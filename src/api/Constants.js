@@ -11,17 +11,25 @@ export const API_CONSUMER = Config[KEY].API_URL;
 
 // Helpers
 export const APP_TOKEN = {
-  set: ({ token, refreshToken }) => {
+  set: ({ token, refreshToken, roleName, franchiseId, userName }) => {
     localStorage.setItem('token', token);
     localStorage.setItem('refresh_token', refreshToken);
+    localStorage.setItem('role_name', roleName);
+    localStorage.setItem('franchise_id', franchiseId);
+    localStorage.setItem('user_name', userName);
+
   },
   remove: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('role_name');
   },
   get: () => ({
     token: localStorage.getItem('token'),
     refreshToken: localStorage.getItem('refresh_token'),
+    roleName: localStorage.getItem('role_name'),
+    franchiseId: localStorage.getItem('franchise_id'),
+    userName: localStorage.getItem('user_name'),
   }),
   get notEmpty() {
     const cond1 = this.get().token !== null;

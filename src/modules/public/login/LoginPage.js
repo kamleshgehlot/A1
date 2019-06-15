@@ -70,11 +70,14 @@ class LoginPage extends Component {
       APP_TOKEN.set({
         token: result.token,
         refreshToken: '',
+        roleName: result.role_name,
+        franchiseId: result.franchise_id,
+        userName: result.user_name
       });
       history.push('/auth');
     } catch (error) {
       if (axios.isCancel(error)) {
-        // console.log('Request canceled', error.message);
+        console.log('Request canceled', error.message);
       } else {
         const { message, errorCode } = error.response.data;
         if (errorCode === '401') {

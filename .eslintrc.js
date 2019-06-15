@@ -13,6 +13,7 @@ module.exports = {
 		'jsx-a11y',
 		'react',
 		'prettier',
+		'react-hooks'
 	],
 	parser: 'babel-eslint',
 	parserOptions: {
@@ -30,6 +31,9 @@ module.exports = {
 	// 	},
 	// },
 	rules: {
+		"react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+		"react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+		
 		'linebreak-style': 'off', // Don't play nicely with Windows.
 
 		'arrow-parens': 'off', // Incompatible with prettier

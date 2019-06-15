@@ -27,8 +27,8 @@ const Routes = () => {
         <Route
           path="/auth"
           render={props => {
-            // return APP_TOKEN.notEmpty ? <AuthLayout {...props} /> : <Redirect to="/login" />;
-            return <AuthLayout {...props} />;
+            return APP_TOKEN.notEmpty ? <AuthLayout {...props} /> : <Redirect to="/login" />;
+            // return <AuthLayout {...props} />;
           }}
         />
         <Route component={NoMatchPage} />
