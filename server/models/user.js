@@ -3,22 +3,19 @@ const utils = require("../utils");
 
 var User = function (params) {
   this.id = params.id;
-  this.email = params.email;
-  this.password = params.password; //utils.randomString(11);
-  this.companyId = params.companyId;
-  this.organizationId = params.organizationId;
+  this.franchise_id   = params.franchise_id ;
   this.name = params.name;
-  this.userId = params.userId;
+  this.user_id = params.user_id;
+  this.password = params.password; //utils.randomString(11);
   this.designation = params.designation;
-  this.area = params.area;
-  this.address = params.address;
-  this.mobileNo = params.mobileNo;
-  this.role = params.role;
-  this.isActive = params.isActive;
-  this.createdBy = params.createdBy;
+  this.mobile_no = params.mobile_no;
+  this.email = params.email;
+  this.role_id = params.role_id;
+  this.is_active = params.is_active;
+  this.created_by = params.created_by;
 };
 
-User.prototype.register = function (newUser) {
+User.prototype.register = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -26,16 +23,8 @@ User.prototype.register = function (newUser) {
         throw error;
       }
 
-      // let values = [
-      //   [that.company_id, that.name, AES_ENCRYPT(that.password, 'secret'), that.designation, that.address, that.area, that.mobileNo, that.email, that.isActive, that.createdBy]
-      // ]
-
-
-      // connection.query('SELECT MAX(id) as id FROM user', function (error, rows, fields) {
-      // const userId = that.name.slice(0, 4).toLowerCase() + (rows[0].id + 1);
-
       if (!error) {
-        connection.query('INSERT INTO user(companyId,organizationId,name,userId,password,designation,address,area,mobileNo,email,role,isActive,createdBy) VALUES ("' + that.companyId + '", "' + that.organizationId + '", "' + that.name + '", "' + that.userId + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.area + '", "' + that.address + '", "' + that.mobileNo + '", "' + that.email + '", "' + that.role + '", "' + that.isActive + '", "' + that.createdBy + '")', function (error, rows, fields) {
+        connection.query('INSERT INTO user(franchise_id,name,user_id,password,designation,mobile_no,email,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + that.name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.mobile_no + '", "' + that.email + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
           if (!error) {
             resolve({ userName: that.name, userId: that.userId, password: that.password });
@@ -100,7 +89,7 @@ User.prototype.all = function () {
 
       const isActive = 1;
 
-      connection.query('select u.id, c.name as companyName, u.companyId, u.name, u.userId, u.designation, u.area, u.address, u.mobileNo, u.email, u.dateTimeCreated from user u inner join company c on u.companyId = c.id where u.isActive=?', [isActive], function (error, rows, fields) {
+      connection.query('select u.id, f.name as companyName, u.franchise_id, u.name, u.user_id, u.designation, u.mobile_no, u.email, u.created_at from user u inner join franchise f on u.franchise_id = f.id where u.is_active=?', [isActive], function (error, rows, fields) {
 
         if (!error) {
           resolve(rows);

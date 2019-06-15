@@ -1,50 +1,63 @@
 const User = require("../models/user.js")
+const Franchise = require("../models/franchise.js")
 
 const register = function (req, res, next) {
-	let params = {
+	console.log("...............", req.decoded);
+	let franchiseParam = {
 		created_by: req.decoded.id,
-		id: req.body.id,
-		company_id: req.body.companyId,
 		name: req.body.name,
-		user_id: req.body.userId,
-		password: req.body.password,
-		area: req.body.area,
-		address: req.body.address,
-		mobile_no: req.body.mobileNo,
-		role: 'user',
-		is_active: 1,
-		email: req.body.email
+		location: req.body.location,
+		contact: req.body.contact,
+		abn: req.body.abn,
+		is_active: 1
 	};
-	const newUser = new User(params);
+
+	let userParam = {
+		name: req.body.name,
+		user_id: req.body.user_id,
+		password: req.body.password,
+		mobile_no: req.body.mobile_no,
+		role_id: req.body.role_id,
+		is_active: 1,
+		email: req.body.email,
+		created_by: req.decoded.id
+	};
+
+	const newFranchise = new Franchise(franchiseParam);
 
 	try {
-		if (params.id) {
-			newUser.update().then(function (result) {
-				if (req.decoded.role === 'admin') {
-					new User({}).all().then(function (userList) {
+		const newUser = new User(userParam);
+
+		if(userParam.role_id === 2) {
+			newFranchise.register().then(function (result) {
+				console.log('...................inside if condition', newUser);
+	
+				newUser.franchise_id = result.franchise_id;
+	
+				console.log('...................5%%', newUser);
+				newUser.register().then(function (result) {
+					new Franchise({}).all().then(function (userList) {
 						res.send({ credentials: result, userList: userList });
 					});
-				} else {
-					res.send([]);
-				}
-			}).catch((err) => {
-				res.status(500);
-				res.render('error', { error: err });
+				}).catch((err) => {
+					res.status(500);
+					res.render('error', { error: err });
+				});
 			});
 		} else {
-			newUser.register().then(function (result) {
-				if (req.decoded.role === 'admin') {
-					new User({}).all().then(function (userList) {
+				newUser.franchise_id = req.decoded.franchise_id;
+	
+				console.log('...................inside else condition', newUser);
+				newUser.register().then(function (result) {
+					new Franchise({}).all().then(function (userList) {
 						res.send({ credentials: result, userList: userList });
 					});
-				} else {
-					res.send([]);
-				}
-			}).catch((err) => {
-				res.status(500);
-				res.send('error', { error: err });
-			});;
+				}).catch((err) => {
+					res.status(500);
+					res.render('error', { error: err });
+				});
 		}
+		
 	} catch (err) {
 		console.log("Error: ", err);
 
@@ -54,14 +67,11 @@ const register = function (req, res, next) {
 };
 
 const all = function (req, res, next) {
+	console.log(".............. All");
 	try {
-		if (req.decoded.role === 'admin') {
-			new User({}).all().then(function (userList) {
+			new Franchise({}).all().then(function (userList) {
 				res.send({ userList: userList });
 			});
-		} else {
-			res.send([]);
-		}
 	} catch (err) {
 		console.log("Error: ", err);
 	}

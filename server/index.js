@@ -20,13 +20,13 @@ app.use(cors());
 app.use('/', express.static(path.join(__dirname, '..', 'dist')));
 app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 
-const routes = require('./routes');
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
+const routes = require('./routes');
 
-app.use('/', routes);
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/', routes);
 
 /** Get port from environment and store in Express. */
 const port = process.env.PORT || '3000';

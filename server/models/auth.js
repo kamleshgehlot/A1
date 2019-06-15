@@ -15,7 +15,7 @@ Auth.prototype.login = function (newUser) {
 
       let values = [that.name, 1];
 
-      connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.role from user u where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
+      connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, r.name as role_name from user u inner join role r on u.role_id = r.id where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
 
         if (!error) {
           resolve(rows);
