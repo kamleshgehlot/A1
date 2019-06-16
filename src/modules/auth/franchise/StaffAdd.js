@@ -22,7 +22,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import CheckboxList from '../../common/CheckboxList';
 
 // API CALL
-import UserAPI from '../../../api/User'
+import UserAPI from '../../../api/franchise/User'
 
 import useSignUpForm from './CustomHooks';
 

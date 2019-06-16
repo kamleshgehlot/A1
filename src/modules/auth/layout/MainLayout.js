@@ -28,6 +28,7 @@ import UserAPI from '../../../api/User'
 
 import Add from '../franchise/Add';
 import StaffAdd from '../franchise/StaffAdd';
+import UserList from '../layout/franchise/UserList';
 
 import MuiVirtualizedTable from '../../common/MuiVirtualizedTable'
 
@@ -247,35 +248,7 @@ console.log("....... roles", roleName);
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Paper style={{ height: 400, width: '100%' }}>
-                  <MuiVirtualizedTable
-                    rowCount={franchiseList.length ? franchiseList.length : 0}
-                    rowGetter={({ index }) => franchiseList[index]}
-                    columns={[
-                      {
-                        width: 200,
-                        label: 'Name',
-                        dataKey: 'name',
-                      },
-                      {
-                        width: 120,
-                        label: 'Location',
-                        dataKey: 'location',
-                        numeric: true,
-                      },
-                      {
-                        width: 120,
-                        label: 'Contact',
-                        dataKey: 'contact',
-                        numeric: true,
-                      },
-                      {
-                        width: 120,
-                        label: 'abn',
-                        dataKey: 'abn',
-                        numeric: true,
-                      }
-                    ]}
-                  />
+                  <UserList />
                 </Paper>
               </Grid>
             </Grid> : null

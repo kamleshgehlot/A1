@@ -16,7 +16,7 @@ const login = function (req, res, next) {
         console.log("&&&&&&&&&&&&&&&", user);
         status = 200;
         // Create a token
-        const payload = { id: user[0].id, user: params.name, franchise_id: user[0].franchise_id, role: user[0].role_id };
+        const payload = { id: user[0].id, user: params.name, user_id: user[0].user_id, franchise_id: user[0].franchise_id, role: user[0].role_id };
         const options = { expiresIn: '365d', issuer: 'https://sargatechnology.com' };
         const secret = process.env.JWT_SECRET || 'secret';
         const token = jwt.sign(payload, secret, options);

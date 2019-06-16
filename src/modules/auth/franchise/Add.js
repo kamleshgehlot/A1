@@ -17,6 +17,8 @@ import useSignUpForm from './CustomHooks';
 
 import { store, useStore } from '../../../store/hookStore';
 
+const RESET_VALUES = {name: '', location: '', contact: '', abn: '', user_name: '', user_id: '', password: ''};
+
 export default function Add({open, handleClose, handleSnackbarClick}) {
 
   const [franchiseList, setFranchiseList] = useStore();
@@ -37,10 +39,29 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);
+    handleReset(RESET_VALUES);
     handleClose(false);
   }
 
-  const {inputs, handleInputChange, handleSubmit} = useSignUpForm({name: '', location: '', contact: '', abn: '', user_name: '', user_id: '', password: ''}, signup);
+  const {inputs, handleInputChange, handleSubmit, handleReset, setInput} = useSignUpForm(RESET_VALUES, signup);
+  
+  function handleNameBlurChange(e) {
+    let value = inputs.name;
+
+    if(value.split(' ').length > 1) {
+      value = value.split(' ')[1].toLowerCase();
+    }
+
+    // if(value !== '') {
+    //   const output = Array.from(value.toLowerCase());
+
+    //   if(output.length > 6) {
+    //     setInput('user_id', '_' + output[0] + output[2] + output[4] + output[6]);
+    //   } else {
+        setInput('user_id', inputs.user_name.substring(0, 4) + '_' + value.substring(0, 4).toLowerCase());
+      // }
+    // }
+  }
 
   return (
     <div>
@@ -57,6 +78,8 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               label="Name"
               type="text"
               onChange={handleInputChange} value={inputs.name} required
+              onBlur={handleNameBlurChange}
+              placeholder="ex: Rentronics Hemilton"
               fullWidth
             />
             <TextField
@@ -98,6 +121,7 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               label="User Name"
               type="text"
               onChange={handleInputChange} value={inputs.user_name} required
+              onBlur={handleNameBlurChange}
               fullWidth
             />
             <TextField

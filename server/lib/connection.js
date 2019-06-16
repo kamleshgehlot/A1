@@ -1,19 +1,20 @@
 // This will be in some JSON config we'll say
 let dbOptions = '';
+let dbName = 'rentronics';
 
 if (process.env.NODE_ENV === 'development') {
    dbOptions = {
       host: 'localhost',
       user: 'root',
       password: '',
-      database: 'rentronics'
+      // database: 'rentronics'
    };
 } else {
    dbOptions = {
       host: 'localhost',
       user: 'root',
       password: '',
-      database: 'rentronics'
+      // database: 'rentronics'
    };
 }
 
@@ -22,8 +23,13 @@ const MySQL = require("mysql");
 // const config = require("../config/db.json");
 let connectionPool = MySQL.createPool({ host: dbOptions.host, user: dbOptions.user, password: dbOptions.password, port: dbOptions.port, database: dbOptions.database });
 
-const getConnection = function (done) {
-   connectionPool.getConnection(done);
+const getConnection = async function (done) {
+   try{
+      connectionPool.getConnection(done);
+   } catch(ex) {
+console.log("ex........", ex);
+throw ex;
+   }
 };
 
-module.exports = { getConnection: getConnection };
+module.exports = { getConnection: getConnection, dbName: dbName };

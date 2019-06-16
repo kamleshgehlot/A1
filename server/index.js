@@ -22,10 +22,17 @@ app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
+
+// Franchise
+const franchiseUserRouter = require('./routes/franchise/user');
+
 const routes = require('./routes');
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+
+app.use('/api/franchise/user', franchiseUserRouter);
+
 app.use('/', routes);
 
 /** Get port from environment and store in Express. */

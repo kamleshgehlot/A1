@@ -1,5 +1,13 @@
 # Documentation
 
+https://www.robinwieruch.de/react-hooks-fetch-data/
+
+https://jasonwatmore.com/post/2019/02/01/react-role-based-authorization-tutorial-with-example
+https://auth0.com/blog/role-based-access-control-rbac-and-react-apps/
+https://www.netlify.com/blog/2019/01/31/restrict-access-to-your-sites-with-role-based-redirects/
+
+https://docs.microsoft.com/en-us/azure/sql-database/saas-tenancy-app-design-patterns
+
 Webapp Was Built In:
 
  * ReactJS

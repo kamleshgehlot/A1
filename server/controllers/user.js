@@ -3,8 +3,11 @@ const Franchise = require("../models/franchise.js")
 
 const register = function (req, res, next) {
 	console.log("...............", req.decoded);
+	console.log("...............", req.body);
+
 	let franchiseParam = {
 		created_by: req.decoded.id,
+		user_id: req.body.user_id,
 		name: req.body.name,
 		location: req.body.location,
 		contact: req.body.contact,
@@ -30,14 +33,12 @@ const register = function (req, res, next) {
 
 		if(userParam.role_id === 2) {
 			newFranchise.register().then(function (result) {
-				console.log('...................inside if condition', newUser);
 	
 				newUser.franchise_id = result.franchise_id;
 	
-				console.log('...................5%%', newUser);
 				newUser.register().then(function (result) {
 					new Franchise({}).all().then(function (userList) {
-						res.send({ credentials: result, userList: userList });
+						res.json({ credentials: result, userList: userList });
 					});
 				}).catch((err) => {
 					res.status(500);
@@ -47,7 +48,6 @@ const register = function (req, res, next) {
 		} else {
 				newUser.franchise_id = req.decoded.franchise_id;
 	
-				console.log('...................inside else condition', newUser);
 				newUser.register().then(function (result) {
 					new Franchise({}).all().then(function (userList) {
 						res.send({ credentials: result, userList: userList });
@@ -67,7 +67,6 @@ const register = function (req, res, next) {
 };
 
 const all = function (req, res, next) {
-	console.log(".............. All");
 	try {
 			new Franchise({}).all().then(function (userList) {
 				res.send({ userList: userList });
