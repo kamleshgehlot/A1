@@ -116,14 +116,13 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
         const LocationResult = await LocationAPI.list();
         console.log('Fetched Data', LocationResult.cityList);
         setCityList(LocationResult.cityList);
-        console.log('Fetched Data', cityList);
       } catch (error) {
         console.log('Error', error);
       }
     };
 
     fetchData();
-  }, [cityList, setCityList]);
+  }, []);
 
   // const signup = async () => {
   //   const response = await UserAPI.add({
@@ -207,7 +206,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <from onSubmit={handleSubmit}>
+        <from>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -216,7 +215,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
               <Typography variant="h6" className={classes.title}>
                 Franchise Creation Panel
               </Typography>
-              <Button color="inherit" type="submit">
+              <Button onClick={handleSubmit} color="inherit" type="submit">
                 save
               </Button>
             </Toolbar>
@@ -239,13 +238,13 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="city_selection">Select City *</InputLabel>
+                    <InputLabel htmlFor="city">Select City *</InputLabel>
                     <Select
-                      value={inputs.location}
+                      value={inputs.city}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'city',
-                        id: 'city_selection',
+                        id: 'city',
                       }}
                       fullWidth
                       label="City"

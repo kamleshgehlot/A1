@@ -179,19 +179,19 @@ export default function Franchise(props) {
                   /> */}
 
                   <Table className={classes.table}>
-  <TableHead>
-                  <TableRow>
-                    <StyledTableCell>#</StyledTableCell>
-                    <StyledTableCell>Name</StyledTableCell>
-                    <StyledTableCell>UID</StyledTableCell>
-                    <StyledTableCell>Email</StyledTableCell>
-                    <StyledTableCell>Contact</StyledTableCell>
-                    <StyledTableCell>Status</StyledTableCell>
-                    <StyledTableCell>Options</StyledTableCell>
-                  </TableRow>
-                </TableHead>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Name</StyledTableCell>
+                        <StyledTableCell>UID</StyledTableCell>
+                        <StyledTableCell>Email</StyledTableCell>
+                        <StyledTableCell>Contact</StyledTableCell>
+                        <StyledTableCell>Status</StyledTableCell>
+                        <StyledTableCell>Options</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
 
-  <TableBody>
+  <TableBody />
           <TableRow />
               </Table>
 

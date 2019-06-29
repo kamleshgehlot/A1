@@ -119,7 +119,7 @@ export default function ClippedDrawer(props) {
         <div className={classes.toolbar} />
         <List>
           {roleName === 'Super Admin' 
-            && <List>
+            && (<List>
               <Link to="franchise">
                 <ListItem button key="ManagewStaff">
                   <ListItemIcon>
@@ -137,13 +137,12 @@ export default function ClippedDrawer(props) {
                 </ListItem>
               </Link>
             </List>
-          )}
+            )}
           {roleName === 'Admin' && (
 <ListItem button key='Manage Staff'>
              <ListItemIcon><PeopleIcon /></ListItemIcon>
              <ListItemText primary='Manage Staff' />
            </ListItem>
-)
           )}
         </List>
         {/* <Divider /> */}
