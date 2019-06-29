@@ -57,7 +57,7 @@ Franchise.prototype.register = function (newUser) {
               ]
 
               connection.changeUser({database : 'rentronics'});
-              connection.query('INSERT INTO franchise(name,location,contact,abn,is_active,created_by) VALUES ?', [values], function (error, rows, fields) {
+              connection.query('INSERT INTO franchise(name,city,contact,abn,is_active,created_by) VALUES ?', [values], function (error, rows, fields) {
 
                 if (!error) {
                   let franchise_id = rows.insertId;

@@ -11,6 +11,7 @@ import CategoryList from './modules/auth/category/CategoryList';
 const AuthLayout = lazy(() => import('./modules/auth/layout/MainLayout'));
 const LoginPage = lazy(() => import('./modules/public/login/LoginPage'));
 const NoMatchPage = lazy(() => import('./modules/not-found/NoMatchPage'));
+// import Category from './modules/auth/category/Category';
 const Routes = () => {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -33,6 +34,7 @@ const Routes = () => {
           />
           <Route path="/franchise" component={Franchise} />
           <Route path="/category" component={CategoryList} />
+          {/* <Route path="/category" component={Category} /> */}
           <Route component={NoMatchPage} />
         </Switch>
       </AuthLayout>

@@ -65,11 +65,7 @@ export default function ClippedDrawer(props) {
   console.log('props...................', props);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
-
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  // ////////////////////////////////
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const classes = useStyles();
@@ -123,7 +119,7 @@ export default function ClippedDrawer(props) {
         <div className={classes.toolbar} />
         <List>
           {roleName === 'Super Admin' 
-            && <List>
+            && (<List>
               <Link to="franchise">
                 <ListItem button key="ManagewStaff">
                   <ListItemIcon>
@@ -142,25 +138,23 @@ export default function ClippedDrawer(props) {
                   <ListItemText primary="Manage Categories" />
                 </ListItem>
               </Link>
-              {/* --code by BSM ends here */}
             </List>
-          }
+            )}
           {roleName === 'Admin' && (
 <ListItem button key='Manage Staff'>
              <ListItemIcon><PeopleIcon /></ListItemIcon>
              <ListItemText primary='Manage Staff' />
            </ListItem>
-)
-          }
+          )}
         </List>
         {/* <Divider /> */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {/* franchise code shifted from here to auth/franchise/Franchise.js */}
         {props.children}
       </main>
-      {/* <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/> */}
+
+
       <Snackbar
         anchorOrigin={{
           vertical: 'top',

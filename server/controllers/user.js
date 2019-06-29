@@ -8,8 +8,8 @@ const register = function (req, res, next) {
 	let franchiseParam = {
 		created_by: req.decoded.id,
 		user_id: req.body.user_id,
-		name: req.body.name,
-		location: req.body.location,
+		name: req.body.franchise_name,
+		location: req.body.city,
 		contact: req.body.contact,
 		abn: req.body.abn,
 		is_active: 1
