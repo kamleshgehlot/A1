@@ -16,17 +16,6 @@
     "test:coverage": "jest --coverage --colors",
     "prettier": "prettier --write src/**/*.js"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.(js|jsx)": [
-      "npm run lint:write",
-      "git add"
-    ]
-  },
   "dependencies": {
     "@material-ui/core": "^4.1.0",
     "@material-ui/icons": "^4.1.0",

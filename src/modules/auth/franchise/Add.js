@@ -42,6 +42,7 @@ import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
   city: '',
+
   suburb: '',
   franchise_name: '',
   uid: '',
@@ -105,7 +106,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
   const [cityList, setCityList] = useStore([]);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-
+  const [city_code,setCityCode] = React.useState();
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -145,12 +146,12 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
       // cancelToken: this.isTokenSource.token,
 
       city: inputs.city,
-      suburb: inputs.suburb,
+      suburb: "East",
       franchise_name: inputs.franchise_name,
-      uid: inputs.uid,
+      uid: "UID",
 
-      city_code: inputs.city_code,
-      abn: inputs.abn,
+      city_code: city_code,
+      abn: "1234",
 
       company_name: inputs.company_name,
       nbzn: inputs.nbzn,
@@ -256,6 +257,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                             <MenuItem value={data.id}>{data.city}</MenuItem>
                             // console.log('from : ', data.city)
                           );
+                          setCityCode(data.city_code);
                         })}
                     </Select>
                   </Grid>

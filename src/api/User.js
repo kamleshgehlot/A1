@@ -14,6 +14,7 @@ export default {
   add: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/user/register`;
     try {
+      console.log(data);
       const { data } = await axios(
         URL,
         Object.assign({}, PARAMS({ methodType: 'POST' }), {
