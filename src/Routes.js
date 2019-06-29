@@ -5,6 +5,7 @@ import { APP_TOKEN } from './api/Constants';
 // Utils
 import PageLoader from './modules/common/PageLoader';
 import Franchise from './modules/auth/franchise/Franchise';
+import CategoryList from './modules/auth/category/CategoryList';
 
 // Routes
 const AuthLayout = lazy(() => import('./modules/auth/layout/MainLayout'));
@@ -32,6 +33,7 @@ const Routes = () => {
             }}
           />
           <Route path="/franchise" component={Franchise} />
+          <Route path="/category" component={CategoryList} />
           {/* <Route path="/category" component={Category} /> */}
           <Route component={NoMatchPage} />
         </Switch>

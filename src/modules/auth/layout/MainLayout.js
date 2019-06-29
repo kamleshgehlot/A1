@@ -128,6 +128,8 @@ export default function ClippedDrawer(props) {
                   <ListItemText primary="Manage Franchise" />
                 </ListItem>
               </Link>
+              {/* code by Bhagyashree starts from here
+              Category is added to menu */}
               <Link to="category">
                 <ListItem button>
                   <ListItemIcon>

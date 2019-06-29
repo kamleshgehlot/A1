@@ -79,7 +79,10 @@ export default function Franchise(props) {
       color: theme.palette.text.secondary,
     },
   }));
+<<<<<<< HEAD
+=======
 
+>>>>>>> 2a45149bd65fce2239b4d1744cd5b077dfa932f2
   const classes = useStyles();
   useEffect(() => {
     const fetchData = async () => {
