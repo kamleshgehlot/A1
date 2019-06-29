@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
-import MuiVirtualizedTable from '../../../common/MuiVirtualizedTable'
+import MuiVirtualizedTable from '../../../common/MuiVirtualizedTable';
 
 // API CALL
-import UserAPI from '../../../../api/franchise/User'
+import UserAPI from '../../../../api/franchise/User';
 
 import { store, useStore } from '../../../../store/hookStore';
 
@@ -31,31 +31,31 @@ export default function UserList(props) {
   }, []);
 
   return (
-          <MuiVirtualizedTable
-            rowCount={userList.length ? userList.length : 0}
-            rowGetter={({ index }) => userList[index]}
-            columns={[
-              {
-                width: 200,
-                label: 'Name',
-                dataKey: 'name',
-              },
-              {
-                width: 120,
-                label: 'User Id',
-                dataKey: 'user_id',
-              },
-              {
-                width: 120,
-                label: 'Active',
-                dataKey: 'is_active',
-              },
-              {
-                width: 120,
-                label: 'Created Date',
-                dataKey: 'created_at',
-              }
-            ]}
-          />
-  )
+    <MuiVirtualizedTable
+      rowCount={userList.length ? userList.length : 0}
+      rowGetter={({ index }) => userList[index]}
+      columns={[
+        {
+          width: 200,
+          label: 'Name',
+          dataKey: 'name',
+        },
+        {
+          width: 120,
+          label: 'User Id',
+          dataKey: 'user_id',
+        },
+        {
+          width: 120,
+          label: 'Active',
+          dataKey: 'is_active',
+        },
+        {
+          width: 120,
+          label: 'Created Date',
+          dataKey: 'created_at',
+        },
+      ]}
+    />
+  );
 }

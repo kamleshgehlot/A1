@@ -26,8 +26,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CheckboxList({items}) {
-  console.log("role..............", items);
+export default function CheckboxList({ items }) {
+  console.log('role..............', items);
 
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
@@ -47,28 +47,26 @@ export default function CheckboxList({items}) {
 
   return (
     <Paper className={classes.paper}>
+      <List className={classes.root}>
+        {(items || []).map(value => {
+          const labelId = `checkbox-list-label-${value}`;
 
-    <List className={classes.root}>
-      {(items || []).map(value => {
-        const labelId = `checkbox-list-label-${value}`;
-
-        return (
-          <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={checked.indexOf(value) !== -1}
-                tabIndex={-1}
-                disableRipple
-                inputProps={{ 'aria-labelledby': labelId }}
-              />
-            </ListItemIcon>
-            <ListItemText id={labelId} primary={value} />
-          </ListItem>
-        );
-      })}
-    </List>
+          return (
+            <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={checked.indexOf(value) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': labelId }}
+                />
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={value} />
+            </ListItem>
+          );
+        })}
+      </List>
     </Paper>
-
   );
 }

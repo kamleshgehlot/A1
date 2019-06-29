@@ -6,19 +6,19 @@ export const store = {
     this.state = value;
     this.setters.forEach(setter => setter(this.state));
   },
-  setters: []
+  setters: [],
 };
-  
-// Bind the setState function to the store object so 
+
+// Bind the setState function to the store object so
 // we don't lose context when calling it elsewhere
 store.setState = store.setState.bind(store);
 
 // this is the custom hook we'll call on components.
 export function useStore() {
-  const [ state, set ] = useState(store.state);
+  const [state, set] = useState(store.state);
   if (!store.setters.includes(set)) {
     store.setters.push(set);
   }
 
-  return [ state, store.setState ];
+  return [state, store.setState];
 }

@@ -7,7 +7,7 @@ const PARAMS = ({ methodType = 'GET' }) => ({
   headers: {
     'Content-Type': 'application/json',
   },
-  headers: authHeader()
+  headers: authHeader(),
 });
 
 export default {
@@ -29,15 +29,10 @@ export default {
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/user/list`;
     try {
-      const { data } = await axios(
-        URL,
-        Object.assign({}, PARAMS({ methodType: 'GET' }), {
-         
-        }),
-      );
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
     } catch (error) {
       throw error;
     }
-  }
+  },
 };

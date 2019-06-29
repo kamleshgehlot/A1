@@ -3,7 +3,7 @@ export function authHeader() {
   // let user = JSON.parse(localStorage.token);
 
   // if (user && user.token) {
-      return { 'Authorization': 'Basic ' + localStorage.token };
+  return { Authorization: `Basic ${localStorage.token}` };
   // } else {
   //     return {};
   // }

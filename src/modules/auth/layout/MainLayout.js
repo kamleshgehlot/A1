@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Router, Route, Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -24,15 +25,9 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import UserAPI from '../../../api/User'
+import UserAPI from '../../../api/User';
 
-import Add from '../franchise/Add';
-import StaffAdd from '../franchise/StaffAdd';
-import UserList from '../layout/franchise/UserList';
-
-import MuiVirtualizedTable from '../../common/MuiVirtualizedTable'
-
-import { store, useStore } from '../../../store/hookStore';
+import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 
 const drawerWidth = 240;
 
@@ -67,52 +62,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ClippedDrawer(props) {
-console.log("props...................", props);
+  console.log('props...................', props);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
-
-  const [open, setOpen] = useState(false);
-  const [staffOpen, setStaffOpen] = useState(false);
-
-
-  const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
-  const [showStaff, setShowStaff] = useState(roleName === 'Admin');
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  //////////////////////////////////
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [franchiseList, setFranchiseList] = useStore();
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
-      try {
-        const result = await UserAPI.list();
-        setFranchiseList(result.userList);
-      } catch (error) {
-        setIsError(true);
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, []);
-///////////////////////////////////////
-
   const classes = useStyles();
 
   function handleClickOpen() {
     setOpen(true);
-  }
-
-  function handleClickStaffOpen() {
-    setStaffOpen(true);
   }
 
   function handleClose() {
@@ -120,15 +79,6 @@ console.log("props...................", props);
     setStaffOpen(false);
   }
 
-  function handleFranchiseClick() {
-    setShowFranchise(true);
-    setShowStaff(false);
-  }
-
-  function handleStaffClick() {
-    setShowFranchise(false);
-    setShowStaff(true);
-  }
 
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -142,7 +92,7 @@ console.log("props...................", props);
     APP_TOKEN.remove();
     props.history.push('/login');
   }
-console.log("....... roles", roleName);
+  console.log('....... roles', roleName);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -152,9 +102,11 @@ console.log("....... roles", roleName);
             Rentronics
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
-              Welcome {userName}
+            Welcome {userName}
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>Logout</Button>
+          <Button color="inherit" onClick={handleLogout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -166,113 +118,57 @@ console.log("....... roles", roleName);
       >
         <div className={classes.toolbar} />
         <List>
-            {roleName === 'Super Admin' && <ListItem button key='ManagewStaff' onClick={handleFranchiseClick}>
-              <ListItemIcon><PeopleIcon /></ListItemIcon>
-              <ListItemText primary='Manage Franchise' />
-            </ListItem>
-            }
-            {roleName === 'Admin' && <ListItem button key='Manage Staff' onClick={handleStaffClick}>
+          {roleName === 'Super Admin' 
+            && <List>
+              <Link to="franchise">
+                <ListItem button key="ManagewStaff">
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage Franchise" />
+                </ListItem>
+              </Link>
+              <Link to="category">
+                <ListItem button>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage Categories" />
+                </ListItem>
+              </Link>
+            </List>
+          )}
+          {roleName === 'Admin' && (
+<ListItem button key='Manage Staff'>
              <ListItemIcon><PeopleIcon /></ListItemIcon>
              <ListItemText primary='Manage Staff' />
            </ListItem>
-            }
+)
+          )}
         </List>
         {/* <Divider /> */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-          {showFranchise ? 
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                <Fab
-                  variant="extended"
-                  size="small"
-                  color="primary"
-                  aria-label="Add"
-                  className={classes.margin}
-                  onClick={handleClickOpen}
-                >
-                  <AddIcon className={classes.extendedIcon} />
-                  Franchise
-                </Fab>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Paper style={{ height: 400, width: '100%' }}>
-                  <MuiVirtualizedTable
-                    rowCount={franchiseList.length ? franchiseList.length : 0}
-                    rowGetter={({ index }) => franchiseList[index]}
-                    columns={[
-                      {
-                        width: 200,
-                        label: 'Name',
-                        dataKey: 'name',
-                      },
-                      {
-                        width: 120,
-                        label: 'Location',
-                        dataKey: 'location',
-                        numeric: true,
-                      },
-                      {
-                        width: 120,
-                        label: 'Contact',
-                        dataKey: 'contact',
-                        numeric: true,
-                      },
-                      {
-                        width: 120,
-                        label: 'abn',
-                        dataKey: 'abn',
-                        numeric: true,
-                      }
-                    ]}
-                  />
-                </Paper>
-              </Grid>
-            </Grid>
-            : null}
-            {showStaff ?
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                <Fab
-                  variant="extended"
-                  size="small"
-                  color="primary"
-                  aria-label="Add"
-                  className={classes.margin}
-                  onClick={handleClickStaffOpen}
-                >
-                  <AddIcon className={classes.extendedIcon} />
-                  Staff
-                </Fab>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Paper style={{ height: 400, width: '100%' }}>
-                  <UserList />
-                </Paper>
-              </Grid>
-            </Grid> : null
-          }
+        {props.children}
       </main>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
 
-      <StaffAdd open={staffOpen} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
 
       <Snackbar
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={snackbarOpen}
-          autoHideDuration={6000}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MySnackbarContentWrapper
           onClose={handleSnackbarClose}
-        >
-          <MySnackbarContentWrapper
-            onClose={handleSnackbarClose}
-            variant="success"
-            message="Frenchise Created successfully with Admin User!"
-          />
-        </Snackbar>
+          variant="success"
+          message="Frenchise Created successfully with Admin User!"
+        />
+      </Snackbar>
     </div>
   );
 }
