@@ -10,7 +10,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import AuthenticationAPI from '../../../api/AuthenticationAPI'
+import AuthenticationAPI from '../../../api/AuthenticationAPI';
 // Components
 import LoginForm from './components/LoginForm';
 import WelcomeMessage from './components/WelcomeMessage';
@@ -72,7 +72,7 @@ class LoginPage extends Component {
         refreshToken: '',
         roleName: result.role_name,
         franchiseId: result.franchise_id,
-        userName: result.user_name
+        userName: result.user_name,
       });
       history.push('/auth');
     } catch (error) {

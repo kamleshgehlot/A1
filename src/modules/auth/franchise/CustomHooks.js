@@ -3,38 +3,38 @@ import { useState } from 'react';
 const useSignUpForm = (state, callback) => {
   const [inputs, setInputs] = useState(state);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     if (event) {
       event.preventDefault();
     }
 
     callback();
-  }
+  };
 
   const handleInputChange = e =>
-  setInputs({
+    setInputs({
     ...inputs,
-    [e.target.name]: e.target.value
+    [e.target.name]: e.target.value,
   });
 
-  const handleReset = (RESET_VALUES) => {
-    setInputs(inputs => (RESET_VALUES))
-  }
+  const handleReset = RESET_VALUES => {
+    setInputs(inputs => RESET_VALUES);
+  };
 
   const setInput = (name, value) => {
     setInputs({
       ...inputs,
-      [name]: value
+      [name]: value,
     });
-  }
+  };
 
   return {
     handleSubmit,
     handleInputChange,
     inputs,
     handleReset,
-    setInput
+    setInput,
   };
-}
+};
 
 export default useSignUpForm;

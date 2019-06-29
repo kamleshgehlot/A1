@@ -22,7 +22,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import CheckboxList from '../../common/CheckboxList';
 
 // API CALL
-import UserAPI from '../../../api/franchise/User'
+import UserAPI from '../../../api/franchise/User';
 
 import useSignUpForm from './CustomHooks';
 
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Add({open, handleClose, handleSnackbarClick}) {
+export default function Add({ open, handleClose, handleSnackbarClick }) {
   const classes = useStyles();
 
   const [franchiseList, setFranchiseList] = useStore();
@@ -58,23 +58,25 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
       user_id: inputs.user_id,
       password: inputs.password,
       name: inputs.name,
-      role_id: 3
+      role_id: 3,
     });
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);
     handleClose(false);
-  }
+  };
 
-  const {inputs, handleInputChange, handleSubmit} = useSignUpForm({name: '', location: '', contact: '', abn: '', user_name: '', user_id: '', password: ''}, signup);
+  const { inputs, handleInputChange, handleSubmit } = useSignUpForm(
+    { name: '', location: '', contact: '', abn: '', user_name: '', user_id: '', password: '' },
+    signup,
+  );
 
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-      <form onSubmit={handleSubmit}>
-
-        <DialogTitle id="form-dialog-title">Add Franchise Staff</DialogTitle>
-        <DialogContent>
+        <form onSubmit={handleSubmit}>
+          <DialogTitle id="form-dialog-title">Add Franchise Staff</DialogTitle>
+          <DialogContent>
             <TextField
               autoFocus
               margin="dense"
@@ -82,7 +84,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="name"
               label="Name"
               type="text"
-              onChange={handleInputChange} value={inputs.name} required
+              onChange={handleInputChange}
+              value={inputs.name}
+              required
               fullWidth
             />
             <TextField
@@ -91,7 +95,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="location"
               label="Location"
               type="text"
-              onChange={handleInputChange} value={inputs.location} required
+              onChange={handleInputChange}
+              value={inputs.location}
+              required
               fullWidth
             />
 
@@ -104,7 +110,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="user_id"
               label="User Id"
               type="text"
-              onChange={handleInputChange} value={inputs.user_id} required
+              onChange={handleInputChange}
+              value={inputs.user_id}
+              required
               fullWidth
             />
             <TextField
@@ -113,22 +121,32 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="password"
               label="Password"
               type="text"
-              onChange={handleInputChange} value={inputs.password} required
+              onChange={handleInputChange}
+              value={inputs.password}
+              required
               fullWidth
             />
             <DialogTitle id="form-dialog-title">Roles</DialogTitle>
-            <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
-              <Grid item><CheckboxList items={['CSR', 'Finance', 'Delivery', 'HR']} /></Grid>
+            <Grid
+              container
+              spacing={2}
+              justify="center"
+              alignItems="center"
+              className={classes.root}
+            >
+              <Grid item>
+                <CheckboxList items={['CSR', 'Finance', 'Delivery', 'HR']} />
+              </Grid>
             </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
-            Add
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Cancle
-          </Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleSubmit} color="primary">
+              Add
+            </Button>
+            <Button onClick={handleClose} color="primary">
+              Cancle
+            </Button>
+          </DialogActions>
         </form>
       </Dialog>
     </div>

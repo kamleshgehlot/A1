@@ -11,16 +11,23 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 // API CALL
-import UserAPI from '../../../api/User'
+import UserAPI from '../../../api/User';
 
 import useSignUpForm from './CustomHooks';
 
 import { store, useStore } from '../../../store/hookStore';
 
-const RESET_VALUES = {name: '', location: '', contact: '', abn: '', user_name: '', user_id: '', password: ''};
+const RESET_VALUES = {
+  name: '',
+  location: '',
+  contact: '',
+  abn: '',
+  user_name: '',
+  user_id: '',
+  password: '',
+};
 
-export default function Add({open, handleClose, handleSnackbarClick}) {
-
+export default function Add({ open, handleClose, handleSnackbarClick }) {
   const [franchiseList, setFranchiseList] = useStore();
 
   const signup = async () => {
@@ -34,21 +41,24 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
       user_id: inputs.user_id,
       password: inputs.password,
       name: inputs.name,
-      role_id: 2
+      role_id: 2,
     });
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);
     handleReset(RESET_VALUES);
     handleClose(false);
-  }
+  };
 
-  const {inputs, handleInputChange, handleSubmit, handleReset, setInput} = useSignUpForm(RESET_VALUES, signup);
-  
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+    RESET_VALUES,
+    signup,
+  );
+
   function handleNameBlurChange(e) {
     let value = inputs.name;
 
-    if(value.split(' ').length > 1) {
+    if (value.split(' ').length > 1) {
       value = value.split(' ')[1].toLowerCase();
     }
 
@@ -58,18 +68,20 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
     //   if(output.length > 6) {
     //     setInput('user_id', '_' + output[0] + output[2] + output[4] + output[6]);
     //   } else {
-        setInput('user_id', inputs.user_name.substring(0, 4) + '_' + value.substring(0, 4).toLowerCase());
-      // }
+    setInput(
+      'user_id',
+      `${inputs.user_name.substring(0, 4)}_${value.substring(0, 4).toLowerCase()}`,
+    );
+    // }
     // }
   }
 
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-      <form onSubmit={handleSubmit}>
-
-        <DialogTitle id="form-dialog-title">Add Franchise</DialogTitle>
-        <DialogContent>
+        <form onSubmit={handleSubmit}>
+          <DialogTitle id="form-dialog-title">Add Franchise</DialogTitle>
+          <DialogContent>
             <TextField
               autoFocus
               margin="dense"
@@ -77,7 +89,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="name"
               label="Name"
               type="text"
-              onChange={handleInputChange} value={inputs.name} required
+              onChange={handleInputChange}
+              value={inputs.name}
+              required
               onBlur={handleNameBlurChange}
               placeholder="ex: Rentronics Hemilton"
               fullWidth
@@ -88,7 +102,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="location"
               label="Location"
               type="text"
-              onChange={handleInputChange} value={inputs.location} required
+              onChange={handleInputChange}
+              value={inputs.location}
+              required
               fullWidth
             />
             <TextField
@@ -97,7 +113,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="contact"
               label="Contact"
               type="text"
-              onChange={handleInputChange} value={inputs.contact} required
+              onChange={handleInputChange}
+              value={inputs.contact}
+              required
               fullWidth
             />
             <TextField
@@ -106,7 +124,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="abn"
               label="ABN"
               type="text"
-              onChange={handleInputChange} value={inputs.abn} required
+              onChange={handleInputChange}
+              value={inputs.abn}
+              required
               fullWidth
             />
             <br />
@@ -120,7 +140,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="user_name"
               label="User Name"
               type="text"
-              onChange={handleInputChange} value={inputs.user_name} required
+              onChange={handleInputChange}
+              value={inputs.user_name}
+              required
               onBlur={handleNameBlurChange}
               fullWidth
             />
@@ -130,7 +152,9 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="user_id"
               label="User Id"
               type="text"
-              onChange={handleInputChange} value={inputs.user_id} required
+              onChange={handleInputChange}
+              value={inputs.user_id}
+              required
               fullWidth
             />
             <TextField
@@ -139,18 +163,20 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
               name="password"
               label="Password"
               type="text"
-              onChange={handleInputChange} value={inputs.password} required
+              onChange={handleInputChange}
+              value={inputs.password}
+              required
               fullWidth
             />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
-            Add
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Cancle
-          </Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleSubmit} color="primary">
+              Add
+            </Button>
+            <Button onClick={handleClose} color="primary">
+              Cancle
+            </Button>
+          </DialogActions>
         </form>
       </Dialog>
     </div>

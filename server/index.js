@@ -9,8 +9,8 @@ const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 app.use(helmet());
 
@@ -22,7 +22,7 @@ app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
-
+const categoryRouter = require('./routes/category');
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
 
@@ -30,6 +30,7 @@ const routes = require('./routes');
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/category', categoryRouter);
 
 app.use('/api/franchise/user', franchiseUserRouter);
 

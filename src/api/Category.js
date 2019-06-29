@@ -12,7 +12,7 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 
 export default {
   add: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/user/register`;
+    const URL = `${c.API_CONSUMER}/api/category/add`;
     try {
       const { data } = await axios(
         URL,
@@ -27,7 +27,7 @@ export default {
     }
   },
   list: async () => {
-    const URL = `${c.API_CONSUMER}/api/user/list`;
+    const URL = `${c.API_CONSUMER}/api/category/list`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;

@@ -87,9 +87,9 @@ class MuiVirtualizedTable extends React.PureComponent {
                   key={dataKey}
                   headerRenderer={headerProps =>
                     this.headerRenderer({
-                      ...headerProps,
-                      columnIndex: index,
-                    })
+                    ...headerProps,
+                    columnIndex: index,
+                  })
                   }
                   className={classes.flexContainer}
                   cellRenderer={this.cellRenderer}
