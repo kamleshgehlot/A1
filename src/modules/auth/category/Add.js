@@ -85,8 +85,7 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Add({ open, handleClose, handleSnackbarClick }) {
-  const [franchiseList, setFranchiseList] = useStore();
+export default function Add({ open, handleClose, handleSnackbarClick, setCategoryList }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
 
@@ -108,11 +107,10 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
       meta_keywords: inputs.meta_keywords,
       meta_description: inputs.meta_description,
       active: inputs.active,
-
     });
 
     handleSnackbarClick(true);
-    setFranchiseList(response.userList);
+    setCategoryList(response.categoryList);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
@@ -121,27 +119,6 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
     RESET_VALUES,
     categoryadd,
   );
-
-  function handleNameBlurChange(e) {
-    let value = inputs.name;
-
-    if (value.split(' ').length > 1) {
-      value = value.split(' ')[1].toLowerCase();
-    }
-
-    // if(value !== '') {
-    //   const output = Array.from(value.toLowerCase());
-
-    //   if(output.length > 6) {
-    //     setInput('user_id', '_' + output[0] + output[2] + output[4] + output[6]);
-    //   } else {
-    setInput(
-      'user_id',
-      `${inputs.user_name.substring(0, 4)}_${value.substring(0, 4).toLowerCase()}`,
-    );
-    // }
-    // }
-  }
 
   return (
     <div>
@@ -176,6 +153,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                     id="category"
                     name="category"
+                    value={inputs.category}
                     onChange={handleInputChange}
                     fullWidth
                     margin="normal"
@@ -187,19 +165,20 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                   <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="city_selection">Select Category Type</InputLabel>
                   <Select
-                      name="category"
+                      name="type"
                       onChange={handleInputChange}
+                      value={inputs.type}
                       inputProps={{
-                        name: 'category',
-                        id: 'category',
+                        name: 'type',
+                        id: 'type',
                       }}
                       fullWidth
-                      label="City"
+                      label="Category Type"
                       required
                     >
-                      <MenuItem value="1">Main Category</MenuItem>
-                      <MenuItem value="2">Category</MenuItem>
-                      <MenuItem value="3">Sub Category</MenuItem>
+                      <MenuItem value="Main Category">Main Category</MenuItem>
+                      <MenuItem value="Category">Category</MenuItem>
+                      <MenuItem value="Sub Category">Sub Category</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={6} sm={6}>
@@ -207,6 +186,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                   <TextField
                       id="position"
                       name="position"
+                      value={inputs.position}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -232,6 +212,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                   <TextField
                       id="meta_keywords"
                       name="meta_keywords"
+                      value={inputs.meta_keywords}
                       fullWidth
                       margin="normal"
                       required
@@ -245,6 +226,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                   <TextField
                       id="meta_description"
                       name="meta_description"
+                      value={inputs.meta_description}
                       margin="normal"
                       required
                       fullWidth
@@ -258,6 +240,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                   <TextField
                       id="description"
                       name="description"
+                      value={inputs.description}
                       multiline
                       fullWidth
                       rows="4"

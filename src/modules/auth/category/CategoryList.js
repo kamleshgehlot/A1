@@ -24,7 +24,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
-
 // API CALL
 import Category from '../../../../src/api/Category';
 const StyledTableCell = withStyles(theme => ({
@@ -97,7 +96,6 @@ export default function CategoryList(props) {
       try {
         const result = await Category.list();
         setCategoryList(result.categoryList);
-        console.log('hellooo',result);
       } catch (error) {
         setIsError(true);
       }
@@ -118,6 +116,7 @@ export default function CategoryList(props) {
     setEditOpen(true);
     console.log(val);
   }
+
   function handleClose() {
     setOpen(false);
   }
@@ -125,6 +124,11 @@ export default function CategoryList(props) {
   function handleEditClose() {
     setEditOpen(false);
   }
+
+  function setCategoryListFn(categoryList) {
+    setCategoryList(categoryList);
+  }
+
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
@@ -134,8 +138,6 @@ export default function CategoryList(props) {
   }
   return (
     <div>
-      <div className={classes.toolbar} />
-
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
           <Fab
@@ -151,7 +153,7 @@ export default function CategoryList(props) {
           </Fab>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
-          <Paper style={{ height: 400, width: '100%' }}>
+          <Paper style={{ width: '100%' }}>
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
@@ -175,13 +177,13 @@ export default function CategoryList(props) {
                       {data.id}
                       </StyledTableCell>
                       <StyledTableCell>{data.category}</StyledTableCell>
-                      <StyledTableCell></StyledTableCell>
+                      <StyledTableCell>{data.type}</StyledTableCell>
                       <StyledTableCell>{data.position}</StyledTableCell>
                       <StyledTableCell>{data.description}</StyledTableCell>
                       <StyledTableCell>{data.meta_keywords}</StyledTableCell>
                       <StyledTableCell>{data.meta_description}</StyledTableCell>
                       <StyledTableCell>{data.description}</StyledTableCell>
-                      <StyledTableCell></StyledTableCell>
+                      <StyledTableCell>Active</StyledTableCell>
                       <StyledTableCell>
                         <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(index); }}>
                         Update
@@ -253,9 +255,10 @@ export default function CategoryList(props) {
           </Paper>
         </Grid>
       </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setCategoryList={setCategoryListFn}/>
       
-      <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} dataid={editid} datarow={categoryList}/>
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} dataid={editid} datarow={categoryList[editid]} setCategoryList={setCategoryListFn}/> : null}
+      
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
@@ -268,7 +271,7 @@ export default function CategoryList(props) {
         <MySnackbarContentWrapper
           onClose={handleSnackbarClose}
           variant="success"
-          message="Category Created successfully with Admin User!"
+          message="Category Created successfully!"
         />
       </Snackbar>
     </div>

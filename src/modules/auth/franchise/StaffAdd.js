@@ -22,7 +22,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import CheckboxList from '../../common/CheckboxList';
 
 // API CALL
-import UserAPI from '../../../api/franchise/User';
+import UserAPI from '../../../api/franchise/User'
+import { APP_TOKEN } from '../../../api/Constants';
 
 import useSignUpForm from './CustomHooks';
 
@@ -42,10 +43,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Add({ open, handleClose, handleSnackbarClick }) {
+const RESET_VALUES = {name: '', location: '', contact: '', abn: '', user_name: '', user_id: '', password: ''};
+
+export default function Add({open, handleClose, handleSnackbarClick}) {
   const classes = useStyles();
+  let userName = APP_TOKEN.get().userName;
 
   const [franchiseList, setFranchiseList] = useStore();
+  const [roles, setRoles] = useStore();
 
   const signup = async () => {
     const response = await UserAPI.add({
@@ -59,17 +64,29 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
       password: inputs.password,
       name: inputs.name,
       role_id: 3,
+      roles: roles
     });
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);
+    handleReset(RESET_VALUES);
+
     handleClose(false);
   };
 
-  const { inputs, handleInputChange, handleSubmit } = useSignUpForm(
-    { name: '', location: '', contact: '', abn: '', user_name: '', user_id: '', password: '' },
-    signup,
-  );
+  const {inputs, handleInputChange, handleSubmit, handleReset, setInput} = useSignUpForm(RESET_VALUES, signup);
+
+  function callback(roles) {
+    setRoles(roles);
+  }
+
+  function handleNameBlurChange(e) {
+    if(userName.split(' ').length > 1) {
+      userName = userName.split(' ')[1].toLowerCase();
+    }
+
+    setInput('user_id', inputs.name.substring(0, 4).toLowerCase() + '_' + userName.substring(0, 4).toLowerCase());
+  }
 
   return (
     <div>
@@ -84,9 +101,10 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
               name="name"
               label="Name"
               type="text"
-              onChange={handleInputChange}
-              value={inputs.name}
+              onChange={handleInputChange} 
+              value={inputs.name} 
               required
+              onBlur={handleNameBlurChange}
               fullWidth
             />
             <TextField
@@ -110,10 +128,10 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
               name="user_id"
               label="User Id"
               type="text"
-              onChange={handleInputChange}
-              value={inputs.user_id}
+              value={inputs.user_id} 
               required
               fullWidth
+              readOnly
             />
             <TextField
               margin="dense"

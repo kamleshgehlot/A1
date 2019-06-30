@@ -26,11 +26,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CheckboxList({ items }) {
-  console.log('role..............', items);
-
+export default function CheckboxList({items, parentCallback}) {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([0]);
+  const [checked, setChecked] = React.useState([]);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -43,30 +41,31 @@ export default function CheckboxList({ items }) {
     }
 
     setChecked(newChecked);
+    parentCallback(newChecked);
   };
 
   return (
     <Paper className={classes.paper}>
-      <List className={classes.root}>
-        {(items || []).map(value => {
-          const labelId = `checkbox-list-label-${value}`;
+    <List className={classes.root}>
+      {(items || []).map(role => {
+        const labelId = `checkbox-list-label-${role.value}`;
 
-          return (
-            <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={value} />
-            </ListItem>
-          );
-        })}
-      </List>
+        return (
+          <ListItem key={role.value} role={undefined} dense button onClick={handleToggle(role.value)}>
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked.indexOf(role.value) !== -1}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{ 'aria-labelledby': labelId }}
+              />
+            </ListItemIcon>
+            <ListItemText id={labelId} primary={role.text} />
+          </ListItem>
+        );
+      })}
+    </List>
     </Paper>
   );
 }

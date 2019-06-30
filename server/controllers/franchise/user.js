@@ -1,4 +1,5 @@
 const User = require("../../models/franchise/user.js")
+const UserRole = require("../../models/franchise/userRole")
 
 const register = function (req, res, next) {
 	console.log("...............", req.decoded);

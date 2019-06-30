@@ -26,6 +26,21 @@ export default {
       throw error;
     }
   },
+  edit: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/category/edit`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/category/list`;
     try {

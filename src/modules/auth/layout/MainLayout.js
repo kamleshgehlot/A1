@@ -62,7 +62,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ClippedDrawer(props) {
-  console.log('props...................', props);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -84,7 +83,7 @@ export default function ClippedDrawer(props) {
     setSnackbarOpen(false);
   }
 
-  function handleSnackbarClick() {
+  function handleSnackbarClick(flag, message) {
     setSnackbarOpen(true);
   }
 
@@ -92,7 +91,6 @@ export default function ClippedDrawer(props) {
     APP_TOKEN.remove();
     props.history.push('/login');
   }
-  console.log('....... roles', roleName);
   return (
     <div className={classes.root}>
       <CssBaseline />

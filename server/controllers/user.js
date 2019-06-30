@@ -26,17 +26,20 @@ const register = function (req, res, next) {
 
 	let franchiseParam = {
 		created_by: req.decoded.id,
-		user_id: req.body.user_id,
+		user_id: req.body.uid,
+		password: req.body.password,
+		uid: req.body.uid,
 		name: req.body.franchise_name,
-		location: req.body.city,
-		contact: req.body.contact,
+		city: req.body.city,
+		city_code: req.body.city,
+		suburb: req.body.suburb,
 		abn: req.body.abn,
 		is_active: 1
 	};
 
 	let userParam = {
 		name: req.body.name,
-		user_id: req.body.user_id,
+		user_id: req.body.uid,
 		password: req.body.password,
 		mobile_no: req.body.mobile_no,
 		role_id: req.body.role_id,
@@ -64,6 +67,9 @@ const register = function (req, res, next) {
 
 					newUser.register().then(function(result){
 								console.log("Saved Successfully.");
+								new Franchise({}).all().then(function (userList) {
+									res.send({ userList: userList });
+								});
 					})
 				})
 			})
@@ -111,17 +117,17 @@ const register = function (req, res, next) {
 // 		res.status(500)
 // 		res.send('error', { error: err })
 // 	}
-// };
+};
 
-// const all = function (req, res, next) {
-// 	try {
-// 			new Franchise({}).all().then(function (userList) {
-// 				res.send({ userList: userList });
-// 			});
-// 	} catch (err) {
-// 		console.log("Error: ", err);
-// 	}
-// }
+const all = function (req, res, next) {
+	try {
+			new Franchise({}).all().then(function (userList) {
+				res.send({ userList: userList });
+			});
+	} catch (err) {
+		console.log("Error: ", err);
+	}
+}
 
 // const getUniqueNames = function (req, res, next) {
 // 	try {
@@ -135,6 +141,6 @@ const register = function (req, res, next) {
 // 	} catch (err) {
 // 		console.log("Error: ", err);
 // 	}
-}
+// }
 
-module.exports = { register: register};
+module.exports = { all: all, register: register};

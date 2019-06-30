@@ -6,14 +6,16 @@ if (process.env.NODE_ENV === 'development') {
    dbOptions = {
       host: 'localhost',
       user: 'root',
-      password: '',
+      password: '6mNMX9Ln0oykXKic',
+      port: 3306
       // database: 'rentronics'
    };
 } else {
    dbOptions = {
       host: 'localhost',
       user: 'root',
-      password: '',
+      password: '6mNMX9Ln0oykXKic',
+      port: 3306
       // database: 'rentronics'
    };
 }
