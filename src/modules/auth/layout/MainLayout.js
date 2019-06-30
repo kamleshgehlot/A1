@@ -21,6 +21,10 @@ import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
+
+import Franchise from '../franchise/Franchise';
+import Category from '../category/CategoryList';
+
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -67,6 +71,11 @@ export default function ClippedDrawer(props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
+  const [showCategory, setShowCategory] = useState(false);
+
+  const [showStaff, setShowStaff] = useState(roleName === 'Admin');
+
   const classes = useStyles();
 
   function handleClickOpen() {
@@ -86,6 +95,19 @@ export default function ClippedDrawer(props) {
   function handleSnackbarClick(flag, message) {
     setSnackbarOpen(true);
   }
+
+  function handleFranchiseClick() {
+    setShowFranchise(true);
+    setShowStaff(false);
+    setShowCategory(false);
+  }
+
+  function handleCategoryClick() {
+    setShowCategory(true);
+    setShowFranchise(false);
+    setShowStaff(false);
+  }
+
 
   function handleLogout() {
     APP_TOKEN.remove();
@@ -118,24 +140,24 @@ export default function ClippedDrawer(props) {
         <List>
           {roleName === 'Super Admin' 
             && (<List>
-              <Link to="franchise">
-                <ListItem button key="ManagewStaff">
+              {/* <Link to="auth/franchise"> */}
+                <ListItem button key="ManagewStaff" onClick={handleFranchiseClick}>
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
                   <ListItemText primary="Manage Franchise" />
                 </ListItem>
-              </Link>
+              {/* </Link> */}
               {/* code by Bhagyashree starts from here
               Category is added to menu */}
-              <Link to="category">
-                <ListItem button>
+              {/* <Link to="category"> */}
+                <ListItem button key="ManageCategory"  onClick={handleCategoryClick}>
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
                   <ListItemText primary="Manage Categories" />
                 </ListItem>
-              </Link>
+              {/* </Link> */}
             </List>
             )}
           {roleName === 'Admin' && (
@@ -149,7 +171,14 @@ export default function ClippedDrawer(props) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {props.children}
+        {
+          showFranchise ? <Franchise /> : null
+        }
+
+        {
+          showCategory ? <Category /> : null
+        }
+        {/* {props.children} */}
       </main>
 
 

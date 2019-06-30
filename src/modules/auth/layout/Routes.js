@@ -6,6 +6,8 @@ import styled from 'styled-components';
 
 /* Auth Pages Starts Here */
 const UserPage = lazy(() => import('../user/UserPage'));
+const Franchise = lazy(() => import('./franchise/Franchise'));
+const CategoryList = lazy(() => import('./category/CategoryList'));
 
 /* Auth Pages Ends Here */
 
@@ -29,7 +31,7 @@ const Routes = ({ match, location }) => (
     <CSSTransition key={location.key} classNames="fade" timeout={300}>
       <Switch>
         <Route exact path={`${match.url}`} component={UserPage} />
-        <Route exact path={`${match.url}/user`} component={UserPage} />
+        <Route exact path={`${match.url}/franchise`} component={Franchise} />
       </Switch>
     </CSSTransition>
   </Transition>

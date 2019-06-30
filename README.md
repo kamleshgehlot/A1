@@ -1,5 +1,7 @@
 # Documentation
 
+https://github.com/react-boilerplate/react-boilerplate/blob/master/app/containers/App/index.js
+
 https://www.robinwieruch.de/react-hooks-fetch-data/
 
 https://jasonwatmore.com/post/2019/02/01/react-role-based-authorization-tutorial-with-example

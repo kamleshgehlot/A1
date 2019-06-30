@@ -28,6 +28,9 @@ export default function Franchise(props) {
   const [isError, setIsError] = useState(false);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
+
+  console.log("....Role Name....", roleName);
+
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
   const [franchiseList, setFranchiseList] = useState([]);
