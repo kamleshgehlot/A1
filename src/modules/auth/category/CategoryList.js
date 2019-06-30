@@ -18,7 +18,7 @@ import Grid from '@material-ui/core/Grid';
 import { APP_TOKEN } from '../../../api/Constants';
 import { store, useStore } from '../../../store/hookStore';
 import UserList from '../layout/franchise/UserList';
-import Edit from './Editbackup';
+import Edit from './Edit';
 import Add from './Add';
 import Snackbar from '@material-ui/core/Snackbar';
 

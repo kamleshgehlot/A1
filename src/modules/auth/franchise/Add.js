@@ -264,7 +264,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="suburb_selection">Suburb *</InputLabel>
                     <Select
-                      value=""
+                      value={inputs.suburb}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'suburb',
@@ -274,6 +274,10 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                       label="Suburb"
                       required
                     >
+                      <MenuItem value={1}>suburb1</MenuItem>
+                      <MenuItem value={2}>suburb2</MenuItem>
+                      <MenuItem value={3}>suburb3</MenuItem>
+
                       {/* {cityList.length > 0 && cityList.map(data => {
                         return(
                         // <MenuItem value={data.id}>{data.city}</MenuItem>
@@ -306,7 +310,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                       margin="normal"
                       onChange={handleInputChange}
                     />
-                    <TextField
+                    {/* <TextField
                       disabled
                       id="uid"
                       name="uid"
@@ -322,6 +326,14 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                       margin="normal"
                       onChange={handleInputChange}
                     />
+                    <TextField
+                      disabled
+                      id="uid"
+                      name="uid"
+                      className={classes.textField}
+                      margin="normal"
+                      onChange={handleInputChange}
+                    /> */}
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
