@@ -85,126 +85,51 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
-
-export default function Edit({ open, handleEditClose, handleSnackbarClick, dataid, datarow}) {
-  
-  
-  if(dataid!=null){
-    useEffect(() => {
-      const fetchData = async () => {
-        setIsError(false);
-        setIsLoading(true);
-  
-        try {
-          const result = await Category.edit(dataid);
-          setCategoryList(result.categoryList);
-          console.log('hellooo',result);
-        } catch (error) {
-          setIsError(true);
-        }
-  
-        setIsLoading(false);
-      };
-  
-      fetchData();
-    }, []);
-    let data = datarow[dataid];
-    const stateData = {
-      description: data.description,
-    }
-    const [editdata, seteditdata]=useState(stateData);
-    console.log('edit data',editdata);
-  }
+export default function Edit(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
+  const [category, setCategory] = useState(props.datarow)
+
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  console.log("dataid...", dataid);
-  console.log("datarow...", datarow[dataid]);
-  // if(dataid!=null){
-  //   seteditdata(datarow[dataid]);
-  // }
-  // datarow.length > 0 && datarow.map(data=>{
-  //   if(data.id===dataid){
-  //     seteditdata(data);
-      
-  //   }
-  // })
-  // const signup = async () => {
-  //   const response = await UserAPI.add({
-  //     // cancelToken: this.isTokenSource.token,
-  //     name: inputs.name,
-  //     location: inputs.location,
-  //     contact: inputs.contact,
-  //     abn: inputs.abn,
-  //     user_name: inputs.user_name,
-  //     user_id: inputs.user_id,
-  //     password: inputs.password,
-  //     name: inputs.name,
-  //     role_id: 2,
-  //   });
+  useEffect(() => {
+    setCategory(props.datarow)
+  }, [props]);
 
-  //Shahrukh code start here
+  const handleInputChange = event => {
+    const { name, value } = event.target
 
-  const categoryedit = async () => {
-    const response = await Category.edit({
-      // cancelToken: this.isTokenSource.token,
-
-      category: inputs.category,
-      type: inputs.type,
-      // parentid: inputs.parentid,
-      position: inputs.position,
-      description: inputs.description,
-      // image: inputs.image,
-      meta_keywords: inputs.meta_keywords,
-      meta_description: inputs.meta_description,
-      active: inputs.active,
-
-    });
-
-    handleSnackbarClick(true);
-    setFranchiseList(response.userList);
-    handleReset(RESET_VALUES);
-    handleEditClose(false);
-  };
-
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-    datarow[dataid] || {},
-    categoryedit,
-  );
-
-  function handleNameBlurChange(e) {
-    let value = inputs.name;
-
-    if (value.split(' ').length > 1) {
-      value = value.split(' ')[1].toLowerCase();
-    }
-
-    // if(value !== '') {
-    //   const output = Array.from(value.toLowerCase());
-
-    //   if(output.length > 6) {
-    //     setInput('user_id', '_' + output[0] + output[2] + output[4] + output[6]);
-    //   } else {
-    setInput(
-      'user_id',
-      `${inputs.user_name.substring(0, 4)}_${value.substring(0, 4).toLowerCase()}`,
-    );
-    // }
-    // }
+    setCategory({ ...category, [name]: value })
   }
 
-  
+  const handleSubmit = async () => {
+    const response = await Category.edit({
+      // cancelToken: this.isTokenSource.token,
+      id: category.id,
+      category: category.category,
+      type: category.type,
+      position: category.position,
+      description: category.description,
+      meta_keywords: category.meta_keywords,
+      meta_description: category.meta_description,
+      active: category.active,
+    });
+
+    props.handleSnackbarClick(true, 'Category Updated Successfully.');
+    props.setCategoryList(response.categoryList);
+    // props.handleReset(RESET_VALUES);
+    props.handleEditClose(false);
+  };
+    
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}>
+      <Dialog maxWidth="lg" open={props.open} onClose={props.handleEditClose} TransitionComponent={Transition}>
+      <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              <IconButton edge="start" color="inherit" onClick={props.handleEditClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
@@ -233,7 +158,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, datai
                     name="category"
                     onChange={handleInputChange}
                     fullWidth
-
+                    value={category.category}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true,
@@ -243,19 +168,24 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, datai
                   <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="city_selection">Select Category Type</InputLabel>
                   <Select
-                      name="category"
+                      name="type"
                       onChange={handleInputChange}
+                      value={category.type}
                       inputProps={{
-                        name: 'category',
-                        id: 'category',
+                        name: 'type',
+                        id: 'type',
                       }}
                       fullWidth
-                      label="City"
+                      label="Category Type"
                       required
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     >
-                      <MenuItem value="1">Main Category</MenuItem>
-                      <MenuItem value="2">Category</MenuItem>
-                      <MenuItem value="3">Sub Category</MenuItem>
+                      <MenuItem value="Main Category">Main Category</MenuItem>
+                      <MenuItem value="Category">Category</MenuItem>
+                      <MenuItem value="Sub Category">Sub Category</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={6} sm={6}>
@@ -263,6 +193,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, datai
                   <TextField
                       id="position"
                       name="position"
+                      value={category.position}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -288,6 +219,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, datai
                   <TextField
                       id="meta_keywords"
                       name="meta_keywords"
+                      value={category.meta_keywords}
                       fullWidth
                       margin="normal"
                       required
@@ -301,6 +233,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, datai
                   <TextField
                       id="meta_description"
                       name="meta_description"
+                      value={category.meta_description}
                       margin="normal"
                       required
                       fullWidth
@@ -314,6 +247,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, datai
                   <TextField
                       id="description"
                       name="description"
+                      value={category.description}
                       multiline
                       fullWidth
                       // value={editdata.description}

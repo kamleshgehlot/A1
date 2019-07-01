@@ -22,11 +22,50 @@ Category.prototype.add = function() {
       }
 
       if (!error) {
+        console.log("type..........", that);
+
         connection.changeUser({ database: 'rentronics' });
         connection.query(
           `INSERT INTO category(category,type,position,description,meta_keywords,meta_description,is_active) VALUES ("${that.category}", "${that.type}", "${that.position}", "${that.description}", "${that.meta_keywords}", "${that.meta_description}", "${that.is_active}")`,
           (error, rows, fields) => {
             if (!error) {
+            resolve(rows);
+          } else {
+            console.log('Error...', error);
+            reject(error);
+          }
+        });
+        
+      } else {
+        console.log('Error...', error);
+        reject(error);
+      }
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  }).catch(error => {
+    throw error;
+  });
+};
+
+Category.prototype.update = function() {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+
+      if (!error) {
+        console.log("type..........", that);
+        
+        connection.changeUser({ database: 'rentronics' });
+
+        let values = [that.category, that.type, that.position, that.description, that.meta_keywords, that.meta_description, that.id]
+
+			connection.query('UPDATE category set category = ?, type = ?, position = ?, description = ?, meta_keywords = ?, meta_description = ? WHERE id = ?', values, function (error, rows, fields) {
+          if (!error) {
             resolve(rows);
           } else {
             console.log('Error...', error);

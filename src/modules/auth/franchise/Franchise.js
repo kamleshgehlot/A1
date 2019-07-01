@@ -17,6 +17,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Add from '../franchise/Add';
 
+import UserAPI from '../../../api/User';
 
 
 export default function Franchise(props) {
@@ -27,9 +28,13 @@ export default function Franchise(props) {
   const [isError, setIsError] = useState(false);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
+
+  console.log("....Role Name....", roleName);
+
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
-  const [franchiseList, setFranchiseList] = useStore();
+  const [franchiseList, setFranchiseList] = useState([]);
+  const [franchiseData,setFranchiseData]= useState();
 
   const StyledTableCell = withStyles(theme => ({
     head: {
@@ -79,8 +84,12 @@ export default function Franchise(props) {
       color: theme.palette.text.secondary,
     },
   }));
+<<<<<<< HEAD
   
+=======
+>>>>>>> 5e6931dd6de9e7b4360ccaf6242ca71703c8f4f1
   const classes = useStyles();
+
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -88,6 +97,7 @@ export default function Franchise(props) {
 
       try {
         const result = await UserAPI.list();
+        console.log("user list", result);
         setFranchiseList(result.userList);
       } catch (error) {
         setIsError(true);
@@ -98,6 +108,10 @@ export default function Franchise(props) {
 
     fetchData();
   }, [setFranchiseList]);
+
+  function setFranchiseListFn(franchiseList) {
+    setFranchiseList(franchiseList);
+  }
   // /////////////////////////////////////
   function handleFranchiseClick() {
     setShowFranchise(true);
@@ -128,6 +142,12 @@ export default function Franchise(props) {
   function handleSnackbarClick() {
     setSnackbarOpen(true);
   }
+
+  function handleClickEditOpen(val) {
+    setFranchiseData(franchiseList[val]);
+    setOpen(true);
+  }
+
   return (
     <div>
       {showFranchise 
@@ -147,7 +167,7 @@ export default function Franchise(props) {
                 </Fab>
           </Grid>
           <Grid item xs={12} sm={10}>
-            <Paper style={{ height: 400, width: '100%' }}>
+            <Paper style={{ width: '100%' }}>
               {/* <MuiVirtualizedTable
                     rowCount={franchiseList.length ? franchiseList.length : 0}
                     rowGetter={({ index }) => franchiseList[index]}
@@ -190,9 +210,31 @@ export default function Franchise(props) {
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
+                    <TableBody>
 
-  <TableBody />
-          <TableRow />
+                    { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
+                      console.log("............", data);
+                      return(
+                        <TableRow key={data.id} >
+                            <StyledTableCell>
+                            {data.id}
+                            </StyledTableCell>
+                            <StyledTableCell>{data.franchise_name}</StyledTableCell>
+                            <StyledTableCell>{data.uid}</StyledTableCell>
+                            <StyledTableCell>{data.email}</StyledTableCell>
+                            <StyledTableCell>{data.contact}</StyledTableCell>
+                            <StyledTableCell>Active</StyledTableCell>
+                            <StyledTableCell>
+                              <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(index); }}>
+                              Update
+                            </Button>
+                            </StyledTableCell>
+                        </TableRow>
+                      )
+                      
+                      })
+                    }
+                    </TableBody>
               </Table>
 
 
@@ -222,7 +264,8 @@ export default function Franchise(props) {
               </Grid>
             </Grid> : null
           } */}
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
+      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} franchiseData={franchiseData} setFranchiseListFn={setFranchiseListFn}/> : null}
+
       <StaffAdd
         open={staffOpen}
         handleClose={handleClose}

@@ -6,6 +6,6 @@ const validateToken = require('../utils').validateToken;
 const categoryRouter = express.Router();
 
 categoryRouter.route('/add').post(validateToken, Category.add);
-
+categoryRouter.route('/edit').post(validateToken, Category.edit);
 categoryRouter.route('/list').get(validateToken, Category.all);
 module.exports = categoryRouter;

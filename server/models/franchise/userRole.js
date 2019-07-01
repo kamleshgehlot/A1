@@ -1,5 +1,4 @@
-const connection = require("../lib/connection.js");
-const utils = require("../utils");
+const connection = require("../../lib/connection.js");
 
 var UserRole = function (params) {
   this.id = params.id;

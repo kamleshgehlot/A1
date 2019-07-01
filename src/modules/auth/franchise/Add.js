@@ -63,7 +63,7 @@ const RESET_VALUES = {
   accountant_email: '',
   accountant_contact: '',
 
-  user_id: '',
+  uid: '',
   password: '',
 };
 
@@ -101,12 +101,13 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Add({ open, handleClose, handleSnackbarClick }) {
-  const [franchiseList, setFranchiseList] = useStore();
-  const [cityList, setCityList] = useStore([]);
+export default function Add({ open, handleClose, handleSnackbarClick, franchiseData, setFranchiseListFn }) {
+  // const [franchiseList, setFranchiseList] = useState();
+  const [cityList, setCityList] = useState([]);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [city_code,setCityCode] = React.useState();
+
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -115,7 +116,6 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
     const fetchData = async () => {
       try {
         const LocationResult = await LocationAPI.list();
-        console.log('Fetched Data', LocationResult.cityList);
         setCityList(LocationResult.cityList);
       } catch (error) {
         console.log('Error', error);
@@ -125,30 +125,18 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
     fetchData();
   }, []);
 
-  // const signup = async () => {
-  //   const response = await UserAPI.add({
-  //     // cancelToken: this.isTokenSource.token,
-  //     name: inputs.name,
-  //     location: inputs.location,
-  //     contact: inputs.contact,
-  //     abn: inputs.abn,
-  //     user_name: inputs.user_name,
-  //     user_id: inputs.user_id,
-  //     password: inputs.password,
-  //     name: inputs.name,
-  //     role_id: 2,
-  //   });
-
-  // Shahrukh code start here
+  useEffect(() => {
+    console.log("user effect franchise....", franchiseData);
+    franchiseData !== undefined ? handleReset(franchiseData) : null;
+  }, [franchiseData]);
 
   const signup = async () => {
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
 
       city: inputs.city,
-      suburb: "East",
+      suburb: inputs.suburb,
       franchise_name: inputs.franchise_name,
-      uid: "UID",
 
       city_code: city_code,
       abn: "1234",
@@ -166,13 +154,13 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
       accountant_email: inputs.accountant_email,
       accountant_contact: inputs.accountant_contact,
 
-      user_id: inputs.user_id,
+      uid: inputs.uid,
       password: inputs.password,
       role_id: 2,
     });
 
     handleSnackbarClick(true);
-    setFranchiseList(response.userList);
+    setFranchiseListFn(response.userList);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
@@ -183,7 +171,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
   );
 
   function handleNameBlurChange(e) {
-    let value = inputs.name;
+    let value = inputs.city;
 
     if (value.split(' ').length > 1) {
       value = value.split(' ')[1].toLowerCase();
@@ -193,17 +181,24 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
     //   const output = Array.from(value.toLowerCase());
 
     //   if(output.length > 6) {
-    //     setInput('user_id', '_' + output[0] + output[2] + output[4] + output[6]);
+    //     setInput('uid', '_' + output[0] + output[2] + output[4] + output[6]);
     //   } else {
-    setInput(
-      'user_id',
-      `${inputs.user_name.substring(0, 4)}_${value.substring(0, 4).toLowerCase()}`,
-    );
-    // }
+        setInput('uid', inputs.franchise_name.substring(0, 4).toLowerCase() + '_' + value.substring(0, 4).toLowerCase());
+
+        // setInput('password', GeneratePassword());
+
+      // }
     // }
   }
 
-  console.log('data result...', cityList);
+  function handlePasswordBlurChange() {
+    setInput('password', GeneratePassword());
+  }
+
+  function GeneratePassword() {
+    return Math.random().toString(36).slice(-8);
+  }
+
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -254,17 +249,17 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                       {cityList.length > 0 &&
                         cityList.map(data => {
                           return (
-                            <MenuItem value={data.id}>{data.city}</MenuItem>
+                            <MenuItem value={data.city}>{data.city}</MenuItem>
                             // console.log('from : ', data.city)
                           );
-                          setCityCode(data.city_code);
+                          // setCityCode(data.city_code);
                         })}
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="suburb_selection">Suburb *</InputLabel>
                     <Select
-                      value=""
+                      value={inputs.suburb}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'suburb',
@@ -274,6 +269,10 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                       label="Suburb"
                       required
                     >
+                      <MenuItem value={1}>suburb1</MenuItem>
+                      <MenuItem value={2}>suburb2</MenuItem>
+                      <MenuItem value={3}>suburb3</MenuItem>
+
                       {/* {cityList.length > 0 && cityList.map(data => {
                         return(
                         // <MenuItem value={data.id}>{data.city}</MenuItem>
@@ -288,7 +287,9 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="franchise_name"
                       name="franchise_name"
+                      value={inputs.franchise_name}
                       onChange={handleInputChange}
+                      onBlur={handleNameBlurChange}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
@@ -299,6 +300,18 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="franchaise_name">Unique Id</InputLabel>
                     <TextField
+                      margin="dense"
+                      id="uid"
+                      name="uid"
+                      label="User Id"
+                      type="text"
+                      value={inputs.uid} 
+                      required
+                      onBlur={handlePasswordBlurChange}
+                      fullWidth
+                    />
+                    
+                    {/* <TextField
                       disabled
                       id="uid"
                       name="uid"
@@ -321,6 +334,19 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                       className={classes.textField}
                       margin="normal"
                       onChange={handleInputChange}
+                    /> */}
+                  </Grid>
+                  <Grid item xs={6} sm={6}>
+                    <InputLabel htmlFor="password">Password *</InputLabel>
+                    <TextField
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      label="Password"
+                      value={inputs.password}
+                      type="text"
+                      value={inputs.password} required
+                      fullWidth
                     />
                   </Grid>
                 </Grid>
@@ -348,6 +374,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="company_name"
                       name="company_name"
+                      value={inputs.company_name}
                       fullWidth
                       margin="normal"
                       required
@@ -359,6 +386,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="nbzn"
                       name="nbzn"
+                      value={inputs.nbzn}
                       fullWidth
                       margin="normal"
                       required
@@ -370,6 +398,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="company_location"
                       name="company_location"
+                      value={inputs.company_location}
                       margin="normal"
                       required
                       fullWidth
@@ -382,6 +411,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="director"
                       name="director"
+                      value={inputs.director}
                       fullWidth
                       margin="normal"
                       required
@@ -393,6 +423,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="email"
                       name="email"
+                      value={inputs.email}
                       margin="normal"
                       required
                       type="email"
@@ -405,6 +436,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="contact"
                       name="contact"
+                      value={inputs.contact}
                       margin="normal"
                       required
                       fullWidth
@@ -416,6 +448,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="alt_contact"
                       name="alt_contact"
+                      value={inputs.alt_contact}
                       margin="normal"
                       required
                       fullWidth
@@ -445,6 +478,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="accountant_name"
                       name="accountant_name"
+                      value={inputs.accountant_name}
                       placeholder="Accountant name"
                       fullWidth
                       margin="normal"
@@ -458,6 +492,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="accountant_email"
                       name="accountant_email"
+                      value={inputs.accountant_email}
                       placeholder="Email"
                       fullWidth
                       margin="normal"
@@ -471,6 +506,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="accountant_contact"
                       name="accountant_contact"
+                      value={inputs.accountant_contact}
                       placeholder="Contact"
                       fullWidth
                       margin="normal"
@@ -484,6 +520,7 @@ export default function Add({ open, handleClose, handleSnackbarClick }) {
                     <TextField
                       id="website"
                       name="website"
+                      value={inputs.website}
                       placeholder="Accountant name"
                       fullWidth
                       margin="normal"
