@@ -2,29 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
 import Slide from '@material-ui/core/Slide';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -37,8 +24,6 @@ import UserAPI from '../../../api/User';
 import LocationAPI from '../../../api/Location';
 
 import useSignUpForm from './CustomHooks';
-
-import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
   city: '',
@@ -102,11 +87,10 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function Add({ open, handleClose, handleSnackbarClick, franchiseData, setFranchiseListFn }) {
-  // const [franchiseList, setFranchiseList] = useState();
-  const [cityList, setCityList] = useState([]);
   const classes = useStyles();
+
+  const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
-  const [city_code,setCityCode] = React.useState();
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -126,7 +110,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseD
   }, []);
 
   useEffect(() => {
-    console.log("user effect franchise....", franchiseData);
     franchiseData !== undefined ? handleReset(franchiseData) : null;
   }, [franchiseData]);
 
@@ -138,7 +121,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseD
       suburb: inputs.suburb,
       franchise_name: inputs.franchise_name,
 
-      city_code: city_code,
+      city_code: inputs.city,
       abn: "1234",
 
       company_name: inputs.company_name,
@@ -171,24 +154,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseD
   );
 
   function handleNameBlurChange(e) {
-    let value = inputs.city;
-
-    if (value.split(' ').length > 1) {
-      value = value.split(' ')[1].toLowerCase();
-    }
-
-    // if(value !== '') {
-    //   const output = Array.from(value.toLowerCase());
-
-    //   if(output.length > 6) {
-    //     setInput('uid', '_' + output[0] + output[2] + output[4] + output[6]);
-    //   } else {
-        setInput('uid', inputs.franchise_name.substring(0, 4).toLowerCase() + '_' + value.substring(0, 4).toLowerCase());
-
-        // setInput('password', GeneratePassword());
-
-      // }
-    // }
+    setInput('uid', inputs.franchise_name.substring(0, 4).toLowerCase() + '_' + inputs.city.substring(0, 4).toLowerCase());
   }
 
   function handlePasswordBlurChange() {
@@ -306,6 +272,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseD
                       label="User Id"
                       type="text"
                       value={inputs.uid} 
+                      onChange={handleInputChange}
                       required
                       onBlur={handlePasswordBlurChange}
                       fullWidth

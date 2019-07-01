@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import StaffAdd from '../franchise/StaffAdd';
-import UserList from '../layout/franchise/UserList';
-import { store, useStore } from '../../../store/hookStore';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -19,7 +16,6 @@ import Add from '../franchise/Add';
 
 import UserAPI from '../../../api/User';
 
-
 export default function Franchise(props) {
   const [open, setOpen] = useState(false);
   const [staffOpen, setStaffOpen] = useState(false);
@@ -28,8 +24,6 @@ export default function Franchise(props) {
   const [isError, setIsError] = useState(false);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
-
-  console.log("....Role Name....", roleName);
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');

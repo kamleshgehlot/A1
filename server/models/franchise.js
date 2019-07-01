@@ -64,7 +64,7 @@ Franchise.prototype.register = function (newUser) {
               ]
 
               connection.changeUser({database : 'rentronics'});
-              connection.query('INSERT INTO franchise(uid,password,name,city,city_code,suburb,abn,is_active,created_by,company_id) VALUES ?', [values], function (error, rows, fields) {
+              connection.query('INSERT INTO franchise(uid,password,name,city,city_code,suburb,abn,is_active,created_by,company_id) VALUES ("' + that.uid + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.name + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.is_active + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
 
                 if (!error) {
                   let franchise_id = rows.insertId;
@@ -113,8 +113,7 @@ Franchise.prototype.all = function () {
       }
 
       connection.changeUser({database : 'rentronics'});
-      connection.query('select f.uid, f.name as franchise_name, f.password, f.city, f.city_code, c.name as company_name, c.location as company_location, c.director, c.alt_contact, c.website, c.nbzn, f.suburb, f.abn, c.name, c.nbzn, c.location, c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id  = a.id', function (error, rows, fields) {
-
+      connection.query('select f.uid, f.name as franchise_name, AES_DECRYPT(`password`, \'secret\') AS password, f.city, f.city_code, c.name as company_name, c.location as company_location, c.director, c.alt_contact, c.website, c.nbzn, f.suburb, f.abn, c.name, c.nbzn, c.location, c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
         } else {
