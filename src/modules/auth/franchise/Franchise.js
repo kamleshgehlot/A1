@@ -84,10 +84,6 @@ export default function Franchise(props) {
       color: theme.palette.text.secondary,
     },
   }));
-<<<<<<< HEAD
-  
-=======
->>>>>>> 5e6931dd6de9e7b4360ccaf6242ca71703c8f4f1
   const classes = useStyles();
 
   useEffect(() => {
