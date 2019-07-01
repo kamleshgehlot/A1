@@ -3,7 +3,7 @@ const utils = require("../utils");
 
 var User = function (params) {
   this.franchise_id   = params.franchise_id ;
-  this.name = params.name;
+  this.user_name = params.user_name;
   this.user_id = params.user_id;
   this.password = params.password; //utils.randomString(11);
   this.mobile_no = params.mobile_no;
@@ -55,36 +55,37 @@ User.prototype.register = function () {
   });
 };
 
-// User.prototype.update = function (newUser) {
-//   const that = this;
-//   return new Promise(function (resolve, reject) {
-//     connection.getConnection(function (error, connection) {
-//       if (error) {
-//         throw error;
-//       }
 
-//       const values = [that.companyId, that.organizationId, that.name, that.userId, that.password, that.designation, that.address, that.area, that.mobileNo, that.email, that.role, that.id];
+User.prototype.update = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
 
-//       if (!error) {
-//         connection.query('Update user set companyId = "' + that.companyId + '", organizationId = "' + that.organizationId + '", name = "' + that.name + '", userId = "' + that.userId + '", password = AES_ENCRYPT("' + that.password + '", "secret"), designation = "' + that.designation + '", address = "' + that.address + '", area = "' + that.area + '", mobileNo = "' + that.mobileNo + '", email = "' + that.email + '", role = "' + that.role + '" Where Id = "' + that.id + '"', values, function (error, rows, fields) {
+      const values = [that.franchise_id, that.name, that.user_id, that.password, that.designation, that.mobile_no, that.email, that.role_id, that.id];
 
-//           if (!error) {
-//             resolve({ userName: that.name, userId: that.userId, password: that.password });
-//           } else {
-//             console.log("Error...", error);
-//             reject(error)
-//           }
-//         });
-//       } else {
-//         console.log("Error...", error);
-//         reject(error)
-//       }
+      if (!error) {
+        connection.query('UPDATE user set franchise_id = ?, name = ?, user_id=?, password=?, designation = ?, mobile_no = ?, email = ?, role_id = ?  WHERE id = ?', values, function (error, rows, fields) {
+          if (!error) {
+            // resolve({ userName: that.name, userId: that.userId, password: that.password });
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error)
+          }
+        });
+      } else {
+        console.log("Error...", error);
+        reject(error)
+      }
 
-//       connection.release();
-//       console.log('Process Complete %d', connection.threadId);
-//     });
-//   });
-// };
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
 
 // User.prototype.all = function () {
 //   return new Promise(function (resolve, reject) {

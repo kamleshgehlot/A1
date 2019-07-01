@@ -25,6 +25,7 @@ const register = function (req, res, next) {
 	};
 
 	let franchiseParam = {
+		id: req.body.id,
 		created_by: req.decoded.id,
 		user_id: req.body.uid,
 		password: req.body.password,
@@ -38,10 +39,10 @@ const register = function (req, res, next) {
 	};
 
 	let userParam = {
-		name: req.body.name,
+		user_name: req.body.user_name,
 		user_id: req.body.uid,
 		password: req.body.password,
-		mobile_no: req.body.mobile_no,
+		mobile_no: req.body.contact,
 		role_id: req.body.role_id,
 		is_active: 1,
 		email: req.body.email,
@@ -55,7 +56,11 @@ const register = function (req, res, next) {
 	const newFranchise = new Franchise(franchiseParam);
 	const newUser = new User(userParam);
 
-	
+	// if(req.body.id) {
+	// 	// update
+	// } else {
+	// 	// Insert
+	// }
 		newAccountant.register().then(function(result){
 			newCompany.accountant_id = result.accountant_id;
 			console.log(	newCompany.accountant_id);
@@ -119,6 +124,32 @@ const register = function (req, res, next) {
 // 	}
 };
 
+
+const edit = function(req, res, next) {
+  console.log('...............', req.decoded);
+  console.log('...............', req.body);
+
+  try {
+    const newAccountant = new Accountant(accountantParam);
+    newAccountant.update().then(result => {
+        console.log('controller update accountant', result);
+        new Category({}).all().then(categoryList => {
+          res.send({ categoryList });
+        });
+      })
+      .catch(err => {
+        res.status(500);
+        res.render('error', { error: err });
+      });
+  } catch (err) {
+    console.log('Error: ', err);
+
+    res.status(500);
+    res.send('error', { error: err });
+  }
+};
+
+
 const all = function (req, res, next) {
 	try {
 			new Franchise({}).all().then(function (userList) {
@@ -140,7 +171,7 @@ const all = function (req, res, next) {
 // 		}
 // 	} catch (err) {
 // 		console.log("Error: ", err);
-// 	}
+// 	} 
 // }
 
-module.exports = { all: all, register: register};
+module.exports = { all,register,edit};
