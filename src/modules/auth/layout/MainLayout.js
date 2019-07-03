@@ -155,7 +155,7 @@ export default function ClippedDrawer(props) {
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Manage Categories" />
+                  <ListItemText primary="Manage Products" />
                 </ListItem>
               {/* </Link> */}
             </List>

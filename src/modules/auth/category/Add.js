@@ -34,6 +34,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // API CALL
 import Category from '../../../api/Category';
 
+import AddMainCategory from './AddMainCategory';
+import AddCategory from './AddCategory';
+import AddSubcategory from './AddSubcategory';
+import AddProduct from './AddProduct';
 import useSignUpForm from '../franchise/CustomHooks';
 
 import { store, useStore } from '../../../store/hookStore';
@@ -78,7 +82,18 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  margin:{
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+  input: {
+    display: 'none',
+  },
 }));
+
+
 
 
 const Transition = React.forwardRef((props, ref) => {
@@ -89,6 +104,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
 
+  const [mainOpen, setMainOpen] = useState(false);
+  const [catOpen, setCatOpen] = useState(false);
+  const [subcatOpen, setSubCatOpen] = useState(false);
+  const [productOpen, setProductOpen] = useState(false);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -98,15 +117,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
     const response = await Category.add({
       // cancelToken: this.isTokenSource.token,
 
-      category: inputs.category,
-      type: inputs.type,
+      // category: inputs.category,
+      // type: inputs.type,
       // parentid: inputs.parentid,
-      position: inputs.position,
-      description: inputs.description,
+      // position: inputs.position,
+      // description: inputs.description,
       // image: inputs.image,
-      meta_keywords: inputs.meta_keywords,
-      meta_description: inputs.meta_description,
-      active: inputs.active,
+      // meta_keywords: inputs.meta_keywords,
+      // meta_description: inputs.meta_description,
+      // active: inputs.active,
     });
 
     handleSnackbarClick(true);
@@ -115,6 +134,46 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
     handleClose(false);
   };
 
+
+
+  const handleSelectInputChange = e =>{
+    console.log(e.target.value);
+   handleInputChange(e);
+      if(e.target.value==='0'){
+        setMainOpen(true);
+      }
+    };
+  
+    const handleSelectCatInputChange = e =>{
+      console.log(e.target.value);
+      handleInputChange(e);
+        if(e.target.value==='0'){
+          setCatOpen(true);
+        }
+      };
+  
+    const handleSelectSubcatInputChange = e =>{
+      console.log(e.target.value);
+      handleInputChange(e);
+        if(e.target.value==='0'){
+          setSubCatOpen(true);
+        }
+      };
+      function product(){
+        setProductOpen(true);
+      }
+      function handleProductClose() {
+        setProductOpen(false);
+      }
+    function handleMainClose() {
+      setMainOpen(false);
+    }
+    function handleCatClose() {
+      setCatOpen(false);
+    }
+    function handleSubCatClose() {
+      setSubCatOpen(false);
+    }
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
@@ -130,18 +189,104 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Category Creation Panel
+                Product Creation Panel
               </Typography>
-              <Button color="inherit" onClick={handleSubmit}>
+              {/* <Button color="inherit" onClick={handleSubmit}>
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
 
-          {/* Franchise Details */}
           <ExpansionPanel
+              className={classes.expansionTitle}
+              expanded={expanded === 'panel1'}
+              onChange={handleChange('panel1')}
+>
+              <ExpansionPanelDetails>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel htmlFor="city_selection">Select Main Category</InputLabel>
+                    <Select
+                        name="maincat"
+                        onChange={handleSelectInputChange}
+                        value={inputs.maincat}
+                        inputProps={{
+                          name: 'maincat',
+                          id: 'maincat',
+                        }}
+                        className={classes.margin}
+                        fullWidth
+                        label="Main Category"
+                        required
+                      >
+                        <MenuItem value="1">Appliances</MenuItem>
+                        <MenuItem value="2">Furniture</MenuItem>
+                        <MenuItem value="0">Others</MenuItem>
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel htmlFor="city_selection">Select Category</InputLabel>
+                    <Select
+                        name="cat"
+                        onChange={handleSelectCatInputChange}
+                        value={inputs.cat}
+                        inputProps={{
+                          name: 'cat',
+                          id: 'cat',
+                        }}
+                        className={classes.margin}
+                        fullWidth
+                        label="Category Type"
+                        required
+                      >
+                        <MenuItem value="1">Fridge</MenuItem>
+                        <MenuItem value="2">Sofa</MenuItem>
+                        <MenuItem value="0">Others</MenuItem>
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel htmlFor="city_selection">Select Sub Category</InputLabel>
+                    <Select
+                        name="subcat"
+                        onChange={handleSelectSubcatInputChange}
+                        value={inputs.subcat}
+                        inputProps={{
+                          name: 'subcat',
+                          id: 'subcat',
+                        }}
+                        className={classes.margin}
+                        fullWidth
+                        label="Sub Category"
+                        required
+                      >
+                        <MenuItem value="1">Double door</MenuItem>
+                        <MenuItem value="2">Wooden sofa</MenuItem>
+                        <MenuItem value="0">Others</MenuItem>
+                    </Select>
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={4}>
+                    <Button variant="contained" color="primary" onClick={product} className={classes.button} 
+                      >
+                      Save
+                    </Button>
+                    <Button variant="contained" color="primary" className={classes.button}>
+                      Clear
+                    </Button>
+                  </Grid>
+                
+              </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <AddMainCategory open={mainOpen} handleClose={handleMainClose} />
+             
+            <AddCategory open={catOpen} handleClose={handleCatClose} />           
+            <AddSubcategory open={subcatOpen} handleClose={handleSubCatClose} />       
+            <AddProduct open={productOpen} handleClose={handleProductClose} />   
+         {/* Category creation old code  */}
+          {/* <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
               onChange={handleChange('panel1')}
@@ -176,9 +321,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
                       label="Category Type"
                       required
                     >
-                      <MenuItem value="Main Category">Main Category</MenuItem>
-                      <MenuItem value="Category">Category</MenuItem>
-                      <MenuItem value="Sub Category">Sub Category</MenuItem>
+                      <MenuItem value="1">Main Category</MenuItem>
+                      <MenuItem value="2">Category</MenuItem>
+                      <MenuItem value="3">Sub Category</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={6} sm={6}>
@@ -195,7 +340,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
                       }}
                     />
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}>
+                   <Grid item xs={12} sm={6}>
 
                     <InputLabel htmlFor="company_name">Image </InputLabel>
                     <TextField
@@ -206,7 +351,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
                       fullWidth
                     />
 
-                </Grid> */}
+                </Grid> 
                   <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="metak">Meta Keywords</InputLabel>
                   <TextField
@@ -250,7 +395,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
 
               </Grid>
               </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel> */}
           </div>
       </form>
       </Dialog>
