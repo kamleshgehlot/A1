@@ -212,11 +212,21 @@ export default function Franchise(props) {
                             <StyledTableCell>{data.uid}</StyledTableCell>
                             <StyledTableCell>{data.email}</StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
-                            <StyledTableCell>Active</StyledTableCell>
+                            <StyledTableCell>{
+                                data.state===1 ? 'Open' 
+                                : data.state===2 ? 'Active' 
+                                : data.state===3 ? 'Inactive' 
+                                : data.state===4 ? 'Close' 
+                                : ''
+                            }</StyledTableCell>
                             <StyledTableCell>
-                              <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Edit
-                            </Button>
+                            {data.state===4 ? 
+                              <Button disabled  variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                              </Button>
+                              :<Button  variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                              </Button>
+                              }
+                              
                             </StyledTableCell>
                         </TableRow>
                       )

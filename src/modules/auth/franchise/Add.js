@@ -17,6 +17,8 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Formik, Form, Field, ErrorMessage} from 'formik';
+import * as Yup from 'yup';
 
 // API CALL
 import UserAPI from '../../../api/User';
@@ -57,7 +59,9 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
   },
   title: {
-    marginLeft: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
   },
   root: {
@@ -144,6 +148,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       designation: "2",
       password: inputs.password,
       role_id: "2",
+      state:1,
     });
 
     handleSnackbarClick(true);
@@ -165,6 +170,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   function handleNameBlurChange(e) {
     setInput('uid', inputs.franchise_name.substring(0, 4).toLowerCase() + '_' + inputs.city.substring(0, 4).toLowerCase());
+    
   }
 
   function handlePasswordBlurChange() {
@@ -185,7 +191,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Franchise Creation Panel
+                Create Franchise
               </Typography>
               <Button onClick={handleSubmit} color="inherit" type="submit">
                 save
@@ -219,6 +225,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       inputProps={{
                         name: 'city',
                         id: 'city',
+                        label:'Select City'
                       }}
                       fullWidth
                       label="City"
@@ -227,7 +234,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       {cityList.length > 0 &&
                         cityList.map(data => {
                           return (
-                            <MenuItem value={data.city}>{data.city}</MenuItem>
+                            <MenuItem value={data.city}>{data.city+ ' - ' + data.city_code}</MenuItem>
                             // console.log('from : ', data.city)
                           );
                           // setCityCode(data.city_code);
@@ -242,41 +249,36 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       inputProps={{
                         name: 'suburb',
                         id: 'suburb_selection',
+                        label: 'Suburb'
                       }}
                       fullWidth
                       label="Suburb"
                       required
                     >
-                      <MenuItem value={1}>suburb1</MenuItem>
-                      <MenuItem value={2}>suburb2</MenuItem>
-                      <MenuItem value={3}>suburb3</MenuItem>
-
-                      {/* {cityList.length > 0 && cityList.map(data => {
-                        return(
-                        // <MenuItem value={data.id}>{data.city}</MenuItem>
-                          console.log("from : ",data.city)
-                        )
-                      })
-                    } */}
+                       <MenuItem value={"East"}>East</MenuItem>
+                      <MenuItem value={"West"}>West</MenuItem>
+                      <MenuItem value={"North"}>North</MenuItem>
+                      <MenuItem value={"South"}>South</MenuItem>
+                      <MenuItem value={"Central"}>Central</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={6} sm={6}>
-                    <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel>
+                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="franchise_name"
                       name="franchise_name"
+                      label="Franchise Name"
                       value={inputs.franchise_name}
                       onChange={handleInputChange}
                       onBlur={handleNameBlurChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      required
+                      // placeholder="Franchise Name"
+                      margin="dense"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="franchaise_name">Unique Id</InputLabel>
+                    {/* <InputLabel htmlFor="franchaise_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
                       id="uid"
@@ -285,9 +287,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="text"
                       value={inputs.uid} 
                       onChange={handleInputChange}
+                      // onFocus={handlePasswordBlurChange}
                       required
                       onBlur={handlePasswordBlurChange}
                       fullWidth
+                      // disabled
                     />
                     
                     {/* <TextField
@@ -316,16 +320,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     /> */}
                   </Grid>
                   <Grid item xs={6} sm={6}>
-                    <InputLabel htmlFor="password">Password *</InputLabel>
+                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
                     <TextField
                       margin="dense"
                       id="password"
                       name="password"
                       label="Password"
-                      value={inputs.password}
-                      type="text"
-                      value={inputs.password} required
+                      value={inputs.password} 
+                      required
                       fullWidth
+                      // disabled
                     />
                   </Grid>
                 </Grid>
@@ -344,41 +348,44 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Company Details</Typography>
+             <Typography className={classes.heading}>Company Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="company_name">Company Name *</InputLabel>
+                    {/* <InputLabel htmlFor="company_name">Company Name *</InputLabel> */}
                     <TextField
                       id="company_name"
                       name="company_name"
+                      label="Company Name"
                       value={inputs.company_name}
                       fullWidth
-                      margin="normal"
+                      margin="dense"
                       required
                       onChange={handleInputChange}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="nbzn">Company NBZN *</InputLabel>
+                    {/* <InputLabel htmlFor="nbzn">Company NBZN *</InputLabel> */}
                     <TextField
                       id="nbzn"
                       name="nbzn"
+                      label="Company's NBZN"
                       value={inputs.nbzn}
                       fullWidth
-                      margin="normal"
+                      margin="dense"
                       required
                       onChange={handleInputChange}
                     />
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <InputLabel htmlFor="company_location">Company Location *</InputLabel>
+                    {/* <InputLabel htmlFor="company_location">Company Location *</InputLabel> */}
                     <TextField
                       id="company_location"
                       name="company_location"
+                      label="Comapny Location"
                       value={inputs.company_location}
-                      margin="normal"
+                      margin="dense"
                       required
                       fullWidth
                       onChange={handleInputChange}
@@ -386,24 +393,27 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="director">Director Name *</InputLabel>
+                    {/* <InputLabel htmlFor="director">Director Name *</InputLabel> */}
                     <TextField
                       id="director"
                       name="director"
+                      label="Director Name"
                       value={inputs.director}
                       fullWidth
-                      margin="normal"
+                      type="text"
+                      margin="dense"
                       required
                       onChange={handleInputChange}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Email Address *</InputLabel>
+                    {/* <InputLabel htmlFor="email">Email Address *</InputLabel> */}
                     <TextField
                       id="email"
                       name="email"
+                      label="Email"
                       value={inputs.email}
-                      margin="normal"
+                      margin="dense"
                       required
                       type="email"
                       fullWidth
@@ -411,25 +421,26 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="contact">Contact # *</InputLabel>
+                    {/* <InputLabel htmlFor="contact">Contact # *</InputLabel> */}
                     <TextField
                       id="contact"
                       name="contact"
+                      label="Contact #"
                       value={inputs.contact}
-                      margin="normal"
+                      margin="dense"
                       required
                       fullWidth
                       onChange={handleInputChange}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_contact">Alternative #</InputLabel>
+                    {/* <InputLabel htmlFor="alt_contact">Alternative #</InputLabel> */}
                     <TextField
                       id="alt_contact"
                       name="alt_contact"
+                      label="Alternative Contact"
                       value={inputs.alt_contact}
-                      margin="normal"
-                      required
+                      margin="dense"
                       fullWidth
                       onChange={handleInputChange}
                     />
@@ -453,56 +464,60 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="accountant_name">Name *</InputLabel>
+                    {/* <InputLabel htmlFor="accountant_name">Name *</InputLabel> */}
                     <TextField
                       id="accountant_name"
                       name="accountant_name"
+                      label="Name"
                       value={inputs.accountant_name}
-                      placeholder="Accountant name"
+                      // placeholder="Accountant name"
                       fullWidth
-                      margin="normal"
+                      margin="dense"
                       required
                       onChange={handleInputChange}
                     />
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="accountant_email">Email Address*</InputLabel>
+                    {/* <InputLabel htmlFor="accountant_email">Email Address*</InputLabel> */}
                     <TextField
                       id="accountant_email"
                       name="accountant_email"
+                      label="Email Address"
                       value={inputs.accountant_email}
-                      placeholder="Email"
+                      // placeholder="Email"
                       fullWidth
-                      margin="normal"
+                      margin="dense"
                       required
                       onChange={handleInputChange}
                     />
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="accountant_contact">Contact #*</InputLabel>
+                    {/* <InputLabel htmlFor="accountant_contact">Contact #*</InputLabel> */}
                     <TextField
                       id="accountant_contact"
                       name="accountant_contact"
+                      label="Contact #"
                       value={inputs.accountant_contact}
-                      placeholder="Contact"
+                      // placeholder="Contact"
                       fullWidth
-                      margin="normal"
+                      margin="dense"
                       required
                       onChange={handleInputChange}
                     />
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="website">Website</InputLabel>
+                    {/* <InputLabel htmlFor="website">Website</InputLabel> */}
                     <TextField
                       id="website"
                       name="website"
+                      label="Website"
                       value={inputs.website}
-                      placeholder="Accountant name"
+                      // placeholder="Accountant name"
                       fullWidth
-                      margin="normal"
+                      margin="dense"
                       onChange={handleInputChange}
                     />
                   </Grid>

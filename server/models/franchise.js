@@ -9,7 +9,7 @@ const Franchise = function (params) {
   this.city_code = params.city_code;
   this.suburb = params.suburb;
   this.abn = params.abn;
-  this.is_active = params.is_active;
+  this.state = params.state;
   this.created_by = params.created_by;
   this.company_id = params.company_id;
 
@@ -17,9 +17,11 @@ const Franchise = function (params) {
   this.f_id = params.f_id;
 };
 
-var table = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT, `franchise_id`  INT, name VARCHAR(50) NOT NULL, `user_id` VARCHAR(10) NOT NULL, `password` blob NOT NULL, `designation` VARCHAR(50) NULL, `mobile_no` VARCHAR(50) NULL, `email` VARCHAR(50) NULL, `role_id` INT NOT NULL, `is_active` TINYINT NULL, `created_by` INT NULL, `created_at` timestamp null default current_timestamp, PRIMARY KEY (id));";
-var table1 = "CREATE TABLE IF NOT EXISTS `role` (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(50) NOT NULL, `is_active` TINYINT NULL, `created_by` INT NOT NULL,`created_at` timestamp null default current_timestamp,PRIMARY KEY (id));";
-const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,role_id INT NOT NULL,is_active TINYINT NULL,created_by INT NOT NULL,created_at timestamp null default current_timestamp,PRIMARY KEY (id));";
+console.log("88888   ",this.state);
+
+var table = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT, `franchise_id`  INT, name VARCHAR(50) NOT NULL, `user_id` VARCHAR(10) NOT NULL, `password` blob NOT NULL, `designation` VARCHAR(50) NULL, `mobile_no` VARCHAR(50) NULL, `email` VARCHAR(50) NULL, `role_id` INT NOT NULL, `state` TINYINT NULL, `created_by` INT NULL, `created_at` timestamp null default current_timestamp, PRIMARY KEY (id));";
+var table1 = "CREATE TABLE IF NOT EXISTS `role` (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(50) NOT NULL, `state` TINYINT NULL, `created_by` INT NOT NULL,`created_at` timestamp null default current_timestamp,PRIMARY KEY (id));";
+const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,role_id INT NOT NULL,state TINYINT NULL,created_by INT NOT NULL,created_at timestamp null default current_timestamp,PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
   const that = this;
@@ -54,7 +56,7 @@ Franchise.prototype.register = function (newUser) {
               ]
 
               // connection.changeUser({database : dbName});
-              // connection.query('INSERT INTO `role`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
+              // connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
                 if (error) {
                   console.log("Error...", error);
                   reject(error);
@@ -62,11 +64,11 @@ Franchise.prototype.register = function (newUser) {
 
               if (!error) {
               let values = [
-                [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.is_active, that.created_by, that.company_id]
+                [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.created_by, that.company_id]
               ]
 
               connection.changeUser({database : 'rentronics'});
-              connection.query('INSERT INTO franchise(uid,name,city,city_code,suburb,abn,is_active,created_by,company_id) VALUES ("' + that.uid + '", "' + that.name + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.is_active + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
+              connection.query('INSERT INTO franchise(uid,name,city,city_code,suburb,abn,state,created_by,company_id) VALUES ("' + that.uid + '", "' + that.name + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
 
                 if (!error) {
                   let franchise_id = rows.insertId;
@@ -148,11 +150,11 @@ Franchise.prototype.update = function () {
         throw error;
       }
 
-      let values = [that.uid, that.name, that.city, that.city_code, that.suburb, that.abn, that.f_id];
+      let values = [that.uid, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.f_id];
 
       if (!error) {
         connection.changeUser({ database: 'rentronics' });
-        connection.query('update franchise set uid = "' + that.uid + '", name = "' + that.name + '", city= "' + that.city + '", suburb = "' + that.suburb + '", abn ="' + that.abn + '" WHERE id = "' + that.f_id + '"', function (error, rows, fields) {
+        connection.query('update franchise set uid = "' + that.uid + '", name = "' + that.name + '", city= "' + that.city + '", suburb = "' + that.suburb + '", abn ="' + that.abn + '", state ="' + that.state + '"  WHERE id = "' + that.f_id + '"', function (error, rows, fields) {
           if (!error) {
             connection.query('select company_id from franchise where id="' + that.f_id + '"', function (error, rows, fields){
             if (!error) {
@@ -204,8 +206,9 @@ Franchise.prototype.all = function () {
       }
 
       connection.changeUser({database : 'rentronics'});
-      connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, c.name as company_name, c.location as company_location, c.director, c.contact, c.website, c.nbzn, f.suburb, f.abn,  c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id', function (error, rows, fields) {
+      connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, f.state, c.name as company_name, c.location as company_location, c.director, c.contact, c.website, c.nbzn, f.suburb, f.abn,  c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id', function (error, rows, fields) {
         if (!error) {
+          console.log("rows..",rows);
           resolve(rows);
         } else {
           console.log("Error...", error);

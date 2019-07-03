@@ -34,7 +34,7 @@ const register = function (req, res, next) {
 		city_code: req.body.city_code,
 		suburb: req.body.suburb,
 		abn: req.body.abn,
-		is_active: 1,
+		state: req.body.state,
 		created_by: req.decoded.id,
 		password: req.body.password,
 
@@ -52,7 +52,7 @@ const register = function (req, res, next) {
 		mobile_no: req.body.contact,
 		email: req.body.email,
 		role_id: req.body.role_id,
-		is_active: 1,
+		state: 1,
 		created_by: req.decoded.id,
 
 		//franchaise id receiving by frachaise model
