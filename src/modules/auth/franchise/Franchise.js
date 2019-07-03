@@ -13,40 +13,52 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Add from '../franchise/Add';
+import Edit from './Edit';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
+// API CALL
 import UserAPI from '../../../api/User';
+
+
+const StyledTableCell = withStyles(theme => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles(theme => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.background.default,
+    },
+  },
+}))(TableRow);
+
 
 export default function Franchise(props) {
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [staffOpen, setStaffOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [franchiseData,setFranchiseData]= useState();
+  const [franchiseList, setFranchiseList] = useState({});
+
+
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
-  const [franchiseList, setFranchiseList] = useState([]);
-  const [franchiseData,setFranchiseData]= useState();
+    
 
-  const StyledTableCell = withStyles(theme => ({
-    head: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    body: {
-      fontSize: 14,
-    },
-  }))(TableCell);
-
-  const StyledTableRow = withStyles(theme => ({
-    root: {
-      '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.background.default,
-      },
-    },
-  }))(TableRow);
+  
 
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -87,7 +99,6 @@ export default function Franchise(props) {
 
       try {
         const result = await UserAPI.list();
-        console.log("user list", result);
         setFranchiseList(result.userList);
       } catch (error) {
         setIsError(true);
@@ -97,34 +108,31 @@ export default function Franchise(props) {
     };
 
     fetchData();
-  }, [setFranchiseList]);
+  }, []);
 
-  function setFranchiseListFn(franchiseList) {
-    setFranchiseList(franchiseList);
-  }
-  // /////////////////////////////////////
-  function handleFranchiseClick() {
-    setShowFranchise(true);
-    setShowStaff(false);
-  }
 
-  function handleStaffClick() {
-    setShowFranchise(false);
-    setShowStaff(true);
-  }
 
-  function handleClickStaffOpen() {
-    setStaffOpen(true);
-  }
+
   function handleClickOpen() {
     setOpen(true);
   }
-
   function handleClose() {
     setOpen(false);
     setStaffOpen(false);
   }
-
+  function handleClickEditOpen(val) {
+    setFranchiseData(val),
+    setEditOpen(true);
+    // console.log("value 00 ",val);
+  }
+  function handleEditClose() {
+    setEditOpen(false);
+  }
+  ////////////////////////////////////////
+  function setFranchiseListFn(response) {
+    console.log("response---",response);
+    setFranchiseList(response);
+  }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
@@ -133,15 +141,36 @@ export default function Franchise(props) {
     setSnackbarOpen(true);
   }
 
-  function handleClickEditOpen(val) {
-    setFranchiseData(franchiseList[val]);
-    setOpen(true);
+  
+  function handleFranchiseClick() {
+    setShowFranchise(true);
+    setShowStaff(false);
   }
+
+  // function handleStaffClick() {
+  //   setShowFranchise(false);
+  //   setShowStaff(true);
+  // }
+
+  // function handleClickStaffOpen() {
+  //   setStaffOpen(true);
+  // }
+  
+
+  
+  
+
+  // function handleClickEditOpen(val) {
+  //   setFranchiseData(franchiseList[val]);
+  //   setOpen(true);
+  // }
+
+ 
 
   return (
     <div>
-      {showFranchise 
-            ? <Grid container spacing={3}>
+      {/* {showFranchise ?  */}
+      <Grid container spacing={3}>
 
               <Grid item xs={12} sm={12}>
             <Fab
@@ -154,40 +183,10 @@ export default function Franchise(props) {
             >
               <AddIcon className={classes.extendedIcon} />
               Franchise
-                </Fab>
+            </Fab>
           </Grid>
           <Grid item xs={12} sm={10}>
             <Paper style={{ width: '100%' }}>
-              {/* <MuiVirtualizedTable
-                    rowCount={franchiseList.length ? franchiseList.length : 0}
-                    rowGetter={({ index }) => franchiseList[index]}
-                    columns={[
-                      {
-                        width: 200,
-                        label: 'Name',
-                        dataKey: 'name',
-                      },
-                      {
-                        width: 120,
-                        label: 'Location',
-                        dataKey: 'location',
-                        numeric: true,
-                      },
-                      {
-                        width: 120,
-                        label: 'Contact',
-                        dataKey: 'contact',
-                        numeric: true,
-                      },
-                      {
-                        width: 120,
-                        label: 'abn',
-                        dataKey: 'abn',
-                        numeric: true,
-                      }
-                    ]}
-                  /> */}
-
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -202,21 +201,21 @@ export default function Franchise(props) {
                     </TableHead>
                     <TableBody>
 
+                    {console.log("franchaise length",franchiseList.length)}
                     { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
-                      console.log("............", data);
+                      // console.log("............data id ", data);
+                      // console.log("............Index", data.id);
                       return(
                         <TableRow key={data.id} >
-                            <StyledTableCell>
-                            {data.id}
-                            </StyledTableCell>
+                            <StyledTableCell> {data.id}  </StyledTableCell>
                             <StyledTableCell>{data.franchise_name}</StyledTableCell>
                             <StyledTableCell>{data.uid}</StyledTableCell>
                             <StyledTableCell>{data.email}</StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>Active</StyledTableCell>
                             <StyledTableCell>
-                              <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(index); }}>
-                              Update
+                              <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                              Edit
                             </Button>
                             </StyledTableCell>
                         </TableRow>
@@ -225,42 +224,39 @@ export default function Franchise(props) {
                       })
                     }
                     </TableBody>
-              </Table>
-
-
-                </Paper>
+                  </Table>
+               </Paper>
           </Grid>
         </Grid>
-      : null}
-      {/* {showStaff ?
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                <Fab
-                  variant="extended"
-                  size="small"
-                  color="primary"
-                  aria-label="Add"
-                  className={classes.margin}
-                  onClick={handleClickStaffOpen}
-                >
-                  <AddIcon className={classes.extendedIcon} />
-                  Staff
-                </Fab>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Paper style={{ height: 400, width: '100%' }}>
-                  <UserList />
-                </Paper>
-              </Grid>
-            </Grid> : null
-          } */}
-      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} franchiseData={franchiseData} setFranchiseListFn={setFranchiseListFn}/> : null}
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn}/>
+      
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={franchiseData} setFranchiseList={setFranchiseListFn} /> : null}
+          
 
-      <StaffAdd
+      {/* <StaffAdd
         open={staffOpen}
         handleClose={handleClose}
         handleSnackbarClick={handleSnackbarClick}
-      />
+      /> */}
+
+
+        {/* <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleSnackbarClose}
+          variant="success"
+          message="Category Created successfully!"
+        />
+      </Snackbar> */}
+
+
     </div>
   );
 }

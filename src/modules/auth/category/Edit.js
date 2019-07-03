@@ -136,7 +136,7 @@ export default function Edit(props) {
                 Category Update Panel
               </Typography>
               <Button color="inherit" onClick={handleSubmit}>
-                save
+                Update
               </Button>
             </Toolbar>
           </AppBar>

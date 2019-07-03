@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -21,11 +18,12 @@ import UserList from '../layout/franchise/UserList';
 import Edit from './Edit';
 import Add from './Add';
 import Snackbar from '@material-ui/core/Snackbar';
-
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 // API CALL
 import Category from '../../../../src/api/Category';
+
+
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -88,6 +86,8 @@ export default function CategoryList(props) {
     },
   }));
   const classes = useStyles();
+
+
     useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -110,6 +110,10 @@ export default function CategoryList(props) {
   function handleClickOpen() {
     setOpen(true);
   }
+  function handleClose() {
+    setOpen(false);
+  }
+
 
   function handleClickEditOpen(val) {
     setData(val);
@@ -117,10 +121,7 @@ export default function CategoryList(props) {
     console.log(val);
   }
 
-  function handleClose() {
-    setOpen(false);
-  }
-
+  
   function handleEditClose() {
     setEditOpen(false);
   }
@@ -186,7 +187,7 @@ export default function CategoryList(props) {
                       <StyledTableCell>Active</StyledTableCell>
                       <StyledTableCell>
                         <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(index); }}>
-                        Update
+                        Edit
                       </Button>
                       </StyledTableCell>
                   </TableRow>
@@ -196,62 +197,6 @@ export default function CategoryList(props) {
               }
               </TableBody>
             </Table>
-            {/* <MuiVirtualizedTable
-                    rowCount={franchiseList.length ? franchiseList.length : 0}
-                    rowGetter={({ index }) => franchiseList[index]}
-                    columns={[
-                      {
-                        width: 200,
-                        label: 'Sno',
-                        dataKey: 'sno',
-                      },
-                      {
-                        width: 120,
-                        label: 'Category',
-                        dataKey: 'category',
-                      },
-                      {
-                        width: 120,
-                        label: 'Type',
-                        dataKey: 'type',
-                      },
-                      {
-                        width: 120,
-                        label: 'Parent Id',
-                        dataKey: 'parentid',
-                      },
-                      {
-                        width: 120,
-                        label: 'Description',
-                        dataKey: 'description',
-                      },
-                      {
-                        width: 120,
-                        label: 'Image',
-                        dataKey: 'image',
-                      },
-                      {
-                        width: 120,
-                        label: 'Meta Keywords',
-                        dataKey: 'metakeywords',
-                      },
-                      {
-                        width: 120,
-                        label: 'Meta Description',
-                        dataKey: 'metadescription',
-                      },
-                      {
-                        width: 120,
-                        label: 'Active',
-                        dataKey: 'active',
-                      },
-                      {
-                        width: 120,
-                        label: 'Edit',
-                        dataKey: 'edit'
-                      }
-                    ]}
-                  /> */}
           </Paper>
         </Grid>
       </Grid>

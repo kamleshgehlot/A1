@@ -14,19 +14,34 @@ export default {
   add: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/user/register`;
     try {
-      console.log(data);
-      const { data } = await axios(
-        URL,
-        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
           cancelToken,
           data: payload,
         }),
       );
+      // console.log("user api data : ",data);
       return data;
     } catch (error) {
       throw error;
     }
   },
+
+  // edit: async ({ cancelToken, ...payload }) => {
+  //   const URL = `${c.API_CONSUMER}/api/user/update`;
+  //   try {
+  //     const { data } = await axios(
+  //       URL,
+  //       Object.assign({}, PARAMS({ methodType: 'POST' }), {
+  //         cancelToken,
+  //         data: payload,
+  //       }),
+  //     );
+  //     return data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/user/list`;
     try {

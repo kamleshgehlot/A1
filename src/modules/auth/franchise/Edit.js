@@ -19,6 +19,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // API CALL
+
 import UserAPI from '../../../api/User';
 
 import LocationAPI from '../../../api/Location';
@@ -48,6 +49,7 @@ const RESET_VALUES = {
   accountant_email: '',
   accountant_contact: '',
 
+  user_name:'',
   uid: '',
   password: '',
 };
@@ -86,17 +88,20 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList }) {
+export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList}) {
   const classes = useStyles();
+  
+  
+  console.log("inutes----",inputs);
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
-
-  // console.log("heello", setFranchiseList);
+  const [franchise, setFranchise] = React.useState(inputs);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
+  
+   useEffect(() => {
     const fetchData = async () => {
       try {
         const LocationResult = await LocationAPI.list();
@@ -105,66 +110,65 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
         console.log('Error', error);
       }
     };
-
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   franchiseData !== undefined ? handleReset(franchiseData) : null;
-  // }, [franchiseData]);
+  const handleInputChange = event => {
+    const { name, value } = event.target
 
+    setFranchise({ ...franchise, [name]: value })
+  }
 
-  const addFranchise = async () => {
+  const setInput = (name, value) => {
+    setFranchise({ ...franchise, [name]: value });
+  };
+  
+  const handleSubmit = async () => {
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
       
-      id: '',
-      city: inputs.city,
-      suburb: inputs.suburb,
-      franchise_name: inputs.franchise_name,
+      id: franchise.id,
+      city: franchise.city,
+      suburb: franchise.suburb,
+      franchise_name: franchise.franchise_name,
 
-      city_code: inputs.city,
+      city_code: franchise.city,
       abn: "1234",
 
-      company_name: inputs.company_name,
-      nbzn: inputs.nbzn,
-      company_location: inputs.company_location,
-      director: inputs.director,
-      email: inputs.email,
-      contact: inputs.contact,
-      alt_contact: inputs.alt_contact,
-      website: inputs.website,
+      company_name: franchise.company_name,
+      nbzn: franchise.nbzn,
+      company_location: franchise.company_location,
+      director: franchise.director,
+      email: franchise.email,
+      contact: franchise.contact,
+      alt_contact: franchise.alt_contact,
+      website: franchise.website,
 
-      accountant_name: inputs.accountant_name,
-      accountant_email: inputs.accountant_email,
-      accountant_contact: inputs.accountant_contact,
+      accountant_name: franchise.accountant_name,
+      accountant_email: franchise.accountant_email,
+      accountant_contact: franchise.accountant_contact,
 
-      user_name : inputs.director,
-      uid: inputs.uid,
+      user_name : franchise.director,
+      uid: franchise.uid,
       designation: "2",
-      password: inputs.password,
+      password: franchise.password,
       role_id: "2",
     });
 
-    handleSnackbarClick(true);
-    console.log("sdfkasl;",response.userList);
+    handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.userList);
-    handleReset(RESET_VALUES);
-    handleClose(false);
+    // handleReset(RESET_VALUES);
+    handleEditClose(false);
   };
 
+  // const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+  //   RESET_VALUES,
+  //   handleSubmit,
+  // );
 
   
-  
-
-
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-    RESET_VALUES,
-    addFranchise,
-  );
-
   function handleNameBlurChange(e) {
-    setInput('uid', inputs.franchise_name.substring(0, 4).toLowerCase() + '_' + inputs.city.substring(0, 4).toLowerCase());
+    setInput('uid', franchise.franchise_name.substring(0, 4).toLowerCase() + '_' + franchise.city.substring(0, 4).toLowerCase());
   }
 
   function handlePasswordBlurChange() {
@@ -177,18 +181,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <from onSubmit={handleSubmit}> 
+      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+        <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Franchise Creation Panel
+                Franchise Updation Panel
               </Typography>
-              <Button onClick={handleSubmit} color="inherit" type="submit">
-                save
+              <Button onClick={handleSubmit} color="inherit">
+                Update
               </Button>
             </Toolbar>
           </AppBar>
@@ -207,14 +211,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               >
                 <Typography className={classes.heading}>Franchise Details</Typography>
               </ExpansionPanelSummary>
-
-              
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="city">Select City *</InputLabel>
                     <Select
-                      value={inputs.city}
+                      value={franchise.city}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'city',
@@ -228,16 +230,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                         cityList.map(data => {
                           return (
                             <MenuItem value={data.city}>{data.city}</MenuItem>
-                            // console.log('from : ', data.city)
                           );
-                          // setCityCode(data.city_code);
                         })}
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="suburb_selection">Suburb *</InputLabel>
                     <Select
-                      value={inputs.suburb}
+                      value={franchise.suburb}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'suburb',
@@ -265,7 +265,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="franchise_name"
                       name="franchise_name"
-                      value={inputs.franchise_name}
+                      value={franchise.franchise_name}
                       onChange={handleInputChange}
                       onBlur={handleNameBlurChange}
                       fullWidth
@@ -283,7 +283,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="uid"
                       label="User Id"
                       type="text"
-                      value={inputs.uid} 
+                      value={franchise.uid} 
                       onChange={handleInputChange}
                       required
                       onBlur={handlePasswordBlurChange}
@@ -322,9 +322,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       id="password"
                       name="password"
                       label="Password"
-                      value={inputs.password}
+                      value={franchise.password}
                       type="text"
-                      value={inputs.password} required
+                      value={franchise.password} required
                       fullWidth
                     />
                   </Grid>
@@ -353,7 +353,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="company_name"
                       name="company_name"
-                      value={inputs.company_name}
+                      value={franchise.company_name}
                       fullWidth
                       margin="normal"
                       required
@@ -365,7 +365,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="nbzn"
                       name="nbzn"
-                      value={inputs.nbzn}
+                      value={franchise.nbzn}
                       fullWidth
                       margin="normal"
                       required
@@ -377,7 +377,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="company_location"
                       name="company_location"
-                      value={inputs.company_location}
+                      value={franchise.company_location}
                       margin="normal"
                       required
                       fullWidth
@@ -390,7 +390,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="director"
                       name="director"
-                      value={inputs.director}
+                      value={franchise.director}
                       fullWidth
                       margin="normal"
                       required
@@ -402,7 +402,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="email"
                       name="email"
-                      value={inputs.email}
+                      value={franchise.email}
                       margin="normal"
                       required
                       type="email"
@@ -415,7 +415,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="contact"
                       name="contact"
-                      value={inputs.contact}
+                      value={franchise.contact}
                       margin="normal"
                       required
                       fullWidth
@@ -427,7 +427,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="alt_contact"
                       name="alt_contact"
-                      value={inputs.alt_contact}
+                      value={franchise.alt_contact}
                       margin="normal"
                       required
                       fullWidth
@@ -457,7 +457,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="accountant_name"
                       name="accountant_name"
-                      value={inputs.accountant_name}
+                      value={franchise.accountant_name}
                       placeholder="Accountant name"
                       fullWidth
                       margin="normal"
@@ -471,7 +471,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="accountant_email"
                       name="accountant_email"
-                      value={inputs.accountant_email}
+                      value={franchise.accountant_email}
                       placeholder="Email"
                       fullWidth
                       margin="normal"
@@ -485,7 +485,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="accountant_contact"
                       name="accountant_contact"
-                      value={inputs.accountant_contact}
+                      value={franchise.accountant_contact}
                       placeholder="Contact"
                       fullWidth
                       margin="normal"
@@ -499,7 +499,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <TextField
                       id="website"
                       name="website"
-                      value={inputs.website}
+                      value={franchise.website}
                       placeholder="Accountant name"
                       fullWidth
                       margin="normal"

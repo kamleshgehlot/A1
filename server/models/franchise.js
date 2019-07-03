@@ -1,7 +1,7 @@
 const connection = require("../lib/connection.js");
 
 const Franchise = function (params) {
-  this.id = params.id;
+  // this.id = params.id;
   this.uid = params.uid;
   this.password = params.password;
   this.name = params.name;
@@ -12,6 +12,9 @@ const Franchise = function (params) {
   this.is_active = params.is_active;
   this.created_by = params.created_by;
   this.company_id = params.company_id;
+
+  //frachise id for updation
+  this.f_id = params.f_id;
 };
 
 var table = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT, `franchise_id`  INT, name VARCHAR(50) NOT NULL, `user_id` VARCHAR(10) NOT NULL, `password` blob NOT NULL, `designation` VARCHAR(50) NULL, `mobile_no` VARCHAR(50) NULL, `email` VARCHAR(50) NULL, `role_id` INT NOT NULL, `is_active` TINYINT NULL, `created_by` INT NULL, `created_at` timestamp null default current_timestamp, PRIMARY KEY (id));";
@@ -137,7 +140,7 @@ Franchise.prototype.register = function (newUser) {
 
 
 
-Franchise.prototype.update = function (newUser) {
+Franchise.prototype.update = function () {
   const that = this;
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
@@ -145,18 +148,18 @@ Franchise.prototype.update = function (newUser) {
         throw error;
       }
 
+      let values = [that.uid, that.name, that.city, that.city_code, that.suburb, that.abn, that.f_id];
+
       if (!error) {
-        console.log("type..........", that);
-        
         connection.changeUser({ database: 'rentronics' });
-
-        let values = [
-          [that.uid, that.name, that.city, that.city_code, that.suburb, that.abn, that.is_active, that.created_by, that.company_id, that.id]
-        ]
-
-        connection.query('UPDATE franchise set uid = ?, name = ?, city=?, city_code=?, suburb = ?, abn = ?, is_active = ?, created_by = ?, company_id =?  WHERE id = ?', values, function (error, rows, fields) {
+        connection.query('update franchise set uid = "' + that.uid + '", name = "' + that.name + '", city= "' + that.city + '", suburb = "' + that.suburb + '", abn ="' + that.abn + '" WHERE id = "' + that.f_id + '"', function (error, rows, fields) {
           if (!error) {
-            resolve(rows);
+            connection.query('select company_id from franchise where id="' + that.f_id + '"', function (error, rows, fields){
+            if (!error) {
+              resolve(rows);
+            }
+            })
+            
           } else {
             console.log('Error...', error);
             reject(error);
@@ -201,7 +204,7 @@ Franchise.prototype.all = function () {
       }
 
       connection.changeUser({database : 'rentronics'});
-      connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, c.name as company_name, c.location as company_location, c.director, c.alt_contact, c.website, c.nbzn, f.suburb, f.abn, c.name, c.nbzn, c.location, c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id', function (error, rows, fields) {
+      connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, c.name as company_name, c.location as company_location, c.director, c.contact, c.website, c.nbzn, f.suburb, f.abn,  c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
         } else {
