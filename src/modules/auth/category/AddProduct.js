@@ -33,7 +33,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // API CALL
 import Category from '../../../api/Category';
-
+import Brand from '../../../api/product/Brand';
+import Color from '../../../api/product/Color';
 import useSignUpForm from '../franchise/CustomHooks';
 
 import { store, useStore } from '../../../store/hookStore';
@@ -99,11 +100,37 @@ const Transition = React.forwardRef((props, ref) => {
 export default function AddProduct(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
+  
+  const [isError, setIsError] = useState(false);
+  const [brandList, setBrandList] = useState([]);
+  const [colorList, setColorList] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await Brand.list();
+        setBrandList(result.brandList);
+        console.log("Brand------------",result.brandList);
+        const color_result = await Color.list();
+        setColorList(color_result.colorList);
+        console.log("Color------------",color_result.colorList);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   const categoryadd = async () => {
     const response = await Category.add({
@@ -187,9 +214,12 @@ export default function AddProduct(props) {
                         label="Choose Color"
                         required
                       >
-                        <MenuItem value="1">Black</MenuItem>
-                        <MenuItem value="2">Brown</MenuItem>
-                        <MenuItem value="3">Grey</MenuItem>
+                        { colorList.map((data, index)=>{
+                          return(
+                        <MenuItem value={data.id}>{data.color}</MenuItem>
+                          )
+                      })
+                    }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -207,9 +237,12 @@ export default function AddProduct(props) {
                         label="Choose Brand"
                         required
                       >
-                        <MenuItem value="1">LG</MenuItem>
-                        <MenuItem value="2">Onida</MenuItem>
-                        {/* <MenuItem value="3">Grey</MenuItem> */}
+                        { brandList.map((data, index)=>{
+                          return(
+                        <MenuItem value={data.id}>{data.brand_name}</MenuItem>
+                          )
+                      })
+                    }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -309,7 +342,7 @@ export default function AddProduct(props) {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={12}>
                     <InputLabel htmlFor="specification">Meta Description</InputLabel>
                     <TextField
                         id="meta_description"
