@@ -246,6 +246,7 @@ export default function AddProduct(props) {
                     <TextField
                         id="specification"
                         multiline
+                        fullWidth
                         name="specification"
                         margin="normal"
                         value={inputs.specification}

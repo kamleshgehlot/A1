@@ -78,6 +78,8 @@ const useStyles = makeStyles(theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
+    marginTop: theme.spacing(2),
+    textAlign: "center",
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
@@ -204,13 +206,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
               expanded={expanded === 'panel1'}
               onChange={handleChange('panel1')}
 >
-              <ExpansionPanelSummary
+              {/* <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls=""
                 id="panel1a-header"
-              >
+              > */}
                 <Typography className={classes.heading}>Category Details</Typography>
-              </ExpansionPanelSummary>
+              {/* </ExpansionPanelSummary> */}
 
               
               <ExpansionPanelDetails>

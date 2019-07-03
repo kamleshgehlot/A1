@@ -159,19 +159,22 @@ export default function CategoryList(props) {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>S. No.</StyledTableCell>
-                  <StyledTableCell>Category Name</StyledTableCell>
-                  <StyledTableCell>Category Type</StyledTableCell>
-                  <StyledTableCell>Parent Id</StyledTableCell>
+                  <StyledTableCell>Product Name</StyledTableCell>
+                  <StyledTableCell>Color</StyledTableCell>
+                  <StyledTableCell>Brand</StyledTableCell>
+                  <StyledTableCell>Buying Price</StyledTableCell>
                   <StyledTableCell>Description</StyledTableCell>
-                  <StyledTableCell>Image</StyledTableCell>
+                  <StyledTableCell>Specification</StyledTableCell>
+                  <StyledTableCell>Brought from</StyledTableCell>
+                  <StyledTableCell>Invoice Number</StyledTableCell>
+                  <StyledTableCell>Rental Price</StyledTableCell>
                   <StyledTableCell>Meta Keywords</StyledTableCell>
                   <StyledTableCell>Meta Description</StyledTableCell>
-                  <StyledTableCell>Active</StyledTableCell>
                   <StyledTableCell>Edit</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-               { categoryList.map((data, index)=>{
+               {/* { categoryList.map((data, index)=>{
                  return(
                   <TableRow key={data.id} >
                       <StyledTableCell component="th" scope="row">
@@ -194,7 +197,7 @@ export default function CategoryList(props) {
                  )
                  
                 })
-              }
+              } */}
               </TableBody>
             </Table>
           </Paper>
