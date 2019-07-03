@@ -6,6 +6,9 @@ var Accountant = function (params) {
   this.name= params.name;
   this.email= params.email;
   this.contact= params.contact;
+
+  //update params
+  this.acc_id = params.acc_id;
 };
 
 Accountant.prototype.register = function () {
@@ -57,12 +60,9 @@ Accountant.prototype.update = function() {
       }
 
       if (!error) {
-        console.log("type..........", that);
-        
-        connection.changeUser({ database: 'rentronics' });
+      let values = [that.name, that.email, that.contact, that.acc_id];
 
-        let values = [that.name, that.email, that.contact, that.id]
-
+      connection.changeUser({ database: 'rentronics' });
 			connection.query('UPDATE accountant set name = ?, email = ?, contact = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             resolve(rows);

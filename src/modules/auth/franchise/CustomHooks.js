@@ -7,9 +7,18 @@ const useSignUpForm = (state, callback) => {
     if (event) {
       event.preventDefault();
     }
-
+    
     callback();
   };
+
+
+  const handleEditSubmit = event => {
+    if(event){
+      event.preventDefault();
+    }
+    callback();
+    console.log("callback = ", callback);
+  }
 
   const handleInputChange = e =>
     setInputs({
@@ -31,6 +40,7 @@ const useSignUpForm = (state, callback) => {
   return {
     handleSubmit,
     handleInputChange,
+    handleEditSubmit,
     inputs,
     handleReset,
     setInput,

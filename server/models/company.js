@@ -11,7 +11,10 @@ var Company = function (params) {
       this.alt_contact= params.alt_contact;
       this.website= params.website;
       this.accountant_id = params.accountant_id;
-      console.log('model company',params);
+      
+
+      //company_id for update
+      this.comp_id = params.camp_id;
 };
 
 Company.prototype.register = function () {
@@ -59,17 +62,17 @@ Company.prototype.update = function (newUser) {
       }
 
       if (!error) {
-        console.log("type..........", that);
+
+        let values = [that.name, that.nbzn, that.location, that.director, that.email, that.contact, that.alt_contact, that.website, that.comp_id];
         
         connection.changeUser({ database: 'rentronics' });
-
-        let values = [
-          [that.name, that.nbzn, that.location, that.director, that.email, that.contact, that.alt_contact, that.website, that.accountant_id, that.id]
-        ]
-
-        connection.query('UPDATE company set name = ?, nbzn = ?, location=?, director=?, email = ?, contact = ?, alt_contact = ?, website = ?, accountant_id =?  WHERE id = ?', values, function (error, rows, fields) {
+        connection.query('UPDATE company set name = ?, nbzn = ?, location=?, director=?, email = ?, contact = ?, alt_contact = ?, website = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
-            resolve(rows);
+            connection.query('select accountant_id from company where id="' + that.comp_id + '"',function(error,rows,fields){
+              if (!error) {
+                resolve(rows);
+              }
+            })
           } else {
             console.log('Error...', error);
             reject(error);

@@ -88,7 +88,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick, setCategoryList }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-
+  
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -146,6 +146,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
               expanded={expanded === 'panel1'}
               onChange={handleChange('panel1')}
 >
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls=""
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>Category Details</Typography>
+              </ExpansionPanelSummary>
+
+              
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
