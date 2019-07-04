@@ -22,8 +22,10 @@ app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
+const staffMaster = require('./routes/staffMaster');
 const categoryRouter = require('./routes/category');
-const locationRouter = require('./routes/location');
+const locationRouter = require('./routes/location'); 
+const staffPosition = require('./routes/staffPosition');
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
 
@@ -33,6 +35,8 @@ app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/location', locationRouter);
+app.use('/api/user/staff',staffMaster);
+app.use('/api/user/position',staffPosition);
 
 app.use('/api/franchise/user', franchiseUserRouter);
 

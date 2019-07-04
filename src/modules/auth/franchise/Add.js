@@ -79,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
@@ -170,7 +170,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   function handleNameBlurChange(e) {
     setInput('uid', inputs.franchise_name.substring(0, 4).toLowerCase() + '_' + inputs.city.substring(0, 4).toLowerCase());
-    
   }
 
   function handlePasswordBlurChange() {
@@ -235,9 +234,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                         cityList.map(data => {
                           return (
                             <MenuItem value={data.city}>{data.city+ ' - ' + data.city_code}</MenuItem>
-                            // console.log('from : ', data.city)
                           );
-                          // setCityCode(data.city_code);
                         })}
                     </Select>
                   </Grid>
@@ -286,12 +283,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       label="User Id"
                       type="text"
                       value={inputs.uid} 
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                       // onFocus={handlePasswordBlurChange}
                       required
                       onBlur={handlePasswordBlurChange}
                       fullWidth
-                      // disabled
+                      disabled
                     />
                     
                     {/* <TextField
@@ -326,6 +323,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       id="password"
                       name="password"
                       label="Password"
+                      onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
                       required
                       fullWidth

@@ -79,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
@@ -101,7 +101,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+console.log("fsdl   fhsadkh", franchise);
   
   
    useEffect(() => {
@@ -164,12 +164,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     // handleReset(RESET_VALUES);
     handleEditClose(false);
   };
-  console.log("franchise.state,",franchise.state);
-
-  // const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-  //   RESET_VALUES,
-  //   handleSubmit,
-  // );
 
   
   function handleNameBlurChange(e) {
@@ -230,6 +224,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       label="City"
                       required
+                      disabled
                     >
                       {cityList.length > 0 &&
                         cityList.map(data => {
@@ -297,7 +292,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                       onBlur={handlePasswordBlurChange}
                       fullWidth
-                      // disabled
+                      disabled
                     />
                     
                     {/* <TextField
@@ -325,9 +320,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     /> */}
                   </Grid>
-                  <Grid item xs={6} sm={6}>
+                  {/* <Grid item xs={6} sm={6}> */}
                     {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
-                    <TextField
+                    {/* <TextField
                       margin="dense"
                       id="password"
                       name="password"
@@ -337,7 +332,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       required
                       fullWidth
                     />
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="status">Status *</InputLabel>
                     <Select
@@ -442,6 +437,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       required
                       type="email"
                       fullWidth
+                      disabled
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -466,7 +462,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       label="Alternative Contact"
                       value={franchise.alt_contact}
                       margin="dense"
-                      required
+                      // required
                       fullWidth
                       onChange={handleInputChange}
                     />

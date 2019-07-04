@@ -24,6 +24,7 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 import Franchise from '../franchise/Franchise';
 import Category from '../category/CategoryList';
+import Staff from '../staff/Staff';
 
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
@@ -73,8 +74,11 @@ export default function ClippedDrawer(props) {
   const [isError, setIsError] = useState(false);
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showCategory, setShowCategory] = useState(false);
+  const [showMasterStaff, setShowMasterStaff] = useState(false);
+
 
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
+
 
   const classes = useStyles();
 
@@ -100,12 +104,20 @@ export default function ClippedDrawer(props) {
     setShowFranchise(true);
     setShowStaff(false);
     setShowCategory(false);
+    setShowMasterStaff(false);
   }
 
   function handleCategoryClick() {
     setShowCategory(true);
     setShowFranchise(false);
+    setShowMasterStaff(false);
     setShowStaff(false);
+  }
+
+  function handleMasterStaffClick(){
+    setShowMasterStaff(true);
+    setShowFranchise(false);
+    setShowCategory(false);
   }
 
 
@@ -122,7 +134,7 @@ export default function ClippedDrawer(props) {
             Rentronics
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
-            Welcome {userName}
+            Welcome Master {userName}
           </Typography>
           <Button color="inherit" onClick={handleLogout}>
             Logout
@@ -141,7 +153,7 @@ export default function ClippedDrawer(props) {
           {roleName === 'Super Admin' 
             && (<List>
               {/* <Link to="auth/franchise"> */}
-                <ListItem button key="ManagewStaff" onClick={handleFranchiseClick}>
+                <ListItem button key="ManageFranchise" onClick={handleFranchiseClick}>
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
@@ -158,15 +170,23 @@ export default function ClippedDrawer(props) {
                   <ListItemText primary="Manage Products" />
                 </ListItem>
               {/* </Link> */}
+                <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage Staff" />
+                </ListItem>
             </List>
             )}
-          {roleName === 'Admin' && (
-<ListItem button key='Manage Staff'>
-             <ListItemIcon><PeopleIcon /></ListItemIcon>
-             <ListItemText primary='Manage Staff' />
-           </ListItem>
-          )}
-        </List>
+            </List>
+             <List>
+              {roleName === 'Admin' && (
+              <ListItem button key='Manage Staff'>
+                <ListItemIcon><PeopleIcon /></ListItemIcon>
+                <ListItemText primary='Manage Staff' />
+              </ListItem>
+              )}
+            </List>
         {/* <Divider /> */}
       </Drawer>
       <main className={classes.content}>
@@ -177,6 +197,9 @@ export default function ClippedDrawer(props) {
 
         {
           showCategory ? <Category /> : null
+        }
+        {
+          showMasterStaff ? <Staff /> : null
         }
         {/* {props.children} */}
       </main>

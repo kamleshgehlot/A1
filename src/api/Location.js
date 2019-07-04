@@ -15,7 +15,6 @@ export default {
     const URL = `${c.API_CONSUMER}/api/location/getAll`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
-
       return data;
     } catch (error) {
       throw error;

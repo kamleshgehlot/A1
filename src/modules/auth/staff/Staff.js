@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import StaffAdd from '../franchise/StaffAdd';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -14,12 +13,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Add from './Add';
 import Edit from './Edit';
-import Snackbar from '@material-ui/core/Snackbar';
-import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 // API CALL
-import UserAPI from '../../../api/User';
-
+import StaffAPI from '../../../api/StaffMasterAdmin';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -40,15 +36,15 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Franchise(props) {
+export default function Staff(props) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [staffOpen, setStaffOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [franchiseData,setFranchiseData]= useState();
-  const [franchiseList, setFranchiseList] = useState({});
+  const [staffData,setStaffData]= useState();
+  const [staffList, setStaffList] = useState({});
+  const [position, setPosition] = useState({});
 
 
   const roleName = APP_TOKEN.get().roleName;
@@ -57,9 +53,6 @@ export default function Franchise(props) {
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
     
-
-  
-
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -98,40 +91,46 @@ export default function Franchise(props) {
       setIsLoading(true);
 
       try {
-        const result = await UserAPI.list();
-        setFranchiseList(result.userList);
+        const result = await StaffAPI.list();
+        setStaffList(result.staffList);
       } catch (error) {
         setIsError(true);
       }
-
       setIsLoading(false);
     };
-
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const positions = async () => {
+      try {
+        const positionResult = await StaffAPI.positionList();
+        setPosition(positionResult.staffPosition);
+      } catch (error) {
+        console.log('Error',error);
+      }
+    };
+    positions();
+  }, []);
 
-
+  
 
   function handleClickOpen() {
     setOpen(true);
   }
   function handleClose() {
     setOpen(false);
-    setStaffOpen(false);
   }
-  function handleClickEditOpen(val) {
-    setFranchiseData(val),
+  function handleClickEditOpen(data) {
+    setStaffData(data),
     setEditOpen(true);
-    // console.log("value 00 ",val);
   }
   function handleEditClose() {
     setEditOpen(false);
   }
   ////////////////////////////////////////
   function setFranchiseListFn(response) {
-    console.log("response---",response);
-    setFranchiseList(response);
+    setStaffList(response);
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -182,7 +181,7 @@ export default function Franchise(props) {
               onClick={handleClickOpen}
             >
               <AddIcon className={classes.extendedIcon} />
-              Franchise
+              Staff
             </Fab>
           </Grid>
           <Grid item xs={12} sm={10}>
@@ -191,46 +190,45 @@ export default function Franchise(props) {
                     <TableHead>
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Name</StyledTableCell>
-                        <StyledTableCell>UID</StyledTableCell>
-                        <StyledTableCell>Email</StyledTableCell>
+                        <StyledTableCell>Full Name</StyledTableCell>
+                        <StyledTableCell>Position</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Status</StyledTableCell>
+                        <StyledTableCell>Email</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
 
-                    {console.log("franchaise length",franchiseList.length)}
-                    { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
-                      // console.log("............data id ", data);
-                      // console.log("............Index", data.id);
+                    { (staffList.length > 0 ? staffList : []).map((data, index)=>{
                       return(
                         <TableRow key={data.id} >
-                            <StyledTableCell> {data.id}  </StyledTableCell>
-                            <StyledTableCell>{data.franchise_name}</StyledTableCell>
-                            <StyledTableCell>{data.uid}</StyledTableCell>
-                            <StyledTableCell>{data.email}</StyledTableCell>
-                            <StyledTableCell>{data.contact}</StyledTableCell>
-                            <StyledTableCell>{
-                                data.state===1 ? 'Open' 
-                                : data.state===2 ? 'Active' 
-                                : data.state===3 ? 'Inactive' 
-                                : data.state===4 ? 'Close' 
-                                : ''
-                            }</StyledTableCell>
+                          <StyledTableCell> {data.id}  </StyledTableCell>
+                            <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                             <StyledTableCell>
-                            {data.state===4 ? 
-                              <Button disabled  variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
-                              </Button>
-                              :<Button  variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
-                              </Button>
-                              }
-                              
+                            {/* {
+                              positions.map(ele =>{
+                                return(
+                                <MenuItem value={ele.id}>{ele.position}</MenuItem>
+                                )
+                              })
+                            } */}
+
+                            {/* {
+                              position.map((pos, index) =>{
+                              if(pos.id===data.position)
+                                return pos.position
+                              }) 
+                            } */}
+                            </StyledTableCell>
+                            <StyledTableCell>{data.contact}</StyledTableCell>
+                            <StyledTableCell>{data.email}</StyledTableCell>
+                            <StyledTableCell>
+                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                              Edit
+                            </Button>
                             </StyledTableCell>
                         </TableRow>
                       )
-                      
                       })
                     }
                     </TableBody>
@@ -238,35 +236,10 @@ export default function Franchise(props) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn}/>
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} positions={position}/>
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={franchiseData} setFranchiseList={setFranchiseListFn} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} setFranchiseList={setFranchiseListFn} positions={position} /> : null}
           
-
-      {/* <StaffAdd
-        open={staffOpen}
-        handleClose={handleClose}
-        handleSnackbarClick={handleSnackbarClick}
-      /> */}
-
-
-        {/* <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <MySnackbarContentWrapper
-          onClose={handleSnackbarClose}
-          variant="success"
-          message="Category Created successfully!"
-        />
-      </Snackbar> */}
-
-
     </div>
   );
 }

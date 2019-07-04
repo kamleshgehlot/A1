@@ -4,8 +4,8 @@ const Accountant = require("../models/accountant.js")
 const Company = require("../models/company.js")
 
 const register = function (req, res, next) {
-	console.log("Req. Decoded Data...", req.decoded);
-	console.log("Req. Body Data..", req.body);
+	// console.log("Req. Decoded Data...", req.decoded);
+	// console.log("Req. Body Data..", req.body);
 
 	let accountantParam = {
 		// id : req.body.id,
