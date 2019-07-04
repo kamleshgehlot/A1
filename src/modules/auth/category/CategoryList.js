@@ -96,6 +96,7 @@ export default function CategoryList(props) {
       try {
         const result = await Category.list();
         setCategoryList(result.categoryList);
+        console.log(result.categoryList);
       } catch (error) {
         setIsError(true);
       }

@@ -26,6 +26,9 @@ const staffMaster = require('./routes/staffMaster');
 const categoryRouter = require('./routes/category');
 const locationRouter = require('./routes/location'); 
 const staffPosition = require('./routes/staffPosition');
+const brandRouter = require('./routes/product/brand');
+const colorRouter = require('./routes/product/color');
+const locationRouter = require('./routes/location');
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
 
@@ -34,9 +37,14 @@ const routes = require('./routes');
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/category', categoryRouter);
+
+app.use('/api/brand', brandRouter);
+app.use('/api/color', colorRouter);
+
 app.use('/api/location', locationRouter);
 app.use('/api/user/staff',staffMaster);
 app.use('/api/user/position',staffPosition);
+
 
 app.use('/api/franchise/user', franchiseUserRouter);
 

@@ -105,6 +105,8 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick, setCategoryList }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [mainOpen, setMainOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
@@ -136,7 +138,23 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
     handleClose(false);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
 
+      try {
+        const result = await Category.list();
+        setCategoryList(result.categoryList);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   const handleSelectInputChange = e =>{
     console.log(e.target.value);
