@@ -51,7 +51,7 @@ export default function CategoryList(props) {
   const [isError, setIsError] = useState(false);
   const [editid,setData]= useState();
   
-  const [categoryList, setCategoryList] = useState([]);
+  const [productList, setProductList] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 
@@ -94,9 +94,9 @@ export default function CategoryList(props) {
       setIsLoading(true);
 
       try {
-        const result = await Category.list();
-        setCategoryList(result.categoryList);
-        console.log(result.categoryList);
+        const result = await Category.productlist();
+        setProductList(result.productList);
+        console.log(result.productList);
       } catch (error) {
         setIsError(true);
       }
@@ -175,20 +175,23 @@ export default function CategoryList(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-               {/* { categoryList.map((data, index)=>{
+               { productList.map((data, index)=>{
                  return(
                   <TableRow key={data.id} >
                       <StyledTableCell component="th" scope="row">
                       {data.id}
                       </StyledTableCell>
-                      <StyledTableCell>{data.category}</StyledTableCell>
-                      <StyledTableCell>{data.type}</StyledTableCell>
-                      <StyledTableCell>{data.position}</StyledTableCell>
+                      <StyledTableCell>{data.name}</StyledTableCell>
+                      <StyledTableCell></StyledTableCell>
+                      <StyledTableCell></StyledTableCell>
+                      <StyledTableCell>{data.buying_price}</StyledTableCell>
                       <StyledTableCell>{data.description}</StyledTableCell>
+                      <StyledTableCell>{data.specification}</StyledTableCell>
+                      <StyledTableCell>{data.brought}</StyledTableCell>
+                      <StyledTableCell>{data.invoice}</StyledTableCell>
+                      <StyledTableCell>{data.rental}</StyledTableCell>
                       <StyledTableCell>{data.meta_keywords}</StyledTableCell>
                       <StyledTableCell>{data.meta_description}</StyledTableCell>
-                      <StyledTableCell>{data.description}</StyledTableCell>
-                      <StyledTableCell>Active</StyledTableCell>
                       <StyledTableCell>
                         <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(index); }}>
                         Edit
@@ -198,13 +201,13 @@ export default function CategoryList(props) {
                  )
                  
                 })
-              } */}
+              }
               </TableBody>
             </Table>
           </Paper>
         </Grid>
       </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setCategoryList={setCategoryListFn}/>
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} dataid={editid} datarow={categoryList[editid]} setCategoryList={setCategoryListFn}/> : null}
       
