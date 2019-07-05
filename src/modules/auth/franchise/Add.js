@@ -461,6 +461,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       required
                       fullWidth
                       onChange={handleInputChange}
+                      type="number"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -473,6 +474,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       margin="dense"
                       fullWidth
                       onChange={handleInputChange}
+                      type="number"
                     />
                   </Grid>
                 </Grid>

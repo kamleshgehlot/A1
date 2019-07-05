@@ -151,7 +151,7 @@ export default function CategoryList(props) {
             onClick={handleClickOpen}
           >
             <AddIcon className={classes.extendedIcon} />
-            Add Product
+            Product
           </Fab>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>

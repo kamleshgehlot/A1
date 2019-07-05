@@ -84,7 +84,7 @@ StaffMaster.prototype.getAll = function() {
       }
 
       connection.changeUser({ database: 'rentronics' });
-      connection.query('select * from master_staff', (error, rows, fields) => {
+      connection.query('select ms.id, first_name, last_name, location, contact, email, sp.position, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id', (error, rows, fields) => {
         if (!error) {
           console.log("rows..",rows);
           resolve(rows);

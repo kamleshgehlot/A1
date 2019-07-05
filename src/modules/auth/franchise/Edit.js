@@ -177,7 +177,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
-        <from >
+        <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
@@ -448,6 +448,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       required
                       fullWidth
                       onChange={handleInputChange}
+                      type="number"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -461,6 +462,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // required
                       fullWidth
                       onChange={handleInputChange}
+                      type="number"
                     />
                   </Grid>
                 </Grid>
@@ -543,7 +545,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </div>
-        </from>
+        </form>
       </Dialog>
     </div>
   );
