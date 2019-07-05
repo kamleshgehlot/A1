@@ -100,6 +100,13 @@ const addsubcategory = function(req, res, next) {
 };
 
 
+
+
+
+
+
+
+
 const addproduct = function(req, res, next) {
   console.log('...............', req.decoded);
   console.log('...............', req.body);
@@ -144,6 +151,14 @@ const addproduct = function(req, res, next) {
   }
 };
 
+
+
+
+
+
+
+
+
 const productlist = function(req, res, next) {
   try {
     new Product({}).all().then(productList => {
@@ -154,17 +169,37 @@ const productlist = function(req, res, next) {
   }
 };
 
+
+
+
+
+
 const edit = function(req, res, next) {
   console.log('...............', req.decoded);
   console.log('...............', req.body);
+
+  const categoryParam = {
+    id: req.body.id,
+    name: req.body.name,
+    color_id: req.body.color_id,
+    brand_id: req.body.brand_id,
+    buying_price: req.body.buying_price,
+    description: req.body.description,
+    specification: req.body.specification,
+    brought: req.body.brought,
+    invoice: req.body.invoice,
+    rental: req.body.rental,
+    meta_keywords: req.body.meta_keywords,
+    meta_description: req.body.meta_description,
+  };
 
   try {
     const newCategory = new Category(categoryParam);
 
     newCategory.update().then(result => {
         console.log('controller category', result);
-        new Category({}).all().then(categoryList => {
-          res.send({ categoryList });
+        new Product({}).all().then(productlist => {
+        res.send( productlist );
         });
       })
       .catch(err => {
@@ -178,6 +213,14 @@ const edit = function(req, res, next) {
     res.send('error', { error: err });
   }
 };
+
+
+
+
+
+
+
+
 
 const all = function(req, res, next) {
   try {

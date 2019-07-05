@@ -96,7 +96,7 @@ export default function CategoryList(props) {
       try {
         const result = await Category.productlist();
         setProductList(result.productList);
-        console.log(result.productList);
+        console.log('product------------',result.productList);
       } catch (error) {
         setIsError(true);
       }
@@ -209,9 +209,9 @@ export default function CategoryList(props) {
           </Paper>
         </Grid>
       </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} updateProductList = {setCategoryListFn} />
       {console.log("rec.. ",receivedData)}
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  updateProductList={setCategoryListFn}/> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={receivedData} updateProductList={setCategoryListFn}/> : null}
       
       <Snackbar
         anchorOrigin={{

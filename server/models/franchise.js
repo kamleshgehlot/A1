@@ -205,7 +205,7 @@ Franchise.prototype.all = function () {
       }
 
       connection.changeUser({database : 'rentronics'});
-      connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, f.state, c.name as company_name, c.location as company_location, c.director, c.contact, c.alt_contact, c.website, c.nbzn, f.suburb, f.abn,  c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id', function (error, rows, fields) {
+      connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, f.state, c.name as company_name, c.location as company_location, c.director, c.contact, c.alt_contact, c.website, c.nbzn, f.suburb, f.abn,  c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id order by f.id desc', function (error, rows, fields) {
         if (!error) {
           console.log("rows..",rows);
           resolve(rows);

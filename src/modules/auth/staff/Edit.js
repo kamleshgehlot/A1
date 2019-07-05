@@ -195,17 +195,18 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       label="position"
                       required
                     >
-                      <MenuItem value={1}>{1}</MenuItem>
+                      {/* <MenuItem value={1}>{1}</MenuItem>
                       <MenuItem value={2}>{2}</MenuItem>
-                      <MenuItem value={3}>{3}</MenuItem>
+                      <MenuItem value={3}>{3}</MenuItem> */}
                       
-                      {/* {
+                      {console.log(positions)}
+                      {
                         positions.map(ele =>{
                           return(
                           <MenuItem value={ele.id}>{ele.position}</MenuItem>
                           )
                         })
-                      } */}
+                      }
                     </Select>
                   </Grid>
                 </Grid>

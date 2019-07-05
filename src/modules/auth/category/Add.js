@@ -102,7 +102,7 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Add({ open, handleClose, handleSnackbarClick}) {
+export default function Add({ open, handleClose, handleSnackbarClick, updateProductList}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [isError, setIsError] = useState(false);
@@ -182,10 +182,11 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   }
 
   function productData(newdata){
-    setProductList(newdata);
-    console.log(newdata);
+    console.log("newdat",newdata);
+    updateProductList(newdata);
+    // setProductList(newdata);
+    // updateProductList(newdata);
     handleClose(false);
-
   }
   function newCatData(newdata){
     setNewCatDataList(newdata);
@@ -420,7 +421,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
              
             <AddCategory open={catOpen} handleClose={handleCatClose} updatedCatData={updatedCatData} newCatData={newCatData} />           
             <AddSubcategory open={subcatOpen} handleClose={handleSubCatClose} updatedSubCatData={updatedSubCatData} newSubCatData={newSubCatData}  />       
-            <AddProduct open={productOpen} handleClose={handleProductClose} productCatList={productCatList} productData={productData}/>   
+            <AddProduct open={productOpen} handleClose={handleProductClose} productCatList={productCatList} productData={productData} />   
          {/* Category creation old code  */}
           {/* <ExpansionPanel
               className={classes.expansionTitle}

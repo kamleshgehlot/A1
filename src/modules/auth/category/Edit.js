@@ -33,6 +33,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // API CALL
 import Category from '../../../api/Category';
+import Brand from '../../../api/product/Brand';
+import Color from '../../../api/product/Color';
+
 
 import { store, useStore } from '../../../store/hookStore';
 
@@ -86,58 +89,85 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit(open, handleEditClose, handleSnackbarClick, updateProductList) {
+export default function Edit({open, handleEditClose, handleSnackbarClick, inputs, updateProductList}) {
   // console.log("inputs 46 ",inputs) 
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [product, setProduct] = useState();
+  const [product, setProduct] = useState(inputs);
+  const [brandList, setBrandList] = useState([]);
+  const [colorList, setColorList] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   // console.log("inputs 45 ",inputs)
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  
+  console.log("berandd", brandList);
+  console.log("Color,",colorList);
   const handleInputChange = event => {
     const { name, value } = event.target
 
     setProduct({ ...product, [name]: value })
   }
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await Brand.list();
+        setBrandList(result.brandList);
+        console.log("Brand------------",result.brandList);
+        const color_result = await Color.list();
+        setColorList(color_result.colorList);
+        console.log("Color------------",color_result.colorList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+
+
   const handleSubmit = async () => {
     const response = await Category.edit({
       // cancelToken: this.isTokenSource.token,
-      id: 1,
-      maincat: 4,
-      subcat: 0,
-      name: "Office table",
-      // brand_id: 6
-      // brought: "sdasad"
-      // buying_price: "3333"
-      // category: 15
-      // color_id: 3
-      // description: "testing"
-      
-      // invoice: "sd"
-      
-      // meta_description: "testing"
-      // meta_keywords: "testing"
-      
-      // rental: "testing"
-      // specification: "testing"
-      
+      id: product.id,
+      maincat: product.maincat,
+      category: product.category,
+      subcat: product.subcat,
+      name: product.name,
+      color_id: product.color_id,
+      brand_id: product.brand_id,
+      buying_price: product.buying_price,
+      description: product.description,
+      specification: product.specification,
+      brought: product.brought,
+      invoice: product.invoice,
+      rental: product.rental,
+      meta_keywords: product.meta_keywords,
+      meta_description: product.meta_description,
     });
 
-    handleSnackbarClick(true, 'Category Updated Successfully.');
-    updateProductList(response.categoryList);
+    // handleSnackbarClick(true, 'Category Updated Successfully.');
+    console.log("response", response);
+    updateProductList(response);
     // props.handleReset(RESET_VALUES);
     handleEditClose(false);
   };
-  
+  console.log("pro,,,", product);
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClick={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
       <form >
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -161,9 +191,9 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="product_name">Enter Product Title/Name</InputLabel>
                     <TextField
-                      id="productname"
-                      name="productname"
-                      // value={product.category}
+                      id="name"
+                      name="name"
+                      value={product.name}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -173,65 +203,65 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="choose_color">Choose Color</InputLabel>
+                    <InputLabel htmlFor="productprice">Enter Product Buying Price</InputLabel>
+                    <TextField
+                      id="buyingprice"
+                      name="buying_price"
+                      value={product.buying_price}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="city">Choose Color</InputLabel>
                     <Select
-                        name="color"
-                        onChange={handleInputChange}
-                        // value={product.color}
-                        inputProps={{
-                          name: 'color',
-                          id: 'color',
-                        }}
-                        className={classes.margin}
-                        fullWidth
-                        label="Choose Color"
-                        required
-                      >
-                        {/* { colorList.map((data, index)=>{
+                      value={product.color_id}
+                      onChange={handleInputChange}
+                      inputProps={{
+                        name: 'color_id',
+                        id: 'color_id',
+                      }}
+                      fullWidth
+                      label="Choose Color"
+                      required
+                      className={classes.margin}
+                    >
+                    { colorList.map((data, index)=>{
                           return(
                         <MenuItem value={data.id}>{data.color}</MenuItem>
                           )
                       })
-                    } */}
+                    }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="city_selection">Choose Brand</InputLabel>
+                    <InputLabel htmlFor="brand_id">Choose Brand</InputLabel>
                     <Select
-                        name="brand"
+                        
                         onChange={handleInputChange}
-                        // value={product.brand}
+                        value={product.brand_id}
                         inputProps={{
-                          name: 'brand',
-                          id: 'brand',
+                          name: 'brand_id',
+                          id: 'brand_id',
                         }}
                         className={classes.margin}
                         fullWidth
                         label="Choose Brand"
                         required
                       >
-                        {/* { brandList.map((data, index)=>{
+                        { brandList.map((data, index)=>{
                           return(
                         <MenuItem value={data.id}>{data.brand_name}</MenuItem>
                           )
                       })
-                    } */}
+                    }
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="productprice">Enter Product Buying Price</InputLabel>
-                    <TextField
-                      id="productprice"
-                      name="productprice"
-                      // value={product.productprice}
-                      onChange={handleInputChange}
-                      fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
+                  
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="description">Enter Product Description</InputLabel>
                     <TextField
@@ -240,7 +270,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                         fullWidth
                         margin="normal"
                         multiline
-                        // value={product.description}
+                        value={product.description}
                         onChange={handleInputChange}
                         InputLabelProps={{
                           shrink: true,
@@ -255,16 +285,16 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                         fullWidth
                         name="specification"
                         margin="normal"
-                        // value={product.specification}
+                        value={product.specification}
                         onChange={handleInputChange}
                       />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="product_name">Brought From</InputLabel>
                     <TextField
-                      id="brought_from"
-                      name="brought_from"
-                      // value={product.brought_from}
+                      id="brought"
+                      name="brought"
+                      value={product.brought}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -278,7 +308,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                     <TextField
                       id="invoice"
                       name="invoice"
-                      // value={product.invoice}
+                      value={product.invoice}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -292,7 +322,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                     <TextField
                       id="rental"
                       name="rental"
-                      // value={product.rental}
+                      value={product.rental}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -306,7 +336,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                     <TextField
                       id="meta_keywords"
                       name="meta_keywords"
-                      // value={product.meta_keywords}
+                      value={product.meta_keywords}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -323,19 +353,12 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                         multiline
                         margin="normal"
                         fullWidth
-                        // value={product.meta_description}
+                        value={product.meta_description}
                         onChange={handleInputChange}
                       />
                   </Grid>
                   
                   <Grid item xs={12} sm={12}>
-                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
-                      >
-                      Save
-                    </Button>
-                    <Button variant="contained" color="primary" className={classes.button}>
-                      Clear
-                    </Button>
                   </Grid>
                 </Grid>
                 </Paper>

@@ -210,9 +210,17 @@ return (
                       label="position"
                       required
                     >
-                      <MenuItem value={1}>{1}</MenuItem>
-                      <MenuItem value={2}>{2}</MenuItem>
-                      <MenuItem value={3}>{3}</MenuItem>
+               
+                      <MenuItem value={1}>Territory Manager</MenuItem>
+                      <MenuItem value={2}>Marketing Manager</MenuItem>
+                      <MenuItem value={3}>IT Specialist</MenuItem>
+                      <MenuItem value={4}>BDM (Business Development Manager)</MenuItem>
+                      <MenuItem value={5}>Accountant</MenuItem>
+                      <MenuItem value={6}>Sales Specialist</MenuItem>
+
+
+                      {/* {console.log(positions)} */}
+
                       {/* {
                         positions.map(ele =>{
                           return(

@@ -6,6 +6,22 @@ const Category = function(params) {
   this.maincategory = params.maincategory;
   this.category = params.category;
   this.subcategory = params.subcategory;
+
+
+
+  // params for updation
+  this.iid  =  params.id;
+  this.name  =  params.name;
+  this.color_id  =  params.color_id;
+  this.brand_id  =  params.brand_id;
+  this.buying_price  =  params.buying_price;
+  this.description  =  params.description;
+  this.specification  =  params.specification;
+  this.brought  =  params.brought;
+  this.invoice  =  params.invoice;
+  this.rental  =  params.rental;
+  this.meta_keywords  =  params.meta_keywords;
+  this.meta_description  =  params.meta_description;
 };
 
 Category.prototype.add = function() {
@@ -158,13 +174,13 @@ Category.prototype.update = function() {
       }
 
       if (!error) {
-        console.log("type..........", that);
+        // console.log("type..........", that);
         
         connection.changeUser({ database: 'rentronics' });
 
-        let values = [that.category, that.type, that.position, that.description, that.meta_keywords, that.meta_description, that.id]
+        let values = [that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.iid];
 
-			connection.query('UPDATE category set category = ?, type = ?, position = ?, description = ?, meta_keywords = ?, meta_description = ? WHERE id = ?', values, function (error, rows, fields) {
+			connection.query('UPDATE product set name = ?, color_id = ?, brand_id = ?, buying_price =?, description = ?, specification = ?, brought = ?, invoice = ?, rental = ?, meta_keywords = ?,  meta_description = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {

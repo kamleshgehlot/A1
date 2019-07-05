@@ -83,9 +83,7 @@ export default {
   edit: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/category/edit`;
     try {
-      const { data } = await axios(
-        URL,
-        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'POST' }), {
           cancelToken,
           data: payload,
         }),

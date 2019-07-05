@@ -151,9 +151,9 @@ export default function AddProduct(props) {
     });
 
     // handleSnackbarClick(true);
-    // setCategoryList(response.categoryList);
     // handleReset(RESET_VALUES);
-    props.productData(response);
+    console.log("dflkj=-==",response.categoryList);
+    props.productData(response.categoryList);
     props.handleClose(false);
   };
 
