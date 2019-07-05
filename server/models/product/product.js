@@ -1,4 +1,6 @@
 const connection = require('../../lib/connection.js');
+const dbName = require('../../lib/databaseMySQL.js');
+
 const utils = require('../../utils');
 
 const Product = function(params) {
@@ -29,7 +31,7 @@ Product.prototype.addProduct = function () {
         throw error;
       }
 
-      connection.changeUser({database : 'rentronics'});
+      connection.changeUser({database : dbName["prod"]});
       connection.query(
         `INSERT INTO product(maincat,category,subcat,name,color_id,brand_id,buying_price,description,specification,brought,invoice,rental,meta_keywords,meta_description) VALUES 
         ("${that.maincat}", "${that.category}", "${that.subcat}", "${that.name}", "${that.color_id}", "${that.brand_id}", "${that.buying_price}", "${that.description}", "${that.specification}", "${that.brought}", "${that.invoice}", "${that.rental}", "${that.meta_keywords}", "${that.meta_description}")`,
@@ -55,9 +57,8 @@ Product.prototype.all = function () {
         throw error;
       }
 
-      connection.changeUser({database : 'rentronics'});
+      connection.changeUser({database : dbName["prod"]});
       connection.query('select * from product order by id desc', function (error, rows, fields) {
-
         if (!error) {
           resolve(rows);
         } else {

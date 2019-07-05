@@ -1,4 +1,6 @@
 const connection = require('../lib/connection.js');
+const dbName = require('../lib/databaseMySQL.js');
+
 const utils = require('../utils');
 
 const Category = function(params) {
@@ -30,7 +32,7 @@ Category.prototype.add = function() {
       }
 
       if (!error) {
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
         connection.query(
           `INSERT INTO category(category,type) VALUES ("${that.maincategory}", "1")`,
           (error, mrows, fields) => {
@@ -87,7 +89,7 @@ Category.prototype.addCategory = function() {
       if (!error) {
         console.log("type..........", that);
 
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
 
         connection.query(
           `INSERT INTO category(category,type) VALUES ("${that.category}", "2")`,
@@ -133,7 +135,7 @@ Category.prototype.addSubCategory = function() {
       }
 
       if (!error) {
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
         connection.query(
           `INSERT INTO category(category,type) VALUES ("${that.subcategory}", "3")`,
           (error, rows, fields) => {
@@ -167,7 +169,7 @@ Category.prototype.update = function() {
       }
 
       if (!error) {
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
 
         let values = [that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.id];
 
@@ -202,7 +204,7 @@ Category.prototype.all = function () {
         throw error;
       }
 
-      connection.changeUser({database : 'rentronics'});
+      connection.changeUser({database : dbName["prod"]});
       connection.query('select * from category', function (error, rows, fields) {
 
         if (!error) {

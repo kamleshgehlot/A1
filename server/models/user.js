@@ -1,4 +1,6 @@
 const connection = require("../lib/connection.js");
+const dbName = require('../lib/databaseMySQL.js');
+
 const utils = require("../utils");
 
 var User = function (params) {
@@ -27,7 +29,7 @@ User.prototype.register = function () {
       }
 
       if (!error) {
-        connection.changeUser({database : 'rentronics'});
+        connection.changeUser({database : dbName["prod"]});
         connection.query('INSERT INTO user(franchise_id,name,user_id,password,designation, mobile_no,email,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + that.name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.mobile_no + '", "' + that.email + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
           // if (!error) {
@@ -71,7 +73,7 @@ User.prototype.update = function () {
       const values = [ that.name, that.user_id, that.password, that.designation, that.mobile_no, that.email, that.role_id, that.f_id];
 
       if (!error) {
-        connection.changeUser({database : 'rentronics'});
+        connection.changeUser({database : dbName["prod"]});
         connection.query('UPDATE user set name = ?, user_id=?, password=?, designation = ?, mobile_no = ?, email = ?, role_id = ?  WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             // resolve({ userName: that.name, userId: that.userId, password: that.password });
@@ -101,7 +103,7 @@ User.prototype.update = function () {
 //         throw error;
 //       }
 
-//       connection.changeUser({database : 'rentronics'});
+//       connection.changeUser({database : dbName["prod"]});
 //       connection.query('select u.id, f.name as companyName, u.franchise_id, u.name, u.user_id, u.designation, u.mobile_no, u.email, u.created_at from user u inner join franchise f on u.franchise_id = f.id where u.is_active=?', [isActive], function (error, rows, fields) {
 
 //         if (!error) {
