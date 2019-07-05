@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -13,16 +12,15 @@ import TableRow from '@material-ui/core/TableRow';
 // import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 import Grid from '@material-ui/core/Grid';
 import { APP_TOKEN } from '../../../api/Constants';
-import { store, useStore } from '../../../store/hookStore';
-import UserList from '../layout/franchise/UserList';
 import Edit from './Edit';
 import Add from './Add';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
+import Brand from '../../../api/product/Brand';
+import Color from '../../../api/product/Color';
 // API CALL
 import Category from '../../../../src/api/Category';
-
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -51,6 +49,8 @@ export default function CategoryList(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [receivedData, setReceivedData]= useState([]);
+  const [brandList, setBrandList] = useState([]);
+  const [colorList, setColorList] = useState([]);
   
   const [productList, setProductList] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
@@ -89,8 +89,7 @@ export default function CategoryList(props) {
       textTransform:"initial"
     },
   }));
-  const classes = useStyles();
-
+    const classes = useStyles();
 
     useEffect(() => {
     const fetchData = async () => {
@@ -100,6 +99,10 @@ export default function CategoryList(props) {
       try {
         const result = await Category.productlist();
         setProductList(result.productList);
+        const brand_result = await Brand.list();
+        setBrandList(brand_result.brandList);
+        const color_result = await Color.list();
+        setColorList(color_result.colorList);
       } catch (error) {
         setIsError(true);
       }
@@ -114,10 +117,10 @@ export default function CategoryList(props) {
   function handleClickOpen() {
     setOpen(true);
   }
+
   function handleClose() {
     setOpen(false);
   }
-
 
   function handleClickEditOpen(response) {
     setReceivedData(response);
@@ -184,8 +187,26 @@ export default function CategoryList(props) {
                       {data.id}
                       </StyledTableCell>
                       <StyledTableCell>{data.name}</StyledTableCell>
-                      <StyledTableCell></StyledTableCell>
-                      <StyledTableCell></StyledTableCell>
+                      
+                      { colorList.map((datacolor, index)=>{
+                        return(
+                          data.color_id===datacolor.id ?
+                            <StyledTableCell>{datacolor.color}</StyledTableCell>
+                            :''
+                            )
+                            
+                           })
+                         }
+
+                      { brandList.map((databrand, index)=>{
+                        return(
+                          data.brand_id===databrand.id ?
+                            <StyledTableCell>{databrand.brand_name}</StyledTableCell>
+                            :''
+                            )
+                            
+                           })
+                         }
                       <StyledTableCell>{data.buying_price}</StyledTableCell>
                       <StyledTableCell>{data.description}</StyledTableCell>
                       <StyledTableCell>{data.specification}</StyledTableCell>
