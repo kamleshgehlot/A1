@@ -49,9 +49,9 @@ export default function CategoryList(props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [editid,setData]= useState();
+  const [receivedData, setReceivedData]= useState([]);
   
-  const [categoryList, setCategoryList] = useState([]);
+  const [productList, setProductList] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 
@@ -94,9 +94,9 @@ export default function CategoryList(props) {
       setIsLoading(true);
 
       try {
-        const result = await Category.list();
-        setCategoryList(result.categoryList);
-        console.log(result.categoryList);
+        const result = await Category.productlist();
+        setProductList(result.productList);
+        console.log(result.productList);
       } catch (error) {
         setIsError(true);
       }
@@ -116,19 +116,19 @@ export default function CategoryList(props) {
   }
 
 
-  function handleClickEditOpen(val) {
-    setData(val);
+  function handleClickEditOpen(response) {
+    console.log("response",response);
+    setReceivedData(response);
     setEditOpen(true);
-    console.log(val);
   }
-
+// console.log("received",receivedData);
   
   function handleEditClose() {
     setEditOpen(false);
   }
 
-  function setCategoryListFn(categoryList) {
-    setCategoryList(categoryList);
+  function setCategoryListFn(response) {
+    setProductList(response);
   }
 
   function handleSnackbarClose() {
@@ -151,7 +151,7 @@ export default function CategoryList(props) {
             onClick={handleClickOpen}
           >
             <AddIcon className={classes.extendedIcon} />
-            Add Product
+            Product
           </Fab>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
@@ -175,22 +175,27 @@ export default function CategoryList(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-               {/* { categoryList.map((data, index)=>{
+              
+               { productList.map((data, index)=>{
                  return(
                   <TableRow key={data.id} >
                       <StyledTableCell component="th" scope="row">
                       {data.id}
                       </StyledTableCell>
-                      <StyledTableCell>{data.category}</StyledTableCell>
-                      <StyledTableCell>{data.type}</StyledTableCell>
-                      <StyledTableCell>{data.position}</StyledTableCell>
+                      <StyledTableCell>{data.name}</StyledTableCell>
+                      <StyledTableCell></StyledTableCell>
+                      <StyledTableCell></StyledTableCell>
+                      <StyledTableCell>{data.buying_price}</StyledTableCell>
                       <StyledTableCell>{data.description}</StyledTableCell>
+                      <StyledTableCell>{data.specification}</StyledTableCell>
+                      <StyledTableCell>{data.brought}</StyledTableCell>
+                      <StyledTableCell>{data.invoice}</StyledTableCell>
+                      <StyledTableCell>{data.rental}</StyledTableCell>
                       <StyledTableCell>{data.meta_keywords}</StyledTableCell>
                       <StyledTableCell>{data.meta_description}</StyledTableCell>
-                      <StyledTableCell>{data.description}</StyledTableCell>
-                      <StyledTableCell>Active</StyledTableCell>
                       <StyledTableCell>
-                        <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(index); }}>
+                        {/* {console.log("data ji ",data)} */}
+                        <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                         Edit
                       </Button>
                       </StyledTableCell>
@@ -198,15 +203,15 @@ export default function CategoryList(props) {
                  )
                  
                 })
-              } */}
+              }
               </TableBody>
             </Table>
           </Paper>
         </Grid>
       </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setCategoryList={setCategoryListFn}/>
-      
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} dataid={editid} datarow={categoryList[editid]} setCategoryList={setCategoryListFn}/> : null}
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
+      {console.log("rec.. ",receivedData)}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  updateProductList={setCategoryListFn}/> : null}
       
       <Snackbar
         anchorOrigin={{

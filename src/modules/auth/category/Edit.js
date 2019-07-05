@@ -34,8 +34,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // API CALL
 import Category from '../../../api/Category';
 
-import useSignUpForm from '../franchise/CustomHooks';
-
 import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
@@ -66,6 +64,9 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
+  // root: {
+  //   padding: theme.spacing(3, 2),
+  // },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -85,51 +86,62 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit(props) {
+export default function Edit(open, handleEditClose, handleSnackbarClick, updateProductList) {
+  // console.log("inputs 46 ",inputs) 
+
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [category, setCategory] = useState(props.datarow)
+  const [product, setProduct] = useState();
+  // console.log("inputs 45 ",inputs)
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    setCategory(props.datarow)
-  }, [props]);
-
+  
   const handleInputChange = event => {
     const { name, value } = event.target
 
-    setCategory({ ...category, [name]: value })
+    setProduct({ ...product, [name]: value })
   }
 
   const handleSubmit = async () => {
     const response = await Category.edit({
       // cancelToken: this.isTokenSource.token,
-      id: category.id,
-      category: category.category,
-      type: category.type,
-      position: category.position,
-      description: category.description,
-      meta_keywords: category.meta_keywords,
-      meta_description: category.meta_description,
-      active: category.active,
+      id: 1,
+      maincat: 4,
+      subcat: 0,
+      name: "Office table",
+      // brand_id: 6
+      // brought: "sdasad"
+      // buying_price: "3333"
+      // category: 15
+      // color_id: 3
+      // description: "testing"
+      
+      // invoice: "sd"
+      
+      // meta_description: "testing"
+      // meta_keywords: "testing"
+      
+      // rental: "testing"
+      // specification: "testing"
+      
     });
 
-    props.handleSnackbarClick(true, 'Category Updated Successfully.');
-    props.setCategoryList(response.categoryList);
+    handleSnackbarClick(true, 'Category Updated Successfully.');
+    updateProductList(response.categoryList);
     // props.handleReset(RESET_VALUES);
-    props.handleEditClose(false);
+    handleEditClose(false);
   };
-    
+  
   return (
     <div>
-      <Dialog maxWidth="lg" open={props.open} onClose={props.handleEditClose} TransitionComponent={Transition}>
-      <form onSubmit={handleSubmit}>
+      <Dialog maxWidth="lg" open={open} onClick={handleEditClose} TransitionComponent={Transition}>
+      <form >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={props.handleEditClose} aria-label="Close">
+              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
@@ -144,56 +156,74 @@ export default function Edit(props) {
           <div className={classes.root}>
 
           {/* Franchise Details */}
-          <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
->
-              <ExpansionPanelDetails>
+          <Paper className={classes.paper}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="franchaise_name">Category Name </InputLabel>
+                    <InputLabel htmlFor="product_name">Enter Product Title/Name</InputLabel>
                     <TextField
-                    id="category"
-                    name="category"
-                    onChange={handleInputChange}
-                    fullWidth
-                    value={category.category}
-                    margin="normal"
-                    InputLabelProps={{
+                      id="productname"
+                      name="productname"
+                      // value={product.category}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                      InputLabelProps={{
                         shrink: true,
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city_selection">Select Category Type</InputLabel>
-                  <Select
-                      name="type"
-                      onChange={handleInputChange}
-                      value={category.type}
-                      inputProps={{
-                        name: 'type',
-                        id: 'type',
-                      }}
-                      fullWidth
-                      label="Category Type"
-                      required
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    >
-                      <MenuItem value="Main Category">Main Category</MenuItem>
-                      <MenuItem value="Category">Category</MenuItem>
-                      <MenuItem value="Sub Category">Sub Category</MenuItem>
+                    <InputLabel htmlFor="choose_color">Choose Color</InputLabel>
+                    <Select
+                        name="color"
+                        onChange={handleInputChange}
+                        // value={product.color}
+                        inputProps={{
+                          name: 'color',
+                          id: 'color',
+                        }}
+                        className={classes.margin}
+                        fullWidth
+                        label="Choose Color"
+                        required
+                      >
+                        {/* { colorList.map((data, index)=>{
+                          return(
+                        <MenuItem value={data.id}>{data.color}</MenuItem>
+                          )
+                      })
+                    } */}
                     </Select>
                   </Grid>
-                  <Grid item xs={6} sm={6}>
-                  <InputLabel htmlFor="franchaise_name">Position</InputLabel>
-                  <TextField
-                      id="position"
-                      name="position"
-                      value={category.position}
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="city_selection">Choose Brand</InputLabel>
+                    <Select
+                        name="brand"
+                        onChange={handleInputChange}
+                        // value={product.brand}
+                        inputProps={{
+                          name: 'brand',
+                          id: 'brand',
+                        }}
+                        className={classes.margin}
+                        fullWidth
+                        label="Choose Brand"
+                        required
+                      >
+                        {/* { brandList.map((data, index)=>{
+                          return(
+                        <MenuItem value={data.id}>{data.brand_name}</MenuItem>
+                          )
+                      })
+                    } */}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="productprice">Enter Product Buying Price</InputLabel>
+                    <TextField
+                      id="productprice"
+                      name="productprice"
+                      // value={product.productprice}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -202,63 +232,113 @@ export default function Edit(props) {
                       }}
                     />
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}>
-
-                    <InputLabel htmlFor="company_name">Image </InputLabel>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="description">Enter Product Description</InputLabel>
                     <TextField
-                      id="image"editdata
-                      label="Image"
-                      type="file"
-                      margin="normal"
-                      fullWidth
-                    />
-
-                </Grid> */}
+                        id="description"
+                        name="description"
+                        fullWidth
+                        margin="normal"
+                        multiline
+                        // value={product.description}
+                        onChange={handleInputChange}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                  </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="metak">Meta Keywords</InputLabel>
-                  <TextField
-                      id="meta_keywords"
-                      name="meta_keywords"
-                      value={category.meta_keywords}
-                      fullWidth
-                      margin="normal"
-                      required
-                      onChange={handleInputChange}
-                    />
-
-                </Grid>
+                    <InputLabel htmlFor="specification">Enter Product Specification</InputLabel>
+                    <TextField
+                        id="specification"
+                        multiline
+                        fullWidth
+                        name="specification"
+                        margin="normal"
+                        // value={product.specification}
+                        onChange={handleInputChange}
+                      />
+                  </Grid>
                   <Grid item xs={12} sm={6}>
-
-                  <InputLabel htmlFor="metad">Meta Description</InputLabel>
-                  <TextField
-                      id="meta_description"
-                      name="meta_description"
-                      value={category.meta_description}
+                    <InputLabel htmlFor="product_name">Brought From</InputLabel>
+                    <TextField
+                      id="brought_from"
+                      name="brought_from"
+                      // value={product.brought_from}
+                      onChange={handleInputChange}
+                      fullWidth
                       margin="normal"
-                      required
-                      fullWidth
-                      onChange={handleInputChange}
-                    />
-
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="description">Description</InputLabel>
-                  <TextField
-                      id="description"
-                      name="description"
-                      value={category.description}
-                      multiline
-                      fullWidth
-                      // value={editdata.description}
-                      rows="4"
-                      onChange={handleInputChange}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
-
-              </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="product_name">Invoice Number</InputLabel>
+                    <TextField
+                      id="invoice"
+                      name="invoice"
+                      // value={product.invoice}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="product_name">Rental Price </InputLabel>
+                    <TextField
+                      id="rental"
+                      name="rental"
+                      // value={product.rental}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="product_name">Meta Keywords</InputLabel>
+                    <TextField
+                      id="meta_keywords"
+                      name="meta_keywords"
+                      // value={product.meta_keywords}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <InputLabel htmlFor="specification">Meta Description</InputLabel>
+                    <TextField
+                        id="meta_description"
+                        name="meta_description"
+                        multiline
+                        margin="normal"
+                        fullWidth
+                        // value={product.meta_description}
+                        onChange={handleInputChange}
+                      />
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={12}>
+                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
+                      >
+                      Save
+                    </Button>
+                    <Button variant="contained" color="primary" className={classes.button}>
+                      Clear
+                    </Button>
+                  </Grid>
+                </Grid>
+                </Paper>
           </div>
       </form>
       </Dialog>

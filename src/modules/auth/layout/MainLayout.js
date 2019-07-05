@@ -134,7 +134,7 @@ export default function ClippedDrawer(props) {
             Rentronics
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
-            Welcome Master {userName}
+            Welcome {userName}
           </Typography>
           <Button color="inherit" onClick={handleLogout}>
             Logout
@@ -167,7 +167,7 @@ export default function ClippedDrawer(props) {
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Manage Products" />
+                  <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
               {/* </Link> */}
                 <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>

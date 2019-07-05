@@ -108,28 +108,29 @@ export default function AddMainCategory(props) {
 
   const categoryadd = async () => {
     const response = await Category.add({
-      // cancelToken: this.isTokenSource.token,
-
+      maincategory: inputs.maincategory,
       category: inputs.category,
-      type: inputs.type,
-      // parentid: inputs.parentid,
-      position: inputs.position,
-      description: inputs.description,
-      // image: inputs.image,
-      meta_keywords: inputs.meta_keywords,
-      meta_description: inputs.meta_description,
-      active: inputs.active,
+      subcategory: inputs.subcategory,
     });
 
-    handleSnackbarClick(true);
-    setCategoryList(response.categoryList);
-    handleReset(RESET_VALUES);
-    handleClose(false);
+    // props.handleSnackbarClick(true);
+    // setCategoryList(response.categoryList);
+    // handleReset(RESET_VALUES);
+    props.newData(inputs);
+    props.updatedData(response.categoryList);
+    props.handleClose(false);
   };
   
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+  };
+
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
+    validate
   );
 
   return (
@@ -162,9 +163,9 @@ export default function AddMainCategory(props) {
                   <Grid item xs={12} sm={4}>
                     <InputLabel htmlFor="city_selection">Add Main Category</InputLabel>
                     <TextField
-                      id="position"
-                      name="position"
-                      value={inputs.position}
+                      id="maincategory"
+                      name="maincategory"
+                      value={inputs.maincategory}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -176,9 +177,9 @@ export default function AddMainCategory(props) {
                   <Grid item xs={12} sm={4}>
                     <InputLabel htmlFor="city_selection">Add Category</InputLabel>
                     <TextField
-                      id="position"
-                      name="position"
-                      value={inputs.position}
+                      id="category"
+                      name="category"
+                      value={inputs.category}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -190,9 +191,9 @@ export default function AddMainCategory(props) {
                   <Grid item xs={12} sm={4}>
                     <InputLabel htmlFor="city_selection">Add Sub Category</InputLabel>
                     <TextField
-                      id="position"
-                      name="position"
-                      value={inputs.position}
+                      id="subcategory"
+                      name="subcategory"
+                      value={inputs.subcategory}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -203,7 +204,7 @@ export default function AddMainCategory(props) {
                   </Grid>
                   
                   <Grid item xs={12} sm={4}>
-                    <Button variant="contained" color="primary" className={classes.button} 
+                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
                       >
                       Save
                     </Button>

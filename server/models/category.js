@@ -3,14 +3,9 @@ const utils = require('../utils');
 
 const Category = function(params) {
   this.id = params.id;
+  this.maincategory = params.maincategory;
   this.category = params.category;
-  this.type = params.type;
-  // this.parentid = params.parentid;
-  this.position = params.position;
-  this.description = params.description;
-  this.meta_keywords = params.meta_keywords;
-  this.meta_description = params.meta_description;
-  this.is_active = params.is_active;
+  this.subcategory = params.subcategory;
 };
 
 Category.prototype.add = function() {
@@ -26,7 +21,112 @@ Category.prototype.add = function() {
 
         connection.changeUser({ database: 'rentronics' });
         connection.query(
-          `INSERT INTO category(category,type,position,description,meta_keywords,meta_description,is_active) VALUES ("${that.category}", "${that.type}", "${that.position}", "${that.description}", "${that.meta_keywords}", "${that.meta_description}", "${that.is_active}")`,
+          `INSERT INTO category(category,type) VALUES ("${that.maincategory}", "1")`,
+          (error, mrows, fields) => {
+            if (!error) {
+            resolve(mrows);
+          } else {
+            console.log('Error...', error);
+            reject(error);
+          }
+        });
+        connection.query(
+          `INSERT INTO category(category,type) VALUES ("${that.category}", "2")`,
+          (error, rows, fields) => {
+            if (!error) {
+            resolve(rows);
+          } else {
+            console.log('Error...', error);
+            reject(error);
+          }
+        });
+        connection.query(
+          `INSERT INTO category(category,type) VALUES ("${that.subcategory}", "3")`,
+          (error, rows, fields) => {
+            if (!error) {
+            resolve(rows);
+          } else {
+            console.log('Error...', error);
+            reject(error);
+          }
+        });
+        
+      } else {
+        console.log('Error...', error);
+        reject(error);
+      }
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  }).catch(error => {
+    throw error;
+  });
+};
+
+
+Category.prototype.addcategory = function() {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+
+      if (!error) {
+        console.log("type..........", that);
+
+        connection.changeUser({ database: 'rentronics' });
+
+        connection.query(
+          `INSERT INTO category(category,type) VALUES ("${that.category}", "2")`,
+          (error, rows, fields) => {
+            if (!error) {
+            resolve(rows);
+          } else {
+            console.log('Error...', error);
+            reject(error);
+          }
+        });
+        connection.query(
+          `INSERT INTO category(category,type) VALUES ("${that.subcategory}", "3")`,
+          (error, rows, fields) => {
+            if (!error) {
+            resolve(rows);
+          } else {
+            console.log('Error...', error);
+            reject(error);
+          }
+        });
+        
+      } else {
+        console.log('Error...', error);
+        reject(error);
+      }
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  }).catch(error => {
+    throw error;
+  });
+};
+
+
+Category.prototype.addsubcategory = function() {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+
+      if (!error) {
+        console.log("type..........", that);
+
+        connection.changeUser({ database: 'rentronics' });
+        connection.query(
+          `INSERT INTO category(category,type) VALUES ("${that.subcategory}", "3")`,
           (error, rows, fields) => {
             if (!error) {
             resolve(rows);

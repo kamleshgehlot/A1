@@ -89,9 +89,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
-
-
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -104,31 +101,30 @@ export default function AddCategory(props) {
     setExpanded(isExpanded ? panel : false);
   };
 
-
   const categoryadd = async () => {
-    const response = await Category.add({
-      // cancelToken: this.isTokenSource.token,
-
+    const response = await Category.addcategory({
       category: inputs.category,
-      type: inputs.type,
-      // parentid: inputs.parentid,
-      position: inputs.position,
-      description: inputs.description,
-      // image: inputs.image,
-      meta_keywords: inputs.meta_keywords,
-      meta_description: inputs.meta_description,
-      active: inputs.active,
+      subcategory: inputs.subcategory,
     });
 
-    handleSnackbarClick(true);
-    setCategoryList(response.categoryList);
-    handleReset(RESET_VALUES);
-    handleClose(false);
+    props.newCatData(inputs);
+    props.updatedCatData(response.categoryList);
+    // handleSnackbarClick(true);
+    // setCategoryList(response.categoryList);
+    // handleReset(RESET_VALUES);
+    props.handleClose(false);
   };
   
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+  };
+
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
+    validate
   );
 
   return (
@@ -162,9 +158,9 @@ export default function AddCategory(props) {
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="city_selection">Add Category</InputLabel>
                     <TextField
-                      id="position"
-                      name="position"
-                      value={inputs.position}
+                      id="category"
+                      name="category"
+                      value={inputs.category}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -176,9 +172,9 @@ export default function AddCategory(props) {
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="city_selection">Add Sub Category</InputLabel>
                     <TextField
-                      id="position"
-                      name="position"
-                      value={inputs.position}
+                      id="subcategory"
+                      name="subcategory"
+                      value={inputs.subcategory}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -189,7 +185,7 @@ export default function AddCategory(props) {
                   </Grid>
                   
                   <Grid item xs={12} sm={4}>
-                    <Button variant="contained" color="primary" className={classes.button} 
+                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
                       >
                       Save
                     </Button>

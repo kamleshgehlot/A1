@@ -145,27 +145,6 @@ export default function Staff(props) {
     setShowFranchise(true);
     setShowStaff(false);
   }
-
-  // function handleStaffClick() {
-  //   setShowFranchise(false);
-  //   setShowStaff(true);
-  // }
-
-  // function handleClickStaffOpen() {
-  //   setStaffOpen(true);
-  // }
-  
-
-  
-  
-
-  // function handleClickEditOpen(val) {
-  //   setFranchiseData(franchiseList[val]);
-  //   setOpen(true);
-  // }
-
- 
-
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -205,6 +184,8 @@ export default function Staff(props) {
                           <StyledTableCell> {data.id}  </StyledTableCell>
                             <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                             <StyledTableCell>
+
+                            {data.position}
                             {/* {
                               positions.map(ele =>{
                                 return(

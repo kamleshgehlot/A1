@@ -109,7 +109,7 @@ export default function AddProduct(props) {
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+// console.log('hellooooo---------',props.productCatList.category);
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -133,29 +133,40 @@ export default function AddProduct(props) {
   }, []);
 
   const categoryadd = async () => {
-    const response = await Category.add({
-      // cancelToken: this.isTokenSource.token,
-
-      // category: inputs.category,
-      // type: inputs.type,
-      // // parentid: inputs.parentid,
-      // position: inputs.position,
-      // description: inputs.description,
-      // // image: inputs.image,
-      // meta_keywords: inputs.meta_keywords,
-      // meta_description: inputs.meta_description,
-      // active: inputs.active,
+    const response = await Category.addproduct({
+      maincat:props.productCatList.maincategory,
+      category:props.productCatList.category,
+      subcat:props.productCatList.subcategory,
+      name:inputs.productname,
+      color_id:inputs.color,
+      brand_id:inputs.brand,
+      buying_price:inputs.productprice,
+      description:inputs.description,
+      specification:inputs.specification,
+      brought:inputs.brought_from,
+      invoice:inputs.invoice,
+      rental:inputs.rental,
+      meta_keywords:inputs.meta_keywords,
+      meta_description:inputs.meta_description
     });
 
-    handleSnackbarClick(true);
-    setCategoryList(response.categoryList);
-    handleReset(RESET_VALUES);
-    handleClose(false);
+    // handleSnackbarClick(true);
+    // setCategoryList(response.categoryList);
+    // handleReset(RESET_VALUES);
+    props.productData(response);
+    props.handleClose(false);
+  };
+
+  function validate(values) {
+    let errors = {};
+
+    return errors;
   };
   
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
+    validate
   );
 
   return (
@@ -356,7 +367,7 @@ export default function AddProduct(props) {
                   </Grid>
                   
                   <Grid item xs={12} sm={12}>
-                    <Button variant="contained" color="primary" className={classes.button} 
+                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
                       >
                       Save
                     </Button>

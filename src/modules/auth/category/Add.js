@@ -102,12 +102,20 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Add({ open, handleClose, handleSnackbarClick, setCategoryList }) {
+export default function Add({ open, handleClose, handleSnackbarClick}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [newDataList, setNewDataList] = useState([]);
+  const [newCatDataList, setNewCatDataList] = useState([]);
+  const [newSubCatDataList, setNewSubCatDataList] = useState([]);
+  
+  const [productCatList, setProductCatList] = useState([]);
+
+  const [productList, setProductList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
   const [mainOpen, setMainOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [subcatOpen, setSubCatOpen] = useState(false);
@@ -156,47 +164,129 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
     fetchData();
   }, []);
 
+  function newData(newdata){
+    setNewDataList(newdata);
+    console.log(newdata);
+
+  }
+  function updatedData(response){
+    
+    setCategoryList(response);
+
+    (response).map(ele =>{
+      return(
+      // ele.category == newDataList.maincategory ? console.log( ele.id ): ''
+      console.log(newDataList)
+      )
+    });
+  }
+
+  function productData(newdata){
+    setProductList(newdata);
+    console.log(newdata);
+    handleClose(false);
+
+  }
+  function newCatData(newdata){
+    setNewCatDataList(newdata);
+    console.log(newdata);
+
+  }
+  function updatedCatData(response){
+    
+    setCategoryList(response);
+
+    (response).map(ele =>{
+      return(
+      // ele.category == newDataList.maincategory ? console.log( ele.id ): ''
+      console.log(newCatDataList)
+      )
+    });
+  }
+
+  
+  function newSubCatData(newdata){
+    setNewSubCatDataList(newdata);
+    console.log(newdata);
+
+  }
+  function updatedSubCatData(response){
+    
+    setCategoryList(response);
+
+    (response).map(ele =>{
+      return(
+      // ele.category == newDataList.maincategory ? console.log( ele.id ): ''
+      console.log(newSubCatDataList)
+      )
+    });
+  }
   const handleSelectInputChange = e =>{
     console.log(e.target.value);
-   handleInputChange(e);
-      if(e.target.value==='0'){
-        setMainOpen(true);
-      }
-    };
+    console.log('name',e.target.name);
+    handleInputChange(e);
+    if(e.target.value==='0'){
+      setMainOpen(true);
+    }
+    else{
+      setProductCatList({
+        ...productCatList, 'maincategory': e.target.value
+      });
+    }
+  };
   
-    const handleSelectCatInputChange = e =>{
-      console.log(e.target.value);
-      handleInputChange(e);
-        if(e.target.value==='0'){
-          setCatOpen(true);
-        }
-      };
+  const handleSelectCatInputChange = e =>{
+    console.log(e.target.value);
+    handleInputChange(e);
+    if(e.target.value==='0'){
+      setCatOpen(true);
+    }
+    else{
+      setProductCatList({
+        ...productCatList, 'category': e.target.value
+      });
+    }
+  };
   
-    const handleSelectSubcatInputChange = e =>{
-      console.log(e.target.value);
-      handleInputChange(e);
-        if(e.target.value==='0'){
-          setSubCatOpen(true);
-        }
-      };
-      function product(){
-        setProductOpen(true);
-      }
-      function handleProductClose() {
-        setProductOpen(false);
-      }
-    function handleMainClose() {
-      setMainOpen(false);
+  const handleSelectSubcatInputChange = e =>{
+    console.log(e.target.value);
+    handleInputChange(e);
+    if(e.target.value==='0'){
+      setSubCatOpen(true);
     }
-    function handleCatClose() {
-      setCatOpen(false);
+    else{
+      setProductCatList({
+        ...productCatList, 'subcategory': e.target.value
+      });
     }
-    function handleSubCatClose() {
-      setSubCatOpen(false);
-    }
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+  };
+
+  function openProductDialog(){
+    setProductOpen(true);
+  }
+  function handleProductClose() {
+    setProductOpen(false);
+  }
+  function handleMainClose() {
+    setMainOpen(false);
+  }
+  function handleCatClose() {
+    setCatOpen(false);
+  }
+  function handleSubCatClose() {
+    setSubCatOpen(false);
+  }
+
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+  };
+
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
+    validate
   );
 
   return (
@@ -245,14 +335,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
                           name: 'maincat',
                           id: 'maincat',
                         }}
+                        defaultValue='Shah'
                         className={classes.margin}
                         fullWidth
                         label="Main Category"
                         required
                       >
-                        <MenuItem value="1">Appliances</MenuItem>
-                        <MenuItem value="2">Furniture</MenuItem>
-                        <MenuItem value="0">Others</MenuItem>
+                        { categoryList.map((data, index)=>{
+                          
+                              return(data.type===1 ? 
+                            <MenuItem value={data.id}>{data.category}</MenuItem>
+                            :''
+                              )
+                          })
+                        }
+                        <MenuItem value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -270,9 +367,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
                         label="Category Type"
                         required
                       >
-                        <MenuItem value="1">Fridge</MenuItem>
-                        <MenuItem value="2">Sofa</MenuItem>
-                        <MenuItem value="0">Others</MenuItem>
+                       { categoryList.map((data, index)=>{
+                          
+                          return(data.type===2 ? 
+                        <MenuItem value={data.id}>{data.category}</MenuItem>
+                        :''
+                          )
+                      })
+                    }
+                    <MenuItem value="0">Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -290,30 +393,34 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCategor
                         label="Sub Category"
                         required
                       >
-                        <MenuItem value="1">Double door</MenuItem>
-                        <MenuItem value="2">Wooden sofa</MenuItem>
-                        <MenuItem value="0">Others</MenuItem>
+                      { categoryList.map((data, index)=>{
+                         
+                         return(data.type===3 ? 
+                       <MenuItem value={data.id}>{data.category}</MenuItem>
+                       :''
+                         )
+                     })
+                   }
+                   <MenuItem value="0">Others</MenuItem>
                     </Select>
                   </Grid>
                   
                   <Grid item xs={12} sm={4}>
-                    <Button variant="contained" color="primary" onClick={product} className={classes.button} 
+                    <Button variant="contained" color="primary" onClick={openProductDialog} className={classes.button} 
                       >
-                      Save
+                     Add Product
                     </Button>
-                    <Button variant="contained" color="primary" className={classes.button}>
-                      Clear
-                    </Button>
+                    
                   </Grid>
                 
               </Grid>
               </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <AddMainCategory open={mainOpen} handleClose={handleMainClose} />
+            </ExpansionPanel> 
+            <AddMainCategory open={mainOpen} handleClose={handleMainClose}  updatedData={updatedData} newData={newData}/>
              
-            <AddCategory open={catOpen} handleClose={handleCatClose} />           
-            <AddSubcategory open={subcatOpen} handleClose={handleSubCatClose} />       
-            <AddProduct open={productOpen} handleClose={handleProductClose} />   
+            <AddCategory open={catOpen} handleClose={handleCatClose} updatedCatData={updatedCatData} newCatData={newCatData} />           
+            <AddSubcategory open={subcatOpen} handleClose={handleSubCatClose} updatedSubCatData={updatedSubCatData} newSubCatData={newSubCatData}  />       
+            <AddProduct open={productOpen} handleClose={handleProductClose} productCatList={productCatList} productData={productData}/>   
          {/* Category creation old code  */}
           {/* <ExpansionPanel
               className={classes.expansionTitle}
