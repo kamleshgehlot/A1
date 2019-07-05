@@ -25,7 +25,7 @@ import Paper from '@material-ui/core/Paper';
 // API CALL
 import StaffMaster from '../../../api/StaffMasterAdmin';
 
-import useSignUpForm from './CustomHooks';
+import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
   id: '',
@@ -94,17 +94,22 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     handleClose(false);
   };
 
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+  };
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     addStaffMaster,
+    validate
   );
-console.log("inputs;;;", inputs);
 
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <from> 
+        <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -113,7 +118,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Staff
               </Typography>
-              <Button onClick={handleSubmit} color="inherit" type="submit">
+              <Button color="inherit" type="submit">
                 save
               </Button>
             </Toolbar>
@@ -188,6 +193,7 @@ return (
                       onChange={handleInputChange}
                       required
                       fullWidth
+                      type="email"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -221,7 +227,7 @@ return (
 
             
           </div>
-        </from>
+        </form>
       </Dialog>
     </div>
   );

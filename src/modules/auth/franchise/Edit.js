@@ -24,8 +24,6 @@ import UserAPI from '../../../api/User';
 
 import LocationAPI from '../../../api/Location';
 
-import useSignUpForm from './CustomHooks';
-
 const RESET_VALUES = {
   city: '',
 
@@ -101,8 +99,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-console.log("fsdl   fhsadkh", franchise);
-  
   
    useEffect(() => {
     const fetchData = async () => {
@@ -181,7 +177,7 @@ console.log("fsdl   fhsadkh", franchise);
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
-        <from >
+        <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
@@ -452,6 +448,7 @@ console.log("fsdl   fhsadkh", franchise);
                       required
                       fullWidth
                       onChange={handleInputChange}
+                      type="number"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -465,6 +462,7 @@ console.log("fsdl   fhsadkh", franchise);
                       // required
                       fullWidth
                       onChange={handleInputChange}
+                      type="number"
                     />
                   </Grid>
                 </Grid>
@@ -547,7 +545,7 @@ console.log("fsdl   fhsadkh", franchise);
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </div>
-        </from>
+        </form>
       </Dialog>
     </div>
   );

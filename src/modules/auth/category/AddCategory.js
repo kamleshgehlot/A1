@@ -115,9 +115,16 @@ export default function AddCategory(props) {
     props.handleClose(false);
   };
   
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+  };
+
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
+    validate
   );
 
   return (

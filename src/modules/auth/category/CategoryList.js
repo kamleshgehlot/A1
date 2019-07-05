@@ -117,7 +117,7 @@ export default function CategoryList(props) {
 
 
   function handleClickEditOpen(response) {
-    // console.log("response",response);
+    console.log("response",response);
     setReceivedData(response);
     setEditOpen(true);
   }
@@ -151,7 +151,7 @@ export default function CategoryList(props) {
             onClick={handleClickOpen}
           >
             <AddIcon className={classes.extendedIcon} />
-            Add Product
+            Product
           </Fab>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
@@ -211,7 +211,7 @@ export default function CategoryList(props) {
       </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
       {console.log("rec.. ",receivedData)}
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={receivedData} updateProductList={setCategoryListFn}/> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  updateProductList={setCategoryListFn}/> : null}
       
       <Snackbar
         anchorOrigin={{

@@ -34,8 +34,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // API CALL
 import Category from '../../../api/Category';
 
-import useSignUpForm from '../franchise/CustomHooks';
-
 import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
@@ -66,6 +64,9 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
+  // root: {
+  //   padding: theme.spacing(3, 2),
+  // },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -85,10 +86,12 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit(open, handleEditClose, handleSnackbarClick, inputs, updateProductList) {
+export default function Edit(open, handleEditClose, handleSnackbarClick, updateProductList) {
+  // console.log("inputs 46 ",inputs) 
+
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [product, setProduct] = useState([])
+  const [product, setProduct] = useState();
   // console.log("inputs 45 ",inputs)
 
   const handleChange = panel => (event, isExpanded) => {
@@ -134,7 +137,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
   
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="lg" open={open} onClick={handleEditClose} TransitionComponent={Transition}>
       <form >
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -153,13 +156,14 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
           <div className={classes.root}>
 
           {/* Franchise Details */}
+          <Paper className={classes.paper}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="product_name">Enter Product Title/Name</InputLabel>
                     <TextField
                       id="productname"
                       name="productname"
-                      value={product.category}
+                      // value={product.category}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -173,7 +177,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     <Select
                         name="color"
                         onChange={handleInputChange}
-                        value={product.color}
+                        // value={product.color}
                         inputProps={{
                           name: 'color',
                           id: 'color',
@@ -183,12 +187,12 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                         label="Choose Color"
                         required
                       >
-                        { colorList.map((data, index)=>{
+                        {/* { colorList.map((data, index)=>{
                           return(
                         <MenuItem value={data.id}>{data.color}</MenuItem>
                           )
                       })
-                    }
+                    } */}
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -196,7 +200,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     <Select
                         name="brand"
                         onChange={handleInputChange}
-                        value={product.brand}
+                        // value={product.brand}
                         inputProps={{
                           name: 'brand',
                           id: 'brand',
@@ -206,12 +210,12 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                         label="Choose Brand"
                         required
                       >
-                        { brandList.map((data, index)=>{
+                        {/* { brandList.map((data, index)=>{
                           return(
                         <MenuItem value={data.id}>{data.brand_name}</MenuItem>
                           )
                       })
-                    }
+                    } */}
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -219,7 +223,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     <TextField
                       id="productprice"
                       name="productprice"
-                      value={product.productprice}
+                      // value={product.productprice}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -236,7 +240,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                         fullWidth
                         margin="normal"
                         multiline
-                        value={product.description}
+                        // value={product.description}
                         onChange={handleInputChange}
                         InputLabelProps={{
                           shrink: true,
@@ -251,7 +255,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                         fullWidth
                         name="specification"
                         margin="normal"
-                        value={product.specification}
+                        // value={product.specification}
                         onChange={handleInputChange}
                       />
                   </Grid>
@@ -260,7 +264,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     <TextField
                       id="brought_from"
                       name="brought_from"
-                      value={product.brought_from}
+                      // value={product.brought_from}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -274,7 +278,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     <TextField
                       id="invoice"
                       name="invoice"
-                      value={product.invoice}
+                      // value={product.invoice}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -288,7 +292,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     <TextField
                       id="rental"
                       name="rental"
-                      value={product.rental}
+                      // value={product.rental}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -302,7 +306,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     <TextField
                       id="meta_keywords"
                       name="meta_keywords"
-                      value={product.meta_keywords}
+                      // value={product.meta_keywords}
                       onChange={handleInputChange}
                       fullWidth
                       margin="normal"
@@ -319,7 +323,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                         multiline
                         margin="normal"
                         fullWidth
-                        value={product.meta_description}
+                        // value={product.meta_description}
                         onChange={handleInputChange}
                       />
                   </Grid>
@@ -334,6 +338,7 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, inputs,
                     </Button>
                   </Grid>
                 </Grid>
+                </Paper>
           </div>
       </form>
       </Dialog>
