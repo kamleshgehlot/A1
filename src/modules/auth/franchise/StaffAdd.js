@@ -6,18 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import InputLabel from '@material-ui/core/InputLabel';
 
 import CheckboxList from '../../common/CheckboxList';
 
@@ -25,7 +16,7 @@ import CheckboxList from '../../common/CheckboxList';
 import UserAPI from '../../../api/franchise/User'
 import { APP_TOKEN } from '../../../api/Constants';
 
-import useSignUpForm from './CustomHooks';
+import useSignUpForm from '../franchise/CustomHooks';
 
 import { store, useStore } from '../../../store/hookStore';
 
@@ -74,7 +65,14 @@ export default function Add({open, handleClose, handleSnackbarClick}) {
     handleClose(false);
   };
 
-  const {inputs, handleInputChange, handleSubmit, handleReset, setInput} = useSignUpForm(RESET_VALUES, signup);
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+
+  };
+
+  const {inputs, handleInputChange, handleSubmit, handleReset, setInput} = useSignUpForm(RESET_VALUES, signup, validate);
 
   function callback(roles) {
     setRoles(roles);

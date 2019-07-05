@@ -261,9 +261,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
     }
   };
 
-  function product(){
-    console.log("hi----------------",productCatList);
-
+  function openProductDialog(){
     setProductOpen(true);
   }
   function handleProductClose() {
@@ -278,9 +276,17 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   function handleSubCatClose() {
     setSubCatOpen(false);
   }
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+  };
+
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
+    validate
   );
 
   return (
@@ -400,7 +406,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
                   </Grid>
                   
                   <Grid item xs={12} sm={4}>
-                    <Button variant="contained" color="primary" onClick={product} className={classes.button} 
+                    <Button variant="contained" color="primary" onClick={openProductDialog} className={classes.button} 
                       >
                      Add Product
                     </Button>

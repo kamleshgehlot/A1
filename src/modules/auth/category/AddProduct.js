@@ -156,10 +156,17 @@ export default function AddProduct(props) {
     props.productData(response);
     props.handleClose(false);
   };
+
+  function validate(values) {
+    let errors = {};
+
+    return errors;
+  };
   
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
+    validate
   );
 
   return (

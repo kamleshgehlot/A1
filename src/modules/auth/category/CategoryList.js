@@ -127,8 +127,8 @@ export default function CategoryList(props) {
     setEditOpen(false);
   }
 
-  function setCategoryListFn(categoryList) {
-    setCategoryList(categoryList);
+  function setProductListFn(categoryList) {
+    setProductList(categoryList);
   }
 
   function handleSnackbarClose() {
@@ -209,7 +209,7 @@ export default function CategoryList(props) {
       </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} dataid={editid} datarow={categoryList[editid]} setCategoryList={setCategoryListFn}/> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} dataid={editid} datarow={productList[editid]} setProductList={setProductListFn}/> : null}
       
       <Snackbar
         anchorOrigin={{

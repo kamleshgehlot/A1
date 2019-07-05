@@ -34,8 +34,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // API CALL
 import Category from '../../../api/Category';
 
-import useSignUpForm from '../franchise/CustomHooks';
-
 import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {

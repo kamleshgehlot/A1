@@ -17,7 +17,6 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import validate from './FranchisePageValidationRule';
 
 // API CALL
 import UserAPI from '../../../api/User';
@@ -521,6 +520,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       margin="dense"
                       required
                       onChange={handleInputChange}
+                      type="email"
                     />
                   </Grid>
 

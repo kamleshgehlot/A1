@@ -24,8 +24,6 @@ import UserAPI from '../../../api/User';
 
 import LocationAPI from '../../../api/Location';
 
-import useSignUpForm from './CustomHooks';
-
 const RESET_VALUES = {
   city: '',
 
@@ -101,8 +99,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-console.log("fsdl   fhsadkh", franchise);
-  
   
    useEffect(() => {
     const fetchData = async () => {
