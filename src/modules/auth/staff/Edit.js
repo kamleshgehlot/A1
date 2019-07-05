@@ -199,7 +199,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       <MenuItem value={2}>{2}</MenuItem>
                       <MenuItem value={3}>{3}</MenuItem> */}
                       
-                      {console.log(positions)}
+                      {console.log(staffList)}
                       {
                         positions.map(ele =>{
                           return(
