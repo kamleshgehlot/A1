@@ -49,7 +49,7 @@ export default function CategoryList(props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [editid,setData]= useState();
+  const [receivedData, setReceivedData]= useState([]);
   
   const [productList, setProductList] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
@@ -116,19 +116,19 @@ export default function CategoryList(props) {
   }
 
 
-  function handleClickEditOpen(val) {
-    setData(val);
+  function handleClickEditOpen(response) {
+    // console.log("response",response);
+    setReceivedData(response);
     setEditOpen(true);
-    console.log(val);
   }
-
+// console.log("received",receivedData);
   
   function handleEditClose() {
     setEditOpen(false);
   }
 
-  function setCategoryListFn(categoryList) {
-    setCategoryList(categoryList);
+  function setCategoryListFn(response) {
+    setProductList(response);
   }
 
   function handleSnackbarClose() {
@@ -175,6 +175,7 @@ export default function CategoryList(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
+              
                { productList.map((data, index)=>{
                  return(
                   <TableRow key={data.id} >
@@ -193,7 +194,8 @@ export default function CategoryList(props) {
                       <StyledTableCell>{data.meta_keywords}</StyledTableCell>
                       <StyledTableCell>{data.meta_description}</StyledTableCell>
                       <StyledTableCell>
-                        <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(index); }}>
+                        {/* {console.log("data ji ",data)} */}
+                        <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                         Edit
                       </Button>
                       </StyledTableCell>
@@ -208,8 +210,8 @@ export default function CategoryList(props) {
         </Grid>
       </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}/>
-      
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} dataid={editid} datarow={categoryList[editid]} setCategoryList={setCategoryListFn}/> : null}
+      {console.log("rec.. ",receivedData)}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={receivedData} updateProductList={setCategoryListFn}/> : null}
       
       <Snackbar
         anchorOrigin={{
