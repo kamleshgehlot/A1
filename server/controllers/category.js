@@ -6,6 +6,7 @@ const add = function(req, res, next) {
     maincategory: req.body.maincategory,
     category: req.body.category,
     subcategory: req.body.subcategory,
+    user_id: req.decoded.id,
   };
 
   try {
@@ -34,6 +35,7 @@ const addCategory = function(req, res, next) {
   const categoryParam = {
     category: req.body.category,
     subcategory: req.body.subcategory,
+    user_id: req.decoded.id,
   };
 
   try {
@@ -62,6 +64,8 @@ const addCategory = function(req, res, next) {
 const addSubCategory = function(req, res, next) {
   const categoryParam = {
     subcategory: req.body.subcategory,
+    user_id: req.decoded.id,
+
   };
 
   try {
@@ -89,19 +93,21 @@ const addSubCategory = function(req, res, next) {
 const addProduct = function(req, res, next) {
   const categoryParam = {
     maincat:req.body.maincat,
-      category:req.body.category,
-      subcat:req.body.subcat,
-      name:req.body.name,
-      color_id:req.body.color_id,
-      brand_id:req.body.brand_id,
-      buying_price:req.body.buying_price,
-      description:req.body.description,
-      specification:req.body.specification,
-      brought:req.body.brought,
-      invoice:req.body.invoice,
-      rental:req.body.rental,
-      meta_keywords:req.body.meta_keywords,
-      meta_description:req.body.meta_description
+    category:req.body.category,
+    subcat:req.body.subcat,
+    name:req.body.name,
+    color_id:req.body.color_id,
+    brand_id:req.body.brand_id,
+    buying_price:req.body.buying_price,
+    description:req.body.description,
+    specification:req.body.specification,
+    brought:req.body.brought,
+    invoice:req.body.invoice,
+    rental:req.body.rental,
+    meta_keywords:req.body.meta_keywords,
+    meta_description:req.body.meta_description,
+
+    user_id: req.decoded.id,
   };
 
   try {
@@ -150,6 +156,8 @@ const edit = function(req, res, next) {
     rental: req.body.rental,
     meta_keywords: req.body.meta_keywords,
     meta_description: req.body.meta_description,
+
+    user_id: req.decoded.id,
   };
 
   try {
