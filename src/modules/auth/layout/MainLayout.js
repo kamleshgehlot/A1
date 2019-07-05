@@ -64,6 +64,9 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
+  fonttransform:{
+    textTransform:"initial"
+  }
 }));
 
 export default function ClippedDrawer(props) {
@@ -131,13 +134,14 @@ export default function ClippedDrawer(props) {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title} noWrap>
-            Rentronics
+          Welcome Master Admin
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
-            Welcome {userName}
+          Welcome To Rental Solutions
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>
-            Logout
+          <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
+          Logout
+          
           </Button>
         </Toolbar>
       </AppBar>
@@ -169,6 +173,7 @@ export default function ClippedDrawer(props) {
                   </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
+                {/* code by Bhagyashree ends here */}
               {/* </Link> */}
                 <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>
                   <ListItemIcon>

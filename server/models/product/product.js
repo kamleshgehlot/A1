@@ -57,7 +57,7 @@ Product.prototype.all = function () {
       }
 
       connection.changeUser({database : 'rentronics'});
-      connection.query('select * from product order by created_at desc', function (error, rows, fields) {
+      connection.query('select * from product order by id desc', function (error, rows, fields) {
 
         if (!error) {
           resolve(rows);

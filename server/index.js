@@ -27,7 +27,7 @@ const categoryRouter = require('./routes/category');
 const staffPosition = require('./routes/staffPosition');
 const brandRouter = require('./routes/product/brand');
 const colorRouter = require('./routes/product/color');
-
+const locationRouter=require('./routes/location');
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
 

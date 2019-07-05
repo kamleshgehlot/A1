@@ -333,9 +333,9 @@ export default function Edit(open, handleEditClose, handleSnackbarClick, updateP
                       >
                       Save
                     </Button>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    {/* <Button variant="contained" color="primary" className={classes.button}>
                       Clear
-                    </Button>
+                    </Button> */}
                   </Grid>
                 </Grid>
                 </Paper>

@@ -14,7 +14,7 @@ Location.prototype.getAll = function() {
       }
 
       connection.changeUser({ database: 'rentronics' });
-      connection.query('select id, city, city_code from location order by city', (error, rows, fields) => {
+      connection.query('select id, city, city_code from location', (error, rows, fields) => {
         if (!error) {
           resolve(rows);
         } else {

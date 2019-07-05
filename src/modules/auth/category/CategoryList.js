@@ -28,6 +28,7 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+    fontSize: theme.typography.pxToRem(16),
   },
   body: {
     fontSize: 14,
@@ -83,6 +84,9 @@ export default function CategoryList(props) {
       padding: theme.spacing(2),
       textAlign: 'left',
       color: theme.palette.text.secondary,
+    },
+    fonttransform:{
+      textTransform:"initial"
     },
   }));
   const classes = useStyles();
@@ -147,7 +151,7 @@ export default function CategoryList(props) {
             size="small"
             color="primary"
             aria-label="Add"
-            className={classes.margin}
+            className={classes.fonttransform}
             onClick={handleClickOpen}
           >
             <AddIcon className={classes.extendedIcon} />
@@ -159,7 +163,7 @@ export default function CategoryList(props) {
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <StyledTableCell>S. No.</StyledTableCell>
+                  <StyledTableCell>#</StyledTableCell>
                   <StyledTableCell>Product Name</StyledTableCell>
                   <StyledTableCell>Color</StyledTableCell>
                   <StyledTableCell>Brand</StyledTableCell>
@@ -171,7 +175,7 @@ export default function CategoryList(props) {
                   <StyledTableCell>Rental Price</StyledTableCell>
                   <StyledTableCell>Meta Keywords</StyledTableCell>
                   <StyledTableCell>Meta Description</StyledTableCell>
-                  <StyledTableCell>Edit</StyledTableCell>
+                  <StyledTableCell>Options</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
