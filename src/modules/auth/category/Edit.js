@@ -90,8 +90,6 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function Edit({open, handleEditClose, handleSnackbarClick, inputs, updateProductList}) {
-  // console.log("inputs 46 ",inputs) 
-
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [product, setProduct] = useState(inputs);
@@ -100,20 +98,15 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // console.log("inputs 45 ",inputs)
-
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  console.log("berandd", brandList);
-  console.log("Color,",colorList);
   const handleInputChange = event => {
     const { name, value } = event.target
 
     setProduct({ ...product, [name]: value })
   }
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,10 +116,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
       try {
         const result = await Brand.list();
         setBrandList(result.brandList);
-        console.log("Brand------------",result.brandList);
         const color_result = await Color.list();
         setColorList(color_result.colorList);
-        console.log("Color------------",color_result.colorList);
       } catch (error) {
         setIsError(true);
       }
@@ -135,8 +126,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
 
     fetchData();
   }, []);
-
-
 
   const handleSubmit = async () => {
     const response = await Category.edit({
@@ -159,12 +148,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     });
 
     // handleSnackbarClick(true, 'Category Updated Successfully.');
-    console.log("response", response);
     updateProductList(response);
     // props.handleReset(RESET_VALUES);
     handleEditClose(false);
   };
-  console.log("pro,,,", product);
+  
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>

@@ -100,7 +100,6 @@ export default function CategoryList(props) {
       try {
         const result = await Category.productlist();
         setProductList(result.productList);
-        console.log('product------------',result.productList);
       } catch (error) {
         setIsError(true);
       }
@@ -121,11 +120,9 @@ export default function CategoryList(props) {
 
 
   function handleClickEditOpen(response) {
-    console.log("response",response);
     setReceivedData(response);
     setEditOpen(true);
   }
-// console.log("received",receivedData);
   
   function handleEditClose() {
     setEditOpen(false);
@@ -198,7 +195,6 @@ export default function CategoryList(props) {
                       <StyledTableCell>{data.meta_keywords}</StyledTableCell>
                       <StyledTableCell>{data.meta_description}</StyledTableCell>
                       <StyledTableCell>
-                        {/* {console.log("data ji ",data)} */}
                         <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                         Edit
                       </Button>
@@ -213,8 +209,9 @@ export default function CategoryList(props) {
           </Paper>
         </Grid>
       </Grid>
+      
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} updateProductList = {setCategoryListFn} />
-      {console.log("rec.. ",receivedData)}
+      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={receivedData} updateProductList={setCategoryListFn}/> : null}
       
       <Snackbar

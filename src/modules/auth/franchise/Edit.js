@@ -91,8 +91,6 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList}) {
   const classes = useStyles();
   
-  
-  console.log("inutes----",inputs);
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
   const [franchise, setFranchise] = React.useState(inputs);

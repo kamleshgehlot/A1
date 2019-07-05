@@ -27,7 +27,7 @@ export default {
     }
   },
   addcategory: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/category/addcategory`;
+    const URL = `${c.API_CONSUMER}/api/category/addCategory`;
     try {
       const { data } = await axios(
         URL,
@@ -42,7 +42,7 @@ export default {
     }
   },
   addsubcategory: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/category/addsubcategory`;
+    const URL = `${c.API_CONSUMER}/api/category/addSubCategory`;
     try {
       const { data } = await axios(
         URL,
@@ -57,7 +57,7 @@ export default {
     }
   },
   addproduct: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/category/addproduct`;
+    const URL = `${c.API_CONSUMER}/api/category/addProduct`;
     try {
       const { data } = await axios(
         URL,
@@ -72,7 +72,7 @@ export default {
     }
   },
   productlist: async () => {
-    const URL = `${c.API_CONSUMER}/api/category/productlist`;
+    const URL = `${c.API_CONSUMER}/api/category/productList`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;

@@ -2,9 +2,6 @@ const Category = require('../models/category.js');
 const Product = require('../models/product/product.js');
 
 const add = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
   const categoryParam = {
     maincategory: req.body.maincategory,
     category: req.body.category,
@@ -17,7 +14,6 @@ const add = function(req, res, next) {
     newCategory
       .add()
       .then(result => {
-        console.log('controller category', result);
         new Category({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -34,11 +30,7 @@ const add = function(req, res, next) {
   }
 };
 
-
-const addcategory = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
+const addCategory = function(req, res, next) {
   const categoryParam = {
     category: req.body.category,
     subcategory: req.body.subcategory,
@@ -48,9 +40,8 @@ const addcategory = function(req, res, next) {
     const newCategory = new Category(categoryParam);
 
     newCategory
-      .addcategory()
+      .addCategory()
       .then(result => {
-        console.log('controller category', result);
         new Category({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -68,10 +59,7 @@ const addcategory = function(req, res, next) {
 };
 
 
-const addsubcategory = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
+const addSubCategory = function(req, res, next) {
   const categoryParam = {
     subcategory: req.body.subcategory,
   };
@@ -80,9 +68,8 @@ const addsubcategory = function(req, res, next) {
     const newCategory = new Category(categoryParam);
 
     newCategory
-      .addsubcategory()
+      .addSubCategory()
       .then(result => {
-        console.log('controller category', result);
         new Category({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -99,18 +86,7 @@ const addsubcategory = function(req, res, next) {
   }
 };
 
-
-
-
-
-
-
-
-
-const addproduct = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
+const addProduct = function(req, res, next) {
   const categoryParam = {
     maincat:req.body.maincat,
       category:req.body.category,
@@ -132,9 +108,8 @@ const addproduct = function(req, res, next) {
     const newProduct = new Product(categoryParam);
 
     newProduct
-      .addproduct()
+      .addProduct()
       .then(result => {
-        console.log('controller category', result);
         new Product({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -151,15 +126,7 @@ const addproduct = function(req, res, next) {
   }
 };
 
-
-
-
-
-
-
-
-
-const productlist = function(req, res, next) {
+const productList = function(req, res, next) {
   try {
     new Product({}).all().then(productList => {
       res.send({ productList });
@@ -169,15 +136,7 @@ const productlist = function(req, res, next) {
   }
 };
 
-
-
-
-
-
 const edit = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
   const categoryParam = {
     id: req.body.id,
     name: req.body.name,
@@ -197,9 +156,8 @@ const edit = function(req, res, next) {
     const newCategory = new Category(categoryParam);
 
     newCategory.update().then(result => {
-        console.log('controller category', result);
-        new Product({}).all().then(productlist => {
-        res.send( productlist );
+        new Product({}).all().then(productList => {
+          res.send( productList );
         });
       })
       .catch(err => {
@@ -214,14 +172,6 @@ const edit = function(req, res, next) {
   }
 };
 
-
-
-
-
-
-
-
-
 const all = function(req, res, next) {
   try {
     new Category({}).all().then(categoryList => {
@@ -232,4 +182,4 @@ const all = function(req, res, next) {
   }
 };
 
-module.exports = { add,addcategory,addsubcategory,addproduct, all, edit,productlist };
+module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList };

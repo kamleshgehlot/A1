@@ -2,9 +2,6 @@ const User = require("../../models/franchise/user.js")
 const UserRole = require("../../models/franchise/userRole")
 
 const register = function (req, res, next) {
-	console.log("...............", req.decoded);
-	console.log("...............", req.body);
-
 	let userParam = {
 		name: req.body.name,
 		user_id: req.body.user_id,

@@ -19,7 +19,7 @@ const Product = function(params) {
   this.meta_description=params.meta_description;
 };
 
-Product.prototype.addproduct = function () {
+Product.prototype.addProduct = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -46,7 +46,6 @@ Product.prototype.addproduct = function () {
   });
 }
 
-
 Product.prototype.all = function () {
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -72,4 +71,5 @@ Product.prototype.all = function () {
     });
   });
 }
+
 module.exports = Product;
