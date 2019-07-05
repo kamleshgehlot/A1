@@ -1,23 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const useSignUpForm = (state, callback) => {
+const useSignUpForm = (state, callback, validate) => {
   const [inputs, setInputs] = useState(state);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = event => {
     if (event) {
       event.preventDefault();
     }
-    
-    callback();
+
+    setIsSubmitting(true);
+    setErrors(validate(inputs));
   };
 
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmitting) {
+      callback();
+    }
+  }, [errors]);
 
   const handleEditSubmit = event => {
     if(event){
       event.preventDefault();
     }
     callback();
-    console.log("callback = ", callback);
   }
 
   const handleInputChange = e =>
@@ -44,6 +51,8 @@ const useSignUpForm = (state, callback) => {
     inputs,
     handleReset,
     setInput,
+    errors,
+    isSubmitting
   };
 };
 

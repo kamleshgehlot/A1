@@ -24,7 +24,6 @@ const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
 const staffMaster = require('./routes/staffMaster');
 const categoryRouter = require('./routes/category');
-const locationRouter = require('./routes/location'); 
 const staffPosition = require('./routes/staffPosition');
 const brandRouter = require('./routes/product/brand');
 const colorRouter = require('./routes/product/color');

@@ -17,8 +17,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
+import validate from './FranchisePageValidationRule';
 
 // API CALL
 import UserAPI from '../../../api/User';
@@ -93,6 +92,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList }) {
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
+
   const [expanded, setExpanded] = React.useState('panel1');
 
   // console.log("heello", setFranchiseList);
@@ -119,6 +119,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
 
   const addFranchise = async () => {
+
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
       
@@ -152,20 +153,44 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     });
 
     handleSnackbarClick(true);
-    console.log("sdfkasl;",response.userList);
     setFranchiseList(response.userList);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
 
+  function validate(values) {
+    let errors = {};
+    if (!values.email) {
+      errors.email = 'Email address is required';
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = 'Email address is invalid';
+    }
 
-  
-  
+    if (!values.password) {
+      errors.password = 'password address is required';
+    } else if (values.password.length < 8) {
+      errors.password = "Your password must be at least 8 characters";
+    } else if (values.password.search(/[a-z]/i) < 0) {
+        errors.password = "Your password must contain at least one letter.";
+    } else if (values.password.search(/[0-9]/) < 0) {
+        errors.password = "Your password must contain at least one digit.";
+    }
 
+    if (!values.city) {
+      errors.city = 'City is required';
+    } 
 
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+    if (!values.suburb) {
+      errors.suburb = 'suburb is required';
+    } 
+
+    return errors;
+  };
+
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addFranchise,
+    validate
   );
 
   function handleNameBlurChange(e) {
@@ -183,7 +208,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <from onSubmit={handleSubmit}> 
+        <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -192,7 +217,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               <Typography variant="h6" className={classes.title}>
                 Create Franchise
               </Typography>
-              <Button onClick={handleSubmit} color="inherit" type="submit">
+              <Button color="inherit" type="submit">
                 save
               </Button>
             </Toolbar>
@@ -229,6 +254,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       fullWidth
                       label="City"
                       required
+                      error={errors.city}
+                      helperText={errors.city ? errors.city : ' '}
                     >
                       {cityList.length > 0 &&
                         cityList.map(data => {
@@ -251,6 +278,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       fullWidth
                       label="Suburb"
                       required
+                      error={errors.suburb}
+                      helperText={errors.suburb ? errors.suburb : ' '}
                     >
                        <MenuItem value={"East"}>East</MenuItem>
                       <MenuItem value={"West"}>West</MenuItem>
@@ -284,11 +313,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="text"
                       value={inputs.uid} 
                       // onChange={handleInputChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
                       onBlur={handlePasswordBlurChange}
                       fullWidth
                       disabled
+                      required
                     />
                     
                     {/* <TextField
@@ -323,10 +351,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       id="password"
                       name="password"
                       label="Password"
+                      // onChange={handleInputChange}
                       onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
                       required
                       fullWidth
+                      error={errors.password}
+                      helperText={errors.password ? errors.password : ' '}
                       // disabled
                     />
                   </Grid>
@@ -416,6 +447,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="email"
                       fullWidth
                       onChange={handleInputChange}
+                      error={errors.email}
+                      helperText={errors.email ? errors.email : ' '}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -523,7 +556,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </div>
-        </from>
+        </form>
       </Dialog>
     </div>
   );
