@@ -21,6 +21,7 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+    fontSize: theme.typography.pxToRem(18),
   },
   body: {
     fontSize: 14,
@@ -81,6 +82,9 @@ export default function Staff(props) {
       padding: theme.spacing(2),
       textAlign: 'left',
       color: theme.palette.text.secondary,
+    },
+    fonttransform:{
+      textTransform:"initial"
     },
   }));
   const classes = useStyles();
@@ -156,7 +160,7 @@ export default function Staff(props) {
               size="small"
               color="primary"
               aria-label="Add"
-              className={classes.margin}
+              className={classes.fonttransform}
               onClick={handleClickOpen}
             >
               <AddIcon className={classes.extendedIcon} />

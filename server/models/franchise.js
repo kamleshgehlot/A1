@@ -198,7 +198,7 @@ Franchise.prototype.update = function () {
 Franchise.prototype.all = function () {
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
-      console.log('Process Started %d All', connection.threadId);
+      // console.log('Process Started %d All', connection.threadId);
 
       if (error) {
         throw error;

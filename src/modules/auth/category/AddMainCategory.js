@@ -161,45 +161,42 @@ export default function AddMainCategory(props) {
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel htmlFor="city_selection">Add Main Category</InputLabel>
+                    {/* <InputLabel htmlFor="city_selection">Add Main Category</InputLabel> */}
                     <TextField
                       id="maincategory"
                       name="maincategory"
                       value={inputs.maincategory}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      margin="dense"
+                      type="text"
+                      label="Add Main Category"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel htmlFor="city_selection">Add Category</InputLabel>
+                    {/* <InputLabel htmlFor="city_selection">Add Category</InputLabel> */}
                     <TextField
                       id="category"
                       name="category"
                       value={inputs.category}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      margin="dense"
+                      type="text"
+                      label="Add Category"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel htmlFor="city_selection">Add Sub Category</InputLabel>
+                    {/* <InputLabel htmlFor="city_selection">Add Sub Category</InputLabel> */}
                     <TextField
                       id="subcategory"
                       name="subcategory"
                       value={inputs.subcategory}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      margin="dense"
+                      type="text"
+                      label="Add Sub Category"
                     />
                   </Grid>
                   
@@ -208,9 +205,9 @@ export default function AddMainCategory(props) {
                       >
                       Save
                     </Button>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    {/* <Button variant="contained" color="primary" className={classes.button}>
                       Clear
-                    </Button>
+                    </Button> */}
                   </Grid>
                 
               </Grid>

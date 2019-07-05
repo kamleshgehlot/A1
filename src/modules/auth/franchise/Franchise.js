@@ -25,6 +25,7 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+    fontSize: theme.typography.pxToRem(18),
   },
   body: {
     fontSize: 14,
@@ -88,6 +89,13 @@ export default function Franchise(props) {
       padding: theme.spacing(2),
       textAlign: 'left',
       color: theme.palette.text.secondary,
+    },
+    fonttransform:{
+      textTransform:"initial"
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(25),
+      fontWeight: theme.typography.fontWeightBold,
     },
   }));
   const classes = useStyles();
@@ -178,14 +186,14 @@ export default function Franchise(props) {
               size="small"
               color="primary"
               aria-label="Add"
-              className={classes.margin}
+              className={classes.fonttransform}
               onClick={handleClickOpen}
             >
               <AddIcon className={classes.extendedIcon} />
               Franchise
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
                     <TableHead>

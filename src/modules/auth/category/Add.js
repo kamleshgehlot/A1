@@ -77,9 +77,9 @@ const useStyles = makeStyles(theme => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
     marginTop: theme.spacing(2),
-    textAlign: "center",
+    marginLeft: theme.spacing(3),
+    fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
@@ -263,7 +263,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   };
 
   function openProductDialog(){
-    setProductOpen(true);
+    if(inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
+
+      setProductOpen(true);
+    }
+    else{
+      console.log("no cat");
+    }
   }
   function handleProductClose() {
     setProductOpen(false);
@@ -300,7 +306,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Product Creation Panel
+                Add Product
               </Typography>
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
@@ -320,12 +326,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                 aria-controls=""
                 id="panel1a-header"
               > */}
-                <Typography className={classes.heading}>Category Details</Typography>
+                {/* <Typography className={classes.heading}>Category Details</Typography> */}
               {/* </ExpansionPanelSummary> */}
 
               
               <ExpansionPanelDetails>
-                <Grid container spacing={3}>
+                <Grid container spacing={5} className={classes.margin}>
                   <Grid item xs={12} sm={4}>
                     <InputLabel htmlFor="city_selection">Select Main Category</InputLabel>
                     <Select

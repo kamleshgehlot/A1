@@ -214,7 +214,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Create Franchise
+                Add Franchise
               </Typography>
               <Button color="inherit" type="submit">
                 save

@@ -40,15 +40,18 @@ import useSignUpForm from '../franchise/CustomHooks';
 import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
-  category: '',
-  type: '',
-  parentid: '',
-  position: '',
-  description: '',
-  image: '',
-  meta_keywords: '',
-  meta_description: '',
-  active: '',
+  productname:'',
+  color:'',
+  brand:'',
+  productprice:'',
+  description:'',
+  specification:'',
+  brought_from:'',
+  invoice:'',
+  rental:'',
+  meta_keywords:'',
+  meta_description:''
+  
 };
 
 const useStyles = makeStyles(theme => ({
@@ -149,7 +152,6 @@ export default function AddProduct(props) {
       meta_keywords:inputs.meta_keywords,
       meta_description:inputs.meta_description
     });
-
     // handleSnackbarClick(true);
     // handleReset(RESET_VALUES);
     console.log("dflkj=-==",response.categoryList);
@@ -162,8 +164,14 @@ export default function AddProduct(props) {
 
     return errors;
   };
+  function handleReset() {
+    cleanInputs()
+    console.log(inputs);
+
+    
+  };
   
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+  const { inputs, handleInputChange, handleSubmit,  setInput ,cleanInputs} = useSignUpForm(
     RESET_VALUES,
     categoryadd,
     validate
@@ -197,17 +205,18 @@ export default function AddProduct(props) {
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Enter Product Title/Name</InputLabel>
+                    {/* <InputLabel htmlFor="product_name">Enter Product Title/Name</InputLabel> */}
+                    
                     <TextField
                       id="productname"
                       name="productname"
+                      label="Enter Product Title/Name"
                       value={inputs.productname}
-                      onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      type="text"
+                      margin="dense"
+                      required
+                      onChange={handleInputChange}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -257,104 +266,101 @@ export default function AddProduct(props) {
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="productprice">Enter Product Buying Price</InputLabel>
+                    {/* <InputLabel htmlFor="productprice">Enter Product Buying Price</InputLabel> */}
                     <TextField
                       id="productprice"
                       name="productprice"
+                      label="Enter Product Buying Price"
                       value={inputs.productprice}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      type="text"
+                      margin="dense"
+                      required
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="description">Enter Product Description</InputLabel>
+                    {/* <InputLabel htmlFor="description">Enter Product Description</InputLabel> */}
                     <TextField
                         id="description"
                         name="description"
                         fullWidth
-                        margin="normal"
                         multiline
+                        margin="dense"
+                        type="text"
+                        label="Enter Product Description"
                         value={inputs.description}
                         onChange={handleInputChange}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
                       />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="specification">Enter Product Specification</InputLabel>
+                    {/* <InputLabel htmlFor="specification">Enter Product Specification</InputLabel> */}
                     <TextField
                         id="specification"
                         multiline
                         fullWidth
                         name="specification"
-                        margin="normal"
+                        margin="dense"
+                        type="text"
+                        label="Enter Product Specification"
                         value={inputs.specification}
                         onChange={handleInputChange}
                       />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Brought From</InputLabel>
+                    {/* <InputLabel htmlFor="product_name">Brought From</InputLabel> */}
                     <TextField
                       id="brought_from"
                       name="brought_from"
                       value={inputs.brought_from}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      margin="dense"
+                      type="text"
+                      label="Brought From"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Invoice Number</InputLabel>
+                    {/* <InputLabel htmlFor="product_name">Invoice Number</InputLabel> */}
                     <TextField
                       id="invoice"
                       name="invoice"
                       value={inputs.invoice}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      margin="dense"
+                      type="text"
+                      label="Invoice Number"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Rental Price </InputLabel>
+                    {/* <InputLabel htmlFor="product_name">Rental Price </InputLabel> */}
                     <TextField
                       id="rental"
                       name="rental"
                       value={inputs.rental}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      margin="dense"
+                      type="text"
+                      label="Rental Price"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Meta Keywords</InputLabel>
+                    {/* <InputLabel htmlFor="product_name">Meta Keywords</InputLabel> */}
                     <TextField
                       id="meta_keywords"
                       name="meta_keywords"
                       value={inputs.meta_keywords}
                       onChange={handleInputChange}
                       fullWidth
-                      margin="normal"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
+                      margin="dense"
+                      type="text"
+                      label="Meta Keywords"
                     />
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <InputLabel htmlFor="specification">Meta Description</InputLabel>
+                    {/* <InputLabel htmlFor="specification">Meta Description</InputLabel> */}
                     <TextField
                         id="meta_description"
                         name="meta_description"
@@ -363,6 +369,9 @@ export default function AddProduct(props) {
                         fullWidth
                         value={inputs.meta_description}
                         onChange={handleInputChange}
+                        margin="dense"
+                        type="text"
+                        label="Meta Description"
                       />
                   </Grid>
                   
@@ -371,9 +380,9 @@ export default function AddProduct(props) {
                       >
                       Save
                     </Button>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    {/* <Button variant="contained" color="primary" onClick={handleReset} className={classes.button}>
                       Clear
-                    </Button>
+                    </Button> */}
                   </Grid>
                 
               </Grid>

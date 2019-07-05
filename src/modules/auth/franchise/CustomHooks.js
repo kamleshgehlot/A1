@@ -9,11 +9,13 @@ const useSignUpForm = (state, callback, validate) => {
     if (event) {
       event.preventDefault();
     }
-
     setIsSubmitting(true);
     setErrors(validate(inputs));
   };
 
+  const cleanInputs = event =>{
+    setInputs('');
+  }
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitting) {
       callback();
@@ -35,6 +37,7 @@ const useSignUpForm = (state, callback, validate) => {
 
   const handleReset = RESET_VALUES => {
     setInputs(inputs => RESET_VALUES);
+    
   };
 
   const setInput = (name, value) => {
@@ -52,7 +55,8 @@ const useSignUpForm = (state, callback, validate) => {
     handleReset,
     setInput,
     errors,
-    isSubmitting
+    isSubmitting,
+    cleanInputs
   };
 };
 

@@ -157,7 +157,7 @@ export default function AddSubcategory(props) {
                   
                   
                   <Grid item xs={12} sm={12}>
-                    <InputLabel htmlFor="city_selection">Add Sub Category</InputLabel>
+                    {/* <InputLabel htmlFor="city_selection">Add Sub Category</InputLabel> */}
                     <TextField
                       id="subcategory"
                       name="subcategory"
@@ -176,9 +176,9 @@ export default function AddSubcategory(props) {
                       >
                       Save
                     </Button>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    {/* <Button variant="contained" color="primary" className={classes.button}>
                       Clear
-                    </Button>
+                    </Button> */}
                   </Grid>
                 
               </Grid>
