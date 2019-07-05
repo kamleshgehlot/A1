@@ -20,6 +20,8 @@ import Add from './Add';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
+import Brand from '../../../api/product/Brand';
+import Color from '../../../api/product/Color';
 // API CALL
 import Category from '../../../../src/api/Category';
 
@@ -51,6 +53,8 @@ export default function CategoryList(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [receivedData, setReceivedData]= useState([]);
+  const [brandList, setBrandList] = useState([]);
+  const [colorList, setColorList] = useState([]);
   
   const [productList, setProductList] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
@@ -101,6 +105,12 @@ export default function CategoryList(props) {
         const result = await Category.productlist();
         setProductList(result.productList);
         console.log('product------------',result.productList);
+        const brand_result = await Brand.list();
+        setBrandList(brand_result.brandList);
+        console.log("Brand------------",result.brandList);
+        const color_result = await Color.list();
+        setColorList(color_result.colorList);
+        console.log("Color------------",color_result.colorList);
       } catch (error) {
         setIsError(true);
       }
@@ -187,8 +197,27 @@ export default function CategoryList(props) {
                       {data.id}
                       </StyledTableCell>
                       <StyledTableCell>{data.name}</StyledTableCell>
-                      <StyledTableCell></StyledTableCell>
-                      <StyledTableCell></StyledTableCell>
+                      
+                      { colorList.map((datacolor, index)=>{
+                        return(
+                          data.color_id===datacolor.id ?
+                            <StyledTableCell>{datacolor.color}</StyledTableCell>
+                            :''
+                            )
+                            
+                           })
+                         }
+
+                      { brandList.map((databrand, index)=>{
+                        return(
+                          data.brand_id===databrand.id ?
+                            <StyledTableCell>{databrand.brand_name}</StyledTableCell>
+                            :''
+                            )
+                            
+                           })
+                         }
+
                       <StyledTableCell>{data.buying_price}</StyledTableCell>
                       <StyledTableCell>{data.description}</StyledTableCell>
                       <StyledTableCell>{data.specification}</StyledTableCell>
