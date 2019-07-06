@@ -111,11 +111,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   franchiseData !== undefined ? handleReset(franchiseData) : null;
-  // }, [franchiseData]);
+  // function IDGenerator() {
+  //   this.length = 4;
+  //   this.timestamp = +new Date;
+    
+  //   var _getRandomInt = function( min, max ) {
+  //   return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+  //   }
+  // }
 
 
+    
+  
   const addFranchise = async () => {
 
     const response = await UserAPI.add({
@@ -192,9 +199,22 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   );
 
   function handleNameBlurChange(e) {
-    setInput('uid', inputs.franchise_name.substring(0, 4).toLowerCase() + '_' + inputs.city.substring(0, 4).toLowerCase());
+    setInput('uid', generate(inputs.franchise_name, inputs.city));
   }
 
+  function generate(franchiseName, city) {
+    const ts = new Date().getTime().toString();
+    const parts = ts.split( "" ).reverse();
+    let id = "";
+    
+    for( let i = 0; i < 4; ++i ) {
+    let index = Math.floor( Math.random() * (5) );
+    id += parts[index];	 
+    }
+    
+    return franchiseName.substring(franchiseName.length - 4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
+  }
+  
   function handlePasswordBlurChange() {
     setInput('password', GeneratePassword());
   }
