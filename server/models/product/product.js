@@ -1,8 +1,6 @@
 const connection = require('../../lib/connection.js');
 const dbName = require('../../lib/databaseMySQL.js');
 
-const utils = require('../../utils');
-
 const Product = function(params) {
   this.id = params.id;
   this.maincat=params.maincat;
@@ -19,6 +17,8 @@ const Product = function(params) {
   this.rental=params.rental;
   this.meta_keywords=params.meta_keywords;
   this.meta_description=params.meta_description;
+
+  this.user_id = params.user_id;
 };
 
 Product.prototype.addProduct = function () {
@@ -31,10 +31,13 @@ Product.prototype.addProduct = function () {
         throw error;
       }
 
+      const values = [
+        [that.maincat, that.category, that.subcat, that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.user_id]
+      ];
+
       connection.changeUser({database : dbName["prod"]});
       connection.query(
-        `INSERT INTO product(maincat,category,subcat,name,color_id,brand_id,buying_price,description,specification,brought,invoice,rental,meta_keywords,meta_description) VALUES 
-        ("${that.maincat}", "${that.category}", "${that.subcat}", "${that.name}", "${that.color_id}", "${that.brand_id}", "${that.buying_price}", "${that.description}", "${that.specification}", "${that.brought}", "${that.invoice}", "${that.rental}", "${that.meta_keywords}", "${that.meta_description}")`,
+        `INSERT INTO product(maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by) VALUES ?`, [values],
         (error, mrows, fields) => {
           if (!error) {
           resolve(mrows);
