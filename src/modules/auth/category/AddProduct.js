@@ -26,6 +26,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Category from '../../../api/Category';
 import Brand from '../../../api/product/Brand';
 import Color from '../../../api/product/Color';
+import Status from '../../../api/product/Status';
 import useSignUpForm from '../franchise/CustomHooks';
 
 import { store, useStore } from '../../../store/hookStore';
@@ -41,7 +42,8 @@ const RESET_VALUES = {
   invoice:'',
   rental:'',
   meta_keywords:'',
-  meta_description:''
+  meta_description:'',
+  status:''
   
 };
 
@@ -98,6 +100,7 @@ export default function AddProduct(props) {
   const [isError, setIsError] = useState(false);
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
+  const [statusList, setStatusList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const handleChange = panel => (event, isExpanded) => {
@@ -114,6 +117,8 @@ export default function AddProduct(props) {
         setBrandList(result.brandList);
         const color_result = await Color.list();
         setColorList(color_result.colorList);
+        const status_result = await Status.list();
+        setStatusList(status_result.statusList);
       } catch (error) {
         setIsError(true);
       }
@@ -139,7 +144,8 @@ export default function AddProduct(props) {
       invoice:inputs.invoice,
       rental:inputs.rental,
       meta_keywords:inputs.meta_keywords,
-      meta_description:inputs.meta_description
+      meta_description:inputs.meta_description,
+      status:inputs.status,
     });
     props.productData(response.categoryList);
     props.handleClose(false);
@@ -326,7 +332,7 @@ export default function AddProduct(props) {
                       onChange={handleInputChange}
                       fullWidth
                       margin="dense"
-                      type="text"
+                      type="number"
                       label="Rental Price"
                     />
                   </Grid>
@@ -343,7 +349,7 @@ export default function AddProduct(props) {
                       label="Meta Keywords"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
+                  <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="specification">Meta Description</InputLabel> */}
                     <TextField
                         id="meta_description"
@@ -358,7 +364,30 @@ export default function AddProduct(props) {
                         label="Meta Description"
                       />
                   </Grid>
-                  
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="city_selection">Choose Status</InputLabel>
+                    <Select
+                        name="status"
+                        onChange={handleInputChange}
+                        value={inputs.status}
+                        inputProps={{
+                          name: 'status',
+                          id: 'status',
+                        }}
+                        className={classes.margin}
+                        fullWidth
+                        label="Choose Status"
+                        required
+                      >
+                        { statusList.map((datastatus, index)=>{
+                          
+                          return(datastatus.id!=3 ?
+                        <MenuItem value={datastatus.id}>{datastatus.status}</MenuItem>:''
+                          )
+                      })
+                    }
+                    </Select>
+                  </Grid>
                   <Grid item xs={12} sm={12}>
                     <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
                       >

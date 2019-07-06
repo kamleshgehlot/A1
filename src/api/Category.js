@@ -59,6 +59,7 @@ export default {
   addproduct: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/category/addProduct`;
     try {
+      console.log('api----',data);
       const { data } = await axios(
         URL,
         Object.assign({}, PARAMS({ methodType: 'POST' }), {

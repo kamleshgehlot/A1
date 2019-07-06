@@ -17,10 +17,11 @@ import Add from './Add';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
-import Brand from '../../../api/product/Brand';
-import Color from '../../../api/product/Color';
 // API CALL
 import Category from '../../../../src/api/Category';
+import Brand from '../../../api/product/Brand';
+import Color from '../../../api/product/Color';
+import Status from '../../../api/product/Status';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -51,6 +52,7 @@ export default function CategoryList(props) {
   const [receivedData, setReceivedData]= useState([]);
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
+  const [statusList, setStatusList] = useState([]);
   
   const [productList, setProductList] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
@@ -103,6 +105,8 @@ export default function CategoryList(props) {
         setBrandList(brand_result.brandList);
         const color_result = await Color.list();
         setColorList(color_result.colorList);
+        const status_result = await Status.list();
+        setStatusList(status_result.statusList);
       } catch (error) {
         setIsError(true);
       }
@@ -175,6 +179,7 @@ export default function CategoryList(props) {
                   <StyledTableCell>Rental Price</StyledTableCell>
                   <StyledTableCell>Meta Keywords</StyledTableCell>
                   <StyledTableCell>Meta Description</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
                   <StyledTableCell>Options</StyledTableCell>
                 </TableRow>
               </TableHead>
@@ -215,11 +220,26 @@ export default function CategoryList(props) {
                       <StyledTableCell>{data.rental}</StyledTableCell>
                       <StyledTableCell>{data.meta_keywords}</StyledTableCell>
                       <StyledTableCell>{data.meta_description}</StyledTableCell>
-                      <StyledTableCell>
-                        <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                        Edit
-                      </Button>
-                      </StyledTableCell>
+                      { statusList.map((datastatus, index)=>{
+                        return(
+                          data.status===datastatus.id ?
+                            <StyledTableCell>{datastatus.status}</StyledTableCell>
+                            :''
+                            )
+                            
+                           })
+                         }
+                         <StyledTableCell>
+                            {data.status===3 ? 
+                              <Button disabled variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                              Edit
+                              </Button>
+                              :<Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                                Edit
+                                </Button>
+                              }
+                              
+                            </StyledTableCell>
                   </TableRow>
                  )
                  
