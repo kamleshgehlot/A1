@@ -28,6 +28,7 @@ Franchise.prototype.register = function (newUser) {
   return new Promise(function (resolve, reject) {
     console.log("franchise..........", that)
     const frachiseDbName = 'rentronics_franchise_' + that.uid.split('_')[1];
+    console.log("franchise database name..........", frachiseDbName)
 
     connection.getConnection(function (error, connection) {
       if (error) {

@@ -2,6 +2,7 @@ const User = require("../models/user.js")
 const Franchise = require("../models/franchise.js")
 const Accountant = require("../models/accountant.js")
 const Company = require("../models/company.js")
+const { trans } = require("../lib/mailtransporter");
 
 const register = function (req, res, next) {
 	let accountantParam = {
@@ -63,6 +64,22 @@ const register = function (req, res, next) {
 	const newCompany = new Company(companyParam);
 	const newFranchise = new Franchise(franchiseParam);
 	const newUser = new User(userParam);
+
+	const mail = {
+		 from: 'admin@rentronics.saimrc.com',
+			to: 'mpurohit88@gmail.com',
+			subject: 'New Message from Contact Form',
+			text: "testing email"
+		}
+
+		trans.sendMail(mail, (err, info) => {
+			if (err) {
+				return console.log(err);
+		} 
+		console.log('Message sent: %s', info.messageId);
+		// Preview only available when sending through an Ethereal account
+		console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+	});
 
 	if(req.body.id) {
 		
