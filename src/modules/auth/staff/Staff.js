@@ -173,6 +173,7 @@ export default function Staff(props) {
                     <TableHead>
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>User ID</StyledTableCell>
                         <StyledTableCell>Full Name</StyledTableCell>
                         <StyledTableCell>Position</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
@@ -181,12 +182,13 @@ export default function Staff(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-
+                      {console.log(staffList)}
                     { (staffList.length > 0 ? staffList : []).map((data, index)=>{
                       return(
                         <TableRow key={data.id} >
                           <StyledTableCell> {data.id}  </StyledTableCell>
-                            <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
+                          <StyledTableCell> {data.user_id}  </StyledTableCell>
+                          <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                             <StyledTableCell>
 
                             {data.position}

@@ -529,6 +529,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       label="Contact #"
                       value={franchise.accountant_contact}
                       // placeholder="Contact"
+                      type="number"
                       fullWidth
                       margin="dense"
                       required

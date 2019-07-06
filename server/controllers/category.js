@@ -106,6 +106,7 @@ const addProduct = function(req, res, next) {
     rental:req.body.rental,
     meta_keywords:req.body.meta_keywords,
     meta_description:req.body.meta_description,
+    status:req.body.status,
 
     user_id: req.decoded.id,
   };
@@ -156,13 +157,13 @@ const edit = function(req, res, next) {
     rental: req.body.rental,
     meta_keywords: req.body.meta_keywords,
     meta_description: req.body.meta_description,
-
+    status:req.body.status,
     user_id: req.decoded.id,
   };
 
   try {
     const newProduct = new Product(categoryParam);
-
+      console.log('categoryParam----',categoryParam);
     newProduct.update().then(result => {
         new Product({}).all().then(productList => {
           res.send( productList );

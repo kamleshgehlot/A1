@@ -17,8 +17,10 @@ const Product = function(params) {
   this.rental=params.rental;
   this.meta_keywords=params.meta_keywords;
   this.meta_description=params.meta_description;
+  this.status=params.status;
 
   this.user_id = params.user_id;
+  console.log('params-----',params);
 };
 
 Product.prototype.addProduct = function () {
@@ -32,12 +34,12 @@ Product.prototype.addProduct = function () {
       }
 
       const values = [
-        [that.maincat, that.category, that.subcat, that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.user_id]
+        [that.maincat, that.category, that.subcat, that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.user_id,that.status]
       ];
-
+       
       connection.changeUser({database : dbName["prod"]});
       connection.query(
-        `INSERT INTO product(maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by) VALUES ?`, [values],
+        `INSERT INTO product(maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status) VALUES ?`, [values],
         (error, mrows, fields) => {
           if (!error) {
           resolve(mrows);
@@ -61,9 +63,10 @@ Product.prototype.all = function () {
       }
 
       connection.changeUser({database : dbName["prod"]});
-      connection.query('select * from product order by id desc', function (error, rows, fields) {
+      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where status=1 OR status=2 order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
+
         } else {
           console.log("Error...", error);
           reject(error);
@@ -88,9 +91,9 @@ Product.prototype.update = function() {
       if (!error) {
         connection.changeUser({database : dbName["prod"]});
 
-        let values = [that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.user_id, that.id];
+        let values = [that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description,that.status, that.user_id, that.id];
 
-			  connection.query('UPDATE product set name = ?, color_id = ?, brand_id = ?, buying_price =?, description = ?, specification = ?, brought = ?, invoice = ?, rental = ?, meta_keywords = ?,  meta_description = ?, updated_by = ? WHERE id = ?', values, function (error, rows, fields) {
+			  connection.query('UPDATE product set name = ?, color_id = ?, brand_id = ?, buying_price =?, description = ?, specification = ?, brought = ?, invoice = ?, rental = ?, meta_keywords = ?,  meta_description = ?, status=?, updated_by = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {

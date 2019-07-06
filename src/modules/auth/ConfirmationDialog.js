@@ -19,7 +19,7 @@ export default function ConfirmationDialog({open, handleConfirmationClose, title
   return(
    <div>
     <Dialog
-        maxHeight= "lg"
+        maxWidth="lg"
         open={open}
         onClose={handleConfirmationClose}
         aria-labelledby="alert-dialog-title"

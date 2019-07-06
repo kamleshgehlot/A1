@@ -554,6 +554,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       value={inputs.accountant_contact}
                       // placeholder="Contact"
                       fullWidth
+                      type="number"
                       margin="dense"
                       required
                       onChange={handleInputChange}
