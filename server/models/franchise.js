@@ -27,16 +27,16 @@ Franchise.prototype.register = function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
     console.log("franchise..........", that)
-    const dbName = 'rentronics_franchise_' + that.uid.split('_')[1];
+    const frachiseDbName = 'rentronics_franchise_' + that.uid.split('_')[1];
 
     connection.getConnection(function (error, connection) {
       if (error) {
         throw error;
       }
       else if(!error) {
-        connection.query('CREATE DATABASE IF NOT EXISTS ??', dbName, function (error, rows, fields) {
+        connection.query('CREATE DATABASE IF NOT EXISTS ??', frachiseDbName, function (error, rows, fields) {
           if (!error) {
-            connection.changeUser({database : dbName["prod"]});
+            connection.changeUser({database : frachiseDbName});
             connection.query(table, function(err) {
               
               connection.query(table1, function(err) {

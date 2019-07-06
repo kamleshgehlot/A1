@@ -17,7 +17,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import ConfirmationDialog from '../ConfirmationDialog.js';
 // API CALL
 
 import UserAPI from '../../../api/User';
@@ -90,10 +90,10 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList}) {
   const classes = useStyles();
-  
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
   const [franchise, setFranchise] = React.useState(inputs);
+  const [confirmation, setConfirmation] = React.useState(false);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -112,9 +112,19 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
 
   const handleInputChange = event => {
     const { name, value } = event.target
-
+    // console.log(name, value);
+    name =='state' && value =='4' ? setConfirmation(true) : ''
     setFranchise({ ...franchise, [name]: value })
   }
+
+  function handleConfirmationDialog (){
+    // setFranchise({ ...franchise, 'state': response});
+    // console.log(franchise);
+    setConfirmation(false);
+  }
+  // function confirmDialogResponse(response){
+
+  // }
 
   const setInput = (name, value) => {
     setFranchise({ ...franchise, [name]: value });
@@ -545,6 +555,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           </div>
         </form>
       </Dialog>
+      {/* {console.log(confirmation)} */}
+      <ConfirmationDialog open = {confirmation} handleConfirmationClose={handleConfirmationDialog} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
     </div>
   );
 }
