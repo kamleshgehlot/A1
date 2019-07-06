@@ -91,7 +91,7 @@ const addSubCategory = function(req, res, next) {
 };
 
 const addProduct = function(req, res, next) {
-  const categoryParam = {
+  const productParam = {
     maincat:req.body.maincat,
     category:req.body.category,
     subcat:req.body.subcat,
@@ -111,7 +111,7 @@ const addProduct = function(req, res, next) {
   };
 
   try {
-    const newProduct = new Product(categoryParam);
+    const newProduct = new Product(productParam);
 
     newProduct
       .addProduct()
@@ -161,9 +161,9 @@ const edit = function(req, res, next) {
   };
 
   try {
-    const newCategory = new Category(categoryParam);
+    const newProduct = new Product(categoryParam);
 
-    newCategory.update().then(result => {
+    newProduct.update().then(result => {
         new Product({}).all().then(productList => {
           res.send( productList );
         });

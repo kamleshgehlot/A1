@@ -145,41 +145,6 @@ Category.prototype.addSubCategory = function() {
   });
 };
 
-Category.prototype.update = function() {
-  const that = this;
-  return new Promise((resolve, reject) => {
-    connection.getConnection((error, connection) => {
-      if (error) {
-        throw error;
-      }
-
-      if (!error) {
-        connection.changeUser({database : dbName["prod"]});
-
-        let values = [that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.id];
-
-			  connection.query('UPDATE product set name = ?, color_id = ?, brand_id = ?, buying_price =?, description = ?, specification = ?, brought = ?, invoice = ?, rental = ?, meta_keywords = ?,  meta_description = ? WHERE id = ?', values, function (error, rows, fields) {
-          if (!error) {
-            resolve(rows);
-          } else {
-            console.log('Error...', error);
-            reject(error);
-          }
-        });
-        
-      } else {
-        console.log('Error...', error);
-        reject(error);
-      }
-
-      connection.release();
-      console.log('Process Complete %d', connection.threadId);
-    });
-  }).catch(error => {
-    throw error;
-  });
-};
-
 Category.prototype.all = function () {
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
