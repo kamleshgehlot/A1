@@ -81,6 +81,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       id: '',
       first_name: inputs.first_name,
       last_name:inputs.last_name,
+      user_id:inputs.user_id,
+      password:'1234',
       location:inputs.location,
       contact:inputs.contact,
       email:inputs.email,
@@ -106,6 +108,24 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     validate
   );
 
+  function handleNameBlurChange(e) {
+    setInput('user_id', generate(inputs.first_name, inputs.last_name));
+  }
+
+  function generate(first_name, last_name) {
+    const ts = new Date().getTime().toString();
+    const parts = ts.split( "" ).reverse();
+    let id = "";
+    
+    for( let i = 0; i < 4; ++i ) {
+    let index = Math.floor( Math.random() * (5) );
+    id += parts[index];	 
+    }
+    
+    return first_name.substring(first_name.length - 4).toLowerCase() + '_' + last_name.substring(0,4).toLowerCase() + '_' + id;
+  }
+
+  console.log("inputess",inputs);
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -151,6 +171,7 @@ return (
                       label="Last Name"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
+                      onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth

@@ -5,6 +5,8 @@ const StaffMaster = function(params) {
   this.id=params.id;
   this.first_name=params.first_name
   this.last_name=params.last_name;
+  this.user_id=params.user_id;
+  this.password=params.password;
   this.location=params.location;
   this.contact=params.contact;
   this.email=params.email;
@@ -23,7 +25,7 @@ StaffMaster.prototype.register = function () {
 
       if (!error) {
         connection.changeUser({database : dbName["prod"]});
-        connection.query('INSERT INTO master_staff(first_name,last_name,location,contact,email,position,created_by) VALUES ("' + that.first_name + '", "' + that.last_name + '", "' + that.location + '", "' + that.contact + '" , "' + that.email + '", "' + that.position + '", "' + that.created_by + '")', function (error, rows, fields) {
+        connection.query('INSERT INTO master_staff(first_name,last_name,user_id,password,location,contact,email,position,created_by) VALUES ("' + that.first_name + '", "' + that.last_name + '","' + that.user_id + '","' + that.password + '", "' + that.location + '", "' + that.contact + '" , "' + that.email + '", "' + that.position + '", "' + that.created_by + '")', function (error, rows, fields) {
               if (!error) {
                 resolve({rows});
               } else {
@@ -85,7 +87,7 @@ StaffMaster.prototype.getAll = function() {
       }
 
       connection.changeUser({database : dbName["prod"]});
-      connection.query('select ms.id, first_name, last_name, location, contact, email, sp.position, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id', (error, rows, fields) => {
+      connection.query('select ms.id, first_name, last_name,user_id, location, contact, email, sp.position, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id', (error, rows, fields) => {
         if (!error) {
           resolve(rows);
         } else {
