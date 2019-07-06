@@ -124,6 +124,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                       fullWidth
                       required
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                     />
@@ -135,6 +136,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="last_name"
                       name="last_name"
                       label="Last Name"
+                      type="text"
+                      required
                       value={staffList.last_name} 
                       onChange={handleInputChange}
                       // onFocus={handlePasswordBlurChange}
@@ -149,6 +152,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="location"
                       name="location"
                       label="Location"
+                      type="text"
                       value={staffList.location}
                       onChange={handleInputChange}
                       required
@@ -162,6 +166,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="contact"
                       name="contact"
                       label="Contact"
+                      type="number"
                       value={staffList.contact} 
                       onChange={handleInputChange}
                       required
@@ -175,6 +180,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="email"
                       name="email"
                       label="Email Id"
+                      type="email"
                       value={staffList.email} 
                       onChange={handleInputChange}
                       required
@@ -194,12 +200,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       label="position"
                       required
-                    >
-                      {/* <MenuItem value={1}>{1}</MenuItem>
-                      <MenuItem value={2}>{2}</MenuItem>
-                      <MenuItem value={3}>{3}</MenuItem> */}
-                      
-                      {console.log(staffList)}
+                    > 
                       {
                         positions.map(ele =>{
                           return(

@@ -182,7 +182,6 @@ export default function Staff(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {console.log(staffList)}
                     { (staffList.length > 0 ? staffList : []).map((data, index)=>{
                       return(
                         <TableRow key={data.id} >

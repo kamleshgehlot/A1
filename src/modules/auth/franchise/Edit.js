@@ -113,12 +113,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const handleInputChange = event => {
     const { name, value } = event.target
     // console.log(name, value);
-    name =='state' && value =='4' ? setConfirmation(true) : ''
+    name =='state' && value =='4' ? setConfirmation(true) : 
     setFranchise({ ...franchise, [name]: value })
   }
 
-  function handleConfirmationDialog (){
-    // setFranchise({ ...franchise, 'state': response});
+  function handleConfirmationDialog (response){
+    setFranchise({ ...franchise, 'state': response});
     // console.log(franchise);
     setConfirmation(false);
   }
@@ -170,9 +170,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   };
 
   
-  function handleNameBlurChange(e) {
-    setInput('uid', franchise.franchise_name.substring(0, 4).toLowerCase() + '_' + franchise.city.substring(0, 4).toLowerCase());
-  }
+  // function handleNameBlurChange(e) {
+  //   setInput('uid', franchise.franchise_name.substring(0, 4).toLowerCase() + '_' + franchise.city.substring(0, 4).toLowerCase());
+  // }
 
   function handlePasswordBlurChange() {
     setInput('password', GeneratePassword());
@@ -277,7 +277,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="text"
                       value={franchise.franchise_name}
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}/
                       fullWidth
                       required
                       // disabled                      
@@ -293,8 +293,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       required
                       type="text"
                       value={franchise.uid} 
-                      onChange={handleInputChange}
-                      onBlur={handlePasswordBlurChange}
+                      // onChange={handleInputChange}
+                      // onBlur={handlePasswordBlurChange}
                       fullWidth
                       disabled
                     />
@@ -557,7 +557,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
         </form>
       </Dialog>
       {/* {console.log(confirmation)} */}
-      <ConfirmationDialog open = {confirmation} handleConfirmationClose={handleConfirmationDialog} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
+      <ConfirmationDialog open = {confirmation} handleConfirmationClose={handleConfirmationDialog} currentState={franchise.state} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
     </div>
   );
 }

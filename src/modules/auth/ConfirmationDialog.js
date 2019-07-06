@@ -6,15 +6,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
-export default function ConfirmationDialog({open, handleConfirmationClose, title, content}){
-//  function handleDialogClose(){
-  //  console.log(event);
-//   handleConfirmationClose('0');
-//  }
-//  function handleDialogConfirm(){
-//   // console.log(event);
-//  handleConfirmationClose('4');
-// }
+export default function ConfirmationDialog({open, handleConfirmationClose, currentState, title, content}){
+ 
+  function handleDialogClose(){
+  handleConfirmationClose(currentState);
+ }
+ function handleDialogConfirm(){
+  handleConfirmationClose(4);
+}
  
   return(
    <div>
@@ -32,10 +31,10 @@ export default function ConfirmationDialog({open, handleConfirmationClose, title
           </DialogContentText>
         </DialogContent> */}
         <DialogActions>
-          <Button name="close" onClick={handleConfirmationClose} color="primary">
+          <Button name="close" onClick={handleDialogClose} color="primary">
             No
           </Button>
-          <Button name="comfirm" onClick={handleConfirmationClose} color="primary" autoFocus>
+          <Button name="comfirm" onClick={handleDialogConfirm} color="primary" autoFocus>
             Yes
           </Button>
         </DialogActions>

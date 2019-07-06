@@ -125,7 +125,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     return first_name.substring(first_name.length - 4).toLowerCase() + '_' + last_name.substring(0,4).toLowerCase() + '_' + id;
   }
 
-  console.log("inputess",inputs);
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -158,6 +157,7 @@ return (
                       onChange={handleInputChange}
                       fullWidth
                       required
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                     />
@@ -169,6 +169,7 @@ return (
                       id="last_name"
                       name="last_name"
                       label="Last Name"
+                      type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
                       onBlur={handleNameBlurChange}
@@ -184,6 +185,7 @@ return (
                       id="location"
                       name="location"
                       label="Location"
+                      type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
                       required
@@ -197,6 +199,7 @@ return (
                       id="contact"
                       name="contact"
                       label="Contact"
+                      type="number"
                       value={inputs.contact} 
                       onChange={handleInputChange}
                       required
@@ -210,6 +213,7 @@ return (
                       id="email"
                       name="email"
                       label="Email Id"
+                      type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
                       required
@@ -227,6 +231,7 @@ return (
                         id: 'position',
                         label:'position'
                       }}
+                      
                       fullWidth
                       label="position"
                       required
