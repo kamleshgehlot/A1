@@ -87,7 +87,7 @@ StaffMaster.prototype.getAll = function() {
       }
 
       connection.changeUser({database : dbName["prod"]});
-      connection.query('select ms.id, first_name, last_name,user_id, location, contact, email, sp.position, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id', (error, rows, fields) => {
+      connection.query('select ms.id, ms.first_name, ms.last_name, ms.user_id, ms.location, ms.contact, ms.email, ms.position, sp.position as position_name, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id order by id desc', (error, rows, fields) => {
         if (!error) {
           resolve(rows);
         } else {
