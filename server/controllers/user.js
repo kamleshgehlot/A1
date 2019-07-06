@@ -1,3 +1,5 @@
+const nodemailer = require('nodemailer');
+
 const User = require("../models/user.js")
 const Franchise = require("../models/franchise.js")
 const Accountant = require("../models/accountant.js")
