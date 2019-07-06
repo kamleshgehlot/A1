@@ -1,4 +1,6 @@
 const connection = require("../lib/connection.js");
+const dbName = require('../lib/databaseMySQL.js');
+
 const utils = require("../utils");
 
 var Accountant = function (params) {
@@ -21,7 +23,7 @@ Accountant.prototype.register = function () {
       }
 
       if (!error) {
-        connection.changeUser({database : 'rentronics'});
+        connection.changeUser({database : dbName["prod"]});
         connection.query('INSERT INTO accountant(name,email,contact) VALUES ("' + that.name + '", "' + that.email + '", "' + that.contact + '")', function (error, rows, fields) {
 
 
@@ -62,7 +64,7 @@ Accountant.prototype.update = function() {
       if (!error) {
       let values = [that.name, that.email, that.contact, that.acc_id];
 
-      connection.changeUser({ database: 'rentronics' });
+      connection.changeUser({database : dbName["prod"]});
 			connection.query('UPDATE accountant set name = ?, email = ?, contact = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             resolve(rows);

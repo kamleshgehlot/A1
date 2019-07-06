@@ -1,4 +1,5 @@
 const connection = require("../lib/connection.js");
+const dbName = require('../lib/databaseMySQL.js');
 
 const Franchise = function (params) {
   // this.id = params.id;
@@ -35,7 +36,7 @@ Franchise.prototype.register = function (newUser) {
       else if(!error) {
         connection.query('CREATE DATABASE IF NOT EXISTS ??', dbName, function (error, rows, fields) {
           if (!error) {
-            connection.changeUser({database : dbName});
+            connection.changeUser({database : dbName["prod"]});
             connection.query(table, function(err) {
               
               connection.query(table1, function(err) {
@@ -66,7 +67,7 @@ Franchise.prototype.register = function (newUser) {
                 [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.created_by, that.company_id]
               ]
 
-              connection.changeUser({database : 'rentronics'});
+              connection.changeUser({database : dbName["prod"]});
               connection.query('INSERT INTO franchise(uid,name,city,city_code,suburb,abn,state,created_by,company_id) VALUES ("' + that.uid + '", "' + that.name + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
 
                 if (!error) {
@@ -152,7 +153,7 @@ Franchise.prototype.update = function () {
       let values = [that.uid, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.f_id];
 
       if (!error) {
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
         connection.query('update franchise set uid = "' + that.uid + '", name = "' + that.name + '", city= "' + that.city + '", suburb = "' + that.suburb + '", abn ="' + that.abn + '", state ="' + that.state + '"  WHERE id = "' + that.f_id + '"', function (error, rows, fields) {
           if (!error) {
             connection.query('select company_id from franchise where id="' + that.f_id + '"', function (error, rows, fields){
@@ -204,10 +205,9 @@ Franchise.prototype.all = function () {
         throw error;
       }
 
-      connection.changeUser({database : 'rentronics'});
+      connection.changeUser({database : dbName["prod"]});
       connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, f.state, c.name as company_name, c.location as company_location, c.director, c.contact, c.alt_contact, c.website, c.nbzn, f.suburb, f.abn,  c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id order by f.id desc', function (error, rows, fields) {
         if (!error) {
-          console.log("rows..",rows);
           resolve(rows);
         } else {
           console.log("Error...", error);

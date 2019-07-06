@@ -118,27 +118,24 @@ export default function Franchise(props) {
     fetchData();
   }, []);
 
-
-
-
   function handleClickOpen() {
     setOpen(true);
   }
+
   function handleClose() {
     setOpen(false);
     setStaffOpen(false);
   }
+  
   function handleClickEditOpen(val) {
     setFranchiseData(val),
     setEditOpen(true);
-    // console.log("value 00 ",val);
   }
   function handleEditClose() {
     setEditOpen(false);
   }
   ////////////////////////////////////////
   function setFranchiseListFn(response) {
-    console.log("response---",response);
     setFranchiseList(response);
   }
   function handleSnackbarClose() {
@@ -149,38 +146,16 @@ export default function Franchise(props) {
     setSnackbarOpen(true);
   }
 
-  
   function handleFranchiseClick() {
     setShowFranchise(true);
     setShowStaff(false);
   }
 
-  // function handleStaffClick() {
-  //   setShowFranchise(false);
-  //   setShowStaff(true);
-  // }
-
-  // function handleClickStaffOpen() {
-  //   setStaffOpen(true);
-  // }
-  
-
-  
-  
-
-  // function handleClickEditOpen(val) {
-  //   setFranchiseData(franchiseList[val]);
-  //   setOpen(true);
-  // }
-
- 
-
   return (
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-
-              <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={12}>
             <Fab
               variant="extended"
               size="small"
@@ -209,10 +184,7 @@ export default function Franchise(props) {
                     </TableHead>
                     <TableBody>
 
-                    {console.log("franchaise length",franchiseList.length)}
                     { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
-                      // console.log("............data id ", data);
-                      // console.log("............Index", data.id);
                       return(
                         <TableRow key={data.id} >
                             <StyledTableCell> {data.id}  </StyledTableCell>
@@ -238,7 +210,6 @@ export default function Franchise(props) {
                             </StyledTableCell>
                         </TableRow>
                       )
-                      
                       })
                     }
                     </TableBody>
@@ -249,32 +220,6 @@ export default function Franchise(props) {
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn}/>
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={franchiseData} setFranchiseList={setFranchiseListFn} /> : null}
-          
-
-      {/* <StaffAdd
-        open={staffOpen}
-        handleClose={handleClose}
-        handleSnackbarClick={handleSnackbarClick}
-      /> */}
-
-
-        {/* <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <MySnackbarContentWrapper
-          onClose={handleSnackbarClose}
-          variant="success"
-          message="Category Created successfully!"
-        />
-      </Snackbar> */}
-
-
     </div>
   );
 }

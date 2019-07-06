@@ -1,11 +1,11 @@
 const connection = require('../lib/connection.js');
+const dbName = require('../lib/databaseMySQL.js');
 
 const StaffPosition = function(params) {
   this.id= params.id;
   this.position= params.position;
   this.created_at= params.created_at;
 };
-
 
 StaffPosition.prototype.getAll = function() {
   return new Promise((resolve, reject) => {
@@ -14,10 +14,9 @@ StaffPosition.prototype.getAll = function() {
         throw error;
       }
 
-      connection.changeUser({ database: 'rentronics' });
+      connection.changeUser({database : dbName["prod"]});
       connection.query('select * from staff_position', (error, rows, fields) => {
         if (!error) {
-          console.log("rows..",rows);
           resolve(rows);
         } else {
           console.log('Error...', error);

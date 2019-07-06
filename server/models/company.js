@@ -1,4 +1,6 @@
 const connection = require("../lib/connection.js");
+const dbName = require('../lib/databaseMySQL.js');
+
 const utils = require("../utils");
 
 var Company = function (params) {
@@ -27,7 +29,7 @@ Company.prototype.register = function () {
       }
 
       if (!error) {
-        connection.changeUser({database : 'rentronics'});
+        connection.changeUser({database : dbName["prod"]});
         connection.query('INSERT INTO company(name,nbzn,location,director,email,contact,alt_contact,website,accountant_id) VALUES ("' + that.name + '", "' + that.nbzn + '","' + that.location + '", "' + that.director + '","' + that.email + '", "' + that.contact + '","' + that.alt_contact + '","' + that.website + '","' + that.accountant_id + '")', function (error, rows, fields) {
 
 
@@ -65,7 +67,7 @@ Company.prototype.update = function (newUser) {
 
         let values = [that.name, that.nbzn, that.location, that.director, that.email, that.contact, that.alt_contact, that.website, that.comp_id];
         
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
         connection.query('UPDATE company set name = ?, nbzn = ?, location=?, director=?, email = ?, contact = ?, alt_contact = ?, website = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             connection.query('select accountant_id from company where id="' + that.comp_id + '"',function(error,rows,fields){

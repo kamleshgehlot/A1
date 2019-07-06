@@ -2,13 +2,11 @@ const Category = require('../models/category.js');
 const Product = require('../models/product/product.js');
 
 const add = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
   const categoryParam = {
     maincategory: req.body.maincategory,
     category: req.body.category,
     subcategory: req.body.subcategory,
+    user_id: req.decoded.id,
   };
 
   try {
@@ -17,7 +15,6 @@ const add = function(req, res, next) {
     newCategory
       .add()
       .then(result => {
-        console.log('controller category', result);
         new Category({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -34,23 +31,19 @@ const add = function(req, res, next) {
   }
 };
 
-
-const addcategory = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
+const addCategory = function(req, res, next) {
   const categoryParam = {
     category: req.body.category,
     subcategory: req.body.subcategory,
+    user_id: req.decoded.id,
   };
 
   try {
     const newCategory = new Category(categoryParam);
 
     newCategory
-      .addcategory()
+      .addCategory()
       .then(result => {
-        console.log('controller category', result);
         new Category({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -68,21 +61,19 @@ const addcategory = function(req, res, next) {
 };
 
 
-const addsubcategory = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
+const addSubCategory = function(req, res, next) {
   const categoryParam = {
     subcategory: req.body.subcategory,
+    user_id: req.decoded.id,
+
   };
 
   try {
     const newCategory = new Category(categoryParam);
 
     newCategory
-      .addsubcategory()
+      .addSubCategory()
       .then(result => {
-        console.log('controller category', result);
         new Category({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -99,42 +90,32 @@ const addsubcategory = function(req, res, next) {
   }
 };
 
-
-
-
-
-
-
-
-
-const addproduct = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
-  const categoryParam = {
+const addProduct = function(req, res, next) {
+  const productParam = {
     maincat:req.body.maincat,
-      category:req.body.category,
-      subcat:req.body.subcat,
-      name:req.body.name,
-      color_id:req.body.color_id,
-      brand_id:req.body.brand_id,
-      buying_price:req.body.buying_price,
-      description:req.body.description,
-      specification:req.body.specification,
-      brought:req.body.brought,
-      invoice:req.body.invoice,
-      rental:req.body.rental,
-      meta_keywords:req.body.meta_keywords,
-      meta_description:req.body.meta_description
+    category:req.body.category,
+    subcat:req.body.subcat,
+    name:req.body.name,
+    color_id:req.body.color_id,
+    brand_id:req.body.brand_id,
+    buying_price:req.body.buying_price,
+    description:req.body.description,
+    specification:req.body.specification,
+    brought:req.body.brought,
+    invoice:req.body.invoice,
+    rental:req.body.rental,
+    meta_keywords:req.body.meta_keywords,
+    meta_description:req.body.meta_description,
+
+    user_id: req.decoded.id,
   };
 
   try {
-    const newProduct = new Product(categoryParam);
+    const newProduct = new Product(productParam);
 
     newProduct
-      .addproduct()
+      .addProduct()
       .then(result => {
-        console.log('controller category', result);
         new Product({}).all().then(categoryList => {
           res.send({ categoryList });
         });
@@ -151,15 +132,7 @@ const addproduct = function(req, res, next) {
   }
 };
 
-
-
-
-
-
-
-
-
-const productlist = function(req, res, next) {
+const productList = function(req, res, next) {
   try {
     new Product({}).all().then(productList => {
       res.send({ productList });
@@ -169,15 +142,7 @@ const productlist = function(req, res, next) {
   }
 };
 
-
-
-
-
-
 const edit = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
-
   const categoryParam = {
     id: req.body.id,
     name: req.body.name,
@@ -191,15 +156,16 @@ const edit = function(req, res, next) {
     rental: req.body.rental,
     meta_keywords: req.body.meta_keywords,
     meta_description: req.body.meta_description,
+
+    user_id: req.decoded.id,
   };
 
   try {
-    const newCategory = new Category(categoryParam);
+    const newProduct = new Product(categoryParam);
 
-    newCategory.update().then(result => {
-        console.log('controller category', result);
-        new Product({}).all().then(productlist => {
-        res.send( productlist );
+    newProduct.update().then(result => {
+        new Product({}).all().then(productList => {
+          res.send( productList );
         });
       })
       .catch(err => {
@@ -214,14 +180,6 @@ const edit = function(req, res, next) {
   }
 };
 
-
-
-
-
-
-
-
-
 const all = function(req, res, next) {
   try {
     new Category({}).all().then(categoryList => {
@@ -232,4 +190,4 @@ const all = function(req, res, next) {
   }
 };
 
-module.exports = { add,addcategory,addsubcategory,addproduct, all, edit,productlist };
+module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList };

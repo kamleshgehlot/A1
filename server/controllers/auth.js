@@ -2,8 +2,6 @@ const Auth = require("../models/auth.js")
 const jwt = require('jsonwebtoken');
 
 const login = function (req, res, next) {
-  console.log("@@@@@@@@@@@@@@@@2", req.body);
-
   let params = {
     name: req.body.username,
     password: req.body.password
@@ -13,10 +11,7 @@ const login = function (req, res, next) {
   let status = 201;
   try {
     auth.login().then((user) => {
-      console.log("!!!!!!!!!!!!!!", user);
-
       if (user && user.length > 0 && user[0].password.toString('utf8') === params.password) {
-        console.log("&&&&&&&&&&&&&&&", user);
         status = 200;
         // Create a token
         const payload = { id: user[0].id, user: params.name, user_id: user[0].user_id, franchise_id: user[0].franchise_id, role: user[0].role_id };

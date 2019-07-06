@@ -1,4 +1,6 @@
 const connection = require('../lib/connection.js');
+const dbName = require('../lib/databaseMySQL.js');
+
 const utils = require('../utils');
 
 const Category = function(params) {
@@ -7,10 +9,7 @@ const Category = function(params) {
   this.category = params.category;
   this.subcategory = params.subcategory;
 
-
-
   // params for updation
-  this.iid  =  params.id;
   this.name  =  params.name;
   this.color_id  =  params.color_id;
   this.brand_id  =  params.brand_id;
@@ -22,6 +21,9 @@ const Category = function(params) {
   this.rental  =  params.rental;
   this.meta_keywords  =  params.meta_keywords;
   this.meta_description  =  params.meta_description;
+
+  this.user_id = params.user_id;
+  this.updated_at = new Date();
 };
 
 Category.prototype.add = function() {
@@ -33,11 +35,15 @@ Category.prototype.add = function() {
       }
 
       if (!error) {
-        console.log("type..........", that);
+        const values = [ 
+          [that.maincategory, 1, that.user_id],
+          [that.category, 2, that.user_id],
+          [that.subcategory, 3, that.user_id]
+        ];
 
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
         connection.query(
-          `INSERT INTO category(category,type) VALUES ("${that.maincategory}", "1")`,
+          `INSERT INTO category(category, type, created_by) VALUES ?`, [values],
           (error, mrows, fields) => {
             if (!error) {
             resolve(mrows);
@@ -46,27 +52,7 @@ Category.prototype.add = function() {
             reject(error);
           }
         });
-        connection.query(
-          `INSERT INTO category(category,type) VALUES ("${that.category}", "2")`,
-          (error, rows, fields) => {
-            if (!error) {
-            resolve(rows);
-          } else {
-            console.log('Error...', error);
-            reject(error);
-          }
-        });
-        connection.query(
-          `INSERT INTO category(category,type) VALUES ("${that.subcategory}", "3")`,
-          (error, rows, fields) => {
-            if (!error) {
-            resolve(rows);
-          } else {
-            console.log('Error...', error);
-            reject(error);
-          }
-        });
-        
+     
       } else {
         console.log('Error...', error);
         reject(error);
@@ -81,7 +67,7 @@ Category.prototype.add = function() {
 };
 
 
-Category.prototype.addcategory = function() {
+Category.prototype.addCategory = function() {
   const that = this;
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
@@ -90,12 +76,15 @@ Category.prototype.addcategory = function() {
       }
 
       if (!error) {
-        console.log("type..........", that);
+        const values = [ 
+          [that.category, 2, that.user_id],
+          [that.subcategory, 3, that.user_id]
+        ];
 
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
 
         connection.query(
-          `INSERT INTO category(category,type) VALUES ("${that.category}", "2")`,
+          `INSERT INTO category(category, type, created_by) VALUES ?`, [values],
           (error, rows, fields) => {
             if (!error) {
             resolve(rows);
@@ -104,17 +93,6 @@ Category.prototype.addcategory = function() {
             reject(error);
           }
         });
-        connection.query(
-          `INSERT INTO category(category,type) VALUES ("${that.subcategory}", "3")`,
-          (error, rows, fields) => {
-            if (!error) {
-            resolve(rows);
-          } else {
-            console.log('Error...', error);
-            reject(error);
-          }
-        });
-        
       } else {
         console.log('Error...', error);
         reject(error);
@@ -129,7 +107,7 @@ Category.prototype.addcategory = function() {
 };
 
 
-Category.prototype.addsubcategory = function() {
+Category.prototype.addSubCategory = function() {
   const that = this;
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
@@ -138,50 +116,15 @@ Category.prototype.addsubcategory = function() {
       }
 
       if (!error) {
-        console.log("type..........", that);
+        const values = [ 
+          [that.subcategory, 3, that.user_id]
+        ];
 
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
         connection.query(
-          `INSERT INTO category(category,type) VALUES ("${that.subcategory}", "3")`,
+          `INSERT INTO category(category, type, created_by) VALUES ?`, [values],
           (error, rows, fields) => {
             if (!error) {
-            resolve(rows);
-          } else {
-            console.log('Error...', error);
-            reject(error);
-          }
-        });
-        
-      } else {
-        console.log('Error...', error);
-        reject(error);
-      }
-
-      connection.release();
-      console.log('Process Complete %d', connection.threadId);
-    });
-  }).catch(error => {
-    throw error;
-  });
-};
-
-Category.prototype.update = function() {
-  const that = this;
-  return new Promise((resolve, reject) => {
-    connection.getConnection((error, connection) => {
-      if (error) {
-        throw error;
-      }
-
-      if (!error) {
-        // console.log("type..........", that);
-        
-        connection.changeUser({ database: 'rentronics' });
-
-        let values = [that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description, that.iid];
-
-			connection.query('UPDATE product set name = ?, color_id = ?, brand_id = ?, buying_price =?, description = ?, specification = ?, brought = ?, invoice = ?, rental = ?, meta_keywords = ?,  meta_description = ? WHERE id = ?', values, function (error, rows, fields) {
-          if (!error) {
             resolve(rows);
           } else {
             console.log('Error...', error);
@@ -211,7 +154,7 @@ Category.prototype.all = function () {
         throw error;
       }
 
-      connection.changeUser({database : 'rentronics'});
+      connection.changeUser({database : dbName["prod"]});
       connection.query('select * from category', function (error, rows, fields) {
 
         if (!error) {
@@ -227,4 +170,5 @@ Category.prototype.all = function () {
     });
   });
 }
+
 module.exports = Category;

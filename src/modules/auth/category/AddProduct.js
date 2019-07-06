@@ -2,21 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -112,7 +103,7 @@ export default function AddProduct(props) {
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-// console.log('hellooooo---------',props.productCatList.category);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -121,10 +112,8 @@ export default function AddProduct(props) {
       try {
         const result = await Brand.list();
         setBrandList(result.brandList);
-        console.log("Brand------------",result.brandList);
         const color_result = await Color.list();
         setColorList(color_result.colorList);
-        console.log("Color------------",color_result.colorList);
       } catch (error) {
         setIsError(true);
       }
@@ -152,9 +141,6 @@ export default function AddProduct(props) {
       meta_keywords:inputs.meta_keywords,
       meta_description:inputs.meta_description
     });
-    // handleSnackbarClick(true);
-    // handleReset(RESET_VALUES);
-    console.log("dflkj=-==",response.categoryList);
     props.productData(response.categoryList);
     props.handleClose(false);
   };
@@ -167,8 +153,6 @@ export default function AddProduct(props) {
   function handleReset() {
     cleanInputs()
     console.log(inputs);
-
-    
   };
   
   const { inputs, handleInputChange, handleSubmit,  setInput ,cleanInputs} = useSignUpForm(

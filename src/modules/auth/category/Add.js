@@ -166,8 +166,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
 
   function newData(newdata){
     setNewDataList(newdata);
-    console.log(newdata);
-
   }
   function updatedData(response){
     
@@ -182,7 +180,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   }
 
   function productData(newdata){
-    console.log("newdat",newdata);
     updateProductList(newdata);
     // setProductList(newdata);
     // updateProductList(newdata);
@@ -190,8 +187,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   }
   function newCatData(newdata){
     setNewCatDataList(newdata);
-    console.log(newdata);
-
   }
   function updatedCatData(response){
     
@@ -208,8 +203,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   
   function newSubCatData(newdata){
     setNewSubCatDataList(newdata);
-    console.log(newdata);
-
   }
   function updatedSubCatData(response){
     
@@ -223,8 +216,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
     });
   }
   const handleSelectInputChange = e =>{
-    console.log(e.target.value);
-    console.log('name',e.target.name);
     handleInputChange(e);
     if(e.target.value==='0'){
       setMainOpen(true);
@@ -237,7 +228,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   };
   
   const handleSelectCatInputChange = e =>{
-    console.log(e.target.value);
     handleInputChange(e);
     if(e.target.value==='0'){
       setCatOpen(true);
@@ -250,7 +240,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   };
   
   const handleSelectSubcatInputChange = e =>{
-    console.log(e.target.value);
     handleInputChange(e);
     if(e.target.value==='0'){
       setSubCatOpen(true);
@@ -264,22 +253,25 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
 
   function openProductDialog(){
     if(inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
-
       setProductOpen(true);
     }
     else{
       console.log("no cat");
     }
   }
+  
   function handleProductClose() {
     setProductOpen(false);
   }
+
   function handleMainClose() {
     setMainOpen(false);
   }
+
   function handleCatClose() {
     setCatOpen(false);
   }
+
   function handleSubCatClose() {
     setSubCatOpen(false);
   }
@@ -411,7 +403,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                    <MenuItem value="0">Others</MenuItem>
                     </Select>
                   </Grid>
-                  
                   <Grid item xs={12} sm={4}>
                     <Button variant="contained" color="primary" onClick={openProductDialog} className={classes.button} 
                       >
@@ -419,8 +410,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                     </Button>
                     
                   </Grid>
-                
-              </Grid>
+                </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel> 
             <AddMainCategory open={mainOpen} handleClose={handleMainClose}  updatedData={updatedData} newData={newData}/>

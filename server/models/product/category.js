@@ -1,4 +1,6 @@
 const connection = require('../lib/connection.js');
+const dbName = require('../lib/databaseMySQL.js');
+
 const utils = require('../utils');
 
 const Category = function(params) {
@@ -22,9 +24,7 @@ Category.prototype.add = function() {
       }
 
       if (!error) {
-        console.log("type..........", that);
-
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
         connection.query(
           `INSERT INTO category(category,type,position,description,meta_keywords,meta_description,is_active) VALUES ("${that.category}", "${that.type}", "${that.position}", "${that.description}", "${that.meta_keywords}", "${that.meta_description}", "${that.is_active}")`,
           (error, rows, fields) => {
@@ -60,7 +60,7 @@ Category.prototype.update = function() {
       if (!error) {
         console.log("type..........", that);
         
-        connection.changeUser({ database: 'rentronics' });
+        connection.changeUser({database : dbName["prod"]});
 
         let values = [that.category, that.type, that.position, that.description, that.meta_keywords, that.meta_description, that.id]
 
@@ -95,7 +95,7 @@ Category.prototype.all = function () {
         throw error;
       }
 
-      connection.changeUser({database : 'rentronics'});
+      connection.changeUser({database : dbName["prod"]});
       connection.query('select * from category', function (error, rows, fields) {
 
         if (!error) {

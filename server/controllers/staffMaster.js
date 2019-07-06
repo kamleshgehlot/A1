@@ -1,9 +1,6 @@
 const StaffMaster = require("../models/staffMaster.js");
 
 const register = function (req, res, next) {
-	console.log("Req. Decoded Data...", req.decoded);
-	console.log("Staff Req. Body Data..", req.body);
-
 	let staffMasterParams = {
     id: req.body.id,
     first_name: req.body.first_name,
@@ -16,27 +13,24 @@ const register = function (req, res, next) {
 	};
 	
 	try{
-	const newStaffMaster = new StaffMaster(staffMasterParams);
-	
-	if(req.body.id) {
-						newStaffMaster.update().then(function(result){
-							new StaffMaster({}).getAll().then(function (staffList) {
-							res.send({ staffList });
+		const newStaffMaster = new StaffMaster(staffMasterParams);
+		
+		if(req.body.id) {
+				newStaffMaster.update().then(function(result){
+					new StaffMaster({}).getAll().then(function (staffList) {
+					res.send({ staffList });
+				});
+			});
+		} else {
+			newStaffMaster.register().then(function(result){
+				new StaffMaster({}).getAll().then(function (staffList) {
+					res.send({ staffList });
+				})
 			})
-		})
-
-	} else {
-		newStaffMaster.register().then(function(result){
-			new StaffMaster({}).getAll().then(function (staffList) {
-			res.send({ staffList });
-		})
-	})
-}
-
-}catch(err){
-		console.log('error:',err);
+		}
+	} catch(err){
+			console.log('error:',err);
 	}
-
 };
 
 const all = function (req, res, next) {

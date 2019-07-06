@@ -1,4 +1,5 @@
 const connection = require('../lib/connection.js');
+const dbName = require('../lib/databaseMySQL.js');
 
 const Location = function(params) {
   this.id = params.id;
@@ -13,7 +14,7 @@ Location.prototype.getAll = function() {
         throw error;
       }
 
-      connection.changeUser({ database: 'rentronics' });
+      connection.changeUser({database : dbName["prod"]});
       connection.query('select id, city, city_code from location', (error, rows, fields) => {
         if (!error) {
           resolve(rows);

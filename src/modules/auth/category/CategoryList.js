@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -13,8 +12,6 @@ import TableRow from '@material-ui/core/TableRow';
 // import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 import Grid from '@material-ui/core/Grid';
 import { APP_TOKEN } from '../../../api/Constants';
-import { store, useStore } from '../../../store/hookStore';
-import UserList from '../layout/franchise/UserList';
 import Edit from './Edit';
 import Add from './Add';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -24,7 +21,6 @@ import Brand from '../../../api/product/Brand';
 import Color from '../../../api/product/Color';
 // API CALL
 import Category from '../../../../src/api/Category';
-
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -93,8 +89,7 @@ export default function CategoryList(props) {
       textTransform:"initial"
     },
   }));
-  const classes = useStyles();
-
+    const classes = useStyles();
 
     useEffect(() => {
     const fetchData = async () => {
@@ -104,13 +99,10 @@ export default function CategoryList(props) {
       try {
         const result = await Category.productlist();
         setProductList(result.productList);
-        console.log('product------------',result.productList);
         const brand_result = await Brand.list();
         setBrandList(brand_result.brandList);
-        console.log("Brand------------",result.brandList);
         const color_result = await Color.list();
         setColorList(color_result.colorList);
-        console.log("Color------------",color_result.colorList);
       } catch (error) {
         setIsError(true);
       }
@@ -125,17 +117,15 @@ export default function CategoryList(props) {
   function handleClickOpen() {
     setOpen(true);
   }
+
   function handleClose() {
     setOpen(false);
   }
 
-
   function handleClickEditOpen(response) {
-    console.log("response",response);
     setReceivedData(response);
     setEditOpen(true);
   }
-// console.log("received",receivedData);
   
   function handleEditClose() {
     setEditOpen(false);
@@ -217,7 +207,6 @@ export default function CategoryList(props) {
                             
                            })
                          }
-
                       <StyledTableCell>{data.buying_price}</StyledTableCell>
                       <StyledTableCell>{data.description}</StyledTableCell>
                       <StyledTableCell>{data.specification}</StyledTableCell>
@@ -227,7 +216,6 @@ export default function CategoryList(props) {
                       <StyledTableCell>{data.meta_keywords}</StyledTableCell>
                       <StyledTableCell>{data.meta_description}</StyledTableCell>
                       <StyledTableCell>
-                        {/* {console.log("data ji ",data)} */}
                         <Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                         Edit
                       </Button>
@@ -242,8 +230,9 @@ export default function CategoryList(props) {
           </Paper>
         </Grid>
       </Grid>
+      
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} updateProductList = {setCategoryListFn} />
-      {console.log("rec.. ",receivedData)}
+      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={receivedData} updateProductList={setCategoryListFn}/> : null}
       
       <Snackbar

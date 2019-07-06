@@ -94,7 +94,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   const [expanded, setExpanded] = React.useState('panel1');
 
-  // console.log("heello", setFranchiseList);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
