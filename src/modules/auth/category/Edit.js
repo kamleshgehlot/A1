@@ -30,25 +30,29 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ConfirmationDialog from '../ConfirmationDialog.js';
 
 // API CALL
 import Category from '../../../api/Category';
 import Brand from '../../../api/product/Brand';
 import Color from '../../../api/product/Color';
-
+import Status from '../../../api/product/Status';
 
 import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
-  category: '',
-  type: '',
-  parentid: '',
-  position: '',
-  description: '',
-  image: '',
-  meta_keywords: '',
-  meta_description: '',
-  active: '',
+  productname:'',
+  color:'',
+  brand:'',
+  productprice:'',
+  description:'',
+  specification:'',
+  brought_from:'',
+  invoice:'',
+  rental:'',
+  meta_keywords:'',
+  meta_description:'',
+  status:''
 };
 
 const useStyles = makeStyles(theme => ({
@@ -95,6 +99,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
   const [product, setProduct] = useState(inputs);
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
+  const [statusList, setStatusList] = useState([]);
+  const [confirmation, setConfirmation] = React.useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -105,6 +111,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
   const handleInputChange = event => {
     const { name, value } = event.target
 
+    name =='status' && value =='3' ? setConfirmation(true) : ''
     setProduct({ ...product, [name]: value })
   }
 
@@ -118,6 +125,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
         setBrandList(result.brandList);
         const color_result = await Color.list();
         setColorList(color_result.colorList);
+        const status_result = await Status.list();
+        setStatusList(status_result.statusList);
       } catch (error) {
         setIsError(true);
       }
@@ -127,6 +136,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     fetchData();
   }, []);
 
+  console.log(product);
   const handleSubmit = async () => {
     const response = await Category.edit({
       // cancelToken: this.isTokenSource.token,
@@ -145,6 +155,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
       rental: product.rental,
       meta_keywords: product.meta_keywords,
       meta_description: product.meta_description,
+      status: product.status,
     });
 
     // handleSnackbarClick(true, 'Category Updated Successfully.');
@@ -152,7 +163,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     // props.handleReset(RESET_VALUES);
     handleEditClose(false);
   };
-  
+  function handleConfirmationDialog (){
+   
+    setConfirmation(false);
+  }
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
@@ -333,7 +347,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="specification">Meta Description</InputLabel>
                     <TextField
                         id="meta_description"
@@ -346,6 +360,29 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       />
                   </Grid>
                   
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="status">Choose Status</InputLabel>
+                    <Select
+                        
+                        onChange={handleInputChange}
+                        value={product.status}
+                        inputProps={{
+                          name: 'status',
+                          id: 'status',
+                        }}
+                        className={classes.margin}
+                        fullWidth
+                        label="Choose Status"
+                        required
+                      >
+                        { statusList.map((datastatus, index)=>{
+                          return(
+                        <MenuItem value={datastatus.id}>{datastatus.status}</MenuItem>
+                          )
+                      })
+                    }
+                    </Select>
+                  </Grid>
                   <Grid item xs={12} sm={12}>
                   </Grid>
                 </Grid>
@@ -353,6 +390,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
           </div>
       </form>
       </Dialog>
+      <ConfirmationDialog open = {confirmation} handleConfirmationClose={handleConfirmationDialog} title={"Discontinued"} content={"Do you really want to discontinue this product ?"} />
+
     </div>
   );
 }
