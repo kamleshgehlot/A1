@@ -37,7 +37,8 @@ User.prototype.register = function () {
           //   connection.query('INSERT INTO user(franchise_id,name,user_id,password,designation,mobile_no,email,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + that.name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.mobile_no + '", "' + that.email + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
               if (!error) {
-                resolve({ userName: that.name, userId: that.user_id, password: that.password });
+                const id = rows.insertId;
+                resolve({ userName: that.name, userId: that.user_id, password: that.password, id: id });
               } else {
                 console.log("Error...", error);
                 reject(error);

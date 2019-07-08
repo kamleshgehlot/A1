@@ -1,4 +1,5 @@
 const connection = require("../../lib/connection.js");
+const dbName = require('../../lib/databaseMySQL.js');
 
 var UserRole = function (params) {
   this.id = params.id;
@@ -17,6 +18,7 @@ UserRole.prototype.register = function () {
       }
 
       if (!error) {
+        connection.changeUser({database : dbName["prod"]});
         connection.query('INSERT INTO user_role(user_id,role_id,is_active,created_by) VALUES ("' + that.user_id + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
           if (!error) {

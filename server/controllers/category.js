@@ -163,7 +163,6 @@ const edit = function(req, res, next) {
 
   try {
     const newProduct = new Product(categoryParam);
-      console.log('categoryParam----',categoryParam);
     newProduct.update().then(result => {
         new Product({}).all().then(productList => {
           res.send( productList );

@@ -20,7 +20,6 @@ const Product = function(params) {
   this.status=params.status;
 
   this.user_id = params.user_id;
-  console.log('params-----',params);
 };
 
 Product.prototype.addProduct = function () {
@@ -93,7 +92,7 @@ Product.prototype.update = function() {
 
         let values = [that.name, that.color_id, that.brand_id, that.buying_price, that.description, that.specification, that.brought, that.invoice, that.rental, that.meta_keywords, that.meta_description,that.status, that.user_id, that.id];
 
-			  connection.query('UPDATE product set name = ?, color_id = ?, brand_id = ?, buying_price =?, description = ?, specification = ?, brought = ?, invoice = ?, rental = ?, meta_keywords = ?,  meta_description = ?, status=?, updated_by = ? WHERE id = ?', values, function (error, rows, fields) {
+			  connection.query('UPDATE product set name = ?, color_id = ?, brand_id = ?, buying_price =?, description = ?, specification = ?, brought = ?, invoice = ?, rental = ?, meta_keywords = ?,  meta_description = ?, status=?, modified_by = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {

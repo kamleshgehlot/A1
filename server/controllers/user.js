@@ -4,6 +4,8 @@ const User = require("../models/user.js")
 const Franchise = require("../models/franchise.js")
 const Accountant = require("../models/accountant.js")
 const Company = require("../models/company.js")
+const UserRole = require("../models/franchise/userRole")
+
 const { trans } = require("../lib/mailtransporter");
 
 const register = function (req, res, next) {
@@ -60,28 +62,33 @@ const register = function (req, res, next) {
 		f_id: req.body.id,
 	};
 
+	const userRoleParam = {
+		role_id : req.body.role_id,
+		is_active : 1,
+		created_by : req.decoded.id,
+	};
 	
 	try{
 	const newAccountant = new Accountant(accountantParam);
 	const newCompany = new Company(companyParam);
 	const newFranchise = new Franchise(franchiseParam);
 	const newUser = new User(userParam);
+	const newUserRole = new UserRole(userRoleParam);
+	// const mail = {
+	// 	 from: 'admin@rentronics.saimrc.com',
+	// 		to: 'mpurohit88@gmail.com',
+	// 		subject: 'New Message from Contact Form',
+	// 		text: "testing email"
+	// 	}
 
-	const mail = {
-		 from: 'admin@rentronics.saimrc.com',
-			to: 'mpurohit88@gmail.com',
-			subject: 'New Message from Contact Form',
-			text: "testing email"
-		}
-
-		trans.sendMail(mail, (err, info) => {
-			if (err) {
-				return console.log(err);
-		} 
-		console.log('Message sent: %s', info.messageId);
-		// Preview only available when sending through an Ethereal account
-		console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-	});
+	// 	trans.sendMail(mail, (err, info) => {
+	// 		if (err) {
+	// 			return console.log(err);
+	// 	} 
+	// 	console.log('Message sent: %s', info.messageId);
+	// 	// Preview only available when sending through an Ethereal account
+	// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+	// });
 
 	if(req.body.id) {
 		
@@ -105,7 +112,6 @@ const register = function (req, res, next) {
 		
 		// newAccountant.update();
 	} else {
-
 		newAccountant.register().then(function(result){
 			
 			newCompany.accountant_id = result.accountant_id;
@@ -116,10 +122,13 @@ const register = function (req, res, next) {
 
 					newUser.franchise_id = result.franchise_id;
 					newUser.register().then(function(result){
-								console.log("Saved Successfully.");
-								new Franchise({}).all().then(function (userList) {
-									res.send({ userList: userList });
-								});
+						console.log("Saved Successfully.");
+						newUserRole.user_id = result.id;
+						newUserRole.register().then(function(result) {
+							new Franchise({}).all().then(function (userList) {
+								res.send({ userList: userList });
+							});
+						});
 					})
 				})
 			})
