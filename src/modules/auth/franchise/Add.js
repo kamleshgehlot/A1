@@ -30,7 +30,6 @@ import UserAPI from '../../../api/User';
 import LocationAPI from '../../../api/Location';
 
 import useSignUpForm from './CustomHooks';
-import { green } from '@material-ui/core/colors';
 
 const RESET_VALUES = {
   city: '',
@@ -221,10 +220,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   );
 
   function handleNameBlurChange(e) {
-    setInput('uid', generate(inputs.director, inputs.city));
+    setInput('uid', generate(inputs.franchise_name, inputs.city));
   }
 
-  function generate(director, city) {
+  function generate(franchiseName, city) {
     const ts = new Date().getTime().toString();
     const parts = ts.split( "" ).reverse();
     let id = "";
@@ -234,16 +233,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     id += parts[index];	 
     }
     
-    return director.substring(0,4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
+    return franchiseName.substring(franchiseName.length - 4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
   }
   
   function handlePasswordBlurChange() {
-    // console.log(inputs);
     inputs['password']=='' ? 
     setInput('password', GeneratePassword())
     :''
-    console.log(inputs);
-    // console.log(inputs['password']);
   }
 
   function GeneratePassword() {
@@ -286,20 +282,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      id="franchise_name"
-                      name="franchise_name"
-                      label="Franchise Name"
-                      value={inputs.franchise_name}
-                      onChange={handleInputChange}                      
-                      fullWidth
-                      required
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                    />
-                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="city">Select City *</InputLabel>
                     <Select
@@ -347,7 +329,79 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       <MenuItem value={"Central"}>Central</MenuItem>
                     </Select>
                   </Grid>
-                
+                  <Grid item xs={6} sm={6}>
+                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
+                    <TextField
+                      id="franchise_name"
+                      name="franchise_name"
+                      label="Franchise Name"
+                      value={inputs.franchise_name}
+                      onChange={handleInputChange}
+                      onBlur={handleNameBlurChange}
+                      fullWidth
+                      required
+                      // placeholder="Franchise Name"
+                      margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    {/* <InputLabel htmlFor="franchaise_name">User Id</InputLabel> */}
+                    <TextField
+                      margin="dense"
+                      id="uid"
+                      name="uid"
+                      label="User Id"
+                      type="text"
+                      value={inputs.uid} 
+                      // onChange={handleInputChange}
+                      onBlur={handlePasswordBlurChange}
+                      fullWidth
+                      disabled
+                      required
+                    />
+                    
+                    {/* <TextField
+                      disabled
+                      id="uid"
+                      name="uid"
+                      className={classes.textField}
+                      margin="normal"
+                      onChange={handleInputChange}
+                    />
+                    <TextField
+                      disabled
+                      id="uid"
+                      name="uid"
+                      className={classes.textField}
+                      margin="normal"
+                      onChange={handleInputChange}
+                    />
+                    <TextField
+                      disabled
+                      id="uid"
+                      name="uid"
+                      className={classes.textField}
+                      margin="normal"
+                      onChange={handleInputChange}
+                    /> */}
+                  </Grid>
+                  <Grid item xs={6} sm={6}>
+                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
+                    <TextField
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      label="Password"
+                      // onChange={handleInputChange}
+                      onFocus={handlePasswordBlurChange}
+                      value={inputs.password} 
+                      required
+                      fullWidth
+                      error={errors.password}
+                      helperText={errors.password ? errors.password : ' '}
+                      // disabled
+                    />
+                  </Grid>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -408,8 +462,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
 
-                  <Paper className={classes.paper}>
-                  <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="director">Director Name *</InputLabel> */}
                     <TextField
@@ -422,7 +474,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       margin="dense"
                       required
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -437,7 +488,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="email"
                       fullWidth
                       onChange={handleInputChange}
-                      onFocus={handlePasswordBlurChange}
                       error={errors.email}
                       helperText={errors.email ? errors.email : ' '}
                     />
@@ -469,66 +519,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="number"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="uid"
-                      name="uid"
-                      label="User Id"
-                      type="text"
-                      value={inputs.uid} 
-                      // onChange={handleInputChange}
-                      // onBlur={handlePasswordBlurChange}                      
-                      fullWidth
-                      disabled
-                      required
-                    />
-                    
-                  </Grid>
-                  <Grid item xs={12} sm={5}>
-                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="password"
-                      name="password"
-                      label="Password"
-                      // onChange={handleInputChange}
-                      // onFocus={handlePasswordBlurChange}
-                      value={inputs.password} 
-                      required
-                      fullWidth
-                      error={errors.password}
-                      helperText={errors.password ? errors.password : ' '}
-                      // disabled
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={1}>
-                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
-                     <Button className={classes.addButton}>+</Button>
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>1</StyledTableCell>
-                        <StyledTableCell>directro name</StyledTableCell>
-                        <StyledTableCell>email</StyledTableCell>
-                        <StyledTableCell>contact</StyledTableCell>
-                        <StyledTableCell>altContact</StyledTableCell>
-                        <StyledTableCell>user_name</StyledTableCell>
-                        <StyledTableCell>password</StyledTableCell>
-                        <StyledTableCell>
-                        <Button className={classes.addButton}>Delete</Button>
-                        
-                        <Button className={classes.addButton}>update</Button>
-                        </StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                  </Table>
-                  </Grid>
-                  </Grid>
-                </Paper>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>

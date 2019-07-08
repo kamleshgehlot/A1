@@ -224,7 +224,7 @@ export default function AddProduct(props) {
                         label="Choose Color"
                         required
                       >
-                        { colorList.map((data, index)=>{
+                        { (colorList || []).map((data, index)=>{
                           return(
                         <MenuItem value={data.id}>{data.color}</MenuItem>
                           )
@@ -247,9 +247,9 @@ export default function AddProduct(props) {
                         label="Choose Brand"
                         required
                       >
-                        { brandList.map((data, index)=>{
+                        { (brandList || []).map((data, index)=>{
                           return(
-                        <MenuItem value={data.id}>{data.brand_name}</MenuItem>
+                            <MenuItem value={data.id}>{data.brand_name}</MenuItem>
                           )
                       })
                     }
@@ -379,7 +379,7 @@ export default function AddProduct(props) {
                         label="Choose Status"
                         required
                       >
-                        { statusList.map((datastatus, index)=>{
+                        { (statusList || []).map((datastatus, index)=>{
                           
                           return(datastatus.id!=3 ?
                         <MenuItem value={datastatus.id}>{datastatus.status}</MenuItem>:''
