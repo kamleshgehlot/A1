@@ -8,7 +8,11 @@ const UserRole = require("../models/franchise/userRole")
 
 const { trans } = require("../lib/mailtransporter");
 
+
 const register = function (req, res, next) {
+
+	// console.log("check data ",req.body);
+
 	let accountantParam = {
 		// id : req.body.id,
 		name: req.body.accountant_name,
@@ -20,17 +24,18 @@ const register = function (req, res, next) {
 		  name: req.body.company_name,
       nbzn: req.body.nbzn,
       location: req.body.company_location,
-      director: req.body.director,
-      email: req.body.email,
-      contact: req.body.contact,
-      alt_contact: req.body.alt_contact,
+      // director: req.body.director,
+      // email: req.body.email,
+      // contact: req.body.contact,
+			// alt_contact: req.body.alt_contact,
+			directorList: req.body.directorList,
 			website: req.body.website,
 		// Accountant id recieving by accountant model
 	};
 
 	let franchiseParam = {
 		id: req.body.id,
-		uid: req.body.uid,
+		// uid: req.body.uid,
 		name: req.body.franchise_name,
 		city: req.body.city,
 		city_code: req.body.city_code,
@@ -38,7 +43,8 @@ const register = function (req, res, next) {
 		abn: req.body.abn,
 		state: req.body.state,
 		created_by: req.decoded.id,
-		password: req.body.password,
+		// password: req.body.password,
+		
 
 		// Company id recieving by Company model
 
@@ -47,12 +53,13 @@ const register = function (req, res, next) {
 	};
 
 	let userParam = {
-		name: req.body.user_name,
-		user_id: req.body.uid,
-		password: req.body.password,
+		// name: req.body.user_name,
+		user_details: req.body.directorList,
+		// user_id: req.body.uid,
+		// password: req.body.password,
 		designation: req.body.designation,
-		mobile_no: req.body.contact,
-		email: req.body.email,
+		// mobile_no: req.body.contact,
+		// email: req.body.email,
 		role_id: req.body.role_id,
 		state: 1,
 		created_by: req.decoded.id,
@@ -116,8 +123,9 @@ const register = function (req, res, next) {
 			
 			newCompany.accountant_id = result.accountant_id;
 			newCompany.register().then(function(result){
-
-				newFranchise.company_id = result.company_id;
+				
+				newFranchise.company_id = result;
+				newUser.company_id = result;
 				newFranchise.register().then(function(result){
 
 					newUser.franchise_id = result.franchise_id;

@@ -7,10 +7,11 @@ var Company = function (params) {
       this.name= params.name;
       this.nbzn= params.nbzn;
       this.location= params.location;
-      this.director= params.director;
-      this.email= params.email;
-      this.contact= params.contact;
-      this.alt_contact= params.alt_contact;
+      // this.director= params.director;
+      // this.email= params.email;
+      // this.contact= params.contact;
+      // this.alt_contact= params.alt_contact;
+      this.directorList=params.directorList;
       this.website= params.website;
       this.accountant_id = params.accountant_id;
       
@@ -19,8 +20,11 @@ var Company = function (params) {
       this.comp_id = params.camp_id;
 };
 
+// console.log("company---",Company);
+
 Company.prototype.register = function () {
   const that = this;
+  var company_id;
   return new Promise(function (resolve, reject) {
 
     connection.getConnection(function (error, connection) {
@@ -30,17 +34,30 @@ Company.prototype.register = function () {
 
       if (!error) {
         connection.changeUser({database : dbName["prod"]});
-        connection.query('INSERT INTO company(name,nbzn,location,director,email,contact,alt_contact,website,accountant_id) VALUES ("' + that.name + '", "' + that.nbzn + '","' + that.location + '", "' + that.director + '","' + that.email + '", "' + that.contact + '","' + that.alt_contact + '","' + that.website + '","' + that.accountant_id + '")', function (error, rows, fields) {
+        connection.query('SELECT company_id from company ORDER BY company_id DESC LIMIT 1 ', function (error, rows, fields) {
+          if(!error){
+            company_id = rows[0].company_id + 1;
 
-
-              if (!error) {
-                let company_id = rows.insertId;
-                resolve({ company_id: company_id });
-              } else {
-                console.log("Error...", error);
-                reject(error);
-              }
-            });
+            (that.directorList || []).map(info=>{
+         
+              connection.query('INSERT INTO company(company_id, name,nbzn,location,director,email,contact,alt_contact,website,accountant_id) VALUES ("'+ company_id +'", "' + that.name + '", "' + that.nbzn + '","' + that.location + '", "' + info.director + '","' + info.email + '", "' + info.contact + '","' + info.alt_contact + '","' + that.website + '","' + that.accountant_id + '")', function (error, rows, fields) {
+                if (!error) {
+                  
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+              });
+            })
+            resolve(company_id);
+          }else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+        
+        
+        
           
       } else {
         console.log("Error...", error);

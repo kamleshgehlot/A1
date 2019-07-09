@@ -23,6 +23,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 // API CALL
 import UserAPI from '../../../api/User';
@@ -85,6 +88,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     flexGrow: 1,
     padding: theme.spacing(2),
+    // padding: theme.spacing(3, 2),
     textAlign: 'left',
     backgroundColor: '#E5E9EA',
   },
@@ -103,6 +107,12 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  deleteBtn: {
+    margin: theme.spacing(1),
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -112,6 +122,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList }) {
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
+  const [directorList, setDirectorList] =useState([]);
 
   const [expanded, setExpanded] = React.useState('panel1');
 
@@ -160,10 +171,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       company_name: inputs.company_name,
       nbzn: inputs.nbzn,
       company_location: inputs.company_location,
-      director: inputs.director,
-      email: inputs.email,
-      contact: inputs.contact,
-      alt_contact: inputs.alt_contact,
+      // director: inputs.director,
+      // email: inputs.email,
+      // contact: inputs.contact,
+      // alt_contact: inputs.alt_contact,
+      directorList: directorList,
       website: inputs.website,
 
       accountant_name: inputs.accountant_name,
@@ -171,9 +183,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       accountant_contact: inputs.accountant_contact,
 
       user_name : inputs.director,
-      uid: inputs.uid,
+      // uid: inputs.uid,
+      // password: inputs.password,
       designation: "2",
-      password: inputs.password,
       role_id: "2",
       state:1,
     });
@@ -219,11 +231,38 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     validate
   );
 
-  function handleNameBlurChange(e) {
-    setInput('uid', generate(inputs.franchise_name, inputs.city));
+  function handleDirectorList(){
+    directorList.push({
+      'director': inputs.director,
+      'email' : inputs.email,
+      'contact': inputs.contact,
+      'alt_contact': inputs.alt_contact,
+      'uid' : inputs.uid,
+      'password': inputs.password
+    });
+    
+    inputs.director = '';
+    inputs.email = '';
+    inputs.contact = '';
+    inputs.alt_contact = '';
+    inputs.uid = '';
+    inputs.password = '';
+
+    // console.log(directorList);
   }
 
-  function generate(franchiseName, city) {
+console.log(directorList);
+
+  function handleRemoveDirector(index){
+    directorList.splice(index, 1);
+    console.log(directorList);
+  }
+
+  function handleNameBlurChange(e) {
+    setInput('uid', generate(inputs.director, inputs.city));
+  }
+
+  function generate(director, city) {
     const ts = new Date().getTime().toString();
     const parts = ts.split( "" ).reverse();
     let id = "";
@@ -233,7 +272,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     id += parts[index];	 
     }
     
-    return franchiseName.substring(franchiseName.length - 4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
+    return director.substring(0, 4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
   }
   
   function handlePasswordBlurChange() {
@@ -282,6 +321,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
+                <Grid item xs={12} sm={12}>
+                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
+                    <TextField
+                      id="franchise_name"
+                      name="franchise_name"
+                      label="Franchise Name"
+                      value={inputs.franchise_name}
+                      onChange={handleInputChange}
+                      // onBlur={handleNameBlurChange}
+                      fullWidth
+                      required
+                      // placeholder="Franchise Name"
+                      margin="dense"
+                    />
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="city">Select City *</InputLabel>
                     <Select
@@ -329,79 +383,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       <MenuItem value={"Central"}>Central</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={6} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      id="franchise_name"
-                      name="franchise_name"
-                      label="Franchise Name"
-                      value={inputs.franchise_name}
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      fullWidth
-                      required
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="uid"
-                      name="uid"
-                      label="User Id"
-                      type="text"
-                      value={inputs.uid} 
-                      // onChange={handleInputChange}
-                      onBlur={handlePasswordBlurChange}
-                      fullWidth
-                      disabled
-                      required
-                    />
-                    
-                    {/* <TextField
-                      disabled
-                      id="uid"
-                      name="uid"
-                      className={classes.textField}
-                      margin="normal"
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      disabled
-                      id="uid"
-                      name="uid"
-                      className={classes.textField}
-                      margin="normal"
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      disabled
-                      id="uid"
-                      name="uid"
-                      className={classes.textField}
-                      margin="normal"
-                      onChange={handleInputChange}
-                    /> */}
-                  </Grid>
-                  <Grid item xs={6} sm={6}>
-                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="password"
-                      name="password"
-                      label="Password"
-                      // onChange={handleInputChange}
-                      onFocus={handlePasswordBlurChange}
-                      value={inputs.password} 
-                      required
-                      fullWidth
-                      error={errors.password}
-                      helperText={errors.password ? errors.password : ' '}
-                      // disabled
-                    />
-                  </Grid>
+                  
+                
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -461,7 +444,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       onChange={handleInputChange}
                     />
                   </Grid>
-
+                  <Paper className={classes.paper}>
+                  <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="director">Director Name *</InputLabel> */}
                     <TextField
@@ -473,6 +457,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="text"
                       margin="dense"
                       required
+                      onBlur={handleNameBlurChange}
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -519,6 +504,73 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="number"
                     />
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    {/* <InputLabel htmlFor="franchaise_name">User Id</InputLabel> */}
+                    <TextField
+                      margin="dense"
+                      id="uid"
+                      name="uid"
+                      label="User Id"
+                      type="text"
+                      value={inputs.uid} 
+                      // onChange={handleInputChange}
+                      // onBlur={handlePasswordBlurChange}
+                      fullWidth
+                      disabled
+                      required
+                    />
+                    
+                  </Grid>
+                  <Grid item xs={6} sm={5}>
+                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
+                    <TextField
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      label="Password"
+                      // onChange={handleInputChange}
+                      onFocus={handlePasswordBlurChange}
+                      value={inputs.password} 
+                      required
+                      fullWidth
+                      error={errors.password}
+                      helperText={errors.password ? errors.password : ' '}
+                      // disabled
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={1}>
+                  <Fab size="small" color="secondary" aria-label="Add" onClick={handleDirectorList} className={classes.margin}>
+                    <AddIcon />
+                  </Fab>
+                  </Grid>
+                  </Grid>
+                  <Table >
+                    <TableHead>
+                      
+                      {
+                        (directorList || []).map((list, index) =>{
+                          return(
+                            <TableRow>
+                              <StyledTableCell>{index}</StyledTableCell>
+                              <StyledTableCell>{list.director}</StyledTableCell>
+                              <StyledTableCell>{list.email}</StyledTableCell>
+                              <StyledTableCell>{list.contact}</StyledTableCell>
+                              <StyledTableCell>{list.alt_contact}</StyledTableCell>
+                              <StyledTableCell>{list.uid}</StyledTableCell>
+                              <StyledTableCell>{list.password}</StyledTableCell>
+                              <StyledTableCell>
+                              <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
+                                <DeleteIcon />
+                              </IconButton>
+                              </StyledTableCell>
+                            </TableRow>
+                          )
+                        })
+                      }
+
+                    </TableHead>
+                    </Table>
+                  </Paper>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>

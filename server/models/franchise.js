@@ -3,8 +3,8 @@ const dbName = require('../lib/databaseMySQL.js');
 
 const Franchise = function (params) {
   // this.id = params.id;
-  this.uid = params.uid;
-  this.password = params.password;
+  // this.uid = params.uid;
+  // this.password = params.password;
   this.name = params.name;
   this.city = params.city;
   this.city_code = params.city_code;
@@ -26,8 +26,7 @@ const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_I
 Franchise.prototype.register = function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
-    console.log("franchise..........", that)
-    const frachiseDbName = 'rentronics_franchise_' + that.uid.split('_')[1];
+    const frachiseDbName = 'rentronics_franchise_' + that.name.split('_')[1];
     console.log("franchise database name..........", frachiseDbName)
 
     connection.getConnection(function (error, connection) {
@@ -69,7 +68,7 @@ Franchise.prototype.register = function (newUser) {
               ]
 
               connection.changeUser({database : dbName["prod"]});
-              connection.query('INSERT INTO franchise(uid,name,city,city_code,suburb,abn,state,created_by,company_id) VALUES ("' + that.uid + '", "' + that.name + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
+              connection.query('INSERT INTO franchise(name,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
 
                 if (!error) {
                   let franchise_id = rows.insertId;
