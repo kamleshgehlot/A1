@@ -4,21 +4,23 @@ const dbName = require('../lib/databaseMySQL.js');
 const utils = require("../utils");
 
 var User = function (params) {
-  this.franchise_id   = params.franchise_id ;
+  this.franchise_id   = params.franchise_id;
+  this.director_id = params.director_id;
   this.company_id = params.company_id;
+
   this.name = params.name;
-  // this.user_id = params.user_id;
-  // this.password = params.password; //utils.randomString(11);
+  
   this.designation = params.designation;
-  this.mobile_no = params.mobile_no;
   this.role_id = params.role_id;
-  this.email = params.email;
   this.is_active = params.is_active;
   this.created_by = params.created_by;
   this.user_details = params.user_details;
 
+  this.user_id = params.user_id;
+  this.password = params.password;
+
   // for update - param
-  this.f_id = params.f_id;
+  // this.f_id = params.f_id;
 };
 
 User.prototype.register = function () {
@@ -37,38 +39,28 @@ User.prototype.register = function () {
           // console.log(rows[0].id);
           directors_id = rows;
 
-          // let userValues = [
-          // ];
+          let userValues = [
+          ];
     
-          // that.user_details.map((data, index) => {
-          //   userValues.push([that.franchise_id,directors_id[index],that.name,data.user_id,"AES_ENCRYPT("  + data.password + ")",that.designation,that.mobile_no,that.email,that.role_id,that.is_active,that.created_by])
-          // });
-          // console.log("----",userValues);
-
-          (that.user_details || []).map((info,index)=>{
-            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation, mobile_no,email,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + that.directors_id[index].id + '", "' + info.director + '", "' + info.uid + '", AES_ENCRYPT("' + info.password + '", "secret"), "' + that.designation + '", "' + info.contact + '", "' + info.email + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
-              // connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation, mobile_no,email,role_id,is_active,created_by) VALUES  ?', function (error, rows, fields) {
-
-              // if (!error) {
-              //   connection.changeUser({database : 'rentronics_franchise_' + that.user_id.split('_')[1]});
-              //   connection.query('INSERT INTO user(franchise_id,name,user_id,password,designation,mobile_no,email,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + that.name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.mobile_no + '", "' + that.email + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
-    
-                  if (!error) {
-                    
-                    
-                  } else {
-                    console.log("Error...", error);
-                    reject(error);
-                  }
-                // });
-              // } else {
-              //   console.log("Error...", error);
-              //   reject(error);
-              // }
-            });
+          (that.user_details || []).map((data, index) => {
+            userValues.push([that.franchise_id,directors_id[index].id,data.director,data.uid,"AES_ENCRYPT('"  + data.password + "')",that.designation,that.role_id,that.is_active,that.created_by])
           });
-          const id = rows.insertId;
-          resolve({ userName: that.name, userId: that.user_id, password: that.password, id: id });
+          // console.log("----",userValues);
+          // (userValues || []).map(row=>{
+            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation, role_id,is_active,created_by) VALUES ?', [userValues], function (error, rows, fields) {
+            
+              // if (!error) {
+                //   connection.changeUser({database : 'rentronics_franchise_' + that.user_id.split('_')[1]});
+                //   connection.query('INSERT INTO user(franchise_id,name,user_id,password,designation,mobile_no,email,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + that.name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.mobile_no + '", "' + that.email + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+                    if (!error) {
+                      const id = rows.insertId;
+                      resolve({ userName: that.name, userId: that.user_id, password: that.password, id: id });
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+            });
+          // })
         })
         
       } else {
@@ -93,11 +85,11 @@ User.prototype.update = function () {
         throw error;
       }
 
-      const values = [ that.name, that.user_id, that.password, that.designation, that.mobile_no, that.email, that.role_id, that.f_id];
+      const values = [ that.name, that.designation, that.role_id, that.director_id];
 
       if (!error) {
         connection.changeUser({database : dbName["prod"]});
-        connection.query('UPDATE user set name = ?, user_id=?, password=?, designation = ?, mobile_no = ?, email = ?, role_id = ?  WHERE id = ?', values, function (error, rows, fields) {
+        connection.query('UPDATE user set name = ?, designation = ?, role_id = ?  WHERE director_id = ?', values, function (error, rows, fields) {
           if (!error) {
             // resolve({ userName: that.name, userId: that.userId, password: that.password });
             resolve(rows);

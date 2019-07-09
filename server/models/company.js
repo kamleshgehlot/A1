@@ -7,17 +7,18 @@ var Company = function (params) {
       this.name= params.name;
       this.nbzn= params.nbzn;
       this.location= params.location;
-      // this.director= params.director;
-      // this.email= params.email;
-      // this.contact= params.contact;
-      // this.alt_contact= params.alt_contact;
-      this.directorList=params.directorList;
+      this.director_id = params.director_id;
+      this.director= params.director;
+      this.email= params.email;
+      this.contact= params.contact;
+      this.alt_contact= params.alt_contact;
       this.website= params.website;
       this.accountant_id = params.accountant_id;
-      
 
+      this.directorList=params.directorList;
+      
       //company_id for update
-      this.comp_id = params.camp_id;
+      // this.comp_id = params.camp_id;
 };
 
 // console.log("company---",Company);
@@ -36,7 +37,11 @@ Company.prototype.register = function () {
         connection.changeUser({database : dbName["prod"]});
         connection.query('SELECT company_id from company ORDER BY company_id DESC LIMIT 1 ', function (error, rows, fields) {
           if(!error){
-            company_id = rows[0].company_id + 1;
+            if(rows==''){
+              company_id = 1;
+            }else{
+              company_id = rows[0].company_id + 1;
+            }
 
             (that.directorList || []).map(info=>{
          
@@ -82,16 +87,16 @@ Company.prototype.update = function (newUser) {
 
       if (!error) {
 
-        let values = [that.name, that.nbzn, that.location, that.director, that.email, that.contact, that.alt_contact, that.website, that.comp_id];
+        let values = [that.name, that.nbzn, that.location, that.director, that.email, that.contact, that.alt_contact, that.website, that.director_id];
         
         connection.changeUser({database : dbName["prod"]});
         connection.query('UPDATE company set name = ?, nbzn = ?, location=?, director=?, email = ?, contact = ?, alt_contact = ?, website = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
-            connection.query('select accountant_id from company where id="' + that.comp_id + '"',function(error,rows,fields){
-              if (!error) {
+            // connection.query('select accountant_id from company where id="' + that.comp_id + '"',function(error,rows,fields){
+            //   if (!error) {
                 resolve(rows);
-              }
-            })
+          //     }
+          //   })
           } else {
             console.log('Error...', error);
             reject(error);

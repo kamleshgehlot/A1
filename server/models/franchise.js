@@ -3,8 +3,7 @@ const dbName = require('../lib/databaseMySQL.js');
 
 const Franchise = function (params) {
   // this.id = params.id;
-  // this.uid = params.uid;
-  // this.password = params.password;
+  
   this.name = params.name;
   this.city = params.city;
   this.city_code = params.city_code;
@@ -16,6 +15,7 @@ const Franchise = function (params) {
 
   //frachise id for updation
   this.f_id = params.f_id;
+  // this.com_id = params.com_id;
 };
 
 
@@ -154,14 +154,13 @@ Franchise.prototype.update = function () {
 
       if (!error) {
         connection.changeUser({database : dbName["prod"]});
-        connection.query('update franchise set uid = "' + that.uid + '", name = "' + that.name + '", city= "' + that.city + '", suburb = "' + that.suburb + '", abn ="' + that.abn + '", state ="' + that.state + '"  WHERE id = "' + that.f_id + '"', function (error, rows, fields) {
+        connection.query('update franchise set name = "' + that.name + '", city= "' + that.city + '", suburb = "' + that.suburb + '", abn ="' + that.abn + '", state ="' + that.state + '"  WHERE id = "' + that.f_id + '"', function (error, rows, fields) {
           if (!error) {
-            connection.query('select company_id from franchise where id="' + that.f_id + '"', function (error, rows, fields){
-            if (!error) {
+            // connection.query('select company_id from franchise where id="' + that.f_id + '"', function (error, rows, fields){
+            // if (!error) {
               resolve(rows);
-            }
-            })
-            
+            // }
+            // })
           } else {
             console.log('Error...', error);
             reject(error);
@@ -206,8 +205,9 @@ Franchise.prototype.all = function () {
       }
 
       connection.changeUser({database : dbName["prod"]});
-      connection.query('select f.id, f.uid, f.name as franchise_name, f.city, f.city_code, f.state, c.name as company_name, c.location as company_location, c.director, c.contact, c.alt_contact, c.website, c.nbzn, f.suburb, f.abn,  c.director, c.email, c.contact, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from franchise f inner join company c on f.company_id = c.id inner join accountant a on c.accountant_id = a.id order by f.id desc', function (error, rows, fields) {
+      connection.query('SELECT u.franchise_id, u.director_id, u.user_id, u.password, u.designation, u.role_id, u.is_active, c.name as company_name, c.nbzn, c.location as company_location, c.director, c.email, c.contact, c.alt_contact, c.website, c.accountant_id, f.name as franchise_name, f.company_id, f.city, f.city_code, f.suburb, f.state, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from user u INNER JOIN company c on u.director_id = c.id INNER JOIN franchise f on u.franchise_id = f.id INNER JOIN accountant a on c.accountant_id = a.id order by f.id desc', function (error, rows, fields) {
         if (!error) {
+          // console.log(rows);
           resolve(rows);
         } else {
           console.log("Error...", error);

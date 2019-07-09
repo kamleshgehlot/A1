@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'; 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -117,7 +117,7 @@ export default function Franchise(props) {
 
     fetchData();
   }, []);
-
+// console.log(franchiseList);
   function handleClickOpen() {
     setOpen(true);
   }
@@ -174,7 +174,8 @@ export default function Franchise(props) {
                     <TableHead>
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Name</StyledTableCell>
+                        <StyledTableCell>Franchise</StyledTableCell>
+                        <StyledTableCell>director</StyledTableCell>
                         <StyledTableCell>UID</StyledTableCell>
                         <StyledTableCell>Email</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
@@ -186,10 +187,11 @@ export default function Franchise(props) {
 
                     { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
                       return(
-                        <TableRow key={data.id} >
-                            <StyledTableCell> {data.id}  </StyledTableCell>
+                        <TableRow key={data.franchise_id} >
+                            <StyledTableCell> {data.franchise_id}  </StyledTableCell>
                             <StyledTableCell>{data.franchise_name}</StyledTableCell>
-                            <StyledTableCell>{data.uid}</StyledTableCell>
+                            <StyledTableCell>{data.director}</StyledTableCell>
+                            <StyledTableCell>{data.user_id}</StyledTableCell>
                             <StyledTableCell>{data.email}</StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>{

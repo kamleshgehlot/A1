@@ -62,7 +62,7 @@ Accountant.prototype.update = function() {
       }
 
       if (!error) {
-      let values = [that.name, that.email, that.contact, that.acc_id];
+      let values = [that.name, that.email, that.contact, that.id];
 
       connection.changeUser({database : dbName["prod"]});
 			connection.query('UPDATE accountant set name = ?, email = ?, contact = ? WHERE id = ?', values, function (error, rows, fields) {
