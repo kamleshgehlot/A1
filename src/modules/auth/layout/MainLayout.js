@@ -25,6 +25,7 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 import Franchise from '../franchise/Franchise';
 import Category from '../category/CategoryList';
 import Staff from '../staff/Staff';
+import FranchiseStaff from '../franchisestaff/FranchiseStaff';
 
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
@@ -78,6 +79,7 @@ export default function ClippedDrawer(props) {
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showCategory, setShowCategory] = useState(false);
   const [showMasterStaff, setShowMasterStaff] = useState(false);
+  const [showFranchiseStaff, setShowFranchiseStaff] = useState(false);
 
 
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
@@ -108,6 +110,7 @@ export default function ClippedDrawer(props) {
     setShowStaff(false);
     setShowCategory(false);
     setShowMasterStaff(false);
+    setShowFranchiseStaff(false);
   }
 
   function handleCategoryClick() {
@@ -115,14 +118,22 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowMasterStaff(false);
     setShowStaff(false);
+    setShowFranchiseStaff(false);
   }
 
   function handleMasterStaffClick(){
     setShowMasterStaff(true);
     setShowFranchise(false);
     setShowCategory(false);
+    setShowFranchiseStaff(false);
   }
 
+  function handleFranchiseStaffClick(){
+    setShowFranchiseStaff(true);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+  }
 
   function handleLogout() {
     APP_TOKEN.remove();
@@ -173,6 +184,12 @@ export default function ClippedDrawer(props) {
                   </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
+                <ListItem button key="ManageFranchise"  onClick={handleFranchiseStaffClick}>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage Franchise Staff" />
+                </ListItem>
                 {/* code by Bhagyashree ends here */}
               {/* </Link> */}
                 <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>
@@ -205,6 +222,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showMasterStaff ? <Staff /> : null
+        }
+        {
+          showFranchiseStaff ? <FranchiseStaff /> : null
         }
         {/* {props.children} */}
       </main>

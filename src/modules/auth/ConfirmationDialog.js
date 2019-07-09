@@ -6,13 +6,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
-export default function ConfirmationDialog({open, handleConfirmationClose, currentState, title, content}){
+export default function ConfirmationDialog({open, lastValue, handleConfirmationClose, currentState, title, content}){
  
   function handleDialogClose(){
   handleConfirmationClose(currentState);
  }
  function handleDialogConfirm(){
-  handleConfirmationClose(4);
+  handleConfirmationClose(lastValue);
 }
  
   return(

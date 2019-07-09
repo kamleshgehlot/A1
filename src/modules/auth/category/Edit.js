@@ -111,7 +111,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
   const handleInputChange = event => {
     const { name, value } = event.target
 
-    name =='status' && value =='3' ? setConfirmation(true) : ''
+    name =='status' && value =='3' ? setConfirmation(true) : 
     setProduct({ ...product, [name]: value })
   }
 
@@ -163,8 +163,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     // props.handleReset(RESET_VALUES);
     handleEditClose(false);
   };
-  function handleConfirmationDialog (){
-   
+  function handleConfirmationDialog (response){
+    setProduct({ ...product,'status': response })
     setConfirmation(false);
   }
   return (
@@ -390,7 +390,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
           </div>
       </form>
       </Dialog>
-      <ConfirmationDialog open = {confirmation} handleConfirmationClose={handleConfirmationDialog} title={"Discontinued"} content={"Do you really want to discontinue this product ?"} />
+      <ConfirmationDialog open = {confirmation} lastValue={3} handleConfirmationClose={handleConfirmationDialog}  currentState={product.status}  title={"Discontinued"} content={"Do you really want to discontinue this product ?"} />
 
     </div>
   );
