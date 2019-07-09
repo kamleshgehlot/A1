@@ -14,28 +14,34 @@ const register = function (req, res, next) {
 	// console.log("check data ",req.body);
 
 	let accountantParam = {
-		// id : req.body.id,
+		id : req.body.accountant_id,
 		name: req.body.accountant_name,
 		email: req.body.accountant_email,
 		contact: req.body.accountant_contact,
 	};
 
 	let companyParam = {
+
 		  name: req.body.company_name,
       nbzn: req.body.nbzn,
-      location: req.body.company_location,
-      // director: req.body.director,
-      // email: req.body.email,
-      // contact: req.body.contact,
-			// alt_contact: req.body.alt_contact,
-			directorList: req.body.directorList,
+			location: req.body.company_location,
+			director_id: req.body.director_id,
+      director: req.body.director,
+      email: req.body.email,
+      contact: req.body.contact,
+			alt_contact: req.body.alt_contact,
 			website: req.body.website,
+			
+
+			directorList: req.body.directorList,
+			
+
+
 		// Accountant id recieving by accountant model
 	};
 
 	let franchiseParam = {
 		id: req.body.id,
-		// uid: req.body.uid,
 		name: req.body.franchise_name,
 		city: req.body.city,
 		city_code: req.body.city_code,
@@ -43,8 +49,7 @@ const register = function (req, res, next) {
 		abn: req.body.abn,
 		state: req.body.state,
 		created_by: req.decoded.id,
-		// password: req.body.password,
-		
+		// com_id: req.body.company_id,		
 
 		// Company id recieving by Company model
 
@@ -53,20 +58,25 @@ const register = function (req, res, next) {
 	};
 
 	let userParam = {
-		// name: req.body.user_name,
-		user_details: req.body.directorList,
-		// user_id: req.body.uid,
-		// password: req.body.password,
+		franchise_id: req.body.id,
+		director_id: req.body.director_id,
+
+		name: req.body.user_name,
+		user_id: req.body.user_id,
+		password: req.body.password,
 		designation: req.body.designation,
+
+		user_details: req.body.directorList,
 		// mobile_no: req.body.contact,
 		// email: req.body.email,
 		role_id: req.body.role_id,
-		state: 1,
+		// state: 1,
 		created_by: req.decoded.id,
+		is_active: 1,
 
 		//franchaise id receiving by frachaise model
 		//Update params
-		f_id: req.body.id,
+		// f_id: req.body.id,
 	};
 
 	const userRoleParam = {
@@ -103,10 +113,10 @@ const register = function (req, res, next) {
 
 			newFranchise.update().then(function(result){
 				
-				newCompany.comp_id= result[0].company_id;
+				// newCompany.comp_id= result[0].company_id;
 				newCompany.update().then(function(result){
 
-						newAccountant.acc_id = result[0].accountant_id;
+						// newAccountant.acc_id = result[0].accountant_id;
 						newAccountant.update().then(function(result){
 							new Franchise({}).all().then(function (userList) {
 							res.send({ userList: userList });
@@ -129,9 +139,13 @@ const register = function (req, res, next) {
 				newFranchise.register().then(function(result){
 
 					newUser.franchise_id = result.franchise_id;
+					newUserRole.franchise_id = result.franchise_id;
+
 					newUser.register().then(function(result){
 						console.log("Saved Successfully.");
-						newUserRole.user_id = result.id;
+
+					// newUserRole.user_id = result.id;
+						
 						newUserRole.register().then(function(result) {
 							new Franchise({}).all().then(function (userList) {
 								res.send({ userList: userList });
@@ -190,8 +204,8 @@ const register = function (req, res, next) {
 
 
 const edit = function(req, res, next) {
-  console.log('...............', req.decoded);
-  console.log('...............', req.body);
+  // console.log('...............', req.decoded);
+  // console.log('...............', req.body);
 
   try {
 

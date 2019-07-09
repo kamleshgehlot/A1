@@ -18,6 +18,16 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConfirmationDialog from '../ConfirmationDialog.js';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 // API CALL
 
 import UserAPI from '../../../api/User';
@@ -66,9 +76,11 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   paper: {
+    flexGrow: 1,
     padding: theme.spacing(2),
+    // padding: theme.spacing(3, 2),
     textAlign: 'left',
-    color: theme.palette.text.secondary,
+    backgroundColor: '#E5E9EA',
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -82,6 +94,10 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  addButton:{
+    backgroundColor:'#CBDF90',
+  },
+
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -93,7 +109,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
   const [franchise, setFranchise] = React.useState(inputs);
+  const [directorList, setDirectorList] =useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
+  
+    // console.log(franchise);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -134,7 +153,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
       
-      id: franchise.id,
+      id: franchise.franchise_id,
       city: franchise.city,
       suburb: franchise.suburb,
       franchise_name: franchise.franchise_name,
@@ -145,22 +164,27 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       company_name: franchise.company_name,
       nbzn: franchise.nbzn,
       company_location: franchise.company_location,
+
+      director_id: franchise.director_id,
       director: franchise.director,
       email: franchise.email,
       contact: franchise.contact,
       alt_contact: franchise.alt_contact,
       website: franchise.website,
 
+      accountant_id: franchise.accountant_id,
       accountant_name: franchise.accountant_name,
       accountant_email: franchise.accountant_email,
       accountant_contact: franchise.accountant_contact,
 
       user_name : franchise.director,
-      uid: franchise.uid,
-      designation: "2",
+      user_id: franchise.user_id,
       password: franchise.password,
+      state: franchise.state,
+
+      designation: "2",
       role_id: "2",
-      state: franchise.state
+      company_id: franchise.company_id,
     });
 
     handleSnackbarClick(true,'Franchise Updated Successfully');
@@ -216,6 +240,43 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
+                    <TextField
+                      id="franchise_name"
+                      name="franchise_name"
+                      label="Franchise Name"
+                      margin="dense"
+                      required
+                      type="text"
+                      value={franchise.franchise_name}
+                      onChange={handleInputChange}
+                      // onBlur={handleNameBlurChange}/
+                      fullWidth
+                      required
+                      // disabled                      
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="status">Status *</InputLabel>
+                    <Select
+                      value={franchise.state}
+                      onChange={handleInputChange}
+                      inputProps={{
+                        name: 'state',
+                        id: 'state',
+                      }}
+                      margin="normal"
+                      fullWidth
+                      label="Status"
+                      required
+                    >
+                      <MenuItem value={1}>Open</MenuItem>
+                      <MenuItem value={2}>Active</MenuItem>
+                      <MenuItem value={3}>Inactive</MenuItem>
+                      <MenuItem value={4}>Close</MenuItem>
+                    </Select>
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="city">Select City *</InputLabel>
                     <Select
@@ -266,97 +327,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     } */}
                     </Select>
                   </Grid>
-                  <Grid item xs={6} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      id="franchise_name"
-                      name="franchise_name"
-                      label="Franchise Name"
-                      margin="dense"
-                      required
-                      type="text"
-                      value={franchise.franchise_name}
-                      onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}/
-                      fullWidth
-                      required
-                      // disabled                      
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">Unique Id</InputLabel> */}
-                    <TextField
-                      id="uid"
-                      name="uid"
-                      label="User Id"
-                      margin="dense"
-                      required
-                      type="text"
-                      value={franchise.uid} 
-                      // onChange={handleInputChange}
-                      // onBlur={handlePasswordBlurChange}
-                      fullWidth
-                      disabled
-                    />
-                    
-                    {/* <TextField
-                      disabled
-                      id="uid"
-                      name="uid"
-                      className={classes.textField}
-                      margin="normal"
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      disabled
-                      id="uid"
-                      name="uid"
-                      className={classes.textField}
-                      margin="normal"
-                      onChange={handleInputChange}
-                    />
-                    <TextField
-                      disabled
-                      id="uid"
-                      name="uid"
-                      className={classes.textField}
-                      margin="normal"
-                      onChange={handleInputChange}
-                    /> */}
-                  </Grid>
-                  {/* <Grid item xs={6} sm={6}> */}
-                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
-                    {/* <TextField
-                      margin="dense"
-                      id="password"
-                      name="password"
-                      label="Password"
-                      type="text"
-                      value={franchise.password}
-                      required
-                      fullWidth
-                    />
-                  </Grid> */}
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="status">Status *</InputLabel>
-                    <Select
-                      value={franchise.state}
-                      onChange={handleInputChange}
-                      inputProps={{
-                        name: 'state',
-                        id: 'state',
-                      }}
-                      margin="normal"
-                      fullWidth
-                      label="Status"
-                      required
-                    >
-                      <MenuItem value={1}>Open</MenuItem>
-                      <MenuItem value={2}>Active</MenuItem>
-                      <MenuItem value={3}>Inactive</MenuItem>
-                      <MenuItem value={4}>Close</MenuItem>
-                    </Select>
-                  </Grid>
+                 
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -416,7 +387,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     />
                   </Grid>
-
+                  {/* <Paper className={classes.paper}> */}
+                  {/* <Grid container spacing={3}> */}
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="director">Director Name *</InputLabel> */}
                     <TextField
@@ -473,7 +445,58 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="number"
                     />
                   </Grid>
-                </Grid>
+                   
+                  <Grid item xs={12} sm={6}>
+                    {/* <InputLabel htmlFor="franchaise_name">Unique Id</InputLabel> */}
+                    <TextField
+                      id="user_id"
+                      name="user_id"
+                      label="User Id"
+                      margin="dense"
+                      required
+                      type="text"
+                      value={franchise.user_id} 
+                      // onChange={handleInputChange}
+                      // onBlur={handlePasswordBlurChange}
+                      fullWidth
+                      disabled
+                    />
+                  </Grid>
+                  {/* <Grid item xs={6} sm={1}>
+                  <Fab size="small" color="secondary" aria-label="Add"  className={classes.margin}>
+                    <AddIcon />
+                  </Fab>
+                  </Grid> */}
+                  </Grid>
+                  {/* <Table >
+                    <TableHead>
+                      
+                      {
+                        (directorList || []).map((list, index) =>{
+                          return(
+                            <TableRow>
+                              <StyledTableCell>{index}</StyledTableCell>
+                              <StyledTableCell>{list.director}</StyledTableCell>
+                              <StyledTableCell>{list.email}</StyledTableCell>
+                              <StyledTableCell>{list.contact}</StyledTableCell>
+                              <StyledTableCell>{list.alt_contact}</StyledTableCell>
+                              <StyledTableCell>{list.uid}</StyledTableCell>
+                              <StyledTableCell>{list.password}</StyledTableCell>
+                              <StyledTableCell>
+                              <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
+                                <DeleteIcon />
+                              </IconButton>
+                              </StyledTableCell>
+                            </TableRow>
+                          )
+                        })
+                      }
+
+                    </TableHead>
+                    </Table> */}
+                  {/* </Paper> */}
+                  
+                {/* </Grid> */}
               </ExpansionPanelDetails>
             </ExpansionPanel>
 
@@ -557,7 +580,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
         </form>
       </Dialog>
       {/* {console.log(confirmation)} */}
-      <ConfirmationDialog open = {confirmation} handleConfirmationClose={handleConfirmationDialog} currentState={franchise.state} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
+      <ConfirmationDialog open = {confirmation} lastValue={4} handleConfirmationClose={handleConfirmationDialog}  currentState={franchise.state} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
     </div>
   );
 }

@@ -240,7 +240,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       'uid' : inputs.uid,
       'password': inputs.password
     });
-    
+     
     inputs.director = '';
     inputs.email = '';
     inputs.contact = '';
@@ -251,12 +251,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     // console.log(directorList);
   }
 
-console.log(directorList);
+// console.log(directorList);
 
-  function handleRemoveDirector(index){
-    directorList.splice(index, 1);
-    console.log(directorList);
-  }
+  // function handleRemoveDirector(index){
+  //   directorList.splice(index, 1);
+  //   // console.log(directorList);
+  // }
 
   function handleNameBlurChange(e) {
     setInput('uid', generate(inputs.director, inputs.city));
@@ -551,18 +551,18 @@ console.log(directorList);
                         (directorList || []).map((list, index) =>{
                           return(
                             <TableRow>
-                              <StyledTableCell>{index}</StyledTableCell>
+                              <StyledTableCell>{index+1}</StyledTableCell>
                               <StyledTableCell>{list.director}</StyledTableCell>
                               <StyledTableCell>{list.email}</StyledTableCell>
                               <StyledTableCell>{list.contact}</StyledTableCell>
                               <StyledTableCell>{list.alt_contact}</StyledTableCell>
                               <StyledTableCell>{list.uid}</StyledTableCell>
                               <StyledTableCell>{list.password}</StyledTableCell>
-                              <StyledTableCell>
+                              {/* <StyledTableCell>
                               <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
                                 <DeleteIcon />
                               </IconButton>
-                              </StyledTableCell>
+                              </StyledTableCell> */}
                             </TableRow>
                           )
                         })
