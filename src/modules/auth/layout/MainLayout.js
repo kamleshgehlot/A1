@@ -139,20 +139,20 @@ export default function ClippedDrawer(props) {
     APP_TOKEN.remove();
     props.history.push('/login');
   }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title} noWrap>
-          Welcome Master Admin
+          Welcome {userName}
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
           Welcome To Rental Solutions
           </Typography>
           <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
           Logout
-          
           </Button>
         </Toolbar>
       </AppBar>
@@ -165,6 +165,7 @@ export default function ClippedDrawer(props) {
       >
         <div className={classes.toolbar} />
         <List>
+        {console.log(roleName)}
           {roleName === 'Super Admin' 
             && (<List>
               {/* <Link to="auth/franchise"> */}
@@ -202,6 +203,7 @@ export default function ClippedDrawer(props) {
             )}
             </List>
              <List>
+               
               {roleName === 'Admin' && (
               <ListItem button key='Manage Staff'>
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
