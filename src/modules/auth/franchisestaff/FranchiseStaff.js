@@ -15,7 +15,7 @@ import Add from './Add';
 import Edit from './Edit';
 
 // API CALL
-import StaffAPI from '../../../api/StaffMasterAdmin';
+import Staff from '../../../api/franchise/Staff';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -89,13 +89,13 @@ export default function FranchiseStaff(props) {
   }));
   const classes = useStyles();
 
+
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
-
       try {
-        const result = await StaffAPI.list();
+        const result = await Staff.list();
         setStaffList(result.staffList);
       } catch (error) {
         setIsError(true);
@@ -104,20 +104,6 @@ export default function FranchiseStaff(props) {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const positions = async () => {
-      try {
-        const positionResult = await StaffAPI.positionList();
-        setPosition(positionResult.staffPosition);
-      } catch (error) {
-        console.log('Error',error);
-      }
-    };
-    positions();
-  }, []);
-
-  
 
   function handleClickOpen() {
     setOpen(true);
@@ -181,22 +167,49 @@ export default function FranchiseStaff(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    {/* { (staffList.length > 0 ? staffList : []).map((data, index)=>{ */}
-                      {/* return( */}
-                        <TableRow  >
-                           
+                    { (staffList.length > 0 ? staffList : []).map((data, index)=>{
+                      return(
+                        <TableRow key={data.id} >
+                          <StyledTableCell> {index + 1}  </StyledTableCell>
+                          <StyledTableCell> {data.user_id}  </StyledTableCell>
+                          <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
+                          <StyledTableCell> </StyledTableCell>
+                          {/* <StyledTableCell>
+
+                            {data.position}
+                            {/* {
+                              positions.map(ele =>{
+                                return(
+                                <MenuItem value={ele.id}>{ele.position}</MenuItem>
+                                )
+                              })
+                            } */}
+
+                            {/* {
+                              position.map((pos, index) =>{
+                              if(pos.id===data.position)
+                                return pos.position
+                              }) 
+                            } */}
+                            {/* </StyledTableCell> */}
+                            <StyledTableCell>{data.contact}</StyledTableCell>
+                            <StyledTableCell>
+                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                              Edit
+                            </Button>
+                            </StyledTableCell>
                         </TableRow>
-                      {/* )
+                      )
                       })
-                    } */}
+                    }
                     </TableBody>
                   </Table>
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} positions={position}/>
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} setFranchiseList={setFranchiseListFn} positions={position} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null}
           
     </div>
   );

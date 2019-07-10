@@ -18,18 +18,35 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Formik, Form, Field, ErrorMessage} from 'formik';
+import * as Yup from 'yup';
+
+
 
 // API CALL
-import StaffMaster from '../../../api/StaffMasterAdmin';
+import Staff from '../../../api/franchise/Staff';
+
+import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
   id: '',
-  first_name: '',
-  last_name:'',
-  location:'',
-  contact:'',
-  email:'',
-  position:'',
+  first_name : '',
+  last_name : '',
+  location : '',
+  contact : '',
+  email : '',  
+  pre_company_name : '',
+  pre_company_address : '',
+  pre_company_contact : '',
+  pre_position : '',
+  duration : '',
+  resume : '',
+  cover_letter : '',
+  employment_doc : '',
+  
+  user_id : '',
+  password : '',
+  role : '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -68,24 +85,50 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList, positions}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList}) {
   const classes = useStyles();
   
+  const [expanded, setExpanded] = React.useState('panel1');
   const [staffList, setStaffList] = React.useState(inputs);
+  const [assignRole, setAssignRole] = React.useState([]);
 
-  const addStaffMaster = async () => {
-    const response = await StaffMaster.register({
-      // id: staffList.id,
-      // first_name: staffList.first_name,
-      // last_name:staffList.last_name,
-      // location:staffList.location,
-      // contact:staffList.contact,
-      // email:staffList.email,
-      // position:staffList.position,
-      // created_by: 1,
+  const handleChange = panel => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  
+  
+  function handleChangeMultiple(event) {
+    setAssignRole(event.target.value);
+    staffList['role']=assignRole;
+  }
+  
+  // console.log("staff data -",staffList);
+  const addFranchiseStaff = async () => {
+    const response = await Staff.register({
+      id: staffList.id,
+      first_name: staffList.first_name,
+      last_name: staffList.last_name,
+      location: staffList.location,
+      contact: staffList.contact,
+      email: staffList.email,
+      
+      pre_company_name: staffList.pre_company_name,
+      pre_company_address: staffList.pre_company_address,
+      pre_company_contact: staffList.pre_company_contact,
+      pre_position: staffList.pre_position,
+      duration: staffList.duration,
+      // resume:  staffList.resume,
+      // cover_letter: staffList.cover_letter,
+      employment_doc: staffList.employment_doc,
+      
+      user_id: staffList.user_id,
+      password: staffList.password,
+      role: assignRole,
+      created_by: 1,
     });
     handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.staffList);
+    // handleReset(RESET_VALUES);
     handleEditClose(false);
   };
 
@@ -105,7 +148,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               <Typography variant="h6" className={classes.title}>
                 Edit Staff
               </Typography>
-              <Button onClick={addStaffMaster} color="inherit">
+              <Button onClick={addFranchiseStaff} color="inherit">
                 Update
               </Button>
             </Toolbar>
@@ -123,7 +166,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Staff Details</Typography>
+              <Typography className={classes.heading}>Staff Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -152,7 +195,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="text"
                       value={staffList.last_name} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
@@ -162,11 +205,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="address"
-                      name="address"
-                      label="Address"
+                      id="location"
+                      name="location"
+                      label="Location"
                       type="text"
-                      value={staffList.address}
+                      value={staffList.location}
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -218,18 +261,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="company_name"
-                      name="company_name"
+                      id="pre_company_name"
+                      name="pre_company_name"
                       label="Name of Previous Company"
                       type="text"
-                      value={staffList.company_name} 
+                      value={staffList.pre_company_name} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
+                      // onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />
@@ -238,15 +280,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="company_address"
-                      name="company_address"
-                      label="Address of previous Company"
+                      id="pre_company_address"
+                      name="pre_company_address"
+                      label="Address of Previous Company"
                       type="text"
-                      value={staffList.company_address} 
+                      value={staffList.pre_company_address} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      multiline
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -255,40 +294,29 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="company_contact"
-                      name="company_contact"
-                      label="Contact No."
+                      id="pre_company_contact"
+                      name="pre_company_contact"
+                      label="Contact# of Previous Company"
                       type="number"
-                      value={staffList.company_contact} 
+                      value={staffList.pre_company_contact} 
                       onChange={handleInputChange}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city">Position *</InputLabel>
-                    <Select
-                      value={staffList.position}
+                  {/* <InputLabel htmlFor="pre_position">Position *</InputLabel> */}
+                  <TextField
+                      margin="dense"
+                      id="pre_position"
+                      name="pre_position"
+                      label="Position/JobRole in Previous Company"
+                      type="text"
+                      value={staffList.pre_position} 
                       onChange={handleInputChange}
-                      inputProps={{
-                        name: 'position',
-                        id: 'position',
-                        label:'position'
-                      }}
-                      
-                      fullWidth
-                      label="position"
                       required
-                    >
-               
-               {
-                        positions.map(ele =>{
-                          return(
-                          <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                          )
-                        })
-                      }
-                    </Select>
+                      fullWidth
+                  />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
@@ -296,59 +324,27 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="duration"
                       name="duration"
-                      label="Duration"
+                      label="Work Experience"
                       type="text"
                       value={staffList.duration} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Upload Resume</InputLabel>
+                    <InputLabel htmlFor="employment_docs">Upload Employement Docs</InputLabel>
                     <TextField
                       margin="dense"
-                      id="resume"
-                      name="resume"
-                      label=""
-                      type="file"
-                      value={staffList.resume} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Upload Cover Letter</InputLabel>
-                    <TextField
-                      margin="dense"
-                      id="cover"
-                      name="cover"
-                      label=""
-                      type="file"
-                      value={staffList.cover} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Upload Employement Docs</InputLabel>
-                    <TextField
-                      margin="dense"
-                      id="employment_doc"
-                      name="employment_doc"
+                      id="employment_docs"
+                      name="employment_docs"
                       label=""
                       type="file"
                       value={staffList.employment_doc} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
@@ -371,69 +367,58 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">User Id</InputLabel>
+                <Grid item xs={12} sm={6}>
+                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
                       id="user_id"
                       name="user_id"
-                      label=""
+                      label="User Id"
                       type="text"
                       value={staffList.user_id} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onChange={handleInputChange}
+                      // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
+                      disabled
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Password</InputLabel>
-                    <TextField
+                  {/* <Grid item xs={12} sm={6}> */}
+                    {/* <InputLabel htmlFor="last_name">Password</InputLabel> */}
+                    {/* <TextField
                       margin="dense"
                       id="password"
                       name="password"
-                      label=""
-                      type="text"
-                      value={staffList.password} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      label="Password"
                       // onFocus={handlePasswordBlurChange}
+                      value={staffList.password} 
                       required
                       fullWidth
+                      // error={errors.password}
+                      // helperText={errors.password ? errors.password : ' '}
+                      disabled
                     />
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city">Assign Role</InputLabel>
-                    <Select
-                      value={staffList.assign_role}
-                      onChange={handleInputChange}
+                  <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
+                  <Select
+                      multiple
+                      value={assignRole}
+                      onChange={handleChangeMultiple}
                       inputProps={{
                         name: 'assign_role',
                         id: 'assign_role',
                         label:'assign_role'
                       }}
-                      
+                     
                       fullWidth
-                      label="assign_role"
                       required
                     >
-               
-                      <MenuItem value={1}>CSR</MenuItem>
-                      <MenuItem value={2}>Finance</MenuItem>
-                      <MenuItem value={3}>Delivery</MenuItem>
-                      <MenuItem value={4}>HR</MenuItem>
-
-
-                      {/* {console.log(positions)} */}
-
-                      {/* {
-                        positions.map(ele =>{
-                          return(
-                          <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                          )
-                        })
-                      } */}
+                    <MenuItem value={1}>Delivery</MenuItem>
+                    <MenuItem value={2}>CSR</MenuItem>
+                    <MenuItem value={3}>Finance</MenuItem>
+                    <MenuItem value={4}>HR</MenuItem>
                     </Select>
                   </Grid>
                 </Grid>
