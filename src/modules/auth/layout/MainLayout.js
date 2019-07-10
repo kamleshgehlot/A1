@@ -31,6 +31,7 @@ import Franchise from '../franchise/Franchise';
 import Category from '../category/CategoryList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
+import Task from '../task/Task';
 
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
@@ -89,6 +90,7 @@ export default function ClippedDrawer(props) {
   const [showCategory, setShowCategory] = useState(false);
   const [showMasterStaff, setShowMasterStaff] = useState(false);
   const [showFranchiseStaff, setShowFranchiseStaff] = useState(false);
+  const [showTask, setShowTask] = useState(false);
 
 
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
@@ -131,6 +133,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowMasterStaff(false);
     setShowFranchiseStaff(false);
+    setShowTask(false);
   }
 
   function handleCategoryClick() {
@@ -139,6 +142,7 @@ export default function ClippedDrawer(props) {
     setShowMasterStaff(false);
     setShowStaff(false);
     setShowFranchiseStaff(false);
+    setShowTask(false);
   }
 
   function handleMasterStaffClick(){
@@ -146,10 +150,19 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowCategory(false);
     setShowFranchiseStaff(false);
+    setShowTask(false);
   }
 
   function handleFranchiseStaffClick(){
     setShowFranchiseStaff(true);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowTask(false);
+  }
+  function handleTaskClick(){
+    setShowTask(true);
+    setShowFranchiseStaff(false);
     setShowMasterStaff(false);
     setShowFranchise(false);
     setShowCategory(false);
@@ -165,7 +178,7 @@ export default function ClippedDrawer(props) {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title} noWrap>
-          Welcome Master Admin
+          Welcome {userName}
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
           Welcome To Rental Solutions
@@ -238,6 +251,12 @@ export default function ClippedDrawer(props) {
                   </ListItemIcon>
                   <ListItemText primary="Manage Franchise Staff" />
                 </ListItem>
+                <ListItem button key="ManageTask"  onClick={handleTaskClick}>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage Task" />
+                </ListItem>
                 {/* code by Bhagyashree ends here */}
               {/* </Link> */}
                 <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>
@@ -273,6 +292,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showFranchiseStaff ? <FranchiseStaff /> : null
+        }
+        {
+          showTask ? <Task /> : null
         }
         {/* {props.children} */}
       </main>
