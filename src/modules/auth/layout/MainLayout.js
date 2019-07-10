@@ -17,6 +17,11 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -67,6 +72,10 @@ const useStyles = makeStyles(theme => ({
   },
   fonttransform:{
     textTransform:"initial"
+  },
+  menu:{
+    color:"white",
+    textTransform:'initial'
   }
 }));
 
@@ -86,7 +95,18 @@ export default function ClippedDrawer(props) {
 
 
   const classes = useStyles();
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+  function handleToggleMenu() {
+    setMenuOpen(prevMenuOpen => !prevMenuOpen);
+  }
+  function handleCloseMenu(event) {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
 
+    setMenuOpen(false);
+  }
   function handleClickOpen() {
     setOpen(true);
   }
@@ -151,9 +171,39 @@ export default function ClippedDrawer(props) {
           <Typography variant="h6" className={classes.title} noWrap>
           Welcome To Rental Solutions
           </Typography>
-          <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
+          {/* <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
           Logout
           </Button>
+          
+          </Button> */}
+      <div>
+        <Button
+          ref={anchorRef}
+          aria-controls="menu-list-grow"
+          aria-haspopup="true"
+          onClick={handleToggleMenu} className={classes.menu}
+        >
+         Settings
+        </Button>
+        <Popper open={menuOpen} anchorEl={anchorRef.current} keepMounted transition disablePortal>
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+            >
+              <Paper id="menu-list-grow">
+                <ClickAwayListener onClickAway={handleCloseMenu}>
+                  <MenuList>
+                    <MenuItem onClick={handleCloseMenu}>My Profile</MenuItem>
+                    <MenuItem onClick={handleCloseMenu}>Change Password</MenuItem>
+                    <MenuItem  onClick={handleLogout}>Logout</MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </div>
         </Toolbar>
       </AppBar>
       <Drawer

@@ -32,6 +32,7 @@ const locationRouter = require('./routes/location');
 
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
+const franchiseStaff = require('./routes/franchise/staff');
 
 const routes = require('./routes');
 
@@ -49,6 +50,7 @@ app.use('/api/user/position',staffPosition);
 
 
 app.use('/api/franchise/user', franchiseUserRouter);
+app.use('/api/franchise/staff', franchiseStaff);
 
 app.use('/', routes);
 

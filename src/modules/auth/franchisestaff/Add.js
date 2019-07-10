@@ -23,18 +23,29 @@ import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 
 // API CALL
-import StaffMaster from '../../../api/StaffMasterAdmin';
+import Staff from '../../../api/franchise/Staff';
 
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
   id: '',
-  first_name: '',
-  last_name:'',
-  location:'',
-  contact:'',
-  email:'',
-  position:'',
+  first_name : '',
+  last_name : '',
+  location : '',
+  contact : '',
+  email : '',  
+  pre_company_name : '',
+  pre_company_address : '',
+  pre_company_contact : '',
+  pre_position : '',
+  duration : '',
+  resume : '',
+  cover_letter : '',
+  employment_docs : '',
+  
+  user_id : '',
+  password : '',
+  role : '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -73,41 +84,40 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, positions}) {
+
+export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList}) {
   const classes = useStyles();
 
   const [expanded, setExpanded] = React.useState('panel1');
-  
   const [assignRole, setAssignRole] = React.useState([]);
+ 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  function handleChangeMultiple(event) {
-    setAssignRole(event.target.value);
-  }
 
-  const addStaffMaster = async () => {
-    const response = await StaffMaster.register({
-      // id: '',
-      // first_name: inputs.first_name,
-      // last_name:inputs.last_name,
-      // user_id:inputs.user_id,
-      // password:'1234',
-      // location:inputs.location,
-      // contact:inputs.contact,
-      // email:inputs.email,
-      // position:inputs.position,
-      // created_by: 1,
+
+  const addFranchiseStaff = async () => {
+    const response = await Staff.register({
+      id: '',
+      first_name: inputs.first_name,
+      last_name: inputs.last_name,
+      location: inputs.location,
+      contact: inputs.contact,
+      email: inputs.email,
+      
+      pre_company_name: inputs.pre_company_name,
+      pre_company_address: inputs.pre_company_address,
+      pre_company_contact: inputs.pre_company_contact,
+      pre_position: inputs.pre_position,
+      duration: inputs.duration,
+      // resume:  inputs.resume,
+      // cover_letter: inputs.cover_letter,
+      employment_docs: inputs.employment_docs,
+      
+      user_id: inputs.user_id,
+      password: inputs.password,
+      role: assignRole,
+      created_by: 1,
     });
 
     handleSnackbarClick(true);
@@ -124,10 +134,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
-    addStaffMaster,
+    addFranchiseStaff,
     validate
   );
-
+  
+  
+  function handleChangeMultiple(event) {
+    setAssignRole(event.target.value);
+    inputs['role']=assignRole;
+  }
+  
   function handleNameBlurChange(e) {
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
   }
@@ -142,7 +158,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     id += parts[index];	 
     }
     
-    return first_name.substring(first_name.length - 4).toLowerCase() + '_' + last_name.substring(0,4).toLowerCase() + '_' + id;
+    return first_name.substring(0, 4).toLowerCase() + '_' + last_name.substring(0,4).toLowerCase() + '_' + id;
+  }
+  
+  function handlePasswordBlurChange() {
+    
+    inputs['password']=='' ? 
+    setInput('password', GeneratePassword())
+    :''
+  }
+
+  function GeneratePassword() {
+    return Math.random().toString(36).slice(-8);
   }
 
 return (
@@ -204,7 +231,7 @@ return (
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
@@ -214,11 +241,11 @@ return (
                     {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="address"
-                      name="address"
-                      label="Address"
+                      id="location"
+                      name="location"
+                      label="Location"
                       type="text"
-                      value={inputs.address}
+                      value={inputs.location}
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -274,14 +301,13 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="company_name"
-                      name="company_name"
+                      id="pre_company_name"
+                      name="pre_company_name"
                       label="Name of Previous Company"
                       type="text"
-                      value={inputs.company_name} 
+                      value={inputs.pre_company_name} 
                       onChange={handleInputChange}
                       onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -290,15 +316,12 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="company_address"
-                      name="company_address"
-                      label="Address of previous Company"
+                      id="pre_company_address"
+                      name="pre_company_address"
+                      label="Address of Previous Company"
                       type="text"
-                      value={inputs.company_address} 
+                      value={inputs.pre_company_address} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      multiline
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -307,50 +330,29 @@ return (
                     {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="company_contact"
-                      name="company_contact"
-                      label="Contact No."
+                      id="pre_company_contact"
+                      name="pre_company_contact"
+                      label="Contact# of Previous Company"
                       type="number"
-                      value={inputs.company_contact} 
+                      value={inputs.pre_company_contact} 
                       onChange={handleInputChange}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city">Position *</InputLabel>
-                    <Select
-                      value={inputs.position}
+                  {/* <InputLabel htmlFor="pre_position">Position *</InputLabel> */}
+                  <TextField
+                      margin="dense"
+                      id="pre_position"
+                      name="pre_position"
+                      label="Position/JobRole in Previous Company"
+                      type="text"
+                      value={inputs.pre_position} 
                       onChange={handleInputChange}
-                      inputProps={{
-                        name: 'position',
-                        id: 'position',
-                        label:'position'
-                      }}
-                      
-                      fullWidth
-                      label="position"
                       required
-                    >
-               
-                      <MenuItem value={1}>Territory Manager</MenuItem>
-                      <MenuItem value={2}>Marketing Manager</MenuItem>
-                      <MenuItem value={3}>IT Specialist</MenuItem>
-                      <MenuItem value={4}>BDM (Business Development Manager)</MenuItem>
-                      <MenuItem value={5}>Accountant</MenuItem>
-                      <MenuItem value={6}>Sales Specialist</MenuItem>
-
-
-                      {/* {console.log(positions)} */}
-
-                      {/* {
-                        positions.map(ele =>{
-                          return(
-                          <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                          )
-                        })
-                      } */}
-                    </Select>
+                      fullWidth
+                  />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
@@ -358,7 +360,7 @@ return (
                       margin="dense"
                       id="duration"
                       name="duration"
-                      label="Duration"
+                      label="Work Experience"
                       type="text"
                       value={inputs.duration} 
                       onChange={handleInputChange}
@@ -369,48 +371,16 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Upload Resume</InputLabel>
+                    <InputLabel htmlFor="employment_docs">Upload Employement Docs</InputLabel>
                     <TextField
                       margin="dense"
-                      id="resume"
-                      name="resume"
+                      id="employment_docs"
+                      name="employment_docs"
                       label=""
                       type="file"
-                      value={inputs.resume} 
+                      value={inputs.employment_docs} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Upload Cover Letter</InputLabel>
-                    <TextField
-                      margin="dense"
-                      id="cover"
-                      name="cover"
-                      label=""
-                      type="file"
-                      value={inputs.cover} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Upload Employement Docs</InputLabel>
-                    <TextField
-                      margin="dense"
-                      id="employment_doc"
-                      name="employment_doc"
-                      label=""
-                      type="file"
-                      value={inputs.employment_doc} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
@@ -434,84 +404,58 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">User Id</InputLabel>
+                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
                       id="user_id"
                       name="user_id"
-                      label=""
+                      label="User Id"
                       type="text"
                       value={inputs.user_id} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onChange={handleInputChange}
+                      // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
+                      disabled
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Password</InputLabel>
+                    {/* <InputLabel htmlFor="last_name">Password</InputLabel> */}
                     <TextField
                       margin="dense"
                       id="password"
                       name="password"
-                      label=""
-                      type="text"
+                      label="Password"
+                      onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
-                      onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
+                      // error={errors.password}
+                      // helperText={errors.password ? errors.password : ' '}
+                      // disabled
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city">Assign Role</InputLabel>
-                  <Select
-                    multiple
-                    displayEmpty
-                    value={assignRole}
-                    onChange={handleChangeMultiple}
-                    // input={<Input id="select-multiple-placeholder" />}
-                    // renderValue={selected => {
-                      // if (selected.length === 0) {
-                        // return <em>Placeholder</em>;
-                      // }
-
-                      // return selected.join(', ');
-                    // }
-                  // }
-                  fullWidth
-                    MenuProps={MenuProps}
-                  >
-                    <MenuItem disabled value="">
-                      <em>Assign Role</em>
-                    </MenuItem>
-                  
-                    <MenuItem value={1}>CSR</MenuItem>
-                      <MenuItem value={2}>Finance</MenuItem>
-                      <MenuItem value={3}>Delivery</MenuItem>
-                      <MenuItem value={4}>HR</MenuItem>
-                  </Select>
-                    {/* <Select
-                      value={inputs.assign_role}
-                      onChange={handleInputChange}
+                  <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
+                    <Select
+                      multiple
+                      value={assignRole}
+                      onChange={handleChangeMultiple}
                       inputProps={{
                         name: 'assign_role',
                         id: 'assign_role',
                         label:'assign_role'
                       }}
-                      
+                     
                       fullWidth
-                      label="assign_role"
                       required
                     >
-               
-                      <MenuItem value={1}>CSR</MenuItem>
-                      <MenuItem value={2}>Finance</MenuItem>
-                      <MenuItem value={3}>Delivery</MenuItem>
-                      <MenuItem value={4}>HR</MenuItem>
-                    </Select> */}
+                    <MenuItem value={1}>Delivery</MenuItem>
+                    <MenuItem value={2}>CSR</MenuItem>
+                    <MenuItem value={3}>Finance</MenuItem>
+                    <MenuItem value={4}>HR</MenuItem>
+                    </Select>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
