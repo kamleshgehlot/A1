@@ -173,7 +173,10 @@ export default function ClippedDrawer(props) {
           </Typography>
           {/* <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
           Logout
+<<<<<<< HEAD
           </Button>
+=======
+>>>>>>> eae0811fea750a2d8828add3a9d6e35ab3efbf74
           
           </Button> */}
       <div>
