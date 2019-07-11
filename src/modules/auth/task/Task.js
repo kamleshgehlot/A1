@@ -14,8 +14,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Add from './Add';
 import Edit from './Edit';
 
+import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
 import TaskAPI from '../../../api/Task';
+import Staff from '../../../api/franchise/Staff';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -43,16 +45,19 @@ export default function Task(props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [staffData,setStaffData]= useState();
+  const [taskData,setTaskData]= useState();
+  const [delId,setDelId]= useState();
+  const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
 
 
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 
-  const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
-  const [showStaff, setShowStaff] = useState(roleName === 'Admin');
+  // const [showTask, setShowTask] = useState(roleName === 'Super Admin');
+  const [showTask, setShowTask] = useState(roleName === 'Admin');
     
+ 
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -95,8 +100,21 @@ export default function Task(props) {
 
       try {
         const result = await TaskAPI.list();
-        setStaffList(result.taskList);
-        console.log('list',result.taskList);
+        setTaskList(result.taskList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await Staff.list();
+        setStaffList(result.staffList);
       } catch (error) {
         setIsError(true);
       }
@@ -112,15 +130,15 @@ export default function Task(props) {
     setOpen(false);
   }
   function handleClickEditOpen(data) {
-    setStaffData(data),
+    setTaskData(data),
     setEditOpen(true);
   }
   function handleEditClose() {
     setEditOpen(false);
   }
   ////////////////////////////////////////
-  function setFranchiseListFn(response) {
-    setStaffList(response);
+  function setTaskListFn(response) {
+    setTaskList(response);
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -131,13 +149,37 @@ export default function Task(props) {
   }
 
   
-  function handleFranchiseClick() {
-    setShowFranchise(true);
-    setShowStaff(false);
+  function handleTaskClick() {
+    setShowTask(true);
+    setShowTask(false);
   }
+  function handleClickDel(data) {
+    setDelId(data.id);
+    handleClickDelete();
+    
+  }
+
+  const handleClickDelete = async () => {
+    console.log(delId);
+    const response = await TaskAPI.delete({
+      id:delId,
+    });
+    // handleSnackbarClick(true,'Franchise Updated Successfully');
+    // setFranchiseList(response.staffList);
+    // handleReset(RESET_VALUES);
+    setTaskList(response.taskList);
+  };
+
+
+
+  // const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+  //   // RESET_VALUES,
+  //   handleClickDelete,
+  //   validate
+  // );
   return (
     <div>
-      {/* {showFranchise ?  */}
+      {/* {showTask ?  */}
       <Grid container spacing={3}>
 
               <Grid item xs={12} sm={12}>
@@ -153,7 +195,7 @@ export default function Task(props) {
               Task List
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
                     <TableHead>
@@ -167,32 +209,46 @@ export default function Task(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    {/* { (staffList.length > 0 ? staffList : []).map((data, index)=>{
+                    { (tasksList.length > 0 ? tasksList : []).map((data, index)=>{
                       return(
                         <TableRow key={data.id} >
-                          <StyledTableCell> {data.id}  </StyledTableCell>
-                          <StyledTableCell> {data.user_id}  </StyledTableCell>
-                          <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
+                        <StyledTableCell> {data.id}  </StyledTableCell>
+                          <StyledTableCell> {data.task_id}  </StyledTableCell>
+                          <StyledTableCell> {data.task_description}  </StyledTableCell>
+                         
+                            { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
+                                return(
+                                  data.assigned_to===datastaff.id ?
+                                  <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
+                                    :''
+                                    )
+                                    
+                              })
+                            }
                             
-                            <StyledTableCell>{data.contact}</StyledTableCell>
-                            <StyledTableCell>{data.email}</StyledTableCell>
-                            <StyledTableCell>
+                          
+                            
+                          <StyledTableCell>{data.due_date}</StyledTableCell>
+                          <StyledTableCell>
                             <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Edit
+                              Update
                             </Button>
-                            </StyledTableCell>
+                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}>
+                              Delete
+                            </Button>
+                          </StyledTableCell>
                         </TableRow>
                       )
                       })
-                    } */}
+                    }
                     </TableBody>
                   </Table>
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} setFranchiseList={setFranchiseListFn} positions={position} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
           
     </div>
   );

@@ -14,14 +14,16 @@ import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // API CALL
-import StaffMaster from '../../../api/StaffMasterAdmin';
-
+import Task from '../../../api/Task';
+import Staff from '../../../api/franchise/Staff';
 const RESET_VALUES = {
   id: '',
   first_name: '',
@@ -29,7 +31,6 @@ const RESET_VALUES = {
   location:'',
   contact:'',
   email:'',
-  position:'',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -68,30 +69,61 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList, positions}) {
+const StyledTableCell = withStyles(theme => ({
+  head: {
+   
+    color: theme.palette.common.black,
+    fontSize: theme.typography.pxToRem(18),
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles(theme => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.background.default,
+    },
+  },
+}))(TableRow);
+export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setTaskList}) {
   const classes = useStyles();
   
-  const [staffList, setStaffList] = React.useState(inputs);
-
-  const addStaffMaster = async () => {
-    const response = await StaffMaster.register({
-      id: staffList.id,
-      first_name: staffList.first_name,
-      last_name:staffList.last_name,
-      location:staffList.location,
-      contact:staffList.contact,
-      email:staffList.email,
-      position:staffList.position,
-      created_by: 1,
+  const [staffList, setStaffList] = useState({});
+  const [taskList, setTasksList] = React.useState(inputs);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const addTaskMaster = async () => {
+    const response = await Task.add({
+      id: taskList.id,
+      task_id: taskList.task_id,
+      task_description:taskList.task_description,
+      assigned_to:taskList.assigned_to,
+      due_date:taskList.due_date,
     });
-    handleSnackbarClick(true,'Franchise Updated Successfully');
-    setFranchiseList(response.staffList);
+    handleSnackbarClick(true,'Task Updated Successfully');
+    // console.log('update======',response.taskList);
+    setTaskList(response.taskList);
     handleEditClose(false);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await Staff.list();
+        setStaffList(result.staffList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
   const handleInputChange = event => {
     const { name, value } = event.target
-    setStaffList({ ...staffList, [name]: value })
+    setTasksList({ ...taskList, [name]: value })
   }
   return (
     <div>
@@ -103,113 +135,104 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Edit Staff
+                Edit Task
               </Typography>
-              <Button onClick={addStaffMaster} color="inherit">
+              {/* <Button onClick={addTaskMaster} color="inherit">
                 Update
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
           <Paper className={classes.paper}>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      id="first_name"
-                      name="first_name"
-                      label="First Name"
-                      value={staffList.first_name}
-                      onChange={handleInputChange}
-                      fullWidth
-                      required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="last_name"
-                      name="last_name"
-                      label="Last Name"
-                      type="text"
-                      required
-                      value={staffList.last_name} 
-                      onChange={handleInputChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="location"
-                      name="location"
-                      label="Location"
-                      type="text"
-                      value={staffList.location}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="contact"
-                      name="contact"
-                      label="Contact"
-                      type="number"
-                      value={staffList.contact} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="email"
-                      name="email"
-                      label="Email Id"
-                      type="email"
-                      value={staffList.email} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city">Position *</InputLabel>
-                    <Select
-                      value={staffList.position}
-                      onChange={handleInputChange}
-                      inputProps={{
-                        name: 'position',
-                        id: 'position',
-                        label:'position'
-                      }}
-                      fullWidth
-                      label="position"
-                      required
-                    > 
-                      {
-                        positions.map(ele =>{
-                          return(
-                          <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                          )
-                        })
-                      }
-                    </Select>
-                  </Grid>
+                <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>Task ID</StyledTableCell>
+                        <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assigned To</StyledTableCell>
+                        <StyledTableCell>Due Date</StyledTableCell>
+                        <StyledTableCell>Options</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                          <StyledTableCell> 
+                            <TextField
+                              id="task_id"
+                              name="task_id"
+                              label="Task Id"
+                              value={taskList.task_id}
+                              fullWidth
+                              disabled
+                              type="text"
+                              // placeholder="Franchise Name"
+                              margin="dense"
+                            /> 
+                          </StyledTableCell>
+                          <StyledTableCell> 
+                            <TextField
+                                id="task_description"
+                                name="task_description"
+                                label="Task Description"
+                                value={taskList.task_description}
+                                onChange={handleInputChange}
+                                fullWidth
+                                required
+                                type="text"
+                                // placeholder="Franchise Name"
+                                margin="dense"
+                              /> 
+                          </StyledTableCell>
+                          <StyledTableCell>  
+                            <Select
+                              value={taskList.assigned_to}
+                              onChange={handleInputChange}
+                              inputProps={{
+                                name: 'assigned_to',
+                                id: 'assigned_to',
+                                label:'assigned_to'
+                              }}
+                              
+                              fullWidth
+                              label="assigned_to"
+                              required
+                            >
+                      
+                      { (staffList.length > 0 ? staffList : []).map((data, index1)=>{
+                        
+                                  return(
+                              <MenuItem value={data.id}>{data.first_name + ' ' + data.last_name} </MenuItem>
+                              )
+                              })
+                            }
+                            </Select>
+                          </StyledTableCell>
+                            
+                            <StyledTableCell>
+                              
+                              <TextField
+                                id="due_date"
+                                name="due_date"
+                                // label="Task Id"
+                                value={taskList.due_date}
+                                onChange={handleInputChange}
+                                fullWidth
+                                required
+                                type="date"
+                                // placeholder="Franchise Name"
+                                margin="dense"
+                              /> 
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">
+                                Update
+                              </Button>
+                            </StyledTableCell>
+                        </TableRow>
+                    </TableBody>
+                  </Table>
                 </Grid>
               </Paper>
           </div>

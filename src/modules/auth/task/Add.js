@@ -27,17 +27,15 @@ import Paper from '@material-ui/core/Paper';
 
 // API CALL
 import Task from '../../../api/Task';
+import Staff from '../../../api/franchise/Staff';
 
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
-  id: '',
-  first_name: '',
-  last_name:'',
-  location:'',
-  contact:'',
-  email:'',
-  position:'',
+  task_id:'',
+      task_description:'',
+      assigned_to:'',
+      due_date:''
 };
 
 const useStyles = makeStyles(theme => ({
@@ -95,19 +93,69 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList}) {
+export default function Add({ open, handleClose, handleSnackbarClick, setTaskList}) {
   const classes = useStyles();
 
-  const addStaffMaster = async () => {
+  const [taskLast, setTaskLast] = useState({});
+  const [taskId, setTaskId] = useState();
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [staffList, setStaffList] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await Task.last();
+        // setTaskLast(result.taskLast[0]);
+        if(result.taskLast[0]){
+          generate(result.taskLast[0].id);
+        }
+        else{
+          setTaskId('t_1');
+        }
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  function generate(last_id) {
+   const tid=last_id+1;
+   const t_id='t_'+tid;
+    setTaskId(t_id);
+  }
+
+
+    useEffect(() => {
+      const fetchData = async () => {
+        setIsError(false);
+        setIsLoading(true);
+        try {
+          const result = await Staff.list();
+          setStaffList(result.staffList);
+        } catch (error) {
+          setIsError(true);
+        }
+        setIsLoading(false);
+      };
+      fetchData();
+    }, []);
+
+  const addTaskMaster = async () => {
     const response = await Task.add({
-      task_id: inputs.task_id,
+      task_id: taskId,
       task_description:inputs.task_description,
       assigned_to:inputs.assigned_to,
       due_date:inputs.due_date,
     });
 
     handleSnackbarClick(true);
-    setFranchiseList(response.staffList);
+    setTaskList(response.taskList);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
@@ -120,26 +168,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
-    addStaffMaster,
+    addTaskMaster,
     validate
   );
 
-  function handleNameBlurChange(e) {
-    setInput('user_id', generate(inputs.first_name, inputs.last_name));
-  }
-
-  function generate(first_name, last_name) {
-    const ts = new Date().getTime().toString();
-    const parts = ts.split( "" ).reverse();
-    let id = "";
-    
-    for( let i = 0; i < 4; ++i ) {
-    let index = Math.floor( Math.random() * (5) );
-    id += parts[index];	 
-    }
-    
-    return first_name.substring(first_name.length - 4).toLowerCase() + '_' + last_name.substring(0,4).toLowerCase() + '_' + id;
-  }
+ 
 
 return (
     <div>
@@ -180,10 +213,9 @@ return (
                               id="task_id"
                               name="task_id"
                               label="Task Id"
-                              value={inputs.task_id}
-                              onChange={handleInputChange}
+                              value={taskId}
                               fullWidth
-                              required
+                              disabled
                               type="text"
                               // placeholder="Franchise Name"
                               margin="dense"
@@ -217,13 +249,12 @@ return (
                               label="assigned_to"
                               required
                             >
-                      
-                              <MenuItem value={1}>Territory Manager</MenuItem>
-                              <MenuItem value={2}>Marketing Manager</MenuItem>
-                              <MenuItem value={3}>IT Specialist</MenuItem>
-                              <MenuItem value={4}>BDM (Business Development Manager)</MenuItem>
-                              <MenuItem value={5}>Accountant</MenuItem>
-                              <MenuItem value={6}>Sales Specialist</MenuItem>
+                                { (staffList.length > 0 ? staffList : []).map((data, index)=>{
+                                  return(
+                              <MenuItem value={data.id}>{data.first_name + ' ' + data.last_name} </MenuItem>
+                              )
+                              })
+                            }
                             </Select>
                           </StyledTableCell>
                             
