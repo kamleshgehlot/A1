@@ -32,7 +32,7 @@ User.prototype.register = function () {
       if (error) {
         throw error;
       }
-
+      
       if (!error) {
         connection.changeUser({database : dbName["prod"]});
         connection.query('select id from company where company_id = "'+that.company_id+'"', function (error, rows, fields) {
@@ -43,15 +43,13 @@ User.prototype.register = function () {
           ];
     
           (that.user_details || []).map((data, index) => {
-            userValues.push([that.franchise_id,directors_id[index].id,data.director,data.uid,"AES_ENCRYPT('"  + data.password + "')",that.designation,that.role_id,that.is_active,that.created_by])
+            userValues.push([that.franchise_id,directors_id[index].id,data.director,data.uid, data.password,that.designation,that.role_id,that.is_active,that.created_by])
           });
-          // console.log("----",userValues);
-          // (userValues || []).map(row=>{
             connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation, role_id,is_active,created_by) VALUES ?', [userValues], function (error, rows, fields) {
             
-              // if (!error) {
-                //   connection.changeUser({database : 'rentronics_franchise_' + that.user_id.split('_')[1]});
-                //   connection.query('INSERT INTO user(franchise_id,name,user_id,password,designation,mobile_no,email,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + that.name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.mobile_no + '", "' + that.email + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+              if (!error) {
+                  connection.changeUser({database : 'rentronics_franchise_' + that.user_details[0].uid.split('_')[1]});
+                  connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation, role_id,is_active,created_by) VALUES ?', [userValues], function (error, rows, fields) {
                     if (!error) {
                       const id = rows.insertId;
                       resolve({ userName: that.name, userId: that.user_id, password: that.password, id: id });
@@ -60,7 +58,8 @@ User.prototype.register = function () {
                       reject(error);
                     }
             });
-          // })
+          }
+        });
         })
         
       } else {

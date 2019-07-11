@@ -16,6 +16,7 @@ import Edit from './Edit';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
+import Role from '../../../api/franchise/Role';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -45,6 +46,7 @@ export default function FranchiseStaff(props) {
   const [isError, setIsError] = useState(false);
   const [staffData,setStaffData]= useState();
   const [staffList, setStaffList] = useState({});
+  const [role, setRole] = useState([]);
   const [position, setPosition] = useState({});
 
 
@@ -103,7 +105,20 @@ export default function FranchiseStaff(props) {
       setIsLoading(false);
     };
     fetchData();
+
+    const roleData = async () => {
+      
+      try {
+        const result = await Role.list();
+        setRole(result.role);
+      } catch (error) {
+        console.log("Error",error);
+      }
+    };
+    roleData();
   }, []);
+
+  
 
   function handleClickOpen() {
     setOpen(true);
@@ -173,25 +188,23 @@ export default function FranchiseStaff(props) {
                           <StyledTableCell> {index + 1}  </StyledTableCell>
                           <StyledTableCell> {data.user_id}  </StyledTableCell>
                           <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
-                          <StyledTableCell> </StyledTableCell>
-                          {/* <StyledTableCell>
+                          <StyledTableCell> 
+                          
 
-                            {data.position}
-                            {/* {
-                              positions.map(ele =>{
-                                return(
-                                <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                                )
+                            {
+                            (data.role.split(',')).map((a,index) =>{
+                              console.log("loop count",index);
+                              return(
+                                role.map((ele)=>{
+                                  return(
+                                    data.role.split(',')[index] == ele.id ? ele.name + ", " :''
+                                  )
+                                  }) 
+                              ) 
                               })
-                            } */}
-
-                            {/* {
-                              position.map((pos, index) =>{
-                              if(pos.id===data.position)
-                                return pos.position
-                              }) 
-                            } */}
-                            {/* </StyledTableCell> */}
+                            }
+                              
+                          </StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>
                             <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
@@ -207,9 +220,9 @@ export default function FranchiseStaff(props) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} role={role} setFranchiseList={setFranchiseListFn} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null}
           
     </div>
   );
