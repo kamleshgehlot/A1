@@ -85,12 +85,13 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick, role, inputs, setFranchiseList}) {
   const classes = useStyles();
   
   const [expanded, setExpanded] = React.useState('panel1');
   const [staffList, setStaffList] = React.useState(inputs);
   const [assignRole, setAssignRole] = React.useState([]);
+  const [checkRole, setCheckRole] = React.useState(["Delivery","CSR","Finance","HR"]);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -101,6 +102,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     setAssignRole(event.target.value);
     staffList['role']=assignRole;
   }
+
+  useEffect(() => {
+    setCheckRole(staffList['role']);
+  }, []);
+  console.log(checkRole);
   
   // console.log("staff data -",staffList);
   const addFranchiseStaff = async () => {
@@ -400,6 +406,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       disabled
                     />
                   </Grid> */}
+                  {console.log("stafflist..",staffList)}
+                  {console.log("assign=",assignRole)}
                   <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
                   <Select
@@ -411,14 +419,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                         id: 'assign_role',
                         label:'assign_role'
                       }}
-                     
                       fullWidth
                       required
                     >
-                    <MenuItem value={1}>Delivery</MenuItem>
-                    <MenuItem value={2}>CSR</MenuItem>
-                    <MenuItem value={3}>Finance</MenuItem>
-                    <MenuItem value={4}>HR</MenuItem>
+                    {role.map((ele,index) =>{
+                        return(
+                        <MenuItem value={ele.id}>{ele.name}</MenuItem>
+                        )
+                    })}
                     </Select>
                   </Grid>
                 </Grid>

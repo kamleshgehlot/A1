@@ -19,14 +19,14 @@ const Franchise = function (params) {
 };
 
 
-var table = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT, `franchise_id`  INT, name VARCHAR(50) NOT NULL, `user_id` VARCHAR(10) NOT NULL, `password` blob NOT NULL, `designation` VARCHAR(50) NULL, `mobile_no` VARCHAR(50) NULL, `email` VARCHAR(50) NULL, `role_id` INT NOT NULL, `state` TINYINT NULL, `created_by` INT NULL, `created_at` timestamp null default current_timestamp, PRIMARY KEY (id));";
+var table = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT, `franchise_id`  INT, `director_id` INT, name VARCHAR(50) NOT NULL, `user_id` VARCHAR(20) NOT NULL, `password` blob NOT NULL, `designation` VARCHAR(50) NULL, `role_id` INT NOT NULL, `is_active` TINYINT NULL, `created_by` INT NULL, `created_at` timestamp null default current_timestamp, PRIMARY KEY (id));";
 var table1 = "CREATE TABLE IF NOT EXISTS `role` (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(50) NOT NULL, `state` TINYINT NULL, `created_by` INT NOT NULL,`created_at` timestamp null default current_timestamp,PRIMARY KEY (id));";
 const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,role_id INT NOT NULL,state TINYINT NULL,created_by INT NOT NULL,created_at timestamp null default current_timestamp,PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
-    const frachiseDbName = 'rentronics_franchise_' + that.name.split('_')[1];
+    const frachiseDbName = 'rentronics_franchise_' + that.city.substring(0, 4).toLowerCase();
     console.log("franchise database name..........", frachiseDbName)
 
     connection.getConnection(function (error, connection) {
@@ -55,8 +55,8 @@ Franchise.prototype.register = function (newUser) {
                 [6,'HR',1,1]
               ]
 
-              // connection.changeUser({database : dbName});
-              // connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
+              connection.changeUser({database : frachiseDbName});
+              connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
                 if (error) {
                   console.log("Error...", error);
                   reject(error);
@@ -83,7 +83,7 @@ Franchise.prototype.register = function (newUser) {
             connection.release();
             console.log('Process Complete %d', connection.threadId);
           });
-          // });
+          });
         });
               console.log('created a new table');
             });

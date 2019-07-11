@@ -21,6 +21,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
+import Input from "@material-ui/core/Input";
+import Checkbox from "@material-ui/core/Checkbox";
+import ListItemText from "@material-ui/core/ListItemText";
+import FormControl from "@material-ui/core/FormControl";
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
@@ -85,12 +89,25 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList}) {
+export default function Add({ open, handleClose, handleSnackbarClick, role, setFranchiseList}) {
   const classes = useStyles();
 
   const [expanded, setExpanded] = React.useState('panel1');
   const [assignRole, setAssignRole] = React.useState([]);
  
+  // "1","2","3","4"
+  
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250
+      }
+    }
+  };
+
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -438,6 +455,32 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
+                  {/* <Select
+                    multiple
+                    value={assignRole}
+                    onChange={handleChangeMultiple}
+                    input={<Input id="select-multiple-checkbox" />}
+                    renderValue={selected => selected.join(", ")}
+                    MenuProps={MenuProps}
+                  >
+                     <MenuItem key={1} value={1}>
+                        <Checkbox checked={assignRole.indexOf('1') > -1} />
+                        <ListItemText primary={'1'} />
+                      </MenuItem>
+                      <MenuItem key={2} value={2}>
+                        <Checkbox checked={assignRole.indexOf('2') > -1} />
+                        <ListItemText primary={'2'} />
+                      </MenuItem>
+                      <MenuItem key={3} value={3}>
+                        <Checkbox checked={assignRole.indexOf('3') > -1} />
+                        <ListItemText primary={'3'} />
+                      </MenuItem>
+                      <MenuItem key={4} value={4}>
+                        <Checkbox checked={assignRole.indexOf('4') > -1} />
+                        <ListItemText primary={'4'} />
+                      </MenuItem>
+                  </Select> */}
+
                     <Select
                       multiple
                       value={assignRole}
@@ -451,11 +494,17 @@ return (
                       fullWidth
                       required
                     >
-                    <MenuItem value={1}>Delivery</MenuItem>
-                    <MenuItem value={2}>CSR</MenuItem>
-                    <MenuItem value={3}>Finance</MenuItem>
-                    <MenuItem value={4}>HR</MenuItem>
+                      {role.map((ele,index) =>{
+                        return(
+                        <MenuItem value={ele.id}>{ele.name}</MenuItem>
+                        )
+                      })}
+
                     </Select>
+
+
+
+
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

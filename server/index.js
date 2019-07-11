@@ -34,6 +34,7 @@ const taskRouter = require('./routes/task');
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
 const franchiseStaff = require('./routes/franchise/staff');
+const roleRouter = require('./routes/franchise/role');
 
 const routes = require('./routes');
 
@@ -51,8 +52,10 @@ app.use('/api/user/staff',staffMaster);
 app.use('/api/user/position',staffPosition);
 
 
+
 app.use('/api/franchise/user', franchiseUserRouter);
 app.use('/api/franchise/staff', franchiseStaff);
+app.use('/api/franchise/role', roleRouter);
 
 app.use('/', routes);
 

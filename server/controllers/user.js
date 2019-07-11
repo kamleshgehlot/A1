@@ -139,6 +139,7 @@ const register = function (req, res, next) {
 				newFranchise.register().then(function(result){
 
 					newUser.franchise_id = result.franchise_id;
+					
 					newUserRole.franchise_id = result.franchise_id;
 
 					newUser.register().then(function(result){
