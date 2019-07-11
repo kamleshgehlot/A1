@@ -11,7 +11,7 @@ const { trans } = require("../lib/mailtransporter");
 
 const register = function (req, res, next) {
 
-	// console.log("check data ",req.body);
+	console.log("check data ",req.body);
 
 	let accountantParam = {
 		id : req.body.accountant_id,
@@ -35,9 +35,6 @@ const register = function (req, res, next) {
 
 			directorList: req.body.directorList,
 			
-
-
-		// Accountant id recieving by accountant model
 	};
 
 	let franchiseParam = {
@@ -79,6 +76,7 @@ const register = function (req, res, next) {
 		// f_id: req.body.id,
 	};
 
+	
 	const userRoleParam = {
 		role_id : req.body.role_id,
 		is_active : 1,
@@ -91,24 +89,29 @@ const register = function (req, res, next) {
 	const newFranchise = new Franchise(franchiseParam);
 	const newUser = new User(userParam);
 	const newUserRole = new UserRole(userRoleParam);
-	// const mail = {
-	// 	 from: 'admin@rentronics.saimrc.com',
-	// 		to: 'mpurohit88@gmail.com',
-	// 		subject: 'New Message from Contact Form',
-	// 		text: "testing email"
-	// 	}
 
-	// 	trans.sendMail(mail, (err, info) => {
-	// 		if (err) {
-	// 			return console.log(err);
-	// 	} 
-	// 	console.log('Message sent: %s', info.messageId);
-	// 	// Preview only available when sending through an Ethereal account
-	// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-	// });
-
+	// (req.body.directorList ||[]).map(info =>{
+	// 	const mail = {
+	// 		from: 'admin@rentronics.saimrc.com',
+	// 		//  to: 'mpurohit88@gmail.com',
+	// 		 to: info.email,
+	// 		 subject: 'New Message from Contact Form',
+	// 		 text: "testing email"
+	// 	 }
+ 
+	// 	 trans.sendMail(mail, (err, info) => {
+	// 		 if (err) {
+	// 			 return console.log(err);
+	// 	 } 
+	// 	 console.log('Message sent: %s', info.messageId);
+	// 	 // Preview only available when sending through an Ethereal account
+	// 	 console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+	//  });
+	// })
+	
 	if(req.body.id) {
 		
+
 		newUser.update().then(function(result){
 
 			newFranchise.update().then(function(result){
@@ -214,7 +217,7 @@ const edit = function(req, res, next) {
 		// new Category({}).all().then(categoryList => {
 		// 	res.send({ categoryList });
 		// });
-
+		
     const newAccountant = new Accountant(accountantParam);
     newAccountant.update().then(result => {
 				user

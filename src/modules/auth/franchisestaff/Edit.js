@@ -104,11 +104,15 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, role, 
   }
 
   useEffect(() => {
-    setCheckRole(staffList['role']);
+    
+    (staffList.role.split(',')).map((a,index) =>{
+      var i = (staffList.role.split(',')[index]);
+      assignRole.push(i)
+    })
   }, []);
-  console.log(checkRole);
+
   
-  // console.log("staff data -",staffList);
+  
   const addFranchiseStaff = async () => {
     const response = await Staff.register({
       id: staffList.id,
@@ -406,8 +410,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, role, 
                       disabled
                     />
                   </Grid> */}
-                  {console.log("stafflist..",staffList)}
-                  {console.log("assign=",assignRole)}
+                  
                   <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
                   <Select

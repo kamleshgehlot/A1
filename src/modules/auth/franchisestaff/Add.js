@@ -490,7 +490,6 @@ return (
                         id: 'assign_role',
                         label:'assign_role'
                       }}
-                     
                       fullWidth
                       required
                     >
@@ -501,10 +500,6 @@ return (
                       })}
 
                     </Select>
-
-
-
-
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
