@@ -32,6 +32,7 @@ import Category from '../category/CategoryList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
 import Task from '../task/Task';
+import Profile from '../setting/Profile';
 
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
@@ -92,8 +93,7 @@ export default function ClippedDrawer(props) {
   const [showMasterStaff, setShowMasterStaff] = useState(false);
   const [showFranchiseStaff, setShowFranchiseStaff] = useState(false);
   const [showTask, setShowTask] = useState(false);
-
-
+  const [showProfile, setShowProfile] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
 
 
@@ -134,6 +134,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowMasterStaff(false);
     setShowFranchiseStaff(false);
+    setShowProfile(false);
     setShowTask(false);
   }
 
@@ -144,6 +145,7 @@ export default function ClippedDrawer(props) {
     setShowStaff(false);
     setShowFranchiseStaff(false);
     setShowTask(false);
+    setShowProfile(false);
   }
 
   function handleMasterStaffClick(){
@@ -152,6 +154,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowFranchiseStaff(false);
     setShowTask(false);
+    setShowProfile(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -160,9 +163,19 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowCategory(false);
     setShowTask(false);
+    setShowProfile(false);
   }
   function handleTaskClick(){
     setShowTask(true);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+  }
+  function handleProfileClick(){
+    setShowProfile(true);
+    setShowTask(false);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
     setShowFranchise(false);
@@ -209,7 +222,7 @@ export default function ClippedDrawer(props) {
                 <ClickAwayListener onClickAway={handleCloseMenu}>
                   <MenuList>
                     <MenuItem onClick={handleCloseMenu}>My Profile</MenuItem>
-                    <MenuItem onClick={handleCloseMenu}>Change Password</MenuItem>
+                    <MenuItem onClick={handleProfileClick}>Change Password</MenuItem>
                     <MenuItem  onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
@@ -291,6 +304,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showTask ? <Task /> : null
+        }
+        {
+          showProfile ? <Profile /> : null
         }
         {/* {props.children} */}
       </main>

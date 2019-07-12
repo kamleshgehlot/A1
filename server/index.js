@@ -30,6 +30,7 @@ const colorRouter = require('./routes/product/color');
 const statusRouter = require('./routes/product/status');
 const locationRouter = require('./routes/location');
 const taskRouter = require('./routes/task');
+const profileRouter = require('./routes/setting/profile');
 
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
@@ -52,6 +53,7 @@ app.use('/api/user/staff',staffMaster);
 app.use('/api/user/position',staffPosition);
 
 
+app.use('/api/profile', profileRouter);
 
 app.use('/api/franchise/user', franchiseUserRouter);
 app.use('/api/franchise/staff', franchiseStaff);

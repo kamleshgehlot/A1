@@ -96,6 +96,9 @@ export default function Task(props) {
     tbrow:{
       
     marginTop:theme.spacing(10),
+    },
+    bgtask:{
+      backgroundColor:"yellow",
     }
   }));
   const classes = useStyles();
@@ -168,7 +171,6 @@ export default function Task(props) {
   }
 
   const handleClickDelete = async (id) => {
-  console.log('response------',id);
     const response = await TaskAPI.delete({
       id:id,
     });
@@ -236,7 +238,7 @@ export default function Task(props) {
                             
                           
                             
-                          <StyledTableCell>{data.due_date}</StyledTableCell>
+                          <StyledTableCell className={classes.bgtask}>{data.due_date}</StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update

@@ -5,8 +5,6 @@ const Staff = require('../../models/franchise/staff.js');
 
 const register = function (req, res, next) {
 
-	// console.log("check data ",req.body);
-
 	let staffParams = {
       franchise_id: req.body.franchise_id,
       id: req.body.id,
