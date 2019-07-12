@@ -192,7 +192,7 @@ export default function Task(props) {
               onClick={handleClickOpen}
             >
               <AddIcon className={classes.extendedIcon} />
-              Task List
+              Task
             </Fab>
           </Grid>
           <Grid item xs={12} sm={12}>
