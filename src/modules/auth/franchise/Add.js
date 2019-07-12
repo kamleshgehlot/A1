@@ -192,27 +192,28 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);
+    setDirectorList([]);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
 
   function validate(values) {
     let errors = {};
-    if (!values.email) {
-      errors.email = 'Email address is required';
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = 'Email address is invalid';
-    }
+    // if (!values.email) {
+    //   errors.email = 'Email address is required';
+    // } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+    //   errors.email = 'Email address is invalid';
+    // }
 
-    if (!values.password) {
-      errors.password = 'password address is required';
-    } else if (values.password.length < 8) {
-      errors.password = "Your password must be at least 8 characters";
-    } else if (values.password.search(/[a-z]/i) < 0) {
-        errors.password = "Your password must contain at least one letter.";
-    } else if (values.password.search(/[0-9]/) < 0) {
-        errors.password = "Your password must contain at least one digit.";
-    }
+    // if (!values.password) {
+    //   errors.password = 'password address is required';
+    // } else if (values.password.length < 8) {
+    //   errors.password = "Your password must be at least 8 characters";
+    // } else if (values.password.search(/[a-z]/i) < 0) {
+    //     errors.password = "Your password must contain at least one letter.";
+    // } else if (values.password.search(/[0-9]/) < 0) {
+    //     errors.password = "Your password must contain at least one digit.";
+    // }
 
     if (!values.city) {
       errors.city = 'City is required';
@@ -234,23 +235,28 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   function handleDirectorList(){
     const directorListTemp = [...directorList];
 
-    directorListTemp.push({
-      'director': inputs.director,
-      'email' : inputs.email,
-      'contact': inputs.contact,
-      'alt_contact': inputs.alt_contact,
-      'uid' : inputs.uid,
-      'password': inputs.password
-    });
-     
-    inputs.director = '';
-    inputs.email = '';
-    inputs.contact = '';
-    inputs.alt_contact = '';
-    inputs.uid = '';
-    inputs.password = '';
-
-    setDirectorList(directorListTemp);
+    if(inputs.director === '' || inputs.email === '' || inputs.uid === '' || inputs.password === '') {
+      alert('Please provide required information')
+    } else {
+      directorListTemp.push({
+        'director': inputs.director,
+        'email' : inputs.email,
+        'contact': inputs.contact,
+        'alt_contact': inputs.alt_contact,
+        'uid' : inputs.uid,
+        'password': inputs.password
+      });
+       
+      inputs.director = '';
+      inputs.email = '';
+      inputs.contact = '';
+      inputs.alt_contact = '';
+      inputs.uid = '';
+      inputs.password = '';
+  
+      setDirectorList(directorListTemp);
+    }
+    
     // console.log(directorList);
   }
 
@@ -459,7 +465,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       fullWidth
                       type="text"
                       margin="dense"
-                      required
+                      // required
                       onBlur={handleNameBlurChange}
                       onChange={handleInputChange}
                     />
@@ -472,12 +478,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       label="Email"
                       value={inputs.email}
                       margin="dense"
-                      required
+                      // required
                       type="email"
                       fullWidth
                       onChange={handleInputChange}
-                      error={errors.email}
-                      helperText={errors.email ? errors.email : ' '}
+                      // error={errors.email}
+                      // helperText={errors.email ? errors.email : ' '}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -488,7 +494,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       label="Contact #"
                       value={inputs.contact}
                       margin="dense"
-                      required
+                      // required
                       fullWidth
                       onChange={handleInputChange}
                       type="number"
@@ -520,7 +526,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       // onBlur={handlePasswordBlurChange}
                       fullWidth
                       disabled
-                      required
+                      // required
                     />
                     
                   </Grid>
@@ -534,10 +540,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       // onChange={handleInputChange}
                       onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
-                      required
+                      // required
                       fullWidth
-                      error={errors.password}
-                      helperText={errors.password ? errors.password : ' '}
+                      // error={errors.password}
+                      // helperText={errors.password ? errors.password : ' '}
                       // disabled
                     />
                   </Grid>
