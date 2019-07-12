@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Staff = function (params) {
-  // console.log("params", params);
+  console.log("params@@@@@@@@@@@", params);
   
   this.franchise_id = params.franchise_id;
   this.id = params.id;
@@ -122,10 +122,10 @@ Staff.prototype.all = function () {
               throw error;
             }
             if (!error) {
-              connection.changeUser({database : dbName["prod"]});
-              connection.query('select city from franchise where id = "'+that.franchise_id+'"', function (error, rows, fields) {
+              // connection.changeUser({database : dbName["prod"]});
+              // connection.query('select city from franchise where id = "'+that.franchise_id+'"', function (error, rows, fields) {
               // const frachiseDbName = 'rentronics_franchise_' + rows[0].city.substring(0, 4).toLowerCase();
-              connection.changeUser({database : "rentronics_franchise_chri"});
+              connection.changeUser({database : "rentronics_franchise_" + that.user_id.split('_')[1]});
               connection.query('select id, first_name, last_name, location, contact, email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, role, employment_docs, created_by from staff order by id desc', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
@@ -134,7 +134,7 @@ Staff.prototype.all = function () {
                 reject(error);
               }
             });
-      });
+      // });
       }
    else {
     console.log("Error...", error);

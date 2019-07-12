@@ -34,13 +34,13 @@ const register = function (req, res, next) {
 
 	if(req.body.id) {
     newStaff.update().then(function(result){
-      new Staff({}).all().then(function (staffList) {
+      new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
         res.send({ staffList: staffList });
       });
     });
 	} else {
     newStaff.register().then(function(result){
-      new Staff({}).all().then(function (staffList) {
+      new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
         res.send({ staffList: staffList });
       });
     });
@@ -72,7 +72,8 @@ const register = function (req, res, next) {
 const all = function(req, res, next) {
   
   try {
-    new Staff({}).all().then(staffList => {
+    console.log(req.decoded);
+    new Staff({user_id : req.decoded.user_id}).all().then(staffList => {
       res.send({ staffList });
     });
   } catch (error) {
