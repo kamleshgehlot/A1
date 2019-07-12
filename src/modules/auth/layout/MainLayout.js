@@ -83,6 +83,7 @@ const useStyles = makeStyles(theme => ({
 export default function ClippedDrawer(props) {
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
+  const franchiseId = APP_TOKEN.get().franchiseId;
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -186,10 +187,7 @@ export default function ClippedDrawer(props) {
           </Typography>
           {/* <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
           Logout
-<<<<<<< HEAD
           </Button>
-=======
->>>>>>> eae0811fea750a2d8828add3a9d6e35ab3efbf74
           
           </Button> */}
       <div>
@@ -222,6 +220,8 @@ export default function ClippedDrawer(props) {
       </div>
         </Toolbar>
       </AppBar>
+
+
       <Drawer
         className={classes.drawer}
         variant="permanent"
@@ -236,9 +236,7 @@ export default function ClippedDrawer(props) {
             && (<List>
               {/* <Link to="auth/franchise"> */}
                 <ListItem button key="ManageFranchise" onClick={handleFranchiseClick}>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
+                  <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Franchise" />
                 </ListItem>
               {/* </Link> */}
@@ -246,29 +244,14 @@ export default function ClippedDrawer(props) {
               Category is added to menu */}
               {/* <Link to="category"> */}
                 <ListItem button key="ManageCategory"  onClick={handleCategoryClick}>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
+                  <ListItemIcon><PeopleIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
-                <ListItem button key="ManageFranchise"  onClick={handleFranchiseStaffClick}>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Manage Franchise Staff" />
-                </ListItem>
-                <ListItem button key="ManageTask"  onClick={handleTaskClick}>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Manage Task" />
-                </ListItem>
+                
                 {/* code by Bhagyashree ends here */}
               {/* </Link> */}
                 <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
+                  <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Staff" />
                 </ListItem>
             </List>
@@ -277,10 +260,16 @@ export default function ClippedDrawer(props) {
              <List>
                
               {roleName === 'Admin' && (
-              <ListItem button key='Manage Staff'>
-                <ListItemIcon><PeopleIcon /></ListItemIcon>
-                <ListItemText primary='Manage Staff' />
-              </ListItem>
+              <List>
+                <ListItem button key="ManageFranchise"  onClick={handleFranchiseStaffClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Staff" />
+                </ListItem>
+                <ListItem button key="ManageTask"  onClick={handleTaskClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Task" />
+                </ListItem>
+              </List>
               )}
             </List>
         {/* <Divider /> */}
@@ -298,7 +287,7 @@ export default function ClippedDrawer(props) {
           showMasterStaff ? <Staff /> : null
         }
         {
-          showFranchiseStaff ? <FranchiseStaff /> : null
+          showFranchiseStaff ? <FranchiseStaff  franchiseId={franchiseId}/> : null
         }
         {
           showTask ? <Task /> : null

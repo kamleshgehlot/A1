@@ -85,7 +85,7 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick, role, inputs, setFranchiseList}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick, franchiseId, role, inputs, setFranchiseList}) {
   const classes = useStyles();
   
   const [expanded, setExpanded] = React.useState('panel1');
@@ -115,6 +115,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, role, 
   
   const addFranchiseStaff = async () => {
     const response = await Staff.register({
+      franchise_id: franchiseId,
       id: staffList.id,
       first_name: staffList.first_name,
       last_name: staffList.last_name,

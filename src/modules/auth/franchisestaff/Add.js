@@ -89,14 +89,12 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, role, setFranchiseList}) {
-  const classes = useStyles();
+export default function Add({ open, handleClose, handleSnackbarClick, franchiseId, role, setFranchiseList}) {
 
+  const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [assignRole, setAssignRole] = React.useState([]);
  
-  // "1","2","3","4"
-  
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -115,6 +113,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, role, setF
 
   const addFranchiseStaff = async () => {
     const response = await Staff.register({
+      
+      franchise_id: franchiseId,
       id: '',
       first_name: inputs.first_name,
       last_name: inputs.last_name,

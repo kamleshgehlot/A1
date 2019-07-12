@@ -8,7 +8,7 @@ const register = function (req, res, next) {
 	// console.log("check data ",req.body);
 
 	let staffParams = {
-  
+      franchise_id: req.body.franchise_id,
       id: req.body.id,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
@@ -52,7 +52,27 @@ const register = function (req, res, next) {
 	}
 };
 
+
+
+// const all = function(req, res, next) {
+//   let staffParams = {
+//     franchise_id: req.body.franchise_id,
+//   };
+//   try {
+//     const newStaff = new Staff(staffParams);
+//     newStaff.all().then(function(result){
+//     new Staff({}).all().then(staffList => {
+//       res.send({ staffList });
+//     });
+//   });
+//   } catch (error) {
+//     console.log('Error: ', error);
+//   }
+// };
+
+
 const all = function(req, res, next) {
+  
   try {
     new Staff({}).all().then(staffList => {
       res.send({ staffList });

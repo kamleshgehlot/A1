@@ -38,7 +38,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function FranchiseStaff(props) {
+export default function FranchiseStaff(franchiseId) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -97,7 +97,7 @@ export default function FranchiseStaff(props) {
       setIsError(false);
       setIsLoading(true);
       try {
-        const result = await Staff.list();
+        const result = await Staff.list({franchise_id: franchiseId.franchiseId});
         setStaffList(result.staffList);
       } catch (error) {
         setIsError(true);
@@ -193,7 +193,6 @@ export default function FranchiseStaff(props) {
 
                             {
                             (data.role.split(',')).map((a,index) =>{
-                              console.log("loop count",index);
                               return(
                                 role.map((ele)=>{
                                   return(
@@ -220,9 +219,9 @@ export default function FranchiseStaff(props) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} role={role} setFranchiseList={setFranchiseListFn} />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} setFranchiseList={setFranchiseListFn} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null}
           
     </div>
   );
