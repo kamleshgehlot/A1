@@ -1,5 +1,7 @@
 const connection = require("../lib/connection.js");
 const dbName = require('../lib/databaseMySQL.js');
+var encryptionHelper = require("../lib/simple-nodejs-iv-encrypt-decrypt.js");
+var algorithm = encryptionHelper.CIPHERS.AES_256;
 
 const utils = require("../utils");
 
@@ -42,14 +44,18 @@ User.prototype.register = function () {
           let userValues = [
           ];
     
+          // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (result) { //using 32 byte key
+
           (that.user_details || []).map((data, index) => {
-            userValues.push([that.franchise_id,directors_id[index].id,data.director,data.uid, data.password,that.designation,that.role_id,that.is_active,that.created_by])
-          });
-            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation, role_id,is_active,created_by) VALUES ?', [userValues], function (error, rows, fields) {
+          //   var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, data.password, "base64");
+
+          //   userValues.push([that.franchise_id,directors_id[index].id,data.director,data.uid, encText,that.designation,that.role_id,that.is_active,that.created_by])
+          // });
+          connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
             
               if (!error) {
                   connection.changeUser({database : 'rentronics_franchise_' + that.user_details[0].uid.split('_')[1]});
-                  connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation, role_id,is_active,created_by) VALUES ?', [userValues], function (error, rows, fields) {
+                  connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
                     if (!error) {
                       const id = rows.insertId;
                       resolve({ userName: that.name, userId: that.user_id, password: that.password, id: id });
@@ -60,7 +66,9 @@ User.prototype.register = function () {
             });
           }
         });
-        })
+      });
+        // })
+    });
         
       } else {
         console.log("Error...", error);

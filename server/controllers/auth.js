@@ -1,5 +1,7 @@
 const Auth = require("../models/auth.js")
 const jwt = require('jsonwebtoken');
+var encryptionHelper = require("../lib/simple-nodejs-iv-encrypt-decrypt.js")
+var algorithm = encryptionHelper.CIPHERS.AES_256;
 
 const login = function (req, res, next) {
   let params = {
@@ -11,6 +13,12 @@ const login = function (req, res, next) {
   let status = 201;
   try {
     auth.login().then((user) => {
+      // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
+
+        console.log("user....************.", user)
+      // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
+      // console.log("decText....************.", decText)
+
       if (user && user.length > 0 && user[0].password.toString('utf8') === params.password) {
         status = 200;
         // Create a token
@@ -32,6 +40,7 @@ const login = function (req, res, next) {
       }
 
       res.status(status).send(result);
+    // });
     }).catch(err => {
       console.log("Error", err)
       status = 500;
