@@ -90,6 +90,13 @@ export default function Task(props) {
     fonttransform:{
       textTransform:"initial"
     },
+    button:{
+      marginRight: theme.spacing(2),
+    },
+    tbrow:{
+      
+    marginTop:theme.spacing(10),
+    }
   }));
   const classes = useStyles();
 
@@ -154,15 +161,16 @@ export default function Task(props) {
     setShowTask(false);
   }
   function handleClickDel(data) {
+
     setDelId(data.id);
-    handleClickDelete();
+    handleClickDelete(data.id);
     
   }
 
-  const handleClickDelete = async () => {
-    console.log(delId);
+  const handleClickDelete = async (id) => {
+  console.log('response------',id);
     const response = await TaskAPI.delete({
-      id:delId,
+      id:id,
     });
     // handleSnackbarClick(true,'Franchise Updated Successfully');
     // setFranchiseList(response.staffList);
@@ -211,7 +219,7 @@ export default function Task(props) {
                     <TableBody>
                     { (tasksList.length > 0 ? tasksList : []).map((data, index)=>{
                       return(
-                        <TableRow key={data.id} >
+                        <TableRow key={data.id}>
                         <StyledTableCell> {data.id}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>

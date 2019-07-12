@@ -68,6 +68,13 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  tbrow:{
+    marginTop:theme.spacing(2),
+    marginBottom:theme.spacing(2),
+  },
+  dropdwn:{
+      marginTop:theme.spacing(2.5),
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -207,7 +214,7 @@ return (
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow>
+                        <TableRow  className={classes.tbrow}>
                           <StyledTableCell> 
                             <TextField
                               id="task_id"
@@ -215,7 +222,7 @@ return (
                               label="Task Id"
                               value={taskId}
                               fullWidth
-                              disabled
+                              disabled className={classes.tbrow}
                               type="text"
                               // placeholder="Franchise Name"
                               margin="dense"
@@ -229,7 +236,7 @@ return (
                                 value={inputs.task_description}
                                 onChange={handleInputChange}
                                 fullWidth
-                                required
+                                required className={classes.tbrow}
                                 type="text"
                                 // placeholder="Franchise Name"
                                 margin="dense"
@@ -245,7 +252,7 @@ return (
                                 label:'assigned_to'
                               }}
                               
-                              fullWidth
+                              fullWidth className={classes.dropdwn}
                               label="assigned_to"
                               required
                             >
@@ -268,7 +275,7 @@ return (
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
-                                type="date"
+                                type="date" className={classes.dropdwn}
                                 // placeholder="Franchise Name"
                                 margin="dense"
                               /> 
