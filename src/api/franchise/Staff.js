@@ -27,10 +27,14 @@ export default {
   },
 
 
-  list: async () => {
+  list: async (franchisedata) => {
+ 
     const URL = `${c.API_CONSUMER}/api/franchise/staff/list`;
     try {
-      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {
+        data: franchisedata,
+      }),
+      );
       return data;
     } catch (error) {
       throw error;

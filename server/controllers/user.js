@@ -92,9 +92,9 @@ const register = function (req, res, next) {
 
 	(req.body.directorList ||[]).map(info =>{
 		const mail = {
-			from: 'mpurohit88@gmail.com',
+			from: 'admin@rentronics.saimrc.com',
 			 to: 'mpurohit88@gmail.com',
-			//  to: info.email,
+			 to: info.email,
 			 subject: 'New Message from Contact Form',
 			 text: "testing email"
 		 }
