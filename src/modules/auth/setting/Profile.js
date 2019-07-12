@@ -17,7 +17,8 @@ export default function Profile(props) {
 
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
-    console.log('role------',rolename);
+  const uid = APP_TOKEN.get().userId;
+    console.log('role------',uid);
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {

@@ -33,6 +33,7 @@ const login = function (req, res, next) {
         result.role_name = user[0].role_name;
         result.user_name = user[0].user_name;
         result.franchise_id = user[0].franchise_id || '';
+        result.user_id=user[0].id;
       } else {
         status = 401;
         result.status = status;
@@ -45,7 +46,7 @@ const login = function (req, res, next) {
       console.log("Error", err)
       status = 500;
       result.status = status;
-      result.error = 'Applition Error, Please contact the adminstrator.';
+      result.error = 'Application Error, Please contact the administrator.';
       res.status(status).send(result);
     });
   } catch (err) {

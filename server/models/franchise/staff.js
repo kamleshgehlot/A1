@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Staff = function (params) {
-  console.log("params@@@@@@@@@@@", params);
+  // console.log("params@@@@@@@@@@@", params);
   
   this.franchise_id = params.franchise_id;
   this.id = params.id;

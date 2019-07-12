@@ -39,7 +39,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Task(props) {
+export default function Task(franchiseId) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -99,6 +99,7 @@ export default function Task(props) {
     },
     bgtask:{
       backgroundColor:"yellow",
+      padding: theme.spacing(1),
     }
   }));
   const classes = useStyles();
@@ -238,7 +239,7 @@ export default function Task(props) {
                             
                           
                             
-                          <StyledTableCell className={classes.bgtask}>{data.due_date}</StyledTableCell>
+                          <StyledTableCell><p className={classes.bgtask}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update
@@ -256,9 +257,9 @@ export default function Task(props) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />
+      <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
           
     </div>
   );

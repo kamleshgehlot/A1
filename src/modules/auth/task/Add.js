@@ -100,7 +100,7 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-export default function Add({ open, handleClose, handleSnackbarClick, setTaskList}) {
+export default function Add({ open, handleClose, franchiseId, handleSnackbarClick, setTaskList}) {
   const classes = useStyles();
 
   const [taskLast, setTaskLast] = useState({});
@@ -155,6 +155,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
 
   const addTaskMaster = async () => {
     const response = await Task.add({
+      franchise_id: franchiseId,
       task_id: taskId,
       task_description:inputs.task_description,
       assigned_to:inputs.assigned_to,

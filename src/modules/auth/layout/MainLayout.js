@@ -221,8 +221,8 @@ export default function ClippedDrawer(props) {
               <Paper id="menu-list-grow">
                 <ClickAwayListener onClickAway={handleCloseMenu}>
                   <MenuList>
-                    <MenuItem onClick={handleCloseMenu}>My Profile</MenuItem>
-                    <MenuItem onClick={handleProfileClick}>Change Password</MenuItem>
+                    <MenuItem onClick={handleProfileClick}>My Profile</MenuItem>
+                    <MenuItem onClick={handleCloseMenu}>Change Password</MenuItem>
                     <MenuItem  onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
@@ -303,7 +303,7 @@ export default function ClippedDrawer(props) {
           showFranchiseStaff ? <FranchiseStaff  franchiseId={franchiseId}/> : null
         }
         {
-          showTask ? <Task /> : null
+          showTask ? <Task franchiseId={franchiseId} /> : null
         }
         {
           showProfile ? <Profile /> : null

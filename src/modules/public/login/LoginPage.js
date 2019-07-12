@@ -73,6 +73,7 @@ class LoginPage extends Component {
         roleName: result.role_name,
         franchiseId: result.franchise_id,
         userName: result.user_name,
+        userId: result.user_id,
       });
       history.push('/auth');
     } catch (error) {

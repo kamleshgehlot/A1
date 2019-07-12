@@ -87,7 +87,7 @@ const StyledTableRow = withStyles(theme => ({
     },
   },
 }))(TableRow);
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setTaskList}) {
+export default function Edit({open, handleEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList}) {
   const classes = useStyles();
   
   const [staffList, setStaffList] = useState({});
@@ -96,6 +96,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const [isError, setIsError] = useState(false);
   const addTaskMaster = async () => {
     const response = await Task.add({
+      franchise_id: franchiseId,
       id: taskList.id,
       task_id: taskList.task_id,
       task_description:taskList.task_description,
