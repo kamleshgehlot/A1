@@ -90,24 +90,24 @@ const register = function (req, res, next) {
 	const newUser = new User(userParam);
 	const newUserRole = new UserRole(userRoleParam);
 
-	(req.body.directorList ||[]).map(info =>{
-		const mail = {
-			from: 'admin@rentronics.saimrc.com',
-			 to: 'mpurohit88@gmail.com',
-			 to: info.email,
-			 subject: 'New Message from Contact Form',
-			 text: "testing email"
-		 }
+	// (req.body.directorList ||[]).map(info =>{
+	// 	const mail = {
+	// 		from: 'admin@rentronics.saimrc.com',
+	// 		//  to: 'mpurohit88@gmail.com',
+	// 		 to: info.email,
+	// 		 subject: 'New Message from Contact Form',
+	// 		 text: "testing email"
+	// 	 }
  
-		 trans.sendMail(mail, (err, info) => {
-			 if (err) {
-				 return console.log(err);
-		 } 
-		 console.log('Message sent: %s', info.messageId);
-		 // Preview only available when sending through an Ethereal account
-		 console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-	 });
-	})
+	// 	 trans.sendMail(mail, (err, info) => {
+	// 		 if (err) {
+	// 			 return console.log(err);
+	// 	 } 
+	// 	 console.log('Message sent: %s', info.messageId);
+	// 	 // Preview only available when sending through an Ethereal account
+	// 	 console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+	//  });
+	// })
 	
 	if(req.body.id) {
 		

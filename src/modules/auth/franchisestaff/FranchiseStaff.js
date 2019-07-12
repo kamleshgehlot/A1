@@ -150,6 +150,9 @@ export default function FranchiseStaff(franchiseId) {
     setShowFranchise(true);
     setShowStaff(false);
   }
+  console.log("data.role......", staffList)
+
+
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -190,9 +193,8 @@ export default function FranchiseStaff(franchiseId) {
                           <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                           <StyledTableCell> 
                           
-
                             {
-                            (data.role.split(',')).map((a,index) =>{
+                            ( (data.role && data.role.split(',')) || []).map((a, index) =>{
                               return(
                                 role.map((ele)=>{
                                   return(
