@@ -122,7 +122,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList }) {
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
-  const [directorList, setDirectorList] =useState([]);
+  const [directorList, setDirectorList] = useState([]);
 
   const [expanded, setExpanded] = React.useState('panel1');
 
@@ -232,7 +232,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   );
 
   function handleDirectorList(){
-    directorList.push({
+    const directorListTemp = [...directorList];
+
+    directorListTemp.push({
       'director': inputs.director,
       'email' : inputs.email,
       'contact': inputs.contact,
@@ -248,6 +250,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     inputs.uid = '';
     inputs.password = '';
 
+    setDirectorList(directorListTemp);
     // console.log(directorList);
   }
 
@@ -539,7 +542,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
                   <Grid item xs={6} sm={1}>
-                  <Fab size="small" color="secondary" aria-label="Add" onClick={handleDirectorList} className={classes.margin}>
+                  <Fab size="small" color="secondary" aria-label="Add" onClick={() => handleDirectorList()} className={classes.margin}>
                     <AddIcon />
                   </Fab>
                   </Grid>

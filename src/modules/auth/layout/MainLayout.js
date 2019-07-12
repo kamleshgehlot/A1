@@ -251,7 +251,7 @@ export default function ClippedDrawer(props) {
                   </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
-                <ListItem button key="ManageFranchise"  onClick={handleFranchiseStaffClick}>
+                <ListItem button key="ManageFranchiseStaff"  onClick={handleFranchiseStaffClick}>
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
