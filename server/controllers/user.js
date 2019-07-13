@@ -8,33 +8,28 @@ const UserRole = require("../models/franchise/userRole")
 
 const { trans } = require("../lib/mailtransporter");
 
-
 const register = function (req, res, next) {
-
-	console.log("check data ",req.body);
-
 	let accountantParam = {
-		id : req.body.accountant_id,
+		id: req.body.accountant_id,
 		name: req.body.accountant_name,
 		email: req.body.accountant_email,
 		contact: req.body.accountant_contact,
 	};
 
 	let companyParam = {
+		name: req.body.company_name,
+		nbzn: req.body.nbzn,
+		location: req.body.company_location,
+		director_id: req.body.director_id,
+		director: req.body.director,
+		email: req.body.email,
+		contact: req.body.contact,
+		alt_contact: req.body.alt_contact,
+		website: req.body.website,
 
-		  name: req.body.company_name,
-      nbzn: req.body.nbzn,
-			location: req.body.company_location,
-			director_id: req.body.director_id,
-      director: req.body.director,
-      email: req.body.email,
-      contact: req.body.contact,
-			alt_contact: req.body.alt_contact,
-			website: req.body.website,
-			
 
-			directorList: req.body.directorList,
-			
+		directorList: req.body.directorList,
+
 	};
 
 	let franchiseParam = {
@@ -76,171 +71,171 @@ const register = function (req, res, next) {
 		// f_id: req.body.id,
 	};
 
-	
+
 	const userRoleParam = {
-		role_id : req.body.role_id,
-		is_active : 1,
-		created_by : req.decoded.id,
+		role_id: req.body.role_id,
+		is_active: 1,
+		created_by: req.decoded.id,
 	};
-	
-	try{
-	const newAccountant = new Accountant(accountantParam);
-	const newCompany = new Company(companyParam);
-	const newFranchise = new Franchise(franchiseParam);
-	const newUser = new User(userParam);
-	const newUserRole = new UserRole(userRoleParam);
 
-	(req.body.directorList ||[]).map(director =>{
-		const mail = {
-			from: 'admin@rentronics.saimrc.com',
-			//  to: 'mpurohit88@gmail.com',
-			 to: director.email,
-			 subject: 'New Message from Contact Form',
-			 text: "user Id: " + director.email + "<br />password: " + director.password
-		 }
- 
-		 trans.sendMail(mail, (err, info) => {
-			 if (err) {
-				 return console.log(err);
-		 } 
-		 console.log('Message sent: %s', info.messageId);
-		 // Preview only available when sending through an Ethereal account
-		 console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-	 });
-	});
-	
-	if(req.body.id) {
-		
+	try {
+		const newAccountant = new Accountant(accountantParam);
+		const newCompany = new Company(companyParam);
+		const newFranchise = new Franchise(franchiseParam);
+		const newUser = new User(userParam);
+		const newUserRole = new UserRole(userRoleParam);
 
-		newUser.update().then(function(result){
+		(req.body.directorList || []).map(director => {
+			const mail = {
+				from: 'admin@rentronics.saimrc.com',
+				//  to: 'mpurohit88@gmail.com',
+				to: director.email,
+				subject: 'New Message from Contact Form',
+				html: "user Id: " + director.email + "<br />password: " + director.password
+			}
 
-			newFranchise.update().then(function(result){
-				
-				// newCompany.comp_id= result[0].company_id;
-				newCompany.update().then(function(result){
+			trans.sendMail(mail, (err, info) => {
+				if (err) {
+					return console.log(err);
+				}
+				console.log('Message sent: %s', info.messageId);
+				// Preview only available when sending through an Ethereal account
+				console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+			});
+		});
+
+		if (req.body.id) {
+
+
+			newUser.update().then(function (result) {
+
+				newFranchise.update().then(function (result) {
+
+					// newCompany.comp_id= result[0].company_id;
+					newCompany.update().then(function (result) {
 
 						// newAccountant.acc_id = result[0].accountant_id;
-						newAccountant.update().then(function(result){
-							new Franchise({}).all().then(function (userList) {
-							res.send({ userList: userList });
-						})
-					})
-				});
-			})
-		})
-
-		
-		// newAccountant.update();
-	} else {
-		newAccountant.register().then(function(result){
-			
-			newCompany.accountant_id = result.accountant_id;
-			newCompany.register().then(function(result){
-				
-				newFranchise.company_id = result;
-				newUser.company_id = result;
-				newFranchise.register().then(function(result){
-
-					newUser.franchise_id = result.franchise_id;
-					
-					newUserRole.franchise_id = result.franchise_id;
-
-					newUser.register().then(function(result){
-						console.log("Saved Successfully.");
-
-					// newUserRole.user_id = result.id;
-						
-						newUserRole.register().then(function(result) {
+						newAccountant.update().then(function (result) {
 							new Franchise({}).all().then(function (userList) {
 								res.send({ userList: userList });
+							})
+						})
+					});
+				})
+			})
+
+
+			// newAccountant.update();
+		} else {
+			newAccountant.register().then(function (result) {
+
+				newCompany.accountant_id = result.accountant_id;
+				newCompany.register().then(function (result) {
+
+					newFranchise.company_id = result;
+					newUser.company_id = result;
+					newFranchise.register().then(function (result) {
+
+						newUser.franchise_id = result.franchise_id;
+
+						newUserRole.franchise_id = result.franchise_id;
+
+						newUser.register().then(function (result) {
+							console.log("Saved Successfully.");
+
+							// newUserRole.user_id = result.id;
+
+							newUserRole.register().then(function (result) {
+								new Franchise({}).all().then(function (userList) {
+									res.send({ userList: userList });
+								});
 							});
-						});
+						})
 					})
 				})
 			})
-		})
+
+		}
+
+
+	} catch (err) {
 
 	}
 
+	// 	const newFranchise = new Franchise();
 
-	}catch(err){
+	// 	try {
+	// 		const newUser = new User(userParam);
 
-	}
+	// 		if(userParam.role_id === 2) {
 
-// 	const newFranchise = new Franchise();
+	// 			newFranchise.register().then(function (result) {
+	// 				newUser.franchise_id = result.franchise_id;
 
-// 	try {
-// 		const newUser = new User(userParam);
+	// 				newUser.register().then(function (result) {
+	// 					new Franchise({}).all().then(function (userList) {
+	// 						res.json({ credentials: result, userList: userList });
+	// 					});
+	// 				}).catch((err) => {
+	// 					res.status(500);
+	// 					res.render('error', { error: err });
+	// 				});
+	// 			});
+	// 		} else {
+	// 				newUser.franchise_id = req.decoded.franchise_id;
 
-// 		if(userParam.role_id === 2) {
-			
-// 			newFranchise.register().then(function (result) {
-// 				newUser.franchise_id = result.franchise_id;
-				
-// 				newUser.register().then(function (result) {
-// 					new Franchise({}).all().then(function (userList) {
-// 						res.json({ credentials: result, userList: userList });
-// 					});
-// 				}).catch((err) => {
-// 					res.status(500);
-// 					res.render('error', { error: err });
-// 				});
-// 			});
-// 		} else {
-// 				newUser.franchise_id = req.decoded.franchise_id;
-	
-// 				newUser.register().then(function (result) {
-// 					new Franchise({}).all().then(function (userList) {
-// 						res.send({ credentials: result, userList: userList });
-// 					});
-// 				}).catch((err) => {
-// 					res.status(500);
-// 					res.render('error', { error: err });
-// 				});
-// 		}
-// 	} catch (err) {
-// 		console.log("Error: ", err);
+	// 				newUser.register().then(function (result) {
+	// 					new Franchise({}).all().then(function (userList) {
+	// 						res.send({ credentials: result, userList: userList });
+	// 					});
+	// 				}).catch((err) => {
+	// 					res.status(500);
+	// 					res.render('error', { error: err });
+	// 				});
+	// 		}
+	// 	} catch (err) {
+	// 		console.log("Error: ", err);
 
-// 		res.status(500)
-// 		res.send('error', { error: err })
-// 	}
+	// 		res.status(500)
+	// 		res.send('error', { error: err })
+	// 	}
 };
 
 
-const edit = function(req, res, next) {
-  // console.log('...............', req.decoded);
-  // console.log('...............', req.body);
+const edit = function (req, res, next) {
+	// console.log('...............', req.decoded);
+	// console.log('...............', req.body);
 
-  try {
+	try {
 
 		// console.log('controller update accountant', result);
 		// new Category({}).all().then(categoryList => {
 		// 	res.send({ categoryList });
 		// });
-		
-    const newAccountant = new Accountant(accountantParam);
-    newAccountant.update().then(result => {
-				user
-        
-      })
-      .catch(err => {
-        res.status(500);
-        res.render('error', { error: err });
-      });
-  } catch (err) {
-    console.log('Error: ', err);
 
-    res.status(500);
-    res.send('error', { error: err });
-  }
+		const newAccountant = new Accountant(accountantParam);
+		newAccountant.update().then(result => {
+			user
+
+		})
+			.catch(err => {
+				res.status(500);
+				res.render('error', { error: err });
+			});
+	} catch (err) {
+		console.log('Error: ', err);
+
+		res.status(500);
+		res.send('error', { error: err });
+	}
 };
 
 
 const all = function (req, res, next) {
 	try {
-			new Franchise({}).all().then(function (userList) {
-				res.send({ userList: userList });
-			});
+		new Franchise({}).all().then(function (userList) {
+			res.send({ userList: userList });
+		});
 	} catch (err) {
 		console.log("Error: ", err);
 	}
@@ -260,4 +255,4 @@ const all = function (req, res, next) {
 // 	} 
 // }
 
-module.exports = { all: all, register: register};
+module.exports = { all: all, register: register };

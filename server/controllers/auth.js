@@ -34,6 +34,7 @@ const login = function (req, res, next) {
         result.user_name = user[0].user_name;
         result.franchise_id = user[0].franchise_id || '';
         result.user_id=user[0].id;
+        result.uid=user[0].user_id;
       } else {
         status = 401;
         result.status = status;

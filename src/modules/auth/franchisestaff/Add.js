@@ -26,6 +26,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 
+import { APP_TOKEN } from '../../../api/Constants';
+
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 
@@ -182,7 +184,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     id += parts[index];	 
     }
     
-    return first_name.substring(0, 4).toLowerCase() + '_' + last_name.substring(0,4).toLowerCase() + '_' + id;
+    const uid = APP_TOKEN.get().uid;
+
+    return first_name.substring(0, 4).toLowerCase() + '_' + uid.split('_')[1] + '_' + id;
   }
   
   function handlePasswordBlurChange() {
