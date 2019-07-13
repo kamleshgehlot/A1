@@ -144,11 +144,11 @@ Task.prototype.deletetask = function () {
       }
       if (!error) {
         connection.changeUser({database : dbName["prod"]});
-      connection.query('select fdbname from franchise where id= "' + that.franchise_id + '"',(error, rows, fields) => {
+        connection.query('select fdbname from franchise where id= "' + that.franchise_id + '"',(error, rows, fields) => {
         // if (!error) {
-          // console.log("ddddd", rows);
-          const frachiseDbName = rows[0].fdbname;
-          connection.changeUser({database : frachiseDbName});
+          // console.log("ddddd",  that.franchise_id);
+        const frachiseDbName = rows[0].fdbname;
+        connection.changeUser({database : frachiseDbName});
         connection.query('update task set status = "' + 0 + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
                 resolve({rows});

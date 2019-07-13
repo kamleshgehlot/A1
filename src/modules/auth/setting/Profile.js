@@ -5,7 +5,15 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import HomeIcon from '@material-ui/icons/Home';
+import StoreIcon from '@material-ui/icons/Store';
+import BusinessIcon from '@material-ui/icons/Business';
+import LocationCityIcon from '@material-ui/icons/LocationCity';
+import DescriptionIcon from '@material-ui/icons/Description';
+import CallIcon from '@material-ui/icons/Call';
+import EmailIcon from '@material-ui/icons/Email';
 
 // API CALL
 import ProfileAPI from '../../../api/Profile';
@@ -18,7 +26,6 @@ export default function Profile(props) {
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
   const uid = APP_TOKEN.get().userId;
-    console.log('role------',uid);
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -44,13 +51,16 @@ export default function Profile(props) {
       flexGrow: 1,
     },
     paper: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(5),
       textAlign: 'left',
       color: theme.palette.text.secondary,
     },
     fonttransform:{
       textTransform:"initial"
     },
+    typography:{
+      paddingTop: theme.spacing(3),
+    }
   }));
   const classes = useStyles();
 
@@ -61,7 +71,8 @@ export default function Profile(props) {
 
       try {
         const result = await ProfileAPI.info();
-        setProfileList(result.profile);
+        setProfileList(result.profile[0]);
+        console.log('profile------',result.profile[0]);
       } catch (error) {
         setIsError(true);
       }
@@ -69,7 +80,6 @@ export default function Profile(props) {
     };
     fetchData();
   }, []);
-
   function handleClickOpen() {
     setOpen(true);
   }
@@ -87,6 +97,32 @@ export default function Profile(props) {
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
+        <Paper className={classes.paper} style={{ width: '100%' }}>
+              <Typography variant="h4" className={classes.title}>
+                {profileList.director}
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <StoreIcon />{profileList.fname} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <BusinessIcon />{profileList.name} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <LocationCityIcon />{profileList.location} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <DescriptionIcon />{profileList.nbzn} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <EmailIcon />{profileList.email} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <CallIcon />{profileList.contact} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <CallIcon />{profileList.alt_contact} <br/>
+              </Typography>
+        </Paper>
       </Grid>
     </div>
   );

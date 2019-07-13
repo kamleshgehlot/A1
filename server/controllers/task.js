@@ -60,8 +60,9 @@ const last = function(req, res, next) {
 const deletetask = function(req, res, next) {
   const taskParam = {
     id:req.body.id,
+    franchise_id: req.body.franchise_id.franchiseId,
   };
-// console.log('req--------------',req.body);
+// console.log('req--------------',req.body.franchise_id.franchiseId);
   try {
     const newTask = new Task(taskParam);
     newTask.deletetask().then(result => {

@@ -174,6 +174,7 @@ export default function Task(franchiseId) {
   const handleClickDelete = async (id) => {
     const response = await TaskAPI.delete({
       id:id,
+      franchise_id: franchiseId,
     });
     // handleSnackbarClick(true,'Franchise Updated Successfully');
     // setFranchiseList(response.staffList);
@@ -222,7 +223,7 @@ export default function Task(franchiseId) {
                     <TableBody>
                     { (tasksList.length > 0 ? tasksList : []).map((data, index)=>{
                       return(
-                        <TableRow key={data.id}>
+                        <TableRow >
                         <StyledTableCell> {data.id}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
@@ -241,7 +242,7 @@ export default function Task(franchiseId) {
                             
                           <StyledTableCell><p className={classes.bgtask}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
-                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                            <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update
                             </Button>
                             <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}>
