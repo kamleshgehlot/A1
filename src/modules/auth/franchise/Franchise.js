@@ -12,6 +12,11 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Add from './Add';
 import Edit from './Edit';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -58,7 +63,11 @@ export default function Franchise(props) {
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
     
+  const [expanded, setExpanded] = React.useState('panel1');
 
+  const handleChange = panel => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   
 
   const drawerWidth = 240;
@@ -97,6 +106,9 @@ export default function Franchise(props) {
       fontSize: theme.typography.pxToRem(25),
       fontWeight: theme.typography.fontWeightBold,
     },
+    expand:{
+      fontSize: theme.typography.pxToRem(16),
+    }
   }));
   const classes = useStyles();
 
@@ -183,9 +195,35 @@ export default function Franchise(props) {
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
+                    </Table>
+                    <Table>
                     <TableBody>
-
-                    { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
+            {/* {console.log(franchiseList)}
+            {(franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
+              // const franchise_id = franchiseList.franchise_id; 
+              // franchiseList.franchise_id == franchise_id ?'' : ''
+              return(
+                
+                <ExpansionPanel
+                className={classes.expansionTitle}
+                expanded={expanded === 'panel1'}
+                onChange={handleChange('panel1')}
+                >
+                  <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls=""
+                id="panel1a-header"
+                >   <Typography className={classes.expand}>Franchise Details</Typography>
+                </ExpansionPanelSummary>
+                </ExpansionPanel>
+              )
+              // const franchise_id = franchiseList.franchise_id; 
+            })
+            } */}
+                      
+                      { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
+                      
+                      // <ExpansionPanelDetails>
                       return(
                         <TableRow key={data.franchise_id} >
                             <StyledTableCell> {data.franchise_id}  </StyledTableCell>
@@ -212,8 +250,11 @@ export default function Franchise(props) {
                             </StyledTableCell>
                         </TableRow>
                       )
+                      // </ExpansionPanelDetails>
                       })
                     }
+                    {/* </ExpansionPanel> */}
+                  
                     </TableBody>
                   </Table>
                </Paper>

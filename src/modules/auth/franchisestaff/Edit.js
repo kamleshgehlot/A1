@@ -98,21 +98,22 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
   };
   
   
+  console.log("Sss", staffList);
   function handleChangeMultiple(event) {
     setAssignRole(event.target.value);
-    staffList['role'] = assignRole[0];
   }
+console.log("sdfsd", assignRole);
 
   useEffect(() => {
     let assignRoleList = [];
     (staffList.role.split(',')).map((role,index) =>{
       assignRoleList.push(role);
     });
-
     setAssignRole(assignRoleList);
   }, []);
 
   const addFranchiseStaff = async () => {
+
     const response = await Staff.register({
       franchise_id: franchiseId,
       id: staffList.id,

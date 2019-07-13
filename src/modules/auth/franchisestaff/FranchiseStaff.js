@@ -150,7 +150,7 @@ export default function FranchiseStaff(franchiseId) {
     setShowFranchise(true);
     setShowStaff(false);
   }
-  console.log("data.role......", staffList)
+  // console.log("data.role......", staffList)
 
 
   return (
