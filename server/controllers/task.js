@@ -62,7 +62,7 @@ const deletetask = function(req, res, next) {
     id:req.body.id,
     franchise_id: req.body.franchise_id.franchiseId,
   };
-// console.log('req--------------',req.body.franchise_id.franchiseId);
+console.log('req--------------',req.body.franchise_id);
   try {
     const newTask = new Task(taskParam);
     newTask.deletetask().then(result => {

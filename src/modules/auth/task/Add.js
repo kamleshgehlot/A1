@@ -117,11 +117,15 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
       try {
         const result = await Task.last();
         // setTaskLast(result.taskLast[0]);
-        if(result.taskLast[0]){
+          console.log('taskLast----',result.taskLast[0]);
+        if(result.taskLast[0]!=null){
+          console.log('taskLast----',result.taskLast[0].id);
           generate(result.taskLast[0].id);
         }
         else{
-          setTaskId('t_1');
+          const t_id='t_1';
+          setTaskId(t_id);
+          console.log('hgrfeuf----',t_id);
         }
       } catch (error) {
         setIsError(true);
