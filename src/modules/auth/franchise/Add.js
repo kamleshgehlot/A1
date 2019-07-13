@@ -262,10 +262,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
 // console.log(directorList);
 
-  // function handleRemoveDirector(index){
-  //   directorList.splice(index, 1);
-  //   // console.log(directorList);
-  // }
+  function handleRemoveDirector(index){
+    const directorListTemp = [...directorList];
+    directorListTemp.splice(index, 1);
+    // directorList.splice(index, 1);
+
+    setDirectorList(directorListTemp);
+    // console.log(directorList);
+  }
 
   function handleNameBlurChange(e) {
     setInput('uid', generate(inputs.director, inputs.city));
@@ -554,8 +558,23 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                   </Grid>
                   </Grid>
                   <Table >
-                    <TableHead>
+                    
                       
+                          {directorList.length > 0 &&
+                          <TableHead>
+                              <StyledTableCell>#</StyledTableCell>
+                              <StyledTableCell>Name</StyledTableCell>
+                              <StyledTableCell>Email</StyledTableCell>
+                              <StyledTableCell>Contact</StyledTableCell>
+                              <StyledTableCell>Alt. Contact</StyledTableCell>
+                              <StyledTableCell>User _id</StyledTableCell>
+                              <StyledTableCell>Password</StyledTableCell>
+                              <StyledTableCell>Action</StyledTableCell>
+                          </TableHead>
+                          }
+                      
+                      
+                      <TableBody>
                       {
                         (directorList || []).map((list, index) =>{
                           return(
@@ -567,17 +586,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                               <StyledTableCell>{list.alt_contact}</StyledTableCell>
                               <StyledTableCell>{list.uid}</StyledTableCell>
                               <StyledTableCell>{list.password}</StyledTableCell>
-                              {/* <StyledTableCell>
+                              <StyledTableCell>
                               <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
                                 <DeleteIcon />
                               </IconButton>
-                              </StyledTableCell> */}
+                              </StyledTableCell>
                             </TableRow>
                           )
                         })
                       }
-
-                    </TableHead>
+                    </TableBody>
                     </Table>
                   </Paper>
                 </Grid>

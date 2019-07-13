@@ -95,8 +95,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
+  const [temp, setTemp] = React.useState([]);
   const [assignRole, setAssignRole] = React.useState([]);
- 
+  
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -108,14 +110,19 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     }
   };
 
+
+    
+
+
+
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
 
   const addFranchiseStaff = async () => {
+
     const response = await Staff.register({
-      
       franchise_id: franchiseId,
       id: '',
       first_name: inputs.first_name,
@@ -138,7 +145,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
       role: assignRole,
       created_by: 1,
     });
-
+    assignRole.length = 0;
     handleSnackbarClick(true);
     setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
@@ -459,31 +466,6 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
-                  {/* <Select
-                    multiple
-                    value={assignRole}
-                    onChange={handleChangeMultiple}
-                    input={<Input id="select-multiple-checkbox" />}
-                    renderValue={selected => selected.join(", ")}
-                    MenuProps={MenuProps}
-                  >
-                     <MenuItem key={1} value={1}>
-                        <Checkbox checked={assignRole.indexOf('1') > -1} />
-                        <ListItemText primary={'1'} />
-                      </MenuItem>
-                      <MenuItem key={2} value={2}>
-                        <Checkbox checked={assignRole.indexOf('2') > -1} />
-                        <ListItemText primary={'2'} />
-                      </MenuItem>
-                      <MenuItem key={3} value={3}>
-                        <Checkbox checked={assignRole.indexOf('3') > -1} />
-                        <ListItemText primary={'3'} />
-                      </MenuItem>
-                      <MenuItem key={4} value={4}>
-                        <Checkbox checked={assignRole.indexOf('4') > -1} />
-                        <ListItemText primary={'4'} />
-                      </MenuItem>
-                  </Select> */}
 
                     <Select
                       multiple
