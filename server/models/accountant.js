@@ -3,7 +3,7 @@ const dbName = require('../lib/databaseMySQL.js');
 
 const utils = require("../utils");
 
-var Accountant = function (params) {
+var Accountant = function (params) { 
   this.id = params.id;
   this.name= params.name;
   this.email= params.email;

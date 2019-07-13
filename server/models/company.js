@@ -17,7 +17,7 @@ var Company = function (params) {
 
       this.directorList=params.directorList;
       
-      //company_id for update
+      //company_id for update 
       // this.comp_id = params.camp_id;
 };
 

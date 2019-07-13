@@ -24,6 +24,7 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 // API CALL
 import UserAPI from '../../../api/User';
+import { breakStatement } from '@babel/types';
 
 
 const StyledTableCell = withStyles(theme => ({
@@ -55,20 +56,22 @@ export default function Franchise(props) {
   const [isError, setIsError] = useState(false);
   const [franchiseData,setFranchiseData]= useState();
   const [franchiseList, setFranchiseList] = useState({});
-
+  const [franchiseId, setFranchiseId] = useState([]);
 
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
-    
+  // var totalFranchise = 1;  
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
   
+  
+
 
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -108,7 +111,16 @@ export default function Franchise(props) {
     },
     expand:{
       fontSize: theme.typography.pxToRem(16),
-    }
+    },
+    expandHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      flexBasis: '33.33%',
+      flexShrink: 0,
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary,
+    },
   }));
   const classes = useStyles();
 
@@ -126,9 +138,57 @@ export default function Franchise(props) {
 
       setIsLoading(false);
     };
-
     fetchData();
+    // (franchiseList.length > 0 ? franchiseList : []).map((row, index)=>{
+    //   console.log('rows',row.franchise_id);  
+    // })
+    
   }, []);
+  
+  
+  useEffect(() => {
+    (franchiseList.length > 0 ? franchiseList : []).map((row, index)=>{
+    console.log("index",index);
+      if(franchiseId.length === 0 ){
+        // console.log("hello",index);
+        franchiseId.push(row.franchise_id);
+      }else if(franchiseId[index-1] !== row.franchise_id){
+        // console.log("hi",index);
+        // console.log("ddd",franchiseId[index-1])
+        franchiseId.push(row.franchise_id);
+      }
+      // if(index===0){
+      //   totalFranchise =row.franchise_id;
+      // }
+      // console.log('row',row.franchise_id);
+      // console.log('ttoal',totalFranchise);
+      // // totalFranchise !==row.franchise_id ? totalFranchise += 1 :''
+      // // console.log('row',row.franchise_id);
+    })
+  });
+  console.log("length",franchiseId.length);
+  // var totalFranchise =0;
+  // (franchiseList.length > 0 ? franchiseList : []).map((row, index)=>{
+    
+  //   if(franchiseId.length === 0 ){
+  //     console.log("hello",index);
+  //     franchiseId.push(row.franchise_id);
+  //   }else if(franchiseId[index-1] !== row.franchise_id){
+  //     console.log("hi",index);
+  //     console.log("ddd",franchiseId[index-1])
+  //     franchiseId.push(row.franchise_id);
+  //   }
+  //   // if(index===0){
+  //   //   totalFranchise =row.franchise_id;
+  //   // }
+  //   // console.log('row',row.franchise_id);
+  //   // console.log('ttoal',totalFranchise);
+  //   // // totalFranchise !==row.franchise_id ? totalFranchise += 1 :''
+  //   // // console.log('row',row.franchise_id);
+  // })
+  // franchiseList['franchise_Id']
+console.log("total",franchiseId);
+console.log("staff",franchiseList);
 // console.log(franchiseList);
   function handleClickOpen() {
     setOpen(true);
@@ -163,6 +223,8 @@ export default function Franchise(props) {
     setShowStaff(false);
   }
 
+
+
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -181,47 +243,80 @@ export default function Franchise(props) {
             </Fab>
           </Grid>
           <Grid item xs={12} sm={12}>
-            <Paper style={{ width: '100%' }}>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Franchise</StyledTableCell>
-                        <StyledTableCell>director</StyledTableCell>
-                        <StyledTableCell>UID</StyledTableCell>
-                        <StyledTableCell>Email</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Status</StyledTableCell>
-                        <StyledTableCell>Options</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    </Table>
-                    <Table>
-                    <TableBody>
-            {/* {console.log(franchiseList)}
-            {(franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
-              // const franchise_id = franchiseList.franchise_id; 
-              // franchiseList.franchise_id == franchise_id ?'' : ''
-              return(
                 
-                <ExpansionPanel
-                className={classes.expansionTitle}
-                expanded={expanded === 'panel1'}
-                onChange={handleChange('panel1')}
-                >
-                  <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel1a-header"
-                >   <Typography className={classes.expand}>Franchise Details</Typography>
-                </ExpansionPanelSummary>
-                </ExpansionPanel>
-              )
-              // const franchise_id = franchiseList.franchise_id; 
-            })
-            } */}
-                      
-                      { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
+                    { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
+                      // data.franchise_id !== totalFranchise ? console.log("hello ") : console.log("bye")
+
+                      return(
+                      <ExpansionPanel
+                      className={classes.expansionTitle}
+                      expanded={expanded === data.director_id}
+                      onChange={handleChange(data.director_id)}
+                      >
+                        <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls=""
+                        id="panel1a-header"
+                        >
+                          {/* <Typography className={classes.expand}>Franchise Details</Typography> */}
+                          <Typography className={classes.expandHeading}>{data.franchise_name}</Typography>
+                          <Typography className={classes.secondaryHeading}>{data.company_name +' at '+ data.suburb + ', ' + data.city }</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <Paper style={{ width: '100%' }}>
+                              <Table className={classes.table}>
+                                <TableHead>
+                                  <TableRow>
+                                    <StyledTableCell>#</StyledTableCell>
+                                    {/* <StyledTableCell>Franchise</StyledTableCell> */}
+                                    <StyledTableCell>Director</StyledTableCell>
+                                    <StyledTableCell>UID</StyledTableCell>
+                                    <StyledTableCell>Email</StyledTableCell>
+                                    <StyledTableCell>Contact</StyledTableCell>
+                                    <StyledTableCell>Status</StyledTableCell>
+                                    <StyledTableCell>Options</StyledTableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  <TableRow >
+                                    <StyledTableCell> {data.franchise_id}  </StyledTableCell>
+                                    {/* <StyledTableCell>{data.franchise_name}</StyledTableCell> */}
+                                    <StyledTableCell>{data.director}</StyledTableCell>
+                                    <StyledTableCell>{data.user_id}</StyledTableCell>
+                                    <StyledTableCell>{data.email}</StyledTableCell>
+                                    <StyledTableCell>{data.contact}</StyledTableCell>
+                                    <StyledTableCell>{
+                                                data.state===1 ? 'Open' 
+                                        : data.state===2 ? 'Active' 
+                                        : data.state===3 ? 'Inactive' 
+                                        : data.state===4 ? 'Close' 
+                                        : ''
+                                   }</StyledTableCell>
+                                    <StyledTableCell>
+                                    {data.state===4 ? 
+                                      <Button disabled  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                                      </Button>
+                                      :<Button  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                                      </Button>
+                                      }
+                                    </StyledTableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </Paper>
+                          </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                      )
+                      })
+                    }
+
+
+
+
+
+
+                
+                      {/* { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
                       
                       // <ExpansionPanelDetails>
                       return(
@@ -241,9 +336,9 @@ export default function Franchise(props) {
                             }</StyledTableCell>
                             <StyledTableCell>
                             {data.state===4 ? 
-                              <Button disabled  variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                              <Button disabled  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
                               </Button>
-                              :<Button  variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                              :<Button  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
                               </Button>
                               }
                               
@@ -252,12 +347,10 @@ export default function Franchise(props) {
                       )
                       // </ExpansionPanelDetails>
                       })
-                    }
+                    } */}
                     {/* </ExpansionPanel> */}
                   
-                    </TableBody>
-                  </Table>
-               </Paper>
+                   
           </Grid>
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn}/>
