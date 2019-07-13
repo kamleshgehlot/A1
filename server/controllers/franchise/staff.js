@@ -26,7 +26,8 @@ const register = function (req, res, next) {
       user_id: req.body.user_id,
       password: req.body.password,
       role: req.body.role,
-      created_by: req.body.created_by,
+      created_by: req.decoded.id,
+      is_active: 1
 	};
 
 	try{

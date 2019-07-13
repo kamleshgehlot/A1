@@ -122,7 +122,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     id += parts[index];	 
     }
     
-    return first_name.substring(first_name.length - 4).toLowerCase() + '_' + last_name.substring(0,4).toLowerCase() + '_' + id;
+    return first_name.substring(first_name.length - 4).toLowerCase() + '_' + id;
   }
 
 return (

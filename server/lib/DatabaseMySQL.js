@@ -1,1 +1,1 @@
-module.exports = {'prod': 'rentronics'};
+module.exports = {'prod': 'rentronics', getFullName: function (dbName, userName) { return dbName + "_" + userName }};
