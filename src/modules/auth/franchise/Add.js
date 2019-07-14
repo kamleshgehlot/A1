@@ -559,7 +559,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                   </Grid>
                   <Table >
                     
-                      
                           {directorList.length > 0 &&
                           <TableHead>
                               <StyledTableCell>#</StyledTableCell>

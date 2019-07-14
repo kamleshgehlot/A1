@@ -50,7 +50,6 @@ export default function Task(franchiseId) {
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
 
-
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 

@@ -18,6 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -33,6 +34,7 @@ import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
 import Task from '../task/Task';
 import Profile from '../setting/Profile';
+import ChangePassword from '../setting/ChangePassword';
 
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
@@ -94,22 +96,21 @@ export default function ClippedDrawer(props) {
   const [showFranchiseStaff, setShowFranchiseStaff] = useState(false);
   const [showTask, setShowTask] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
 
 
   const classes = useStyles();
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const anchorRef = React.useRef(null);
-  function handleToggleMenu() {
-    setMenuOpen(prevMenuOpen => !prevMenuOpen);
+  function handleMenuClick(event) {
+    setAnchorEl(event.currentTarget);
   }
-  function handleCloseMenu(event) {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
 
-    setMenuOpen(false);
+  function handleMenuClose() {
+    setAnchorEl(null);
   }
+
   function handleClickOpen() {
     setOpen(true);
   }
@@ -136,6 +137,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseStaff(false);
     setShowProfile(false);
     setShowTask(false);
+    setShowPwd(false);
   }
 
   function handleCategoryClick() {
@@ -145,6 +147,7 @@ export default function ClippedDrawer(props) {
     setShowStaff(false);
     setShowFranchiseStaff(false);
     setShowTask(false);
+    setShowPwd(false);
     setShowProfile(false);
   }
 
@@ -155,6 +158,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseStaff(false);
     setShowTask(false);
     setShowProfile(false);
+    setShowPwd(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -164,6 +168,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowTask(false);
     setShowProfile(false);
+    setShowPwd(false);
   }
   function handleTaskClick(){
     setShowTask(true);
@@ -172,9 +177,21 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowCategory(false);
     setShowProfile(false);
+    setShowPwd(false);
   }
   function handleProfileClick(){
-    setShowProfile(true);
+    setShowProfile(true);setAnchorEl(null);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowPwd(false);
+  }
+  function handleChangePasswordClick(){
+    setShowPwd(true);
+    setAnchorEl(null);
+    setShowProfile(false);
     setShowTask(false);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
@@ -204,7 +221,21 @@ export default function ClippedDrawer(props) {
           
           </Button> */}
       <div>
-        <Button
+        <Button aria-controls="simple-menu" aria-haspopup="true" className={classes.menu} onClick={handleMenuClick}>
+        Settings
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+          <MenuItem onClick={handleChangePasswordClick}>Change Password</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </Menu>
+        {/* <Button
           ref={anchorRef}
           aria-controls="menu-list-grow"
           aria-haspopup="true"
@@ -222,14 +253,14 @@ export default function ClippedDrawer(props) {
                 <ClickAwayListener onClickAway={handleCloseMenu}>
                   <MenuList>
                     <MenuItem onClick={handleProfileClick}>My Profile</MenuItem>
-                    <MenuItem onClick={handleCloseMenu}>Change Password</MenuItem>
+                    <MenuItem onClick={handleChangePasswordClick}>Change Password</MenuItem>
                     <MenuItem  onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
             </Grow>
           )}
-        </Popper>
+        </Popper> */}
       </div>
         </Toolbar>
       </AppBar>
@@ -307,6 +338,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showProfile ? <Profile /> : null
+        }
+        {
+          showPwd ? <ChangePassword  franchiseId={franchiseId} /> : null
         }
         {/* {props.children} */}
       </main>

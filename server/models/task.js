@@ -60,7 +60,7 @@ Task.prototype.all = function () {
 
 
       // connection.changeUser({database : dbName["prod"]});
-      connection.changeUser({ database: "rentronics_franchise_" + that.user_id.split('_')[1] });
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
       connection.query('select id,task_id, task_description, assigned_to, due_date from task where status=1', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
@@ -84,7 +84,7 @@ Task.prototype.last = function () {
       if (error) {
         throw error;
       }
-      connection.changeUser({ database: "rentronics_franchise_" + that.user_id.split('_')[1] });
+        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
       connection.query('select id,task_id, task_description, assigned_to, due_date from task order by id desc limit 1', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
