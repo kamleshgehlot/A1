@@ -14,7 +14,6 @@ export default function ChangePassword(franchiseId) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [password, setPassword] = useState();
 
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -75,8 +74,8 @@ export default function ChangePassword(franchiseId) {
 
       try {
         const result = await PasswordAPI.pwd();
-        setPassword(result.password[0]);
-        console.log('profile------',result.password[0]);
+        setInput('current_password', result.password);
+        document.getElementById('new_password').focus();
       } catch (error) {
         setIsError(true);
       }
@@ -84,12 +83,14 @@ export default function ChangePassword(franchiseId) {
     };
     fetchData();
   }, []);
+
 const RESET_VALUES = {
   current_password:'',
   new_password:'',
   confirm_password:'',
 };
-  const passwordadd = async () => {
+
+  const passwordAdd = async () => {
     const response = await PasswordAPI.change({
       current_password: inputs.current_password,
       new_password: inputs.new_password,
@@ -97,9 +98,10 @@ const RESET_VALUES = {
     });
     console.log(response);
   };
+
   const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
-    passwordadd,
+    passwordAdd,
     validate
   );
 
@@ -138,6 +140,7 @@ const RESET_VALUES = {
                 onChange={handleInputChange}
                 required
                 fullWidth
+                autoFocus
               />
             </Grid>
             <Grid item xs={12} sm={6}>

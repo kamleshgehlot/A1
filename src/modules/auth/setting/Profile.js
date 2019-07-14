@@ -71,7 +71,7 @@ export default function Profile(props) {
 
       try {
         const result = await ProfileAPI.info();
-        setProfileList(result.profile[0]);
+        setProfileList(result.profile[0] || {});
         console.log('profile------',result.profile[0]);
       } catch (error) {
         setIsError(true);
@@ -102,25 +102,25 @@ export default function Profile(props) {
                 {profileList.director}
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <StoreIcon />{profileList.fname} <br/>
+                <StoreIcon /> {profileList.fname} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <BusinessIcon />{profileList.name} <br/>
+                <BusinessIcon /> {profileList.name} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <LocationCityIcon />{profileList.location} <br/>
+                <LocationCityIcon /> {profileList.location} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <DescriptionIcon />{profileList.nbzn} <br/>
+                <DescriptionIcon /> {profileList.nbzn} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <EmailIcon />{profileList.email} <br/>
+                <EmailIcon /> {profileList.email} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <CallIcon />{profileList.contact} <br/>
+                <CallIcon /> {profileList.contact} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <CallIcon />{profileList.alt_contact} <br/>
+                <CallIcon /> {profileList.alt_contact} <br/>
               </Typography>
         </Paper>
       </Grid>

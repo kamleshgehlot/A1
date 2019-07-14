@@ -4,21 +4,21 @@ const dbName = require('../lib/databaseMySQLNew.js');
 const utils = require("../utils");
 
 var Company = function (params) {
-      this.name= params.name;
-      this.nbzn= params.nbzn;
-      this.location= params.location;
-      this.director_id = params.director_id;
-      this.director= params.director;
-      this.email= params.email;
-      this.contact= params.contact;
-      this.alt_contact= params.alt_contact;
-      this.website= params.website;
-      this.accountant_id = params.accountant_id;
+  this.name = params.name;
+  this.nbzn = params.nbzn;
+  this.location = params.location;
+  this.director_id = params.director_id;
+  this.director = params.director;
+  this.email = params.email;
+  this.contact = params.contact;
+  this.alt_contact = params.alt_contact;
+  this.website = params.website;
+  this.accountant_id = params.accountant_id;
 
-      this.directorList=params.directorList;
-      
-      //company_id for update 
-      // this.comp_id = params.camp_id;
+  this.directorList = params.directorList;
+
+  //company_id for update 
+  // this.comp_id = params.camp_id;
 };
 
 // console.log("company---",Company);

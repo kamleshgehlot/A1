@@ -15,7 +15,7 @@ const login = function (req, res, next) {
     auth.login().then((user) => {
       // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
 
-        console.log("user....************.", user)
+      console.log("user....************.", user)
       // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
       // console.log("decText....************.", decText)
 
@@ -33,8 +33,8 @@ const login = function (req, res, next) {
         result.role_name = user[0].role_name;
         result.user_name = user[0].user_name;
         result.franchise_id = user[0].franchise_id || '';
-        result.user_id=user[0].id;
-        result.uid=user[0].user_id;
+        result.user_id = user[0].id;
+        result.uid = user[0].user_id;
       } else {
         status = 401;
         result.status = status;
@@ -42,7 +42,7 @@ const login = function (req, res, next) {
       }
 
       res.status(status).send(result);
-    // });
+      // });
     }).catch(err => {
       console.log("Error", err)
       status = 500;
