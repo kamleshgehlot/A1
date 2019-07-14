@@ -1,9 +1,9 @@
 const connection = require('../../lib/connection.js');
-const dbName = require('../../lib/databaseMySQL.js');
+const dbName = require('../../lib/databaseMySQLNew.js');
 
 const utils = require('../../utils');
 
-const Status = function(params) {
+const Status = function (params) {
   this.id = params.id;
   this.status = params.status;
 };
@@ -18,7 +18,7 @@ Status.prototype.all = function () {
         throw error;
       }
 
-      connection.changeUser({database : dbName["prod"]});
+      connection.changeUser({ database: dbName["prod"] });
       connection.query('select id, status from product_status', function (error, rows, fields) {
 
         if (!error) {

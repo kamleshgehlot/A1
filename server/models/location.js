@@ -1,20 +1,20 @@
 const connection = require('../lib/connection.js');
-const dbName = require('../lib/databaseMySQL.js');
+const dbName = require('../lib/databaseMySQLNew.js');
 
-const Location = function(params) {
+const Location = function (params) {
   this.id = params.id;
   this.city = params.city;
   this.city_code = params.city_code;
 };
 
-Location.prototype.getAll = function() {
+Location.prototype.getAll = function () {
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
       if (error) {
         throw error;
       }
 
-      connection.changeUser({database : dbName["prod"]});
+      connection.changeUser({ database: dbName["prod"] });
       connection.query('select id, city, city_code from location order by city', (error, rows, fields) => {
         if (!error) {
           resolve(rows);

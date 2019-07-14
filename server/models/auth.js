@@ -1,5 +1,5 @@
 var connection = require("../lib/connection.js");
-const dbName = require('../lib/databaseMySQL.js');
+const dbName = require('../lib/databaseMySQLNew.js');
 
 var Auth = function (params) {
   this.name = params.name;

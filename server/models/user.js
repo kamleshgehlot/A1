@@ -1,5 +1,5 @@
 const connection = require("../lib/connection.js");
-const dbName = require('../lib/databaseMySQL.js');
+const dbName = require('../lib/databaseMySQLNew.js');
 var encryptionHelper = require("../lib/simple-nodejs-iv-encrypt-decrypt.js");
 var algorithm = encryptionHelper.CIPHERS.AES_256;
 

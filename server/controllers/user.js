@@ -91,7 +91,7 @@ const register = function (req, res, next) {
 				//  to: 'mpurohit88@gmail.com',
 				to: director.email,
 				subject: 'New Message from Contact Form',
-				html: "user Id: " + director.email + "<br />password: " + director.password
+				html: "user Id: " + director.uid + "<br />password: " + director.password
 			}
 
 			trans.sendMail(mail, (err, info) => {

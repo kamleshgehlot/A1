@@ -1,5 +1,5 @@
 const connection = require("../lib/connection.js");
-const dbName = require('../lib/databaseMySQL.js');
+const dbName = require('../lib/databaseMySQLNew.js');
 
 const Franchise = function (params) {
   // this.id = params.id;
@@ -37,81 +37,81 @@ Franchise.prototype.register = function (newUser) {
       }
       else if (!error) {
         connection.query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?', frachiseDbName, function (error, rows, fields) {
-          if(rows.length === 0) {
+          if (rows.length === 0) {
 
-        connection.query('CREATE DATABASE IF NOT EXISTS ??', frachiseDbName, function (error, rows, fields) {
-          if (!error) {
-            connection.changeUser({ database: frachiseDbName });
-            connection.query(user, function (err) {
-              connection.query(role, function (err) {
-                connection.query(userRole, function (err) {
-                  connection.query(staff, function (err) {
-                    connection.query(task, function (err) {
-                      if (err) {
-                        console.log('error in creating tables', err);
-                        return;
-                      }
+            connection.query('CREATE DATABASE IF NOT EXISTS ??', frachiseDbName, function (error, rows, fields) {
+              if (!error) {
+                connection.changeUser({ database: frachiseDbName });
+                connection.query(user, function (err) {
+                  connection.query(role, function (err) {
+                    connection.query(userRole, function (err) {
+                      connection.query(staff, function (err) {
+                        connection.query(task, function (err) {
+                          if (err) {
+                            console.log('error in creating tables', err);
+                            return;
+                          }
 
-                      let values1 = [
-                        [2, 'Admin', 1, 1],
-                        [3, 'CSR', 1, 1],
-                        [4, 'Finance', 1, 1],
-                        [5, 'Delivery', 1, 1],
-                        [6, 'HR', 1, 1]
-                      ]
-
-                      connection.changeUser({ database: frachiseDbName });
-                      connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
-                        if (error) {
-                          console.log("Error...", error);
-                          reject(error);
-                        }
-
-                        if (!error) {
-                          let values = [
-                            [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.created_by, that.company_id]
+                          let values1 = [
+                            [2, 'Admin', 1, 1],
+                            [3, 'CSR', 1, 1],
+                            [4, 'Finance', 1, 1],
+                            [5, 'Delivery', 1, 1],
+                            [6, 'HR', 1, 1]
                           ]
 
-                          connection.changeUser({ database: dbName["prod"] });
-                          connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
-
-                            if (!error) {
-                              let franchise_id = rows.insertId;
-                              resolve({ franchise_id: franchise_id });
-                            } else {
+                          connection.changeUser({ database: frachiseDbName });
+                          connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
+                            if (error) {
                               console.log("Error...", error);
                               reject(error);
                             }
-                          });
-                        }
 
-                        connection.release();
-                        console.log('Process Complete %d', connection.threadId);
+                            if (!error) {
+                              let values = [
+                                [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.created_by, that.company_id]
+                              ]
+
+                              connection.changeUser({ database: dbName["prod"] });
+                              connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
+
+                                if (!error) {
+                                  let franchise_id = rows.insertId;
+                                  resolve({ franchise_id: franchise_id });
+                                } else {
+                                  console.log("Error...", error);
+                                  reject(error);
+                                }
+                              });
+                            }
+
+                            connection.release();
+                            console.log('Process Complete %d', connection.threadId);
+                          });
+                        });
                       });
                     });
                   });
+                  console.log('created a new table');
                 });
-              });
-              console.log('created a new table');
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
             });
           } else {
-            console.log("Error...", error);
-            reject(error);
+            connection.changeUser({ database: dbName["prod"] });
+            connection.query('SELECT id from franchise where fdbname = ?', frachiseDbName, function (error, rows, fields) {
+              console.log("Frachise DB already exists............", rows);
+              if (!error) {
+                resolve({ franchise_id: rows[0].id });
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
           }
         });
-      } else {
-        connection.changeUser({ database: dbName["prod"] });
-        connection.query('SELECT id from franchise where fdbname = ?', frachiseDbName, function (error, rows, fields) {
-          console.log("Frachise DB already exists............", rows);
-          if (!error) {
-            resolve({ franchise_id: rows[0].id });
-          } else {
-            console.log("Error...", error);
-            reject(error);
-          }
-        });
-      }
-      });
 
       } else {
         console.log("Error...", error);

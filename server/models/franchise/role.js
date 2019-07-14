@@ -1,5 +1,5 @@
 const connection = require('../../lib/connection.js');
-const dbName = require('../../lib/databaseMySQL.js');
+const dbName = require('../../lib/databaseMySQLNew.js');
 const utils = require("../../utils");
 
 
@@ -11,14 +11,14 @@ var Role = function (params) {
 
 
 
-Role.prototype.all = function() {
+Role.prototype.all = function () {
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
       if (error) {
         throw error;
       }
 
-      connection.changeUser({database : dbName["prod"]});
+      connection.changeUser({ database: dbName["prod"] });
       connection.query('select id, name from role where id not in(1,2) ORDER BY name', (error, rows, fields) => {
         if (!error) {
           resolve(rows);

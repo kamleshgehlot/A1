@@ -1,0 +1,1 @@
+module.exports = { 'prod': 'rentrodev_test', getFullName: function (dbName, userName) { return dbName + "_" + userName } };

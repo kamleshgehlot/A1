@@ -1,5 +1,5 @@
 const connection = require('../../lib/connection.js');
-const dbName = require('../../lib/databaseMySQL.js');
+const dbName = require('../../lib/databaseMySQLNew.js');
 const utils = require("../../utils");
 
 
@@ -47,7 +47,7 @@ Staff.prototype.register = function () {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
         connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + 0 + '", "' + 0 + '", "' + that.first_name + ' ' + that.last_name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.role + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
-          
+
           const savedUserId = rows.insertId;
           connection.query('INSERT INTO staff(franchise_user_id, first_name, last_name, location, contact, email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, password, role, employment_docs, created_by) values ("' + savedUserId + '","' + that.first_name + '","' + that.last_name + '","' + that.location + '","' + that.contact + '","' + that.email + '","' + that.pre_company_name + '","' + that.pre_company_address + '","' + that.pre_company_contact + '","' + that.pre_position + '", "' + that.duration + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.role + '", "' + that.employment_docs + '", "' + that.created_by + '")', function (error, rows, fields) {
             if (!error) {

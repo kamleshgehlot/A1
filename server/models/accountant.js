@@ -1,13 +1,13 @@
 const connection = require("../lib/connection.js");
-const dbName = require('../lib/databaseMySQL.js');
+const dbName = require('../lib/databaseMySQLNew.js');
 
 const utils = require("../utils");
 
 var Accountant = function (params) {
   this.id = params.id;
-  this.name= params.name;
-  this.email= params.email;
-  this.contact= params.contact;
+  this.name = params.name;
+  this.email = params.email;
+  this.contact = params.contact;
 
   //update params
   this.acc_id = params.acc_id;
@@ -23,19 +23,19 @@ Accountant.prototype.register = function () {
       }
 
       if (!error) {
-        connection.changeUser({database : dbName["prod"]});
+        connection.changeUser({ database: dbName["prod"] });
         connection.query('INSERT INTO accountant(name,email,contact) VALUES ("' + that.name + '", "' + that.email + '", "' + that.contact + '")', function (error, rows, fields) {
 
 
-              if (!error) {
-                let accountant_id = rows.insertId;
-                resolve({ accountant_id: accountant_id });
-              } else {
-                console.log("Error...", error);
-                reject(error);
-              }
-            });
-          
+          if (!error) {
+            let accountant_id = rows.insertId;
+            resolve({ accountant_id: accountant_id });
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+
       } else {
         console.log("Error...", error);
         reject(error);
@@ -53,7 +53,7 @@ Accountant.prototype.register = function () {
 
 
 
-Accountant.prototype.update = function() {
+Accountant.prototype.update = function () {
   const that = this;
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
@@ -62,10 +62,10 @@ Accountant.prototype.update = function() {
       }
 
       if (!error) {
-      let values = [that.name, that.email, that.contact, that.id];
+        let values = [that.name, that.email, that.contact, that.id];
 
-      connection.changeUser({database : dbName["prod"]});
-			connection.query('UPDATE accountant set name = ?, email = ?, contact = ? WHERE id = ?', values, function (error, rows, fields) {
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('UPDATE accountant set name = ?, email = ?, contact = ? WHERE id = ?', values, function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {
@@ -73,7 +73,7 @@ Accountant.prototype.update = function() {
             reject(error);
           }
         });
-        
+
       } else {
         console.log('Error...', error);
         reject(error);

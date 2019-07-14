@@ -1,9 +1,9 @@
 const connection = require('../../lib/connection.js');
-const dbName = require('../../lib/databaseMySQL.js');
+const dbName = require('../../lib/databaseMySQLNew.js');
 
 const utils = require('../../utils');
 
-const Color = function(params) {
+const Color = function (params) {
   this.id = params.id;
   this.color = params.color;
 };
@@ -18,7 +18,7 @@ Color.prototype.all = function () {
         throw error;
       }
 
-      connection.changeUser({database : dbName["prod"]});
+      connection.changeUser({ database: dbName["prod"] });
       connection.query('select * from color', function (error, rows, fields) {
 
         if (!error) {

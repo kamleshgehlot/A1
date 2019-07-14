@@ -1,5 +1,5 @@
 const connection = require("../../lib/connection.js");
-const dbName = require('../../lib/databaseMySQL.js');
+const dbName = require('../../lib/databaseMySQLNew.js');
 
 var UserRole = function (params) {
   this.id = params.id;
@@ -19,28 +19,28 @@ UserRole.prototype.register = function () {
       }
 
       if (!error) {
-        connection.changeUser({database : dbName["prod"]});
-        connection.query('select id from user where franchise_id = "'+ that.franchise_id+'"',function(error, rows, fields){
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select id from user where franchise_id = "' + that.franchise_id + '"', function (error, rows, fields) {
           if (!error) {
-           var user_id = rows;
-          //  console.log("dflsj, ", rows);
-          (user_id || []).map((user, index)=>{
-            connection.query('INSERT INTO user_role(user_id,role_id,is_active,created_by) VALUES ("' + user_id[index].id + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+            var user_id = rows;
+            //  console.log("dflsj, ", rows);
+            (user_id || []).map((user, index) => {
+              connection.query('INSERT INTO user_role(user_id,role_id,is_active,created_by) VALUES ("' + user_id[index].id + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
-              if (!error) {
-                resolve({ userName: that.name, userId: that.userId, password: that.password });
-              } else {
-                console.log("Error...", error);
-                reject(error);
-              }
-            });
-          })
+                if (!error) {
+                  resolve({ userName: that.name, userId: that.userId, password: that.password });
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+              });
+            })
           } else {
             console.log("Error...", error);
             reject(error);
           }
         })
-        
+
       } else {
         console.log("Error...", error);
         reject(error);
