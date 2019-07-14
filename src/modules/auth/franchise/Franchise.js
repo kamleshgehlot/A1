@@ -54,7 +54,7 @@ export default function Franchise(props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [franchiseData,setFranchiseData]= useState();
+  const [franchiseData, setFranchiseData]= useState();
   const [franchiseList, setFranchiseList] = useState({});
   const [franchiseId, setFranchiseId] = useState([]);
 
@@ -70,9 +70,6 @@ export default function Franchise(props) {
     setExpanded(isExpanded ? panel : false);
   };
   
-  
-
-
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -132,6 +129,25 @@ export default function Franchise(props) {
       try {
         const result = await UserAPI.list();
         setFranchiseList(result.userList);
+
+        const franchiseIdTemp = [];
+
+        result.userList.map(data => {
+          const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
+
+          if(!found) {
+            franchiseIdTemp.push({
+              director_id: data.director_id,
+              franchise_id: data.franchise_id,
+              franchise_name: data.franchise_name,
+              company_name: data.company_name,
+              suburb: data.suburb,
+              city: data.city
+            });
+          }
+        });
+
+        setFranchiseId(franchiseIdTemp);
       } catch (error) {
         setIsError(true);
       }
@@ -145,51 +161,6 @@ export default function Franchise(props) {
     
   }, []);
   
-  
-  useEffect(() => {
-    (franchiseList.length > 0 ? franchiseList : []).map((row, index)=>{
-    console.log("index",index);
-      if(franchiseId.length === 0 ){
-        // console.log("hello",index);
-        franchiseId.push(row.franchise_id);
-      }else if(franchiseId[index-1] !== row.franchise_id){
-        // console.log("hi",index);
-        // console.log("ddd",franchiseId[index-1])
-        franchiseId.push(row.franchise_id);
-      }
-      // if(index===0){
-      //   totalFranchise =row.franchise_id;
-      // }
-      // console.log('row',row.franchise_id);
-      // console.log('ttoal',totalFranchise);
-      // // totalFranchise !==row.franchise_id ? totalFranchise += 1 :''
-      // // console.log('row',row.franchise_id);
-    })
-  });
-  console.log("length",franchiseId.length);
-  // var totalFranchise =0;
-  // (franchiseList.length > 0 ? franchiseList : []).map((row, index)=>{
-    
-  //   if(franchiseId.length === 0 ){
-  //     console.log("hello",index);
-  //     franchiseId.push(row.franchise_id);
-  //   }else if(franchiseId[index-1] !== row.franchise_id){
-  //     console.log("hi",index);
-  //     console.log("ddd",franchiseId[index-1])
-  //     franchiseId.push(row.franchise_id);
-  //   }
-  //   // if(index===0){
-  //   //   totalFranchise =row.franchise_id;
-  //   // }
-  //   // console.log('row',row.franchise_id);
-  //   // console.log('ttoal',totalFranchise);
-  //   // // totalFranchise !==row.franchise_id ? totalFranchise += 1 :''
-  //   // // console.log('row',row.franchise_id);
-  // })
-  // franchiseList['franchise_Id']
-console.log("total",franchiseId);
-console.log("staff",franchiseList);
-// console.log(franchiseList);
   function handleClickOpen() {
     setOpen(true);
   }
@@ -223,8 +194,6 @@ console.log("staff",franchiseList);
     setShowStaff(false);
   }
 
-
-
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -244,25 +213,25 @@ console.log("staff",franchiseList);
           </Grid>
           <Grid item xs={12} sm={12}>
                 
-                    { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
+                    { (franchiseId.length > 0 ? franchiseId : []).map((data, index)=>{
                       // data.franchise_id !== totalFranchise ? console.log("hello ") : console.log("bye")
 
                       return(
-                      <ExpansionPanel
-                      className={classes.expansionTitle}
-                      expanded={expanded === data.director_id}
-                      onChange={handleChange(data.director_id)}
-                      >
-                        <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls=""
-                        id="panel1a-header"
+                        <ExpansionPanel
+                          className={classes.expansionTitle}
+                          expanded={expanded === data.director_id}
+                          onChange={handleChange(data.director_id)}
                         >
-                          {/* <Typography className={classes.expand}>Franchise Details</Typography> */}
-                          <Typography className={classes.expandHeading}>{data.franchise_name}</Typography>
-                          <Typography className={classes.secondaryHeading}>{data.company_name +' at '+ data.suburb + ', ' + data.city }</Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
+                          <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls=""
+                            id="panel1a-header"
+                          >
+                              {/* <Typography className={classes.expand}>Franchise Details</Typography> */}
+                              <Typography className={classes.expandHeading}>{data.franchise_name}</Typography>
+                              <Typography className={classes.secondaryHeading}>{data.company_name +' at '+ data.suburb + ', ' + data.city }</Typography>
+                          </ExpansionPanelSummary>
+                          <ExpansionPanelDetails>
                             <Paper style={{ width: '100%' }}>
                               <Table className={classes.table}>
                                 <TableHead>
@@ -278,29 +247,33 @@ console.log("staff",franchiseList);
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                  <TableRow >
-                                    <StyledTableCell> {data.franchise_id}  </StyledTableCell>
-                                    {/* <StyledTableCell>{data.franchise_name}</StyledTableCell> */}
-                                    <StyledTableCell>{data.director}</StyledTableCell>
-                                    <StyledTableCell>{data.user_id}</StyledTableCell>
-                                    <StyledTableCell>{data.email}</StyledTableCell>
-                                    <StyledTableCell>{data.contact}</StyledTableCell>
+                                {(franchiseList.length > 0 ? franchiseList : []).map((childData, index)=>{
+                                  
+                                  return (childData.franchise_id === data.franchise_id) ? <TableRow >
+                                    <StyledTableCell> {childData.franchise_id}  </StyledTableCell>
+                                    {/* <StyledTableCell>{childData.franchise_name}</StyledTableCell> */}
+                                    <StyledTableCell>{childData.director}</StyledTableCell>
+                                    <StyledTableCell>{childData.user_id}</StyledTableCell>
+                                    <StyledTableCell>{childData.email}</StyledTableCell>
+                                    <StyledTableCell>{childData.contact}</StyledTableCell>
                                     <StyledTableCell>{
-                                                data.state===1 ? 'Open' 
-                                        : data.state===2 ? 'Active' 
-                                        : data.state===3 ? 'Inactive' 
-                                        : data.state===4 ? 'Close' 
+                                                childData.state===1 ? 'Open' 
+                                        : childData.state===2 ? 'Active' 
+                                        : childData.state===3 ? 'Inactive' 
+                                        : childData.state===4 ? 'Close' 
                                         : ''
-                                   }</StyledTableCell>
+                                    }</StyledTableCell>
                                     <StyledTableCell>
-                                    {data.state===4 ? 
-                                      <Button disabled  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                                    {childData.state===4 ? 
+                                      <Button disabled  variant="contained" color="primary"  value={childData.id} name={childData.id} className={classes.button} onClick={(event) => { handleClickEditOpen(childData); }}>Edit
                                       </Button>
-                                      :<Button  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
+                                      :<Button  variant="contained" color="primary"  value={childData.id} name={childData.id} className={classes.button} onClick={(event) => { handleClickEditOpen(childData); }}>Edit
                                       </Button>
                                       }
                                     </StyledTableCell>
-                                  </TableRow>
+                                  </TableRow> : null
+                                    })
+                                  }
                                 </TableBody>
                               </Table>
                             </Paper>
