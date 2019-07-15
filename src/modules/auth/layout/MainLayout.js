@@ -33,6 +33,7 @@ import Category from '../category/CategoryList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
 import Task from '../task/Task';
+import Customer from '../customer/CustomerList';
 import Profile from '../setting/Profile';
 import ChangePassword from '../setting/ChangePassword';
 
@@ -95,6 +96,7 @@ export default function ClippedDrawer(props) {
   const [showMasterStaff, setShowMasterStaff] = useState(false);
   const [showFranchiseStaff, setShowFranchiseStaff] = useState(false);
   const [showTask, setShowTask] = useState(false);
+  const [showCustomer, setShowCustomer] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
@@ -206,8 +208,19 @@ export default function ClippedDrawer(props) {
     setShowMasterStaff(false);
     setShowFranchise(false);
     setShowCategory(false);
+    setShowCustomer(false);
   }
 
+  function handleCustomerClick(){
+    setShowCustomer(true);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+  }
   function handleLogout() {
     APP_TOKEN.remove();
     props.history.push('/login');
@@ -322,6 +335,10 @@ export default function ClippedDrawer(props) {
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
+                <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Customer" />
+                </ListItem>
               </List>
               )}
             </List>
@@ -361,6 +378,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showTask ? <Task franchiseId={franchiseId} /> : null
+        }
+        {
+          showCustomer ? <Customer /> : null
         }
         {
           showProfile ? <Profile /> : null
