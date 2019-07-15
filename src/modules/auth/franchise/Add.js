@@ -119,11 +119,10 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList }) {
+export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, setFranchiseId }) {
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
   const [directorList, setDirectorList] = useState([]);
-
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = panel => (event, isExpanded) => {
@@ -152,9 +151,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   //   }
   // }
 
+  // const handleSuburb = async () => {
+  //   const response = await UserAPI.add({
+   
+  //   });
+  // }
 
-    
-  
   const addFranchise = async () => {
 
     const response = await UserAPI.add({
@@ -189,6 +191,25 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       role_id: "2",
       state:1,
     });
+
+    const franchiseIdTemp = [];
+
+    response.userList.map(data => {
+      const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
+
+      if(!found) {
+        franchiseIdTemp.push({
+          director_id: data.director_id,
+          franchise_id: data.franchise_id,
+          franchise_name: data.franchise_name,
+          company_name: data.company_name,
+          suburb: data.suburb,
+          city: data.city
+        });
+      }
+    });
+
+    setFranchiseId(franchiseIdTemp);
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);
@@ -265,10 +286,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   function handleRemoveDirector(index){
     const directorListTemp = [...directorList];
     directorListTemp.splice(index, 1);
-    // directorList.splice(index, 1);
 
     setDirectorList(directorListTemp);
-    // console.log(directorList);
   }
 
   function handleNameBlurChange(e) {
@@ -354,6 +373,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <Select
                       value={inputs.city}
                       onChange={handleInputChange}
+                      // onBlur={handleSuburb}
                       inputProps={{
                         name: 'city',
                         id: 'city',
@@ -374,14 +394,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="suburb_selection">Suburb *</InputLabel>
+                    <InputLabel htmlFor="suburb_selection">Area *</InputLabel>
                     <Select
                       value={inputs.suburb}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'suburb',
                         id: 'suburb_selection',
-                        label: 'Suburb'
+                        label: 'Area'
                       }}
                       fullWidth
                       label="Suburb"

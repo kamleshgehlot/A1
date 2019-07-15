@@ -108,15 +108,17 @@ export default function Franchise(props) {
     },
     expand:{
       fontSize: theme.typography.pxToRem(16),
+      
     },
     expandHeading: {
       fontSize: theme.typography.pxToRem(15),
       flexBasis: '33.33%',
       flexShrink: 0,
+      fontWeight: theme.typography.fontWeightBold,
     },
     secondaryHeading: {
       fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
+      // color: theme.palette.text.secondary,
     },
   }));
   const classes = useStyles();
@@ -180,6 +182,9 @@ export default function Franchise(props) {
   ////////////////////////////////////////
   function setFranchiseListFn(response) {
     setFranchiseList(response);
+  }
+  function setFranchiseIdFn(response) {
+    setFranchiseId(response);
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -247,11 +252,11 @@ export default function Franchise(props) {
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                {(franchiseList.length > 0 ? franchiseList : []).map((childData, index)=>{
-                                  
+                                {(franchiseList.length > 0 ? franchiseList : []).map((childData, childIndex)=>{
                                   return (childData.franchise_id === data.franchise_id) ? <TableRow >
-                                    <StyledTableCell> {childData.franchise_id}  </StyledTableCell>
+                                    {/* <StyledTableCell> {childData.franchise_id}  </StyledTableCell> */}
                                     {/* <StyledTableCell>{childData.franchise_name}</StyledTableCell> */}
+                                    <StyledTableCell> {childIndex+1}  </StyledTableCell>
                                     <StyledTableCell>{childData.director}</StyledTableCell>
                                     <StyledTableCell>{childData.user_id}</StyledTableCell>
                                     <StyledTableCell>{childData.email}</StyledTableCell>
@@ -282,53 +287,12 @@ export default function Franchise(props) {
                       )
                       })
                     }
-
-
-
-
-
-
-                
-                      {/* { (franchiseList.length > 0 ? franchiseList : []).map((data, index)=>{
-                      
-                      // <ExpansionPanelDetails>
-                      return(
-                        <TableRow key={data.franchise_id} >
-                            <StyledTableCell> {data.franchise_id}  </StyledTableCell>
-                            <StyledTableCell>{data.franchise_name}</StyledTableCell>
-                            <StyledTableCell>{data.director}</StyledTableCell>
-                            <StyledTableCell>{data.user_id}</StyledTableCell>
-                            <StyledTableCell>{data.email}</StyledTableCell>
-                            <StyledTableCell>{data.contact}</StyledTableCell>
-                            <StyledTableCell>{
-                                data.state===1 ? 'Open' 
-                                : data.state===2 ? 'Active' 
-                                : data.state===3 ? 'Inactive' 
-                                : data.state===4 ? 'Close' 
-                                : ''
-                            }</StyledTableCell>
-                            <StyledTableCell>
-                            {data.state===4 ? 
-                              <Button disabled  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
-                              </Button>
-                              :<Button  variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>Edit
-                              </Button>
-                              }
-                              
-                            </StyledTableCell>
-                        </TableRow>
-                      )
-                      // </ExpansionPanelDetails>
-                      })
-                    } */}
-                    {/* </ExpansionPanel> */}
-                  
                    
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn}/>
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} setFranchiseId={setFranchiseIdFn}/>
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={franchiseData} setFranchiseList={setFranchiseListFn} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={franchiseData} setFranchiseList={setFranchiseListFn}  setFranchiseId={setFranchiseIdFn}/> : null}
     </div>
   );
 }

@@ -170,6 +170,15 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowPwd(false);
   }
+  function handleCustomerClick(){
+    setShowFranchiseStaff(true);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowTask(false);
+    setShowProfile(false);
+    setShowPwd(false);
+  }
   function handleTaskClick(){
     setShowTask(true);
     setShowFranchiseStaff(false);
@@ -305,7 +314,7 @@ export default function ClippedDrawer(props) {
                
               {roleName === 'Admin' && (
               <List>
-                <ListItem button key="ManageFranchise"  onClick={handleFranchiseStaffClick}>
+                <ListItem button key="ManageStaff"  onClick={handleFranchiseStaffClick}>
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Staff" />
                 </ListItem>
@@ -316,6 +325,23 @@ export default function ClippedDrawer(props) {
               </List>
               )}
             </List>
+
+            <List>
+               {console.log("role-------..",roleName)}
+               {console.log("user-------..",userName)}
+               {roleName === 'CSR' && (
+               <List>
+                 <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
+                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                     <ListItemText primary="Manage Customer" />
+                 </ListItem>
+                 {/* <ListItem button key="ManageTask"  onClick={handleTaskClick}>
+                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                     <ListItemText primary="Manage Task" />
+                 </ListItem> */}
+               </List>
+               )}
+             </List>
         {/* <Divider /> */}
       </Drawer>
       <main className={classes.content}>
