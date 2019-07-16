@@ -119,11 +119,10 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList }) {
+export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, setFranchiseId }) {
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
   const [directorList, setDirectorList] = useState([]);
-
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = panel => (event, isExpanded) => {
@@ -152,9 +151,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   //   }
   // }
 
+  // const handleSuburb = async () => {
+  //   const response = await UserAPI.add({
+   
+  //   });
+  // }
 
-    
-  
   const addFranchise = async () => {
 
     const response = await UserAPI.add({
@@ -189,6 +191,25 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       role_id: "2",
       state:1,
     });
+
+    const franchiseIdTemp = [];
+
+    response.userList.map(data => {
+      const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
+
+      if(!found) {
+        franchiseIdTemp.push({
+          director_id: data.director_id,
+          franchise_id: data.franchise_id,
+          franchise_name: data.franchise_name,
+          company_name: data.company_name,
+          suburb: data.suburb,
+          city: data.city
+        });
+      }
+    });
+
+    setFranchiseId(franchiseIdTemp);
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);
@@ -256,19 +277,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   
       setDirectorList(directorListTemp);
     }
-    
-    // console.log(directorList);
   }
-
-// console.log(directorList);
 
   function handleRemoveDirector(index){
     const directorListTemp = [...directorList];
     directorListTemp.splice(index, 1);
-    // directorList.splice(index, 1);
 
     setDirectorList(directorListTemp);
-    // console.log(directorList);
   }
 
   function handleNameBlurChange(e) {
@@ -281,8 +296,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     let id = "";
     
     for( let i = 0; i < 4; ++i ) {
-    let index = Math.floor( Math.random() * (5) );
-    id += parts[index];	 
+      let index = Math.floor( Math.random() * (5) );
+      id += parts[index];	 
     }
     
     return director.substring(0, 4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
@@ -330,22 +345,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               >
                 <Typography className={classes.heading}>Franchise Details</Typography>
               </ExpansionPanelSummary>
-
-              
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                 <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="franchise_name"
                       name="franchise_name"
                       label="Franchise Name"
                       value={inputs.franchise_name}
                       onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
                       fullWidth
                       required
-                      // placeholder="Franchise Name"
                       margin="dense"
                     />
                   </Grid>
@@ -354,6 +364,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <Select
                       value={inputs.city}
                       onChange={handleInputChange}
+                      // onBlur={handleSuburb}
                       inputProps={{
                         name: 'city',
                         id: 'city',
@@ -374,14 +385,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="suburb_selection">Suburb *</InputLabel>
+                    <InputLabel htmlFor="suburb_selection">Area *</InputLabel>
                     <Select
                       value={inputs.suburb}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'suburb',
                         id: 'suburb_selection',
-                        label: 'Suburb'
+                        label: 'Area'
                       }}
                       fullWidth
                       label="Suburb"
