@@ -24,7 +24,7 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 // API CALL
 import UserAPI from '../../../api/User';
-import { breakStatement } from '@babel/types';
+// import { breakStatement } from '@babel/types';
 
 
 const StyledTableCell = withStyles(theme => ({
@@ -59,7 +59,6 @@ export default function Franchise(props) {
   const [franchiseId, setFranchiseId] = useState([]);
 
   const roleName = APP_TOKEN.get().roleName;
-  const userName = APP_TOKEN.get().userName;
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
@@ -130,10 +129,10 @@ export default function Franchise(props) {
         const result = await UserAPI.list();
         setFranchiseList(result.userList);
 
-        const franchiseIdTemp = [];
+        let franchiseIdTemp = [];
 
         result.userList.map(data => {
-          const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
+          let found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
 
           if(!found) {
             franchiseIdTemp.push({
@@ -142,7 +141,8 @@ export default function Franchise(props) {
               franchise_name: data.franchise_name,
               company_name: data.company_name,
               suburb: data.suburb,
-              city: data.city
+              city: data.city,
+              contact: data.contact
             });
           }
         });

@@ -256,19 +256,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   
       setDirectorList(directorListTemp);
     }
-    
-    // console.log(directorList);
   }
-
-// console.log(directorList);
 
   function handleRemoveDirector(index){
     const directorListTemp = [...directorList];
     directorListTemp.splice(index, 1);
-    // directorList.splice(index, 1);
 
     setDirectorList(directorListTemp);
-    // console.log(directorList);
   }
 
   function handleNameBlurChange(e) {
@@ -281,8 +275,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     let id = "";
     
     for( let i = 0; i < 4; ++i ) {
-    let index = Math.floor( Math.random() * (5) );
-    id += parts[index];	 
+      let index = Math.floor( Math.random() * (5) );
+      id += parts[index];	 
     }
     
     return director.substring(0, 4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
@@ -330,22 +324,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               >
                 <Typography className={classes.heading}>Franchise Details</Typography>
               </ExpansionPanelSummary>
-
-              
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                 <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="franchise_name"
                       name="franchise_name"
                       label="Franchise Name"
                       value={inputs.franchise_name}
                       onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
                       fullWidth
                       required
-                      // placeholder="Franchise Name"
                       margin="dense"
                     />
                   </Grid>
