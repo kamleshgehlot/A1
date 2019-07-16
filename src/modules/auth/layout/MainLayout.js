@@ -33,6 +33,7 @@ import Category from '../category/CategoryList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
 import Task from '../task/Task';
+import StaffTask from '../task/StaffTask';
 import Customer from '../customer/CustomerList';
 import Profile from '../setting/Profile';
 import ChangePassword from '../setting/ChangePassword';
@@ -88,6 +89,7 @@ export default function ClippedDrawer(props) {
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
   const franchiseId = APP_TOKEN.get().franchiseId;
+  const uid = APP_TOKEN.get().uid;
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -95,12 +97,12 @@ export default function ClippedDrawer(props) {
   const [showCategory, setShowCategory] = useState(false);
   const [showMasterStaff, setShowMasterStaff] = useState(false);
   const [showFranchiseStaff, setShowFranchiseStaff] = useState(false);
+  const [showStaffTask, setShowStaffTask] = useState(false);
   const [showTask, setShowTask] = useState(false);
   const [showCustomer, setShowCustomer] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
-
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -141,6 +143,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowPwd(false);
     setShowCustomer(false);
+    setShowStaffTask(false);
   }
 
   function handleCategoryClick() {
@@ -153,6 +156,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowProfile(false);
     setShowCustomer(false);
+    setShowStaffTask(false);
   }
 
   function handleMasterStaffClick(){
@@ -164,6 +168,7 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowPwd(false);
     setShowCustomer(false);
+    setShowStaffTask(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -175,6 +180,7 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowPwd(false);
     setShowCustomer(false);
+    setShowStaffTask(false);
   }
   function handleCustomerClick(){
     setShowFranchiseStaff(true);
@@ -184,6 +190,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowProfile(false);
     setShowPwd(false);
+    setShowStaffTask(false);
   }
   function handleTaskClick(){
     setShowTask(true);
@@ -193,6 +200,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowCustomer(false);
+    setShowStaffTask(false);
     setShowPwd(false);
   }
   function handleProfileClick(){
@@ -204,6 +212,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowCustomer(false);
     setShowPwd(false);
+    setShowStaffTask(false);
   }
   function handleChangePasswordClick(){
     setShowPwd(true);
@@ -215,10 +224,23 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowCategory(false);
     setShowCustomer(false);
+    setShowStaffTask(false);
   }
 
   function handleCustomerClick(){
     setShowCustomer(true);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowStaffTask(false);
+  }
+  function handleStaffTaskClick(){
+    setShowStaffTask(true);
+    setShowCustomer(false);
     setShowTask(false);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
@@ -358,6 +380,10 @@ export default function ClippedDrawer(props) {
                      <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                      <ListItemText primary="Manage Customer" />
                  </ListItem>
+                <ListItem button key="ManageTask"  onClick={handleStaffTaskClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Task" />
+                </ListItem>
                  {/* <ListItem button key="ManageTask"  onClick={handleTaskClick}>
                      <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                      <ListItemText primary="Manage Task" />
@@ -393,6 +419,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showPwd ? <ChangePassword  franchiseId={franchiseId} /> : null
+        }
+        {
+          showStaffTask ? <StaffTask  uid={uid} /> : null
         }
         {/* {props.children} */}
       </main>

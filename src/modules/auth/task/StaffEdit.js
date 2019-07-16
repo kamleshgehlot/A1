@@ -87,24 +87,25 @@ const StyledTableRow = withStyles(theme => ({
     },
   },
 }))(TableRow);
-export default function Update({open, handleEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList}) {
+export default function StaffEdit({open, handleEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList,uid}) {
   const classes = useStyles();
   
   const [staffList, setStaffList] = useState({});
   const [taskList, setTasksList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [dateToday, setTodayDate]= useState();
   const addTaskMaster = async () => {
-    const response = await Task.add({
+    // console.log('taskList------------',taskList);
+    const response = await Task.staffupdate({
       franchise_id: franchiseId,
       id: taskList.id,
       task_id: taskList.task_id,
-      task_description:taskList.task_description,
-      assigned_to:taskList.assigned_to,
-      due_date:taskList.due_date,
+      message:taskList.message,
+      updated_date:taskList.updated_date,
+      status:taskList.status,
     });
     handleSnackbarClick(true,'Task Updated Successfully');
-    // console.log('update======',response.taskList);
     setTaskList(response.taskList);
     handleEditClose(false);
   };
@@ -112,6 +113,7 @@ export default function Update({open, handleEditClose, franchiseId, handleSnackb
   useEffect(() => {
     const fetchData = async () => {
       try {
+        todayDate();
         const result = await Staff.list();
         setStaffList(result.staffList);
       } catch (error) {
@@ -125,6 +127,13 @@ export default function Update({open, handleEditClose, franchiseId, handleSnackb
   const handleInputChange = event => {
     const { name, value } = event.target
     setTasksList({ ...taskList, [name]: value })
+  }
+  function todayDate(){
+    
+  const today=new Date();
+  const date= today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  setTodayDate(date);
+  setTasksList({ ...taskList, updated_date: date })
   }
   return (
     <div>
@@ -153,9 +162,10 @@ export default function Update({open, handleEditClose, franchiseId, handleSnackb
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
-                        <StyledTableCell>Updated On</StyledTableCell>
-                        <StyledTableCell>Completion Message</StyledTableCell>
+                        {/* <StyledTableCell>Updated On</StyledTableCell> */}
+                        <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Action</StyledTableCell>
+                        <StyledTableCell>Option</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -182,6 +192,7 @@ export default function Update({open, handleEditClose, franchiseId, handleSnackb
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
+                                disabled
                                 type="text"
                                 // placeholder="Franchise Name"
                                 margin="dense"
@@ -197,12 +208,13 @@ export default function Update({open, handleEditClose, franchiseId, handleSnackb
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
+                                disabled
                                 type="date"
                                 // placeholder="Franchise Name"
                                 margin="dense"
                               /> 
                             </StyledTableCell>                          
-                            <StyledTableCell>
+                            {/* <StyledTableCell>
                               
                               <TextField
                                 id="updated_date"
@@ -212,18 +224,19 @@ export default function Update({open, handleEditClose, franchiseId, handleSnackb
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
+                                disabled
                                 type="date"
                                 // placeholder="Franchise Name"
                                 margin="dense"
                               /> 
-                            </StyledTableCell>                     
+                            </StyledTableCell>                      */}
                             <StyledTableCell>
                               
                               <TextField
-                                id="completion_message"
-                                name="completion_message"
+                                id="message"
+                                name="message"
                                 // label="Task Id"
-                                value={taskList.completion_message}
+                                value={taskList.message}
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
@@ -231,6 +244,25 @@ export default function Update({open, handleEditClose, franchiseId, handleSnackb
                                 // placeholder="Franchise Name"
                                 margin="dense"
                               /> 
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              <Select
+                                value={taskList.status}
+                                onChange={handleInputChange}
+                                inputProps={{
+                                  name: 'status',
+                                  id: 'status',
+                                  label:'status'
+                                }}
+                                
+                                fullWidth
+                                label="status"
+                                required
+                              >
+                                <MenuItem value="2">In-progress</MenuItem>
+                                <MenuItem value="3">Reschedule </MenuItem>
+                                <MenuItem value="4">Completed </MenuItem>
+                              </Select>
                             </StyledTableCell>
                             <StyledTableCell>
                               <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">

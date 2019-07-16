@@ -59,5 +59,29 @@ export default {
       throw error;
     }
   },
+  stafftasks: async () => {
+    const URL = `${c.API_CONSUMER}/api/task/stafftasks`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  staffupdate: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/task/staffupdate`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 

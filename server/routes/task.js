@@ -9,5 +9,8 @@ taskRouter.route('/add').post(validateToken, Task.add);
 taskRouter.route('/list').get(validateToken, Task.all);
 taskRouter.route('/last').get(validateToken, Task.last);
 taskRouter.route('/deletetask').post(validateToken, Task.deletetask);
+// staff task list
+taskRouter.route('/stafftasks').get(validateToken, Task.stafftasks);
+taskRouter.route('/staffupdate').post(validateToken, Task.staffupdate);
 
 module.exports = taskRouter;

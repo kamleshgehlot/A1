@@ -11,8 +11,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Add from './Add';
-import Edit from './Edit';
+// import Add from './Add';
+import StaffEdit from './StaffEdit';
 
 import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
@@ -39,7 +39,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Task(franchiseId) {
+export default function StaffTask(uid) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -52,11 +52,7 @@ export default function Task(franchiseId) {
 
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
-
-  // const [showTask, setShowTask] = useState(roleName === 'Super Admin');
-  const [showTask, setShowTask] = useState(roleName === 'Admin');
-    
- 
+   
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -109,8 +105,8 @@ export default function Task(franchiseId) {
       setIsLoading(true);
 
       try {
-        const result = await TaskAPI.list();
-        console.log('tasks----------------',result.taskList);
+        const result = await TaskAPI.stafftasks();
+        // console.log('tasks----------------',result.taskList);
         setTaskList(result.taskList);
       } catch (error) {
         setIsError(true);
@@ -174,7 +170,7 @@ export default function Task(franchiseId) {
   const handleClickDelete = async (id) => {
     const response = await TaskAPI.delete({
       id:id,
-      franchise_id: franchiseId,
+      franchise_id: uid,
     });
     // handleSnackbarClick(true,'Franchise Updated Successfully');
     // setFranchiseList(response.staffList);
@@ -193,20 +189,6 @@ export default function Task(franchiseId) {
     <div>
       {/* {showTask ?  */}
       <Grid container spacing={3}>
-
-              <Grid item xs={12} sm={12}>
-            <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="Add"
-              className={classes.fonttransform}
-              onClick={handleClickOpen}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              Task
-            </Fab>
-          </Grid>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
@@ -215,7 +197,6 @@ export default function Task(franchiseId) {
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
-                        <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
@@ -227,26 +208,10 @@ export default function Task(franchiseId) {
                         <StyledTableCell> {data.id}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
-                         
-                            { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
-                                return(
-                                  data.assigned_to===datastaff.id ?
-                                  <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
-                                    :''
-                                    )
-                                    
-                              })
-                            }
-                            
-                          
-                            
                           <StyledTableCell><p className={classes.bgtask}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update
-                            </Button>
-                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}>
-                              Delete
                             </Button>
                           </StyledTableCell>
                         </TableRow>
@@ -258,9 +223,9 @@ export default function Task(franchiseId) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />
+      {/* <Add open={open} handleClose={handleClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} /> */}
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
+      {editOpen ? <StaffEdit open={editOpen} handleEditClose={handleEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}
           
     </div>
   );

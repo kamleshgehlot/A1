@@ -23,8 +23,8 @@ const user = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREME
 const role = "CREATE TABLE IF NOT EXISTS `role` (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(50) NOT NULL, `state` TINYINT NULL, `created_by` INT NOT NULL,`created_at` timestamp null default current_timestamp,PRIMARY KEY (id));";
 const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,role_id INT NOT NULL,state TINYINT NULL,created_by INT NOT NULL,created_at timestamp null default current_timestamp,PRIMARY KEY (id));";
 const staff = "CREATE TABLE IF NOT EXISTS `staff` ( `id` int(11) NOT NULL AUTO_INCREMENT, `franchise_user_id` INT NOT NULL, `first_name` varchar(20) NOT NULL,`last_name` varchar(20) DEFAULT NULL, `location` varchar(200) NOT NULL, `contact` varchar(10) NOT NULL, `email` varchar(50) NOT NULL, `pre_company_name` varchar(30) DEFAULT NULL, `pre_company_address` varchar(200) DEFAULT NULL, `pre_company_contact` varchar(10) DEFAULT NULL, `pre_position` varchar(100) DEFAULT NULL, `duration` varchar(80) DEFAULT NULL, `user_id` varchar(20) NOT NULL, `password` blob NOT NULL, `role` varchar(20) NULL, `employment_docs` varchar(500) DEFAULT NULL, `created_by` tinyint(4) NOT NULL, `updated_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
-const task = "CREATE TABLE IF NOT EXISTS `task` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL,  `task_description` varchar(255) DEFAULT NULL,  `assigned_to` int(11) DEFAULT NULL,  `due_date` varchar(255) DEFAULT NULL,  `status` int(11)  NOT NULL,  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), PRIMARY KEY (id));";
-
+const task = "CREATE TABLE IF NOT EXISTS `task` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL,  `task_description` varchar(255) DEFAULT NULL,  `is_active` TINYINT(5) NOT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
+const taskAssign = "CREATE TABLE IF NOT EXISTS `task_assign` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL, `assigned_to` int(11) DEFAULT NULL,  `start_date` varchar(25) DEFAULT NULL, `due_date` varchar(25) DEFAULT NULL,  `completion_date` VARCHAR(25) DEFAULT NULL, `message` TEXT DEFAULT NULL, `id_proof` TEXT DEFAULT NULL, `status` int(11)  NOT NULL,  `is_active` TINYINT(5) NOT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
 Franchise.prototype.register = function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -47,46 +47,48 @@ Franchise.prototype.register = function (newUser) {
                     connection.query(userRole, function (err) {
                       connection.query(staff, function (err) {
                         connection.query(task, function (err) {
-                          if (err) {
-                            console.log('error in creating tables', err);
-                            return;
-                          }
-
-                          let values1 = [
-                            [2, 'Admin', 1, 1],
-                            [3, 'CSR', 1, 1],
-                            [4, 'Finance', 1, 1],
-                            [5, 'Delivery', 1, 1],
-                            [6, 'HR', 1, 1]
-                          ]
-
-                          connection.changeUser({ database: frachiseDbName });
-                          connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
-                            if (error) {
-                              console.log("Error...", error);
-                              reject(error);
+                          connection.query(taskAssign, function (err) {
+                            if (err) {
+                              console.log('error in creating tables', err);
+                              return;
                             }
 
-                            if (!error) {
-                              let values = [
-                                [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.created_by, that.company_id]
-                              ]
+                            let values1 = [
+                              [2, 'Admin', 1, 1],
+                              [3, 'CSR', 1, 1],
+                              [4, 'Finance', 1, 1],
+                              [5, 'Delivery', 1, 1],
+                              [6, 'HR', 1, 1]
+                            ]
 
-                              connection.changeUser({ database: dbName["prod"] });
-                              connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
+                            connection.changeUser({ database: frachiseDbName });
+                            connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
+                              if (error) {
+                                console.log("Error...", error);
+                                reject(error);
+                              }
 
-                                if (!error) {
-                                  let franchise_id = rows.insertId;
-                                  resolve({ franchise_id: franchise_id });
-                                } else {
-                                  console.log("Error...", error);
-                                  reject(error);
-                                }
-                              });
-                            }
+                              if (!error) {
+                                let values = [
+                                  [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.created_by, that.company_id]
+                                ]
 
-                            connection.release();
-                            console.log('Process Complete %d', connection.threadId);
+                                connection.changeUser({ database: dbName["prod"] });
+                                connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
+
+                                  if (!error) {
+                                    let franchise_id = rows.insertId;
+                                    resolve({ franchise_id: franchise_id });
+                                  } else {
+                                    console.log("Error...", error);
+                                    reject(error);
+                                  }
+                                });
+                              }
+
+                              connection.release();
+                              console.log('Process Complete %d', connection.threadId);
+                            });
                           });
                         });
                       });
