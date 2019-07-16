@@ -187,7 +187,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       company_id: franchise.company_id,
     });
 
-    const franchiseIdTemp = [];
+    let franchiseIdTemp = [];
 
     response.userList.map(data => {
       const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
