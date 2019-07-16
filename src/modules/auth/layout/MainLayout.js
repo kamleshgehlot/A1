@@ -140,6 +140,7 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowTask(false);
     setShowPwd(false);
+    setShowCustomer(false);
   }
 
   function handleCategoryClick() {
@@ -151,6 +152,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowPwd(false);
     setShowProfile(false);
+    setShowCustomer(false);
   }
 
   function handleMasterStaffClick(){
@@ -161,6 +163,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowProfile(false);
     setShowPwd(false);
+    setShowCustomer(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -171,6 +174,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowProfile(false);
     setShowPwd(false);
+    setShowCustomer(false);
   }
   function handleTaskClick(){
     setShowTask(true);
@@ -179,6 +183,7 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowCategory(false);
     setShowProfile(false);
+    setShowCustomer(false);
     setShowPwd(false);
   }
   function handleProfileClick(){
@@ -188,6 +193,7 @@ export default function ClippedDrawer(props) {
     setShowMasterStaff(false);
     setShowFranchise(false);
     setShowCategory(false);
+    setShowCustomer(false);
     setShowPwd(false);
   }
   function handleChangePasswordClick(){
