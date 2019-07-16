@@ -86,7 +86,7 @@ Staff.prototype.update = function () {
         connection.changeUser({ database: dbName["prod"] });
         connection.query('select city from franchise where id = "' + that.franchise_id + '"', function (error, rows, fields) {
           if (!error) {
-            connection.changeUser({ database: dbName["prod"] + rows[0].city.substring(0, 4).toLowerCase() });
+            connection.changeUser({ database: dbName["prod"] + '_' + rows[0].city.substring(0, 4).toLowerCase() });
 
             // connection.query('update staff set first_name = "'+that.first_name+'", last_name = "'+that.last_name+'", location = "'+that.location+'", contact = "'+that.contact+'", email = "'+that.email+'", pre_company_name = "'+that.pre_company_name+'", pre_company_address = "'+that.pre_company_address+'", pre_company_contact = "'+that.pre_company_contact+'", pre_position = "'+that.pre_position+'", duration = "'+that.duration+'", role =  "'+that.role+'", employment_docs = "'+that.employment_docs+'" WHERE id = "'+that.id+'")', function (error, rows, fields) {
             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {

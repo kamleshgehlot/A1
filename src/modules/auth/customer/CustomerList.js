@@ -15,7 +15,8 @@ import Add from './Add';
 import Edit from './Edit';
 
 // API CALL
-import StaffAPI from '../../../api/StaffMasterAdmin';
+import Staff from '../../../api/franchise/Staff';
+import Role from '../../../api/franchise/Role';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -37,7 +38,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Staff(props) {
+export default function CustomerList() {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -45,14 +46,6 @@ export default function Staff(props) {
   const [isError, setIsError] = useState(false);
   const [staffData,setStaffData]= useState();
   const [staffList, setStaffList] = useState({});
-  const [position, setPosition] = useState({});
-
-
-  const roleName = APP_TOKEN.get().roleName;
-  const userName = APP_TOKEN.get().userName;
-
-  const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
-  const [showStaff, setShowStaff] = useState(roleName === 'Admin');
     
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -89,36 +82,6 @@ export default function Staff(props) {
   }));
   const classes = useStyles();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
-      try {
-        const result = await StaffAPI.list();
-        setStaffList(result.staffList);
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const positions = async () => {
-      try {
-        const positionResult = await StaffAPI.positionList();
-        setPosition(positionResult.staffPosition);
-      } catch (error) {
-        console.log('Error',error);
-      }
-    };
-    positions();
-  }, []);
-
-  
-
   function handleClickOpen() {
     setOpen(true);
   }
@@ -149,6 +112,9 @@ export default function Staff(props) {
     setShowFranchise(true);
     setShowStaff(false);
   }
+  // console.log("data.role......", staffList)
+
+
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -164,7 +130,7 @@ export default function Staff(props) {
               onClick={handleClickOpen}
             >
               <AddIcon className={classes.extendedIcon} />
-              Staff
+              Customers
             </Fab>
           </Grid>
           <Grid item xs={12} sm={10}>
@@ -173,58 +139,21 @@ export default function Staff(props) {
                     <TableHead>
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>User ID</StyledTableCell>
-                        <StyledTableCell>Full Name</StyledTableCell>
-                        <StyledTableCell>Position</StyledTableCell>
+                        <StyledTableCell>Name</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Email</StyledTableCell>
+                        <StyledTableCell>Address</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    { (staffList.length > 0 ? staffList : []).map((data, index)=>{
-                      return(
-                        <TableRow key={data.id} >
-                          <StyledTableCell> {data.id}  </StyledTableCell>
-                          <StyledTableCell> {data.user_id}  </StyledTableCell>
-                          <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
-                            <StyledTableCell>
-
-                            {data.position_name}
-                            {/* {
-                              positions.map(ele =>{
-                                return(
-                                <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                                )
-                              })
-                            } */}
-
-                            {/* {
-                              position.map((pos, index) =>{
-                              if(pos.id===data.position)
-                                return pos.position
-                              }) 
-                            } */}
-                            </StyledTableCell>
-                            <StyledTableCell>{data.contact}</StyledTableCell>
-                            <StyledTableCell>{data.email}</StyledTableCell>
-                            <StyledTableCell>
-                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Edit
-                            </Button>
-                            </StyledTableCell>
-                        </TableRow>
-                      )
-                      })
-                    }
                     </TableBody>
                   </Table>
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} positions={position}/>
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} setFranchiseList={setFranchiseListFn} positions={position} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} /> : null}
           
     </div>
   );

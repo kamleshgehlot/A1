@@ -104,7 +104,7 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList, setFranchiseId}) {
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
@@ -187,6 +187,25 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       company_id: franchise.company_id,
     });
 
+    const franchiseIdTemp = [];
+
+    response.userList.map(data => {
+      const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
+
+      if(!found) {
+        franchiseIdTemp.push({
+          director_id: data.director_id,
+          franchise_id: data.franchise_id,
+          franchise_name: data.franchise_name,
+          company_name: data.company_name,
+          suburb: data.suburb,
+          city: data.city
+        });
+      }
+    });
+
+    setFranchiseId(franchiseIdTemp);
+    
     handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.userList);
     // handleReset(RESET_VALUES);
