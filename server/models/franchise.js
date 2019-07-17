@@ -48,6 +48,9 @@ Franchise.prototype.register = function (newUser) {
                       connection.query(staff, function (err) {
                         connection.query(task, function (err) {
                           connection.query(taskAssign, function (err) {
+                            connection.query(customer,function(err){
+                              connection.query(customer_income,function(err){
+                                connection.query(idProof,function(err){
                             if (err) {
                               console.log('error in creating tables', err);
                               return;
@@ -60,9 +63,15 @@ Franchise.prototype.register = function (newUser) {
                               [5, 'Delivery', 1, 1],
                               [6, 'HR', 1, 1]
                             ]
+                            
+                            let idTypeData = [
+                              [1, 'Passport', 1, 1],
+                              [2, 'Driving Licence', 1, 1]
+                            ]
 
                             connection.changeUser({ database: frachiseDbName });
                             connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
+                              connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) {
                               if (error) {
                                 console.log("Error...", error);
                                 reject(error);
@@ -89,6 +98,10 @@ Franchise.prototype.register = function (newUser) {
                               connection.release();
                               console.log('Process Complete %d', connection.threadId);
                             });
+                          });
+                          });
+                        });
+                        });
                           });
                         });
                       });

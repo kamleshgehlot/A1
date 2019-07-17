@@ -15,8 +15,7 @@ import Add from './Add';
 import Edit from './Edit';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
-import Role from '../../../api/franchise/Role';
+import Customer from '../../../api/franchise/Customer';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -38,14 +37,14 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function CustomerList() {
+export default function CustomerList(userId) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [staffData,setStaffData]= useState();
-  const [staffList, setStaffList] = useState({});
+  const [customerListData, setCustomerListData] = useState([]);
+  const [customerData, setCustomerData] = useState([]);
     
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -89,16 +88,13 @@ export default function CustomerList() {
     setOpen(false);
   }
   function handleClickEditOpen(data) {
-    setStaffData(data),
+    setCustomerData(data),
     setEditOpen(true);
   }
   function handleEditClose() {
     setEditOpen(false);
   }
-  ////////////////////////////////////////
-  function setFranchiseListFn(response) {
-    setStaffList(response);
-  }
+ 
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
@@ -106,13 +102,31 @@ export default function CustomerList() {
   function handleSnackbarClick() {
     setSnackbarOpen(true);
   }
-
   
   function handleFranchiseClick() {
     setShowFranchise(true);
     setShowStaff(false);
   }
-  // console.log("data.role......", staffList)
+
+  function handleCustomerList(response){
+    setCustomerListData(response);
+  }
+  
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await Customer.list();
+        setCustomerListData(result.customerList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
 
   return (
@@ -146,14 +160,28 @@ export default function CustomerList() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                        {(customerListData.length > 0 ? customerListData : []).map((data,index) =>{
+                          return(
+                            <TableRow key={data.id} >
+                            <StyledTableCell> {index + 1}  </StyledTableCell>
+                            <StyledTableCell> {data.customer_name}  </StyledTableCell>
+                            <StyledTableCell> {data.mobile}  </StyledTableCell>
+                            <StyledTableCell> {data.address}  </StyledTableCell>
+                            <StyledTableCell> 
+                              <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button>
+                            </StyledTableCell>
+                            </TableRow>
+                          )
+                        })
+                        }
                     </TableBody>
                   </Table>
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}  />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={staffData} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={customerData} setCustomerList={handleCustomerList} /> : null}
           
     </div>
   );

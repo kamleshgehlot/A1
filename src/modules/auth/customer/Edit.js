@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {component} from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -13,40 +14,58 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from "@material-ui/core/FormControl";
+
+import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
-
+import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
   id: '',
-  first_name : '',
-  last_name : '',
-  location : '',
-  contact : '',
-  email : '',  
-  pre_company_name : '',
-  pre_company_address : '',
-  pre_company_contact : '',
-  pre_position : '',
-  duration : '',
-  resume : '',
-  cover_letter : '',
-  employment_doc : '',
-  
-  user_id : '',
-  password : '',
+  customer_name : '',
+  address : '',
+  city : '',
+  postcode : '',
+  telephone : '',  
+  mobile : '',
+  email : '',
+  gender : '',
+  is_working : '',
+  dob : '',
+  id_type : '',
+  id_number: '',
+  expiry_date : '',
+  is_adult :'',
+  id_proof : '',
+
+  alt_c1_name:'',
+  alt_c1_address:'',
+  alt_c1_contact:'',
+  alt_c1_relation:'',
+  alt_c2_name: '',
+  alt_c2_address: '',
+  alt_c2_contact:'',
+  alt_c2_relation:'',
+
+  employer_name:'',
+  employer_address:'',
+  employer_telephone:'',
+  employer_email:'',
+  employer_tenure:'',
+
+  // is_active:1,
+  // created_by: 1,
 };
 
 const useStyles = makeStyles(theme => ({
@@ -79,79 +98,112 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  group: {
+    margin: theme.spacing(1, 0),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick, inputs}) {
+
+export default function Edit({ open, handleClose, handleSnackbarClick, inputs, setCustomerList}) {
+
   const classes = useStyles();
-  
   const [expanded, setExpanded] = React.useState('panel1');
-  const [staffList, setStaffList] = React.useState(inputs);
-  const [assignRole, setAssignRole] = React.useState([]);
-  const [checkRole, setCheckRole] = React.useState(["Delivery","CSR","Finance","HR"]);
+  const [customerList, setDataCustomerList] = React.useState(inputs);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
-  const addFranchiseStaff = async () => {
 
-    const response = await Staff.register({
-      franchise_id: franchiseId,
-      id: staffList.id,
-      first_name: staffList.first_name,
-      last_name: staffList.last_name,
-      location: staffList.location,
-      contact: staffList.contact,
-      email: staffList.email,
+  const editCustomer = async () => {
+    const response = await Customer.register({
+      id: customerList.id,
+      customer_name : customerList.customer_name,
+      address : customerList.address,
+      city : customerList.city,
+      postcode : customerList.postcode,
+      telephone : customerList.telephone,  
+      mobile : customerList.mobile,
+      email : customerList.email,
+      gender : customerList.gender,
+      is_working : customerList.is_working,
+      dob : customerList.dob,
+      id_type :  customerList.id_type,
+      id_number:  customerList.id_number,
+      expiry_date :  customerList.expiry_date,
+      is_adult : customerList.is_adult,
+      id_proof :  customerList.id_proof,
+
+      alt_c1_name: customerList.alt_c1_name,
+      alt_c1_address: customerList.alt_c1_address,
+      alt_c1_contact: customerList.alt_c1_contact,
+      alt_c1_relation: customerList.alt_c1_relation,
+      alt_c2_name:  customerList.alt_c2_name,
+      alt_c2_address:  customerList.alt_c2_address,
+      alt_c2_contact: customerList.alt_c2_contact,
+      alt_c2_relation: customerList.alt_c2_relation,
+
+      employer_name: customerList.employer_name,
+      employer_address: customerList.employer_address,
+      employer_telephone: customerList.employer_telephone,
+      employer_email: customerList.employer_email,
+      employer_tenure: customerList.employer_tenure,
+
+      is_active: customerList.is_active,
       
-      pre_company_name: staffList.pre_company_name,
-      pre_company_address: staffList.pre_company_address,
-      pre_company_contact: staffList.pre_company_contact,
-      pre_position: staffList.pre_position,
-      duration: staffList.duration,
-      // resume:  staffList.resume,
-      // cover_letter: staffList.cover_letter,
-      employment_doc: staffList.employment_doc,
-      
-      user_id: staffList.user_id,
-      password: staffList.password,
-      created_by: 1,
     });
-    handleSnackbarClick(true,'Franchise Updated Successfully');
-    setFranchiseList(response.staffList);
-    // handleReset(RESET_VALUES);
-    handleEditClose(false);
+    
+    handleSnackbarClick(true);
+    setCustomerList(response.customerList);
+    handleReset(RESET_VALUES);
+    handleClose(false);
   };
 
-  const handleInputChange = event => {
-    const { name, value } = event.target
-    setStaffList({ ...staffList, [name]: value })
-  }
-  return (
+  // function validate(values) {
+  //   let errors = {};
+  //   return errors;
+  // };
+
+//  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+//     RESET_VALUES,
+//     editCustomer,
+//     validate
+//   );
+
+const handleInputChange = event => {
+  const { name, value } = event.target
+  // // console.log(name, value);
+  // name =='state' && value =='4' ? setConfirmation(true) : 
+  setDataCustomerList({ ...customerList, [name]: value })
+}
+
+  
+  console.log("inputs---==",customerList);
+  
+return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
-        <from >
+      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Edit Customer
+                Add Customer
               </Typography>
-              <Button onClick={addFranchiseStaff} color="inherit">
-                Update
+              <Button color="inherit" type="submit" onClick={editCustomer}>
+                save
               </Button>
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
             
-          <ExpansionPanel
+            <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
               onChange={handleChange('panel1')}
@@ -171,7 +223,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       id="customer_name"
                       name="customer_name"
                       label="Full Name"
-                      value={customer.customer_name}
+                      value={customerList.customer_name}
                       onChange={handleInputChange}
                       fullWidth
                       required
@@ -184,11 +236,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="customer_address"
-                      name="customer_address"
+                      id="address"
+                      name="address"
                       label="Address"
                       type="text"
-                      value={customer.customer_address} 
+                      value={customerList.address} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -202,7 +254,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="city"
                       label="City"
                       type="text"
-                      value={customer.city} 
+                      value={customerList.city} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -215,8 +267,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       id="postcode"
                       name="postcode"
                       label="Postcode"
-                      type="text"
-                      value={customer.postcode}
+                      type="number"
+                      value={customerList.postcode}
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -230,7 +282,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="telephone"
                       label="Telephone"
                       type="number"
-                      value={customer.telephone} 
+                      value={customerList.telephone} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -244,7 +296,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="mobile"
                       label="Mobile"
                       type="number"
-                      value={customer.mobile} 
+                      value={customerList.mobile} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -258,7 +310,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="email"
                       label="Email Id"
                       type="email"
-                      value={customer.email} 
+                      value={customerList.email} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -266,37 +318,26 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Gender</InputLabel>
-                    <RadioGroup aria-label="gender" name="gender" value={customer.gender} onChange={handleChange} row>
-                      <FormControlLabel
-                        value="male"
-                        control={<Radio color="primary" />}
-                        label="Male"
-                        labelPlacement="male"
-                      />
-                      <FormControlLabel
-                        value="female"
-                        control={<Radio color="primary" />}
-                        label="Female"
-                        labelPlacement="female"
-                      />
+                    <InputLabel htmlFor="Gender">Gender</InputLabel>
+                    <RadioGroup
+                      aria-label="Gender"
+                      name="gender"
+                      className={classes.group}
+                      value={customerList.gender}
+                      onChange={handleInputChange}
+                      row
+                    >
+                      <FormControlLabel labelPlacement="start" value="female" control={<Radio />} label="Female" />
+                      <FormControlLabel labelPlacement="start" value="male" control={<Radio />} label="Male" />
+                      {/* <FormControlLabel labelPlacement="start" value="transgender" control={<Radio />} label="Transgender" /> */}
                     </RadioGroup>
+                    
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Are you working?</InputLabel>
-                    <RadioGroup aria-label="working" name="working" value={customer.working} onChange={handleChange} row>
-                      <FormControlLabel
-                        value="yes"
-                        control={<Radio color="primary" />}
-                        label="Yes"
-                        labelPlacement="yes"
-                      />
-                      <FormControlLabel
-                        value="no"
-                        control={<Radio color="primary" />}
-                        label="No"
-                        labelPlacement="no"
-                      />
+                    <InputLabel htmlFor="is_working">Are you working?</InputLabel>
+                    <RadioGroup aria-label="is_working" name="is_working" value={customerList.is_working} onChange={handleInputChange} row>
+                      <FormControlLabel value="1" control={<Radio color="primary" />} label="Yes" labelPlacement="start" />
+                      <FormControlLabel value="0" control={<Radio color="primary" />} label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -305,23 +346,23 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       margin="dense"
                       id="dob"
                       name="dob"
-                      label=""
+                      // label=""
                       type="date"
-                      value={customer.dob} 
+                      value={customerList.dob} 
                       onChange={handleInputChange}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="dob">ID Proof</InputLabel>
+                    <InputLabel htmlFor="id_type">ID Proof</InputLabel>
                     <Select
-                         name="id_proof"
+                         name="id_type"
                          onChange={handleInputChange}
-                         value={customer.id_proof}
+                         value={customerList.id_type}
                          inputProps={{
-                           name: 'id_proof',
-                           id: 'id_proof',
+                           name: 'id_type',
+                           id: 'id_type',
                          }}
                          defaultValue='Shah'
                          className={classes.margin}
@@ -329,9 +370,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                          label="Select Id Proof"
                          required
                       >
-                          <MenuItem value="">Passport</MenuItem>
-                          <MenuItem value="">Driving License</MenuItem>
-                          <MenuItem value="">Others</MenuItem>
+                          <MenuItem value="1">Passport</MenuItem>
+                          <MenuItem value="2">Driving License</MenuItem>
+                          <MenuItem value="3">Others</MenuItem>
 
                     </Select>
                   </Grid>
@@ -343,7 +384,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="id_number"
                       label="ID#"
                       type="text"
-                      value={customer.id_number} 
+                      value={customerList.id_number} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -357,42 +398,44 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="expiry_date"
                       label=""
                       type="date"
-                      value={customer.expiry_date} 
+                      value={customerList.expiry_date} 
                       onChange={handleInputChange}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Over 18 Years</InputLabel>
-                    <RadioGroup aria-label="working" name="working" value={customer.working} onChange={handleChange} row>
+                    <InputLabel htmlFor="is_adult">Over 18 Years?</InputLabel>
+                    <RadioGroup aria-label="is_adult" name="is_adult" value={customerList.is_adult} onChange={handleInputChange} row>
                       <FormControlLabel
-                        value="yes"
+                        value="1"
                         control={<Radio color="primary" />}
                         label="Yes"
-                        labelPlacement="yes"
+                        labelPlacement="start"
                       />
                       <FormControlLabel
-                        value="no"
+                        value="0"
                         control={<Radio color="primary" />}
                         label="No"
-                        labelPlacement="no"
+                        labelPlacement="start"
                       />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Over 18 Years</InputLabel> */}
+                    <InputLabel htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField
                       margin="dense"
-                      id="id_file"
-                      name="id_file"
+                      id="employment_docs"
+                      name="employment_docs"
                       label=""
                       type="file"
-                      value={customer.id_file} 
-                      onChange={handleInputChange}
+                      // value={customerList.id_proof} 
+                      // onChange={handleInputChange}
+                      // onBlur={handleNameBlurChange}
+                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
-                    />
+                    /> 
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
@@ -418,11 +461,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="name1"
-                      name="name1"
+                      id="alt_c1_name"
+                      name="alt_c1_name"
                       label="Name"
                       type="text"
-                      value={customer.name1} 
+                      value={customerList.alt_c1_name} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -432,11 +475,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="address1"
-                      name="address1"
+                      id="alt_c1_address"
+                      name="alt_c1_address"
                       label="Address"
                       type="text"
-                      value={customer.address1} 
+                      value={customerList.alt_c1_address} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -446,11 +489,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="alt_contact1"
-                      name="alt_contact1"
-                      label="Contact Number"
+                      id="alt_c1_contact"
+                      name="alt_c1_contact"
+                      label="Contact#"
                       type="number"
-                      value={customer.alt_contact1} 
+                      value={customerList.alt_c1_contact} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -461,13 +504,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="relation1"
-                      name="relation1"
+                      id="alt_c1_relation"
+                      name="alt_c1_relation"
                       label="Relationship To You"
                       type="text"
-                      value={customer.relation1} 
+                      value={customerList.alt_c1_relation} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />
@@ -479,11 +521,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="name2"
-                      name="name2"
+                      id="alt_c2_name"
+                      name="alt_c2_name"
                       label="Name"
                       type="text"
-                      value={customer.name2} 
+                      value={customerList.alt_c2_name} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -493,11 +535,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="address2"
-                      name="address2"
+                      id="alt_c2_address"
+                      name="alt_c2_address"
                       label="Address"
                       type="text"
-                      value={customer.address2} 
+                      value={customerList.alt_c2_address} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -507,11 +549,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="alt_contact2"
-                      name="alt_contact2"
-                      label="Contact Number"
+                      id="alt_c2_contact"
+                      name="alt_c2_contact"
+                      label="Contact#"
                       type="number"
-                      value={customer.alt_contact2} 
+                      value={customerList.alt_c2_contact} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -522,13 +564,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="relation2"
-                      name="relation2"
+                      id="alt_c2_relation"
+                      name="alt_c2_relation"
                       label="Relationship To You"
                       type="text"
-                      value={customer.relation2} 
+                      value={customerList.alt_c2_relation} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />
@@ -558,7 +599,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="employer_name"
                       label="Employer Name"
                       type="text"
-                      value={customer.employer_name} 
+                      value={customerList.employer_name} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -572,7 +613,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="employer_address"
                       label="Employer Address"
                       type="text"
-                      value={customer.employer_address} 
+                      value={customerList.employer_address} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -582,11 +623,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="employer_telephone_number"
-                      name="employer_telephone_number"
-                      label="Employer Address"
+                      id="employer_telephone"
+                      name="employer_telephone"
+                      label="Employer Telephone#"
                       type="number"
-                      value={customer.income_telephone_number} 
+                      value={customerList.employer_telephone} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -600,7 +641,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       name="employer_email"
                       label="Email"
                       type="email"
-                      value={customer.employer_email} 
+                      value={customerList.employer_email} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -610,11 +651,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="experience"
-                      name="experience"
-                      label="Length Of time with current employer"
+                      id="employer_tenure"
+                      name="employer_tenure"
+                      label="Tenure of Employer"
                       type="text"
-                      value={customer.experience} 
+                      value={customerList.employer_tenure} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -624,9 +665,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-              
           </div>
-        </from>
+        </form>
       </Dialog>
     </div>
   );
