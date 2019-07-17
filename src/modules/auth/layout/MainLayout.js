@@ -89,6 +89,7 @@ export default function ClippedDrawer(props) {
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
   const franchiseId = APP_TOKEN.get().franchiseId;
+  const userId = APP_TOKEN.get().userId;
   const uid = APP_TOKEN.get().uid;
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -182,16 +183,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowStaffTask(false);
   }
-  function handleCustomerClick(){
-    setShowFranchiseStaff(true);
-    setShowMasterStaff(false);
-    setShowFranchise(false);
-    setShowCategory(false);
-    setShowTask(false);
-    setShowProfile(false);
-    setShowPwd(false);
-    setShowStaffTask(false);
-  }
+  
   function handleTaskClick(){
     setShowTask(true);
     setShowFranchiseStaff(false);
@@ -363,17 +355,17 @@ export default function ClippedDrawer(props) {
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
-                <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
+                {/* <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Customer" />
-                </ListItem>
+                </ListItem> */}
               </List>
               )}
             </List>
 
             <List>
-               {console.log("role-------..",roleName)}
-               {console.log("user-------..",userName)}
+               {/* {console.log("role-------..",roleName)}
+               {console.log("user-------..",userName)} */}
                {roleName === 'CSR' && (
                <List>
                  <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
@@ -412,7 +404,7 @@ export default function ClippedDrawer(props) {
           showTask ? <Task franchiseId={franchiseId} /> : null
         }
         {
-          showCustomer ? <Customer /> : null
+          showCustomer ? <Customer userId={userId} /> : null
         }
         {
           showProfile ? <Profile /> : null

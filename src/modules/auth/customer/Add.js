@@ -28,13 +28,13 @@ import FormControl from "@material-ui/core/FormControl";
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
+import Customer from '../../../api/franchise/Customer';
 
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
   id: '',
-  full_name : '',
+  customer_name : '',
   address : '',
   city : '',
   postcode : '',
@@ -42,11 +42,31 @@ const RESET_VALUES = {
   mobile : '',
   email : '',
   gender : '',
-  working : '',
+  is_working : '',
   dob : '',
-  id_proof : '',
-  id_number : '',
+  id_type : '',
+  id_number: '',
   expiry_date : '',
+  is_adult :'',
+  id_proof : '',
+
+  alt_c1_name:'',
+  alt_c1_address:'',
+  alt_c1_contact:'',
+  alt_c1_relation:'',
+  alt_c2_name: '',
+  alt_c2_address: '',
+  alt_c2_contact:'',
+  alt_c2_relation:'',
+
+  employer_name:'',
+  employer_address:'',
+  employer_telephone:'',
+  employer_email:'',
+  employer_tenure:'',
+
+  // is_active:1,
+  // created_by: 1,
 };
 
 const useStyles = makeStyles(theme => ({
@@ -79,6 +99,9 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  group: {
+    margin: theme.spacing(1, 0),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -86,74 +109,74 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick}) {
+export default function Add({ open, handleClose, handleSnackbarClick, userId, setCustomerList}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [temp, setTemp] = React.useState([]);
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250
-      }
-    }
-  };
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  
 
-  const addFranchiseStaff = async () => {
 
-    const response = await Staff.register({
-      franchise_id: franchiseId,
+  const addCustomer = async () => {
+    const response = await Customer.register({
       id: '',
-      first_name: inputs.first_name,
-      last_name: inputs.last_name,
-      location: inputs.location,
-      contact: inputs.contact,
-      email: inputs.email,
-      
-      pre_company_name: inputs.pre_company_name,
-      pre_company_address: inputs.pre_company_address,
-      pre_company_contact: inputs.pre_company_contact,
-      pre_position: inputs.pre_position,
-      duration: inputs.duration,
-      // resume:  inputs.resume,
-      // cover_letter: inputs.cover_letter,
-      employment_docs: inputs.employment_docs,
-      
-      user_id: inputs.user_id,
-      password: inputs.password,
-      created_by: 1,
+      customer_name : inputs.customer_name,
+      address : inputs.address,
+      city : inputs.city,
+      postcode : inputs.postcode,
+      telephone : inputs.telephone,  
+      mobile : inputs.mobile,
+      email : inputs.email,
+      gender : inputs.gender,
+      is_working : inputs.is_working,
+      dob : inputs.dob,
+      id_type :  inputs.id_type,
+      id_number:  inputs.id_number,
+      expiry_date :  inputs.expiry_date,
+      is_adult : inputs.is_adult,
+      id_proof :  inputs.id_proof,
+
+      alt_c1_name: inputs.alt_c1_name,
+      alt_c1_address: inputs.alt_c1_address,
+      alt_c1_contact: inputs.alt_c1_contact,
+      alt_c1_relation: inputs.alt_c1_relation,
+      alt_c2_name:  inputs.alt_c2_name,
+      alt_c2_address:  inputs.alt_c2_address,
+      alt_c2_contact: inputs.alt_c2_contact,
+      alt_c2_relation: inputs.alt_c2_relation,
+
+      employer_name: inputs.employer_name,
+      employer_address: inputs.employer_address,
+      employer_telephone: inputs.employer_telephone,
+      employer_email: inputs.employer_email,
+      employer_tenure: inputs.employer_tenure,
+
+      is_active:1,
+      created_by: userId.userId,
     });
-    assignRole.length = 0;
+    
     handleSnackbarClick(true);
-    setFranchiseList(response.staffList);
+    setCustomerList(response.customerList);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
 
   function validate(values) {
     let errors = {};
-
     return errors;
   };
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+ const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
-    addFranchiseStaff,
+    addCustomer,
     validate
   );
   
-  function handleNameBlurChange(e) {
-    setInput('user_id', generate(inputs.first_name, inputs.last_name));
-  }
-
+  
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -207,11 +230,11 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="customer_address"
-                      name="customer_address"
+                      id="address"
+                      name="address"
                       label="Address"
                       type="text"
-                      value={inputs.customer_address} 
+                      value={inputs.address} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -238,7 +261,7 @@ return (
                       id="postcode"
                       name="postcode"
                       label="Postcode"
-                      type="text"
+                      type="number"
                       value={inputs.postcode}
                       onChange={handleInputChange}
                       required
@@ -289,37 +312,26 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Gender</InputLabel>
-                    <RadioGroup aria-label="gender" name="gender" value={inputs.gender} onChange={handleChange} row>
-                      <FormControlLabel
-                        value="male"
-                        control={<Radio color="primary" />}
-                        label="Male"
-                        labelPlacement="male"
-                      />
-                      <FormControlLabel
-                        value="female"
-                        control={<Radio color="primary" />}
-                        label="Female"
-                        labelPlacement="female"
-                      />
+                    <InputLabel htmlFor="Gender">Gender</InputLabel>
+                    <RadioGroup
+                      aria-label="Gender"
+                      name="gender"
+                      className={classes.group}
+                      value={inputs.gender}
+                      onChange={handleInputChange}
+                      row
+                    >
+                      <FormControlLabel labelPlacement="start" value="female" control={<Radio />} label="Female" />
+                      <FormControlLabel labelPlacement="start" value="male" control={<Radio />} label="Male" />
+                      {/* <FormControlLabel labelPlacement="start" value="transgender" control={<Radio />} label="Transgender" /> */}
                     </RadioGroup>
+                    
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Are you working?</InputLabel>
-                    <RadioGroup aria-label="working" name="working" value={inputs.working} onChange={handleChange} row>
-                      <FormControlLabel
-                        value="yes"
-                        control={<Radio color="primary" />}
-                        label="Yes"
-                        labelPlacement="yes"
-                      />
-                      <FormControlLabel
-                        value="no"
-                        control={<Radio color="primary" />}
-                        label="No"
-                        labelPlacement="no"
-                      />
+                    <InputLabel htmlFor="is_working">Are you working?</InputLabel>
+                    <RadioGroup aria-label="is_working" name="is_working" value={inputs.is_working} onChange={handleInputChange} row>
+                      <FormControlLabel value="1" control={<Radio color="primary" />} label="Yes" labelPlacement="start" />
+                      <FormControlLabel value="0" control={<Radio color="primary" />} label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -328,7 +340,7 @@ return (
                       margin="dense"
                       id="dob"
                       name="dob"
-                      label=""
+                      // label=""
                       type="date"
                       value={inputs.dob} 
                       onChange={handleInputChange}
@@ -337,14 +349,14 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="dob">ID Proof</InputLabel>
+                    <InputLabel htmlFor="id_type">ID Proof</InputLabel>
                     <Select
-                         name="id_proof"
+                         name="id_type"
                          onChange={handleInputChange}
-                         value={inputs.id_proof}
+                         value={inputs.id_type}
                          inputProps={{
-                           name: 'id_proof',
-                           id: 'id_proof',
+                           name: 'id_type',
+                           id: 'id_type',
                          }}
                          defaultValue='Shah'
                          className={classes.margin}
@@ -352,9 +364,9 @@ return (
                          label="Select Id Proof"
                          required
                       >
-                          <MenuItem value="">Passport</MenuItem>
-                          <MenuItem value="">Driving License</MenuItem>
-                          <MenuItem value="">Others</MenuItem>
+                          <MenuItem value="1">Passport</MenuItem>
+                          <MenuItem value="2">Driving License</MenuItem>
+                          <MenuItem value="3">Others</MenuItem>
 
                     </Select>
                   </Grid>
@@ -387,19 +399,19 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Over 18 Years</InputLabel>
-                    <RadioGroup aria-label="working" name="working" value={inputs.working} onChange={handleChange} row>
+                    <InputLabel htmlFor="is_adult">Over 18 Years?</InputLabel>
+                    <RadioGroup aria-label="is_adult" name="is_adult" value={inputs.is_adult} onChange={handleInputChange} row>
                       <FormControlLabel
-                        value="yes"
+                        value="1"
                         control={<Radio color="primary" />}
                         label="Yes"
-                        labelPlacement="yes"
+                        labelPlacement="start"
                       />
                       <FormControlLabel
-                        value="no"
+                        value="0"
                         control={<Radio color="primary" />}
                         label="No"
-                        labelPlacement="no"
+                        labelPlacement="start"
                       />
                     </RadioGroup>
                   </Grid>
@@ -407,11 +419,11 @@ return (
                     {/* <InputLabel htmlFor="email">Over 18 Years</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="id_file"
-                      name="id_file"
+                      id="id_proof"
+                      name="id_proof"
                       label=""
                       type="file"
-                      value={inputs.id_file} 
+                      value={inputs.id_proof} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -441,11 +453,11 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="name1"
-                      name="name1"
+                      id="alt_c1_name"
+                      name="alt_c1_name"
                       label="Name"
                       type="text"
-                      value={inputs.name1} 
+                      value={inputs.alt_c1_name} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -455,11 +467,11 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="address1"
-                      name="address1"
+                      id="alt_c1_address"
+                      name="alt_c1_address"
                       label="Address"
                       type="text"
-                      value={inputs.address1} 
+                      value={inputs.alt_c1_address} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -469,11 +481,11 @@ return (
                     {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="alt_contact1"
-                      name="alt_contact1"
-                      label="Contact Number"
+                      id="alt_c1_contact"
+                      name="alt_c1_contact"
+                      label="Contact#"
                       type="number"
-                      value={inputs.alt_contact1} 
+                      value={inputs.alt_c1_contact} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -484,13 +496,12 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="relation1"
-                      name="relation1"
+                      id="alt_c1_relation"
+                      name="alt_c1_relation"
                       label="Relationship To You"
                       type="text"
-                      value={inputs.relation1} 
+                      value={inputs.alt_c1_relation} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />
@@ -502,11 +513,11 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="name2"
-                      name="name2"
+                      id="alt_c2_name"
+                      name="alt_c2_name"
                       label="Name"
                       type="text"
-                      value={inputs.name2} 
+                      value={inputs.alt_c2_name} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -516,11 +527,11 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="address2"
-                      name="address2"
+                      id="alt_c2_address"
+                      name="alt_c2_address"
                       label="Address"
                       type="text"
-                      value={inputs.address2} 
+                      value={inputs.alt_c2_address} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -530,11 +541,11 @@ return (
                     {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="alt_contact2"
-                      name="alt_contact2"
-                      label="Contact Number"
+                      id="alt_c2_contact"
+                      name="alt_c2_contact"
+                      label="Contact#"
                       type="number"
-                      value={inputs.alt_contact2} 
+                      value={inputs.alt_c2_contact} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -545,13 +556,12 @@ return (
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="relation2"
-                      name="relation2"
+                      id="alt_c2_relation"
+                      name="alt_c2_relation"
                       label="Relationship To You"
                       type="text"
-                      value={inputs.relation2} 
+                      value={inputs.alt_c2_relation} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />
@@ -605,11 +615,11 @@ return (
                     {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="employer_telephone_number"
-                      name="employer_telephone_number"
-                      label="Employer Address"
+                      id="employer_telephone"
+                      name="employer_telephone"
+                      label="Employer Telephone#"
                       type="number"
-                      value={inputs.income_telephone_number} 
+                      value={inputs.employer_telephone} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -633,11 +643,11 @@ return (
                     {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
-                      id="experience"
-                      name="experience"
-                      label="Length Of time with current employer"
+                      id="employer_tenure"
+                      name="employer_tenure"
+                      label="Tenure of Employer"
                       type="text"
-                      value={inputs.experience} 
+                      value={inputs.employer_tenure} 
                       onChange={handleInputChange}
                       required
                       fullWidth
