@@ -13,6 +13,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Add from './Add';
 import Edit from './Edit';
+import CompletedTask from './CompletedTask';
 
 import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
@@ -41,6 +42,7 @@ const StyledTableRow = withStyles(theme => ({
 
 export default function Task(franchiseId) {
   const [open, setOpen] = useState(false);
+  const [openCompleteTask, setCompleteTaskOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -137,6 +139,12 @@ export default function Task(franchiseId) {
   function handleClickOpen() {
     setOpen(true);
   }
+  function handleCompleteTaskClickOpen(){
+    setCompleteTaskOpen(true);
+  }
+  function handleCompleteTaskClose() {
+    setCompleteTaskOpen(false);
+  }
   function handleClose() {
     setOpen(false);
   }
@@ -194,7 +202,7 @@ export default function Task(franchiseId) {
       {/* {showTask ?  */}
       <Grid container spacing={3}>
 
-              <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={10}>
             <Fab
               variant="extended"
               size="small"
@@ -207,6 +215,18 @@ export default function Task(franchiseId) {
               Task
             </Fab>
           </Grid>
+          <Grid item xs={12} sm={2}>
+            <Fab
+              variant="extended"
+              size="small"
+              color="primary"
+              aria-label="Complete"
+              className={classes.fonttransform}
+              onClick={handleCompleteTaskClickOpen}
+            >
+              Completed Tasks
+            </Fab>
+          </Grid>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
@@ -216,6 +236,7 @@ export default function Task(franchiseId) {
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
+                        <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
@@ -237,9 +258,7 @@ export default function Task(franchiseId) {
                                     
                               })
                             }
-                            
-                          
-                            
+                          <StyledTableCell><p >{data.status}</p></StyledTableCell>
                           <StyledTableCell><p className={classes.bgtask}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
@@ -261,7 +280,8 @@ export default function Task(franchiseId) {
       <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
-          
+      {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose} />: null}
+
     </div>
   );
 }

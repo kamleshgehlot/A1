@@ -92,8 +92,12 @@ export default function StaffTask(uid) {
       
     marginTop:theme.spacing(10),
     },
-    bgtask:{
+    bgtaskpending:{
       backgroundColor:"yellow",
+      padding: theme.spacing(1),
+    },
+    bgtaskoverdue:{
+      backgroundColor:"red",
       padding: theme.spacing(1),
     }
   }));
@@ -208,7 +212,7 @@ export default function StaffTask(uid) {
                         <StyledTableCell> {data.id}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
-                          <StyledTableCell><p className={classes.bgtask}>{data.due_date}</p></StyledTableCell>
+                          <StyledTableCell><p className={classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update

@@ -11,6 +11,7 @@ const Task = function (params) {
   this.updated_date=params.updated_date;
   this.is_active=1;
   this.status = params.status;
+  this.message = params.message;
   this.user_id = params.user_id;
   if(params.status==='2'){
     this.start_date=params.updated_date;
@@ -80,7 +81,7 @@ Task.prototype.all = function () {
 
       // connection.changeUser({database : dbName["prod"]});
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id ', function (error, rows, fields) {
+      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where status <> "4"', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 
@@ -111,6 +112,37 @@ Task.prototype.last = function () {
           console.log("Error...", error);
           reject(error);
         }
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      });
+    });
+  });
+}
+
+
+
+Task.prototype.completedlist = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+
+      if (error) {
+        throw error;
+      }
+
+
+      // connection.changeUser({database : dbName["prod"]});
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active, a.start_date, a.completed_date,a.message from task t inner join task_assign a on t.task_id = a.task_id where status="4"', function (error, rows, fields) {
+        if (!error) {
+          resolve(rows);
+
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+
         connection.release();
         console.log('Process Complete %d', connection.threadId);
       });
@@ -219,7 +251,7 @@ Task.prototype.stafftasks = function () {
             if (!error) {
                 connection.query('select id as staffid from staff where franchise_user_id="'+rows[0].uid+'" limit 1', function (error, staffrows, fields) {
                   if (!error) {
-                      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+staffrows[0].staffid+'" ', function (error, taskrows, fields) {
+                      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+staffrows[0].staffid+'" AND status <> 4', function (error, taskrows, fields) {
                         if (!error) {
                           // console.log('model-----------------',taskrows);
                           resolve(taskrows);
@@ -275,7 +307,7 @@ Task.prototype.staffupdate = function () {
                   });
                 }
                 else{
-                  connection.query('update task_assign set updated_at="'+that.updated_date+'", updated_by = "' + staffrows[0].staffid + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
+                  connection.query('update task_assign set message="'+that.message+'",updated_at="'+that.updated_date+'", updated_by = "' + staffrows[0].staffid + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
                     if (!error) {
                       // console.log(arows);
                       resolve({ arows });

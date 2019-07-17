@@ -44,6 +44,15 @@ export default {
       throw error;
     }
   },
+  completedlist: async () => {
+    const URL = `${c.API_CONSUMER}/api/task/completedlist`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
   delete: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/task/deletetask`;
     try {

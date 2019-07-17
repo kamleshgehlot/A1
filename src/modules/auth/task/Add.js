@@ -125,7 +125,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
         else{
           const t_id='t_1';
           setTaskId(t_id);
-          console.log('hgrfeuf----',t_id);
+          // console.log('hgrfeuf----',t_id);
         }
       } catch (error) {
         setIsError(true);

@@ -57,6 +57,15 @@ const last = function (req, res, next) {
   }
 };
 
+const completedlist = function (req, res, next) {
+  try {
+    new Task({ user_id: req.decoded.user_id }).completedlist().then(taskList => {
+      res.send({ taskList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
 
 const deletetask = function (req, res, next) {
   const taskParam = {
@@ -94,6 +103,7 @@ const staffupdate = function (req, res, next) {
     id: req.body.id,
     task_id: req.body.task_id,
     assigned_to: req.body.assigned_to,
+    message: req.body.message,
     status: req.body.status,
     user_id: req.decoded.user_id,
     updated_date:req.body.updated_date
@@ -114,4 +124,4 @@ const staffupdate = function (req, res, next) {
     res.send('error', { error: err });
   }
 };
-module.exports = { add, all, last, deletetask, stafftasks,staffupdate };
+module.exports = { add, all, last, completedlist,deletetask, stafftasks,staffupdate };
