@@ -17,6 +17,8 @@ import Edit from './Edit';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 
+
+
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -43,6 +45,7 @@ export default function CustomerList(userId) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [idTypeList, setIdTypeList] = useState([]);
   const [customerListData, setCustomerListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
     
@@ -109,6 +112,7 @@ export default function CustomerList(userId) {
   }
 
   function handleCustomerList(response){
+    // console.log("response---", response);
     setCustomerListData(response);
   }
   
@@ -120,17 +124,23 @@ export default function CustomerList(userId) {
       try {
         const result = await Customer.list();
         setCustomerListData(result.customerList);
+
+        // const idType = await Customer.idtypelist();
+        // setIdTypeList(idType.idTypeList);
+
       } catch (error) {
         setIsError(true);
       }
       setIsLoading(false);
     };
     fetchData();
+    
   }, []);
 
 
   return (
     <div>
+      
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
@@ -160,7 +170,9 @@ export default function CustomerList(userId) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                      
                         {(customerListData.length > 0 ? customerListData : []).map((data,index) =>{
+                          
                           return(
                             <TableRow key={data.id} >
                             <StyledTableCell> {index + 1}  </StyledTableCell>

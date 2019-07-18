@@ -10,4 +10,14 @@ const getAll = function(req, res, next) {
   }
 };
 
-module.exports = { getAll };
+const selectedArea = function(req, res, next) {
+  try {
+      new Location({city_id : req.body.city_id, city_name: req.body.city_name, city_code: req.body.city_code}).getSelectedArea().then(result => {
+        res.send({ selectedArea: result });
+      });
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+};
+
+module.exports = { getAll, selectedArea };

@@ -20,4 +20,19 @@ export default {
       throw error;
     }
   },
+
+  arealist: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/location/area/getAll`;
+    try {
+      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };

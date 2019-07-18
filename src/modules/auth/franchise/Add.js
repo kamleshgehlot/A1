@@ -123,6 +123,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
   const [directorList, setDirectorList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [selectedArea, setSelectedArea] = useState([]);
+  const [tempCity, setTempCity] = useState();
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = panel => (event, isExpanded) => {
@@ -167,7 +171,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       suburb: inputs.suburb,
       franchise_name: inputs.franchise_name,
 
-      city_code: inputs.city,
+      city_code: inputs.city_code,
       abn: "1234",
 
       company_name: inputs.company_name,
@@ -278,6 +282,46 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       setDirectorList(directorListTemp);
     }
   }
+  // function setCityHandler(city){
+  //   setInput('city',city)
+  // }
+  function setCityCodeHandler(event){
+    setInput('city_code',event.target.value.split('_')[2])
+  }
+  function handleCityChange(event){
+    setTempCity(event.target.value)
+    const city_name = event.target.value.split('_')[0];
+    const city_id = event.target.value.split('_')[1];
+    const city_code = event.target.value.split('_')[2];
+
+    setInput('city', city_name);
+    
+    // setInput('city_code', city_code);
+
+    // setCityHandler(city_name);
+    // setCityCodeHandler(city_code);
+    
+
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await LocationAPI.arealist({
+          city_id : city_id,
+          city_name : city_name,
+          city_code : city_code,
+        });
+        setSelectedArea(result.selectedArea);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    
+    fetchData();
+    
+  }
+console.log("data",inputs);
 
   function handleRemoveDirector(index){
     const directorListTemp = [...directorList];
@@ -362,24 +406,22 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="city">Select City *</InputLabel>
                     <Select
-                      value={inputs.city}
-                      onChange={handleInputChange}
-                      // onBlur={handleSuburb}
-                      inputProps={{
-                        name: 'city',
-                        id: 'city',
-                        label:'Select City'
-                      }}
+                      value={tempCity}
+                      onChange={handleCityChange}
+                      onBlur = {setCityCodeHandler}
+                      name ='city'
+                      id = 'city'
+                      label = 'Select City'
                       fullWidth
-                      label="City"
+
                       required
                       error={errors.city}
                       helperText={errors.city ? errors.city : ' '}
                     >
-                      {cityList.length > 0 &&
-                        cityList.map(data => {
+                      {(cityList.length > 0 ? cityList : []).map(data => {
+                          // console.log("City", data);
                           return (
-                            <MenuItem value={data.city}>{data.city+ ' - ' + data.city_code}</MenuItem>
+                            <MenuItem value={data.city + '_' + data.id + '_' + data.city_code} >{data.city+ ' - ' + data.city_code}</MenuItem>
                           );
                         })}
                     </Select>
@@ -389,22 +431,22 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     <Select
                       value={inputs.suburb}
                       onChange={handleInputChange}
-                      inputProps={{
-                        name: 'suburb',
-                        id: 'suburb_selection',
-                        label: 'Area'
-                      }}
+                      name = 'suburb'
+                      id = 'suburb_selection'
+                      label = 'Area'
                       fullWidth
                       label="Suburb"
                       required
                       error={errors.suburb}
                       helperText={errors.suburb ? errors.suburb : ' '}
                     >
-                       <MenuItem value={"East"}>East</MenuItem>
-                      <MenuItem value={"West"}>West</MenuItem>
-                      <MenuItem value={"North"}>North</MenuItem>
-                      <MenuItem value={"South"}>South</MenuItem>
-                      <MenuItem value={"Central"}>Central</MenuItem>
+                      {(selectedArea.length>0 ? selectedArea : []).map((area, index) => {
+                        return(
+                          <MenuItem value={area.area}>{area.area}</MenuItem>
+                        )
+                      })
+                      }
+                      
                     </Select>
                   </Grid>
                   

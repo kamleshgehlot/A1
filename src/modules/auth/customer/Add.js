@@ -113,10 +113,32 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [idTypeList, setIdTypeList] = useState([]);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const idType = await Customer.idtypelist();
+        setIdTypeList(idType.idTypeList);
+
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+    
+  }, []);
+
 
   
 
@@ -175,7 +197,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
     addCustomer,
     validate
   );
-  
   
 return (
     <div>
@@ -370,9 +391,15 @@ return (
                          label="Select Id Proof"
                          required
                       >
-                          <MenuItem value={1}>Passport</MenuItem>
-                          <MenuItem value={2}>Driving License</MenuItem>
-                          <MenuItem value={3}>Others</MenuItem>
+                        {
+                          
+                          ( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
+                            return(
+                                <MenuItem value={ele.id}>{ele.name}</MenuItem>    
+                            )
+                          })
+                        }
+                          
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
