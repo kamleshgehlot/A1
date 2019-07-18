@@ -48,11 +48,11 @@ const register = function (req, res, next) {
 	const newCustomer = new Customer(CustomerParams);
 
 	if(req.body.id) {
-    // newStaff.update().then(function(result){
-    //   new Customer({user_id : req.decoded.user_id}).all().then(function (CustomerList) {
-    //     res.send({ CustomerList: CustomerList });
-    //   });
-    // });
+    newCustomer.update().then(function(result){
+      new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {
+        res.send({ customerList: customerList });
+      });
+    });
 	} else {
     newCustomer.register().then(function(result){
       new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {

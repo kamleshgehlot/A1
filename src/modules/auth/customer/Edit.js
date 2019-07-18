@@ -108,7 +108,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleClose, handleSnackbarClick, inputs, setCustomerList}) {
+export default function Edit({ open, handleEditClose, handleSnackbarClick, inputs, setCustomerList}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
@@ -159,7 +159,7 @@ export default function Edit({ open, handleClose, handleSnackbarClick, inputs, s
     handleSnackbarClick(true);
     setCustomerList(response.customerList);
     handleReset(RESET_VALUES);
-    handleClose(false);
+    handleEditClose(false);
   };
 
   // function validate(values) {
@@ -185,11 +185,11 @@ const handleInputChange = event => {
   
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
@@ -335,9 +335,16 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="is_working">Are you working?</InputLabel>
-                    <RadioGroup aria-label="is_working" name="is_working" value={customerList.is_working} onChange={handleInputChange} row>
-                      <FormControlLabel value="1" control={<Radio color="primary" />} label="Yes" labelPlacement="start" />
-                      <FormControlLabel value="0" control={<Radio color="primary" />} label="No" labelPlacement="start" />
+                    <RadioGroup 
+                      aria-label="is_working" 
+                      name="is_working" 
+                      className={classes.group}
+                      value={parseInt(customerList.is_working)} 
+                      onChange={handleInputChange} 
+                      row
+                    >
+                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" />
+                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -359,7 +366,7 @@ return (
                     <Select
                          name="id_type"
                          onChange={handleInputChange}
-                         value={customerList.id_type}
+                         value={parseInt(customerList.id_type)}
                          inputProps={{
                            name: 'id_type',
                            id: 'id_type',
@@ -370,9 +377,9 @@ return (
                          label="Select Id Proof"
                          required
                       >
-                          <MenuItem value="1">Passport</MenuItem>
-                          <MenuItem value="2">Driving License</MenuItem>
-                          <MenuItem value="3">Others</MenuItem>
+                          <MenuItem value={1}>Passport</MenuItem>
+                          <MenuItem value={2}>Driving License</MenuItem>
+                          <MenuItem value={3}>Others</MenuItem>
 
                     </Select>
                   </Grid>
@@ -406,19 +413,9 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="is_adult">Over 18 Years?</InputLabel>
-                    <RadioGroup aria-label="is_adult" name="is_adult" value={customerList.is_adult} onChange={handleInputChange} row>
-                      <FormControlLabel
-                        value="1"
-                        control={<Radio color="primary" />}
-                        label="Yes"
-                        labelPlacement="start"
-                      />
-                      <FormControlLabel
-                        value="0"
-                        control={<Radio color="primary" />}
-                        label="No"
-                        labelPlacement="start"
-                      />
+                    <RadioGroup aria-label="is_adult" name="is_adult" value={customerList.is_adult} onChange={handleInputChange} className={classes.group} row>
+                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" />
+                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" />                      
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -430,9 +427,7 @@ return (
                       label=""
                       type="file"
                       // value={customerList.id_proof} 
-                      // onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
+                      onChange={handleInputChange}
                       required
                       fullWidth
                     /> 

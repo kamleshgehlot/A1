@@ -329,9 +329,16 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="is_working">Are you working?</InputLabel>
-                    <RadioGroup aria-label="is_working" name="is_working" value={inputs.is_working} onChange={handleInputChange} row>
-                      <FormControlLabel value="1" control={<Radio color="primary" />} label="Yes" labelPlacement="start" />
-                      <FormControlLabel value="0" control={<Radio color="primary" />} label="No" labelPlacement="start" />
+                    <RadioGroup 
+                      aria-label="is_working" 
+                      name="is_working" 
+                      className={classes.group}
+                      value={parseInt(inputs.is_working)} 
+                      onChange={handleInputChange} 
+                      row
+                    >
+                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" />
+                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -353,21 +360,19 @@ return (
                     <Select
                          name="id_type"
                          onChange={handleInputChange}
-                         value={inputs.id_type}
+                         value={parseInt(inputs.id_type)}
                          inputProps={{
                            name: 'id_type',
                            id: 'id_type',
                          }}
-                         defaultValue='Shah'
                          className={classes.margin}
                          fullWidth
                          label="Select Id Proof"
                          required
                       >
-                          <MenuItem value="1">Passport</MenuItem>
-                          <MenuItem value="2">Driving License</MenuItem>
-                          <MenuItem value="3">Others</MenuItem>
-
+                          <MenuItem value={1}>Passport</MenuItem>
+                          <MenuItem value={2}>Driving License</MenuItem>
+                          <MenuItem value={3}>Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -400,23 +405,30 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="is_adult">Over 18 Years?</InputLabel>
-                    <RadioGroup aria-label="is_adult" name="is_adult" value={inputs.is_adult} onChange={handleInputChange} row>
+                    <RadioGroup 
+                      aria-label="is_adult" 
+                      name="is_adult" 
+                      className={classes.group}
+                      value={parseInt(inputs.is_adult)} 
+                      onChange={handleInputChange}
+                      row
+                    >
                       <FormControlLabel
-                        value="1"
-                        control={<Radio color="primary" />}
+                        value={1}
+                        control={<Radio />}
                         label="Yes"
                         labelPlacement="start"
                       />
                       <FormControlLabel
-                        value="0"
-                        control={<Radio color="primary" />}
+                        value={0}
+                        control={<Radio />}
                         label="No"
                         labelPlacement="start"
                       />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Over 18 Years</InputLabel> */}
+                  <InputLabel htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField
                       margin="dense"
                       id="id_proof"

@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Customer = function (params) {
-  // console.log("params@@@@@@@@@@@", params);
+  console.log("params@@@@@@@@@@@", params);
   
   this.id = params.id;
   this.customer_name  = params.customer_name;
@@ -53,8 +53,8 @@ Customer.prototype.register = function () {
       }
       if (!error) {
         // let values=[that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,that.id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by];
-        let values=[that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,that.id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by];
         // console.log("dataname", dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) );
+
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by) VALUES (?)',values, function (error, rows, fields) {
           connection.query('INSERT INTO customer(customer_name, address, city, postcode, telephone, mobile, email, gender, is_working, dob, id_type, id_number, expiry_date, is_adult, id_proof, alt_c1_name, alt_c1_address, alt_c1_contact, alt_c1_relation, alt_c2_name, alt_c2_address, alt_c2_contact, alt_c2_relation, is_active, created_by) VALUES ("'+that.customer_name+'", "'+that.address+'", "'+that.city+'", "'+that.postcode+'", "'+that.telephone+'", "'+that.mobile+'", "'+that.email+'", "'+that.gender+'", "'+that.is_working+'", "'+that.dob+'", "'+that.id_type+'", "'+that.id_number+'", "'+that.expiry_date+'", "'+that.is_adult+'", "'+that.id_proof+'", "'+that.alt_c1_name+'", "'+that.alt_c1_address+'", "'+that.alt_c1_contact+'", "'+that.alt_c1_relation+'", "'+that.alt_c2_name+'", "'+that.alt_c2_address+'", "'+that.alt_c2_contact+'", "'+that.alt_c2_relation+'", "'+that.is_active+'", "'+that.created_by+'")',function (error, rows, fields) {
@@ -87,47 +87,44 @@ Customer.prototype.register = function () {
 };
 
 
+Customer.prototype.update = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
 
-// Customer.prototype.update = function () {
-//   const that = this;
-//   return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
 
-//     connection.getConnection(function (error, connection) {
-//       if (error) {
-//         throw error;
-//       }
-
-//       if (!error) {
-//         connection.changeUser({ database: dbName["prod"] });
-//         connection.query('select city from franchise where id = "' + that.franchise_id + '"', function (error, rows, fields) {
-//           if (!error) {
-//             connection.changeUser({ database: dbName["prod"] + '_' + rows[0].city.substring(0, 4).toLowerCase() });
-
-//             // connection.query('update staff set first_name = "'+that.first_name+'", last_name = "'+that.last_name+'", location = "'+that.location+'", contact = "'+that.contact+'", email = "'+that.email+'", pre_company_name = "'+that.pre_company_name+'", pre_company_address = "'+that.pre_company_address+'", pre_company_contact = "'+that.pre_company_contact+'", pre_position = "'+that.pre_position+'", duration = "'+that.duration+'", role =  "'+that.role+'", employment_docs = "'+that.employment_docs+'" WHERE id = "'+that.id+'")', function (error, rows, fields) {
-//             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
-//               if (!error) {
-//                 resolve(rows);
-//               } else {
-//                 console.log("Error...", error);
-//                 reject(error);
-//               }
-//             });
-//           }
-//         });
-//       }
-//       else {
-//         console.log("Error...", error);
-//         reject(error);
-//       }
-
-//       connection.release();
-//       console.log('Staff Added for Franchise %d', connection.threadId);
-//     });
-//   }).catch((error) => {
-//     throw error;
-//   });
-// };
-
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('UPDATE customer SET customer_name = "' +that.customer_name + '", address = "' + that.address + '", city = "' + that.city + '", postcode = "' + that.postcode + '", telephone = "' + that.telephone + '", mobile = "' + that.mobile + '", email = "' + that.email + '", gender = "' + that.email + '", is_working = "' + that.is_working + '", dob = "' + that.dob+ '", id_type = "' +that.id_type + '", id_number = "' +that.id_number + '", expiry_date = "' + that.expiry_date + '", is_adult = "' + that.is_adult + '", id_proof = "' + that.id_proof + '", alt_c1_name = "' + that.alt_c1_name+ '", alt_c1_address = "' + that.alt_c1_address+ '", alt_c1_contact = "' + that.alt_c1_contact+ '", alt_c1_relation = "' + that.alt_c1_relation + '", alt_c2_name = "' + that.alt_c2_name + '", alt_c2_address = "' + that.alt_c2_address+ '", alt_c2_contact = "' + that.alt_c2_contact+ '", alt_c2_relation = "' + that.alt_c2_relation+ '", is_active = "' + that.is_active+ '" WHERE id= "'+that.id+'"', function (error, rows, fields) {
+          if (!error) {
+                connection.query('UPDATE customer_income SET employer_name = "'+that.employer_name+'", employer_address = "'+that.employer_address+'", employer_telephone = "'+that.employer_telephone+'", employer_email = "'+that.employer_email+'", employer_tenure = "'+that.employer_tenure+'", is_active = "'+that.is_active+'" WHERE cust_id = "'+that.id+'"', function (error, rows, fields) {
+                  if (!error) {
+                    resolve(rows);
+                  } else {
+                    console.log("Error...", error);
+                    reject(error);
+                  }
+                });
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
+          
+        });
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
 
 Customer.prototype.all = function () {
   const that = this;
