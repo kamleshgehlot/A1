@@ -85,7 +85,7 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-export default function CompletedTask({open, handleClose}) {
+export default function CompletedTask({open, handleCompleteTaskClose,assignedid}) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [tasksList, setTaskList] = useState({});
@@ -101,6 +101,7 @@ export default function CompletedTask({open, handleClose}) {
       try {
         const result = await TaskAPI.completedlist();
         console.log('tasks----------------',result.taskList);
+        console.log('hsgdhgsyd-----',assignedid);
         setTaskList(result.taskList);
       } catch (error) {
         setIsError(true);
@@ -127,10 +128,10 @@ export default function CompletedTask({open, handleClose}) {
 
 return (
   <div>
-    <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+    <Dialog maxWidth="lg" open={open} onClose={handleCompleteTaskClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+            <IconButton edge="start" color="inherit" onClick={handleCompleteTaskClose} aria-label="Close">
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
@@ -163,6 +164,7 @@ return (
                   <TableBody>
                   { (tasksList.length > 0 ? tasksList : []).map((data, index)=>{
                     return(
+                     assignedid!=0? data.assigned_to===assignedid?
                       <TableRow >
                       <StyledTableCell> {data.id}  </StyledTableCell>
                         <StyledTableCell> {data.task_id}  </StyledTableCell>
@@ -180,7 +182,29 @@ return (
                         <StyledTableCell>{data.status}</StyledTableCell>
                         <StyledTableCell>{data.due_date}</StyledTableCell>
                         <StyledTableCell>{data.start_date}</StyledTableCell>
-                        <StyledTableCell>{data.completed_date}</StyledTableCell>
+                        <StyledTableCell>{data.completion_date}</StyledTableCell>
+                        <StyledTableCell>{data.message}</StyledTableCell>
+                        <StyledTableCell></StyledTableCell>
+                        
+                      </TableRow>:'':
+                      <TableRow >
+                      <StyledTableCell> {data.id}  </StyledTableCell>
+                        <StyledTableCell> {data.task_id}  </StyledTableCell>
+                        <StyledTableCell> {data.task_description}  </StyledTableCell>
+                      
+                          { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
+                              return(
+                                data.assigned_to===datastaff.id ?
+                                <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
+                                  :''
+                                  )
+                                  
+                            })
+                          }
+                        <StyledTableCell>{data.status}</StyledTableCell>
+                        <StyledTableCell>{data.due_date}</StyledTableCell>
+                        <StyledTableCell>{data.start_date}</StyledTableCell>
+                        <StyledTableCell>{data.completion_date}</StyledTableCell>
                         <StyledTableCell>{data.message}</StyledTableCell>
                         <StyledTableCell></StyledTableCell>
                         

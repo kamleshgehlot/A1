@@ -10,6 +10,7 @@ taskRouter.route('/list').get(validateToken, Task.all);
 taskRouter.route('/last').get(validateToken, Task.last);
 taskRouter.route('/completedlist').get(validateToken, Task.completedlist);
 taskRouter.route('/deletetask').post(validateToken, Task.deletetask);
+taskRouter.route('/reschedule').post(validateToken, Task.reschedule);
 // staff task list
 taskRouter.route('/stafftasks').get(validateToken, Task.stafftasks);
 taskRouter.route('/staffupdate').post(validateToken, Task.staffupdate);

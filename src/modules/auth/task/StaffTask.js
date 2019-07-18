@@ -13,6 +13,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 // import Add from './Add';
 import StaffEdit from './StaffEdit';
+import CompletedTask from './CompletedTask';
 
 import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
@@ -42,6 +43,7 @@ const StyledTableRow = withStyles(theme => ({
 export default function StaffTask(uid) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [openCompleteTask, setCompleteTaskOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -49,10 +51,10 @@ export default function StaffTask(uid) {
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
-
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
    
+  const [assignedid,setAssignedid]= useState();
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -110,8 +112,9 @@ export default function StaffTask(uid) {
 
       try {
         const result = await TaskAPI.stafftasks();
-        // console.log('tasks----------------',result.taskList);
+        console.log('tasks----------------',result.taskList[0].assigned_to);
         setTaskList(result.taskList);
+        setAssignedid(result.taskList[0].assigned_to);
       } catch (error) {
         setIsError(true);
       }
@@ -171,6 +174,12 @@ export default function StaffTask(uid) {
     
   }
 
+  function handleCompleteTaskClickOpen(){
+    setCompleteTaskOpen(true);
+  }
+  function handleCompleteTaskClose() {
+    setCompleteTaskOpen(false);
+  }
   const handleClickDelete = async (id) => {
     const response = await TaskAPI.delete({
       id:id,
@@ -193,6 +202,18 @@ export default function StaffTask(uid) {
     <div>
       {/* {showTask ?  */}
       <Grid container spacing={3}>
+          <Grid item xs={12} sm={2}>
+            <Fab
+              variant="extended"
+              size="small"
+              color="primary"
+              aria-label="Complete"
+              className={classes.fonttransform}
+              onClick={handleCompleteTaskClickOpen}
+            >
+              Completed Tasks
+            </Fab>
+          </Grid>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
@@ -201,7 +222,9 @@ export default function StaffTask(uid) {
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
+                        <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -212,7 +235,18 @@ export default function StaffTask(uid) {
                         <StyledTableCell> {data.id}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
+                          
+                          { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
+                                return(
+                                  data.assigned_to===datastaff.id ?
+                                  <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
+                                    :''
+                                    )
+                                    
+                              })
+                            }
                           <StyledTableCell><p className={classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+                          <StyledTableCell>{data.status}</StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update
@@ -230,7 +264,8 @@ export default function StaffTask(uid) {
       {/* <Add open={open} handleClose={handleClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} /> */}
       
       {editOpen ? <StaffEdit open={editOpen} handleEditClose={handleEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}
-          
+      {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose} assignedid={assignedid} />: null}
+
     </div>
   );
 }

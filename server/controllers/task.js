@@ -87,6 +87,35 @@ const deletetask = function (req, res, next) {
   }
 };
 
+
+const reschedule = function (req, res, next) {
+  const taskParam = {
+    franchise_id: req.body.franchise_id,
+    assignid: req.body.assignid,
+    task_id: req.body.task_id,
+    task_description: req.body.task_description,
+    assigned_to: req.body.assigned_to,
+    due_date: req.body.due_date,
+    new_due_date: req.body.new_due_date,
+    status: req.body.status,
+    user_id: req.decoded.user_id
+  };
+  console.log('req--------------',req.body);
+  try {
+    const newTask = new Task(taskParam);
+      newTask.reschedule().then(result => {
+        new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
+          res.send({ taskList });
+        });
+      })
+  } catch (err) {
+    console.log('Error: ', err);
+
+    res.status(500);
+    res.send('error', { error: err });
+  }
+};
+
 // staff task list
 const stafftasks = function (req, res, next) {
   try {
@@ -124,4 +153,4 @@ const staffupdate = function (req, res, next) {
     res.send('error', { error: err });
   }
 };
-module.exports = { add, all, last, completedlist,deletetask, stafftasks,staffupdate };
+module.exports = { add, all, last, completedlist,deletetask,reschedule, stafftasks,staffupdate };

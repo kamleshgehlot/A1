@@ -11,6 +11,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
+//files
 import Add from './Add';
 import Edit from './Edit';
 import CompletedTask from './CompletedTask';
@@ -51,7 +54,9 @@ export default function Task(franchiseId) {
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
+  const [dateToday, setTodayDate]= useState();
 
+  const [assignedid,setAssignedid]= useState();
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 
@@ -98,8 +103,12 @@ export default function Task(franchiseId) {
       
     marginTop:theme.spacing(10),
     },
-    bgtask:{
+    bgtaskpending:{
       backgroundColor:"yellow",
+      padding: theme.spacing(1),
+    },
+    bgtaskoverdue:{
+      backgroundColor:"red",
       padding: theme.spacing(1),
     }
   }));
@@ -112,8 +121,9 @@ export default function Task(franchiseId) {
 
       try {
         const result = await TaskAPI.list();
-        console.log('tasks----------------',result.taskList);
         setTaskList(result.taskList);
+        setAssignedid(0);
+        todayDate();
       } catch (error) {
         setIsError(true);
       }
@@ -136,6 +146,12 @@ export default function Task(franchiseId) {
     fetchData();
   }, []);
 
+  function todayDate(){
+    
+    const today=new Date();
+    const date= today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
+    setTodayDate(date);
+  }
   function handleClickOpen() {
     setOpen(true);
   }
@@ -259,7 +275,7 @@ export default function Task(franchiseId) {
                               })
                             }
                           <StyledTableCell><p >{data.status}</p></StyledTableCell>
-                          <StyledTableCell><p className={classes.bgtask}>{data.due_date}</p></StyledTableCell>
+                          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update
@@ -277,11 +293,25 @@ export default function Task(franchiseId) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />
+      {open? <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />:null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
-      {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose} />: null}
-
+      {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose}  assignedid={assignedid} />: null}
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleSnackbarClose}
+          variant="success"
+          message="Task successfully!"
+        />
+      </Snackbar>
     </div>
   );
 }

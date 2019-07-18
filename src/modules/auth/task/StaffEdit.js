@@ -254,11 +254,12 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                                   id: 'status',
                                   label:'status'
                                 }}
-                                
                                 fullWidth
                                 label="status"
                                 required
                               >
+                                <MenuItem disabled  value="1" selected>Scheduled
+                                </MenuItem>
                                 <MenuItem value="2">In-progress</MenuItem>
                                 <MenuItem value="3">Reschedule </MenuItem>
                                 <MenuItem value="4">Completed </MenuItem>

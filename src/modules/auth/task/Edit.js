@@ -94,6 +94,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   const [taskList, setTasksList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
   const addTaskMaster = async () => {
     const response = await Task.add({
       franchise_id: franchiseId,
@@ -101,9 +102,30 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
       task_id: taskList.task_id,
       task_description:taskList.task_description,
       assigned_to:taskList.assigned_to,
+      status:taskList.status,
       due_date:taskList.due_date,
     });
     handleSnackbarClick(true,'Task Updated Successfully');
+    // console.log('update======',response.taskList);
+    setTaskList(response.taskList);
+    handleEditClose(false);
+  };
+
+  
+  const rescheduleTask = async () => {
+
+    console.log('taskList======',taskList);
+    const response = await Task.reschedule({
+      franchise_id: franchiseId,
+      assignid: taskList.assignid,
+      task_id: taskList.task_id,
+      task_description:taskList.task_description,
+      assigned_to:taskList.assigned_to,
+      due_date:taskList.due_date,
+      new_due_date:taskList.new_due_date,
+      status:taskList.status
+    });
+    handleSnackbarClick(true,'Task Rescheduled Successfully');
     // console.log('update======',response.taskList);
     setTaskList(response.taskList);
     handleEditClose(false);
@@ -154,6 +176,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
+                        <StyledTableCell>status</StyledTableCell>
+                        {taskList.status===3?<StyledTableCell>New Due Date</StyledTableCell>:''}
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -201,13 +225,13 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               required
                             >
                       
-                      { (staffList.length > 0 ? staffList : []).map((data, index1)=>{
-                        
-                                  return(
-                              <MenuItem value={data.id}>{data.first_name + ' ' + data.last_name} </MenuItem>
-                              )
-                              })
-                            }
+                              { (staffList.length > 0 ? staffList : []).map((data, index1)=>{
+                          
+                                    return(
+                                <MenuItem value={data.id}>{data.first_name + ' ' + data.last_name} </MenuItem>
+                                )
+                                })
+                              }
                             </Select>
                           </StyledTableCell>
                             
@@ -227,7 +251,29 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               /> 
                             </StyledTableCell>
                             <StyledTableCell>
-                              <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">
+                              
+                              <TextField
+                                id="status"
+                                name="status"
+                                // label="Task Id"
+                                value={taskList.status}
+                                onChange={handleInputChange}
+                                fullWidth
+                                required
+                                type="text"
+                                disabled
+                                // placeholder="Franchise Name"
+                                margin="dense"
+                              /> 
+                            </StyledTableCell>
+                            {taskList.status===3? 
+                              <StyledTableCell>
+                                <TextField id="new_due_date" name="new_due_date" value={taskList.new_due_date} onChange={handleInputChange}
+                                  fullWidth required type="date"  margin="dense" /> 
+                              </StyledTableCell>
+                            :''}
+                            <StyledTableCell>
+                              <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask:addTaskMaster}  type="submit">
                                 Update
                               </Button>
                             </StyledTableCell>
