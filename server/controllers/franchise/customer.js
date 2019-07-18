@@ -76,5 +76,15 @@ const all = function(req, res, next) {
   }
 };
 
+const getidtypelist = function(req, res, next) {
+  try {
+    new Customer({user_id : req.decoded.user_id}).getidtypelist().then(idTypeList => {
+      res.send({ idTypeList });
+    });
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+};
 
-module.exports = { register: register, all: all};
+
+module.exports = { register: register, all: all, getidtypelist: getidtypelist};

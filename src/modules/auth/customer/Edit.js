@@ -113,12 +113,36 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [customerList, setDataCustomerList] = React.useState(inputs);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [idTypeList, setIdTypeList] = useState([]);
+
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+ 
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const idType = await Customer.idtypelist();
+        setIdTypeList(idType.idTypeList);
+
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+    
+  }, []);
+
 
   const editCustomer = async () => {
+    
     const response = await Customer.register({
       id: customerList.id,
       customer_name : customerList.customer_name,
@@ -156,27 +180,15 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       
     });
     
-    handleSnackbarClick(true);
+    // handleSnackbarClick(true);
     setCustomerList(response.customerList);
     handleReset(RESET_VALUES);
     handleEditClose(false);
   };
 
-  // function validate(values) {
-  //   let errors = {};
-  //   return errors;
-  // };
-
-//  const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-//     RESET_VALUES,
-//     editCustomer,
-//     validate
-//   );
 
 const handleInputChange = event => {
   const { name, value } = event.target
-  // // console.log(name, value);
-  // name =='state' && value =='4' ? setConfirmation(true) : 
   setDataCustomerList({ ...customerList, [name]: value })
 }
 
@@ -377,10 +389,13 @@ return (
                          label="Select Id Proof"
                          required
                       >
-                          <MenuItem value={1}>Passport</MenuItem>
-                          <MenuItem value={2}>Driving License</MenuItem>
-                          <MenuItem value={3}>Others</MenuItem>
-
+                           {
+                          ( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
+                            return(
+                                <MenuItem value={ele.id}>{ele.name}</MenuItem>    
+                            )
+                          })
+                        }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -413,7 +428,14 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="is_adult">Over 18 Years?</InputLabel>
-                    <RadioGroup aria-label="is_adult" name="is_adult" value={customerList.is_adult} onChange={handleInputChange} className={classes.group} row>
+                    <RadioGroup 
+                      aria-label="is_adult" 
+                      name="is_adult" 
+                      value={parseInt(customerList.is_adult)} 
+                      onChange={handleInputChange} 
+                      className={classes.group} 
+                      row
+                    >
                       <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" />
                       <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" />                      
                     </RadioGroup>
@@ -422,13 +444,13 @@ return (
                     <InputLabel htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField
                       margin="dense"
-                      id="employment_docs"
-                      name="employment_docs"
+                      id="id_proof"
+                      name="id_proof"
                       label=""
                       type="file"
                       // value={customerList.id_proof} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     /> 
                   </Grid>
