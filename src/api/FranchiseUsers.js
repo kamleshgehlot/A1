@@ -19,5 +19,14 @@ export default {
     } catch (error) {
       throw error;
     }
+  },
+  user: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchiseuser/user`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
   }
 };

@@ -15,16 +15,10 @@ Password.prototype.update = function () {
       if (error) {
         throw error;
       }
-      if (!error) {
-        connection.changeUser({ database: dbName["prod"] });
-        connection.query('select fdbname from franchise where id= "' + that.franchise_id + '"', (error, rows, fields) => {
-          if (!error) {
-            // console.log("ddddd", rows);
-            const frachiseDbName = rows[0].fdbname;
-            connection.changeUser({ database: frachiseDbName });
+        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
             connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, rows, fields) {
               if (!error) {
-                console.log('pass-----', rows);
+                // console.log('pass-----', rows);
                 resolve({ rows });
               } else {
                 console.log("Error...", error);
@@ -35,7 +29,7 @@ Password.prototype.update = function () {
             connection.changeUser({ database: dbName["prod"] });
             connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, rows, fields) {
               if (!error) {
-                console.log('passuser-----', rows);
+                // console.log('passuser-----', rows);
                 resolve({ rows });
               } else {
                 console.log("Error...", error);
@@ -43,12 +37,6 @@ Password.prototype.update = function () {
               }
 
             });
-          } else {
-            console.log("Error...", error);
-            reject(error);
-          }
-        })
-      }
       connection.release();
       console.log('Process Complete %d', connection.threadId);
     });
@@ -68,7 +56,7 @@ Password.prototype.pwd = function () {
         throw error;
       }
 
-      connection.changeUser({ database: dbName["prod"] });
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
       connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password from user where user_id="' + that.user_id + '"', function (error, rows, fields) {
         if (!error) {
           resolve(rows);

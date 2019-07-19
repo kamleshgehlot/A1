@@ -137,10 +137,10 @@ const staffUpdate = function (req, res, next) {
     user_id: req.decoded.user_id,
     updated_date:req.body.updated_date
   };
-  // console.log('req--------------',req.body);
+  console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
-      newTask.staffupdate().then(function (result) {
+      newTask.staffUpdate().then(function (result) {
         new Task({ user_id: req.decoded.user_id }).staffTasks().then(taskList => {
           // console.log('controller', { taskList });
           res.send({ taskList });

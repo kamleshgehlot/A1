@@ -23,7 +23,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // API CALL
 import Task from '../../../api/Task';
-import Staff from '../../../api/franchise/Staff';
+// import Staff from '../../../api/franchise/Staff';
+import FranchiseUsers from '../../../api/FranchiseUsers';
+
 const RESET_VALUES = {
   id: '',
   first_name: '',
@@ -94,6 +96,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   const [taskList, setTasksList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [franchiseUsersList, setFranchiseUsersList] = useState({});
 
   const addTaskMaster = async () => {
     const response = await Task.add({
@@ -131,11 +134,26 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     handleEditClose(false);
   };
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await Staff.list();
+  //       setStaffList(result.staffList);
+  //     } catch (error) {
+  //       setIsError(true);
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
       try {
-        const result = await Staff.list();
-        setStaffList(result.staffList);
+        const result = await FranchiseUsers.list();
+        setFranchiseUsersList(result.franchiseUserList);
       } catch (error) {
         setIsError(true);
       }
@@ -225,10 +243,10 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               required
                             >
                       
-                              { (staffList.length > 0 ? staffList : []).map((data, index1)=>{
+                              { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datauser, index1)=>{
                           
                                     return(
-                                <MenuItem value={data.id}>{data.first_name + ' ' + data.last_name} </MenuItem>
+                                <MenuItem value={datauser.id}>{datauser.name} </MenuItem>
                                 )
                                 })
                               }

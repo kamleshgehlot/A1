@@ -114,58 +114,58 @@ const RESET_VALUES = {
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
         <Paper className={classes.paper} style={{ width: '50%' }}>
-              <form onSubmit={handleSubmit}>
-          <Grid item xs={12} sm={6}>
-              <Typography variant="h4" className={classes.title}>
-                 Change Password 
-              </Typography>
-              <TextField
-                id="current_password"
-                name="current_password"
-                label="Current Password"
-                value={inputs.current_password}
-                onChange={handleInputChange}
-                fullWidth
-                required
-                type="text"
-                // placeholder="Franchise Name"
-                margin="dense"
-              />
-            </Grid>
+          <form onSubmit={handleSubmit}>
+            <Typography variant="h4" className={classes.title}>
+                Change Password 
+            </Typography>
             <Grid item xs={12} sm={6}>
-              {/* <InputLabel htmlFor="new_password">User Id</InputLabel> */}
-              <TextField
-                margin="dense"
-                id="new_password"
-                name="new_password"
-                label="New Password"
-                type="text"
-                value={inputs.new_password} 
-                onChange={handleInputChange}
-                required
-                fullWidth
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
-              <TextField
-                margin="dense"
-                id="confirm_password"
-                name="confirm_password"
-                label="Confirm Password"
-                type="text"
-                value={inputs.confirm_password}
-                onChange={handleInputChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Button variant="contained" color="primary" className={classes.button}  type="submit">
-                Change
-              </Button>
-            </Grid>
+                <TextField
+                  id="current_password"
+                  name="current_password"
+                  label="Current Password"
+                  value={inputs.current_password}
+                  onChange={handleInputChange}
+                  fullWidth
+                  required
+                  type="text"
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                {/* <InputLabel htmlFor="new_password">User Id</InputLabel> */}
+                <TextField
+                  margin="dense"
+                  id="new_password"
+                  name="new_password"
+                  label="New Password"
+                  type="text"
+                  value={inputs.new_password} 
+                  onChange={handleInputChange}
+                  required
+                  fullWidth
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
+                <TextField
+                  margin="dense"
+                  id="confirm_password"
+                  name="confirm_password"
+                  label="Confirm Password"
+                  type="text"
+                  value={inputs.confirm_password}
+                  onChange={handleInputChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Button variant="contained" color="primary" className={classes.button}  type="submit">
+                  Change
+                </Button>
+              </Grid>
             </form>
         </Paper>
       </Grid>

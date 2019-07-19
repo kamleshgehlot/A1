@@ -96,7 +96,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
   const [isError, setIsError] = useState(false);
   const [dateToday, setTodayDate]= useState();
   const addTaskMaster = async () => {
-    console.log('taskList------------',taskList);
+    // console.log('taskList------------',taskList);
     const response = await Task.staffupdate({
       franchise_id: franchiseId,
       id: taskList.id,
@@ -105,7 +105,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
       updated_date:taskList.updated_date,
       status:taskList.status,
     });
-    handleSnackbarClick(true,'Task Updated Successfully');
+    handleSnackbarClick(true);
     setTaskList(response.taskList);
     handleEditClose(false);
   };

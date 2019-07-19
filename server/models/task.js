@@ -129,8 +129,6 @@ Task.prototype.completedList = function () {
       if (error) {
         throw error;
       }
-
-
       // connection.changeUser({database : dbName["prod"]});
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
       connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active, a.start_date, a.completion_date,a.message from task t inner join task_assign a on t.task_id = a.task_id where status="4"', function (error, rows, fields) {
@@ -290,35 +288,24 @@ Task.prototype.staffTasks = function () {
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
       console.log('Process Started %d All', connection.threadId);
-
       if (error) {
         throw error;
       }
-
-
       // connection.changeUser({database : dbName["prod"]});
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
 
           connection.query('select id as uid from user where user_id="'+that.user_id+'" limit 1', function (error, rows, fields) {
             if (!error) {
-                connection.query('select id as staffid from staff where franchise_user_id="'+rows[0].uid+'" limit 1', function (error, staffrows, fields) {
-                  if (!error) {
-                      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+staffrows[0].staffid+'" AND status <> 4 AND status <> 5 AND a.is_active="1"', function (error, taskrows, fields) {
-                        if (!error) {
-                          // console.log('model-----------------',taskrows);
-                          resolve(taskrows);
-        
-                        } else {
-                          console.log("Error...", error);
-                          reject(error);
-                        }
-                      });
-                  } else {
-                    console.log("Error...", error);
-                    reject(error);
-                  }
-                });
+              connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+rows[0].uid+'" AND status <> 4 AND status <> 5 AND a.is_active="1"', function (error, taskrows, fields) {
+                if (!error) {
+                  console.log('model-----------------',taskrows);
+                  resolve(taskrows);
 
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+              });
             } else {
               console.log("Error...", error);
               reject(error);
@@ -344,10 +331,8 @@ Task.prototype.staffUpdate = function () {
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
         connection.query('select id as uid from user where user_id="'+that.user_id+'" limit 1', function (error, rows, fields) {
           if (!error) {
-            connection.query('select id as staffid from staff where franchise_user_id="'+rows[0].uid+'" limit 1', function (error, staffrows, fields) {
-              if (!error) {
                 if(that.status==='2'){
-                  connection.query('update task_assign set start_date="'+that.start_date+'", updated_at="'+that.updated_date+'", updated_by = "' + staffrows[0].staffid + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '" ', function (error, arows, fields) {
+                  connection.query('update task_assign set start_date="'+that.start_date+'", updated_at="'+that.updated_date+'", updated_by = "' + rows[0].uid + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '" ', function (error, arows, fields) {
                     if (!error) {
                       // console.log(arows);
                       resolve({ arows });
@@ -359,7 +344,7 @@ Task.prototype.staffUpdate = function () {
                   });
                 }
                 else if(that.status==='4'){
-                  connection.query('update task_assign set message="'+that.message+'",updated_at="'+that.updated_date+'", updated_by = "' + staffrows[0].staffid + '", status="'+that.status+'", is_active="'+that.is_active+'",completion_date="'+that.updated_date+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
+                  connection.query('update task_assign set message="'+that.message+'",updated_at="'+that.updated_date+'", updated_by = "' + rows[0].uid + '", status="'+that.status+'", is_active="'+that.is_active+'",completion_date="'+that.updated_date+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
                     if (!error) {
                       
                       resolve({ arows });
@@ -371,7 +356,7 @@ Task.prototype.staffUpdate = function () {
                   });
                 }
                 else{
-                  connection.query('update task_assign set message="'+that.message+'",updated_at="'+that.updated_date+'", updated_by = "' + staffrows[0].staffid + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
+                  connection.query('update task_assign set message="'+that.message+'",updated_at="'+that.updated_date+'", updated_by = "' + rows[0].uid + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
                     if (!error) {
                       
                       resolve({ arows });
@@ -382,17 +367,11 @@ Task.prototype.staffUpdate = function () {
       
                   });
                 }
-              } else {
-                console.log("Error...", error);
-                reject(error);
-              }
-
-            });
           } else {
             console.log("Error...", error);
             reject(error);
           }
-        })
+        });
       }
       connection.release();
       console.log('Process Complete %d', connection.threadId);

@@ -21,7 +21,9 @@ import Slide from '@material-ui/core/Slide';
 
 // API CALL
 import TaskAPI from '../../../api/Task';
-import Staff from '../../../api/franchise/Staff';
+// import Staff from '../../../api/franchise/Staff';
+
+import FranchiseUsers from '../../../api/FranchiseUsers';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -90,6 +92,7 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
   const [isError, setIsError] = useState(false);
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
+  const [franchiseUsersList, setFranchiseUsersList] = useState({});
 
   const classes = useStyles();
 
@@ -100,8 +103,8 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
 
       try {
         const result = await TaskAPI.completedlist();
-        console.log('tasks----------------',result.taskList);
-        console.log('hsgdhgsyd-----',assignedid);
+        // console.log('tasks----------------',result.taskList);
+        // console.log('hsgdhgsyd-----',assignedid);
         setTaskList(result.taskList);
       } catch (error) {
         setIsError(true);
@@ -111,13 +114,28 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
     fetchData();
   }, []);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setIsError(false);
+  //     setIsLoading(true);
+  //     try {
+  //       const result = await Staff.list();
+  //       setStaffList(result.staffList);
+  //     } catch (error) {
+  //       setIsError(true);
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
       try {
-        const result = await Staff.list();
-        setStaffList(result.staffList);
+        const result = await FranchiseUsers.list();
+        setFranchiseUsersList(result.franchiseUserList);
       } catch (error) {
         setIsError(true);
       }
@@ -125,7 +143,6 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
     };
     fetchData();
   }, []);
-
 return (
   <div>
     <Dialog maxWidth="lg" open={open} onClose={handleCompleteTaskClose} TransitionComponent={Transition}>
@@ -152,7 +169,7 @@ return (
                       <StyledTableCell>#</StyledTableCell>
                       <StyledTableCell>Task ID</StyledTableCell>
                       <StyledTableCell>Task Description</StyledTableCell>
-                      <StyledTableCell>Assigned To</StyledTableCell>
+                      {/* <StyledTableCell>Assigned To</StyledTableCell> */}
                       <StyledTableCell>Status</StyledTableCell>
                       <StyledTableCell>Due Date</StyledTableCell>
                       <StyledTableCell>Start Date</StyledTableCell>
@@ -166,19 +183,19 @@ return (
                     return(
                      assignedid!=0? data.assigned_to===assignedid?
                       <TableRow >
-                      <StyledTableCell> {data.id}  </StyledTableCell>
+                      <StyledTableCell> {index+1}  </StyledTableCell>
                         <StyledTableCell> {data.task_id}  </StyledTableCell>
                         <StyledTableCell> {data.task_description}  </StyledTableCell>
                       
-                          { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
+                          {/* { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                               return(
                                 data.assigned_to===datastaff.id ?
-                                <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
+                                <StyledTableCell> {datastaff.name}</StyledTableCell>
                                   :''
                                   )
                                   
                             })
-                          }
+                          } */}
                         <StyledTableCell>{data.status}</StyledTableCell>
                         <StyledTableCell>{data.due_date}</StyledTableCell>
                         <StyledTableCell>{data.start_date}</StyledTableCell>

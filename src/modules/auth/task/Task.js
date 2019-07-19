@@ -21,7 +21,8 @@ import CompletedTask from './CompletedTask';
 import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
 import TaskAPI from '../../../api/Task';
-import Staff from '../../../api/franchise/Staff';
+// import Staff from '../../../api/franchise/Staff';
+import FranchiseUsers from '../../../api/FranchiseUsers';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -55,6 +56,7 @@ export default function Task(franchiseId) {
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
+  const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [dateToday, setTodayDate]= useState();
 
   const [assignedid,setAssignedid]= useState();
@@ -99,10 +101,10 @@ export default function Task(franchiseId) {
     },
     button:{
       marginRight: theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
-    tbrow:{
-      
-    marginTop:theme.spacing(10),
+    tbrow:{      
+      marginTop:theme.spacing(10),
     },
     bgtaskpending:{
       backgroundColor:"yellow",
@@ -110,18 +112,33 @@ export default function Task(franchiseId) {
     },
     bgtaskoverdue:{
       backgroundColor:"red",
-      color:"white",
-      fontWeight:"bold",
       padding: theme.spacing(1),
     }
   }));
   const classes = useStyles();
+      
+//task status list
+useEffect(() => {
+  const fetchData = async () => {
+    setIsError(false);
+    setIsLoading(true);
 
+    try {
+      const result = await TaskAPI.taskStatus();
+      setTaskStatusList(result.taskStatusList);
+      console.log('status list----',result.taskStatusList);
+    } catch (error) {
+      setIsError(true);
+    }
+    setIsLoading(false);
+  };
+  fetchData();
+}, []);
+  //tasks list
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
-
       try {
         const result = await TaskAPI.list();
         setTaskList(result.taskList);
@@ -134,36 +151,37 @@ export default function Task(franchiseId) {
     };
     fetchData();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await Staff.list();
-        setStaffList(result.staffList);
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
+  //staff list
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setIsError(false);
+  //     setIsLoading(true);
+  //     try {
+  //       const result = await Staff.list();
+  //       setStaffList(result.staffList);
+  //     } catch (error) {
+  //       setIsError(true);
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
+      const fetchData = async () => {
+        setIsError(false);
+        setIsLoading(true);
+        try {
+          const result = await FranchiseUsers.list();
+          setFranchiseUsersList(result.franchiseUserList);
+        } catch (error) {
+          setIsError(true);
+        }
+        setIsLoading(false);
+      };
+      fetchData();
+    }, []);
 
-      try {
-        const result = await TaskAPI.taskStatus();
-        setTaskStatusList(result.taskStatusList);
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
 
   function todayDate(){
     const today=new Date();
@@ -270,7 +288,7 @@ export default function Task(franchiseId) {
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
-                        {/* <StyledTableCell>Status</StyledTableCell> */}
+                        <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
@@ -279,14 +297,23 @@ export default function Task(franchiseId) {
                     { (tasksList.length > 0 ? tasksList : []).map((data, index)=>{
                       return(
                         <TableRow >
-                        <StyledTableCell> {data.id}  </StyledTableCell>
+                        <StyledTableCell> {index+1}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
                          
-                            { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
+                            { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                                 return(
                                   data.assigned_to===datastaff.id ?
-                                  <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
+                                  <StyledTableCell> {datastaff.name}</StyledTableCell>
+                                    :''
+                                    )
+                                    
+                              })
+                            }
+                            { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                                return(
+                                  data.status===datastatus.id ?
+                                  <StyledTableCell> {datastatus.status}</StyledTableCell>
                                     :''
                                     )
                                     

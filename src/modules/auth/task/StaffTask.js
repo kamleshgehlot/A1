@@ -11,6 +11,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 // import Add from './Add';
 import StaffEdit from './StaffEdit';
 import CompletedTask from './CompletedTask';
@@ -18,7 +20,9 @@ import CompletedTask from './CompletedTask';
 import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
 import TaskAPI from '../../../api/Task';
-import Staff from '../../../api/franchise/Staff';
+// import Staff from '../../../api/franchise/Staff';
+
+import FranchiseUsers from '../../../api/FranchiseUsers';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -52,6 +56,7 @@ export default function StaffTask(uid) {
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
   const [dateToday, setTodayDate]= useState();
+  const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [taskStatusList, setTaskStatusList]=useState();
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
@@ -115,40 +120,6 @@ export default function StaffTask(uid) {
       setIsLoading(true);
 
       try {
-        const result = await TaskAPI.stafftasks();
-        // console.log('tasks----------------',result.taskList[0].assigned_to);
-        setTaskList(result.taskList);
-        setAssignedid(result.taskList[0].assigned_to);
-        todayDate();
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await Staff.list();
-        setStaffList(result.staffList);
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
-      try {
         const result = await TaskAPI.taskStatus();
         setTaskStatusList(result.taskStatusList);
         // console.log('task-----',taskStatusList);
@@ -159,6 +130,56 @@ export default function StaffTask(uid) {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await TaskAPI.stafftasks();
+        setTaskList(result.taskList);
+        const currentuser = await FranchiseUsers.user();
+        // console.log('stfftask-899-----', currentuser.currentuser);
+        setAssignedid(currentuser.currentuser[0].uid);
+        todayDate();
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setIsError(false);
+  //     setIsLoading(true);
+  //     try {
+  //       const result = await Staff.list();
+  //       setStaffList(result.staffList);
+  //     } catch (error) {
+  //       setIsError(true);
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await FranchiseUsers.list();
+        setFranchiseUsersList(result.franchiseUserList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+  
+  
 
   function todayDate(){
     
@@ -253,7 +274,7 @@ export default function StaffTask(uid) {
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
-                        {/* <StyledTableCell>Status</StyledTableCell> */}
+                        <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -261,21 +282,20 @@ export default function StaffTask(uid) {
                     { (tasksList.length > 0 ? tasksList : []).map((data, index)=>{
                       return(
                         <TableRow >
-                        <StyledTableCell> {data.id}  </StyledTableCell>
+                        <StyledTableCell> {index+1}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
                           
-                          { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
+                          { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                                 return(
                                   data.assigned_to===datastaff.id ?
-                                  <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
+                                  <StyledTableCell> {datastaff.name}</StyledTableCell>
                                     :''
                                     )
                                     
                               })
                             }
-                          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
-                          {/* { (taskStatusList.length > 0 ? taskStatusList : []).map((dataTaskStatus, index1)=>{
+                             { (taskStatusList.length > 0 ? taskStatusList : []).map((dataTaskStatus, index1)=>{
                                 return(
                                   data.status===dataTaskStatus.id ?
                                   <StyledTableCell> {dataTaskStatus.status}</StyledTableCell>
@@ -283,7 +303,9 @@ export default function StaffTask(uid) {
                                     )
                                     
                               })
-                            } */}
+                            }
+                          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+                         
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update
@@ -302,7 +324,21 @@ export default function StaffTask(uid) {
       
       {editOpen ? <StaffEdit open={editOpen} handleEditClose={handleEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}
       {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose} assignedid={assignedid} />: null}
-
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleSnackbarClose}
+          variant="success"
+          message="Task updated successfully!"
+        />
+      </Snackbar>
     </div>
   );
 }

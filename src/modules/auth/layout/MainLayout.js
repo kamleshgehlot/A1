@@ -327,6 +327,10 @@ export default function ClippedDrawer(props) {
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
+                <ListItem button key="MyTask"  onClick={handleStaffTaskClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="My Task List" />
+                </ListItem>
                 {/* <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Customer" />

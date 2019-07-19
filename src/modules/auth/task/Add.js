@@ -27,7 +27,9 @@ import Paper from '@material-ui/core/Paper';
 
 // API CALL
 import Task from '../../../api/Task';
-import Staff from '../../../api/franchise/Staff';
+// import Staff from '../../../api/franchise/Staff';
+
+import FranchiseUsers from '../../../api/FranchiseUsers';
 
 import useSignUpForm from '../franchise/CustomHooks';
 
@@ -109,6 +111,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
   const [isLoading, setIsLoading] = useState(false);
   const [staffList, setStaffList] = useState({});
 
+  const [franchiseUsersList, setFranchiseUsersList] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -142,13 +145,28 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
   }
 
 
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     setIsError(false);
+    //     setIsLoading(true);
+    //     try {
+    //       const result = await Staff.list();
+    //       setStaffList(result.staffList);
+    //     } catch (error) {
+    //       setIsError(true);
+    //     }
+    //     setIsLoading(false);
+    //   };
+    //   fetchData();
+    // }, []);
+
     useEffect(() => {
       const fetchData = async () => {
         setIsError(false);
         setIsLoading(true);
         try {
-          const result = await Staff.list();
-          setStaffList(result.staffList);
+          const result = await FranchiseUsers.list();
+          setFranchiseUsersList(result.franchiseUserList);
         } catch (error) {
           setIsError(true);
         }
@@ -261,12 +279,12 @@ return (
                               label="assigned_to"
                               required
                             >
-                                { (staffList.length > 0 ? staffList : []).map((data, index)=>{
+                                { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((data, index)=>{
                                   return(
-                              <MenuItem value={data.id}>{data.first_name + ' ' + data.last_name} </MenuItem>
-                              )
-                              })
-                            }
+                                    <MenuItem value={data.id}>{data.name} </MenuItem>
+                                    )
+                                  })
+                                }
                             </Select>
                           </StyledTableCell>
                             
