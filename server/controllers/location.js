@@ -15,7 +15,7 @@ const selectedArea = function(req, res, next) {
     console.log("req....",req.body);
     
     if(!req.body.city_id){
-      new Location({city_name: req.body.city_name, city_code: req.body.city_code}).getSelectedArea().then(result => {
+      new Location({city_name: req.body.city_name, city_code: req.body.city_code}).getCityRelatedAllArea().then(result => {
         res.send({ selectedArea: result });
       });
     }else{

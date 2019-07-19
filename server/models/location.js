@@ -80,15 +80,13 @@ Location.prototype.getCityRelatedAllArea = function (){
       }
     // console.log("params...",that);
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select suburb from franchise WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
+      connection.query('select id from location WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
         if (!error) {
-          let suburb= [''];
-          (rows.length > 0 ? rows : []).map((data,index) => { 
-              suburb.push(data.suburb);
-          })
-          // console.log("sub..",suburb);
-          connection.query('select id, area_name, city_id, is_active from area where city_id = "'+ that.city_id +'" AND area_name NOT IN (?) order by area_name',[suburb], (error, rows, fields) => {
+          const city_id = rows[0].id;
+          // console.log("id..",rows);
+          connection.query('select id, area_name, city_id, is_active from area where city_id = ? order by area_name',city_id, (error, rows, fields) => {
             if (!error) {
+              // console.log(rows);
               resolve(rows);
             } else {
               console.log('Error...', error);

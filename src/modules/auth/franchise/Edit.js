@@ -118,6 +118,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     setExpanded(isExpanded ? panel : false);
   };
   console.log("inputs--",franchise)
+  console.log("selected area--",selectedArea)
    useEffect(() => {
     const fetchData = async () => {
       try {
@@ -336,19 +337,13 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       label="Area"
                       required
                     >
-                      <MenuItem value={"East"}>East</MenuItem>
-                      <MenuItem value={"West"}>West</MenuItem>
-                      <MenuItem value={"North"}>North</MenuItem>
-                      <MenuItem value={"South"}>South</MenuItem>
-                      <MenuItem value={"Central"}>Central</MenuItem>
-
-                      {/* {cityList.length > 0 && cityList.map(data => {
+                    {(selectedArea.length>0 ? selectedArea : []).map((area, index) => {
                         return(
-                        // <MenuItem value={data.id}>{data.city}</MenuItem>
-                          console.log("from : ",data.city)
+                          <MenuItem value={area.area_name}>{area.area_name}</MenuItem>
                         )
                       })
-                    } */}
+                    }
+
                     </Select>
                   </Grid>
                  
