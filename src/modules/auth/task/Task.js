@@ -270,7 +270,7 @@ export default function Task(franchiseId) {
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
-                        <StyledTableCell>Status</StyledTableCell>
+                        {/* <StyledTableCell>Status</StyledTableCell> */}
                         <StyledTableCell>Due Date</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
@@ -292,7 +292,7 @@ export default function Task(franchiseId) {
                                     
                               })
                             }
-                          <StyledTableCell><p >{data.status}</p></StyledTableCell>
+                          {/* <StyledTableCell><p >{data.status}</p></StyledTableCell> */}
                           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
