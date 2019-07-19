@@ -11,7 +11,7 @@ const add = function (req, res, next) {
     status: req.body.status,
     user_id: req.decoded.user_id
   };
-  console.log('req--------------',req.body);
+  // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
 
@@ -57,9 +57,9 @@ const last = function (req, res, next) {
   }
 };
 
-const completedlist = function (req, res, next) {
+const completedList = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id }).completedlist().then(taskList => {
+    new Task({ user_id: req.decoded.user_id }).completedList().then(taskList => {
       res.send({ taskList });
     });
   } catch (err) {
@@ -67,14 +67,14 @@ const completedlist = function (req, res, next) {
   }
 };
 
-const deletetask = function (req, res, next) {
+const deleteTask = function (req, res, next) {
   const taskParam = {
     id: req.body.id,
     franchise_id: req.body.franchise_id.franchiseId,
   };
   try {
     const newTask = new Task(taskParam);
-    newTask.deletetask().then(result => {
+    newTask.deleteTask().then(result => {
       new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
         res.send({ taskList });
       });
@@ -117,9 +117,9 @@ const reschedule = function (req, res, next) {
 };
 
 // staff task list
-const stafftasks = function (req, res, next) {
+const staffTasks = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id }).stafftasks().then(taskList => {
+    new Task({ user_id: req.decoded.user_id }).staffTasks().then(taskList => {
       res.send({ taskList });
     });
   } catch (err) {
@@ -127,7 +127,7 @@ const stafftasks = function (req, res, next) {
   }
 };
 
-const staffupdate = function (req, res, next) {
+const staffUpdate = function (req, res, next) {
   const taskParam = {
     id: req.body.id,
     task_id: req.body.task_id,
@@ -141,7 +141,7 @@ const staffupdate = function (req, res, next) {
   try {
     const newTask = new Task(taskParam);
       newTask.staffupdate().then(function (result) {
-        new Task({ user_id: req.decoded.user_id }).stafftasks().then(taskList => {
+        new Task({ user_id: req.decoded.user_id }).staffTasks().then(taskList => {
           // console.log('controller', { taskList });
           res.send({ taskList });
         });
@@ -153,4 +153,4 @@ const staffupdate = function (req, res, next) {
     res.send('error', { error: err });
   }
 };
-module.exports = { add, all, last, completedlist,deletetask,reschedule, stafftasks,staffupdate };
+module.exports = { add, all, last, completedList,deleteTask,reschedule, staffTasks,staffUpdate };

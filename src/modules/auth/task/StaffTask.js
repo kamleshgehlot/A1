@@ -51,6 +51,8 @@ export default function StaffTask(uid) {
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
+  const [dateToday, setTodayDate]= useState();
+  const [taskStatusList, setTaskStatusList]=useState();
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
    
@@ -100,6 +102,8 @@ export default function StaffTask(uid) {
     },
     bgtaskoverdue:{
       backgroundColor:"red",
+      color:"white",
+      fontWeight:"bold",
       padding: theme.spacing(1),
     }
   }));
@@ -112,9 +116,10 @@ export default function StaffTask(uid) {
 
       try {
         const result = await TaskAPI.stafftasks();
-        console.log('tasks----------------',result.taskList[0].assigned_to);
+        // console.log('tasks----------------',result.taskList[0].assigned_to);
         setTaskList(result.taskList);
         setAssignedid(result.taskList[0].assigned_to);
+        todayDate();
       } catch (error) {
         setIsError(true);
       }
@@ -137,6 +142,30 @@ export default function StaffTask(uid) {
     fetchData();
   }, []);
 
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await TaskAPI.taskStatus();
+        setTaskStatusList(result.taskStatusList);
+        // console.log('task-----',taskStatusList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  function todayDate(){
+    
+    const today=new Date();
+    const date= today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
+    setTodayDate(date);
+  }
   function handleClickOpen() {
     setOpen(true);
   }
@@ -245,8 +274,16 @@ export default function StaffTask(uid) {
                                     
                               })
                             }
-                          <StyledTableCell><p className={classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
-                          <StyledTableCell>{data.status}</StyledTableCell>
+                          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+                          { (taskStatusList.length > 0 ? taskStatusList : []).map((dataTaskStatus, index1)=>{
+                                return(
+                                  data.status===dataTaskStatus.id ?
+                                  <StyledTableCell> {dataTaskStatus.status}</StyledTableCell>
+                                    :''
+                                    )
+                                    
+                              })
+                            }
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                               Update

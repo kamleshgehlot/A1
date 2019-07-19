@@ -176,7 +176,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
-                        <StyledTableCell>status</StyledTableCell>
+                        {/* <StyledTableCell>status</StyledTableCell> */}
                         {taskList.status===3?<StyledTableCell>New Due Date</StyledTableCell>:''}
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
@@ -250,9 +250,9 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 margin="dense"
                               /> 
                             </StyledTableCell>
-                            <StyledTableCell>
+                            {/* <StyledTableCell> */}
                               
-                              <TextField
+                              {/* <TextField
                                 id="status"
                                 name="status"
                                 // label="Task Id"
@@ -264,8 +264,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 disabled
                                 // placeholder="Franchise Name"
                                 margin="dense"
-                              /> 
-                            </StyledTableCell>
+                              />  */}
+                            {/* </StyledTableCell> */}
                             {taskList.status===3? 
                               <StyledTableCell>
                                 <TextField id="new_due_date" name="new_due_date" value={taskList.new_due_date} onChange={handleInputChange}

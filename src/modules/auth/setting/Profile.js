@@ -12,12 +12,13 @@ import StoreIcon from '@material-ui/icons/Store';
 import BusinessIcon from '@material-ui/icons/Business';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import DescriptionIcon from '@material-ui/icons/Description';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CallIcon from '@material-ui/icons/Call';
 import EmailIcon from '@material-ui/icons/Email';
 
 // API CALL
 import ProfileAPI from '../../../api/Profile';
-export default function Profile(props) {
+export default function Profile() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -97,7 +98,8 @@ export default function Profile(props) {
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-        <Paper className={classes.paper} style={{ width: '100%' }}>
+        {profileList.role===2 || profileList.role==null?
+            <Paper className={classes.paper} style={{ width: '100%' }}>
               <Typography variant="h4" className={classes.title}>
                 {profileList.director}
               </Typography>
@@ -120,9 +122,30 @@ export default function Profile(props) {
                 <CallIcon /> {profileList.contact} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <CallIcon /> {profileList.alt_contact} <br/>
+                <CallIcon /> {profileList.alt_contact===null? 'Not Available':profileList.alt_contact} <br/>
               </Typography>
-        </Paper>
+            </Paper>:
+            <Paper className={classes.paper} style={{ width: '100%' }}>
+              <Typography variant="h4" className={classes.title}>
+                  {profileList.first_name + ' ' + profileList.last_name} 
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <AccountCircleIcon /> {profileList.user_id} <br/>
+              </Typography>
+              {/* <Typography  variant="h6" className={classes.typography}>
+                <StoreIcon /> {profileList.fname} <br/>
+              </Typography> */}
+              <Typography  variant="h6" className={classes.typography}>
+                <LocationCityIcon /> {profileList.location} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <EmailIcon /> {profileList.email} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <CallIcon /> {profileList.contact} <br/>
+              </Typography>
+          </Paper>
+        }
       </Grid>
     </div>
   );

@@ -257,53 +257,25 @@ export default function ClippedDrawer(props) {
           <Typography variant="h6" className={classes.title} noWrap>
           Welcome To Rental Solutions
           </Typography>
-          {/* <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
+          {roleName === 'Super Admin' ? <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
           Logout
-          </Button>
-          
-          </Button> */}
-      <div>
-        <Button aria-controls="simple-menu" aria-haspopup="true" className={classes.menu} onClick={handleMenuClick}>
-        Settings
-        </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-          <MenuItem onClick={handleChangePasswordClick}>Change Password</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>
-        {/* <Button
-          ref={anchorRef}
-          aria-controls="menu-list-grow"
-          aria-haspopup="true"
-          onClick={handleToggleMenu} className={classes.menu}
-        >
-         Settings
-        </Button>
-        <Popper open={menuOpen} anchorEl={anchorRef.current} keepMounted transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-            >
-              <Paper id="menu-list-grow">
-                <ClickAwayListener onClickAway={handleCloseMenu}>
-                  <MenuList>
-                    <MenuItem onClick={handleProfileClick}>My Profile</MenuItem>
-                    <MenuItem onClick={handleChangePasswordClick}>Change Password</MenuItem>
-                    <MenuItem  onClick={handleLogout}>Logout</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper> */}
-      </div>
+          </Button>:
+            <div>
+              <Button aria-controls="simple-menu" aria-haspopup="true" className={classes.menu} onClick={handleMenuClick}>
+              Settings
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                <MenuItem onClick={handleChangePasswordClick}>Change Password</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>}
         </Toolbar>
       </AppBar>
 

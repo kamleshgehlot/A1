@@ -130,10 +130,10 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
   }
   function todayDate(){
     
-  const today=new Date();
-  const date= today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  setTodayDate(date);
-  setTasksList({ ...taskList, updated_date: date })
+    const today=new Date();
+    const date= today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    setTodayDate(date);
+    setTasksList({ ...taskList, updated_date: date })
   }
   return (
     <div>
