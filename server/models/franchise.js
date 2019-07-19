@@ -32,7 +32,7 @@ const idProof = "CREATE TABLE  IF NOT EXISTS `id_type` (`id` int(11) UNSIGNED NO
 Franchise.prototype.register = function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
-    const frachiseDbName = dbName.getFullName(dbName["prod"], that.city.substring(0, 4).toLowerCase());
+    const frachiseDbName = dbName.getFullName(dbName["prod"], that.city.substring(0, 2).toLowerCase() + that.suburb.substring(0, 2).toLowerCase());
     console.log("franchise database name..........", frachiseDbName)
 
     connection.getConnection(function (error, connection) {

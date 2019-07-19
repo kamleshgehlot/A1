@@ -180,8 +180,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     let id = "";
     
     for( let i = 0; i < 4; ++i ) {
-    let index = Math.floor( Math.random() * (5) );
-    id += parts[index];	 
+      let index = Math.floor( Math.random() * (5) );
+      id += parts[index];	 
     }
     
     const uid = APP_TOKEN.get().uid;
