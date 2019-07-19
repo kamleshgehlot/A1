@@ -260,7 +260,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   function handleDirectorList(){
     const directorListTemp = [...directorList];
 
-    if(inputs.director === '' || inputs.email === '' || inputs.uid === '' || inputs.password === '') {
+    if(inputs.director === '' || inputs.email === '' || inputs.contact === '' || inputs.uid === '' || inputs.password === '') {
       alert('Please provide required information')
     } else {
       directorListTemp.push({
@@ -321,7 +321,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     fetchData();
     
   }
-console.log("data",inputs);
+// console.log("data",inputs);
 
   function handleRemoveDirector(index){
     const directorListTemp = [...directorList];

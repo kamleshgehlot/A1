@@ -117,8 +117,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  console.log("inputs--",franchise)
-  console.log("selected area--",selectedArea)
+  // console.log("inputs--",franchise)
+  // console.log("selected area--",selectedArea)
    useEffect(() => {
     const fetchData = async () => {
       try {

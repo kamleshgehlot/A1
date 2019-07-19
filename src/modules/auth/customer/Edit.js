@@ -116,11 +116,15 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
+  const [otherIdType, setOtherIdType] = useState(inputs.id_type ===0 ? false : true);
+  const [otherIdTypeValue, setOtherIdTypeValue] = useState(inputs.other_id_type);
 
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  
  
   
   useEffect(() => {
@@ -130,7 +134,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       try {
         const idType = await Customer.idtypelist();
         setIdTypeList(idType.idTypeList);
-
       } catch (error) {
         setIsError(true);
       }
@@ -177,6 +180,8 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       employer_tenure: customerList.employer_tenure,
 
       is_active: customerList.is_active,
+
+      other_id_type: otherIdTypeValue,
       
     });
     
@@ -192,9 +197,21 @@ const handleInputChange = event => {
   setDataCustomerList({ ...customerList, [name]: value })
 }
 
-  
-  // console.log("inputs---==",customerList);
-  
+function handleIdType(event){
+  if(event.target.value===0){
+    setOtherIdType(false)
+  }else{
+    setOtherIdType(true)
+    setOtherIdTypeValue('');
+  }
+  setDataCustomerList({...customerList,  id_type: event.target.value});
+  }
+
+  function handleOtherIdType(event){
+    setOtherIdTypeValue(event.target.value)
+  }
+
+
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
@@ -376,6 +393,48 @@ return (
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="id_type">ID Proof</InputLabel>
                     <Select
+                        margin="dense"
+                        name="id_type"
+                        onChange = {handleIdType}
+                        // value={parseInt(inputs.id_type)}
+                        value={parseInt(customerList.id_type)}
+                        name = 'id_type'
+                        id = 'id_type'
+                        className={classes.margin}
+                        fullWidth
+                        label="Select Id Proof"
+                        required
+                      >
+                        {
+                          
+                          ( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
+                            return(
+                                <MenuItem value={ele.id}>{ele.name}</MenuItem>    
+                            )
+                          })
+                        }
+                          {/* <MenuItem value={0}>{'Other'}</MenuItem>     */}
+                          >    
+                    </Select>
+                    </Grid>
+                    {/* <Grid item xs={12} sm={3}>
+                    <TextField
+                      margin="dense"
+                      id="otherIdTypeValue"
+                      name="otherIdTypeValue"
+                      label="Enter type of ID Proof"
+                      type="text"
+                      value={otherIdTypeValue} 
+                      onChange={handleOtherIdType}
+                      required
+                      disabled = {otherIdType}
+                      fullWidth
+                    />
+                    </Grid> */}
+{/*                   
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="id_type">ID Proof</InputLabel>
+                    <Select
                          name="id_type"
                          onChange={handleInputChange}
                          value={parseInt(customerList.id_type)}
@@ -397,7 +456,7 @@ return (
                           })
                         }
                     </Select>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField

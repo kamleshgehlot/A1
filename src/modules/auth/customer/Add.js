@@ -25,6 +25,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
 
+
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -116,6 +117,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
+  const [otherIdType, setOtherIdType] = useState(true);
+  const [otherIdTypeValue, setOtherIdTypeValue] = useState();
+  
+  // const [idTypeOpen, setIdTypeOpen] = React.useState(false);
+  
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -140,8 +146,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
   }, []);
 
 
-  
+   function handleIdType(event){
+    if(event.target.value===0){
+      setOtherIdType(false)
+      
+    }else{
+      setOtherIdType(true)
+      setOtherIdTypeValue('');
+    }
+    setInput('id_type',event.target.value);
+    }
 
+    function handleOtherIdType(event){
+      setOtherIdTypeValue(event.target.value)
+    }
+  
 
   const addCustomer = async () => {
     const response = await Customer.register({
@@ -179,6 +198,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
 
       is_active:1,
       created_by: userId.userId,
+
+      other_id_type: otherIdTypeValue,
     });
     
     handleSnackbarClick(true);
@@ -197,6 +218,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
     addCustomer,
     validate
   );
+
+  
   
 return (
     <div>
@@ -376,16 +399,16 @@ return (
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={3}>
                     <InputLabel htmlFor="id_type">ID Proof</InputLabel>
                     <Select
-                         name="id_type"
-                         onChange={handleInputChange}
+                        margin="dense"
+                        name="id_type"
+                        //  onChange={handleInputChange}
+                        onChange = {handleIdType}
                          value={parseInt(inputs.id_type)}
-                         inputProps={{
-                           name: 'id_type',
-                           id: 'id_type',
-                         }}
+                         name = 'id_type'
+                         id = 'id_type'
                          className={classes.margin}
                          fullWidth
                          label="Select Id Proof"
@@ -399,9 +422,26 @@ return (
                             )
                           })
                         }
-                          
+
+                          <MenuItem value={0}>{'Other'}</MenuItem>    
+                          >    
                     </Select>
-                  </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                    <TextField
+                      margin="dense"
+                      id="otherIdTypeValue"
+                      name="otherIdTypeValue"
+                      label="Enter type of ID Proof"
+                      type="text"
+                      value={otherIdTypeValue} 
+                      onChange={handleOtherIdType}
+                      required
+                      disabled = {otherIdType}
+                      fullWidth
+                    />
+                    </Grid>
+                  
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField

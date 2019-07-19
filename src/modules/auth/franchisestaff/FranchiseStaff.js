@@ -13,6 +13,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Add from './Add';
 import Edit from './Edit';
+import UploadDoc from './UploadDoc';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
@@ -48,11 +49,13 @@ export default function FranchiseStaff(franchiseId) {
   const [staffList, setStaffList] = useState({});
   const [role, setRole] = useState([]);
   const [position, setPosition] = useState({});
-
+  
+  // Code for testing pls don't remove -- by SRK 
+  // const [uploadOpen,setUploadOpen] = useState(false);
 
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
-
+  
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
     
@@ -118,7 +121,14 @@ export default function FranchiseStaff(franchiseId) {
     roleData();
   }, []);
 
-  
+  // Code for testing pls don't remove -- by SRK 
+  // function handleUploadClose() {
+  //   setUploadOpen(false);
+  // }
+  // function handleUploadOpen(){
+  //   setUploadOpen(true);
+  // }
+
 
   function handleClickOpen() {
     setOpen(true);
@@ -158,7 +168,7 @@ export default function FranchiseStaff(franchiseId) {
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12} sm={6}>
             <Fab
               variant="extended"
               size="small"
@@ -170,7 +180,24 @@ export default function FranchiseStaff(franchiseId) {
               <AddIcon className={classes.extendedIcon} />
               Franchise Staff
             </Fab>
-          </Grid>
+            </Grid>
+            {/* 
+            Code for testing pls don't remove -- by SRK 
+            <Grid item xs={12} sm={6}>
+            <Fab
+              variant="extended"
+              size="small"
+              color="primary"
+              aria-label="Upload"
+              className={classes.fonttransform}
+              onClick={handleUploadOpen}
+            >
+              <AddIcon className={classes.extendedIcon} />
+              Upload
+            </Fab>
+
+            </Grid> */}
+          
           <Grid item xs={12} sm={10}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
@@ -225,6 +252,9 @@ export default function FranchiseStaff(franchiseId) {
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null}
           
+      {/* 
+      Code for testing pls don't remove -- by SRK 
+      { uploadOpen ? <UploadDoc open={uploadOpen} handleClose={handleUploadClose} /> : null } */}
     </div>
   );
 }

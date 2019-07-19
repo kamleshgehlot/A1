@@ -40,13 +40,14 @@ const register = function (req, res, next) {
 
     is_active:req.body.is_active,
     created_by: req.body.created_by,
+    other_id_type: req.body.other_id_type,
 
     user_id: req.decoded.user_id,
 	};
 
 	try{
 	const newCustomer = new Customer(CustomerParams);
-
+  // console.log("req..",req.body);
 	if(req.body.id) {
     newCustomer.update().then(function(result){
       new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {
@@ -54,6 +55,7 @@ const register = function (req, res, next) {
       });
     });
 	} else {
+    
     newCustomer.register().then(function(result){
       new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {
         res.send({ customerList: customerList });
