@@ -51,6 +51,7 @@ export default function Task(franchiseId) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [taskData,setTaskData]= useState();
+  const [taskStatusList, setTaskStatusList]=useState();
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
@@ -109,6 +110,8 @@ export default function Task(franchiseId) {
     },
     bgtaskoverdue:{
       backgroundColor:"red",
+      color:"white",
+      fontWeight:"bold",
       padding: theme.spacing(1),
     }
   }));
@@ -146,8 +149,23 @@ export default function Task(franchiseId) {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await TaskAPI.taskStatus();
+        setTaskStatusList(result.taskStatusList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
   function todayDate(){
-    
     const today=new Date();
     const date= today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
     setTodayDate(date);
@@ -252,7 +270,7 @@ export default function Task(franchiseId) {
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
-                        <StyledTableCell>Status</StyledTableCell>
+                        {/* <StyledTableCell>Status</StyledTableCell> */}
                         <StyledTableCell>Due Date</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
@@ -274,7 +292,7 @@ export default function Task(franchiseId) {
                                     
                               })
                             }
-                          <StyledTableCell><p >{data.status}</p></StyledTableCell>
+                          {/* <StyledTableCell><p >{data.status}</p></StyledTableCell> */}
                           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>

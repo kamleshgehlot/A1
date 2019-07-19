@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 // API CALL
 import PasswordAPI from '../../../api/setting/Password';
@@ -96,7 +98,9 @@ const RESET_VALUES = {
       new_password: inputs.new_password,
       franchise_id: franchiseId,
     });
-    console.log(response);
+    setSnackbarOpen(true);
+    setInput('current_password', response.password);
+    setSnackbarOpen(true); 
   };
 
   const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
@@ -165,6 +169,21 @@ const RESET_VALUES = {
             </form>
         </Paper>
       </Grid>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleSnackbarClose}
+          variant="success"
+          message="Password Changed successfully!"
+        />
+      </Snackbar>
     </div>
   );
 }

@@ -44,6 +44,15 @@ export default {
       throw error;
     }
   },
+  taskStatus: async () => {
+    const URL = `${c.API_CONSUMER}/api/task/taskstatus`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
   completedlist: async () => {
     const URL = `${c.API_CONSUMER}/api/task/completedlist`;
     try {

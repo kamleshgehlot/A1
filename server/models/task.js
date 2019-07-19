@@ -120,7 +120,7 @@ Task.prototype.last = function () {
 
 
 
-Task.prototype.completedlist = function () {
+Task.prototype.completedList = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -194,7 +194,7 @@ Task.prototype.update = function () {
   });
 };
 
-Task.prototype.deletetask = function () {
+Task.prototype.deleteTask = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -285,7 +285,7 @@ Task.prototype.reschedule = function () {
 
 
 //staff task
-Task.prototype.stafftasks = function () {
+Task.prototype.staffTasks = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -333,7 +333,7 @@ Task.prototype.stafftasks = function () {
 }
 
 
-Task.prototype.staffupdate = function () {
+Task.prototype.staffUpdate = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {

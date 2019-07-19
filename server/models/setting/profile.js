@@ -23,23 +23,46 @@ Profile.prototype.info = function () {
       connection.query('select director_id, franchise_id from user where user_id="' + that.user_id + '"', function (error, rows, fields) {
 
         if (!error) {
-          // console.log("ddddd", rows);
-          const director_id = rows[0].director_id;
-          const franchise_id = rows[0].franchise_id;
-          connection.query('select c.name, c.nbzn, c.location, c.director, c.email, c.contact, c.alt_contact, c.website, f.name as fname from company c, franchise f where c.id="' + director_id + '" AND f.id="' + franchise_id + '" limit 1', function (error, mrows, fields) {
-            if (!error) {
-              resolve(mrows);
-            } else {
-              console.log('Error...', error);
-              reject(error);
+          if(rows[0]){
+              const director_id = rows[0].director_id;
+              const franchise_id = rows[0].franchise_id;
+            
+              connection.query('select c.name, c.nbzn, c.location, c.director, c.email, c.contact, c.alt_contact, c.website, f.name as fname from company c, franchise f where c.id="' + director_id + '" AND f.id="' + franchise_id + '" limit 1', function (error, mrows, fields) {
+                if (!error) {
+                  resolve(mrows);
+                } else {
+                  console.log('Error...', error);
+                  reject(error);
+                }
+              });
             }
-            connection.release();
-            console.log('Process Complete %d', connection.threadId);
-          });
+            else{
+              connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+              const db=dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]);
+              console.log('db-----',db);
+              connection.query('select id from user where user_id="' + that.user_id + '" limit 1', function (error, mrows, fields) {
+                if (!error) {
+                  const fuser_id = mrows[0].id;
+                  connection.query('select id, first_name, last_name, location, contact, email, user_id, role from staff where franchise_user_id="'+fuser_id+'"', function (error, prows, fields) {
+                    if (!error) {
+                      resolve(prows);
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
+                } else {
+                  console.log('Error...', error);
+                  reject(error);
+                }
+              });
+            }
         } else {
           console.log('Error...', error);
           reject(error);
         }
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
       });
     });
   });

@@ -40,6 +40,7 @@ const roleRouter = require('./routes/franchise/role');
 
 
 //Staff
+const franchiseUser= require('./routes/franchiseuser');
 const customerRouter = require('./routes/franchise/customer');
 
 const routes = require('./routes');
@@ -57,6 +58,7 @@ app.use('/api/task', taskRouter);
 app.use('/api/user/staff',staffMaster);
 app.use('/api/user/position',staffPosition);
 
+app.use('/api/franchiseuser', franchiseUser);
 
 app.use('/api/profile', profileRouter);
 app.use('/api/changepassword', passwordRouter);
