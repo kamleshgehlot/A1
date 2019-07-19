@@ -442,7 +442,7 @@ console.log("data",inputs);
                     >
                       {(selectedArea.length>0 ? selectedArea : []).map((area, index) => {
                         return(
-                          <MenuItem value={area.area}>{area.area}</MenuItem>
+                          <MenuItem value={area.area_name}>{area.area_name}</MenuItem>
                         )
                       })
                       }

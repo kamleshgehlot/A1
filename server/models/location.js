@@ -42,16 +42,16 @@ Location.prototype.getSelectedArea = function () {
       if (error) {
         throw error;
       }
-
+    // console.log("params...",that);
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select suburb from franchise WHERE city = "'+that.city_name+'" AND city_code = "'+that.city_code+'"', (error, rows, fields) => {
+      connection.query('select suburb from franchise WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
         if (!error) {
           let suburb= [''];
           (rows.length > 0 ? rows : []).map((data,index) => { 
               suburb.push(data.suburb);
           })
           // console.log("sub..",suburb);
-          connection.query('select id, area, city_id, is_active from area where city_id = "'+ that.city_id +'" AND area NOT IN (?) order by area',[suburb], (error, rows, fields) => {
+          connection.query('select id, area_name, city_id, is_active from area where city_id = "'+ that.city_id +'" AND area_name NOT IN (?) order by area_name',[suburb], (error, rows, fields) => {
             if (!error) {
               resolve(rows);
             } else {
@@ -71,5 +71,40 @@ Location.prototype.getSelectedArea = function () {
   });
 };
 
+Location.prototype.getCityRelatedAllArea = function (){
+  const that = this;
+  return new Promise((resolve, reject)=> {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+    // console.log("params...",that);
+      connection.changeUser({ database: dbName["prod"] });
+      connection.query('select suburb from franchise WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
+        if (!error) {
+          let suburb= [''];
+          (rows.length > 0 ? rows : []).map((data,index) => { 
+              suburb.push(data.suburb);
+          })
+          // console.log("sub..",suburb);
+          connection.query('select id, area_name, city_id, is_active from area where city_id = "'+ that.city_id +'" AND area_name NOT IN (?) order by area_name',[suburb], (error, rows, fields) => {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log('Error...', error);
+              reject(error);
+            }
+        }) 
+      }else {
+          console.log('Error...', error);
+          reject(error);
+        }
+        });
+
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+    });
+  })
+}
 
 module.exports = Location;

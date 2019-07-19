@@ -193,7 +193,7 @@ const handleInputChange = event => {
 }
 
   
-  console.log("inputs---==",customerList);
+  // console.log("inputs---==",customerList);
   
 return (
     <div>

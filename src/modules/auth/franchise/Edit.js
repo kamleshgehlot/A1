@@ -110,18 +110,25 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const [expanded, setExpanded] = React.useState('panel1');
   const [franchise, setFranchise] = React.useState(inputs);
   const [directorList, setDirectorList] =useState([]);
+  const [selectedArea, setSelectedArea] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
   
     // console.log(franchise);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+  console.log("inputs--",franchise)
    useEffect(() => {
     const fetchData = async () => {
       try {
         const LocationResult = await LocationAPI.list();
         setCityList(LocationResult.cityList);
+
+        const result = await LocationAPI.arealist({
+          city_name : franchise.city,
+          city_code : franchise.city_code,
+        });
+        setSelectedArea(result.selectedArea);
       } catch (error) {
         console.log('Error', error);
       }
@@ -319,16 +326,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="suburb_selection">Suburb *</InputLabel>
+                    <InputLabel htmlFor="suburb_selection">Area *</InputLabel>
                     <Select
                       value={franchise.suburb}
                       onChange={handleInputChange}
-                      inputProps={{
-                        name: 'suburb',
-                        id: 'suburb_selection',
-                      }}
+                      name= 'suburb'
+                      id= 'suburb_selection'
                       fullWidth
-                      label="Suburb"
+                      label="Area"
                       required
                     >
                       <MenuItem value={"East"}>East</MenuItem>
