@@ -220,11 +220,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     handleEditClose(false);
   };
 
-  
-  // function handleNameBlurChange(e) {
-  //   setInput('uid', franchise.franchise_name.substring(0, 4).toLowerCase() + '_' + franchise.city.substring(0, 4).toLowerCase());
-  // }
-
   function handlePasswordBlurChange() {
     setInput('password', GeneratePassword());
   }

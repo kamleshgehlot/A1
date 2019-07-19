@@ -331,10 +331,10 @@ console.log("data",inputs);
   }
 
   function handleNameBlurChange(e) {
-    setInput('uid', generate(inputs.director, inputs.city));
+    setInput('uid', generate(inputs.director, inputs.city, inputs.suburb));
   }
 
-  function generate(director, city) {
+  function generate(director, city, suburb) {
     const ts = new Date().getTime().toString();
     const parts = ts.split( "" ).reverse();
     let id = "";
@@ -344,7 +344,7 @@ console.log("data",inputs);
       id += parts[index];	 
     }
     
-    return director.substring(0, 4).toLowerCase() + '_' + city.substring(0,4).toLowerCase() + '_' + id;
+    return director.substring(0, 4).toLowerCase() + '_' + city.substring(0,2).toLowerCase() + suburb.substring(0,2).toLowerCase() + '_' + id;
   }
   
   function handlePasswordBlurChange() {

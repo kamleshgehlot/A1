@@ -72,7 +72,6 @@ Staff.prototype.register = function () {
 };
 
 
-
 Staff.prototype.update = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -86,7 +85,7 @@ Staff.prototype.update = function () {
         connection.changeUser({ database: dbName["prod"] });
         connection.query('select city from franchise where id = "' + that.franchise_id + '"', function (error, rows, fields) {
           if (!error) {
-            connection.changeUser({ database: dbName.getFullName(dbName["prod"], rows[0].city.substring(0, 4).toLowerCase()) });
+            connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
             // connection.query('update staff set first_name = "'+that.first_name+'", last_name = "'+that.last_name+'", location = "'+that.location+'", contact = "'+that.contact+'", email = "'+that.email+'", pre_company_name = "'+that.pre_company_name+'", pre_company_address = "'+that.pre_company_address+'", pre_company_contact = "'+that.pre_company_contact+'", pre_position = "'+that.pre_position+'", duration = "'+that.duration+'", role =  "'+that.role+'", employment_docs = "'+that.employment_docs+'" WHERE id = "'+that.id+'")', function (error, rows, fields) {
             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
@@ -122,9 +121,6 @@ Staff.prototype.all = function () {
         throw error;
       }
       if (!error) {
-        // connection.changeUser({database : dbName["prod"]});
-        // connection.query('select city from franchise where id = "'+that.franchise_id+'"', function (error, rows, fields) {
-        // const frachiseDbName = dbName["prod"] + rows[0].city.substring(0, 4).toLowerCase();
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         connection.query('select id, first_name, last_name, location, contact, email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, role, employment_docs, created_by from staff order by id desc', function (error, rows, fields) {
           if (!error) {
@@ -134,7 +130,6 @@ Staff.prototype.all = function () {
             reject(error);
           }
         });
-        // });
       }
       else {
         console.log("Error...", error);
