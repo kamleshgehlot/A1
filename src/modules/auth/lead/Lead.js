@@ -12,8 +12,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Add from './Add';
-// API CALL
+// import Edit from './Edit';
+// import UploadDoc from './UploadDoc';
 
+// API CALL
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -34,12 +36,26 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Enquiry() {
+export default function FranchiseStaff(franchiseId) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [staffData,setStaffData]= useState();
+  const [staffList, setStaffList] = useState({});
+  const [role, setRole] = useState([]);
+  const [position, setPosition] = useState({});
+  
+  // Code for testing pls don't remove -- by SRK 
+  // const [uploadOpen,setUploadOpen] = useState(false);
+
+  const roleName = APP_TOKEN.get().roleName;
+  const userName = APP_TOKEN.get().userName;
+  
+  const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
+  const [showStaff, setShowStaff] = useState(roleName === 'Admin');
+    
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -88,6 +104,10 @@ export default function Enquiry() {
   function handleEditClose() {
     setEditOpen(false);
   }
+  ////////////////////////////////////////
+  function setFranchiseListFn(response) {
+    setStaffList(response);
+  }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
@@ -95,6 +115,13 @@ export default function Enquiry() {
   function handleSnackbarClick() {
     setSnackbarOpen(true);
   }
+
+  
+  function handleFranchiseClick() {
+    setShowFranchise(true);
+    setShowStaff(false);
+  }
+  // console.log("data.role......", staffList)
 
 
   return (
@@ -112,7 +139,7 @@ export default function Enquiry() {
               onClick={handleClickOpen}
             >
               <AddIcon className={classes.extendedIcon} />
-              Enquiry
+              Lead
             </Fab>
           </Grid>
           <Grid item xs={12} sm={2}>
@@ -124,7 +151,7 @@ export default function Enquiry() {
               className={classes.fonttransform}
               // onClick={handleCompleteTaskClickOpen}
             >
-              Converted Enquiry
+              Converted
             </Fab>
           </Grid>
           
@@ -134,10 +161,10 @@ export default function Enquiry() {
                     <TableHead>
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Enq ID</StyledTableCell>
-                        <StyledTableCell>Customer Name</StyledTableCell>
-                        <StyledTableCell>Contact No.</StyledTableCell>
-                        <StyledTableCell>Interested In</StyledTableCell>
+                        <StyledTableCell>Lead ID</StyledTableCell>
+                        <StyledTableCell>Franchise</StyledTableCell>
+                        <StyledTableCell>Doc/Photo</StyledTableCell>
+                        <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -149,6 +176,12 @@ export default function Enquiry() {
           </Grid>
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
+      
+      {/* {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null} */}
+          
+      {/* 
+      Code for testing pls don't remove -- by SRK 
+      { uploadOpen ? <UploadDoc open={uploadOpen} handleClose={handleUploadClose} /> : null } */}
     </div>
   );
 }
