@@ -44,7 +44,7 @@ const roleRouter = require('./routes/franchise/role');
 
 
 //Staff
-const franchiseUser= require('./routes/franchiseuser');
+const franchiseUser= require('./routes/franchiseUser');
 const customerRouter = require('./routes/franchise/customer');
 
 const routes = require('./routes');

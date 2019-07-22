@@ -45,7 +45,7 @@ export default {
     }
   },
   taskStatus: async () => {
-    const URL = `${c.API_CONSUMER}/api/task/taskstatus`;
+    const URL = `${c.API_CONSUMER}/api/task/taskStatus`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
@@ -54,7 +54,7 @@ export default {
     }
   },
   completedlist: async () => {
-    const URL = `${c.API_CONSUMER}/api/task/completedlist`;
+    const URL = `${c.API_CONSUMER}/api/task/completedList`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
@@ -63,7 +63,7 @@ export default {
     }
   },
   delete: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/task/deletetask`;
+    const URL = `${c.API_CONSUMER}/api/task/deleteTask`;
     try {
       const { data } = await axios(
         URL,
@@ -78,7 +78,7 @@ export default {
     }
   },
   stafftasks: async () => {
-    const URL = `${c.API_CONSUMER}/api/task/stafftasks`;
+    const URL = `${c.API_CONSUMER}/api/task/staffTasks`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
@@ -87,7 +87,7 @@ export default {
     }
   },
   staffupdate: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/task/staffupdate`;
+    const URL = `${c.API_CONSUMER}/api/task/staffUpdate`;
     try {
       const { data } = await axios(
         URL,

@@ -38,6 +38,8 @@ import Customer from '../customer/CustomerList';
 import Profile from '../setting/Profile';
 import ChangePassword from '../setting/ChangePassword';
 
+
+import Enquiry from '../enquiry/Enquiry';
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -101,6 +103,7 @@ export default function ClippedDrawer(props) {
   const [showStaffTask, setShowStaffTask] = useState(false);
   const [showTask, setShowTask] = useState(false);
   const [showCustomer, setShowCustomer] = useState(false);
+  const [showEnquiry, setShowEnquiry] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
@@ -145,6 +148,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowCustomer(false);
     setShowStaffTask(false);
+    setShowEnquiry(false);
   }
 
   function handleCategoryClick() {
@@ -158,6 +162,7 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowCustomer(false);
     setShowStaffTask(false);
+    setShowEnquiry(false);
   }
 
   function handleMasterStaffClick(){
@@ -170,6 +175,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowCustomer(false);
     setShowStaffTask(false);
+    setShowEnquiry(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -182,6 +188,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowCustomer(false);
     setShowStaffTask(false);
+    setShowEnquiry(false);
   }
   
   function handleTaskClick(){
@@ -194,6 +201,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowStaffTask(false);
     setShowPwd(false);
+    setShowEnquiry(false);
   }
   function handleProfileClick(){
     setShowProfile(true);setAnchorEl(null);
@@ -205,6 +213,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowPwd(false);
     setShowStaffTask(false);
+    setShowEnquiry(false);
   }
   function handleChangePasswordClick(){
     setShowPwd(true);
@@ -217,6 +226,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowCustomer(false);
     setShowStaffTask(false);
+    setShowEnquiry(false);
   }
 
   function handleCustomerClick(){
@@ -229,6 +239,7 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowPwd(false);
     setShowStaffTask(false);
+    setShowEnquiry(false);
   }
   function handleStaffTaskClick(){
     setShowStaffTask(true);
@@ -240,6 +251,21 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowPwd(false);
+    setShowEnquiry(false);
+  }
+
+  
+  function handleEnquiryClick(){
+    setShowEnquiry(true);
+    setShowCustomer(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowStaffTask(false);
   }
   function handleLogout() {
     APP_TOKEN.remove();
@@ -352,6 +378,10 @@ export default function ClippedDrawer(props) {
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
+                <ListItem button key="ManageEnquiry"  onClick={handleEnquiryClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Enquiry" />
+                </ListItem>
                  {/* <ListItem button key="ManageTask"  onClick={handleTaskClick}>
                      <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                      <ListItemText primary="Manage Task" />
@@ -390,6 +420,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showStaffTask ? <StaffTask  uid={uid} /> : null
+        }
+        {
+          showEnquiry ? <Enquiry />:null
         }
         {/* {props.children} */}
       </main>

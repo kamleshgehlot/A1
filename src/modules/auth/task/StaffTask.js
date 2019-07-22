@@ -141,7 +141,7 @@ export default function StaffTask(uid) {
         const currentuser = await FranchiseUsers.user();
         // console.log('stfftask-899-----', currentuser.currentuser);
         setAssignedid(currentuser.currentuser[0].uid);
-        todayDate();
+        currentDate();
       } catch (error) {
         setIsError(true);
       }
@@ -181,7 +181,7 @@ export default function StaffTask(uid) {
   
   
 
-  function todayDate(){
+  function currentDate(){
     
     const today=new Date();
     const date= today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();

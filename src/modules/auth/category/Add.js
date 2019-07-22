@@ -311,17 +311,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
           <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
->
-              {/* <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel1a-header"
-              > */}
-                {/* <Typography className={classes.heading}>Category Details</Typography> */}
-              {/* </ExpansionPanelSummary> */}
-
-              
+              onChange={handleChange('panel1')}>
               <ExpansionPanelDetails>
                 <Grid container spacing={5} className={classes.margin}>
                   <Grid item xs={12} sm={4}>

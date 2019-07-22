@@ -39,7 +39,7 @@ Profile.prototype.info = function () {
             else{
               connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
               const db=dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]);
-              console.log('db-----',db);
+              // console.log('db-----',db);
               connection.query('select id from user where user_id="' + that.user_id + '" limit 1', function (error, mrows, fields) {
                 if (!error) {
                   const fuser_id = mrows[0].id;
