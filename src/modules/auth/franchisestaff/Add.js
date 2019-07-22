@@ -110,19 +110,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     }
   };
 
-
-    
-
-
-
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-
   const addFranchiseStaff = async () => {
 
-    const response = await Staff.register({
+    const data = {
       franchise_id: franchiseId,
       id: '',
       first_name: inputs.first_name,
@@ -144,7 +138,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
       password: inputs.password,
       role: assignRole,
       created_by: 1,
-    });
+    };
+
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+    
+    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
+      formData.append('avatar', document.getElementById('employment_docs').files[x])
+    }
+
+    const response = await Staff.register( { formData: formData } );
     assignRole.length = 0;
     handleSnackbarClick(true);
     setFranchiseList(response.staffList);
@@ -405,6 +408,7 @@ return (
                       id="employment_docs"
                       name="employment_docs"
                       label=""
+                      multiple
                       type="file"
                       value={inputs.employment_docs} 
                       onChange={handleInputChange}

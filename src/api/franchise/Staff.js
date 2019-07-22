@@ -11,14 +11,17 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 });
 
 export default {
-  register: async ({ cancelToken, ...payload }) => {
+  register: async ( newStaff ) => {
     const URL = `${c.API_CONSUMER}/api/franchise/staff/register`;
     try {
-      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
-          cancelToken,
-          data: payload,
-        }),
-      );
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: newStaff.formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+        );
       // console.log("user api data : ",data);
       return data;
     } catch (error) {
@@ -26,19 +29,18 @@ export default {
     }
   },
 
-
   list: async (franchisedata) => {
  
     const URL = `${c.API_CONSUMER}/api/franchise/staff/list`;
     try {
-      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {
-        data: franchisedata,
-      }),
+        const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {
+          data: franchisedata,
+        }),
       );
+
       return data;
     } catch (error) {
       throw error;
     }
   },
-  
 };

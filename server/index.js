@@ -16,6 +16,10 @@ app.use(helmet());
 
 app.use(cors());
 
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: false }));
+
 // Point static path to dist
 app.use('/', express.static(path.join(__dirname, '..', 'dist')));
 app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));

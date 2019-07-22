@@ -4,48 +4,58 @@ const { trans } = require("../../lib/mailtransporter");
 const Staff = require('../../models/franchise/staff.js');
 
 const register = function (req, res, next) {
+  console.log("****************staff..................", req.body);
+  console.log("%%%%%%%%%%% file %%%%%%%%%%%%%", req.files);
+
+  const staffData = JSON.parse(req.body.data);
+
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
 
 	let staffParams = {
-      franchise_id: req.body.franchise_id,
-      id: req.body.id,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      location: req.body.location,
-      contact: req.body.contact,
-      email: req.body.email,
+      franchise_id: staffData.franchise_id,
+      id: staffData.id,
+      first_name: staffData.first_name,
+      last_name: staffData.last_name,
+      location: staffData.location,
+      contact: staffData.contact,
+      email: staffData.email,
       
-      pre_company_name: req.body.pre_company_name,
-      pre_company_address: req.body.pre_company_address,
-      pre_company_contact: req.body.pre_company_contact,
-      pre_position: req.body.pre_position,
-      duration: req.body.duration,
-      resume:  req.body.resume,
-      cover_letter: req.body.cover_letter,
-      employment_docs: req.body.employment_docs,
+      pre_company_name: staffData.pre_company_name,
+      pre_company_address: staffData.pre_company_address,
+      pre_company_contact: staffData.pre_company_contact,
+      pre_position: staffData.pre_position,
+      duration: staffData.duration,
+      resume:  staffData.resume,
+      cover_letter: staffData.cover_letter,
+      employment_docs: staffData.employment_docs,
       
-      user_id: req.body.user_id,
-      password: req.body.password,
-      role: req.body.role,
+      user_id: staffData.user_id,
+      password: staffData.password,
+      role: staffData.role,
       created_by: req.decoded.id,
       is_active: 1
 	};
 
 	try{
-	const newStaff = new Staff(staffParams);
+    const newStaff = new Staff(staffParams);
 
-	if(req.body.id) {
-    newStaff.update().then(function(result){
-      new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
-        res.send({ staffList: staffList });
+    if(staffData.id) {
+      newStaff.update().then(function(result){
+        new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
+          res.send({ staffList: staffList });
+        });
       });
-    });
-	} else {
-    newStaff.register().then(function(result){
-      new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
-        res.send({ staffList: staffList });
+    } else {
+      newStaff.register().then(function(result){
+        new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
+          res.send({ staffList: staffList });
+        });
       });
-    });
-	}
+    }
 	}catch(err){
     console.log("Error..",err);
 	}

@@ -21,8 +21,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 
-
-
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 
@@ -97,12 +95,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
     setExpanded(isExpanded ? panel : false);
   };
   
-  
-  console.log("Sss", staffList);
   function handleChangeMultiple(event) {
     setAssignRole(event.target.value);
   }
-console.log("sdfsd", assignRole);
 
   useEffect(() => {
     let assignRoleList = [];
@@ -114,7 +109,7 @@ console.log("sdfsd", assignRole);
 
   const addFranchiseStaff = async () => {
 
-    const response = await Staff.register({
+    const data = {
       franchise_id: franchiseId,
       id: staffList.id,
       first_name: staffList.first_name,
@@ -136,7 +131,16 @@ console.log("sdfsd", assignRole);
       password: staffList.password,
       role: assignRole,
       created_by: 1,
-    });
+    };
+
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+    
+    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
+      formData.append('avatar', document.getElementById('employment_docs').files[x])
+    }
+
+    const response = await Staff.register( { formData: formData } );
     handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.staffList);
     // handleReset(RESET_VALUES);
@@ -352,6 +356,7 @@ console.log("sdfsd", assignRole);
                       id="employment_docs"
                       name="employment_docs"
                       label=""
+                      multiple
                       type="file"
                       value={staffList.employment_doc} 
                       onChange={handleInputChange}
