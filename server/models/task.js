@@ -23,7 +23,6 @@ const Task = function (params) {
   if(params.status==='4'){
     this.is_active=0;
   }
-  console.log('ppppp--------',params);
 };
 
 Task.prototype.add = function () {

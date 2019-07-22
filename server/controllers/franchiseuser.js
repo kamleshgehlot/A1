@@ -1,9 +1,9 @@
-const FranchiseUser = require('../models/franchiseuser');
+const FranchiseUser = require('../models/franchiseUser');
 
 const all = function(req, res, next) {
   try {
     new FranchiseUser({user_id: req.decoded.user_id}).all().then(franchiseUserList => {
-      console.log('fuser----',franchiseUserList);
+      // console.log('fuser----',franchiseUserList);
       res.send({ franchiseUserList });
     });
   } catch (error) {
@@ -13,7 +13,7 @@ const all = function(req, res, next) {
 const user = function(req, res, next) {
   try {
     new FranchiseUser({user_id: req.decoded.user_id}).user().then(currentuser => {
-      console.log('fuser----',currentuser);
+      // console.log('fuser----',currentuser);
       res.send({ currentuser });
     });
   } catch (error) {

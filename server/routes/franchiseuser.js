@@ -1,5 +1,5 @@
 const express = require('express');
-const FranchiseUser = require('../controllers/franchiseuser');
+const FranchiseUser = require('../controllers/franchiseUser');
 
 const validateToken = require('../utils').validateToken;
 
