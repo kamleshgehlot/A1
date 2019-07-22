@@ -163,6 +163,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   const addFranchise = async () => {
 
+    if(directorList==''){
+      // console.log("data not include in directorList==''",directorList);
+      handleDirectorList();
+    }
+   
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
       

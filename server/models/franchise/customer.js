@@ -43,6 +43,7 @@ var Customer = function (params) {
   this.user_id = params.user_id;
   
   this.other_id_type = params.other_id_type;
+  this.updated_by = params.updated_by;
 };
 
 Customer.prototype.register = function () {
@@ -64,13 +65,13 @@ Customer.prototype.register = function () {
               console.log("insert id",rows.insertId);
               // newIdType = rows.insertId;
               let values=[
-                [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,rows.insertId,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by]
+                [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,rows.insertId,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by, that.updated_by]
               ];
-              connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by) VALUES ?', [values], function (error, rows, fields) {
+              connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by,updated_by) VALUES ?', [values], function (error, rows, fields) {
                 
                 if (!error) {
                       const savedCustomerId = rows.insertId;
-                      connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ("' + savedCustomerId + '","' + that.employer_name + '","' + that.employer_address + '","' + that.employer_telephone + '","' + that.employer_email + '","' + that.employer_tenure + '","' + that.is_active + '","' + that.created_by + '")', function (error, rows, fields) {
+                      connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ("' + savedCustomerId + '","' + that.employer_name + '","' + that.employer_address + '","' + that.employer_telephone + '","' + that.employer_email + '","' + that.employer_tenure + '","' + that.is_active + '","' + that.created_by + '","' + that.updated_by + '")', function (error, rows, fields) {
                         if (!error) {
                           resolve(rows);
                         } else {
@@ -93,14 +94,14 @@ Customer.prototype.register = function () {
         }
         else{
           let values=[
-            [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,that.id_type,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by]
+            [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,that.id_type,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by,that.updated_by]
           ];
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by) VALUES ?', [values], function (error, rows, fields) {
+        connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by,updated_by) VALUES ?', [values], function (error, rows, fields) {
           
           if (!error) {
                 const savedCustomerId = rows.insertId;
-                connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ("' + savedCustomerId + '","' + that.employer_name + '","' + that.employer_address + '","' + that.employer_telephone + '","' + that.employer_email + '","' + that.employer_tenure + '","' + that.is_active + '","' + that.created_by + '")', function (error, rows, fields) {
+                connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ("' + savedCustomerId + '","' + that.employer_name + '","' + that.employer_address + '","' + that.employer_telephone + '","' + that.employer_email + '","' + that.employer_tenure + '","' + that.is_active + '","' + that.created_by + '", "' + that.updated_by + '")', function (error, rows, fields) {
                   if (!error) {
                     resolve(rows);
                   } else {
@@ -242,9 +243,9 @@ Customer.prototype.update = function () {
       if (!error) {
 
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('UPDATE customer SET customer_name = "' +that.customer_name + '", address = "' + that.address + '", city = "' + that.city + '", postcode = "' + that.postcode + '", telephone = "' + that.telephone + '", mobile = "' + that.mobile + '", email = "' + that.email + '", gender = "' + that.gender + '", is_working = "' + that.is_working + '", dob = "' + that.dob+ '", id_type = "' +that.id_type + '", other_id_type = "'+that.other_id_type+'", id_number = "' +that.id_number + '", expiry_date = "' + that.expiry_date + '", is_adult = "' + that.is_adult + '", id_proof = "' + that.id_proof + '", alt_c1_name = "' + that.alt_c1_name+ '", alt_c1_address = "' + that.alt_c1_address+ '", alt_c1_contact = "' + that.alt_c1_contact+ '", alt_c1_relation = "' + that.alt_c1_relation + '", alt_c2_name = "' + that.alt_c2_name + '", alt_c2_address = "' + that.alt_c2_address+ '", alt_c2_contact = "' + that.alt_c2_contact+ '", alt_c2_relation = "' + that.alt_c2_relation+ '", is_active = "' + that.is_active+ '" WHERE id= "'+that.id+'"', function (error, rows, fields) {
+          connection.query('UPDATE customer SET customer_name = "' +that.customer_name + '", address = "' + that.address + '", city = "' + that.city + '", postcode = "' + that.postcode + '", telephone = "' + that.telephone + '", mobile = "' + that.mobile + '", email = "' + that.email + '", gender = "' + that.gender + '", is_working = "' + that.is_working + '", dob = "' + that.dob+ '", id_type = "' +that.id_type + '", other_id_type = "'+that.other_id_type+'", id_number = "' +that.id_number + '", expiry_date = "' + that.expiry_date + '", is_adult = "' + that.is_adult + '", id_proof = "' + that.id_proof + '", alt_c1_name = "' + that.alt_c1_name+ '", alt_c1_address = "' + that.alt_c1_address+ '", alt_c1_contact = "' + that.alt_c1_contact+ '", alt_c1_relation = "' + that.alt_c1_relation + '", alt_c2_name = "' + that.alt_c2_name + '", alt_c2_address = "' + that.alt_c2_address+ '", alt_c2_contact = "' + that.alt_c2_contact+ '", alt_c2_relation = "' + that.alt_c2_relation+ '", is_active = "' + that.is_active+ '", updated_by = "' + that.updated_by + '" WHERE id= "'+that.id+'"', function (error, rows, fields) {
           if (!error) {
-                connection.query('UPDATE customer_income SET employer_name = "'+that.employer_name+'", employer_address = "'+that.employer_address+'", employer_telephone = "'+that.employer_telephone+'", employer_email = "'+that.employer_email+'", employer_tenure = "'+that.employer_tenure+'", is_active = "'+that.is_active+'" WHERE cust_id = "'+that.id+'"', function (error, rows, fields) {
+                connection.query('UPDATE customer_income SET employer_name = "'+that.employer_name+'", employer_address = "'+that.employer_address+'", employer_telephone = "'+that.employer_telephone+'", employer_email = "'+that.employer_email+'", employer_tenure = "'+that.employer_tenure+'", is_active = "'+that.is_active+'", updated_by = "' + that.updated_by + '" WHERE cust_id = "'+that.id+'"', function (error, rows, fields) {
                   if (!error) {
                     resolve(rows);
                   } else {
@@ -281,7 +282,10 @@ Customer.prototype.all = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select c.id, c.customer_name, c.address, c.city, c.postcode, c.telephone, c.mobile, c.email, c.gender, c.is_working, c.dob, c.id_type, c.other_id_type, c.id_number, c.expiry_date, c.is_adult, c.id_proof, c.alt_c1_name, c.alt_c1_address, c.alt_c1_contact, c.alt_c1_relation, c.alt_c2_name, c.alt_c2_address, c.alt_c2_contact, c.alt_c2_relation, c.is_active, c.created_by, ci.employer_name, ci.employer_address, ci.employer_telephone, ci.employer_email, ci.employer_tenure from customer as c inner join customer_income as ci on c.id = ci.cust_id order by c.id desc', function (error, rows, fields) {
+
+        // connection.query('select c.id, c.customer_name, c.address, c.city, c.postcode, c.telephone, c.mobile, c.email, c.gender, c.is_working, c.dob, c.id_type, c.other_id_type, c.id_number, c.expiry_date, c.is_adult, c.id_proof, c.alt_c1_name, c.alt_c1_address, c.alt_c1_contact, c.alt_c1_relation, c.alt_c2_name, c.alt_c2_address, c.alt_c2_contact, c.alt_c2_relation, c.is_active, c.created_by, ci.employer_name, ci.employer_address, ci.employer_telephone, ci.employer_email, ci.employer_tenure from customer as c inner join customer_income as ci on c.id = ci.cust_id order by c.id desc', function (error, rows, fields) {
+          connection.query('select c.id, c.customer_name, c.address, c.city, c.postcode, c.telephone, c.mobile, c.email, c.gender, c.is_working, c.dob, c.id_type, c.other_id_type, c.id_number, c.expiry_date, c.is_adult, c.id_proof, c.alt_c1_name, c.alt_c1_address, c.alt_c1_contact, c.alt_c1_relation, c.alt_c2_name, c.alt_c2_address, c.alt_c2_contact, c.alt_c2_relation, c.is_active, c.created_by, u.name AS created_by_name, ci.employer_name, ci.employer_address, ci.employer_telephone, ci.employer_email, ci.employer_tenure from customer as c inner join customer_income as ci on c.id = ci.cust_id INNER JOIN user as u on c.created_by = u.id order by c.id desc',
+          function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {

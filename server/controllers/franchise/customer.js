@@ -4,45 +4,58 @@ const { trans } = require("../../lib/mailtransporter");
 const Customer = require('../../models/franchise/customer.js');
 
 const register = function (req, res, next) {
+  console.log("****************staff..................", req.body);
+  console.log("%%%%%%%%%%% file %%%%%%%%%%%%%", req.files);
+
+  const customerData = JSON.parse(req.body.data);
+
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
 
 	let CustomerParams = {
-    id: req.body.id,
-    customer_name : req.body.customer_name,
-    address : req.body.address,
-    city : req.body.city,
-    postcode : req.body.postcode,
-    telephone : req.body.telephone,  
-    mobile : req.body.mobile,
-    email : req.body.email,
-    gender : req.body.gender,
-    is_working : req.body.is_working,
-    dob : req.body.dob,
-    id_type :  req.body.id_type,
-    id_number:  req.body.id_number,
-    expiry_date :  req.body.expiry_date,
-    is_adult : req.body.is_adult,
-    id_proof :  req.body.id_proof,
+    id: customerData.id,
+    customer_name : customerData.customer_name,
+    address : customerData.address,
+    city : customerData.city,
+    postcode : customerData.postcode,
+    telephone : customerData.telephone,  
+    mobile : customerData.mobile,
+    email : customerData.email,
+    gender : customerData.gender,
+    is_working : customerData.is_working,
+    dob : customerData.dob,
+    id_type :  customerData.id_type,
+    id_number:  customerData.id_number,
+    expiry_date :  customerData.expiry_date,
+    is_adult : customerData.is_adult,
+    id_proof :  attachments,
 
-    alt_c1_name: req.body.alt_c1_name,
-    alt_c1_address: req.body.alt_c1_address,
-    alt_c1_contact: req.body.alt_c1_contact,
-    alt_c1_relation: req.body.alt_c1_relation,
-    alt_c2_name:  req.body.alt_c2_name,
-    alt_c2_address:  req.body.alt_c2_address,
-    alt_c2_contact: req.body.alt_c2_contact,
-    alt_c2_relation: req.body.alt_c2_relation,
+    alt_c1_name: customerData.alt_c1_name,
+    alt_c1_address: customerData.alt_c1_address,
+    alt_c1_contact: customerData.alt_c1_contact,
+    alt_c1_relation: customerData.alt_c1_relation,
+    alt_c2_name:  customerData.alt_c2_name,
+    alt_c2_address:  customerData.alt_c2_address,
+    alt_c2_contact: customerData.alt_c2_contact,
+    alt_c2_relation: customerData.alt_c2_relation,
 
-    employer_name: req.body.employer_name,
-    employer_address: req.body.employer_address,
-    employer_telephone: req.body.employer_telephone,
-    employer_email: req.body.employer_email,
-    employer_tenure: req.body.employer_tenure,
+    employer_name: customerData.employer_name,
+    employer_address: customerData.employer_address,
+    employer_telephone: customerData.employer_telephone,
+    employer_email: customerData.employer_email,
+    employer_tenure: customerData.employer_tenure,
 
-    is_active:req.body.is_active,
-    created_by: req.body.created_by,
-    other_id_type: req.body.other_id_type,
+    is_active:customerData.is_active,
+    created_by: customerData.created_by,
+    updated_by: customerData.updated_by, 
+
+    other_id_type: customerData.other_id_type,
 
     user_id: req.decoded.user_id,
+
 	};
 
 	try{

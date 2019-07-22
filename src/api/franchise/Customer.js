@@ -7,17 +7,20 @@ const PARAMS = ({ methodType = 'GET' }) => ({
   headers: {
     'Content-Type': 'application/json',
   },
-  headers: authHeader(),
+  headers: authHeader(), 
 });
 
 export default {
-  register: async ({ cancelToken, ...payload }) => {
+  register: async (newCustomer) => {
     const URL = `${c.API_CONSUMER}/api/franchise/customer/register`;
     try {
-      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
-          cancelToken,
-          data: payload,
-        }),
+      const { data } = await axios(URL, {
+        methodType: 'POST',
+        data: newCustomer.formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
       );
       return data;
     } catch (error) {

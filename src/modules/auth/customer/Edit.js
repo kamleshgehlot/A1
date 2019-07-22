@@ -63,7 +63,7 @@ const RESET_VALUES = {
   employer_telephone:'',
   employer_email:'',
   employer_tenure:'',
-
+  updated_by : '',
   // is_active:1,
   // created_by: 1,
 };
@@ -146,7 +146,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
 
   const editCustomer = async () => {
     
-    const response = await Customer.register({
+      const data = {
       id: customerList.id,
       customer_name : customerList.customer_name,
       address : customerList.address,
@@ -180,10 +180,21 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       employer_tenure: customerList.employer_tenure,
 
       is_active: customerList.is_active,
+      updated_by : userId.userId,
 
       other_id_type: otherIdTypeValue,
       
-    });
+    }
+
+    let formData = new FormData();
+    
+    formData.append('data', JSON.stringify(data));
+    
+    for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
+      formData.append('avatar', document.getElementById('id_proof').files[x])
+    }
+    // console.log("formadata", formData);
+    const response = await Customer.register({ formData: formData });
     
     // handleSnackbarClick(true);
     setCustomerList(response.customerList);

@@ -146,13 +146,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
       formData.append('avatar', document.getElementById('employment_docs').files[x])
     }
-
+    
     const response = await Staff.register( { formData: formData } );
     assignRole.length = 0;
     handleSnackbarClick(true);
     setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
     handleClose(false);
+    
   };
 
   function validate(values) {

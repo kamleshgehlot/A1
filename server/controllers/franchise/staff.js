@@ -31,8 +31,9 @@ const register = function (req, res, next) {
       duration: staffData.duration,
       resume:  staffData.resume,
       cover_letter: staffData.cover_letter,
-      employment_docs: staffData.employment_docs,
-      
+      // employment_docs: staffData.employment_docs,
+      employment_docs: attachments,
+
       user_id: staffData.user_id,
       password: staffData.password,
       role: staffData.role,

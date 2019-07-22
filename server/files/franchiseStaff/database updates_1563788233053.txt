@@ -1,0 +1,3 @@
+ALTER TABLE `user` DROP `mobile_no`, DROP `email`;
+
+ALTER TABLE `franchise` DROP `uid`;

@@ -163,7 +163,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
   
 
   const addCustomer = async () => {
-    const response = await Customer.register({
+
+    const data = {
       id: '',
       customer_name : inputs.customer_name,
       address : inputs.address,
@@ -198,10 +199,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
 
       is_active:1,
       created_by: userId.userId,
-
+      updated_by : userId.userId,
       other_id_type: otherIdTypeValue,
-    });
+    }
+
+    let formData = new FormData();
+
+    formData.append('data', JSON.stringify(data));
     
+    for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
+      formData.append('avatar', document.getElementById('id_proof').files[x])
+    }
+    // console.log("formadata", formData);
+    const response = await Customer.register({ formData: formData });
+    
+
     handleSnackbarClick(true);
     setCustomerList(response.customerList);
     handleReset(RESET_VALUES);

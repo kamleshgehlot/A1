@@ -34,7 +34,7 @@ var Staff = function (params) {
 Staff.prototype.register = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
-
+   
     connection.getConnection(function (error, connection) {
       if (error) {
         throw error;
@@ -75,7 +75,9 @@ Staff.prototype.register = function () {
 Staff.prototype.update = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
-
+ if(that.employment_docs===''){
+  // console.log("emplll",that.employment_docs);
+  }
     connection.getConnection(function (error, connection) {
       if (error) {
         throw error;
@@ -87,7 +89,17 @@ Staff.prototype.update = function () {
           if (!error) {
             connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
+            that.employment_docs==='' ? 
             // connection.query('update staff set first_name = "'+that.first_name+'", last_name = "'+that.last_name+'", location = "'+that.location+'", contact = "'+that.contact+'", email = "'+that.email+'", pre_company_name = "'+that.pre_company_name+'", pre_company_address = "'+that.pre_company_address+'", pre_company_contact = "'+that.pre_company_contact+'", pre_position = "'+that.pre_position+'", duration = "'+that.duration+'", role =  "'+that.role+'", employment_docs = "'+that.employment_docs+'" WHERE id = "'+that.id+'")', function (error, rows, fields) {
+            connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
+              if (!error) {
+                resolve(rows);
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
+            })
+            :
             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
@@ -95,7 +107,7 @@ Staff.prototype.update = function () {
                 console.log("Error...", error);
                 reject(error);
               }
-            });
+            })
           }
         });
       }

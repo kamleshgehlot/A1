@@ -166,6 +166,7 @@ export default function CustomerList(userId) {
                         <StyledTableCell>Name</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
                         <StyledTableCell>Address</StyledTableCell>
+                        <StyledTableCell>Created By</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -179,6 +180,7 @@ export default function CustomerList(userId) {
                             <StyledTableCell> {data.customer_name}  </StyledTableCell>
                             <StyledTableCell> {data.mobile}  </StyledTableCell>
                             <StyledTableCell> {data.address}  </StyledTableCell>
+                            <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                             <StyledTableCell> 
                               <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button>
                             </StyledTableCell>
