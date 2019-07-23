@@ -43,6 +43,7 @@ const passwordRouter = require('./routes/setting/password');
 const franchiseUserRouter = require('./routes/franchise/user');
 const franchiseStaff = require('./routes/franchise/staff');
 const roleRouter = require('./routes/franchise/role');
+const enquiryRouter = require('./routes/franchise/enquiry');
 
 
 //Staff
@@ -73,6 +74,7 @@ app.use('/api/franchise/user', franchiseUserRouter);
 app.use('/api/franchise/staff', franchiseStaff);
 app.use('/api/franchise/customer', customerRouter);
 app.use('/api/franchise/role', roleRouter);
+app.use('/api/franchise/enquiry',enquiryRouter);
 
 app.use('/', routes);
 

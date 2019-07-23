@@ -4,9 +4,9 @@ const { trans } = require("../../lib/mailtransporter");
 const Customer = require('../../models/franchise/customer.js');
 
 const register = function (req, res, next) {
-  console.log("****************Customer..................", req.body.data);
-  console.log("%%%%%%%%%%% Customer File %%%%%%%%%%%%%", req.files);
-  console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
+  // console.log("****************Customer..................", req.body.data);
+  // console.log("%%%%%%%%%%% Customer File %%%%%%%%%%%%%", req.files);
+  // console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
 
   const customerData = JSON.parse(req.body.data);
 
@@ -49,9 +49,10 @@ const register = function (req, res, next) {
     employer_email: customerData.employer_email,
     employer_tenure: customerData.employer_tenure,
     is_active:customerData.is_active,
+    state: customerData.state,
     other_id_type: customerData.other_id_type,
     user_id: req.decoded.user_id,
-
+    
   };
 	try{
 	if(CustomerParams.id) {
@@ -98,5 +99,26 @@ const getidtypelist = function(req, res, next) {
   }
 };
 
+const searchData = function (req, res, next) {
+  // console.log("****************Customer..................", req.body);
 
-module.exports = { register: register, all: all, getidtypelist: getidtypelist};
+  let CustomerParams = {
+    user_id: req.decoded.user_id,
+    searchText: req.body.searchText,
+  };
+	try{
+console.log('body',req.body.searchText);
+    
+    
+     const newCustomer = new Customer(CustomerParams);
+    newCustomer.searchData().then(function(result){
+       res.send({ customerList: result });
+    });
+    // }
+	}catch(err){
+    console.log("Error..",err);
+	}
+};
+
+
+module.exports = { register: register, all: all, getidtypelist: getidtypelist, searchData: searchData};

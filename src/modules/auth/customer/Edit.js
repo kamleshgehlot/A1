@@ -64,6 +64,7 @@ const RESET_VALUES = {
   employer_email:'',
   employer_tenure:'',
   updated_by : '',
+  state: '',
   // is_active:1,
   // created_by: 1,
 };
@@ -181,6 +182,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       employer_tenure: customerList.employer_tenure,
 
       is_active: customerList.is_active,
+      state : customerList.state,
       // updated_by : userId.userId,
 
       other_id_type: otherIdTypeValue,
@@ -325,7 +327,7 @@ return (
                       type="number"
                       value={customerList.telephone} 
                       onChange={handleInputChange}
-                      required
+                      required= {customerList.mobile==='' ? true : false}
                       fullWidth
                     />
                   </Grid>
@@ -339,7 +341,7 @@ return (
                       type="number"
                       value={customerList.mobile} 
                       onChange={handleInputChange}
-                      required
+                      required = {customerList.telephone===''?true : false}
                       fullWidth
                     />
                   </Grid>
@@ -429,46 +431,7 @@ return (
                           >    
                     </Select>
                     </Grid>
-                    {/* <Grid item xs={12} sm={3}>
-                    <TextField
-                      margin="dense"
-                      id="otherIdTypeValue"
-                      name="otherIdTypeValue"
-                      label="Enter type of ID Proof"
-                      type="text"
-                      value={otherIdTypeValue} 
-                      onChange={handleOtherIdType}
-                      required
-                      disabled = {otherIdType}
-                      fullWidth
-                    />
-                    </Grid> */}
-{/*                   
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="id_type">ID Proof</InputLabel>
-                    <Select
-                         name="id_type"
-                         onChange={handleInputChange}
-                         value={parseInt(customerList.id_type)}
-                         inputProps={{
-                           name: 'id_type',
-                           id: 'id_type',
-                         }}
-                         defaultValue='Shah'
-                         className={classes.margin}
-                         fullWidth
-                         label="Select Id Proof"
-                         required
-                      >
-                           {
-                          ( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
-                            return(
-                                <MenuItem value={ele.id}>{ele.name}</MenuItem>    
-                            )
-                          })
-                        }
-                    </Select>
-                  </Grid> */}
+                   
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
@@ -524,6 +487,21 @@ return (
                       // required
                       fullWidth
                     /> 
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="state">Customer State</InputLabel>
+                    <RadioGroup 
+                      aria-label="state" 
+                      name="state" 
+                      className={classes.group}
+                      value={parseInt(customerList.state)} 
+                      onChange={handleInputChange} 
+                      row
+                    >
+                      <FormControlLabel value={1} control={<Radio />} label="Active" labelPlacement="start" />
+                      <FormControlLabel value={2} control={<Radio />} label="Hold" labelPlacement="start" />
+                      <FormControlLabel value={3} control={<Radio />} label="Completed" labelPlacement="start" />
+                    </RadioGroup>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

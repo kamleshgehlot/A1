@@ -55,4 +55,21 @@ export default {
     }
   },
 
+  search: async (searchData) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/search`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: searchData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };

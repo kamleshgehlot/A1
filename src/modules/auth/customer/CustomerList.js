@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, fade } from '@material-ui/core/styles';
+
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -11,6 +12,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import IconButton from '@material-ui/core/IconButton';
 import Add from './Add';
 import Edit from './Edit';
 
@@ -48,7 +53,8 @@ export default function CustomerList(userId) {
   const [idTypeList, setIdTypeList] = useState([]);
   const [customerListData, setCustomerListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
-    
+  const [searchText, setSearchText]  = useState();
+
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -80,6 +86,42 @@ export default function CustomerList(userId) {
     },
     fonttransform:{
       textTransform:"initial"
+    },
+    search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      marginRight: theme.spacing(2),
+      marginLeft: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+      },
+    },
+    searchIcon: {
+      width: theme.spacing(7),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    inputRoot: {
+      color: 'inherit',
+      backgroundColor:'gray',
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 7),
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: 200,
+      },
     },
   }));
   const classes = useStyles();
@@ -115,6 +157,23 @@ export default function CustomerList(userId) {
     // console.log("response---", response);
     setCustomerListData(response);
   }
+
+  function handleSearchText(event){
+    setSearchText(event.target.value);
+  }
+  // console.log("search text", searchText);
+  
+  const searchHandler = async () => {
+      try {
+        const result = await Customer.search({searchText: searchText});
+        console.log(result.customerList);
+        setCustomerListData(result.customerList);
+
+      } catch (error) {
+        console.log('error',error);
+      }
+  }
+
   
   
   useEffect(() => {
@@ -143,8 +202,7 @@ export default function CustomerList(userId) {
       
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-
-              <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={3}>
             <Fab
               variant="extended"
               size="small"
@@ -157,7 +215,27 @@ export default function CustomerList(userId) {
               Customers
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={3}>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                id="search"
+                name="search"
+                label="Search"
+                label="Search..."
+                type="text"
+                value={searchText} 
+                onChange={handleSearchText}
+                fullWidth
+              />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <IconButton  aria-label="Search" onClick={ searchHandler} >
+                <SearchIcon />   
+            </IconButton>
+          </Grid>
+          <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
                     <TableHead>
@@ -167,6 +245,7 @@ export default function CustomerList(userId) {
                         <StyledTableCell>Contact</StyledTableCell>
                         <StyledTableCell>Address</StyledTableCell>
                         <StyledTableCell>Created By</StyledTableCell>
+                        <StyledTableCell>State</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -178,9 +257,11 @@ export default function CustomerList(userId) {
                             <TableRow key={data.id} >
                             <StyledTableCell> {index + 1}  </StyledTableCell>
                             <StyledTableCell> {data.customer_name}  </StyledTableCell>
-                            <StyledTableCell> {data.mobile}  </StyledTableCell>
+                            {/* <StyledTableCell> {data.mobile + ', ' + data.telephone}  </StyledTableCell> */}
+                            <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
                             <StyledTableCell> {data.address}  </StyledTableCell>
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>
+                            <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell>
                             <StyledTableCell> 
                               <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button>
                             </StyledTableCell>

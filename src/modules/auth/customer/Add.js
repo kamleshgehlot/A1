@@ -66,6 +66,8 @@ const RESET_VALUES = {
   employer_email:'',
   employer_tenure:'',
 
+  state: '',
+
   // is_active:1,
   // created_by: 1,
 };
@@ -120,6 +122,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
   const [otherIdType, setOtherIdType] = useState(true);
   const [otherIdTypeValue, setOtherIdTypeValue] = useState();
   
+
   // const [idTypeOpen, setIdTypeOpen] = React.useState(false);
   
 
@@ -197,6 +200,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
       employer_tenure: inputs.employer_tenure,
 
       is_active:1,
+      state: 1,
       // created_by: userId.userId,
       // updated_by : userId.userId,
       other_id_type: otherIdTypeValue,
@@ -229,6 +233,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
     addCustomer,
     validate
   );
+  // {
+  //   inputs.telephone ==='' ? setIsMobileMandatory(true) : setIsMobileMandatory(false)
+  //   inputs.mobile ==='' ? setIsTelephoneMandatory(true) : setIsTelephoneMandatory(false)
+  // }
 
 return (
     <div>
@@ -331,7 +339,7 @@ return (
                       type="number"
                       value={inputs.telephone} 
                       onChange={handleInputChange}
-                      required
+                      required = {inputs.mobile==='' ? true : false}
                       fullWidth
                     />
                   </Grid>
@@ -345,7 +353,7 @@ return (
                       type="number"
                       value={inputs.mobile} 
                       onChange={handleInputChange}
-                      required
+                      required = {inputs.telephone===''?true : false}
                       fullWidth
                     />
                   </Grid>
@@ -517,6 +525,7 @@ return (
                       fullWidth
                     />
                   </Grid>
+                 
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>

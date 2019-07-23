@@ -31,28 +31,17 @@ import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
+import EnquiryAPI from '../../../api/franchise/Enquiry';
 
 import useSignUpForm from '../franchise/CustomHooks';
+import Enquiry from './Enquiry';
 
 const RESET_VALUES = {
-  id: '',
-  first_name : '',
-  last_name : '',
-  location : '',
-  contact : '',
-  email : '',  
-  pre_company_name : '',
-  pre_company_address : '',
-  pre_company_contact : '',
-  pre_position : '',
-  duration : '',
-  resume : '',
-  cover_letter : '',
-  employment_docs : '',
-  
-  user_id : '',
-  password : '',
-  role : '',
+    enquiry_id : '',
+      customer_name: '',
+      contact: '',
+      intrested_product_id: '',
+      is_active: '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -95,90 +84,70 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick}) {
 
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState('panel1');
-  const [temp, setTemp] = React.useState([]);
-  const [assignRole, setAssignRole] = React.useState([]);
+  const [assignIntrest, setAssignIntrest] = React.useState([]);
   const [productList, setProductList] = useState([]);
-  
+  const [enquiryList, setEnquiryList] = useState([]);
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250
-      }
-    }
-  };
-
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
+ 
   useEffect(() => {
     const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
       try {
-        const result = await Category.productlist();
-        setProductList(result.productList);
+        const enquiry_id = await EnquiryAPI.getnewid();
+
+        if(enquiry_id.id[0]!=null){
+          setInput('enquiry_id',("E_" + (enquiry_id.id[0].id+ 1)));
+          // generate(result.taskLast[0].id);
+        }
+        else{
+          setInput('enquiry_id','E_1');
+        }
+
       } catch (error) {
-        setIsError(true);
+        console.log(error);
       }
-
-      setIsLoading(false);
     };
-
     fetchData();
-  }, []);
-  const addFranchiseStaff = async () => {
-
-    const data = {
-      franchise_id: franchiseId,
-      id: '',
-      first_name: inputs.first_name,
-      last_name: inputs.last_name,
-      location: inputs.location,
-      contact: inputs.contact,
-      email: inputs.email,
-     
-      created_by: 1,
-    };
-
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(data));
     
-    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
-      formData.append('avatar', document.getElementById('employment_docs').files[x])
-    }
+  }, []);
+  
+  
+  function handleChangeMultiple(event) {
+    setAssignIntrest(event.target.value);
+    inputs['intrested_product_id']=assignIntrest;
+  }
+  
+  const addEnquiry = async () => {
+    const response = await EnquiryAPI.postEnquiry({
+      enquiry_id : enquiry_id,
+      customer_name: inputs.customer_name,
+      contact: inputs.contact,
+      intrested_product_id: inputs.intrested_product_id,
+      is_active: 1,
+    });
 
-    const response = await Staff.register( { formData: formData } );
-    assignRole.length = 0;
+    assignIntrest.length = 0;
     handleSnackbarClick(true);
-    setFranchiseList(response.staffList);
+    setEnquiryList(response.enquiryList);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
 
   function validate(values) {
     let errors = {};
-
     return errors;
   };
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
-    addFranchiseStaff,
+    addEnquiry,
     validate
   );
   
-
+  console.log("inputess",inputs);
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -187,31 +156,27 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Enquiry
               </Typography>
-              <Button color="inherit" type="submit">
+              <Button color="inherit" type="submit" onClick={addEnquiry}>
                 save
               </Button>
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
-          <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}>
-              <ExpansionPanelDetails>
-                <Grid container spacing={4}>
+          <Paper className={classes.paper}>
+              <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
-                      id="enq_id"
-                      name="enq_id"
-                      label="Enq ID"
-                      value={inputs.enq_id}
+                      id="enquiry_id"
+                      name="enquiry_id"
+                      label="Enquiry Id"
+                      value={inputs.enquiry_id}
                       onChange={handleInputChange}
                       fullWidth
                       required
+                      disabled
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                     />
                   </Grid>
@@ -244,29 +209,32 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
+                    <InputLabel htmlFor="assign_interest">Interested In*</InputLabel>
                     <Select
-                       value={inputs.interested_in} onChange={handleInputChange}
-                        inputProps={{
-                           name: 'interested_in',
-                           id: 'interested_in',
-                            label:'interested_in'
-                            }}
-                              
-                        fullWidth className={classes.dropdwn} label="interested_in" required>
-                               {
-                          
-                          ( productList.length > 0 ? productList : []).map((ele,index) => {
-                            return(
-                                <MenuItem value={ele.id}>{ele.name}</MenuItem>    
-                            )
-                          })
-                        }
+                      multiple
+                      value={assignIntrest}
+                      onChange={handleChangeMultiple}
+                      inputProps={{
+                        name: 'intrested_product_id',
+                        id: 'intrested_product_id',
+                        // label:'assign_interest'
+                      }}
+                      fullWidth
+                      required
+                    >
+                      <MenuItem value={1}>{'Product 1'}</MenuItem>
+                      <MenuItem value={2}>{'Product 2'}</MenuItem>
+                      <MenuItem value={3}>{'Product 3'}</MenuItem>
+                      {/* {role.map((ele,index) =>{
+                        return(
+                        <MenuItem value={ele.id}>{ele.name}</MenuItem>
+                        )
+                      })} */}
+
                     </Select>
                   </Grid>
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel> 
+              </Paper>
             
             
           </div>

@@ -30,6 +30,7 @@ const customerRouter = express.Router();
 customerRouter.route("/register").post(validateToken, upload.array('avatar'), Customer.register);
 customerRouter.route("/list").get(validateToken, Customer.all);
 customerRouter.route("/idtype/list").get(validateToken, Customer.getidtypelist);
+customerRouter.route("/search").post(validateToken, Customer.searchData);
 // userRouter.route("/getUniqueNames").get(validateToken, User.getUniqueNames);
 
 module.exports = customerRouter;
