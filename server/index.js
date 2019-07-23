@@ -36,6 +36,7 @@ const colorRouter = require('./routes/product/color');
 const statusRouter = require('./routes/product/status');
 const locationRouter = require('./routes/location');
 const taskRouter = require('./routes/task');
+const leadRouter = require('./routes/lead/lead');
 const profileRouter = require('./routes/setting/profile');
 const passwordRouter = require('./routes/setting/password');
 
@@ -62,6 +63,7 @@ app.use('/api/status', statusRouter);
 
 app.use('/api/location', locationRouter);
 app.use('/api/task', taskRouter);
+app.use('/api/lead', leadRouter);
 app.use('/api/user/staff',staffMaster);
 app.use('/api/user/position',staffPosition);
 

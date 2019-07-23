@@ -29,30 +29,16 @@ import FormControl from "@material-ui/core/FormControl";
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
-import Category from '../../../../src/api/Category';
+import UserAPI from '../../../api/User';
+import Lead from '../../../api/Lead';
 
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
-  id: '',
-  first_name : '',
-  last_name : '',
-  location : '',
-  contact : '',
-  email : '',  
-  pre_company_name : '',
-  pre_company_address : '',
-  pre_company_contact : '',
-  pre_position : '',
-  duration : '',
-  resume : '',
-  cover_letter : '',
-  employment_docs : '',
-  
-  user_id : '',
-  password : '',
-  role : '',
+  franchise_id: '',
+  lead_id: '',
+  message: '',
+  is_active: ''
 };
 
 const useStyles = makeStyles(theme => ({
@@ -92,15 +78,17 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick}) {
+export default function AddLead({ open, handleClose, handleSnackbarClick, setLeadList}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [temp, setTemp] = React.useState([]);
   const [assignRole, setAssignRole] = React.useState([]);
-  const [productList, setProductList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   
-
+  const [leadId, setLeadId] = useState();
+  const [franchiseList, setFranchiseList] = useState({});
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -112,6 +100,25 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await UserAPI.list();
+        setFranchiseList(result.userList);
+        console.log('usrlist---',result.userList);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+    fetchData();
+    
+  }, []);
+  
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -122,43 +129,43 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
       setIsLoading(true);
 
       try {
-        const result = await Category.productlist();
-        setProductList(result.productList);
+        const result = await Lead.last();
+        // setLeadLast(result.leadLast[0]);
+          // console.log('leadLast----',result.leadLast[0]);
+        if(result.leadLast[0]!=null){
+          // console.log('leadLast----',result.leadLast[0].id);
+          generate(result.leadLast[0].id);
+        }
+        else{
+          const l_id='l_1';
+          setLeadId(l_id);
+          // console.log('hgrfeuf----',t_id);
+        }
       } catch (error) {
         setIsError(true);
       }
-
       setIsLoading(false);
     };
-
     fetchData();
   }, []);
-  const addFranchiseStaff = async () => {
 
-    const data = {
-      franchise_id: franchiseId,
-      id: '',
-      first_name: inputs.first_name,
-      last_name: inputs.last_name,
-      location: inputs.location,
-      contact: inputs.contact,
-      email: inputs.email,
-     
-      created_by: 1,
-    };
+  function generate(last_id) {
+   const lid=last_id+1;
+   const l_id='l_'+lid;
+    setLeadId(l_id);
+  }
 
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(data));
-    
-    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
-      formData.append('avatar', document.getElementById('employment_docs').files[x])
-    }
-
-    const response = await Staff.register( { formData: formData } );
-    assignRole.length = 0;
+  const addLead = async () => {
+    console.log('inp----',inputs);
+    const response = await Lead.add({
+      franchise_id: inputs.franchise_id,
+      lead_id: leadId,
+      message: inputs.description,
+      is_active: 1
+    });
+    console.log(response);
+    setLeadList(response.leadList);
     handleSnackbarClick(true);
-    setFranchiseList(response.staffList);
-    handleReset(RESET_VALUES);
     handleClose(false);
   };
 
@@ -170,7 +177,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
-    addFranchiseStaff,
+    addLead,
     validate
   );
   
@@ -185,7 +192,7 @@ return (
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Add Enquiry
+                Add Lead
               </Typography>
               <Button color="inherit" type="submit">
                 save
@@ -203,41 +210,48 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
-                      id="enq_id"
-                      name="enq_id"
-                      label="Enq ID"
-                      value={inputs.enq_id}
+                      id="lead_id"
+                      name="lead_id"
+                      label="Lead ID"
+                      value={leadId}
                       onChange={handleInputChange}
                       fullWidth
                       required
                       type="text"
-                      // placeholder="Franchise Name"
+                      disabled
                       margin="dense"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="customer_name"
-                      name="customer_name"
-                      label="Customer Name"
-                      type="text"
-                      value={inputs.customer_name} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
+                      <Select
+                        value={inputs.franchise_id}
+                        onChange={handleInputChange}
+                        inputProps={{
+                          name: 'franchise_id',
+                          id: 'franchise_id',
+                          label:'franchise_id'
+                        }}
+                        fullWidth
+                        label="franchise_id"
+                      >
+                      <MenuItem disabled  value="" selected>Select Franchise
+                      </MenuItem>
+                          {(franchiseList.length > 0 ? franchiseList : []).map(data => {
+                          return (
+                            <MenuItem value={data.franchise_id} >{data.franchise_name}</MenuItem>
+                          );
+                        })}
+                      </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
+                    <InputLabel htmlFor="contact">Upload Doc/Photo</InputLabel>
                     <TextField
                       margin="dense"
-                      id="contact"
-                      name="contact"
-                      label="Contact"
-                      type="number"
-                      value={inputs.contact} 
+                      id="upload"
+                      name="upload"
+                      type="file"
+                      value={inputs.upload} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -245,24 +259,17 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <Select
-                       value={inputs.interested_in} onChange={handleInputChange}
-                        inputProps={{
-                           name: 'interested_in',
-                           id: 'interested_in',
-                            label:'interested_in'
-                            }}
-                              
-                        fullWidth className={classes.dropdwn} label="interested_in" required>
-                               {
-                          
-                          ( productList.length > 0 ? productList : []).map((ele,index) => {
-                            return(
-                                <MenuItem value={ele.id}>{ele.name}</MenuItem>    
-                            )
-                          })
-                        }
-                    </Select>
+                    <TextField
+                      id="description"
+                      name="description"
+                      label="Description"
+                      value={inputs.description}
+                      onChange={handleInputChange}
+                      fullWidth
+                      required
+                      type="text"
+                      margin="dense"
+                    />
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

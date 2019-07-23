@@ -81,7 +81,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick}) {
+export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList}) {
 
   const classes = useStyles();
   const [assignIntrest, setAssignIntrest] = React.useState([]);

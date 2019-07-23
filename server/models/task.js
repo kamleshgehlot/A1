@@ -43,7 +43,6 @@ Task.prototype.add = function () {
       connection.changeUser({ database: dbName["prod"] });
       connection.query('select fdbname from franchise where id= "' + that.franchise_id + '"', (error, rows, fields) => {
         if (!error) {
-          // console.log("ddddd", rows);
           const frachiseDbName = rows[0].fdbname;
           connection.changeUser({ database: frachiseDbName });
           connection.query(`INSERT INTO task(task_id, task_description, is_active, created_by) VALUES ?`, [values], (error, mrows, fields) => {
@@ -297,7 +296,6 @@ Task.prototype.staffTasks = function () {
             if (!error) {
               connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+rows[0].uid+'" AND status <> 4 AND status <> 5 AND a.is_active="1"', function (error, taskrows, fields) {
                 if (!error) {
-                  console.log('model-----------------',taskrows);
                   resolve(taskrows);
 
                 } else {
@@ -333,7 +331,6 @@ Task.prototype.staffUpdate = function () {
                 if(that.status==='2'){
                   connection.query('update task_assign set start_date="'+that.start_date+'", updated_at="'+that.updated_date+'", updated_by = "' + rows[0].uid + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '" ', function (error, arows, fields) {
                     if (!error) {
-                      // console.log(arows);
                       resolve({ arows });
                     } else {
                       console.log("Error...", error);
