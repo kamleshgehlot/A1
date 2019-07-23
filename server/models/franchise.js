@@ -28,6 +28,7 @@ const taskAssign = "CREATE TABLE IF NOT EXISTS `task_assign` ( `id` int(10) NOT 
 const customer = "CREATE TABLE IF NOT EXISTS `customer` (`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_name` varchar(50) NOT NULL, `address` varchar(200) NOT NULL, `city` varchar(70) NOT NULL, `postcode` varchar(10) DEFAULT NULL, `telephone` varchar(10) DEFAULT NULL, `mobile` varchar(10) DEFAULT NULL, `email` varchar(100) DEFAULT NULL, `gender` varchar(15) NOT NULL, `is_working` tinyint(4) NOT NULL, `dob` varchar(30) DEFAULT NULL, `id_type` int(11) DEFAULT NULL, `other_id_type` VARCHAR(255) DEFAULT NULL, `id_number` varchar(30) DEFAULT NULL, `expiry_date` varchar(30) NOT NULL, `is_adult` tinyint(4) NOT NULL, `id_proof` varchar(500) DEFAULT NULL, `other_id_proof` varchar(500) DEFAULT NULL, `alt_c1_name` varchar(50) DEFAULT NULL, `alt_c1_address` varchar(200) DEFAULT NULL, `alt_c1_contact` varchar(10) DEFAULT NULL, `alt_c1_relation` varchar(20) DEFAULT NULL, `alt_c2_name` varchar(50) DEFAULT NULL, `alt_c2_address` varchar(200) DEFAULT NULL, `alt_c2_contact` varchar(10) DEFAULT NULL, `alt_c2_relation` varchar(20) DEFAULT NULL, `is_active` tinyint(4) NOT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const customer_income = "CREATE TABLE IF NOT EXISTS `customer_income` (`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `cust_id` int(11) DEFAULT NULL, `employer_name` varchar(100) DEFAULT NULL, `employer_address` varchar(200) DEFAULT NULL, `employer_telephone` varchar(10) DEFAULT NULL, `employer_email` varchar(50) DEFAULT NULL, `employer_tenure` varchar(50) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `updated_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const idProof = "CREATE TABLE  IF NOT EXISTS `id_type` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(100) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
+const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
   const that = this;
@@ -55,6 +56,7 @@ Franchise.prototype.register = function (newUser) {
                             connection.query(customer,function(err){
                               connection.query(customer_income,function(err){
                                 connection.query(idProof,function(err){
+                                  connection.query(leads,function(err){
                             if (err) {
                               console.log('error in creating tables', err);
                               return;
@@ -107,6 +109,7 @@ Franchise.prototype.register = function (newUser) {
                         });
                         });
                           });
+                        });
                         });
                       });
                     });

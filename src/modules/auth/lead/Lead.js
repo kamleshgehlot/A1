@@ -11,11 +11,14 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Add from './Add';
+import AddLead from './Add';
+import Add from '../enquiry/Add';
 // import Edit from './Edit';
 // import UploadDoc from './UploadDoc';
 
 // API CALL
+import LeadAPI from '../../../api/Lead';
+import UserAPI from '../../../api/User';
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -36,26 +39,17 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function FranchiseStaff(franchiseId) {
+export default function Lead() {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [staffData,setStaffData]= useState();
-  const [staffList, setStaffList] = useState({});
-  const [role, setRole] = useState([]);
-  const [position, setPosition] = useState({});
-  
-  // Code for testing pls don't remove -- by SRK 
-  // const [uploadOpen,setUploadOpen] = useState(false);
+  const [franchiseList, setFranchiseList] = useState({});
 
-  const roleName = APP_TOKEN.get().roleName;
-  const userName = APP_TOKEN.get().userName;
-  
-  const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
-  const [showStaff, setShowStaff] = useState(roleName === 'Admin');
-    
+  const [enquiryList, setEnquiryList] = useState({});
+  const [openEnquiry, setEnquiryOpen] = useState(false);
+  const [leadList, setLeadList] = useState({});
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -71,6 +65,10 @@ export default function FranchiseStaff(franchiseId) {
     },
     drawerPaper: {
       width: drawerWidth,
+    },
+    button:{
+      marginRight: theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
     content: {
       flexGrow: 1,
@@ -91,22 +89,56 @@ export default function FranchiseStaff(franchiseId) {
   }));
   const classes = useStyles();
 
+  //leads list
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await LeadAPI.list();
+        setLeadList(result.leadList);
+        console.log('sahgdaud--',result.leadList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await UserAPI.list();
+        setFranchiseList(result.userList);
+        console.log('usrlist---',result.userList);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+    fetchData();
+    
+  }, []);
+  
   function handleClickOpen() {
     setOpen(true);
   }
   function handleClose() {
     setOpen(false);
   }
-  function handleClickEditOpen(data) {
-    setStaffData(data),
-    setEditOpen(true);
+  
+  function handleClickEnquiryOpen(data) {
+    console.log('leadsenq---',data);
+    setEnquiryOpen(true);
   }
-  function handleEditClose() {
-    setEditOpen(false);
-  }
-  ////////////////////////////////////////
-  function setFranchiseListFn(response) {
-    setStaffList(response);
+  function handleEnquiryClose() {
+    setEnquiryOpen(false);
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -116,14 +148,13 @@ export default function FranchiseStaff(franchiseId) {
     setSnackbarOpen(true);
   }
 
-  
-  function handleFranchiseClick() {
-    setShowFranchise(true);
-    setShowStaff(false);
+  function setLeadListFn(response) {
+    setLeadList(response);
   }
-  // console.log("data.role......", staffList)
 
-
+  function setEnquiryListFn(response) {
+    setEnquiryList(response);
+  }
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -149,7 +180,7 @@ export default function FranchiseStaff(franchiseId) {
               color="primary"
               aria-label="Complete"
               className={classes.fonttransform}
-              // onClick={handleCompleteTaskClickOpen}
+              // onClick={handleCompleteLeadClickOpen}
             >
               Converted
             </Fab>
@@ -169,19 +200,44 @@ export default function FranchiseStaff(franchiseId) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                   
+                      { (leadList.length > 0 ? leadList : []).map((data, index)=>{
+                        return(
+                          <TableRow >
+                          <StyledTableCell> {index+1}  </StyledTableCell>
+                            <StyledTableCell> {data.lead_id}  </StyledTableCell>
+                          
+                              { (franchiseList.length > 0 ? franchiseList : []).map((dataf, index1)=>{
+                                  return(
+                                    data.franchise_id===dataf.franchise_id ?
+                                    <StyledTableCell> {dataf.franchise_name}</StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                })
+                              }
+                              <StyledTableCell></StyledTableCell>
+                            <StyledTableCell>{data.message}</StyledTableCell>
+                            <StyledTableCell>
+                              <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }}>
+                                Enquiry
+                              </Button>
+                              <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}>
+                                Order
+                              </Button>
+                            </StyledTableCell>
+                          </TableRow>
+                        )
+                        })
+                      }
                     </TableBody>
                   </Table>
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
+      <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>
       
-      {/* {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null} */}
-          
-      {/* 
-      Code for testing pls don't remove -- by SRK 
-      { uploadOpen ? <UploadDoc open={uploadOpen} handleClose={handleUploadClose} /> : null } */}
+      {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}/> :null}
+    
     </div>
   );
 }

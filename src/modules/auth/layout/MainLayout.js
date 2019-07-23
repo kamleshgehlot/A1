@@ -40,6 +40,7 @@ import ChangePassword from '../setting/ChangePassword';
 
 
 import Enquiry from '../enquiry/Enquiry';
+import Lead from '../lead/Lead';
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -104,6 +105,7 @@ export default function ClippedDrawer(props) {
   const [showTask, setShowTask] = useState(false);
   const [showCustomer, setShowCustomer] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
+  const [showLead, setShowLead] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
@@ -149,6 +151,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowStaffTask(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
 
   function handleCategoryClick() {
@@ -163,6 +166,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowStaffTask(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
 
   function handleMasterStaffClick(){
@@ -176,6 +180,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowStaffTask(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -189,6 +194,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowStaffTask(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
   
   function handleTaskClick(){
@@ -202,6 +208,7 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowPwd(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
   function handleProfileClick(){
     setShowProfile(true);setAnchorEl(null);
@@ -214,6 +221,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowStaffTask(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
   function handleChangePasswordClick(){
     setShowPwd(true);
@@ -227,6 +235,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowStaffTask(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
 
   function handleCustomerClick(){
@@ -240,6 +249,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowStaffTask(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
   function handleStaffTaskClick(){
     setShowStaffTask(true);
@@ -252,11 +262,26 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowPwd(false);
     setShowEnquiry(false);
+    setShowLead(false);
   }
 
   
   function handleEnquiryClick(){
     setShowEnquiry(true);
+    setShowCustomer(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowStaffTask(false);
+    setShowLead(false);
+  }
+  function handleLeadsClick(){
+    setShowLead(true);
+    setShowEnquiry(false);
     setShowCustomer(false);
     setShowTask(false);
     setShowFranchiseStaff(false);
@@ -382,6 +407,10 @@ export default function ClippedDrawer(props) {
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Enquiry" />
                 </ListItem>
+                <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Leads" />
+                </ListItem>
                  {/* <ListItem button key="ManageTask"  onClick={handleTaskClick}>
                      <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                      <ListItemText primary="Manage Task" />
@@ -423,6 +452,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showEnquiry ? <Enquiry />:null
+        }
+        {
+          showLead ? <Lead />:null
         }
         {/* {props.children} */}
       </main>

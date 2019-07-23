@@ -39,6 +39,7 @@ export default function Enquiry() {
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [enquiryList, setEnquiryList] = useState({});
   const [isError, setIsError] = useState(false);
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -96,6 +97,9 @@ export default function Enquiry() {
     setSnackbarOpen(true);
   }
 
+  function setEnquiryListFn(response) {
+    setEnquiryList(response);
+  }
 
   return (
     <div>
@@ -122,7 +126,7 @@ export default function Enquiry() {
               color="primary"
               aria-label="Complete"
               className={classes.fonttransform}
-              // onClick={handleCompleteTaskClickOpen}
+              // onClick={handleCompleteEnquiryClickOpen}
             >
               Converted Enquiry
             </Fab>
@@ -148,7 +152,7 @@ export default function Enquiry() {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  />
     </div>
   );
 }

@@ -92,13 +92,15 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick}) {
+export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [temp, setTemp] = React.useState([]);
   const [assignRole, setAssignRole] = React.useState([]);
   const [productList, setProductList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   
 
   const ITEM_HEIGHT = 48;
@@ -133,7 +135,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
 
     fetchData();
   }, []);
-  const addFranchiseStaff = async () => {
+  const addEnquiry = async () => {
 
     const data = {
       franchise_id: franchiseId,
@@ -170,7 +172,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
-    addFranchiseStaff,
+    addEnquiry,
     validate
   );
   
