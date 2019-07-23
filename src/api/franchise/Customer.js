@@ -15,7 +15,7 @@ export default {
     const URL = `${c.API_CONSUMER}/api/franchise/customer/register`;
     try {
       const { data } = await axios(URL, {
-        methodType: 'POST',
+        method: 'POST',
         data: newCustomer.formData,
         headers: {
           'Content-Type': 'application/json',

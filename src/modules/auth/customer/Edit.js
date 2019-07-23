@@ -144,8 +144,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   }, []);
 
 
-  const editCustomer = async () => {
-    
+  const editCustomer = async (e) => {
+      e.preventDefault();
+
       const data = {
       id: customerList.id,
       customer_name : customerList.customer_name,
@@ -180,7 +181,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       employer_tenure: customerList.employer_tenure,
 
       is_active: customerList.is_active,
-      updated_by : userId.userId,
+      // updated_by : userId.userId,
 
       other_id_type: otherIdTypeValue,
       
@@ -198,7 +199,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
     
     // handleSnackbarClick(true);
     setCustomerList(response.customerList);
-    handleReset(RESET_VALUES);
+    // handleReset(RESET_VALUES);
     handleEditClose(false);
   };
 

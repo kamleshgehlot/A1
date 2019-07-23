@@ -4,8 +4,9 @@ const { trans } = require("../../lib/mailtransporter");
 const Customer = require('../../models/franchise/customer.js');
 
 const register = function (req, res, next) {
-  console.log("****************staff..................", req.body);
-  console.log("%%%%%%%%%%% file %%%%%%%%%%%%%", req.files);
+  console.log("****************Customer..................", req.body.data);
+  console.log("%%%%%%%%%%% Customer File %%%%%%%%%%%%%", req.files);
+  console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
 
   const customerData = JSON.parse(req.body.data);
 
@@ -47,28 +48,24 @@ const register = function (req, res, next) {
     employer_telephone: customerData.employer_telephone,
     employer_email: customerData.employer_email,
     employer_tenure: customerData.employer_tenure,
-
     is_active:customerData.is_active,
-    created_by: customerData.created_by,
-    updated_by: customerData.updated_by, 
-
     other_id_type: customerData.other_id_type,
-
     user_id: req.decoded.user_id,
 
-	};
-
+  };
 	try{
-	const newCustomer = new Customer(CustomerParams);
-  // console.log("req..",req.body);
-	if(req.body.id) {
+	if(CustomerParams.id) {
+    CustomerParams.updated_by = req.decoded.id;
+	  const newCustomer = new Customer(CustomerParams);
+
     newCustomer.update().then(function(result){
       new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {
         res.send({ customerList: customerList });
       });
     });
 	} else {
-    
+    CustomerParams.created_by = req.decoded.id;
+	  const newCustomer = new Customer(CustomerParams);
     newCustomer.register().then(function(result){
       new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {
         res.send({ customerList: customerList });

@@ -165,7 +165,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
   const addCustomer = async () => {
 
     const data = {
-      id: '',
       customer_name : inputs.customer_name,
       address : inputs.address,
       city : inputs.city,
@@ -198,8 +197,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
       employer_tenure: inputs.employer_tenure,
 
       is_active:1,
-      created_by: userId.userId,
-      updated_by : userId.userId,
+      // created_by: userId.userId,
+      // updated_by : userId.userId,
       other_id_type: otherIdTypeValue,
     }
 
@@ -231,8 +230,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
     validate
   );
 
-  
-  
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>

@@ -65,13 +65,16 @@ Customer.prototype.register = function () {
               console.log("insert id",rows.insertId);
               // newIdType = rows.insertId;
               let values=[
-                [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,rows.insertId,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by, that.updated_by]
+                [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,rows.insertId,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by]
               ];
-              connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by,updated_by) VALUES ?', [values], function (error, rows, fields) {
+              connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by) VALUES ?', [values], function (error, rows, fields) {
                 
                 if (!error) {
+                  let customerIncomeValues=[
+                    [ rows.insertId,that.employer_name,that.employer_address,that.employer_telephone,that.employer_email,that.employer_tenure,that.is_active,that.created_by]
+                  ];
                       const savedCustomerId = rows.insertId;
-                      connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ("' + savedCustomerId + '","' + that.employer_name + '","' + that.employer_address + '","' + that.employer_telephone + '","' + that.employer_email + '","' + that.employer_tenure + '","' + that.is_active + '","' + that.created_by + '","' + that.updated_by + '")', function (error, rows, fields) {
+                      connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ?', [customerIncomeValues], function (error, rows, fields) {
                         if (!error) {
                           resolve(rows);
                         } else {
@@ -83,9 +86,7 @@ Customer.prototype.register = function () {
                       console.log("Error...", error);
                       reject(error);
                     }
-                
               });
-
             }else{
               console.log("Error...", error);
               reject(error);
@@ -96,12 +97,16 @@ Customer.prototype.register = function () {
           let values=[
             [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,that.id_type,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by,that.updated_by]
           ];
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by,updated_by) VALUES ?', [values], function (error, rows, fields) {
+
+          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by,updated_by) VALUES ?', [values], function (error, rows, fields) {
           
           if (!error) {
+            let customerIncomeValues=[
+              [ rows.insertId,that.employer_name,that.employer_address,that.employer_telephone,that.employer_email,that.employer_tenure,that.is_active,that.created_by]
+            ];
                 const savedCustomerId = rows.insertId;
-                connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ("' + savedCustomerId + '","' + that.employer_name + '","' + that.employer_address + '","' + that.employer_telephone + '","' + that.employer_email + '","' + that.employer_tenure + '","' + that.is_active + '","' + that.created_by + '", "' + that.updated_by + '")', function (error, rows, fields) {
+                connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ?', [customerIncomeValues], function (error, rows, fields) {
                   if (!error) {
                     resolve(rows);
                   } else {
@@ -113,7 +118,6 @@ Customer.prototype.register = function () {
                 console.log("Error...", error);
                 reject(error);
               }
-          
         });
       }
       } else {
@@ -270,8 +274,6 @@ Customer.prototype.update = function () {
     throw error;
   });
 };
-
-
 
 Customer.prototype.all = function () {
   const that = this;
