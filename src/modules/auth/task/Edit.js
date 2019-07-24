@@ -224,7 +224,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 fullWidth
                                 required
                                 type="text"
-                                // placeholder="Franchise Name"
+                                multiline
                                 margin="dense"
                               /> 
                           </StyledTableCell>

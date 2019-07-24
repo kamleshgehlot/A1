@@ -11,6 +11,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import CreateIcon from '@material-ui/icons/Create';
 import Add from './Add';
 import Edit from './Edit';
 import UploadDoc from './UploadDoc';
@@ -82,6 +83,11 @@ export default function FranchiseStaff(franchiseId) {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+    },
+    button:{
+      marginRight: theme.spacing(2),
+      padding:theme.spacing(2),
+      borderRadius: theme.spacing(7),
     },
     paper: {
       padding: theme.spacing(2),
@@ -236,7 +242,7 @@ export default function FranchiseStaff(franchiseId) {
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>
                             <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Edit
+                            <CreateIcon/>
                             </Button>
                             </StyledTableCell>
                         </TableRow>

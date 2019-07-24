@@ -261,6 +261,7 @@ return (
                                 fullWidth
                                 required className={classes.tbrow}
                                 type="text"
+                                multiline
                                 // placeholder="Franchise Name"
                                 margin="dense"
                               /> 

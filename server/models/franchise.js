@@ -60,7 +60,7 @@ Franchise.prototype.register = function (newUser) {
                                 connection.query(customer_state,function(err){
                                 connection.query(idProof,function(err){
                                   connection.query(enquiry,function(err){
-                                  connection.query(leads,function(err){
+                                  // connection.query(leads,function(err){
                             if (err) {
                               console.log('error in creating tables', err);
                               return;
@@ -116,7 +116,7 @@ Franchise.prototype.register = function (newUser) {
                               connection.release();
                               console.log('Process Complete %d', connection.threadId);
                             });
-                          });
+                          // });
                         });
                           });
                         });

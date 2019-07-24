@@ -6,7 +6,8 @@ const add = function (req, res, next) {
     franchise_id: req.body.franchise_id,
     message: req.body.message,
     is_active: req.body.is_active,
-    user_id: req.decoded.user_id
+    user_id: req.decoded.user_id,
+    userid: req.decoded.id
   };
   try {
     const newLead = new Lead(leadParam);

@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Snackbar from '@material-ui/core/Snackbar';
+import CreateIcon from '@material-ui/icons/Create';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 // import Add from './Add';
 import StaffEdit from './StaffEdit';
@@ -96,6 +97,8 @@ export default function StaffTask(uid) {
     },
     button:{
       marginRight: theme.spacing(2),
+      padding:theme.spacing(2),
+      borderRadius: theme.spacing(7),
     },
     tbrow:{
       
@@ -308,7 +311,7 @@ export default function StaffTask(uid) {
                          
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Update
+                            <CreateIcon/>
                             </Button>
                           </StyledTableCell>
                         </TableRow>

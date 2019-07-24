@@ -93,6 +93,7 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
+  const [taskStatusList, setTaskStatusList]=useState();
 
   const classes = useStyles();
 
@@ -114,6 +115,23 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
     fetchData();
   }, []);
 
+//task status list
+useEffect(() => {
+  const fetchData = async () => {
+    setIsError(false);
+    setIsLoading(true);
+
+    try {
+      const result = await TaskAPI.taskStatus();
+      setTaskStatusList(result.taskStatusList);
+      // console.log('status list----',result.taskStatusList);
+    } catch (error) {
+      setIsError(true);
+    }
+    setIsLoading(false);
+  };
+  fetchData();
+}, []);
   // useEffect(() => {
   //   const fetchData = async () => {
   //     setIsError(false);
@@ -218,7 +236,14 @@ return (
                                   
                             })
                           }
-                        <StyledTableCell>{data.status}</StyledTableCell>
+                        { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                                return(
+                                  data.status===datastatus.id ?
+                                  <StyledTableCell> {datastatus.status}</StyledTableCell>
+                                    :''
+                                    )                                    
+                              })
+                            }
                         <StyledTableCell>{data.due_date}</StyledTableCell>
                         <StyledTableCell>{data.start_date}</StyledTableCell>
                         <StyledTableCell>{data.completion_date}</StyledTableCell>

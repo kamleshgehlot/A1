@@ -114,4 +114,25 @@ Product.prototype.update = function () {
   });
 };
 
+Product.prototype.archivedList = function () {
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }
+      connection.changeUser({ database: dbName["prod"] });
+      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where status=3 order by id desc', function (error, rows, fields) {
+        if (!error) {
+          resolve(rows);
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      });
+    });
+  });
+}
 module.exports = Product;

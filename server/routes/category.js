@@ -12,5 +12,6 @@ categoryRouter.route('/addProduct').post(validateToken, Category.addProduct);
 categoryRouter.route('/productList').get(validateToken, Category.productList);
 categoryRouter.route('/edit').post(validateToken, Category.edit);
 categoryRouter.route('/list').get(validateToken, Category.all);
+categoryRouter.route('/archivedList').get(validateToken, Category.archivedList);
 
 module.exports = categoryRouter;

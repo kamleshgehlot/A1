@@ -103,4 +103,13 @@ export default {
       throw error;
     }
   },
+  archivedList: async () => {
+    const URL = `${c.API_CONSUMER}/api/category/archivedList`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

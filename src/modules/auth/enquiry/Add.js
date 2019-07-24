@@ -84,7 +84,6 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   const classes = useStyles();
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [productList, setProductList] = useState([]);
-  // const [enquiryList, setEnquiryList] = useState([]);
 
  
   useEffect(() => {

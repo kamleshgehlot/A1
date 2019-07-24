@@ -191,7 +191,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                                 value={taskList.task_description}
                                 onChange={handleInputChange}
                                 fullWidth
-                                required
+                                multiline
                                 disabled
                                 type="text"
                                 // placeholder="Franchise Name"
@@ -240,6 +240,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
+                                multiline
                                 type="text"
                                 // placeholder="Franchise Name"
                                 margin="dense"
