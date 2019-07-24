@@ -30,7 +30,7 @@ const customer_income = "CREATE TABLE IF NOT EXISTS `customer_income` (`id` bigi
 const customer_state = "CREATE TABLE IF NOT EXISTS customer_state(id tinyint(4) NOT NULL AUTO_INCREMENT, state_name VARCHAR(20) NOT NULL, is_active tinyint(4) NOT NULL, PRIMARY KEY(id));";
 const idProof = "CREATE TABLE  IF NOT EXISTS `id_type` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(100) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const enquiry = "CREATE TABLE IF NOT EXISTS enquiry(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `enquiry_id` varchar(10) NOT NULL, `customer_name` varchar(50) NOT NULL, `contact` varchar(10) DEFAULT NULL, `intrested_product_id` varchar(20) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
-const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
+// const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
   const that = this;
@@ -60,7 +60,7 @@ Franchise.prototype.register = function (newUser) {
                                 connection.query(customer_state,function(err){
                                 connection.query(idProof,function(err){
                                   connection.query(enquiry,function(err){
-                                  connection.query(leads,function(err){
+                                  // connection.query(leads,function(err){
                             if (err) {
                               console.log('error in creating tables', err);
                               return;
@@ -116,7 +116,7 @@ Franchise.prototype.register = function (newUser) {
                               connection.release();
                               console.log('Process Complete %d', connection.threadId);
                             });
-                          });
+                          // });
                         });
                           });
                         });

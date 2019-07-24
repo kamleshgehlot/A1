@@ -190,4 +190,13 @@ const all = function(req, res, next) {
   }
 };
 
-module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList };
+const archivedList = function(req, res, next) {
+  try {
+    new Product({}).archivedList().then(archivedList => {
+      res.send({ archivedList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
+module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList,archivedList };

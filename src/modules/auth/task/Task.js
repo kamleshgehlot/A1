@@ -3,6 +3,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +13,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Snackbar from '@material-ui/core/Snackbar';
+import CreateIcon from '@material-ui/icons/Create';
+import ArchiveIcon from '@material-ui/icons/Archive';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 //files
 import Add from './Add';
@@ -101,7 +104,8 @@ export default function Task(franchiseId) {
     },
     button:{
       marginRight: theme.spacing(2),
-      marginTop: theme.spacing(2),
+      padding:theme.spacing(2),
+      borderRadius: theme.spacing(7),
     },
     tbrow:{      
       marginTop:theme.spacing(10),
@@ -113,7 +117,10 @@ export default function Task(franchiseId) {
     bgtaskoverdue:{
       backgroundColor:"red",
       padding: theme.spacing(1),
-    }
+    },
+    fab: {
+      margin: theme.spacing(1),
+    },
   }));
   const classes = useStyles();
       
@@ -126,7 +133,7 @@ useEffect(() => {
     try {
       const result = await TaskAPI.taskStatus();
       setTaskStatusList(result.taskStatusList);
-      console.log('status list----',result.taskStatusList);
+      // console.log('status list----',result.taskStatusList);
     } catch (error) {
       setIsError(true);
     }
@@ -315,18 +322,17 @@ useEffect(() => {
                                   data.status===datastatus.id ?
                                   <StyledTableCell> {datastatus.status}</StyledTableCell>
                                     :''
-                                    )
-                                    
+                                    )                                    
                               })
                             }
                           {/* <StyledTableCell><p >{data.status}</p></StyledTableCell> */}
                           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Update
+                             <CreateIcon/>
                             </Button>
                             <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}>
-                              Delete
+                              <ArchiveIcon />
                             </Button>
                           </StyledTableCell>
                         </TableRow>

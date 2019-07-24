@@ -14,6 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import { APP_TOKEN } from '../../../api/Constants';
 import Edit from './Edit';
 import Add from './Add';
+import ArchivedList from './ArchivedList';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
@@ -54,6 +55,7 @@ export default function CategoryList(props) {
   const [colorList, setColorList] = useState([]);
   const [statusList, setStatusList] = useState([]);
   
+  const [openArchived, setArchivedOpen] = useState(false);
   const [productList, setProductList] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
@@ -146,10 +148,16 @@ export default function CategoryList(props) {
   function handleSnackbarClick() {
     setSnackbarOpen(true);
   }
+  function handleArchivedClickOpen(){
+    setArchivedOpen(true);
+  }
+  function handleArchivedClose() {
+    setArchivedOpen(false);
+  }
   return (
     <div>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={10}>
           <Fab
             variant="extended"
             size="small"
@@ -162,6 +170,18 @@ export default function CategoryList(props) {
             Product
           </Fab>
         </Grid>
+          <Grid item xs={12} sm={2}>
+            <Fab
+              variant="extended"
+              size="small"
+              color="primary"
+              aria-label="Complete"
+              className={classes.fonttransform}
+              onClick={handleArchivedClickOpen}
+            >
+              Archived Products
+            </Fab>
+          </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <Paper style={{ width: '100%' }}>
             <Table className={classes.table}>
@@ -184,12 +204,11 @@ export default function CategoryList(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-              
-               { productList.map((data, index)=>{
+              { (productList.length > 0 ? productList : []).map((data, index)=>{
                  return(
                   <TableRow key={data.id} >
                       <StyledTableCell component="th" scope="row">
-                      {data.id}
+                      {index+1}
                       </StyledTableCell>
                       <StyledTableCell>{data.name}</StyledTableCell>
                       
@@ -254,6 +273,7 @@ export default function CategoryList(props) {
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} updateProductList = {setCategoryListFn} />
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={receivedData} updateProductList={setCategoryListFn}/> : null}
+      {openArchived ?  <ArchivedList open={openArchived} handleArchivedClose={handleArchivedClose}  />: null}
       
       <Snackbar
         anchorOrigin={{

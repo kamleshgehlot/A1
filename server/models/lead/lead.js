@@ -7,6 +7,7 @@ const Lead = function (params) {
   this.message= params.message;
   this.is_active= params.is_active;
   this.user_id = params.user_id;
+  this.userid = params.userid;
 };
 
 Lead.prototype.add = function () {
@@ -18,12 +19,10 @@ Lead.prototype.add = function () {
         throw error;
       }
 
-      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-      connection.query('select id from user where user_id= "' + that.user_id + '"', (error, rows, fields) => {
-        if (!error) {
-          const userid = rows[0].id;
+      connection.changeUser({ database: dbName["prod"] });
+
           const values = [
-            [that.lead_id, that.franchise_id, that.message, that.is_active,userid]
+            [that.lead_id, that.franchise_id, that.message, that.is_active,that.userid]
           ];
           connection.query(`INSERT INTO leads(lead_id, franchise_id,message, is_active, created_by) VALUES ?`, [values], (error, mrows, fields) => {
             if (!error) {
@@ -32,11 +31,6 @@ Lead.prototype.add = function () {
               console.log('Error...', error);
               reject(error);
             }
-          });
-        } else {
-          console.log('Error...', error);
-          reject(error);
-        }
       });
     });
   });
@@ -50,7 +44,7 @@ Lead.prototype.all = function () {
       if (error) {
         throw error;
       }
-      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+      connection.changeUser({ database: dbName["prod"] });
       connection.query('select id,lead_id, franchise_id,message from leads where is_active="1" order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
@@ -74,7 +68,7 @@ Lead.prototype.last = function () {
       if (error) {
         throw error;
       }
-        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+      connection.changeUser({ database: dbName["prod"] });
       connection.query('select id from leads order by id desc limit 1', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
