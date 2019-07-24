@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles, fade } from '@material-ui/core/styles';
-
+// import SearchBar from 'material-ui-search-bar-enhanced';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -16,6 +16,8 @@ import TextField from '@material-ui/core/TextField';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
+
+
 import Add from './Add';
 import Edit from './Edit';
 
@@ -274,7 +276,7 @@ export default function CustomerList(userId) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}  />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''}/>
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={customerData} setCustomerList={handleCustomerList} /> : null}
           

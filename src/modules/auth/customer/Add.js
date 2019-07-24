@@ -112,7 +112,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, userId, setCustomerList}) {
+export default function Add({ open, handleClose, handleSnackbarClick, setCustomerList, enquiryData}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
@@ -125,6 +125,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
 
   // const [idTypeOpen, setIdTypeOpen] = React.useState(false);
   
+console.log("dda",enquiryData);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -145,6 +146,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
       setIsLoading(false);
     };
     fetchData();
+
+    enquiryData!= '' ? inputs['customer_name'] = enquiryData.customer_name : ''
+    enquiryData!= '' ? inputs['mobile'] = enquiryData.contact : ''
     
   }, []);
 
@@ -201,8 +205,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, userId, se
 
       is_active:1,
       state: 1,
-      // created_by: userId.userId,
-      // updated_by : userId.userId,
+      
       other_id_type: otherIdTypeValue,
     }
 

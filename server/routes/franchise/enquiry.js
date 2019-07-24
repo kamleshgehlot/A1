@@ -6,5 +6,9 @@ const validateToken = require('../../utils').validateToken;
 const enquiryRouter = express.Router();
 
 enquiryRouter.route("/getnewid").get(validateToken, Enquiry.getnewid);
+enquiryRouter.route("/getall").get(validateToken, Enquiry.getAll);
+enquiryRouter.route("/convertedList").get(validateToken, Enquiry.convertedList);
+enquiryRouter.route("/convert").post(validateToken, Enquiry.convert);
+enquiryRouter.route("/postenquiry").post(validateToken, Enquiry.postenquiry);
 
 module.exports = enquiryRouter;

@@ -9,6 +9,8 @@ const UserRole = require("../models/franchise/userRole")
 const { trans } = require("../lib/mailtransporter");
 
 const register = function (req, res, next) {
+	console.log('req...',req.body);
+	console.log('req...',req.decoded);
 	let accountantParam = {
 		id: req.body.accountant_id,
 		name: req.body.accountant_name,
