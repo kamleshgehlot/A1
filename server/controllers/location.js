@@ -12,7 +12,7 @@ const getAll = function(req, res, next) {
 
 const selectedArea = function(req, res, next) {
   try {
-    console.log("req....",req.body);
+    // console.log("req....",req.body);
     
     if(!req.body.city_id){
       new Location({city_name: req.body.city_name, city_code: req.body.city_code}).getCityRelatedAllArea().then(result => {

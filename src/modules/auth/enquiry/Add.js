@@ -29,18 +29,16 @@ import FormControl from "@material-ui/core/FormControl";
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
 import EnquiryAPI from '../../../api/franchise/Enquiry';
 
 import useSignUpForm from '../franchise/CustomHooks';
-import Enquiry from './Enquiry';
 
 const RESET_VALUES = {
     enquiry_id : '',
       customer_name: '',
       contact: '',
-      intrested_product_id: '',
+      interested_product_id: '',
       is_active: '',
 };
 
@@ -84,16 +82,16 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList}) {
 
   const classes = useStyles();
-  const [assignIntrest, setAssignIntrest] = React.useState([]);
+  const [assignInterest, setAssignInterest] = React.useState([]);
   const [productList, setProductList] = useState([]);
-  const [enquiryList, setEnquiryList] = useState([]);
+  // const [enquiryList, setEnquiryList] = useState([]);
 
  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
-
+        // console.log('helo',enquiry_id);
         if(enquiry_id.id[0]!=null){
           setInput('enquiry_id',("E_" + (enquiry_id.id[0].id+ 1)));
           // generate(result.taskLast[0].id);
@@ -101,6 +99,10 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
         else{
           setInput('enquiry_id','E_1');
         }
+
+        const result = await Category.productlist();
+        setProductList(result.productList);
+        // console.log('product...',result.productList);
 
       } catch (error) {
         console.log(error);
@@ -112,20 +114,25 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   
   
   function handleChangeMultiple(event) {
-    setAssignIntrest(event.target.value);
-    inputs['intrested_product_id']=assignIntrest;
+    setAssignInterest(event.target.value);
+    // console.log("assss",assignInterest);
+    
   }
   
-  const addEnquiry = async () => {
+  const addEnquiry = async (e) => {
+
+    // setInput('interested_product_id',assignInterest.join())
+
     const response = await EnquiryAPI.postEnquiry({
-      enquiry_id : enquiry_id,
+      enquiry_id : inputs.enquiry_id,
       customer_name: inputs.customer_name,
       contact: inputs.contact,
-      intrested_product_id: inputs.intrested_product_id,
+      interested_product_id: assignInterest.join(),
       is_active: 1,
+      converted_to: 0,
     });
 
-    assignIntrest.length = 0;
+    assignInterest.length = 0;
     handleSnackbarClick(true);
     setEnquiryList(response.enquiryList);
     handleReset(RESET_VALUES);
@@ -143,7 +150,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     validate
   );
   
-  console.log("inputess",inputs);
+  // console.log("inputess",inputs);
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -212,19 +219,27 @@ return (
                     <InputLabel htmlFor="assign_interest">Interested In*</InputLabel>
                     <Select
                       multiple
-                      value={assignIntrest}
+                      value={assignInterest}
                       onChange={handleChangeMultiple}
                       inputProps={{
-                        name: 'intrested_product_id',
-                        id: 'intrested_product_id',
+                        name: 'interested_product_id',
+                        id: 'interested_product_id',
                         // label:'assign_interest'
                       }}
                       fullWidth
                       required
                     >
-                      <MenuItem value={1}>{'Product 1'}</MenuItem>
+                      {
+                        (productList.length != '' ? productList : []).map((data)=> {
+                          return(
+                            <MenuItem value={data.id}>{data.name}</MenuItem>      
+                          )
+                        })
+
+                      }
+                      {/* <MenuItem value={1}>{'Product 1'}</MenuItem>
                       <MenuItem value={2}>{'Product 2'}</MenuItem>
-                      <MenuItem value={3}>{'Product 3'}</MenuItem>
+                      <MenuItem value={3}>{'Product 3'}</MenuItem> */}
                       {/* {role.map((ele,index) =>{
                         return(
                         <MenuItem value={ele.id}>{ele.name}</MenuItem>
