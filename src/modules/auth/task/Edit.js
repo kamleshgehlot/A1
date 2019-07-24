@@ -115,6 +115,19 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   };
 
   
+  function pastDate(){
+    var dtToday = new Date();
+      
+      var month = dtToday.getMonth() + 1;
+      var day = dtToday.getDate();
+      var year = dtToday.getFullYear();
+      if(month < 10)
+          month = '0' + month.toString();
+      if(day < 10)
+          day = '0' + day.toString();
+          var maxDate = year + '-' + month + '-' + day;
+          document.getElementById('due_date').setAttribute('min', maxDate);
+    }
   const rescheduleTask = async () => {
 
     console.log('taskList======',taskList);
@@ -262,7 +275,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 value={taskList.due_date}
                                 onChange={handleInputChange}
                                 fullWidth
-                                required
+                                required onFocus={pastDate}
                                 type="date"
                                 // placeholder="Franchise Name"
                                 margin="dense"

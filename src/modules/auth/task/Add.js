@@ -143,8 +143,19 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
    const t_id='t_'+tid;
     setTaskId(t_id);
   }
-
-
+  function pastDate(){
+  var dtToday = new Date();
+    
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+        var maxDate = year + '-' + month + '-' + day;
+        document.getElementById('due_date').setAttribute('min', maxDate);
+  }
     // useEffect(() => {
     //   const fetchData = async () => {
     //     setIsError(false);
@@ -299,6 +310,7 @@ return (
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
+                                onFocus={pastDate}
                                 type="date" className={classes.dropdwn}
                                 // placeholder="Franchise Name"
                                 margin="dense"
