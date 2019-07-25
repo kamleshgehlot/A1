@@ -225,15 +225,19 @@ export default function FranchiseStaff(franchiseId) {
                           <StyledTableCell> {data.user_id}  </StyledTableCell>
                           <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                           <StyledTableCell> 
-                          
+                          {console.log("index length",data.role.split(',').length)}
                             {
                             ( (data.role && data.role.split(',')) || []).map((a, index) =>{
+                              // console.log("index",index);
                               return(
                                 role.map((ele)=>{
                                   return(
+                                    (data.role.split(',').length-1)===index ?
+                                    data.role.split(',')[index] == ele.id ? ele.name  :''
+                                    :
                                     data.role.split(',')[index] == ele.id ? ele.name + ", " :''
                                   )
-                                  }) 
+                                  })  
                               ) 
                               })
                             }

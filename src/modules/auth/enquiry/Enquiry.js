@@ -12,10 +12,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Add from './Add';
+import ConvertedEnquiry from './ConvertedEnquiry';
 import CustomerAdd from '../customer/Add';
 // API CALL
 import EnquiryAPI from '../../../api/franchise/Enquiry';
 import Category from '../../../../src/api/Category';
+
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -45,7 +47,7 @@ export default function Enquiry() {
   const [enquiryData,setEnquiryData] = useState([]);
   const [customerOpen, setCustomerOpen] = useState(false);
   const [productList, setProductList] = useState([]);
-
+  const [convertedEnquiryOpen, SetConvertedEnquiryOpen] = useState(false);
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -102,20 +104,15 @@ export default function Enquiry() {
     setSnackbarOpen(true);
   }
   function handleCompleteEnquiryClickOpen(){
-    const fetchData = async () => {
-      try{
-        const result = await EnquiryAPI.convertedList();
-        console.log('result..',result.enquiryList);
-        setEnquiryList(result.enquiryList);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    SetConvertedEnquiryOpen(true);
     
-    fetchData();
+  }
+  function handleCompleteEnquiryClickClose() {
+    SetConvertedEnquiryOpen(false)
   }
 
   function setEnquiryListFn(response) {
+
     const fetchData = async () => {
       try {
         const result = await EnquiryAPI.convert({enquiry_id: enquiryData.id});
@@ -146,15 +143,6 @@ export default function Enquiry() {
     
   }, []);
 
-  // const handleToConvertEnquiry = async () => {
-  //   try {
-  //     const result = await EnquiryAPI.convertEnquiry();
-  //     setEnquiryList(result.enquiryList);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
 
 
   return (
@@ -176,7 +164,7 @@ export default function Enquiry() {
             </Fab>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Button variant="contained" color="primary" size="small"  onClick={handleCompleteEnquiryClickOpen} >Converted Enquiry List</Button>
+            <Button variant="contained" color="primary" size="small"  onClick={handleCompleteEnquiryClickOpen} >Converted Enquiries</Button>
           </Grid>
           
           <Grid item xs={12} sm={10}>
@@ -206,9 +194,12 @@ export default function Enquiry() {
                                    ((data.interested_product_id && data.interested_product_id.split(',')) || []).map((a, index) =>{
                                     return(
                                       productList.map((ele)=>{
-                                      return(
-                                        data.interested_product_id.split(',')[index] == ele.id ? ele.name + ", " :''
-                                      )
+                                        return(
+                                          (data.interested_product_id.split(',').length-1)===index ?
+                                          data.interested_product_id.split(',')[index] == ele.id ? ele.name :''
+                                          :
+                                          data.interested_product_id.split(',')[index] == ele.id ? ele.name + ", " :''
+                                        )
                                       }) 
                                     ) 
                                     })
@@ -231,6 +222,8 @@ export default function Enquiry() {
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  />
       {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} /> : null}
+      {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null}
+      
     </div>
   );
 }

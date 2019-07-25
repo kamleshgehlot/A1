@@ -9,17 +9,18 @@ const add = function (req, res, next) {
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
     status: req.body.status,
-    user_id: req.decoded.user_id
+    user_id: req.decoded.user_id,
+    created_by:req.decoded.id,
+    updated_by:req.decoded.id,
   };
   // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
 
-
     if (req.body.id) {
       newTask.update().then(function (result) {
         new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
-          console.log('controller', { taskList });
+          // console.log('controller', { taskList });
           res.send({ taskList });
         });
       });
@@ -70,6 +71,8 @@ const completedList = function (req, res, next) {
 const deleteTask = function (req, res, next) {
   const taskParam = {
     id: req.body.id,
+    user_id: req.decoded.user_id,
+    updated_by: req.decoded.id,
     franchise_id: req.body.franchise_id.franchiseId,
   };
   try {
@@ -98,9 +101,11 @@ const reschedule = function (req, res, next) {
     due_date: req.body.due_date,
     new_due_date: req.body.new_due_date,
     status: req.body.status,
+    updated_by: req.decoded.id,
+    created_by: req.decoded.id,
     user_id: req.decoded.user_id
   };
-  console.log('req--------------',req.body);
+  // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
       newTask.reschedule().then(result => {
@@ -135,9 +140,10 @@ const staffUpdate = function (req, res, next) {
     message: req.body.message,
     status: req.body.status,
     user_id: req.decoded.user_id,
+    updated_by: req.decoded.id,
     updated_date:req.body.updated_date
   };
-  console.log('req--------------',req.body);
+  // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
       newTask.staffUpdate().then(function (result) {

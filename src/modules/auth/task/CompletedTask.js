@@ -95,6 +95,7 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [taskStatusList, setTaskStatusList]=useState();
 
+  console.log('assign',assignedid);
   const classes = useStyles();
 
   useEffect(() => {

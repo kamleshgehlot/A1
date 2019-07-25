@@ -38,19 +38,25 @@ const register = function (req, res, next) {
       password: staffData.password,
       role: staffData.role,
       created_by: req.decoded.id,
+      updated_by:req.decoded.id,
       is_active: 1
 	};
 
 	try{
-    const newStaff = new Staff(staffParams);
-
+    
     if(staffData.id) {
+      staffParams.updated_by = req.decoded.id;
+      const newStaff = new Staff(staffParams);
+
       newStaff.update().then(function(result){
         new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
           res.send({ staffList: staffList });
         });
       });
     } else {
+      staffParams.created_by = req.decoded.id;
+      const newStaff = new Staff(staffParams);
+
       newStaff.register().then(function(result){
         new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
           res.send({ staffList: staffList });

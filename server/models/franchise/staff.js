@@ -27,7 +27,7 @@ var Staff = function (params) {
   this.password = params.password;
   this.role = params.role;
   this.created_by = params.created_by;
-
+  this.updated_by = params.updated_by;
   this.is_active = params.is_active;
 };
 
@@ -91,7 +91,7 @@ Staff.prototype.update = function () {
 
             that.employment_docs==='' ? 
             // connection.query('update staff set first_name = "'+that.first_name+'", last_name = "'+that.last_name+'", location = "'+that.location+'", contact = "'+that.contact+'", email = "'+that.email+'", pre_company_name = "'+that.pre_company_name+'", pre_company_address = "'+that.pre_company_address+'", pre_company_contact = "'+that.pre_company_contact+'", pre_position = "'+that.pre_position+'", duration = "'+that.duration+'", role =  "'+that.role+'", employment_docs = "'+that.employment_docs+'" WHERE id = "'+that.id+'")', function (error, rows, fields) {
-            connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
+            connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", updated_by = "'+that.updated_by+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
               } else {
@@ -100,7 +100,7 @@ Staff.prototype.update = function () {
               }
             })
             :
-            connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
+            connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '", updated_by = "'+that.updated_by+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
               } else {

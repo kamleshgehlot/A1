@@ -136,7 +136,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
       
       user_id: inputs.user_id,
       password: inputs.password,
-      role: assignRole,
+      role: assignRole.join(),
       created_by: 1,
     };
 
@@ -155,7 +155,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     handleClose(false);
     
   };
-console.log("erole",assignRole);
+
   function validate(values) {
     let errors = {};
 
@@ -171,7 +171,7 @@ console.log("erole",assignRole);
   
   function handleChangeMultiple(event) {
     setAssignRole(event.target.value);
-    inputs['role']=assignRole;
+    // inputs['role']=assignRole;
   }
   
   function handleNameBlurChange(e) {
@@ -479,7 +479,7 @@ return (
                       inputProps={{
                         name: 'assign_role',
                         id: 'assign_role',
-                        label:'assign_role'
+                        // label:'assign_role'
                       }}
                       fullWidth
                       required

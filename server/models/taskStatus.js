@@ -20,7 +20,7 @@ TaskStatus.prototype.all = function () {
       connection.query('select id, status from task_status', function (error, rows, fields) {
 
         if (!error) {
-          console.log('status',rows);
+          // console.log('status',rows);
           resolve(rows);
         } else {
           console.log("Error...", error);

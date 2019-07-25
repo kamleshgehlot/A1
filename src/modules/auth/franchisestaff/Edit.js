@@ -129,7 +129,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
       
       user_id: staffList.user_id,
       password: staffList.password,
-      role: assignRole,
+      role: assignRole.join(),
       created_by: 1,
     };
 
