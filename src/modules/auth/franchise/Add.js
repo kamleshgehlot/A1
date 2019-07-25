@@ -164,31 +164,31 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const addFranchise = async () => {
 
     if(directorList==''){
-      // console.log("data not include in directorList==''",directorList);
-      // handleDirectorList();
-      const directorListTemp = [...directorList];
+      console.log("data not include in directorList==''",directorList);
+      handleDirectorList();
+      // const directorListTemp = [...directorList];
 
-      if(inputs.director === '' || inputs.email === '' || inputs.contact === '' || inputs.uid === '' || inputs.password === '') {
-        alert('Please provide required information')
-      } else {
-        directorListTemp.push({
-          'director': inputs.director,
-          'email' : inputs.email,
-          'contact': inputs.contact,
-          'alt_contact': inputs.alt_contact,
-          'uid' : inputs.uid,
-          'password': inputs.password
-        });
+      // if(inputs.director === '' || inputs.email === '' || inputs.contact === '' || inputs.uid === '' || inputs.password === '') {
+      //   alert('Please provide required information')
+      // } else {
+      //   directorListTemp.push({
+      //     'director': inputs.director,
+      //     'email' : inputs.email,
+      //     'contact': inputs.contact,
+      //     'alt_contact': inputs.alt_contact,
+      //     'uid' : inputs.uid,
+      //     'password': inputs.password
+      //   });
          
-        inputs.director = '';
-        inputs.email = '';
-        inputs.contact = '';
-        inputs.alt_contact = '';
-        inputs.uid = '';
-        inputs.password = '';
+      //   inputs.director = '';
+      //   inputs.email = '';
+      //   inputs.contact = '';
+      //   inputs.alt_contact = '';
+      //   inputs.uid = '';
+      //   inputs.password = '';
     
-        setDirectorList(directorListTemp);
-      }
+      //   setDirectorList(directorListTemp);
+      // }
     }
    
     const response = await UserAPI.add({

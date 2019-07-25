@@ -16,13 +16,14 @@ import TextField from '@material-ui/core/TextField';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
-
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import Add from './Add';
 import Edit from './Edit';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
+import { fontFamily } from '@material-ui/system';
 
 
 
@@ -55,7 +56,7 @@ export default function CustomerList(userId) {
   const [idTypeList, setIdTypeList] = useState([]);
   const [customerListData, setCustomerListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
-  const [searchText, setSearchText]  = useState();
+  const [searchText, setSearchText]  = useState('');
 
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -104,6 +105,7 @@ export default function CustomerList(userId) {
         width: 'auto',
       },
     },
+      
     searchIcon: {
       width: theme.spacing(7),
       height: '100%',
@@ -166,14 +168,20 @@ export default function CustomerList(userId) {
   // console.log("search text", searchText);
   
   const searchHandler = async () => {
-      try {
+    try {
+    if(searchText!=''){
         const result = await Customer.search({searchText: searchText});
-        console.log(result.customerList);
+        // console.log(result.customerList);
         setCustomerListData(result.customerList);
-
-      } catch (error) {
-        console.log('error',error);
-      }
+        setSearchText('');
+     
+    }else{
+      const result = await Customer.list();
+      setCustomerListData(result.customerList);
+      setSearchText('');
+    }} catch (error) {
+      console.log('error',error);
+    }
   }
 
   
@@ -219,7 +227,7 @@ export default function CustomerList(userId) {
           </Grid>
           <Grid item xs={12} sm={3}>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 margin="dense"
                 id="search"
@@ -228,14 +236,25 @@ export default function CustomerList(userId) {
                 label="Search..."
                 type="text"
                 value={searchText} 
+                onKeyPress={(ev) => {
+                  if (ev.key ===  'Enter') {
+                    searchHandler()
+                    ev.preventDefault();
+                  }
+                }}
                 onChange={handleSearchText}
-                fullWidth
+                // inputProps={{
+                //   endAdorment:(
+                //     <InputAdornment position='start'>
+                //       <SearchIcon />  ll 
+                //     </InputAdornment>
+                //   )
+                // }}
+                // fullWidth
               />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <IconButton  aria-label="Search" onClick={ searchHandler} >
+              <IconButton  aria-label="Search" onClick={ searchHandler} >
                 <SearchIcon />   
-            </IconButton>
+              </IconButton>
           </Grid>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
