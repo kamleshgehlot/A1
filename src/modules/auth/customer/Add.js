@@ -444,7 +444,6 @@ return (
                         }
 
                           <MenuItem value={0}>{'Other'}</MenuItem>    
-                          >    
                     </Select>
                     </Grid>
                     <Grid item xs={12} sm={3}>

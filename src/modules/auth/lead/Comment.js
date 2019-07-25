@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -14,31 +13,29 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
-import Paper from '@material-ui/core/Paper';
-import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
-
-import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
 
-import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
-  franchise_id: '',
-  lead_id: '',
-  message: '',
-  is_active: ''
+  id: '',
+  first_name: '',
+  last_name:'',
+  location:'',
+  contact:'',
+  email:'',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -71,39 +68,48 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
-  drpdwn:{
-    marginTop: theme.spacing(1),
-  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const StyledTableCell = withStyles(theme => ({
+  head: {
+   
+    color: theme.palette.common.black,
+    fontSize: theme.typography.pxToRem(18),
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
 
-export default function AddLead({ open, handleClose, handleSnackbarClick, setLeadList}) {
-
+const StyledTableRow = withStyles(theme => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.background.default,
+    },
+  },
+}))(TableRow);
+export default function Comment({open, handleViewClose, handleSnackbarClick, inputs}) {
   const classes = useStyles();
+  
   const [expanded, setExpanded] = React.useState('panel1');
-  const [temp, setTemp] = React.useState([]);
-  const [assignRole, setAssignRole] = React.useState([]);
+  const [staffList, setStaffList] = useState({});
+  const [leadList, setLeadList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  
-  const [otherDisable, setOtherDisable] = useState(true);
-  const [otherFranchiseValue, setOtherFranchiseValue] = useState();
-  
-  const [leadId, setLeadId] = useState();
   const [franchiseList, setFranchiseList] = useState({});
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250
-      }
-    }
+
+  const addComment = async () => {
+    const response = await Lead.comment({
+      lead_id: leadList.lead_id,
+      comment:inputs.comment,
+      comment_by: inputs.comment_by
+    });
+    handleSnackbarClick(true);
+    handleViewClose(false);
   };
 
   useEffect(() => {
@@ -123,106 +129,31 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     fetchData();
     
   }, []);
-  
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
-      try {
-        const result = await Lead.last();
-        if(result.leadLast[0]!=null){
-          generate(result.leadLast[0].id);
-        }
-        else{
-          const l_id='l_1';
-          setLeadId(l_id);
-        }
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-
-  function generate(last_id) {
-   const lid=last_id+1;
-   const l_id='l_'+lid;
-    setLeadId(l_id);
-  }
-
-  const addLead = async () => {
-    console.log('inp----',inputs);
-    const response = await Lead.add({
-      franchise_id: inputs.franchise_id,
-      lead_id: leadId,
-      message: inputs.description,
-      is_active: 1,
-      franchise_name: otherFranchiseValue,
-      is_franchise_exist: inputs.is_franchise_exist,
-    });
-    console.log(response);
-    setLeadList(response.leadList);
-    handleSnackbarClick(true);
-    handleClose(false);
-  };
-
-  function validate(values) {
-    let errors = {};
-    return errors;
-  };
-
-
-  function handleFranchise(event){
-    if(event.target.value===0){
-      setOtherDisable(false);
-      setInput('is_franchise_exist',0);
-    }else{
-      setOtherDisable(true)
-      setOtherFranchiseValue('');
-      setInput('is_franchise_exist',1);
-    }
-    setInput('franchise_id',event.target.value);
-    }
-
-    function handleOtherFranchise(event){
-      setOtherFranchiseValue(event.target.value)
-    }
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-    RESET_VALUES,
-    addLead,
-    validate
-  );
-  
-
-return (
+  const handleInputChange = e =>
+    setInputs({
+    ...inputs,
+    [e.target.name]: e.target.value,
+  });
+  return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+      <Dialog maxWidth="lg" open={open} onClose={handleViewClose} TransitionComponent={Transition}>
+        <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              <IconButton edge="start" color="inherit" onClick={handleViewClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Add Lead
+                View Lead
               </Typography>
-              <Button color="inherit" type="submit">
-                save
-              </Button>
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
           <ExpansionPanel
               className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}>
+              expanded={expanded === 'panel1'}>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
@@ -231,8 +162,7 @@ return (
                       id="lead_id"
                       name="lead_id"
                       label=""
-                      value={leadId}
-                      onChange={handleInputChange}
+                      value={leadList.lead_id}
                       fullWidth
                       required
                       type="text"
@@ -243,8 +173,7 @@ return (
                   <Grid item xs={12} sm={3}>
                     <InputLabel htmlFor="last_name">Franchise</InputLabel>
                       <Select
-                        value={inputs.franchise_id}
-                        onChange = {handleFranchise}
+                        value={leadList.franchise_id}
                         inputProps={{
                           name: 'franchise_id',
                           id: 'franchise_id',
@@ -271,10 +200,9 @@ return (
                         name="otherFranchiseValue"
                         label="Enter Franchise Name"
                         type="text"
-                        value={otherFranchiseValue} 
-                        onChange={handleOtherFranchise}
+                        value={leadList.franchise_name} 
                         required
-                        disabled = {otherDisable}
+                        disabled 
                         fullWidth
                       />
                     </Grid>
@@ -285,8 +213,8 @@ return (
                       id="upload"
                       name="upload"
                       type="file"
-                      value={inputs.upload} 
-                      onChange={handleInputChange}
+                      disabled 
+                      value={leadList.upload} 
                       required
                       fullWidth
                     />
@@ -297,7 +225,22 @@ return (
                       id="description"
                       name="description"
                       label="Description"
-                      value={inputs.description}
+                      value={leadList.message}
+                      fullWidth
+                      required
+                      disabled 
+                      multiline
+                      type="text"
+                      margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
+                    <TextField
+                      id="comment"
+                      name="comment"
+                      label="Comment"
+                      value={leadList.comment}
                       onChange={handleInputChange}
                       fullWidth
                       required
@@ -306,13 +249,32 @@ return (
                       margin="dense"
                     />
                   </Grid>
+                  <Grid item xs={12} sm={4}>
+                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
+                    <TextField
+                      id="comment_by"
+                      name="comment_by"
+                      label="Comment By"
+                      value={leadList.comment_by}
+                      onChange={handleInputChange}
+                      fullWidth
+                      required
+                      type="text"
+                      margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={addComment} type="submit">
+                      Post Comment
+                    </Button>
+                  </Grid>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel> 
             
             
           </div>
-        </form>
+        </from>
       </Dialog>
     </div>
   );

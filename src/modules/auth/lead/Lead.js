@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddLead from './Add';
+import Comment from './Comment';
 import Add from '../enquiry/Add';
 // import Edit from './Edit';
 // import UploadDoc from './UploadDoc';
@@ -47,8 +48,10 @@ export default function Lead() {
   const [isError, setIsError] = useState(false);
   const [franchiseList, setFranchiseList] = useState({});
 
+  const [leadData,setLeadData]= useState();
   const [enquiryList, setEnquiryList] = useState({});
   const [openEnquiry, setEnquiryOpen] = useState(false);
+  const [openView, setViewOpen] = useState(false);
   const [leadList, setLeadList] = useState({});
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
@@ -133,6 +136,13 @@ export default function Lead() {
     setOpen(false);
   }
   
+  function handleClickViewOpen(data) {
+    setLeadData(data);
+    setViewOpen(true);
+  }
+  function handleViewClose() {
+    setViewOpen(false);
+  }
   function handleClickEnquiryOpen(data) {
     console.log('leadsenq---',data);
     setEnquiryOpen(true);
@@ -160,7 +170,7 @@ export default function Lead() {
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={10}>
             <Fab
               variant="extended"
               size="small"
@@ -186,7 +196,7 @@ export default function Lead() {
             </Fab>
           </Grid>
           
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
                     <TableHead>
@@ -197,6 +207,7 @@ export default function Lead() {
                         <StyledTableCell>Doc/Photo</StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
+                        <StyledTableCell>Convert To</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -218,6 +229,11 @@ export default function Lead() {
                               <StyledTableCell></StyledTableCell>
                             <StyledTableCell>{data.message}</StyledTableCell>
                             <StyledTableCell>
+                              <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickViewOpen(data); }}>
+                                View
+                              </Button>
+                            </StyledTableCell>
+                            <StyledTableCell>
                               <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }}>
                                 Enquiry
                               </Button>
@@ -237,7 +253,8 @@ export default function Lead() {
       <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>
       
       {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}/> :null}
-    
+      {openView ?<Comment open={openView} handleClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputs={leadData}  /> :null}
+
     </div>
   );
 }

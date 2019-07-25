@@ -3,9 +3,10 @@ const Lead = require('../../controllers/lead/lead.js');
 
 const validateToken = require('../../utils').validateToken;
 
-const taskRouter = express.Router();
+const leadRouter = express.Router();
 
-taskRouter.route('/add').post(validateToken, Lead.add);
-taskRouter.route('/list').get(validateToken, Lead.all);
-taskRouter.route('/last').get(validateToken, Lead.last);
-module.exports = taskRouter;
+leadRouter.route('/add').post(validateToken, Lead.add);
+leadRouter.route('/list').get(validateToken, Lead.all);
+leadRouter.route('/last').get(validateToken, Lead.last);
+leadRouter.route('/comment').post(validateToken, Lead.comment);
+module.exports = leadRouter;

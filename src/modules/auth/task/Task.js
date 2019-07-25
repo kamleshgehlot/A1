@@ -208,7 +208,7 @@ useEffect(() => {
     setOpen(false);
   }
   function handleClickEditOpen(data) {
-    setTaskData(data),
+    setTaskData(data);
     setEditOpen(true);
   }
   function handleEditClose() {
