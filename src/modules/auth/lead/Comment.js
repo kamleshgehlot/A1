@@ -278,18 +278,16 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       Post Comment
                     </Button>
                   </Grid>
-                  <Paper className={classes.paper}>    
-                  { (commentList.length > 0 ? commentList : []).map((data, index)=>{
-                        return(
-                        <Typography variant="h6">
-                            {data.comment + '       -' + data.comment_by}
-                        </Typography>
-                        
-
-                  )
-                })
-              }
-</Paper>
+                    <Paper className={classes.paper}>    
+                      { (commentList.length > 0 ? commentList : []).map((data, index)=>{
+                          return(
+                            <Typography variant="h6">
+                                {data.comment + '       -' + data.comment_by}
+                            </Typography>
+                          )
+                        })
+                      }
+                  </Paper>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel> 

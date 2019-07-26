@@ -204,7 +204,7 @@ export default function Lead() {
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Lead ID</StyledTableCell>
                         <StyledTableCell>Franchise</StyledTableCell>
-                        <StyledTableCell>Doc/Photo</StyledTableCell>
+                        {/* <StyledTableCell>Doc/Photo</StyledTableCell> */}
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                         <StyledTableCell>Convert To</StyledTableCell>
@@ -226,7 +226,7 @@ export default function Lead() {
                                       
                                 }) : <StyledTableCell> {data.franchise_name}</StyledTableCell>
                               }
-                              <StyledTableCell></StyledTableCell>
+                              {/* <StyledTableCell></StyledTableCell> */}
                             <StyledTableCell>{data.message}</StyledTableCell>
                             <StyledTableCell>
                               <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickViewOpen(data); }}>
