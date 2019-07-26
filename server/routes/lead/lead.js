@@ -30,4 +30,5 @@ leadRouter.route('/list').get(validateToken, Lead.all);
 leadRouter.route('/last').get(validateToken, Lead.last);
 leadRouter.route('/addComment').post(validateToken, Lead.addComment);
 leadRouter.route('/allComment').post(validateToken, Lead.allComment);
+leadRouter.route('/franchiseList').get(validateToken, Lead.franchiseList);
 module.exports = leadRouter;

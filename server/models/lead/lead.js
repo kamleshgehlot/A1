@@ -82,21 +82,45 @@ Lead.prototype.all = function () {
       if (error) {
         throw error;
       }
-      connection.changeUser({ database: dbName["prod"] });
-      connection.query('select id,lead_id, is_franchise_exist,franchise_id,franchise_name,message, is_active from leads where is_active="1" order by id desc', function (error, rows, fields) {
-        if (!error) {
-          resolve(rows);
+      if(that.user_id!="admin"){
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
+          if (!error) {
+            // resolve(rows);
+            const franchise_id=rows[0].franchise_id;
+            console.log('franchise_id---shd--',franchise_id);
+            connection.changeUser({ database: dbName["prod"] });
+            connection.query('select id,lead_id, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by from leads where is_active="1" AND f_id="'+franchise_id+'" OR franchise_id="'+franchise_id+'" OR franchise_id=0 order by id desc', function (error, rows, fields) {
+              if (!error) {
+                resolve(rows);
 
-        } else {
-          console.log("Error...", error);
-          reject(error);
-        }
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
+          }
+        });
+      }
+      else{
+      
+            connection.changeUser({ database: dbName["prod"] });
+            connection.query('select id,lead_id, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by from leads where is_active="1" AND f_id="0" OR franchise_id=0 order by id desc', function (error, rows, fields) {
+              if (!error) {
+                console.log('roejhsdkhdkk=-===',rows);
+                resolve(rows);
 
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
+      }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
       });
     });
-  });
+    
 }
 
 Lead.prototype.last = function () {
@@ -165,6 +189,33 @@ Lead.prototype.allComment = function () {
           console.log('Error...', error);
           reject(error);
         }
+      });
+    });
+  });
+}
+
+
+Lead.prototype.franchiseList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }
+      connection.changeUser({ database: dbName["prod"] });
+      connection.query('select id,name,city,suburb from franchise order by id desc', function (error, rows, fields) {
+        if (!error) {
+          console.log('rows----',rows);
+          resolve(rows);
+
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
       });
     });
   });

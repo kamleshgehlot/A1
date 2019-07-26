@@ -95,7 +95,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   const [otherFranchiseValue, setOtherFranchiseValue] = useState();
   
   const [leadId, setLeadId] = useState();
-  const [franchiseList, setFranchiseList] = useState({});
+  const [franchiseListd, setFranchiseList] = useState({});
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -113,9 +113,9 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       setIsLoading(true);
 
       try {
-        const result = await UserAPI.list();
-        setFranchiseList(result.userList);
-        console.log('usrlist---',result.userList);
+        const result = await Lead.franchiseList();
+        setFranchiseList(result.franchiseList);
+        // console.log('usrlist---',result.franchiseList);
       } catch (error) {
         setIsError(true);
       }
@@ -179,6 +179,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     console.log(response);
     setLeadList(response.leadList);
     handleSnackbarClick(true);
+    handleReset(RESET_VALUES);
     handleClose(false);
   };
 
@@ -266,9 +267,9 @@ return (
                       >
                       <MenuItem disabled  value="" selected>Select Franchise
                       </MenuItem>
-                          {(franchiseList.length > 0 ? franchiseList : []).map(data => {
+                          {(franchiseListd.length > 0 ? franchiseListd : []).map(dataf => {
                           return (
-                            <MenuItem value={data.franchise_id} >{data.franchise_name}</MenuItem>
+                            <MenuItem value={dataf.id} >{dataf.name}</MenuItem>
                           );
                         })}
                         <MenuItem value={0}>{'Other'}</MenuItem> 

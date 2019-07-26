@@ -48,8 +48,7 @@ export default function Lead() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [franchiseList, setFranchiseList] = useState({});
-
+  const [franchiseListd, setFranchiseList] = useState({});
   const [leadData,setLeadData]= useState();
   const [enquiryList, setEnquiryList] = useState({});
   const [openEnquiry, setEnquiryOpen] = useState(false);
@@ -94,7 +93,6 @@ export default function Lead() {
   }));
   const classes = useStyles();
 
-  //leads list
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -111,16 +109,13 @@ export default function Lead() {
     fetchData();
   }, []);
 
-  
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
-
       try {
-        const result = await UserAPI.list();
-        setFranchiseList(result.userList);
-        console.log('usrlist---',result.userList);
+        const result = await LeadAPI.franchiseList();
+        setFranchiseList(result.franchiseList);
       } catch (error) {
         setIsError(true);
       }
@@ -146,7 +141,7 @@ export default function Lead() {
     setViewOpen(false);
   }
   function handleClickEnquiryOpen(data) {
-    console.log('leadsenq---',data);
+    // console.log('leadsenq---',data);
     setEnquiryOpen(true);
   }
   function handleEnquiryClose() {
@@ -166,6 +161,7 @@ export default function Lead() {
 
   function setEnquiryListFn(response) {
     setEnquiryList(response);
+    console.log('rsfuyi--',response);
   }
   return (
     <div>
@@ -207,6 +203,7 @@ export default function Lead() {
                         <StyledTableCell>Lead ID</StyledTableCell>
                         <StyledTableCell>Franchise</StyledTableCell>
                         {/* <StyledTableCell>Doc/Photo</StyledTableCell> */}
+                        <StyledTableCell>Created by</StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       
@@ -220,17 +217,27 @@ export default function Lead() {
                           <TableRow >
                           <StyledTableCell> {index+1}  </StyledTableCell>
                             <StyledTableCell> {data.lead_id}  </StyledTableCell>
-                          
-                            {data.franchise_id!=0 ?   (franchiseList.length > 0 ? franchiseList : []).map((dataf, index1)=>{
+                            {data.franchise_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((dataf, index1)=>{
+                                  
                                   return(
-                                    data.franchise_id===dataf.franchise_id ?
-                                    <StyledTableCell> {dataf.franchise_name}</StyledTableCell>
+                                    data.franchise_id===dataf.id ?
+                                    <StyledTableCell> {dataf.name} </StyledTableCell>
                                       :''
                                       )
                                       
                                 }) : <StyledTableCell> {data.franchise_name}</StyledTableCell>
                               }
                               {/* <StyledTableCell></StyledTableCell> */}
+                              {data.f_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{
+                                  
+                                  return(
+                                    data.f_id===datafr.id ?
+                                    <StyledTableCell> {datafr.name +'  ('+ datafr.city + ' ,' + datafr.suburb + ' )'} </StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                }) : <StyledTableCell> Master Admin</StyledTableCell>
+                              }
                             <StyledTableCell>{data.message}</StyledTableCell>
                             <StyledTableCell>
                               <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickViewOpen(data); }}>
@@ -255,7 +262,7 @@ export default function Lead() {
                </Paper>
           </Grid>
         </Grid>
-      <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>
+      {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}
       
       {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}/> :null}
       {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputss={leadData}  /> :null}

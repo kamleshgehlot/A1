@@ -118,7 +118,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     
   }
   
-  const addEnquiry = async (e) => {
+  const addEnquiry = async () => {
 
     // setInput('interested_product_id',assignInterest.join())
 
@@ -130,6 +130,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       is_active: 1,
       converted_to: 0,
     });
+        console.log('sahgdaud--',response);
 
     assignInterest.length = 0;
     handleSnackbarClick(true);

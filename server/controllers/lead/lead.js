@@ -1,9 +1,7 @@
 const Lead = require('../../models/lead/lead.js');
 
 const add = function (req, res, next) {
-  console.log("****************staff..................", req.body);
-  console.log("%%%%%%%%%%% file %%%%%%%%%%%%%", req.files);
-
+  
   const leadData = JSON.parse(req.body.data);
 
   let attachments = '';
@@ -97,4 +95,14 @@ const allComment = function (req, res, next) {
     res.send('error', { error: err });
   }
 };
-module.exports = { add, all, last,addComment,allComment};
+const franchiseList = function (req, res, next) {
+  try {
+    new Lead({ user_id: req.decoded.user_id }).franchiseList().then(franchiseList => {
+      res.send({ franchiseList });
+      console.log('franchiseList======',franchiseList);
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
+module.exports = { add, all, last,addComment,allComment,franchiseList};

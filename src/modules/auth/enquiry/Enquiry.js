@@ -112,7 +112,7 @@ export default function Enquiry() {
   }
 
   function setEnquiryListFn(response) {
-
+console.log('res=---',response);
     const fetchData = async () => {
       try {
         const result = await EnquiryAPI.convert({enquiry_id: enquiryData.id});
