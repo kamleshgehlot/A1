@@ -38,6 +38,7 @@ const RESET_VALUES = {
   franchise_id: '',
   lead_id: '',
   message: '',
+  description:'',
   is_active: ''
 };
 
@@ -181,11 +182,11 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   function handleFranchise(event){
     if(event.target.value===0){
       setOtherDisable(false);
-      setInput('is_franchise_exist',0);
+      setInput('is_franchise_exist','0');
     }else{
       setOtherDisable(true)
       setOtherFranchiseValue('');
-      setInput('is_franchise_exist',1);
+      setInput('is_franchise_exist','1');
     }
     setInput('franchise_id',event.target.value);
     }
@@ -287,7 +288,6 @@ return (
                       type="file"
                       value={inputs.upload} 
                       onChange={handleInputChange}
-                      required
                       fullWidth
                     />
                   </Grid>

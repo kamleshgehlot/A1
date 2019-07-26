@@ -44,8 +44,23 @@ export default {
       throw error;
     }
   },
-  comment: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/lead/comment`;
+  addComment: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/lead/addComment`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  allComment: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/lead/allComment`;
     try {
       const { data } = await axios(
         URL,

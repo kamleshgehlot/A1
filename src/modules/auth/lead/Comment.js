@@ -27,15 +27,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // API CALL
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
-
+import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
   id: '',
-  first_name: '',
-  last_name:'',
-  location:'',
-  contact:'',
-  email:'',
+  comment: '',
+  comment_by:'',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -92,19 +89,20 @@ const StyledTableRow = withStyles(theme => ({
     },
   },
 }))(TableRow);
-export default function Comment({open, handleViewClose, handleSnackbarClick, inputs}) {
+export default function Comment({open, handleViewClose, handleSnackbarClick, inputss}) {
   const classes = useStyles();
   
   const [expanded, setExpanded] = React.useState('panel1');
   const [staffList, setStaffList] = useState({});
-  const [leadList, setLeadList] = React.useState(inputs);
+  const [leadList, setLeadList] = React.useState(inputss);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [franchiseList, setFranchiseList] = useState({});
+  const [commentList, setCommentList] = useState({});
 
   const addComment = async () => {
-    const response = await Lead.comment({
-      lead_id: leadList.lead_id,
+    const response = await Lead.addComment({
+      lead_id: leadList.id,
       comment:inputs.comment,
       comment_by: inputs.comment_by
     });
@@ -120,6 +118,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
       try {
         const result = await UserAPI.list();
         setFranchiseList(result.userList);
+        allComment();
         console.log('usrlist---',result.userList);
       } catch (error) {
         setIsError(true);
@@ -129,12 +128,24 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
     fetchData();
     
   }, []);
+  const allComment = async () => {
+    const response = await Lead.allComment({
+      lead_id: leadList.id
+    });
+    setCommentList(response.commentList);
+    console.log('res---',response);
+  };
 
-  const handleInputChange = e =>
-    setInputs({
-    ...inputs,
-    [e.target.name]: e.target.value,
-  });
+  function validate(values) {
+    let errors = {};
+    return errors;
+  };
+  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+    RESET_VALUES,
+    addComment,
+    validate
+  );
+  
   return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleViewClose} TransitionComponent={Transition}>
@@ -215,7 +226,6 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       type="file"
                       disabled 
                       value={leadList.upload} 
-                      required
                       fullWidth
                     />
                   </Grid>
@@ -250,7 +260,6 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
                     <TextField
                       id="comment_by"
                       name="comment_by"
@@ -263,11 +272,24 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       margin="dense"
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={4}>
                     <Button variant="contained" color="primary" className={classes.button} onClick={addComment} type="submit">
                       Post Comment
                     </Button>
                   </Grid>
+                  <Paper className={classes.paper}>    
+                  { (commentList.length > 0 ? commentList : []).map((data, index)=>{
+                        return(
+                        <Typography variant="h6">
+                            {data.comment + '       -' + data.comment_by}
+                        </Typography>
+                        
+
+                  )
+                })
+              }
+</Paper>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel> 

@@ -217,14 +217,14 @@ export default function Lead() {
                           <StyledTableCell> {index+1}  </StyledTableCell>
                             <StyledTableCell> {data.lead_id}  </StyledTableCell>
                           
-                              { (franchiseList.length > 0 ? franchiseList : []).map((dataf, index1)=>{
+                            {data.franchise_id!=0 ?   (franchiseList.length > 0 ? franchiseList : []).map((dataf, index1)=>{
                                   return(
                                     data.franchise_id===dataf.franchise_id ?
                                     <StyledTableCell> {dataf.franchise_name}</StyledTableCell>
                                       :''
                                       )
                                       
-                                })
+                                }) : <StyledTableCell> {data.franchise_name}</StyledTableCell>
                               }
                               <StyledTableCell></StyledTableCell>
                             <StyledTableCell>{data.message}</StyledTableCell>
@@ -253,7 +253,7 @@ export default function Lead() {
       <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>
       
       {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}/> :null}
-      {openView ?<Comment open={openView} handleClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputs={leadData}  /> :null}
+      {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputss={leadData}  /> :null}
 
     </div>
   );
