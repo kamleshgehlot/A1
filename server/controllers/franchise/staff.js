@@ -73,7 +73,7 @@ const register = function (req, res, next) {
 // const all = function(req, res, next) {
 //   let staffParams = {
 //     franchise_id: req.body.franchise_id,
-//   };
+//   }; 
 //   try {
 //     const newStaff = new Staff(staffParams);
 //     newStaff.all().then(function(result){

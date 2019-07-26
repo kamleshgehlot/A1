@@ -1,15 +1,27 @@
 const Lead = require('../../models/lead/lead.js');
 
 const add = function (req, res, next) {
+  console.log("****************staff..................", req.body);
+  console.log("%%%%%%%%%%% file %%%%%%%%%%%%%", req.files);
+
+  const leadData = JSON.parse(req.body.data);
+
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
   const leadParam = {
-    lead_id: req.body.lead_id,
-    franchise_id: req.body.franchise_id,
-    message: req.body.message,
-    is_active: req.body.is_active,
+    lead_id: leadData.lead_id,
+    franchise_id: leadData.franchise_id,
+    message: leadData.message,
+    is_active: leadData.is_active,
     user_id: req.decoded.user_id,
     userid: req.decoded.id,
-    is_franchise_exist:req.body.is_franchise_exist,
-    franchise_name:req.body.franchise_name,
+    upload: attachments,
+    is_franchise_exist:leadData.is_franchise_exist,
+    franchise_name:leadData.franchise_name,
     f_id:req.decoded.franchise_id,
     uid:req.decoded.id
   };

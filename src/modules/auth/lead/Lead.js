@@ -41,6 +41,8 @@ const StyledTableRow = withStyles(theme => ({
 
 
 export default function Lead() {
+  const roleName = APP_TOKEN.get().roleName;
+  const userName = APP_TOKEN.get().userName;
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -100,7 +102,7 @@ export default function Lead() {
       try {
         const result = await LeadAPI.list();
         setLeadList(result.leadList);
-        console.log('sahgdaud--',result.leadList);
+        // console.log('sahgdaud--',result.leadList);
       } catch (error) {
         setIsError(true);
       }
@@ -207,7 +209,9 @@ export default function Lead() {
                         {/* <StyledTableCell>Doc/Photo</StyledTableCell> */}
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
-                        <StyledTableCell>Convert To</StyledTableCell>
+                      
+                        {roleName != 'Super Admin' 
+                        && (   <StyledTableCell>Convert To</StyledTableCell>)}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -233,14 +237,15 @@ export default function Lead() {
                                 View
                               </Button>
                             </StyledTableCell>
-                            <StyledTableCell>
-                              <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }}>
-                                Enquiry
-                              </Button>
-                              <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}>
-                                Order
-                              </Button>
-                            </StyledTableCell>
+                            {roleName != 'Super Admin' 
+                        && (  <StyledTableCell>
+                                          <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }}>
+                                            Enquiry
+                                          </Button>
+                                          <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}>
+                                            Order
+                                          </Button>
+                        </StyledTableCell> )}
                           </TableRow>
                         )
                         })

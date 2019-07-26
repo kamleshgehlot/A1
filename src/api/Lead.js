@@ -11,16 +11,17 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 });
 
 export default {
-  add: async ({ cancelToken, ...payload }) => {
+  add: async ( newLead) => {
     const URL = `${c.API_CONSUMER}/api/lead/add`;
     try {
-      const { data } = await axios(
-        URL,
-        Object.assign({}, PARAMS({ methodType: 'POST' }), {
-          cancelToken,
-          data: payload,
-        }),
-      );
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: newLead.formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+        );
       return data;
     } catch (error) {
       throw error;

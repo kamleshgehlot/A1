@@ -158,15 +158,24 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   }
 
   const addLead = async () => {
-    console.log('inp----',inputs);
-    const response = await Lead.add({
+    let data = {
       franchise_id: inputs.franchise_id,
       lead_id: leadId,
       message: inputs.description,
       is_active: 1,
       franchise_name: otherFranchiseValue,
       is_franchise_exist: inputs.is_franchise_exist,
-    });
+    };
+
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+    
+    for (var x = 0; x < document.getElementById('upload').files.length; x++) {
+      formData.append('avatar', document.getElementById('upload').files[x])
+    }
+    
+    // console.log('inp----',inputs);
+    const response = await Lead.add({formData: formData});
     console.log(response);
     setLeadList(response.leadList);
     handleSnackbarClick(true);

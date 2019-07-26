@@ -2,6 +2,7 @@ const connection = require('../../lib/connection.js');
 const dbName = require('../../lib/databaseMySQLNew.js');
 
 const Lead = function (params) {
+ 
   this.lead_id= params.lead_id;
   this.franchise_id= params.franchise_id;
   this.message= params.message;
@@ -13,6 +14,7 @@ const Lead = function (params) {
   this.comment=params.comment;
   this.comment_by=params.comment_by;
   this.f_id=params.f_id;
+  this.upload = params.upload;
   if(params.f_id===null){
     this.f_id=0;
   }
@@ -36,10 +38,10 @@ Lead.prototype.add = function () {
             // resolve(rows);
             const franchise_id=rows[0].franchise_id;
             const values = [
-              [that.lead_id, that.is_franchise_exist, that.franchise_id,that.franchise_name, that.message,franchise_id, that.uid, that.is_active]
+              [that.lead_id, that.is_franchise_exist, that.franchise_id,that.franchise_name, that.message,franchise_id, that.uid, that.is_active, that.upload]
             ];
             connection.changeUser({ database: dbName["prod"] });
-            connection.query(`INSERT INTO leads(lead_id,is_franchise_exist, franchise_id,franchise_name,message,f_id,created_by ,is_active) VALUES ?`, [values], (error, mrows, fields) => {
+            connection.query(`INSERT INTO leads(lead_id,is_franchise_exist, franchise_id,franchise_name,message,f_id,created_by ,is_active, document) VALUES ?`, [values], (error, mrows, fields) => {
               if (!error) {
                 resolve(mrows);
               } else {
@@ -56,10 +58,10 @@ Lead.prototype.add = function () {
       }
       else{
         const values = [
-          [that.lead_id, that.is_franchise_exist, that.franchise_id,that.franchise_name, that.message,that.f_id, that.uid, that.is_active]
+          [that.lead_id, that.is_franchise_exist, that.franchise_id,that.franchise_name, that.message,that.f_id, that.uid, that.is_active, that.upload]
         ];
         connection.changeUser({ database: dbName["prod"] });
-        connection.query(`INSERT INTO leads(lead_id,is_franchise_exist, franchise_id,franchise_name,message,f_id,created_by ,is_active) VALUES ?`, [values], (error, mrows, fields) => {
+        connection.query(`INSERT INTO leads(lead_id,is_franchise_exist, franchise_id,franchise_name,message,f_id,created_by ,is_active, document) VALUES ?`, [values], (error, mrows, fields) => {
           if (!error) {
             resolve(mrows);
           } else {
