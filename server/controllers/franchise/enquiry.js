@@ -59,16 +59,16 @@ const postenquiry = function (req, res, next) {
     is_active: 1,
     converted_to: req.body.converted_to,
     created_by: req.decoded.id,
-    
+    convert_by_lead: req.body.convert_by_lead,
   };
 	try{
 	
     EnquiryParams.created_by = req.decoded.id;
 	  const newEnquiry = new Enquiry(EnquiryParams);
     newEnquiry.postenquiry().then(function(result){
-      // new Enquiry({user_id : req.decoded.user_id}).all().then(function (enquiryList) {
-      //   res.send({ enquiryList: enquiryList });
-      // });
+      new Enquiry({user_id : req.decoded.user_id}).getAll().then(function (enquiryList) {
+        res.send({ enquiryList: enquiryList });
+      });
     });
 	}catch(err){
     console.log("Error..",err);

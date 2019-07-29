@@ -79,29 +79,24 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList}) {
+export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList, convert}) {
 
   const classes = useStyles();
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [productList, setProductList] = useState([]);
-
  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
-        // console.log('helo',enquiry_id);
         if(enquiry_id.id[0]!=null){
           setInput('enquiry_id',("E_" + (enquiry_id.id[0].id+ 1)));
-          // generate(result.taskLast[0].id);
         }
         else{
           setInput('enquiry_id','E_1');
         }
-
         const result = await Category.productlist();
         setProductList(result.productList);
-        // console.log('product...',result.productList);
 
       } catch (error) {
         console.log(error);
@@ -114,14 +109,12 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   
   function handleChangeMultiple(event) {
     setAssignInterest(event.target.value);
-    // console.log("assss",assignInterest);
-    
   }
   
   const addEnquiry = async () => {
 
     // setInput('interested_product_id',assignInterest.join())
-
+// console.log('convert-----',convert);
     const response = await EnquiryAPI.postEnquiry({
       enquiry_id : inputs.enquiry_id,
       customer_name: inputs.customer_name,
@@ -129,6 +122,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       interested_product_id: assignInterest.join(),
       is_active: 1,
       converted_to: 0,
+      convert_by_lead:convert
     });
         console.log('sahgdaud--',response);
 
@@ -154,7 +148,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <form > 
+      <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -163,7 +157,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Enquiry
               </Typography>
-              <Button color="inherit" type="submit" onClick={addEnquiry}>
+              <Button color="inherit" type="submit">
                 save
               </Button>
             </Toolbar>

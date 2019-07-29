@@ -11,11 +11,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 import AddLead from './Add';
 import Comment from './Comment';
 import Add from '../enquiry/Add';
-// import Edit from './Edit';
-// import UploadDoc from './UploadDoc';
+import ConvertedLeads from './ConvertedLeads';
 
 // API CALL
 import LeadAPI from '../../../api/Lead';
@@ -50,8 +52,11 @@ export default function Lead() {
   const [isError, setIsError] = useState(false);
   const [franchiseListd, setFranchiseList] = useState({});
   const [leadData,setLeadData]= useState();
+  const [convertLead,setConvertLead]= useState();
+  const [filterId,setFilterId]= useState();
   const [enquiryList, setEnquiryList] = useState({});
   const [openEnquiry, setEnquiryOpen] = useState(false);
+  const [openConvertedLeads,setConvertedLeads] = useState(false);
   const [openView, setViewOpen] = useState(false);
   const [leadList, setLeadList] = useState({});
   const drawerWidth = 240;
@@ -100,7 +105,6 @@ export default function Lead() {
       try {
         const result = await LeadAPI.list();
         setLeadList(result.leadList);
-        // console.log('sahgdaud--',result.leadList);
       } catch (error) {
         setIsError(true);
       }
@@ -141,7 +145,7 @@ export default function Lead() {
     setViewOpen(false);
   }
   function handleClickEnquiryOpen(data) {
-    // console.log('leadsenq---',data);
+    setConvertLead(data.id);
     setEnquiryOpen(true);
   }
   function handleEnquiryClose() {
@@ -151,6 +155,12 @@ export default function Lead() {
     setSnackbarOpen(false);
   }
 
+  function handleConvertedLeadsClickOpen(){
+    setConvertedLeads(true);
+  }
+  function handleConvertedLeadsClose() {
+    setConvertedLeads(false);
+  }
   function handleSnackbarClick() {
     setSnackbarOpen(true);
   }
@@ -161,14 +171,22 @@ export default function Lead() {
 
   function setEnquiryListFn(response) {
     setEnquiryList(response);
-    console.log('rsfuyi--',response);
   }
+
+ 
+  const handleFilter = async (event) => {
+    setFilterId(event.target.value);
+    const response = await LeadAPI.filter({
+      filter_id:event.target.value
+    });
+    setLeadList(response.leadList);
+  };
   return (
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={7}>
             <Fab
               variant="extended"
               size="small"
@@ -181,6 +199,26 @@ export default function Lead() {
               Lead
             </Fab>
           </Grid>
+          <Grid item xs={12} sm={3}>
+              <InputLabel htmlFor="last_name">Filter</InputLabel>
+              <Select
+                onChange = {handleFilter}
+                inputProps={{
+                  name: 'filter',
+                  id: 'filter',
+                  label:'filter'
+                }}
+                className={classes.drpdwn}
+                fullWidth
+                value={filterId}
+                label="filter"
+              >
+                <MenuItem value={1}>{'Created By'}</MenuItem> 
+                <MenuItem value={2}>{'Created For Me'}</MenuItem> 
+                <MenuItem value={3}>{'Created General'}</MenuItem> 
+                <MenuItem value={4}>{'Show All'}</MenuItem> 
+              </Select>
+          </Grid>
           <Grid item xs={12} sm={2}>
             <Fab
               variant="extended"
@@ -188,7 +226,7 @@ export default function Lead() {
               color="primary"
               aria-label="Complete"
               className={classes.fonttransform}
-              // onClick={handleCompleteLeadClickOpen}
+              onClick={handleConvertedLeadsClickOpen}
             >
               Converted
             </Fab>
@@ -245,14 +283,15 @@ export default function Lead() {
                               </Button>
                             </StyledTableCell>
                             {roleName != 'Super Admin' 
-                        && (  <StyledTableCell>
-                                          <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }}>
-                                            Enquiry
-                                          </Button>
-                                          <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}>
-                                            Order
-                                          </Button>
-                        </StyledTableCell> )}
+                              && (  <StyledTableCell>
+                                        <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }}>
+                                          Enquiry
+                                        </Button>
+                                        <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}>
+                                          Order
+                                        </Button>
+                                    </StyledTableCell> )
+                            }
                           </TableRow>
                         )
                         })
@@ -264,8 +303,9 @@ export default function Lead() {
         </Grid>
       {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}
       
-      {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}/> :null}
+      {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn} convert={convertLead}/> :null}
       {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputss={leadData}  /> :null}
+      {openConvertedLeads ?  <ConvertedLeads open={openConvertedLeads} handleConvertedLeadsClose={handleConvertedLeadsClose} franchiseListd={franchiseListd} />: null}
 
     </div>
   );

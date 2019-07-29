@@ -99,10 +99,43 @@ const franchiseList = function (req, res, next) {
   try {
     new Lead({ user_id: req.decoded.user_id }).franchiseList().then(franchiseList => {
       res.send({ franchiseList });
-      console.log('franchiseList======',franchiseList);
+      // console.log('franchiseList======',franchiseList);
     });
   } catch (err) {
     console.log('Error: ', err);
   }
 };
-module.exports = { add, all, last,addComment,allComment,franchiseList};
+const convertedList = function (req, res, next) {
+  try {
+    new Lead({ user_id: req.decoded.user_id }).convertedList().then(convertedList => {
+      res.send({ convertedList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
+const filter = function (req, res, next) {
+  const leadParam = {
+    filter_id: req.body.filter_id,
+    user_id: req.decoded.user_id,
+  };
+  try {
+    const newLead = new Lead(leadParam);
+    if(req.body.filter_id!=4){
+      newLead.filter().then(leadList => {
+          res.send({ leadList });
+      })
+    }
+    else{
+      new Lead({ user_id: req.decoded.user_id }).all().then(leadList => {
+        res.send({ leadList });
+      });
+    }
+  } catch (err) {
+    console.log('Error: ', err);
+
+    res.status(500);
+    res.send('error', { error: err });
+  }
+};
+module.exports = { add, all, last,addComment,allComment,franchiseList,convertedList,filter};

@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Enquiry = function (params) {
-  // console.log("params", params);
+  console.log("params", params);
   this.user_id = params.user_id;
 
     
@@ -15,6 +15,7 @@ var Enquiry = function (params) {
   this.is_active = params.is_active;
   this.created_by =params.created_by;
   this.converted_to = params.converted_to;
+  this.convert_by_lead=params.convert_by_lead;
 };
 
 Enquiry.prototype.postenquiry = function () {
@@ -32,11 +33,22 @@ Enquiry.prototype.postenquiry = function () {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         connection.query('INSERT INTO enquiry(enquiry_id, customer_name, contact, interested_product_id, is_active, converted_to, created_by) VALUES ?',[values],function (error, rows, fields) {
             if (!error) {
-                resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
+                if(that.convert_by_lead!=0){
+                  connection.changeUser({ database: dbName["prod"] });
+                  connection.query('update leads set converted_to="1" where id="'+that.convert_by_lead+'"',function (error, rows, fields) {
+                    if (!error) {
+                      // console.log("rows...",rows);
+                        resolve(rows);
+                        } else {
+                          console.log("Error...", error);
+                          reject(error);
+                        }
+                  });
                 }
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
           })
           
       } else {
