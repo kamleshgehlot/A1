@@ -3,6 +3,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -53,7 +54,7 @@ export default function Lead() {
   const [franchiseListd, setFranchiseList] = useState({});
   const [leadData,setLeadData]= useState();
   const [convertLead,setConvertLead]= useState();
-  const [filterId,setFilterId]= useState();
+  const [filterId,setFilterId]= useState(4);
   const [enquiryList, setEnquiryList] = useState({});
   const [openEnquiry, setEnquiryOpen] = useState(false);
   const [openConvertedLeads,setConvertedLeads] = useState(false);
@@ -95,6 +96,9 @@ export default function Lead() {
     fonttransform:{
       textTransform:"initial"
     },
+    drpdwn:{
+      color:'white'
+    }
   }));
   const classes = useStyles();
 
@@ -186,7 +190,7 @@ export default function Lead() {
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={10}>
             <Fab
               variant="extended"
               size="small"
@@ -198,26 +202,6 @@ export default function Lead() {
               <AddIcon className={classes.extendedIcon} />
               Lead
             </Fab>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-              <InputLabel htmlFor="last_name">Filter</InputLabel>
-              <Select
-                onChange = {handleFilter}
-                inputProps={{
-                  name: 'filter',
-                  id: 'filter',
-                  label:'filter'
-                }}
-                className={classes.drpdwn}
-                fullWidth
-                value={filterId}
-                label="filter"
-              >
-                <MenuItem value={1}>{'Created By'}</MenuItem> 
-                <MenuItem value={2}>{'Created For Me'}</MenuItem> 
-                <MenuItem value={3}>{'Created General'}</MenuItem> 
-                <MenuItem value={4}>{'Show All'}</MenuItem> 
-              </Select>
           </Grid>
           <Grid item xs={12} sm={2}>
             <Fab
@@ -241,7 +225,24 @@ export default function Lead() {
                         <StyledTableCell>Lead ID</StyledTableCell>
                         <StyledTableCell>Franchise</StyledTableCell>
                         {/* <StyledTableCell>Doc/Photo</StyledTableCell> */}
-                        <StyledTableCell>Created by</StyledTableCell>
+                        <StyledTableCell>
+                          <Select
+                            onChange = {handleFilter}
+                            inputProps={{
+                              name: 'filter',
+                              id: 'filter',
+                              label:'filter',
+                            }}
+                            className={classes.drpdwn}
+                            value={filterId}
+                            label="filter"
+                          >
+                            <MenuItem value={4}>{'Show All'}</MenuItem> 
+                            <MenuItem value={1}>{'Created By'}</MenuItem> 
+                            <MenuItem value={2}>{'Created For Me'}</MenuItem> 
+                            <MenuItem value={3}>{'Created General'}</MenuItem> 
+                          </Select><ArrowDropDownIcon/>
+                        </StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       
