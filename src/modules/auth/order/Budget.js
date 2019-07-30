@@ -36,29 +36,13 @@ import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
+import Order from '../../../api/franchise/Order';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 
 const RESET_VALUES = {
-  id: '',
-  first_name : '',
-  last_name : '',
-  location : '',
-  contact : '',
-  email : '',  
-  pre_company_name : '',
-  pre_company_address : '',
-  pre_company_contact : '',
-  pre_position : '',
-  duration : '',
-  resume : '',
-  cover_letter : '',
-  employment_docs : '',
   
-  user_id : '',
-  password : '',
-  role : '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -112,7 +96,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Budget({ open, handleBudgetClose}) {
 
   const classes = useStyles();
-  const [temp, setTemp] = React.useState([]);
+  const [inputs,setInputs] = useState([]);
   const [assignRole, setAssignRole] = React.useState([]);
   
 
@@ -159,19 +143,53 @@ export default function Budget({ open, handleBudgetClose}) {
     
   };
 
-  function validate(values) {
-    let errors = {};
-
-    return errors;
-  };
-
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-    RESET_VALUES,
-    addFranchiseStaff,
-    validate
-  );
   
   
+  function handleInputChange(e){
+    console.log('valueee',e.target.value)
+    if(e.target.value===""){
+      setInputs({
+        ...inputs,
+        [e.target.name]: 0,
+      });
+    }
+    else{
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  }
+  console.log('inputs.',inputs);
+
+  function handleSubmit(e){
+    handleBudgetClose(false)
+    e.preventDefault();
+  }
+
+  useEffect(() => {
+    inputs.work = 0;
+    inputs.benefits = 0;
+    inputs.accomodation = 0;
+    inputs.childcare = 0;
+    inputs.rent = 0;
+    inputs.power = 0;
+    inputs.telephone = 0;
+    inputs.mobile = 0;
+    inputs.vehicle = 0;
+    inputs.transport = 0;
+    inputs.food = 0;
+    inputs.credit_card = 0;
+    inputs.loan = 0;
+    inputs.other_expenditure =0;
+    
+  }, []);
+  let income = parseInt(inputs.work) + parseInt(inputs.benefits) + parseInt(inputs.accomodation) + parseInt(inputs.childcare);
+  let Expenditure = parseInt(inputs.rent) + parseInt(inputs.power) + parseInt(inputs.telephone) + parseInt(inputs.mobile) + parseInt(inputs.vehicle) + parseInt(inputs.transport) + parseInt(inputs.food) + parseInt(inputs.credit_card) + parseInt(inputs.loan) + parseInt(inputs.other_expenditure) ;
+  let surplus = income - Expenditure;
+  
+
   function handleChangeMultiple(event) {
     setAssignRole(event.target.value);
     // inputs['role']=assignRole;
@@ -494,12 +512,12 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                     Total Income =
+                     Total Income = {income}
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                     Total Expenses = 
+                     Total Expenses = {Expenditure}
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -510,10 +528,10 @@ return (
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
                     <TextField
-                      id="other_expenditure"
-                      name="other_expenditure"
+                      id="total_surplus"
+                      name="total_surplus"
                       // label="Other"
-                      value={inputs.other_expenditure}
+                      value={surplus}
                       onChange={handleInputChange}
                       fullWidth
                       disabled
@@ -535,14 +553,14 @@ return (
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
                     <TextField
-                      id="other_expenditure"
-                      name="other_expenditure"
+                      id="afford_amt"
+                      name="afford_amt"
                       // label="Other"
-                      value={inputs.other_expenditure}
+                      value={inputs.afford_amt}
                       onChange={handleInputChange}
                       fullWidth
-                      disabled
-                      // required
+                      // disabled
+                      required
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"

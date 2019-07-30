@@ -15,6 +15,7 @@ import TableRow from '@material-ui/core/TableRow';
 import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Add from './Add';
 // import Edit from './Edit';
 
@@ -150,10 +151,13 @@ export default function Order() {
                 //   )
                 // }}
                 // fullWidth
+                InputProps={{
+                  endAdornment: <InputAdornment position='end'><IconButton><SearchIcon /></IconButton></InputAdornment>,
+                }}
               />
-              <IconButton  aria-label="Search" >
+              {/* <IconButton  aria-label="Search" >
                 <SearchIcon />   
-              </IconButton>
+              </IconButton> */}
           </Grid>
           
           <Grid item xs={12} sm={12}>
