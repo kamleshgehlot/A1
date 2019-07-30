@@ -35,34 +35,15 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
-import { APP_TOKEN } from '../../../api/Constants';
+import SearchIcon from '@material-ui/icons/Search';
+import AddIcon from '@material-ui/icons/Add';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
+import Customer from '../../../api/franchise/Customer';
 
-import useSignUpForm from '../franchise/CustomHooks';
-import { FormLabel } from '@material-ui/core';
 
 const RESET_VALUES = {
-  id: '',
-  first_name : '',
-  last_name : '',
-  location : '',
-  contact : '',
-  email : '',  
-  pre_company_name : '',
-  pre_company_address : '',
-  pre_company_contact : '',
-  pre_position : '',
-  duration : '',
-  resume : '',
-  cover_letter : '',
-  employment_docs : '',
-  
-  user_id : '',
-  password : '',
-  role : '',
+  searchText: '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -106,6 +87,9 @@ const useStyles = makeStyles(theme => ({
   buttonMargin: {
     margin: theme.spacing(1),
   },
+  fab: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -113,10 +97,11 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleClose, handleSnackbarClick}) {
+export default function SearchCustomer({ open, handleClose, handleSnackbarClick, setCustomer}) {
 
   const classes = useStyles();
-  const [assignRole, setAssignRole] = React.useState([]);
+  const [searchText, setSearchText]  = useState('');
+  const [customerListData, setCustomerListData] = useState([]);
   
 
   const StyledTableCell = withStyles(theme => ({
@@ -130,100 +115,37 @@ export default function Budget({ open, handleClose, handleSnackbarClick}) {
     },
   }))(TableCell);
 
-  const addFranchiseStaff = async () => {
-
-    const data = {
-      // franchise_id: franchiseId,
-      id: '',
-      first_name: inputs.first_name,
-      last_name: inputs.last_name,
-      location: inputs.location,
-      contact: inputs.contact,
-      email: inputs.email,
-      
-      pre_company_name: inputs.pre_company_name,
-      pre_company_address: inputs.pre_company_address,
-      pre_company_contact: inputs.pre_company_contact,
-      pre_position: inputs.pre_position,
-      duration: inputs.duration,
-      // resume:  inputs.resume,
-      // cover_letter: inputs.cover_letter,
-      employment_docs: inputs.employment_docs,
-      
-      user_id: inputs.user_id,
-      password: inputs.password,
-      role: assignRole.join(),
-      created_by: 1,
-    };
-
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(data));
-    
-    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
-      formData.append('avatar', document.getElementById('employment_docs').files[x])
-    }
-    
-    const response = await Staff.register( { formData: formData } );
-    assignRole.length = 0;
-    handleSnackbarClick(true);
-    // setFranchiseList(response.staffList);
-    handleReset(RESET_VALUES);
-    handleClose(false);
-    
-  };
-
-  function validate(values) {
-    let errors = {};
-
-    return errors;
-  };
-
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-    RESET_VALUES,
-    addFranchiseStaff,
-    validate
-  );
-  
-  
-  function handleChangeMultiple(event) {
-    setAssignRole(event.target.value);
-    // inputs['role']=assignRole;
-  }
-  
-  function handleNameBlurChange(e) {
-    setInput('user_id', generate(inputs.first_name, inputs.last_name));
+  const searchHandler = async () => {
+    try {
+      if(searchText!=''){
+          const result = await Customer.search({searchText: searchText});
+          // console.log('list---',result.customerList);
+          setCustomerListData(result.customerList);
+          setSearchText('');
+       
+      }else{
+        const result = await Customer.list();
+        setCustomerListData(result.customerList);
+        // console.log('list---2',result.customerList);
+        setSearchText('');
+      }} catch (error) {
+        console.log('error',error);
+      }
   }
 
-  function generate(first_name, last_name) {
-    const ts = new Date().getTime().toString();
-    const parts = ts.split( "" ).reverse();
-    let id = "";
-    
-    for( let i = 0; i < 4; ++i ) {
-      let index = Math.floor( Math.random() * (5) );
-      id += parts[index];	 
-    }
-    
-    const uid = APP_TOKEN.get().uid;
-
-    return first_name.substring(0, 4).toLowerCase() + '_' + uid.split('_')[1] + '_' + id;
-  }
-  
-  function handlePasswordBlurChange() {
-    
-    inputs['password']=='' ? 
-    setInput('password', GeneratePassword())
-    :''
+  function handleSearchText(event){
+    setSearchText(event.target.value);
   }
 
-  function GeneratePassword() {
-    return Math.random().toString(36).slice(-8);
+  function handleAddCurrent(response){
+    setCustomer(response);
+    handleClose();
   }
 
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -232,9 +154,6 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Search Customer
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                Add
-              </Button> */}
             </Toolbar>
           </AppBar>
 
@@ -248,16 +167,22 @@ return (
                       id="transport"
                       name="transport"
                       // label=""
-                      value={inputs.transport}
-                      onChange={handleInputChange}
+                      value={searchText}
                       fullWidth
-                      // required
+                      required
                       type="text"
                       placeholder="Search Customer"
                       margin="dense"
-                      // InputProps={{
-                      //   startAdornment: <InputAdornment position="end"></InputAdornment>,
-                      // }}
+                      onKeyPress={(ev) => {
+                        if (ev.key ===  'Enter') {
+                          searchHandler()
+                          ev.preventDefault();
+                        }
+                      }}
+                      onChange={handleSearchText}
+                      InputProps={{
+                        endAdornment: <InputAdornment position='end'><IconButton onClick={ searchHandler}><SearchIcon /></IconButton></InputAdornment>,
+                      }}
                     />
                   </Grid>
                   <Paper style={{ width: '100%' }}>
@@ -269,11 +194,31 @@ return (
                         <StyledTableCell>Contact</StyledTableCell>
                         <StyledTableCell>Address</StyledTableCell>
                         <StyledTableCell>Created By</StyledTableCell>
-                        <StyledTableCell>State</StyledTableCell>
+                        {/* <StyledTableCell>State</StyledTableCell> */}
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
-                  
+                    <TableBody>
+                      {(customerListData.length > 0 ? customerListData :[] ).map((data,index)=>{
+                        console.log('data...',data);
+                        return(
+                          <TableRow key={data.id} >
+                          <StyledTableCell> {index + 1}  </StyledTableCell>
+                          <StyledTableCell> {data.customer_name}  </StyledTableCell>
+                          <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
+                          <StyledTableCell> {data.address}  </StyledTableCell>
+                          <StyledTableCell> {data.created_by_name}  </StyledTableCell>
+                          {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
+                          <StyledTableCell> 
+                          <Fab  aria-label="Add" color="primary" size="small" className={classes.fab} onClick={(event) => { handleAddCurrent(data); }}>
+                            <AddIcon />
+                          </Fab>
+                          
+                          </StyledTableCell>
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
                   </Table>
                </Paper>
             </Grid>

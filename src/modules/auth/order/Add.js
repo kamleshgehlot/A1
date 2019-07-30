@@ -118,6 +118,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   const [customerOpen, setCustomerOpen] = useState(false);
   const [searchCustomerOpen, setSearchCustomerOpen] = useState(false);
   const [assignRole, setAssignRole] = React.useState([]);
+  const [customer, setCustomer] = useState({});
   
 
 
@@ -142,6 +143,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   }
   
   function handleCustomerClose(){
+
     setCustomerOpen(false);
   }
   function handleCustomerOpen(){
@@ -153,6 +155,13 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   function handleSearchCustomerOpen(){
     setSearchCustomerOpen(true);
   }
+
+  function handleCustomerList(response){
+    // console.log("response---", response);
+    // setCustomerListData(response);
+  }
+
+  console.log('cusetomer ', customer);
 
 return (
     <div>
@@ -217,14 +226,15 @@ return (
                         // onChange={handleInputChange}
                         row
                       >
-                        <FormControlLabel labelPlacement="end" value="new" control={<Radio />} label="New Customer" />
-                        <FormControlLabel labelPlacement="end" value="exist" control={<Radio />} label="Existing Customer" />
-                        <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleCustomerOpen}>
+                        <FormControlLabel labelPlacement="end" value="new" control={<Radio />} label="New Customer" onClick={handleCustomerOpen} />
+                        <FormControlLabel labelPlacement="end" value="exist" control={<Radio />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
+                        <Typography variant="h6" className={classes.labelTitle}>{customer ? customer.customer_name : ''}</Typography>
+                        {/* <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleCustomerOpen}>
                         Add Customer
                         </Fab>  
                         <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleSearchCustomerOpen}>
                         Add Customer
-                        </Fab>  
+                        </Fab>   */}
                       </RadioGroup>
                     </Grid>
                   {/* <Grid item xs={12} sm={4}> */}
@@ -267,7 +277,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={2}>
                     {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleBudgetOpen}>
+                    <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
                       Calculate Budget
                     </Fab>
                   </Grid>
@@ -275,7 +285,7 @@ return (
                   <Typography >TOTAL SURPLUS: $400</Typography>
                   <Typography > AFFORD TO PAY: $10</Typography>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="assigned_to">Assigned To*</InputLabel>
                     <Select
                       value={inputs.assigned_to}
@@ -289,24 +299,7 @@ return (
                       <MenuItem value={1}>Finance</MenuItem>
                       <MenuItem value={2}>Delivery</MenuItem>
                     </Select>
-                   </Grid>
-                   <Grid item xs={12} sm={6}>
-                   <InputLabel htmlFor="order_type">Order Type</InputLabel>
-                      <RadioGroup
-                        aria-label="order_type"
-                        name="order_type"
-                        className={classes.group}
-                        // value={inputs.gender}
-                        // onChange={handleInputChange}
-                        row
-                      >
-                        <FormControlLabel labelPlacement="end" value="fixed" control={<Radio />} label="Fixed Order" />
-                        <FormControlLabel labelPlacement="end" value="flex" control={<Radio />} label="Flex Order" />
-                        <Fab variant="extended" size="small" className={classes.buttonMargin}>
-                        Add Details
-                        </Fab>  
-                      </RadioGroup>
-                    </Grid>
+                   </Grid> */}
                     <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
@@ -325,6 +318,24 @@ return (
                       <MenuItem value={5}>Cash</MenuItem>
                     </Select>
                    </Grid>
+                   <Grid item xs={12} sm={6}>
+                   <InputLabel htmlFor="order_type">Order Type</InputLabel>
+                      <RadioGroup
+                        aria-label="order_type"
+                        name="order_type"
+                        className={classes.group}
+                        // value={inputs.gender}
+                        // onChange={handleInputChange}
+                        row
+                      >
+                        <FormControlLabel labelPlacement="end" value="fixed" control={<Radio />} label="Fixed Order" />
+                        <FormControlLabel labelPlacement="end" value="flex" control={<Radio />} label="Flex Order" />
+                        {/* <Fab variant="extended" size="small" className={classes.buttonMargin}>
+                        Add Details
+                        </Fab>   */}
+                      </RadioGroup>
+                    </Grid>
+                   
                 </Grid>
           </Paper>
             
@@ -332,8 +343,8 @@ return (
         </form>
       </Dialog>
       <Budget open={budgetOpen} handleBudgetClose={handleBudgetClose}/>
-    {customerOpen ?  <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={''}   enquiryData={''}/> :'' }
-    {searchCustomerOpen? <SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick} /> :''}
+    <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer}/>
+    {searchCustomerOpen? <SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomer={setCustomer} /> :''}
     </div>
   );
 }

@@ -57,7 +57,8 @@ export default function CustomerList(userId) {
   const [customerListData, setCustomerListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [searchText, setSearchText]  = useState('');
-
+  const [customer, setCustomer] = useState({});
+  
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -243,18 +244,14 @@ export default function CustomerList(userId) {
                   }
                 }}
                 onChange={handleSearchText}
-                // inputProps={{
-                //   endAdorment:(
-                //     <InputAdornment position='start'>
-                //       <SearchIcon />  ll 
-                //     </InputAdornment>
-                //   )
-                // }}
-                // fullWidth
+                InputProps={{
+                  endAdornment: <InputAdornment position='end'><IconButton onClick={ searchHandler}><SearchIcon /></IconButton></InputAdornment>,
+                }}
+                fullWidth
               />
-              <IconButton  aria-label="Search" onClick={ searchHandler} >
+              {/* <IconButton  aria-label="Search" onClick={ searchHandler} >
                 <SearchIcon />   
-              </IconButton>
+              </IconButton> */}
           </Grid>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
@@ -295,7 +292,7 @@ export default function CustomerList(userId) {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''}/>
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer}/>
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={customerData} setCustomerList={handleCustomerList} /> : null}
           

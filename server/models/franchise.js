@@ -30,6 +30,12 @@ const customer_income = "CREATE TABLE IF NOT EXISTS `customer_income` (`id` bigi
 const customer_state = "CREATE TABLE IF NOT EXISTS customer_state(id tinyint(4) NOT NULL AUTO_INCREMENT, state_name VARCHAR(20) NOT NULL, is_active tinyint(4) NOT NULL, PRIMARY KEY(id));";
 const idProof = "CREATE TABLE  IF NOT EXISTS `id_type` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(100) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const enquiry = "CREATE TABLE IF NOT EXISTS enquiry(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `enquiry_id` varchar(10) NOT NULL, `customer_name` varchar(50) NOT NULL, `contact` varchar(10) DEFAULT NULL, `interested_product_id` varchar(20) NOT NULL, `converted_to` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
+const orders = "CREATE TABLE IF NOT EXISTS orders(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `order_id` varchar(10) NOT NULL, `customer_id` int(11) NOT NULL,`product_id` varchar(255) NOT NULL, `order_type` tinyint(4) NOT NULL, `budget_id` int(11) NOT NULL, payment_mode tinyint(4) NOT NULL, `assigned_to` tinyint(4) NOT NULL, `order_date` varchar(50) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const payment_mode = "CREATE TABLE IF NOT EXISTS payment_mode(`id` tinyint(4) NOT NULL AUTO_INCREMENT, `payment_mode` VARCHAR(50) NOT NULL, `is_active` tinyint(4) NOT NULL, PRIMARY KEY(id))";
+const budget = "CREATE TABLE IF NOT EXISTS budget(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `order_id` int(11) NOT NULL, `customer_id` int(11) NOT NULL, `work` double(10,2) DEFAULT NULL, `benefits` double(10,2) DEFAULT NULL, `accomodation` double(10,2) DEFAULT NULL, `chaildcare` double(10,2) DEFAULT NULL, `other_income` double(10,2) DEFAULT NULL, `order_date` varchar(50) DEFAULT NULL, `rent` double(10,2) DEFAULT NULL, `power` double(10,2) DEFAULT NULL, `landline_phone` double(10,2) DEFAULT NULL, `mobile_phone` double(10,2) DEFAULT NULL, `vehicle_finance` double(10,2) DEFAULT NULL, `public_transport` double(10,2) DEFAULT NULL, `food` double(10,2) DEFAULT NULL, `credit_store_cards` double(10,2) DEFAULT NULL, `loans_hire_purchase` double(10,2) DEFAULT NULL, `other_expenditure` double(10,2) DEFAULT NULL, `total_income` double(10,2) DEFAULT NULL, `total_expenditure`  double(10,2) DEFAULT NULL, `total_surplus` double(10,2) DEFAULT NULL, `afford_amt` double(10,2) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const flex_order = "CREATE TABLE IF NOT EXISTS flex_order(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `order_id` int(11) NOT NULL, `customer_id` int(11) NOT NULL, `goods_rent_price` double(10,2) NOT NULL, `ppsr_fee` double(10,2) NOT NULL, `liability_fee` double(10,2) NOT NULL, `weekly_total` double(10,2) NOT NULL, `frequency` double(10,2) NOT NULL, `first_payment` double(10,2) NOT NULL, `no_of_payment` double(10,2) NOT NULL, `each_payment_amt` double(10,2) NOT NULL, `total_payment_amt` double(10,2) NOT NULL, `before_delivery_amt` double(10,2) NOT NULL, `exp_delivery_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `bond_amt` double(10,2) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const fixed_order = "CREATE TABLE IF NOT EXISTS fixed_order(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `order_id` int(11) NOT NULL, `customer_id` int(11) NOT NULL, `int_unpaid_bal` double(10,2) NOT NULL, `cash_price` double(10,2) NOT NULL, `delivery_fee` double(10,2) NOT NULL, `ppsr_fee` double(10,2) NOT NULL, `frequency` double(10,2) NOT NULL, `first_payment` double(10,2) NOT NULL, `last_payment` double(10,2) NOT NULL, `no_of_payment` double(10,2) NOT NULL, `each_payment_amt` double(10,2) NOT NULL, `total_payment_amt` double(10,2) NOT NULL, `before_delivery_amt` double(10,2) NOT NULL, `exp_delivery_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `minimum_payment_amt` double(10,2) NOT NULL, `intrest_rate` double(10,2) NOT NULL, `intrest_rate_per` double(10,2) NOT NULL, `total_intrest` double(10,2) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
@@ -60,6 +66,11 @@ Franchise.prototype.register = function (newUser) {
                                 connection.query(customer_state,function(err){
                                 connection.query(idProof,function(err){
                                   connection.query(enquiry,function(err){
+                                    connection.query(orders,function(err){
+                                      connection.query(budget,function(err){
+                                        connection.query(payment_mode,function(err){
+                                          connection.query(flex_order,function(err){
+                                            connection.query(fixed_order,function(err){
                                   // connection.query(leads,function(err){
                             if (err) {
                               console.log('error in creating tables', err);
@@ -85,11 +96,20 @@ Franchise.prototype.register = function (newUser) {
                               [3, 'Completed', 1]
                             ]
 
+                            
+                            let pay_mode = [
+                              [1, 'EasyPay', 1],
+                              [2, 'Credit', 1],
+                              [3, 'Debit', 1],
+                              [4, 'PayPal', 1],
+                              [5, 'Cash', 1],
+                            ]
+
                            connection.changeUser({ database: frachiseDbName });
                             connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
                               connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) {
                                 connection.query('INSERT INTO `customer_state`(`id`, `state_name`, `is_active`) VALUES ?', [cust_state], function (error, rows, fields) {
-
+                                  connection.query('INSERT INTO `payment_mode`(`id`, `payment_mode`, `is_active`) VALUES ?', [pay_mode], function (error, rows, fields) {
                               if (error) {
                                 console.log("Error in inserting records...", error);
                                 reject(error);
@@ -117,12 +137,17 @@ Franchise.prototype.register = function (newUser) {
                               console.log('Process Complete %d', connection.threadId);
                             });
                           });
-                        // });
+                        });
                           });
                         });
                         });
                       });
                         });
+                      });
+                    });
+                    });
+                  });
+                    });
                           });
                         });
                         });
