@@ -7,7 +7,7 @@ import { APP_TOKEN } from './api/Constants';
 // Utils
 import PageLoader from './modules/common/PageLoader';
 import Franchise from './modules/auth/franchise/Franchise';
-import CategoryList from './modules/auth/category/CategoryList';
+import ProductList from './modules/auth/category/ProductList';
 
 // Routes
 const AuthLayout = lazy(() => import('./modules/auth/layout/MainLayout'));

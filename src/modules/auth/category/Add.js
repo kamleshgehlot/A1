@@ -43,15 +43,9 @@ import useSignUpForm from '../franchise/CustomHooks';
 import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
-  category: '',
-  type: '',
-  parentid: '',
-  position: '',
-  description: '',
-  image: '',
-  meta_keywords: '',
-  meta_description: '',
-  active: '',
+  maincat:'',
+  cat:'',
+  subcat:'',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -182,6 +176,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   function productData(newdata){
     updateProductList(newdata);
     // setProductList(newdata);
+    handleReset(RESET_VALUES);
     // updateProductList(newdata);
     handleClose(false);
   }
@@ -252,8 +247,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   };
 
   function openProductDialog(){
-    if(inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
-      setProductOpen(true);
+    if(inputs.maincat!='' && inputs.cat!='' && inputs.subcat!='' && inputs.maincat!='0' && inputs.cat!='0' && inputs.subcat!='0' && inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
+    setProductOpen(true);
     }
     else{
       console.log("no cat");
@@ -324,7 +319,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                           name: 'maincat',
                           id: 'maincat',
                         }}
-                        defaultValue='Shah'
                         className={classes.margin}
                         fullWidth
                         label="Main Category"
@@ -407,7 +401,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
              
             <AddCategory open={catOpen} handleClose={handleCatClose} updatedCatData={updatedCatData} newCatData={newCatData} />           
             <AddSubcategory open={subcatOpen} handleClose={handleSubCatClose} updatedSubCatData={updatedSubCatData} newSubCatData={newSubCatData}  />       
-            <AddProduct open={productOpen} handleClose={handleProductClose} productCatList={productCatList} productData={productData} />   
+         {productOpen?   <AddProduct open={productOpen} handleClose={handleProductClose} productCatList={productCatList} productData={productData} />   :null}
     
           </div>
       </form>

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 /* Auth Pages Starts Here */
 const UserPage = lazy(() => import('../user/UserPage'));
 const Franchise = lazy(() => import('./franchise/Franchise'));
-const CategoryList = lazy(() => import('./category/CategoryList'));
+const ProductList = lazy(() => import('./category/ProductList'));
 
 /* Auth Pages Ends Here */
 

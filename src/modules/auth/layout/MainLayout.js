@@ -29,7 +29,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 import Franchise from '../franchise/Franchise';
-import Category from '../category/CategoryList';
+import Product from '../category/ProductList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
 import Task from '../task/Task';
@@ -384,7 +384,7 @@ export default function ClippedDrawer(props) {
               {/* code by Bhagyashree starts from here
               Category is added to menu */}
               {/* <Link to="category"> */}
-                <ListItem button key="ManageCategory"  onClick={handleCategoryClick}>
+                <ListItem button key="ManageProduct"  onClick={handleCategoryClick}>
                   <ListItemIcon><PeopleIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
@@ -471,7 +471,7 @@ export default function ClippedDrawer(props) {
         }
 
         {
-          showCategory ? <Category /> : null
+          showCategory ? <Product /> : null
         }
         {
           showMasterStaff ? <Staff /> : null
