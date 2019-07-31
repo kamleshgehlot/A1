@@ -29,7 +29,7 @@ const login = function (req, res, next) {
         if(user[0].status === 0) {
           status = 401;
           result.errorCode = status;
-          result.message = `Account is not varified`;
+          result.message = `Account is not verified`;
         } else if(user[0].password.toString('utf8') === params.password) {
           status = 200;
           // Create a token
@@ -131,7 +131,7 @@ const forgotPassword = function (req, res, next) {
         // if(user[0].status === 0) {
         //   status = 401;
         //   result.errorCode = status;
-        //   result.message = `Account is not varified`;
+        //   result.message = `Account is not verified`;
         // } else {
           status = 200;
           // Create a token

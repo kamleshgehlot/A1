@@ -356,6 +356,7 @@ return (
                       value={customerList.email} 
                       onChange={handleInputChange}
                       required
+                      disabled
                       fullWidth
                       type="email"
                     />
@@ -486,7 +487,7 @@ return (
                       onChange={handleInputChange}
                       // required
                       fullWidth
-                    /> 
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="state">Customer State</InputLabel>
@@ -707,6 +708,7 @@ return (
                       name="employer_email"
                       label="Email"
                       type="email"
+                      disabled
                       value={customerList.employer_email} 
                       onChange={handleInputChange}
                       required

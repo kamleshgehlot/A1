@@ -24,7 +24,7 @@ import Paper from '@material-ui/core/Paper';
 
 // API CALL
 import StaffMaster from '../../../api/StaffMasterAdmin';
-
+import UserAPI from '../../../api/User';
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
@@ -74,9 +74,14 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, positions}) {
-  const classes = useStyles();
+  const [chkEmail, SetChkEmail] = useState();
+  const classes = useStyles(); 
 
   const addStaffMaster = async () => {
+    
+    if(inputs.email === chkEmail){
+      alert('Email already registered')
+    }else{
     const response = await StaffMaster.register({
       id: '',
       first_name: inputs.first_name,
@@ -89,11 +94,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       position:inputs.position,
       created_by: 1,
     });
-
+  
     handleSnackbarClick(true);
     setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
     handleClose(false);
+  }
   };
 
   function validate(values) {
@@ -107,6 +113,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     addStaffMaster,
     validate
   );
+
+  function handleEmailVerification(event){
+    // console.log(event.target.value);
+    const email = event.target.value;
+
+    const checkEmail = async () => {
+      const response = await UserAPI.verifyEmail({email : email});
+      
+      if(response.isVerified!=''){
+      SetChkEmail(response.isVerified[0].email);
+      alert('Email already registred');
+      }
+    }
+    checkEmail();
+  }
 
   function handleNameBlurChange(e) {
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
@@ -216,6 +237,7 @@ return (
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
+                      onBlur={handleEmailVerification}
                       required
                       fullWidth
                       type="email"

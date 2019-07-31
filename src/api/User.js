@@ -26,6 +26,22 @@ export default {
     }
   },
 
+  verifyEmail:async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/user/verifyemail`;
+    try {
+      console.log('payrole..',payload);
+      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      // console.log("user api data : ",data);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   // edit: async ({ cancelToken, ...payload }) => {
   //   const URL = `${c.API_CONSUMER}/api/user/update`;
   //   try {

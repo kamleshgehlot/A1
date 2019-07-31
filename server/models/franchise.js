@@ -16,6 +16,7 @@ const Franchise = function (params) {
   //frachise id for updation
   this.f_id = params.f_id;
   // this.com_id = params.com_id;
+  this.email = params.email;
 };
 
 
@@ -265,7 +266,123 @@ Franchise.prototype.update = function () {
 
 
 
-
+Franchise.prototype.verifyEmail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if(!error){
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select u.id as `u_id`, c.id as `director_id`, c.director, c.email, u.user_id from company as c INNER JOIN user as u on c.id = u.director_id WHERE c.email = "'+that.email+'" AND u.status = 1', function (error, rows, fields) {
+          if (!error) {
+            if(rows.length ===0){
+              connection.query('select email from accountant where email = "'+that.email+'"', function (error, rows, fields) {
+                if (!error) {
+                  if(rows.length===0){
+                    connection.query('select email from master_staff where email = "'+that.email+'"', function (error, rows, fields) {
+                      if (!error) {
+                        if(rows.length===0){
+                          connection.query('select fdbname from franchise', function (error, rows, fields) {
+                            if (!error) {
+                              if(rows.length>0){
+                                
+                                (rows.length>0 ? rows : []).map((dbname, index)=>{
+                                  // console.log('fdbname map---',dbname.fdbname);
+                                  connection.changeUser({ database:  dbname.fdbname});
+                                  connection.query('select email from staff where email = "'+that.email+'"', function (error, rows, fields) {
+                                    if (!error) {
+                                      if(rows.length===0){
+                                        connection.query('select email from customer where email = "'+that.email+'"', function (error, rows, fields) {
+                                          if (!error) {
+                                            if(rows.length===0){
+                                              connection.query('select employer_email from customer_income where employer_email = "'+that.email+'"', function (error, rows, fields) {
+                                                if (!error) {
+                                                  resolve(rows);
+                                                }else {
+                                                  console.log("Error...", error);
+                                                  // reject(error);
+                                                }
+                                              });
+                                            }else{
+                                              resolve(rows);
+                                            }
+                                          }else {
+                                            console.log("Error...", error);
+                                            // reject(error);
+                                          }
+                                        });
+                                      }else{
+                                        resolve(rows);
+                                      }
+                                    }else {
+                                      console.log("Error...", error);
+                                      // reject(error);
+                                    }
+                                  })
+                                })
+                              }else{
+                                resolve(rows);
+                              }
+                            }else {
+                              console.log("Error...", error);
+                              // reject(error);
+                            }
+                          });
+                        }else{
+                          resolve(rows);
+                        }
+                      }else {
+                        console.log("Error...", error);
+                        // reject(error);
+                      }
+                    });
+                  }else{
+                    resolve(rows);
+                  }
+                }else {
+                  console.log("Error...", error);
+                  // reject(error);
+                }
+              });
+            }else{
+              resolve(rows);
+            }
+          }else {
+                console.log("Error...", error);
+                // reject(error);
+              }
+        });
+        // connection.query('select u.id as `u_id`, c.id as `director_id`, c.director, c.email, u.user_id from company as c INNER JOIN user as u on c.id = u.director_id WHERE c.email = "'+that.email+'" AND u.status = 0', function (error, rows, fields) {
+        //   if (!error) {
+        //     (rows.length > 0 ? rows : []).map((data,index) => { 
+        //       connection.query('update user set token = "", account_id = "" where id = '+data.u_id+' ', function (error, rows, fields) {
+        //         if (!error) {
+        //           console.log(rows);
+        //           if(!rows[0]){
+        //             resolve(rows);
+        //               console.log('okkk');
+        //           }
+        //         }else {
+        //           console.log("Error...", error);
+        //           reject(error);
+        //         }
+        //       })
+        //     });
+        //   // }
+        // } else {
+        //     console.log("Error...", error);
+        //     reject(error);
+        //   }
+        // });
+      }
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      
+    });
+  });
+}
 
 
 
