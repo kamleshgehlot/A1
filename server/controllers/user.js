@@ -130,7 +130,7 @@ const register = function (req, res, next) {
 
 							(req.body.directorList || []).map(director => {
 								console.log("director list..............", director)
-								let url = 'http://localhost:3000/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
+								let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
 								console.log("url....", url);
 								const mail = {
 									from: 'admin@rentronicsdev.saimrc.com',
