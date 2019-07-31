@@ -54,4 +54,19 @@ export default {
       throw error;
     }
   },
+  onForgotPassword: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/auth/forgotPassword`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

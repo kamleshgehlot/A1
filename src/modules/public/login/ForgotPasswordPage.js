@@ -12,7 +12,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
 import AuthenticationAPI from '../../../api/AuthenticationAPI';
 // Components
-import LoginForm from './components/LoginForm';
+import ForgotPasswordForm from './components/ForgotPasswordForm';
 import WelcomeMessage from './components/WelcomeMessage';
 
 const Container = styled.section`
@@ -24,13 +24,12 @@ const Container = styled.section`
   background-color: #d0e1e8;
 `;
 
-class LoginPage extends Component {
+class ForgotPasswordPage extends Component {
   isTokenSource = axios.CancelToken.source();
 
   state = {
     form: {
       username: '',
-      password: '',
     },
     isLoading: false,
     isSnackbarOpen: false,
@@ -60,23 +59,14 @@ class LoginPage extends Component {
     try {
       this.setState({ isLoading: true });
 
-      const result = await AuthenticationAPI.onLogin({
+      const result = await AuthenticationAPI.onForgotPassword({
         cancelToken: this.isTokenSource.token,
         username: form.username,
-        password: form.password,
       });
 
       this.setState({ isLoading: false });
-      APP_TOKEN.set({
-        token: result.token,
-        refreshToken: '',
-        roleName: result.role_name,
-        franchiseId: result.franchise_id,
-        userName: result.user_name,
-        userId: result.user_id,
-        uid: result.uid
-      });
-      history.push('/auth');
+     
+      history.push('/login');
     } catch (error) {
       if (axios.isCancel(error)) {
         console.log('Request canceled', error.message);
@@ -102,7 +92,7 @@ class LoginPage extends Component {
     return (
       <Container>
         <WelcomeMessage />
-        <LoginForm
+        <ForgotPasswordForm
           value={form}
           isLoading={isLoading}
           onChange={this.onHandleChangeForm}
@@ -124,8 +114,8 @@ class LoginPage extends Component {
   }
 }
 
-LoginPage.propTypes = {
+ForgotPasswordPage.propTypes = {
   history: PropTypes.object, // React Router Injected
 };
 
-export default LoginPage;
+export default ForgotPasswordPage;

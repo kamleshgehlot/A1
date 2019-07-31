@@ -26,7 +26,7 @@ const styles = theme => ({
   },
 });
 
-const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
+const ForgotPasswordForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
   const isFormEnabled = Object.values(value).every(item => item !== '');
   return (
     <form className={classes.container} onSubmit={onSubmit}>
@@ -40,15 +40,7 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
         autoFocus
         autoComplete="off"
       />
-      <TextField
-        label="Password"
-        value={value.password}
-        name="password"
-        onChange={onChange}
-        margin="normal"
-        fullWidth
-        type="password"
-      />
+     
       <Button
         onClick={onSubmit}
         variant="outlined"
@@ -58,16 +50,16 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
         disabled={!isFormEnabled}
         type="submit"
       >
-        {isLoading ? <CircularProgress size={20} /> : 'Login'}
+        {isLoading ? <CircularProgress size={20} /> : 'Send Password'}
       </Button>
       <p className={classes.forgotContainer}>
-        <Link to="/forgotPassword" >Forgot Password?</Link>
+        <Link to="/" >Login Page</Link>
       </p>
     </form>
   );
 };
 
-LoginForm.propTypes = {
+ForgotPasswordForm.propTypes = {
   value: PropTypes.object,
   isLoading: PropTypes.bool,
   onChange: PropTypes.func,
@@ -75,4 +67,4 @@ LoginForm.propTypes = {
   classes: PropTypes.object, // Material UI Injected
 };
 
-export default withStyles(styles)(LoginForm);
+export default withStyles(styles)(ForgotPasswordForm);
