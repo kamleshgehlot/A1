@@ -102,6 +102,8 @@ export default function AddProduct(props) {
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
   const [statusList, setStatusList] = useState([]);
+  const [rental, setRental] = useState([]);
+
 
   const [isLoading, setIsLoading] = useState(false);
   const handleChange = panel => (event, isExpanded) => {
@@ -143,7 +145,7 @@ export default function AddProduct(props) {
       specification:inputs.specification,
       brought:inputs.brought_from,
       invoice:inputs.invoice,
-      rental:inputs.rental,
+      rental:rental,
       meta_keywords:inputs.meta_keywords,
       meta_description:inputs.meta_description,
       status:inputs.status,
@@ -168,6 +170,11 @@ export default function AddProduct(props) {
     validate
   );
 
+  function handleRentalChange(e){
+    if(!(e.target.value <='0')){
+      setRental(e.target.value)
+    }
+  }
   return (
     <div>
       <Dialog maxWidth="lg" open={props.open} onClose={props.handleClose}>
@@ -341,9 +348,10 @@ export default function AddProduct(props) {
                     <TextField
                       id="rental"
                       name="rental"
-                      value={inputs.rental}
-                      onChange={handleInputChange}
+                      value={rental}
+                      onChange={handleRentalChange}
                       fullWidth
+                      required
                       margin="dense"
                       type="number"
                       label="Rental Price"
