@@ -10,6 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
@@ -76,7 +77,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
   },
   margin:{
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
   },
   button: {
     margin: theme.spacing(1),
@@ -177,7 +178,7 @@ export default function AddProduct(props) {
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Product Creation Panel
+                Add Product
               </Typography>
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
@@ -206,6 +207,15 @@ export default function AddProduct(props) {
                       type="text"
                       margin="dense"
                       required
+                      // onKeyPress={(e) => {
+                      //   var inputValue = e.which;
+                      //   // allow letters and whitespaces only.
+                      //   if((inputValue >= 65 && inputValue <= 90) || (inputValue >= 97 && inputValue <= 122) || (inputValue= 32 && inputValue != 0)) {
+                         
+                      //     console.log('key---',inputValue);
+                      //   }
+                        
+                      // }}
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -264,9 +274,12 @@ export default function AddProduct(props) {
                       value={inputs.productprice}
                       onChange={handleInputChange}
                       fullWidth
-                      type="text"
+                      type="number"
                       margin="dense"
                       required
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -334,6 +347,9 @@ export default function AddProduct(props) {
                       margin="dense"
                       type="number"
                       label="Rental Price"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

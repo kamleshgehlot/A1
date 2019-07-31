@@ -112,7 +112,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, setCustomerList, enquiryData}) {
+export default function Add({ open, handleClose, handleSnackbarClick, setCustomerList, enquiryData, setCustomer}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
@@ -122,10 +122,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   const [otherIdType, setOtherIdType] = useState(true);
   const [otherIdTypeValue, setOtherIdTypeValue] = useState();
   
-
-  // const [idTypeOpen, setIdTypeOpen] = React.useState(false);
-  
-console.log("dda",enquiryData);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -219,9 +215,10 @@ console.log("dda",enquiryData);
     // console.log("formadata", formData);
     const response = await Customer.register({ formData: formData });
     
-
+    
     handleSnackbarClick(true);
     setCustomerList(response.customerList);
+    setCustomer(data);
     handleReset(RESET_VALUES);
     handleClose(false);
   };
@@ -471,7 +468,7 @@ return (
                       type="text"
                       value={inputs.id_number} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -485,7 +482,7 @@ return (
                       type="date"
                       value={inputs.expiry_date} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -523,7 +520,7 @@ return (
                       type="file"
                       value={inputs.id_proof} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -618,7 +615,7 @@ return (
                       type="text"
                       value={inputs.alt_c2_name} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -632,7 +629,7 @@ return (
                       type="text"
                       value={inputs.alt_c2_address} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -646,7 +643,7 @@ return (
                       type="number"
                       value={inputs.alt_c2_contact} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -661,7 +658,7 @@ return (
                       type="text"
                       value={inputs.alt_c2_relation} 
                       onChange={handleInputChange}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>

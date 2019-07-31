@@ -43,7 +43,7 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-export default function CategoryList(props) {
+export default function ProductList(props) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [staffOpen, setStaffOpen] = useState(false);

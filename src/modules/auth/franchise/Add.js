@@ -36,11 +36,10 @@ import useSignUpForm from './CustomHooks';
 
 const RESET_VALUES = {
   city: '',
-
   suburb: '',
   franchise_name: '',
   uid: '',
-
+  
   city_code: '',
   abn: '',
 
@@ -242,6 +241,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     });
 
     setFranchiseId(franchiseIdTemp);
+    setTempCity('');
 
     handleSnackbarClick(true);
     setFranchiseList(response.userList);

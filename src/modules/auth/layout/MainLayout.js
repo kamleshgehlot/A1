@@ -29,7 +29,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
 import Franchise from '../franchise/Franchise';
-import Category from '../category/CategoryList';
+import Product from '../category/ProductList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
 import Task from '../task/Task';
@@ -37,10 +37,9 @@ import StaffTask from '../task/StaffTask';
 import Customer from '../customer/CustomerList';
 import Profile from '../setting/Profile';
 import ChangePassword from '../setting/ChangePassword';
-
-
 import Enquiry from '../enquiry/Enquiry';
 import Lead from '../lead/Lead';
+import Order from '../order/Order'
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -109,6 +108,7 @@ export default function ClippedDrawer(props) {
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
+  const [showOrder,setShowOrder] = useState(false);
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -152,6 +152,7 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
   }
 
   function handleCategoryClick() {
@@ -167,6 +168,7 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
   }
 
   function handleMasterStaffClick(){
@@ -181,6 +183,7 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -195,6 +198,8 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
+
   }
   
   function handleTaskClick(){
@@ -209,6 +214,8 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
+
   }
   function handleProfileClick(){
     setShowProfile(true);setAnchorEl(null);
@@ -222,6 +229,8 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
+
   }
   function handleChangePasswordClick(){
     setShowPwd(true);
@@ -236,6 +245,8 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
+
   }
 
   function handleCustomerClick(){
@@ -250,6 +261,8 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
+
   }
   function handleStaffTaskClick(){
     setShowStaffTask(true);
@@ -263,6 +276,8 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowOrder(false);
+
   }
 
   
@@ -278,9 +293,26 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowStaffTask(false);
     setShowLead(false);
+    setShowOrder(false);
+
   }
   function handleLeadsClick(){
     setShowLead(true);
+    setShowEnquiry(false);
+    setShowCustomer(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowStaffTask(false);
+    setShowOrder(false);
+  }
+  function handleOrderClick(){
+    setShowOrder(true);
+    setShowLead(false);
     setShowEnquiry(false);
     setShowCustomer(false);
     setShowTask(false);
@@ -340,7 +372,7 @@ export default function ClippedDrawer(props) {
       >
         <div className={classes.toolbar} />
         <List>
-        {console.log(roleName)}
+        {/* {console.log(roleName)} */}
           {roleName === 'Super Admin' 
             && (<List>
               {/* <Link to="auth/franchise"> */}
@@ -352,7 +384,7 @@ export default function ClippedDrawer(props) {
               {/* code by Bhagyashree starts from here
               Category is added to menu */}
               {/* <Link to="category"> */}
-                <ListItem button key="ManageCategory"  onClick={handleCategoryClick}>
+                <ListItem button key="ManageProduct"  onClick={handleCategoryClick}>
                   <ListItemIcon><PeopleIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
@@ -419,6 +451,10 @@ export default function ClippedDrawer(props) {
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
+                <ListItem button key="ManageOrder"  onClick={handleOrderClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Order" />
+                </ListItem>
                  {/* <ListItem button key="ManageTask"  onClick={handleTaskClick}>
                      <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                      <ListItemText primary="Manage Task" />
@@ -435,7 +471,7 @@ export default function ClippedDrawer(props) {
         }
 
         {
-          showCategory ? <Category /> : null
+          showCategory ? <Product /> : null
         }
         {
           showMasterStaff ? <Staff /> : null
@@ -463,6 +499,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showLead ? <Lead />:null
+        }
+        {
+          showOrder ? <Order />:null
         }
         {/* {props.children} */}
       </main>
