@@ -22,6 +22,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 // API CALL
 import Category from '../../../api/Category';
@@ -103,6 +104,8 @@ export default function AddProduct(props) {
   const [colorList, setColorList] = useState([]);
   const [statusList, setStatusList] = useState([]);
   const [rental, setRental] = useState([]);
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
 
 
   const [isLoading, setIsLoading] = useState(false);
@@ -133,6 +136,8 @@ export default function AddProduct(props) {
   }, []);
 
   const categoryadd = async () => {
+    setpLoading(true);
+    setSavebtn(false);
     const response = await Category.addproduct({
       maincat:props.productCatList.maincategory,
       category:props.productCatList.category,
@@ -151,6 +156,7 @@ export default function AddProduct(props) {
       status:inputs.status,
     });
     props.productData(response.categoryList);
+    setpLoading(false);
     props.handleClose(false);
   };
 
@@ -187,6 +193,11 @@ export default function AddProduct(props) {
               <Typography variant="h6" className={classes.title}>
                 Add Product
               </Typography>
+              {savebtn?   <Button variant="contained" color="primary" onClick={handleSubmit} >
+                      Save
+                    </Button>:<Button variant="contained" color="primary" onClick={handleSubmit} disabled>
+                      Save
+                    </Button>}
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
               </Button> */}
@@ -195,6 +206,7 @@ export default function AddProduct(props) {
 
           <div className={classes.root}>
 
+          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
@@ -413,10 +425,7 @@ export default function AddProduct(props) {
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
-                      >
-                      Save
-                    </Button>
+                
                     {/* <Button variant="contained" color="primary" onClick={handleReset} className={classes.button}>
                       Clear
                     </Button> */}

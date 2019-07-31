@@ -25,6 +25,7 @@ import Input from "@material-ui/core/Input";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -84,6 +85,8 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   const classes = useStyles();
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [productList, setProductList] = useState([]);
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
  
   useEffect(() => {
     const fetchData = async () => {
@@ -113,6 +116,8 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   
   const addEnquiry = async () => {
 
+    setpLoading(true);
+    setSavebtn(false);
     // setInput('interested_product_id',assignInterest.join())
 // console.log('convert-----',convert);
     const response = await EnquiryAPI.postEnquiry({
@@ -130,6 +135,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     handleSnackbarClick(true);
     setEnquiryList(response.enquiryList);
     handleReset(RESET_VALUES);
+    setpLoading(false);
     handleClose(false);
   };
 
@@ -157,15 +163,18 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Enquiry
               </Typography>
-              <Button color="inherit" type="submit">
+              {savebtn? <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button>:<Button color="inherit" type="submit" disabled>
+                save
+              </Button>}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
           <Paper className={classes.paper}>
               <Grid container spacing={4}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField

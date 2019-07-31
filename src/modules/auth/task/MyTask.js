@@ -3,7 +3,6 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -14,21 +13,24 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Snackbar from '@material-ui/core/Snackbar';
 import CreateIcon from '@material-ui/icons/Create';
-import ArchiveIcon from '@material-ui/icons/Archive';
+import Dialog from '@material-ui/core/Dialog';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
-//files
-import Add from './Add';
-import MyTask from './MyTask';
-import Edit from './Edit';
+// import Add from './Add';
+import StaffEdit from './StaffEdit';
 import CompletedTask from './CompletedTask';
 
 import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
 import TaskAPI from '../../../api/Task';
 // import Staff from '../../../api/franchise/Staff';
+
 import FranchiseUsers from '../../../api/FranchiseUsers';
 
-import StaffTask from '../task/StaffTask';
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -49,38 +51,39 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Task(franchiseId) {
+export default function StaffTask(props) {
   const [open, setOpen] = useState(false);
-  const [openCompleteTask, setCompleteTaskOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [openCompleteTask, setCompleteTaskOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [taskData,setTaskData]= useState();
-  const [taskStatusList, setTaskStatusList]=useState();
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
-  const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [dateToday, setTodayDate]= useState();
-
-  const [showStaffTask, setShowStaffTask] = useState(false);
-  const [assignedid,setAssignedid]= useState();
+  const [franchiseUsersList, setFranchiseUsersList] = useState({});
+  const [taskStatusList, setTaskStatusList]=useState();
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
-
-  // const [showTask, setShowTask] = useState(roleName === 'Super Admin');
-  const [showTask, setShowTask] = useState(roleName === 'Admin');
-    
- 
+   
+  const uid = APP_TOKEN.get().uid;
+  const [assignedid,setAssignedid]= useState();
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
+    appBar: {
+      position: 'relative',
+    },
+    title: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+    },
     root: {
       display: 'flex',
       flexGrow: 1,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
     },
     drawer: {
       width: drawerWidth,
@@ -94,24 +97,24 @@ export default function Task(franchiseId) {
       padding: theme.spacing(3),
     },
     toolbar: theme.mixins.toolbar,
-    title: {
-      flexGrow: 1,
-    },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'left',
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      marginTop: theme.spacing(2),
+      marginLeft: theme.spacing(3),
     },
     button:{
       marginRight: theme.spacing(2),
       padding:theme.spacing(2),
       borderRadius: theme.spacing(7),
     },
-    tbrow:{      
-      marginTop:theme.spacing(10),
+    tbrow:{
+      
+    marginTop:theme.spacing(10),
     },
     bgtaskpending:{
       backgroundColor:"yellow",
@@ -119,41 +122,22 @@ export default function Task(franchiseId) {
     },
     bgtaskoverdue:{
       backgroundColor:"red",
+      color:"white",
+      fontWeight:"bold",
       padding: theme.spacing(1),
-    },
-    fab: {
-      margin: theme.spacing(1),
-    },
+    }
   }));
   const classes = useStyles();
-      
-//task status list
-useEffect(() => {
-  const fetchData = async () => {
-    setIsError(false);
-    setIsLoading(true);
 
-    try {
-      const result = await TaskAPI.taskStatus();
-      setTaskStatusList(result.taskStatusList);
-      // console.log('status list----',result.taskStatusList);
-    } catch (error) {
-      setIsError(true);
-    }
-    setIsLoading(false);
-  };
-  fetchData();
-}, []);
-  //tasks list
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
+
       try {
-        const result = await TaskAPI.list();
-        setTaskList(result.taskList);
-        setAssignedid(0);
-        todayDate();
+        const result = await TaskAPI.taskStatus();
+        setTaskStatusList(result.taskStatusList);
+        // console.log('task-----',taskStatusList);
       } catch (error) {
         setIsError(true);
       }
@@ -161,65 +145,57 @@ useEffect(() => {
     };
     fetchData();
   }, []);
-  //staff list
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setIsError(false);
-  //     setIsLoading(true);
-  //     try {
-  //       const result = await Staff.list();
-  //       setStaffList(result.staffList);
-  //     } catch (error) {
-  //       setIsError(true);
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await TaskAPI.stafftasks();
+        setTaskList(result.taskList);
+        const currentuser = await FranchiseUsers.user();
+        // console.log('stfftask-899-----', currentuser.currentuser);
+        setAssignedid(currentuser.currentuser[0].uid);
+        currentDate();
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
-      const fetchData = async () => {
-        setIsError(false);
-        setIsLoading(true);
-        try {
-          const result = await FranchiseUsers.list();
-          setFranchiseUsersList(result.franchiseUserList);
-        } catch (error) {
-          setIsError(true);
-        }
-        setIsLoading(false);
-      };
-      fetchData();
-    }, []);
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await FranchiseUsers.list();
+        setFranchiseUsersList(result.franchiseUserList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+  
+  
 
-
-  function todayDate(){
-    const dtToday=new Date();
-
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    if(month < 10)
-        month = '0' + month.toString();
-    if(day < 10)
-        day = '0' + day.toString();
-    const date= year + '-' + month + '-' + day;
+  function currentDate(){
+    
+    const today=new Date();
+    const date= today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
     setTodayDate(date);
   }
   function handleClickOpen() {
     setOpen(true);
   }
-  function handleCompleteTaskClickOpen(){
-    setCompleteTaskOpen(true);
-  }
-  function handleCompleteTaskClose() {
-    setCompleteTaskOpen(false);
-  }
   function handleClose() {
     setOpen(false);
   }
   function handleClickEditOpen(data) {
-    setTaskData(data);
+    setTaskData(data),
     setEditOpen(true);
   }
   function handleEditClose() {
@@ -249,10 +225,16 @@ useEffect(() => {
     
   }
 
+  function handleCompleteTaskClickOpen(){
+    setCompleteTaskOpen(true);
+  }
+  function handleCompleteTaskClose() {
+    setCompleteTaskOpen(false);
+  }
   const handleClickDelete = async (id) => {
     const response = await TaskAPI.delete({
       id:id,
-      franchise_id: franchiseId,
+      franchise_id: uid,
     });
     // handleSnackbarClick(true,'Franchise Updated Successfully');
     // setFranchiseList(response.staffList);
@@ -262,27 +244,6 @@ useEffect(() => {
 
 
 
-  function handleStaffTaskClick(){
-    setShowStaffTask(true);
-  }
-  function handleStaffTaskClose() {
-    setShowStaffTask(false);
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await TaskAPI.list();
-        setTaskList(result.taskList);
-        // setAssignedid(0);
-        handleCompleteTaskClose();
-        todayDate();
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }
   // const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
   //   // RESET_VALUES,
   //   handleClickDelete,
@@ -290,34 +251,24 @@ useEffect(() => {
   // );
   return (
     <div>
+    <Dialog maxWidth="lg" open={props.open} onClose={props.handleMyTaskClose} >
+      {/* <form onSubmit={handleSubmit}>  */}
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={props.handleMyTaskClose} aria-label="Close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              My Task
+            </Typography>
+            {/* <Button color="inherit" type="submit">
+              save
+            </Button> */}
+          </Toolbar>
+        </AppBar>
+          <div className={classes.root}>
       {/* {showTask ?  */}
       <Grid container spacing={3}>
-
-          <Grid item xs={12} sm={7}>
-            <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="Add"
-              className={classes.fonttransform}
-              onClick={handleClickOpen}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              Task
-            </Fab>
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="Complete"
-              className={classes.fonttransform}
-              onClick={handleStaffTaskClick}
-            >
-              My Task List
-            </Fab>
-          </Grid>
           <Grid item xs={12} sm={2}>
             <Fab
               variant="extended"
@@ -339,8 +290,8 @@ useEffect(() => {
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
-                        <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
+                        <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -351,8 +302,8 @@ useEffect(() => {
                         <StyledTableCell> {index+1}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
-                         
-                            { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
+                          
+                          { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                                 return(
                                   data.assigned_to===datastaff.id ?
                                   <StyledTableCell> {datastaff.name}</StyledTableCell>
@@ -361,22 +312,20 @@ useEffect(() => {
                                     
                               })
                             }
-                            { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                             { (taskStatusList.length > 0 ? taskStatusList : []).map((dataTaskStatus, index1)=>{
                                 return(
-                                  data.status===datastatus.id ?
-                                  <StyledTableCell> {datastatus.status}</StyledTableCell>
+                                  data.status===dataTaskStatus.id ?
+                                  <StyledTableCell> {dataTaskStatus.status}</StyledTableCell>
                                     :''
-                                    )                                    
+                                    )
+                                    
                               })
                             }
-                          {/* <StyledTableCell><p >{data.status}</p></StyledTableCell> */}
                           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+                         
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                             <CreateIcon/>
-                            </Button>
-                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}>
-                              <ArchiveIcon />
+                            <CreateIcon/>
                             </Button>
                           </StyledTableCell>
                         </TableRow>
@@ -388,11 +337,10 @@ useEffect(() => {
                </Paper>
           </Grid>
         </Grid>
-      {open? <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />:null}
+      {/* <Add open={open} handleClose={handleClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} /> */}
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
-      {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose}  assignedid={0} />: null}
-      {showStaffTask ? <MyTask open={showStaffTask} handleMyTaskClose={handleStaffTaskClose} />: null}
+      {editOpen ? <StaffEdit open={editOpen} handleEditClose={handleEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}
+      {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose} assignedid={assignedid} />: null}
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
@@ -405,9 +353,12 @@ useEffect(() => {
         <MySnackbarContentWrapper
           onClose={handleSnackbarClose}
           variant="success"
-          message="Task successfully!"
+          message="Task updated successfully!"
         />
       </Snackbar>
+          </div>
+        {/* </form> */}
+      </Dialog>
     </div>
   );
 }

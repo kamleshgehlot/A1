@@ -93,7 +93,7 @@ export default function CompletedTask({open, handleCompleteTaskClose,assignedid}
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
-  const [taskStatusList, setTaskStatusList]=useState();
+  const [taskStatusList, setTaskStatusList]=useState([]);
 
   console.log('assign',assignedid);
   const classes = useStyles();

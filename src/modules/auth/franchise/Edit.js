@@ -27,6 +27,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 // API CALL
 
@@ -112,6 +113,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const [directorList, setDirectorList] =useState([]);
   const [selectedArea, setSelectedArea] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
   
     // console.log(franchise);
   const handleChange = panel => (event, isExpanded) => {
@@ -158,6 +161,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   };
   
   const handleSubmit = async () => {
+    setpLoading(true);
+    setSavebtn(false);
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
       
@@ -217,6 +222,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.userList);
     // handleReset(RESET_VALUES);
+    setpLoading(false);
     handleEditClose(false);
   };
 
@@ -240,14 +246,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               <Typography variant="h6" className={classes.title}>
                 Edit franchaise
               </Typography>
-              <Button onClick={handleSubmit} color="inherit">
+              {savebtn? <Button onClick={handleSubmit} color="inherit">
                 Update
-              </Button>
+              </Button> : <Button onClick={handleSubmit} color="inherit" disabled>
+                Update
+              </Button>} 
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
             {/* Franchise Details */}
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}

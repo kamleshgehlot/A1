@@ -18,6 +18,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
@@ -98,6 +99,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   const [temp, setTemp] = React.useState([]);
   const [assignRole, setAssignRole] = React.useState([]);
   
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
+  
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -115,7 +119,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   };
 
   const addFranchiseStaff = async () => {
-
+    setpLoading(true);
     const data = {
       franchise_id: franchiseId,
       id: '',
@@ -152,6 +156,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     handleSnackbarClick(true);
     setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
+    setpLoading(false);
     handleClose(false);
     
   };
@@ -223,7 +228,8 @@ return (
           </AppBar>
 
           <div className={classes.root}>
-            
+                  
+                  <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
@@ -499,6 +505,8 @@ return (
             
           </div>
         </form>
+        
+
       </Dialog>
     </div>
   );

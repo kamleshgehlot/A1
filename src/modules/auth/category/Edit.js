@@ -31,6 +31,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConfirmationDialog from '../ConfirmationDialog.js';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 // API CALL
 import Category from '../../../api/Category';
@@ -103,6 +104,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
   const [confirmation, setConfirmation] = React.useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -138,6 +141,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
 
   console.log(product);
   const handleSubmit = async () => {
+    setpLoading(true);
+    setSavebtn(false);
     const response = await Category.edit({
       // cancelToken: this.isTokenSource.token,
       id: product.id,
@@ -161,6 +166,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     // handleSnackbarClick(true, 'Category Updated Successfully.');
     updateProductList(response);
     // props.handleReset(RESET_VALUES);
+    setpLoading(false);
     handleEditClose(false);
   };
   function handleConfirmationDialog (response){
@@ -179,9 +185,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
               <Typography variant="h6" className={classes.title}>
                 Category Update Panel
               </Typography>
-              <Button color="inherit" onClick={handleSubmit}>
+              {savebtn? <Button color="inherit" onClick={handleSubmit}>
                 Update
-              </Button>
+              </Button>: <Button color="inherit" onClick={handleSubmit} disabled>
+                Update
+              </Button>}
             </Toolbar>
           </AppBar>
 
@@ -190,6 +198,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
           {/* Franchise Details */}
           <Paper className={classes.paper}>
                 <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="product_name">Enter Product Title/Name</InputLabel>
                     <TextField

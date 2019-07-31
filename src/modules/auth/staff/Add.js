@@ -18,6 +18,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
@@ -76,7 +77,9 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, positions}) {
   const classes = useStyles();
 
+  const [ploading, setpLoading] = React.useState(false);
   const addStaffMaster = async () => {
+    setpLoading(true);
     const response = await StaffMaster.register({
       id: '',
       first_name: inputs.first_name,
@@ -93,6 +96,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     handleSnackbarClick(true);
     setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
+    setpLoading(false);
     handleClose(false);
   };
 
@@ -147,6 +151,7 @@ return (
             {/* Franchise Details */}
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
+                <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
