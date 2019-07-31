@@ -21,6 +21,8 @@ var User = function (params) {
   this.user_id = params.user_id;
   this.password = params.password;
 
+  this.token = params.token;
+  this.accountId = params.accountId;
   // for update - param
   // this.f_id = params.f_id;
 };
@@ -51,12 +53,12 @@ User.prototype.register = function () {
 
             //   userValues.push([that.franchise_id,directors_id[index].id,data.director,data.uid, encText,that.designation,that.role_id,that.is_active,that.created_by])
             // });
-            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.token + '", "' + that.accountId + '" , "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
               if (!error) {
-                console.log("databasename",that.user_details[0].uid.split('_')[1]);
+                console.log("databasename", that.user_details[0].uid.split('_')[1]);
                 connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_details[0].uid.split('_')[1]) });
-                connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+                connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.token + '", "' + that.accountId + '" , "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
                   if (!error) {
                     const id = rows.insertId;
                     resolve({ userName: that.name, userId: that.user_id, password: that.password, id: id });
@@ -100,6 +102,37 @@ User.prototype.update = function () {
         connection.query('UPDATE user set name = ?, designation = ?, role_id = ?  WHERE director_id = ?', values, function (error, rows, fields) {
           if (!error) {
             // resolve({ userName: that.name, userId: that.userId, password: that.password });
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error)
+          }
+        });
+      } else {
+        console.log("Error...", error);
+        reject(error)
+      }
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
+User.prototype.updateStatus = function (name) {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+
+      const values = [name];
+
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], name.split('_')[1]) });
+        connection.query('UPDATE user set status = true, token = null  WHERE user_id = ?', values, function (error, rows, fields) {
+          if (!error) {
             resolve(rows);
           } else {
             console.log("Error...", error);

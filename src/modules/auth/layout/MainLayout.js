@@ -338,7 +338,7 @@ export default function ClippedDrawer(props) {
           Welcome {userName}
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
-          Welcome To Rental Solutions
+          Welcome To Rentronics
           </Typography>
           {roleName === 'Super Admin' ? <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
           Logout

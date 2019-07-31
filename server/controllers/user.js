@@ -5,12 +5,11 @@ const Franchise = require("../models/franchise.js")
 const Accountant = require("../models/accountant.js")
 const Company = require("../models/company.js")
 const UserRole = require("../models/franchise/userRole")
+const Miscellaneious = require('../lib/miscellaneous.js')
 
 const { trans } = require("../lib/mailtransporter");
 
 const register = function (req, res, next) {
-	console.log('req...',req.body);
-	console.log('req...',req.decoded);
 	let accountantParam = {
 		id: req.body.accountant_id,
 		name: req.body.accountant_name,
@@ -87,27 +86,7 @@ const register = function (req, res, next) {
 		const newUser = new User(userParam);
 		const newUserRole = new UserRole(userRoleParam);
 
-		(req.body.directorList || []).map(director => {
-			const mail = {
-				from: 'admin@rentronics.saimrc.com',
-				//  to: 'mpurohit88@gmail.com',
-				to: director.email,
-				subject: 'New Message from Contact Form',
-				html: "user Id: " + director.uid + "<br />password: " + director.password
-			}
-
-			trans.sendMail(mail, (err, info) => {
-				if (err) {
-					return console.log(err);
-				}
-				console.log('Message sent: %s', info.messageId);
-				// Preview only available when sending through an Ethereal account
-				console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-			});
-		});
-
 		if (req.body.id) {
-
 
 			newUser.update().then(function (result) {
 
@@ -137,14 +116,40 @@ const register = function (req, res, next) {
 					newFranchise.company_id = result;
 					newUser.company_id = result;
 					newFranchise.register().then(function (result) {
+						console.log("Emaiol started..............")
+						const accountId = Miscellaneious.generateAccountId();
+						const token = Miscellaneious.generateRandomToken();
 
 						newUser.franchise_id = result.franchise_id;
-
+						newUser.accountId = accountId;
+						newUser.token = token;
 						newUserRole.franchise_id = result.franchise_id;
 
 						newUser.register().then(function (result) {
 							console.log("Saved Successfully.");
 
+							(req.body.directorList || []).map(director => {
+								console.log("director list..............", director)
+								let url = 'http://localhost:3000/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
+								console.log("url....", url);
+								const mail = {
+									from: 'admin@rentronicsdev.saimrc.com',
+									//  to: 'mpurohit88@gmail.com',
+									to: director.email,
+									subject: 'Please verify your email address',
+									text: 'activate your account ',
+									html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
+								}
+
+								// trans.sendMail(mail, (err, info) => {
+								// 	if (err) {
+								// 		return console.log(err);
+								// 	}
+								// 	console.log('Message sent: %s', info.messageId);
+								// 	// Preview only available when sending through an Ethereal account
+								// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+								// });
+							});
 							// newUserRole.user_id = result.id;
 
 							newUserRole.register().then(function (result) {
@@ -158,10 +163,7 @@ const register = function (req, res, next) {
 			})
 
 		}
-
-
 	} catch (err) {
-
 	}
 
 	// 	const newFranchise = new Franchise();

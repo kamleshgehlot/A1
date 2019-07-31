@@ -12,6 +12,7 @@ import ProductList from './modules/auth/category/ProductList';
 // Routes
 const AuthLayout = lazy(() => import('./modules/auth/layout/MainLayout'));
 const LoginPage = lazy(() => import('./modules/public/login/LoginPage'));
+const ForgotPasswordPage = lazy(() => import('./modules/public/login/ForgotPasswordPage'));
 const NoMatchPage = lazy(() => import('./modules/not-found/NoMatchPage'));
 
 const Routes = () => {
@@ -24,6 +25,13 @@ const Routes = () => {
           path="/login"
           render={props => {
             return APP_TOKEN.notEmpty ? <Redirect to="/auth" /> : <LoginPage {...props} />;
+          }}
+        />
+        <Route
+          exact
+          path="/forgotPassword"
+          render={props => {
+            return APP_TOKEN.notEmpty ? <Redirect to="/auth" /> : <ForgotPasswordPage {...props} />;
           }}
         />
         <Route
