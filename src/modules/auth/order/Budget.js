@@ -215,7 +215,6 @@ export default function Budget({ open, handleBudgetClose}) {
   }
   
   function handlePasswordBlurChange() {
-    
     inputs['password']=='' ? 
     setInput('password', GeneratePassword())
     :''

@@ -131,7 +131,10 @@ Franchise.prototype.register = function (newUser) {
                                     reject(error);
                                   }
                                 });
-                              });
+                              }
+
+                              connection.release();
+                              console.log('Process Complete %d', connection.threadId);
                             });
                           });
                         });
@@ -185,6 +188,41 @@ Franchise.prototype.register = function (newUser) {
   });
   // // });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Franchise.prototype.update = function () {
   const that = this;
