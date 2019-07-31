@@ -26,6 +26,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 import ConfirmationDialog from '../ConfirmationDialog.js';
@@ -132,6 +133,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const [chkEmail, SetChkEmail] = useState();
   const [confirmation, setConfirmation] = React.useState(false);
   const [directorDeletedIndex, setDirectorDeletedIndex] = useState();
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -208,6 +211,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     if(inputs.accountant_email===chkEmail){
       alert('Email already registered')
     }else{
+    setpLoading(true);
+    setSavebtn(false);
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
       
@@ -265,6 +270,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     setFranchiseList(response.userList);
     setDirectorList([]);
     handleReset(RESET_VALUES);
+    setpLoading(false);
     handleClose(false);
   }
   };
@@ -436,14 +442,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               <Typography variant="h6" className={classes.title}>
                 Add Franchise
               </Typography>
-              <Button color="inherit" type="submit">
+             {savebtn? <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button>:<Button color="inherit" type="submit" disabled>
+                save
+              </Button>}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
             {/* Franchise Details */}
+            
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}

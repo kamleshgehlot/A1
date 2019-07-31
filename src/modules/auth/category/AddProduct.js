@@ -22,6 +22,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 // API CALL
 import Category from '../../../api/Category';
@@ -102,6 +103,10 @@ export default function AddProduct(props) {
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
   const [statusList, setStatusList] = useState([]);
+  const [rental, setRental] = useState([]);
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
+
 
   const [isLoading, setIsLoading] = useState(false);
   const handleChange = panel => (event, isExpanded) => {
@@ -131,6 +136,8 @@ export default function AddProduct(props) {
   }, []);
 
   const categoryadd = async () => {
+    setpLoading(true);
+    setSavebtn(false);
     const response = await Category.addproduct({
       maincat:props.productCatList.maincategory,
       category:props.productCatList.category,
@@ -143,12 +150,13 @@ export default function AddProduct(props) {
       specification:inputs.specification,
       brought:inputs.brought_from,
       invoice:inputs.invoice,
-      rental:inputs.rental,
+      rental:rental,
       meta_keywords:inputs.meta_keywords,
       meta_description:inputs.meta_description,
       status:inputs.status,
     });
     props.productData(response.categoryList);
+    setpLoading(false);
     props.handleClose(false);
   };
 
@@ -168,6 +176,11 @@ export default function AddProduct(props) {
     validate
   );
 
+  function handleRentalChange(e){
+    if(!(e.target.value <='0')){
+      setRental(e.target.value)
+    }
+  }
   return (
     <div>
       <Dialog maxWidth="lg" open={props.open} onClose={props.handleClose}>
@@ -180,6 +193,11 @@ export default function AddProduct(props) {
               <Typography variant="h6" className={classes.title}>
                 Add Product
               </Typography>
+              {savebtn?   <Button variant="contained" color="primary" onClick={handleSubmit} >
+                      Save
+                    </Button>:<Button variant="contained" color="primary" onClick={handleSubmit} disabled>
+                      Save
+                    </Button>}
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
               </Button> */}
@@ -188,6 +206,7 @@ export default function AddProduct(props) {
 
           <div className={classes.root}>
 
+          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
@@ -341,9 +360,10 @@ export default function AddProduct(props) {
                     <TextField
                       id="rental"
                       name="rental"
-                      value={inputs.rental}
-                      onChange={handleInputChange}
+                      value={rental}
+                      onChange={handleRentalChange}
                       fullWidth
+                      required
                       margin="dense"
                       type="number"
                       label="Rental Price"
@@ -405,10 +425,7 @@ export default function AddProduct(props) {
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
-                      >
-                      Save
-                    </Button>
+                
                     {/* <Button variant="contained" color="primary" onClick={handleReset} className={classes.button}>
                       Clear
                     </Button> */}

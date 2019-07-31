@@ -24,6 +24,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -119,6 +120,8 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   const [idTypeList, setIdTypeList] = useState([]);
   const [otherIdType, setOtherIdType] = useState(inputs.id_type ===0 ? false : true);
   const [otherIdTypeValue, setOtherIdTypeValue] = useState(inputs.other_id_type);
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
 
 
   const handleChange = panel => (event, isExpanded) => {
@@ -148,6 +151,8 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   const editCustomer = async (e) => {
       e.preventDefault();
 
+      setpLoading(true);
+      setSavebtn(false);
       const data = {
       id: customerList.id,
       customer_name : customerList.customer_name,
@@ -202,6 +207,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
     // handleSnackbarClick(true);
     setCustomerList(response.customerList);
     // handleReset(RESET_VALUES);
+    setpLoading(false);
     handleEditClose(false);
   };
 
@@ -238,14 +244,17 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Customer
               </Typography>
-              <Button color="inherit" type="submit" onClick={editCustomer}>
+              {savebtn? <Button color="inherit" type="submit" onClick={editCustomer}>
                 save
-              </Button>
+              </Button> : <Button color="inherit" type="submit" onClick={editCustomer} disabled>
+                save
+              </Button>}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
             
+          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}

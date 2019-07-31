@@ -5,6 +5,7 @@ const utils = require('../../utils');
 
 const Profile = function (params) {
   this.user_id = params.user_id;
+  this.franchise_id = params.franchise_id;
 };
 
 
@@ -57,6 +58,35 @@ Profile.prototype.info = function () {
                 }
               });
             }
+        } else {
+          console.log('Error...', error);
+          reject(error);
+        }
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      });
+    });
+  });
+}
+
+
+Profile.prototype.franchiseDetails = function () {
+
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+
+      if (error) {
+        throw error;
+      }
+
+      connection.changeUser({ database: dbName["prod"] });
+      connection.query('select f.name as franchise_name, f.city as franchise_city, f.suburb, c.name as company_name, c.location as company_location, c.nbzn, c.director, c.email, c.contact, c.alt_contact from franchise as f INNER JOIN company as c on f.company_id = c.company_id WHERE f.id = "' + that.franchise_id + '"', function (error, rows, fields) {
+
+        if (!error) {
+          console.log(rows);
+          resolve(rows);
         } else {
           console.log('Error...', error);
           reject(error);

@@ -21,6 +21,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
 import Task from '../../../api/Task';
 // import Staff from '../../../api/franchise/Staff';
@@ -97,8 +98,13 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
+
 
   const addTaskMaster = async () => {
+    setpLoading(true);
+    setSavebtn(false);
     const response = await Task.add({
       franchise_id: franchiseId,
       id: taskList.id,
@@ -111,6 +117,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     handleSnackbarClick(true,'Task Updated Successfully');
     // console.log('update======',response.taskList);
     setTaskList(response.taskList);
+    setpLoading(false);
     handleEditClose(false);
   };
 
@@ -200,6 +207,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
           <div className={classes.root}>
           <Paper className={classes.paper}>
                 <Grid container spacing={4}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                 <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -304,9 +312,11 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               </StyledTableCell>
                             :''}
                             <StyledTableCell>
-                              <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask:addTaskMaster}  type="submit">
+                            {savebtn?  <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask:addTaskMaster}  type="submit">
                                 Update
-                              </Button>
+                              </Button>: <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask:addTaskMaster}  type="submit" disabled>
+                                Update
+                              </Button>}
                             </StyledTableCell>
                         </TableRow>
                     </TableBody>

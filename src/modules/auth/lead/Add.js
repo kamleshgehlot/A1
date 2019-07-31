@@ -26,6 +26,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -96,6 +97,8 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   
   const [leadId, setLeadId] = useState();
   const [franchiseListd, setFranchiseList] = useState({});
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -158,6 +161,8 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   }
 
   const addLead = async () => {
+    setpLoading(true);
+    setSavebtn(true);
     let data = {
       franchise_id: inputs.franchise_id,
       lead_id: leadId,
@@ -180,6 +185,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     setLeadList(response.leadList);
     handleSnackbarClick(true);
     handleReset(RESET_VALUES);
+    setSavebtn(false);
     handleClose(false);
   };
 
@@ -223,13 +229,16 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Lead
               </Typography>
-              <Button color="inherit" type="submit">
+              {savebtn? <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> : <Button color="inherit" type="submit" disabled>
+                save
+              </Button>}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
+          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}

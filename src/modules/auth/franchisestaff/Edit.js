@@ -20,6 +20,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
@@ -90,6 +91,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
   const [staffList, setStaffList] = React.useState(inputs);
   const [assignRole, setAssignRole] = React.useState([]);
   const [checkRole, setCheckRole] = React.useState(["Delivery","CSR","Finance","HR"]);
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -109,6 +112,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
 
   const addFranchiseStaff = async () => {
 
+    setpLoading(true);
+    setSavebtn(true);
     const data = {
       franchise_id: franchiseId,
       id: staffList.id,
@@ -144,6 +149,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
     handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.staffList);
     // handleReset(RESET_VALUES);
+    setSavebtn(false);
     handleEditClose(false);
   };
 
@@ -163,14 +169,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
               <Typography variant="h6" className={classes.title}>
                 Edit Staff
               </Typography>
-              <Button onClick={addFranchiseStaff} color="inherit">
+              {savebtn?  <Button onClick={addFranchiseStaff} color="inherit">
                 Update
-              </Button>
+              </Button> : <Button onClick={addFranchiseStaff} color="inherit" disabled>
+                Update
+                </Button> }
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
             
+          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}

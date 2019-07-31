@@ -21,6 +21,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
 import Task from '../../../api/Task';
 import Staff from '../../../api/franchise/Staff';
@@ -95,7 +96,12 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [dateToday, setTodayDate]= useState();
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
+
   const addTaskMaster = async () => {
+    setpLoading(true);
+    setSavebtn(false);
     // console.log('taskList------------',taskList);
     const response = await Task.staffupdate({
       franchise_id: franchiseId,
@@ -107,6 +113,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
     });
     handleSnackbarClick(true);
     setTaskList(response.taskList);
+    setpLoading(false);
     handleEditClose(false);
   };
 
@@ -156,6 +163,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
           <div className={classes.root}>
           <Paper className={classes.paper}>
                 <Grid container spacing={4}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                 <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -267,9 +275,11 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                               </Select>
                             </StyledTableCell>
                             <StyledTableCell>
-                              <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">
+                            {savebtn? <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">
                                 Update
-                              </Button>
+                              </Button> : <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit" disabled>
+                                Update
+                              </Button>}
                             </StyledTableCell>
                         </TableRow>
                     </TableBody>

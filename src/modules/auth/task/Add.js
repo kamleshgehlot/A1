@@ -20,6 +20,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
@@ -110,6 +111,8 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [staffList, setStaffList] = useState({});
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
 
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   useEffect(() => {
@@ -187,6 +190,9 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     }, []);
 
   const addTaskMaster = async () => {
+    
+    setpLoading(true);
+    setSavebtn(false);
     const response = await Task.add({
       franchise_id: franchiseId,
       task_id: taskId,
@@ -198,6 +204,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     handleSnackbarClick(true);
     setTaskList(response.taskList);
     handleReset(RESET_VALUES);
+    setpLoading(false);
     handleClose(false);
   };
 
@@ -237,6 +244,7 @@ return (
             {/* Franchise Details */}
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                 <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -317,9 +325,11 @@ return (
                               /> 
                             </StyledTableCell>
                             <StyledTableCell>
-                              <Button variant="contained" color="primary" className={classes.button}  type="submit">
+                            {savebtn? <Button variant="contained" color="primary" className={classes.button}  type="submit">
                                 Assign
-                              </Button>
+                              </Button> : <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
+                                Assign
+                              </Button> }
                             </StyledTableCell>
                         </TableRow>
                     </TableBody>

@@ -5,4 +5,5 @@ const validateToken = require('../../utils').validateToken;
 
 const brandRouter = express.Router();
 brandRouter.route('/info').get(validateToken, Profile.info);
+brandRouter.route('/franchiseDetails').get(validateToken, Profile.franchiseDetails);
 module.exports = brandRouter;

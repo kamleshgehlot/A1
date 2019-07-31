@@ -24,6 +24,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 import { APP_TOKEN } from '../../../api/Constants';
@@ -122,6 +123,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   const [otherIdType, setOtherIdType] = useState(true);
   const [chkEmail, SetChkEmail] = useState();
   const [otherIdTypeValue, setOtherIdTypeValue] = useState();
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
   
 
   const handleChange = panel => (event, isExpanded) => {
@@ -184,6 +187,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     if(inputs.email === chkEmail || inputs.employer_email===chkEmail){
       alert('Email already registered')
     }else{
+
+    setpLoading(true);
+    setSavebtn(false);
     const data = {
       customer_name : inputs.customer_name,
       address : inputs.address,
@@ -237,6 +243,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     setCustomerList(response.customerList);
     setCustomer(data);
     handleReset(RESET_VALUES);
+    setpLoading(false);
     handleClose(false);
     }
   };
@@ -268,14 +275,17 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Customer
               </Typography>
-              <Button color="inherit" type="submit">
+              {savebtn? <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button>:<Button color="inherit" type="submit" disabled>
+                save
+              </Button>}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
             
+          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
