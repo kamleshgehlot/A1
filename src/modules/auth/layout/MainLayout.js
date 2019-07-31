@@ -39,7 +39,8 @@ import Profile from '../setting/Profile';
 import ChangePassword from '../setting/ChangePassword';
 import Enquiry from '../enquiry/Enquiry';
 import Lead from '../lead/Lead';
-import Order from '../order/Order'
+import Order from '../order/Order';
+import FranchiseDetail from '../setting/FranchiseDetail';
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -107,6 +108,7 @@ export default function ClippedDrawer(props) {
   const [showLead, setShowLead] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
+  const [showFranchiseDetail, setShowFranchiseDetail] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
   const [showOrder,setShowOrder] = useState(false);
 
@@ -153,6 +155,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
   }
 
   function handleCategoryClick() {
@@ -169,6 +172,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
   }
 
   function handleMasterStaffClick(){
@@ -184,6 +188,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
   }
 
   function handleFranchiseStaffClick(){
@@ -199,6 +204,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
 
   }
   
@@ -215,6 +221,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
 
   }
   function handleProfileClick(){
@@ -230,10 +237,30 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
 
   }
   function handleChangePasswordClick(){
     setShowPwd(true);
+    setAnchorEl(null);
+    setShowProfile(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowCustomer(false);
+    setShowStaffTask(false);
+    setShowEnquiry(false);
+    setShowLead(false);
+    setShowOrder(false);
+    setShowFranchiseDetail(false);
+
+  }
+
+  function handleFranchiseDetailClick(){
+    setShowFranchiseDetail(true);
+    setShowPwd(false);
     setAnchorEl(null);
     setShowProfile(false);
     setShowTask(false);
@@ -262,6 +289,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
 
   }
   function handleStaffTaskClick(){
@@ -277,6 +305,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
 
   }
 
@@ -294,6 +323,7 @@ export default function ClippedDrawer(props) {
     setShowStaffTask(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
 
   }
   function handleLeadsClick(){
@@ -309,6 +339,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowStaffTask(false);
     setShowOrder(false);
+    setShowFranchiseDetail(false);
   }
   function handleOrderClick(){
     setShowOrder(true);
@@ -322,6 +353,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowPwd(false);
+    setShowFranchiseDetail(false);
     setShowStaffTask(false);
   }
   function handleLogout() {
@@ -356,6 +388,7 @@ export default function ClippedDrawer(props) {
               >
                 <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
                 <MenuItem onClick={handleChangePasswordClick}>Change Password</MenuItem>
+                {roleName === 'Admin' && (  <MenuItem onClick={handleFranchiseDetailClick}>Franchise Details</MenuItem>)}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>}
@@ -502,6 +535,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showOrder ? <Order />:null
+        }
+        {
+          showFranchiseDetail ? <FranchiseDetail />:null
         }
         {/* {props.children} */}
       </main>

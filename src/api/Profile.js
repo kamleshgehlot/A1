@@ -19,6 +19,15 @@ export default {
     } catch (error) {
       throw error;
     }
+  },
+  franchiseDetails: async () => {
+    const URL = `${c.API_CONSUMER}/api/profile/franchiseDetails`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
   }
 };
 
