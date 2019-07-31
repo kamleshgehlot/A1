@@ -57,7 +57,7 @@ export default function Task(franchiseId) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [taskData,setTaskData]= useState();
-  const [taskStatusList, setTaskStatusList]=useState();
+  const [taskStatusList, setTaskStatusList]=useState([]);
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
   const [staffList, setStaffList] = useState({});

@@ -120,6 +120,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
 
   const addFranchiseStaff = async () => {
     setpLoading(true);
+    setSavebtn(true);
     const data = {
       franchise_id: franchiseId,
       id: '',
@@ -157,6 +158,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(false);
     handleClose(false);
     
   };
@@ -221,15 +223,17 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Staff
               </Typography>
-              <Button color="inherit" type="submit">
+              {savebtn?  <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> : <Button color="inherit" type="submit" disabled>
+                save
+              </Button> }
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
                   
-                  <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
