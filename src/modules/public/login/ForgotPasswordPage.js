@@ -65,8 +65,9 @@ class ForgotPasswordPage extends Component {
       });
 
       this.setState({ isLoading: false });
-     
-      history.push('/login');
+      this.onToggleSnackbar({ message: "Email with password sent successfully!" });
+
+      // history.push('/login');
     } catch (error) {
       if (axios.isCancel(error)) {
         console.log('Request canceled', error.message);

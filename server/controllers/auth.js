@@ -1,6 +1,10 @@
+const nodemailer = require('nodemailer');
+
 const Auth = require("../models/auth.js")
 const User = require("../models/user.js")
 const jwt = require('jsonwebtoken');
+const { trans } = require("../lib/mailtransporter");
+
 var encryptionHelper = require("../lib/simple-nodejs-iv-encrypt-decrypt.js")
 var algorithm = encryptionHelper.CIPHERS.AES_256;
 
@@ -139,14 +143,14 @@ const forgotPassword = function (req, res, next) {
             html: '<strong> password: </strong>' + user[0].password
           }
 
-          trans.sendMail(mail, (err, info) => {
-            if (err) {
-              return console.log(err);
-            }
-            console.log('Message sent: %s', info.messageId);
-            // Preview only available when sending through an Ethereal account
-            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-          });
+          // trans.sendMail(mail, (err, info) => {
+          //   if (err) {
+          //     return console.log(err);
+          //   }
+          //   console.log('Message sent: %s', info.messageId);
+          //   // Preview only available when sending through an Ethereal account
+          //   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+          // });
 
           result.status = status;
           result.message = `Email send successfully`;

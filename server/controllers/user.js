@@ -88,27 +88,6 @@ const register = function (req, res, next) {
 
 		if (req.body.id) {
 
-			(req.body.directorList || []).map(director => {
-
-				const mail = {
-					from: 'admin@rentronics.saimrc.com',
-					//  to: 'mpurohit88@gmail.com',
-					to: director.email,
-					subject: 'Please verify your email address',
-					text: 'activate your account ',
-					html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
-				}
-
-				trans.sendMail(mail, (err, info) => {
-					if (err) {
-						return console.log(err);
-					}
-					console.log('Message sent: %s', info.messageId);
-					// Preview only available when sending through an Ethereal account
-					console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-				});
-			});
-
 			newUser.update().then(function (result) {
 
 				newFranchise.update().then(function (result) {
@@ -162,14 +141,14 @@ const register = function (req, res, next) {
 									html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
 								}
 
-								trans.sendMail(mail, (err, info) => {
-									if (err) {
-										return console.log(err);
-									}
-									console.log('Message sent: %s', info.messageId);
-									// Preview only available when sending through an Ethereal account
-									console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-								});
+								// trans.sendMail(mail, (err, info) => {
+								// 	if (err) {
+								// 		return console.log(err);
+								// 	}
+								// 	console.log('Message sent: %s', info.messageId);
+								// 	// Preview only available when sending through an Ethereal account
+								// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+								// });
 							});
 							// newUserRole.user_id = result.id;
 
@@ -184,10 +163,7 @@ const register = function (req, res, next) {
 			})
 
 		}
-
-
 	} catch (err) {
-
 	}
 
 	// 	const newFranchise = new Franchise();
