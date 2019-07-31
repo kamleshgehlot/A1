@@ -245,6 +245,23 @@ const all = function (req, res, next) {
 	}
 }
 
+
+
+const verifyEmail = function (req, res, next) {
+	console.log('...............', req.decoded);
+	console.log('...............', req.body);
+
+	try {
+		new Franchise({email: req.body.email}).verifyEmail().then(function (isVerified) {
+			res.send({ isVerified: isVerified });
+		});
+		}catch (err) {
+		console.log('Error: ', err);
+		res.status(500);
+		res.send('error', { error: err });
+	}
+};
+
 // const getUniqueNames = function (req, res, next) {
 // 	try {
 // 		if (req.decoded.role === 'admin') {
@@ -259,4 +276,4 @@ const all = function (req, res, next) {
 // 	} 
 // }
 
-module.exports = { all: all, register: register };
+module.exports = { all: all, register: register, verifyEmail: verifyEmail };

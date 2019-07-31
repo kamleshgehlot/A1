@@ -57,7 +57,7 @@ export default function Franchise(props) {
   const [franchiseData, setFranchiseData]= useState();
   const [franchiseList, setFranchiseList] = useState({});
   const [franchiseId, setFranchiseId] = useState([]);
-
+  
   const roleName = APP_TOKEN.get().roleName;
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
@@ -252,10 +252,13 @@ export default function Franchise(props) {
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                {(franchiseList.length > 0 ? franchiseList : []).map((childData, childIndex)=>{
-                                  return (childData.franchise_id === data.franchise_id) ? <TableRow >
+                                  
+                                {
+                                (franchiseList.length > 0 ? franchiseList : []).map((childData, childIndex)=>{
+                                  return (childData.franchise_id === data.franchise_id) ? <TableRow > 
                                     {/* <StyledTableCell> {childData.franchise_id}  </StyledTableCell> */}
                                     {/* <StyledTableCell>{childData.franchise_name}</StyledTableCell> */}
+                                    
                                     <StyledTableCell> {childIndex+1}  </StyledTableCell>
                                     <StyledTableCell>{childData.director}</StyledTableCell>
                                     <StyledTableCell>{childData.user_id}</StyledTableCell>
@@ -278,7 +281,7 @@ export default function Franchise(props) {
                                     </StyledTableCell>
                                   </TableRow> : null
                                     })
-                                  }
+                                     }
                                 </TableBody>
                               </Table>
                             </Paper>

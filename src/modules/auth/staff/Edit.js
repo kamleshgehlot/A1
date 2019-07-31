@@ -184,6 +184,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       value={staffList.email} 
                       onChange={handleInputChange}
                       required
+                      disabled
                       fullWidth
                     />
                   </Grid>

@@ -564,6 +564,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       margin="dense"
                       required
+                      disabled
                       onChange={handleInputChange}
                     />
                   </Grid>

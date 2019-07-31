@@ -31,7 +31,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
-
+import UserAPI from '../../../api/User';
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
@@ -121,6 +121,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
   const [otherIdType, setOtherIdType] = useState(true);
+  const [chkEmail, SetChkEmail] = useState();
   const [otherIdTypeValue, setOtherIdTypeValue] = useState();
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
@@ -130,6 +131,20 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     setExpanded(isExpanded ? panel : false);
   };
 
+  function handleEmailVerification(event){
+    // console.log(event.target.value);
+    const email = event.target.value;
+
+    const checkEmail = async () => {
+      const response = await UserAPI.verifyEmail({email : email});
+      
+      if(response.isVerified!=''){
+      SetChkEmail(response.isVerified[0].email);
+      alert('Email already registred');
+      }
+    }
+    checkEmail();
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -169,6 +184,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   
 
   const addCustomer = async () => {
+    if(inputs.email === chkEmail || inputs.employer_email===chkEmail){
+      alert('Email already registered')
+    }else{
 
     setpLoading(true);
     setSavebtn(false);
@@ -228,6 +246,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     setpLoading(false);
     setSavebtn(true);
     handleClose(false);
+    }
   };
 
   function validate(values) {
@@ -377,6 +396,7 @@ return (
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
+                      onBlur={handleEmailVerification}
                       required
                       fullWidth
                       type="email"
@@ -741,6 +761,7 @@ return (
                       type="email"
                       value={inputs.employer_email} 
                       onChange={handleInputChange}
+                      onBlur={handleEmailVerification}
                       required
                       fullWidth
                     />

@@ -265,6 +265,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       value={staffList.email} 
                       onChange={handleInputChange}
                       required
+                      disabled
                       fullWidth
                       type="email"
                     />

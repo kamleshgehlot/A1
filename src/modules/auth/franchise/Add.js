@@ -28,6 +28,8 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+
+import ConfirmationDialog from '../ConfirmationDialog.js';
 // API CALL
 import UserAPI from '../../../api/User';
 
@@ -128,12 +130,26 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const [selectedArea, setSelectedArea] = useState([]);
   const [tempCity, setTempCity] = useState();
   const [expanded, setExpanded] = React.useState('panel1');
+  const [chkEmail, SetChkEmail] = useState();
+  const [confirmation, setConfirmation] = React.useState(false);
+  const [directorDeletedIndex, setDirectorDeletedIndex] = useState();
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  function handleConfirmationDialog (response){
+    // setFranchise({ ...franchise, 'state': response});
+    // console.log(franchise);
+    if(response === 0){
+      const directorListTemp = [...directorList];
+      directorListTemp.splice(directorDeletedIndex, 1);
+      setDirectorList(directorListTemp);
+    }
+    setConfirmation(false);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -166,7 +182,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const addFranchise = async () => {
 
     if(directorList==''){
-      console.log("data not include in directorList==''",directorList);
       handleDirectorList();
       // const directorListTemp = [...directorList];
 
@@ -192,6 +207,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       //   setDirectorList(directorListTemp);
       // }
     }
+
+    if(inputs.accountant_email===chkEmail){
+      alert('Email already registered')
+    }else{
     setpLoading(true);
     setSavebtn(false);
     const response = await UserAPI.add({
@@ -254,6 +273,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     setpLoading(false);
     setSavebtn(true);
     handleClose(false);
+  }
   };
 
   function validate(values) {
@@ -291,11 +311,29 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     validate
   );
 
+  function handleEmailVerification(event){
+    // console.log(event.target.value);
+    const email = event.target.value;
+
+    const checkEmail = async () => {
+      const response = await UserAPI.verifyEmail({email : email});
+      
+      if(response.isVerified!=''){
+      SetChkEmail(response.isVerified[0].email);
+      alert('Email already registred');
+      }
+    }
+    checkEmail();
+  }
   function handleDirectorList(){
     const directorListTemp = [...directorList];
 
+    if(inputs.email === chkEmail){
+      alert('Email already registered')
+    }else{
     if(inputs.director === '' || inputs.email === '' || inputs.contact === '' || inputs.uid === '' || inputs.password === '') {
       alert('Please provide required information')
+    
     } else {
       directorListTemp.push({
         'director': inputs.director,
@@ -315,6 +353,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   
       setDirectorList(directorListTemp);
     }
+  }
   }
   // function setCityHandler(city){
   //   setInput('city',city)
@@ -358,10 +397,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 // console.log("data",inputs);
 
   function handleRemoveDirector(index){
-    const directorListTemp = [...directorList];
-    directorListTemp.splice(index, 1);
-
-    setDirectorList(directorListTemp);
+    setDirectorDeletedIndex(index);
+    setConfirmation(true);
+    // const directorListTemp = [...directorList];
+    // directorListTemp.splice(index, 1);
+    // setDirectorList(directorListTemp);
   }
 
   function handleNameBlurChange(e) {
@@ -451,7 +491,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       id = 'city'
                       label = 'Select City'
                       fullWidth
-
                       required
                       error={errors.city}
                       helperText={errors.city ? errors.city : ' '}
@@ -577,6 +616,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="email"
                       fullWidth
                       onChange={handleInputChange}
+                      onBlur={handleEmailVerification}
                       // error={errors.email}
                       // helperText={errors.email ? errors.email : ' '}
                     />
@@ -733,6 +773,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       margin="dense"
                       required
                       onChange={handleInputChange}
+                      onBlur={handleEmailVerification}
                       type="email"
                     />
                   </Grid>
@@ -772,6 +813,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
           </div>
         </form>
       </Dialog>
+      <ConfirmationDialog open = {confirmation} lastValue={0} handleConfirmationClose={handleConfirmationDialog}  currentState={1} title={"Remove Director ?"} content={"Do you really want to remove director ?"} />
     </div>
   );
 }

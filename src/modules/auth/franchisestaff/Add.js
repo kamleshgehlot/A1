@@ -31,7 +31,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
-
+import UserAPI from '../../../api/User';
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
@@ -97,6 +97,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [temp, setTemp] = React.useState([]);
+  const [chkEmail, SetChkEmail] = useState();
   const [assignRole, setAssignRole] = React.useState([]);
   
   const [ploading, setpLoading] = React.useState(false);
@@ -118,7 +119,26 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setExpanded(isExpanded ? panel : false);
   };
 
+  function handleEmailVerification(event){
+    // console.log(event.target.value);
+    const email = event.target.value;
+
+    const checkEmail = async () => {
+      const response = await UserAPI.verifyEmail({email : email});
+      
+      if(response.isVerified!=''){
+      SetChkEmail(response.isVerified[0].email);
+      alert('Email already registred');
+      }
+    }
+    checkEmail();
+  }
+
   const addFranchiseStaff = async () => {
+    if(inputs.email === chkEmail){
+      alert('Email already registered')
+    }else{
+
     setpLoading(true);
     setSavebtn(true);
     const data = {
@@ -161,7 +181,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setSavebtn(false);
     setSavebtn(true);
     handleClose(false);
-    
+  }
   };
 
   function validate(values) {
@@ -318,6 +338,7 @@ return (
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
+                      onBlur={handleEmailVerification}
                       required
                       fullWidth
                       type="email"
