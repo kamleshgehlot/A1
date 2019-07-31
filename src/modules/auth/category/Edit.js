@@ -167,6 +167,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     updateProductList(response);
     // props.handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(true);
     handleEditClose(false);
   };
   function handleConfirmationDialog (response){

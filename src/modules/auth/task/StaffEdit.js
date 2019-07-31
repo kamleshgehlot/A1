@@ -114,6 +114,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
     handleSnackbarClick(true);
     setTaskList(response.taskList);
     setpLoading(false);
+    setSavebtn(true);
     handleEditClose(false);
   };
 

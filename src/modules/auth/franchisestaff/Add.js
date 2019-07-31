@@ -159,6 +159,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     handleReset(RESET_VALUES);
     setpLoading(false);
     setSavebtn(false);
+    setSavebtn(true);
     handleClose(false);
     
   };

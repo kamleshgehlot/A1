@@ -157,6 +157,7 @@ export default function AddProduct(props) {
     });
     props.productData(response.categoryList);
     setpLoading(false);
+    setSavebtn(true);
     props.handleClose(false);
   };
 

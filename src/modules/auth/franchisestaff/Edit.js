@@ -150,6 +150,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
     setFranchiseList(response.staffList);
     // handleReset(RESET_VALUES);
     setSavebtn(false);
+    setSavebtn(true);
     handleEditClose(false);
   };
 

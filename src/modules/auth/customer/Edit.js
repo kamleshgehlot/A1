@@ -208,6 +208,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
     setCustomerList(response.customerList);
     // handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(true);
     handleEditClose(false);
   };
 

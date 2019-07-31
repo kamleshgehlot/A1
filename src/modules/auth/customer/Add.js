@@ -226,6 +226,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     setCustomer(data);
     handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(true);
     handleClose(false);
   };
 

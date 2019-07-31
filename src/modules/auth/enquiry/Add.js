@@ -136,6 +136,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     setEnquiryList(response.enquiryList);
     handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(true);
     handleClose(false);
   };
 

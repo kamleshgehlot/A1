@@ -151,6 +151,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     handleSnackbarClick(true,'Task Rescheduled Successfully');
     // console.log('update======',response.taskList);
     setTaskList(response.taskList);
+    setSavebtn(true);
     handleEditClose(false);
   };
 

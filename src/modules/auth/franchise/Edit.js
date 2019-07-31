@@ -223,6 +223,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     setFranchiseList(response.userList);
     // handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(true);
     handleEditClose(false);
   };
 

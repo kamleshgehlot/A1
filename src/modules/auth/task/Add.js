@@ -205,6 +205,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     setTaskList(response.taskList);
     handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(true);
     handleClose(false);
   };
 

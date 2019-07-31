@@ -252,6 +252,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     setDirectorList([]);
     handleReset(RESET_VALUES);
     setpLoading(false);
+    setSavebtn(true);
     handleClose(false);
   };
 
