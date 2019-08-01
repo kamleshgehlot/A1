@@ -185,9 +185,16 @@ export default function StaffTask(uid) {
   
 
   function currentDate(){
-    
-    const today=new Date();
-    const date= today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
+    const dtToday=new Date();
+
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+    const date= year + '-' + month + '-' + day;
     setTodayDate(date);
   }
   function handleClickOpen() {
