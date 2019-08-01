@@ -14,6 +14,7 @@ const info = function(req, res, next) {
 const franchiseDetails = function(req, res, next) {
   try {
     new Profile({franchise_id : req.decoded.franchise_id}).franchiseDetails().then(fd => {
+      console.log('franchise details------==',fd);
       res.send({ fd });
     });
   } catch (err) {

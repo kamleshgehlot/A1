@@ -85,7 +85,7 @@ Profile.prototype.franchiseDetails = function () {
       connection.query('select f.name as franchise_name, f.city as franchise_city, f.suburb, c.name as company_name, c.location as company_location, c.nbzn, c.director, c.email, c.contact, c.alt_contact from franchise as f INNER JOIN company as c on f.company_id = c.company_id WHERE f.id = "' + that.franchise_id + '"', function (error, rows, fields) {
 
         if (!error) {
-          console.log(rows);
+          console.log('rows---------------------------',rows);
           resolve(rows);
         } else {
           console.log('Error...', error);

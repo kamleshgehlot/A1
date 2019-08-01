@@ -103,14 +103,23 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
     setpLoading(true);
     setSavebtn(false);
     // console.log('taskList------------',taskList);
-    const response = await Task.staffupdate({
+    const data={
       franchise_id: franchiseId,
       id: taskList.id,
       task_id: taskList.task_id,
       message:taskList.message,
       updated_date:taskList.updated_date,
       status:taskList.status,
-    });
+      document:taskList.document
+    }
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+    
+    for (var x = 0; x < document.getElementById('document').files.length; x++) {
+      formData.append('avatar', document.getElementById('document').files[x])
+    }
+    
+    const response = await Task.staffUpdate({ formData: formData });
     handleSnackbarClick(true);
     setTaskList(response.taskList);
     setpLoading(false);
@@ -172,6 +181,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
                         {/* <StyledTableCell>Updated On</StyledTableCell> */}
+                        <StyledTableCell>Upload Doc</StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Action</StyledTableCell>
                         <StyledTableCell>Option</StyledTableCell>
@@ -239,6 +249,21 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                                 margin="dense"
                               /> 
                             </StyledTableCell>                      */}
+                                              
+                            <StyledTableCell>
+                              
+                              <TextField
+                                id="document"
+                                name="document"
+                                // label="Task Id"
+                                value={taskList.document}
+                                onChange={handleInputChange}
+                                fullWidth
+                                type="file"
+                                // placeholder="Franchise Name"
+                                margin="dense"
+                              /> 
+                            </StyledTableCell>
                             <StyledTableCell>
                               
                               <TextField

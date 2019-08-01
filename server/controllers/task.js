@@ -41,7 +41,7 @@ const add = function (req, res, next) {
 
 const all = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
+    new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
       res.send({ taskList });
     });
   } catch (err) {
@@ -133,15 +133,24 @@ const staffTasks = function (req, res, next) {
 };
 
 const staffUpdate = function (req, res, next) {
+  
+  const staffData = JSON.parse(req.body.data);
+
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
   const taskParam = {
-    id: req.body.id,
-    task_id: req.body.task_id,
-    assigned_to: req.body.assigned_to,
-    message: req.body.message,
-    status: req.body.status,
+    id: staffData.id,
+    task_id: staffData.task_id,
+    assigned_to: staffData.assigned_to,
+    message: staffData.message,
+    status: staffData.status,
     user_id: req.decoded.user_id,
     updated_by: req.decoded.id,
-    updated_date:req.body.updated_date
+    updated_date:staffData.updated_date,
+    document: attachments,
   };
   // console.log('req--------------',req.body);
   try {

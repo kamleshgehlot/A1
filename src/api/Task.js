@@ -86,15 +86,18 @@ export default {
       throw error;
     }
   },
-  staffupdate: async ({ cancelToken, ...payload }) => {
+  staffUpdate: async (staffData) => {
     const URL = `${c.API_CONSUMER}/api/task/staffUpdate`;
     try {
       const { data } = await axios(
         URL,
-        Object.assign({}, PARAMS({ methodType: 'POST' }), {
-          cancelToken,
-          data: payload,
-        }),
+        {
+          method: 'POST',
+          data: staffData.formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          headers: authHeader()}
       );
       return data;
     } catch (error) {

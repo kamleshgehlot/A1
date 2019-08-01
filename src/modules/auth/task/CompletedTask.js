@@ -215,7 +215,15 @@ return (
                                   
                             })
                           } */}
-                        <StyledTableCell>{data.status}</StyledTableCell>
+                        
+                        { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                                return(
+                                  data.status===datastatus.id ?
+                                  <StyledTableCell> {datastatus.status}</StyledTableCell>
+                                    :''
+                                    )                                    
+                              })
+                            }
                         <StyledTableCell>{data.due_date}</StyledTableCell>
                         <StyledTableCell>{data.start_date}</StyledTableCell>
                         <StyledTableCell>{data.completion_date}</StyledTableCell>

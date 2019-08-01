@@ -153,6 +153,18 @@ export default function Lead() {
     setEnquiryOpen(true);
   }
   function handleEnquiryClose() {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await LeadAPI.list();
+        setLeadList(result.leadList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
     setEnquiryOpen(false);
   }
   function handleSnackbarClose() {
