@@ -97,7 +97,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function SearchCustomer({ open, handleClose, handleSnackbarClick, setCustomer}) {
+export default function SearchCustomer({ open, handleClose, handleSnackbarClick, setCustomerList, setCustomer}) {
 
   const classes = useStyles();
   const [searchText, setSearchText]  = useState('');
@@ -139,6 +139,7 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
 
   function handleAddCurrent(response){
     setCustomer(response);
+    setCustomerList(0);
     handleClose();
   }
 
@@ -200,7 +201,7 @@ return (
                     </TableHead>
                     <TableBody>
                       {(customerListData.length > 0 ? customerListData :[] ).map((data,index)=>{
-                        console.log('data...',data);
+                        // console.log('data...',data);
                         return(
                           <TableRow key={data.id} >
                           <StyledTableCell> {index + 1}  </StyledTableCell>

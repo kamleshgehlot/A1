@@ -11,56 +11,44 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 });
 
 export default {
-  register: async (newCustomer) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/customer/register`;
+  
+  getnewid: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getnewid`;
     try {
-      const { data } = await axios(URL, {
-        method: 'POST',
-        data: newCustomer.formData,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        headers: authHeader()}
-      );
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-
- list: async (franchisedata) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/customer/list`;
-    try {
-      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {
-        data: franchisedata,
-      }),
-      );
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      
       return data;
     } catch (error) {
       throw error;
     }
   },
   
-  idtypelist: async (franchisedata) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/customer/idtype/list`;
+  getAll: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getall`;
     try {
-      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {
-        data: franchisedata,
-      }),
-      );
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
     } catch (error) {
       throw error;
     }
   },
 
-  search: async (searchData) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/customer/search`;
+  convertedList: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/convertedList`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+   convert: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/convert`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',
-        data: searchData,
+        data: req,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -72,4 +60,20 @@ export default {
     }
   },
 
+  postOrder: async (data1) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/postorder`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: data1,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
