@@ -188,7 +188,7 @@ return (
                       <StyledTableCell>#</StyledTableCell>
                       <StyledTableCell>Task ID</StyledTableCell>
                       <StyledTableCell>Task Description</StyledTableCell>
-                      {/* <StyledTableCell>Assigned To</StyledTableCell> */}
+                      <StyledTableCell>Assigned To</StyledTableCell>
                       <StyledTableCell>Status</StyledTableCell>
                       <StyledTableCell>Due Date</StyledTableCell>
                       <StyledTableCell>Start Date</StyledTableCell>
@@ -206,7 +206,7 @@ return (
                         <StyledTableCell> {data.task_id}  </StyledTableCell>
                         <StyledTableCell> {data.task_description}  </StyledTableCell>
                       
-                          {/* { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
+                          { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                               return(
                                 data.assigned_to===datastaff.id ?
                                 <StyledTableCell> {datastaff.name}</StyledTableCell>
@@ -214,7 +214,7 @@ return (
                                   )
                                   
                             })
-                          } */}
+                          }
                         
                         { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
                                 return(
@@ -228,7 +228,7 @@ return (
                         <StyledTableCell>{data.start_date}</StyledTableCell>
                         <StyledTableCell>{data.completion_date}</StyledTableCell>
                         <StyledTableCell>{data.message}</StyledTableCell>
-                        <StyledTableCell></StyledTableCell>
+                        <StyledTableCell>{data.document}</StyledTableCell>
                         
                       </TableRow>:'':
                       <TableRow >
@@ -257,7 +257,7 @@ return (
                         <StyledTableCell>{data.start_date}</StyledTableCell>
                         <StyledTableCell>{data.completion_date}</StyledTableCell>
                         <StyledTableCell>{data.message}</StyledTableCell>
-                        <StyledTableCell></StyledTableCell>
+                        <StyledTableCell>{data.document}</StyledTableCell>
                         
                       </TableRow>
                     )

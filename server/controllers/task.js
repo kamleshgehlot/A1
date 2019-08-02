@@ -19,15 +19,16 @@ const add = function (req, res, next) {
 
     if (req.body.id) {
       newTask.update().then(function (result) {
-        new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
+        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
           // console.log('controller', { taskList });
           res.send({ taskList });
         });
       });
     } else {
       newTask.add().then(result => {
-        new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
+        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
           res.send({ taskList });
+          console.log('tasklist---==----',taskList);
         });
       })
     }
@@ -60,7 +61,7 @@ const last = function (req, res, next) {
 
 const completedList = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id }).completedList().then(taskList => {
+    new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).completedList().then(taskList => {
       res.send({ taskList });
     });
   } catch (err) {
@@ -78,7 +79,7 @@ const deleteTask = function (req, res, next) {
   try {
     const newTask = new Task(taskParam);
     newTask.deleteTask().then(result => {
-      new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
+      new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
         res.send({ taskList });
       });
     })
@@ -109,7 +110,7 @@ const reschedule = function (req, res, next) {
   try {
     const newTask = new Task(taskParam);
       newTask.reschedule().then(result => {
-        new Task({ user_id: req.decoded.user_id }).all().then(taskList => {
+        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
           res.send({ taskList });
         });
       })
@@ -124,7 +125,7 @@ const reschedule = function (req, res, next) {
 // staff task list
 const staffTasks = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id }).staffTasks().then(taskList => {
+    new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).staffTasks().then(taskList => {
       res.send({ taskList });
     });
   } catch (err) {
@@ -156,7 +157,7 @@ const staffUpdate = function (req, res, next) {
   try {
     const newTask = new Task(taskParam);
       newTask.staffUpdate().then(function (result) {
-        new Task({ user_id: req.decoded.user_id }).staffTasks().then(taskList => {
+        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).staffTasks().then(taskList => {
           // console.log('controller', { taskList });
           res.send({ taskList });
         });
