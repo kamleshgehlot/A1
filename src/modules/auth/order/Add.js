@@ -28,6 +28,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
+import AddIcon from '@material-ui/icons/Add';
+import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { APP_TOKEN } from '../../../api/Constants';
@@ -109,14 +111,15 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   const [fixedOrderList,setFixedOrderList] = useState(null);
   const [flexOrderList,setFlexOrderList] = useState(null);
   const [orderDate,setOrderDate] = useState('');
-  const [customer, setCustomer] = useState({});
+  const [customer, setCustomer] = useState(null);
   const [junkData,setJunkData] = useState({});
   const [productList, setProductList] = useState([]);
+  const [isNewCustomer,setIsNewCustomer] = useState(0);
   const [assignInterest, setAssignInterest] = React.useState([]);
 
   // console.log('flex r', flexOrderList);
   // console.log('flex r', fixedOrderList);
-  console.log('product list', assignInterest);
+  // console.log('product list', assignInterest);
 
 
   function validate(values) {
@@ -169,7 +172,12 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   }
 
   function handleCustomerList(response){
+    setIsNewCustomer(1);
     setCustomer(response[0]);
+  }
+  function handleIsExistCustomer(response){
+    setIsNewCustomer(0);
+    
   }
 
   function handleDateChange(e){
@@ -222,7 +230,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
         setProductList(result.productList);
 
         const order_id = await OrderAPI.getnewid();
-        console.log('order..',order_id);
+        // console.log('order..',order_id);
         if(order_id.id[0]!=null){
           setInput('order_id',("O_" + (order_id.id[0].id+ 1)));
         }
@@ -279,7 +287,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
     
     
     // console.log('Data.....',data);
-    console.log('Inputs.....',inputs);
+    // console.log('Inputs.....',inputs);
     
 
 return (
@@ -345,41 +353,15 @@ return (
                         onChange={handleInputChange}
                         row
                       >
+                        {console.log('customer ',customer)}
                         <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="New Customer" onClick={handleCustomerOpen} />
                         <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
-                        <Typography variant="h6" className={classes.labelTitle}>{customer ? customer.customer_name : ''}</Typography>
-                        {/* <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleCustomerOpen}>
-                        Add Customer
-                        </Fab>  
-                        <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleSearchCustomerOpen}>
-                        Add Customer
-                        </Fab>   */}
+                        {customer  != null  ? 
+                        <FormControlLabel labelPlacement="end" control={<DoneIcon />}  disabled/>
+                        : ''
+                        }
                       </RadioGroup>
                     </Grid>
-                  {/* <Grid item xs={12} sm={4}> */}
-                    {/* <FormLabel htmlFor="customer">Customer</FormLabel> */}
-                    {/* <InputLabel htmlFor="customer">Customer Type *</InputLabel> */}    
-                    {/* <Typography variant="h6" className={classes.labelTitle}>
-                      <Button color="inherit" >Add New Customer</Button>
-                        /    
-                      <Button color="inherit" >Existing Customer</Button>
-                    </Typography>
-                    </Grid> */}
-                    {/* <Grid item xs={12} sm={2}>
-                      <TextField
-                      // margin="normal"
-                      id="customer"
-                      name="customer"
-                      // label="Search"
-                      placeholder = "Search..."
-                      type="text"
-                      value={inputs.customer}
-                      onChange={handleInputChange}
-                      required
-                      disabled
-                      fullWidth
-                    />
-                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="product">Prodcut*</InputLabel>
                     <Select
@@ -400,30 +382,30 @@ return (
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={2}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
+                  {customer  != null && isNewCustomer === 1? 
                     <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
                       Calculate Budget
                     </Fab>
+                    : ''
+                  }
+                  {customer  != null && isNewCustomer === 0? 
+                    <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      Update Budget
+                    </Fab>
+                    : ''
+                  }
                   </Grid>
                   <Grid item xs={12} sm={4}>
+                  {customer  != null  ? 
+                  <div>
                   <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
                   <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
+                  </div>
+                  : ''
+                  }
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="assigned_to">Assigned To*</InputLabel>
-                    <Select
-                      value={inputs.assigned_to}
-                      onChange={handleInputChange}
-                      name= 'assigned_to'
-                      id= 'assigned_to'
-                      // label='customer'
-                      fullWidth
-                      required
-                    >
-                      <MenuItem value={1}>Finance</MenuItem>
-                      <MenuItem value={2}>Delivery</MenuItem>
-                    </Select>
-                   </Grid> */}
+                
+                  
                     <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
@@ -467,11 +449,11 @@ return (
           </div>
         </form>
       </Dialog>
-      <Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList}/>
+    <Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList}/>
     <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/>
     <FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList}/>
     <FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList}/>
-    {searchCustomerOpen? <SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomer={setCustomer} /> :''}
+    <SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} /> 
     </div>
   );
 }

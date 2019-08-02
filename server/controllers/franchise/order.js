@@ -68,15 +68,15 @@ const postOrder = function (req, res, next) {
   };
   console.log('oorder list',orderParams);
 	try{
-	
+  
     // orderParams.created_by = req.decoded.id;
 	  const newOrder = new Order(orderParams);
-    // newOrder.postOrder().then(function(result){
-    //   // new Order({user_id : req.decoded.user_id}).getAll().then(function (enquiryList) {
-    //   //   res.send({ enquiryList: enquiryList });
-    //   // });
-    //   console.log('result controller...',result);
-    // });
+    newOrder.postOrder().then(function(result){
+      new Order({user_id : req.decoded.user_id}).getAll().then(function (enquiryList) {
+        res.send({ enquiryList: enquiryList });
+      });
+      console.log('result controller...',result);
+    });
 	}catch(err){
     console.log("Error..",err);
 	}

@@ -97,7 +97,9 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
 
   const classes = useStyles();
   const [inputs,setInputs] = useState([]);
-  const [assignRole, setAssignRole] = React.useState([]);
+  const [firstPaymentDate,setFirstPaymentDate] = useState('');
+  const [lastPaymentDate,setLastPaymentDate] = useState('');
+  const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
   
 
   function handleInputBlur(e){
@@ -144,14 +146,14 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
       cash_price : parseFloat(inputs.cash_price),
       delivery_fee : parseFloat(inputs.delivery_fee),
       ppsr_fee : parseFloat(inputs.ppsr_fee),
-      frequency : parseFloat(inputs.frequency),
-      first_payment : parseFloat(inputs.first_payment),
-      last_payment : parseFloat(inputs.last_payment),
+      frequency : inputs.frequency,
+      first_payment : firstPaymentDate,
+      last_payment : lastPaymentDate,
       no_of_payment : parseFloat(inputs.no_of_payment),
       each_payment_amt : parseFloat(inputs.each_payment_amt),
       total_payment_amt : parseFloat(inputs.total_payment_amt),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-      exp_delivery_at : inputs.exp_delivery_at,
+      exp_delivery_at : expectedDeliveryDate,
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt),
       intrest_rate : parseFloat(inputs.intrest_rate),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per),
@@ -165,9 +167,6 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
     inputs.cash_price= 0;
     inputs.delivery_fee= 0;
     inputs.ppsr_fee= 0;
-    inputs.frequency= 0;
-    inputs.first_payment= 0;
-    inputs.last_payment= 0;
     inputs.no_of_payment= 0;
     inputs.each_payment_amt= 0;
     inputs.total_payment_amt= 0;
@@ -179,6 +178,94 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
     inputs.total_intrest= 0;
   }, []);
 
+  
+  function pastDate(){
+    var dtToday = new Date();
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10){
+        month = '0' + month.toString();
+      }
+    if(day < 10){
+        day = '0' + day.toString();
+      }
+        var maxDate = year + '-' + month + '-' + day;
+        document.getElementById('first_payment').setAttribute('min', maxDate);
+        setFirstPaymentDate(maxDate.toString());
+  }
+  
+  function pastDateDisabled(){
+    var dtToday = new Date();
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10){
+        month = '0' + month.toString();
+      }
+    if(day < 10){
+        day = '0' + day.toString();
+      }
+        var maxDate = year + '-' + month + '-' + day;
+        document.getElementById('last_payment').setAttribute('min', maxDate);
+        setLastPaymentDate(maxDate.toString());
+  }
+  function pastDateDisabled2(){
+    var dtToday = new Date();
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    var hour = dtToday.getHours();
+    var minute = dtToday.getMinutes();
+    if(month < 10){
+        month = '0' + month.toString();
+      }
+    if(day < 10){
+        day = '0' + day.toString();
+      }
+        var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
+        document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
+        setExpectedDeliveryDate(maxDateTime.toString());
+  }
+
+  useEffect(() => {
+    var dtToday = new Date();
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    var hour = dtToday.getHours();
+    var minute = dtToday.getMinutes();
+    if(month < 10){
+        month = '0' + month.toString();
+      }
+    if(day < 10){
+        day = '0' + day.toString();
+      }
+    if(hour < 10){
+      hour = '0' + hour.toString();
+    }
+    if(minute < 10){
+      minute = '0' + minute.toString();
+    }
+        var maxDate = year + '-' + month + '-' + day;
+        var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
+        
+        setExpectedDeliveryDate(maxDateTime.toString());
+        setFirstPaymentDate(maxDate.toString());
+        setLastPaymentDate(maxDate.toString());
+  }, []);
+  
+  
+  function handleFirstPaymentDate(e){
+    setFirstPaymentDate(e.target.value);
+  }
+  function handleLastPaymentDate(e){
+    setLastPaymentDate(e.target.value);
+  }
+  function handleExpectedDeliveryDate(e){
+    // console.log('ddd',e.target.value);
+    setExpectedDeliveryDate(e.target.value);
+  }
 
 return (
     <div>
@@ -310,43 +397,35 @@ return (
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      }}
+                      
                     />
                      <TextField
                       id="first_payment"
                       name="first_payment"
                       label="First Payment"
-                      value={inputs.first_payment}
-                      onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onChange={handleFirstPaymentDate}
+                      onFocus={pastDate}
+                      value={firstPaymentDate}
+                      defaultValue= {firstPaymentDate}
                       fullWidth
                       // required
-                      type="number"
+                      type="date"
                       // placeholder="Franchise Name"
                       margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      }}
                     />
                     <TextField
                       id="last_payment"
                       name="last_payment"
                       label="Last Payment"
-                      value={inputs.last_payment}
-                      onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onFocus={pastDateDisabled}
+                      value={lastPaymentDate}
+                      defaultValue= {lastPaymentDate}
+                      onChange={handleLastPaymentDate}
                       fullWidth
                       // required
-                      type="number"
+                      type="date"
                       // placeholder="Franchise Name"
                       margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      }}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
@@ -434,9 +513,7 @@ return (
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      }}
+                      
                     />
                 </Grid>
                 
@@ -447,21 +524,16 @@ return (
                   <TextField
                       id="exp_delivery_at"
                       name="exp_delivery_at"
-                      // label="exp_delivery_at/Mortgage"
-                      value={inputs.exp_delivery_at}
-                      onChange={handleInputChange}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
+                      value={expectedDeliveryDate}
+                      onChange={handleExpectedDeliveryDate}
+                      onFocus={pastDateDisabled2}
                       fullWidth
                       type="datetime-local"
-                      defaultValue="2017-05-24T10:30"
-                      // required
-                      // placeholder="Franchise Name"
+                      defaultValue={expectedDeliveryDate}
                       margin="dense"
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      
                     />
                 </Grid>
                 
