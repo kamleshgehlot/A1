@@ -12,8 +12,10 @@ const getnewid = function(req, res, next) {
 
 
 const getAll = function(req, res, next) {
+  
   try {
     new Order({user_id: req.decoded.user_id}).getAll().then(enquiryList => {
+
       res.send({ enquiryList });
     });
   } catch (error) {
@@ -46,8 +48,6 @@ const convert = function(req, res, next) {
 
 
 const postOrder = function (req, res, next) {
-  console.log("****************Order..................", req.body);
-  // console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
 
 	let orderParams = {
     user_id: req.decoded.user_id,
@@ -66,21 +66,49 @@ const postOrder = function (req, res, next) {
     is_active : req.body.is_active,
     created_by: req.decoded.id,
   };
-  console.log('oorder list',orderParams);
-	try{
   
-    // orderParams.created_by = req.decoded.id;
-	  const newOrder = new Order(orderParams);
-    newOrder.postOrder().then(function(result){
-      new Order({user_id : req.decoded.user_id}).getAll().then(function (enquiryList) {
-        res.send({ enquiryList: enquiryList });
-      });
-      console.log('result controller...',result);
-    });
-	}catch(err){
-    console.log("Error..",err);
-	}
-};
+  if(orderParams.user_id!= '' 
+  && orderParams.order_id!= null 
+  && orderParams.customer_id!= null 
+  && orderParams.products_id!= '' 
+  && orderParams.order_type!= null 
+  && orderParams.budget_list != "" 
+  && orderParams.order_date!= ''
+  && orderParams.payment_mode!= null 
+  && orderParams.assigned_to != null 
+  && (orderParams.flexOrderType!=null || orderParams.fixedOrderType!= null)){
+    try{
+      const newOrder = new Order(orderParams);
+      newOrder.postOrder().then(function(result){
+        const lastInsertId = result.insertId;
+        // console.log('resultid',lastInsertId);
+        new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getBudget().then(function (budgetList) {
 
+          if(orderParams.flexOrderType!=null){
+            new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getFlexOrderDetail().then(function (flexPaymentList) {
+              new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getOrderData().then(function (orderList) {
+                res.send({budgetList : budgetList, flexPaymentList: flexPaymentList, orderList: orderList });
+              });
+            });
+          }
+
+          if(orderParams.flexOrderType!=null){
+            new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getFixedOrderDetail().then(function (fixedPaymentList) {
+              new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getOrderData().then(function (orderList) {
+                res.send({budgetList : budgetList, fixedPaymentList: fixedPaymentList, orderList: orderList });
+              });
+            });
+          }
+
+        });
+      });
+      
+    }catch(err){
+      console.log("Error..",err);
+    }
+  }else{
+    console.log('Invalid or Incomplete Credentials');
+  }
+};
 
 module.exports = { getnewid, postOrder, getAll, convert, convertedList};

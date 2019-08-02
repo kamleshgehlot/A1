@@ -20,6 +20,8 @@ var Order = function (params) {
   this.assigned_to = params.assigned_to;
   this.is_active = params.is_active;
   this.created_by =  params.created_by;
+
+  this.lastInsertId = params.lastInsertId; 
 };
 
 
@@ -32,20 +34,6 @@ Order.prototype.postOrder = function () {
         throw error;
       }
       if (!error) {
-
-        if(that.user_id!= '' 
-            && that.order_id!= null 
-            && that.customer_id!= null 
-            && that.products_id!= '' 
-            && that.order_type!= null 
-            && that.budget_list != "" 
-            && that.order_date!= ''
-            && that.payment_mode!= null 
-            && that.assigned_to != null 
-            && that.created_by != null 
-            && that.is_active != null 
-            && (that.flexOrderType!=null || that.fixedOrderType!= null)){
-          
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
           const budget_list = that.budget_list;
@@ -71,8 +59,8 @@ Order.prototype.postOrder = function () {
                       ];
                       connection.query('INSERT INTO orders(order_id, customer_id, product_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
-                          console.log('order inserted', rows.insertId);
-                          
+                          // console.log('order inserted', rows.insertId);
+                          resolve(rows.insertId);
                         } else {
                           console.log("Error...", error);
                           reject(error);
@@ -98,8 +86,8 @@ Order.prototype.postOrder = function () {
                       ];
                       connection.query('INSERT INTO orders(order_id, customer_id, product_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
-                          console.log('order inserted', rows.insertId);
-                          
+                          // console.log('order inserted', rows.insertId);
+                          resolve(rows);
                         } else {
                           console.log("Error...", error);
                           reject(error);
@@ -122,33 +110,6 @@ Order.prototype.postOrder = function () {
           
           // console.log('budget...',budget);
 
-        }else{
-          console.log('Invalid or Incomplete Credentials');
-        }
-
-        // let values = [
-        //   [that.enquiry_id,that.customer_name,that.contact,that.interested_product_id,that.is_active,that.converted_to,that.created_by]
-        // ]
-        // connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        // connection.query('INSERT INTO enquiry(enquiry_id, customer_name, contact, interested_product_id, is_active, converted_to, created_by) VALUES ?',[values],function (error, rows, fields) {
-        //     if (!error) {
-        //         if(that.convert_by_lead!=0){
-        //           connection.changeUser({ database: dbName["prod"] });
-        //           connection.query('update leads set converted_to="1" where id="'+that.convert_by_lead+'"',function (error, rows, fields) {
-        //             if (!error) {
-        //               // console.log("rows...",rows);
-        //                 resolve(rows);
-        //                 } else {
-        //                   console.log("Error...", error);
-        //                   reject(error);
-        //                 }
-        //           });
-        //         }
-        //     } else {
-        //       console.log("Error...", error);
-        //       reject(error);
-        //     }
-        //   })
           
       } else {
         console.log("Error...", error);
@@ -165,38 +126,131 @@ Order.prototype.postOrder = function () {
 
 
 
-// Enquiry.prototype.getAll = function () {
-//   const that = this;
-//   return new Promise(function (resolve, reject) {
+Order.prototype.getBudget = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
 
-//     connection.getConnection(function (error, connection) {
-//       if (error) {
-//         throw error;
-//       }
-    
-//       if (!error) {
-//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-//         connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
-//             if (!error) {
-//               // console.log("rows...",rows);
-//                 resolve(rows);
-//                 } else {
-//                   console.log("Error...", error);
-//                   reject(error);
-//                 }
-//           })
-          
-//       } else {
-//         console.log("Error...", error);
-//         reject(error);
-//       }
-//       connection.release();
-//       console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
-//     });
-//   }).catch((error) => {
-//     throw error;
-//   });
-// };
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT * from budget where customer_id = 22',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Order.prototype.getFlexOrderDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT * from flex_order where customer_id = 22',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+Order.prototype.getFixedOrderDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT * from fixed_order where customer_id = 22',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+
+Order.prototype.getOrderData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT * from orders where customer_id = 22',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
 
 
 // Enquiry.prototype.convertedList = function () {

@@ -258,6 +258,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
       budget_list : budgetList,
       is_active : 1,
      });
+     console.log('response ', response);
     assignInterest.length = 0;
     // handleSnackbarClick(true);
     // setFranchiseList(response.staffList);
