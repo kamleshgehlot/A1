@@ -253,7 +253,7 @@ export default function Lead() {
                             <MenuItem value={1}>{'Created By'}</MenuItem> 
                             <MenuItem value={2}>{'Created For Me'}</MenuItem> 
                             <MenuItem value={3}>{'Created General'}</MenuItem> 
-                          </Select><ArrowDropDownIcon/>
+                          </Select>
                         </StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
@@ -276,7 +276,7 @@ export default function Lead() {
                                       :''
                                       )
                                       
-                                }) : <StyledTableCell> {data.franchise_name}</StyledTableCell>
+                                }) : <StyledTableCell> All</StyledTableCell>
                               }
                               {/* <StyledTableCell></StyledTableCell> */}
                               {data.f_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{

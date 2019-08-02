@@ -196,14 +196,14 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
 
 
   function handleFranchise(event){
-    if(event.target.value===0){
-      setOtherDisable(false);
-      setInput('is_franchise_exist','0');
-    }else{
-      setOtherDisable(true)
-      setOtherFranchiseValue('');
-      setInput('is_franchise_exist','1');
-    }
+    // if(event.target.value===0){
+    //   setOtherDisable(false);
+    //   setInput('is_franchise_exist','0');
+    // }else{
+    //   setOtherDisable(true)
+    //   setOtherFranchiseValue('');
+    //   setInput('is_franchise_exist','1');
+    // }
     setInput('franchise_id',event.target.value);
     }
 
@@ -260,7 +260,7 @@ return (
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="last_name">Franchise</InputLabel>
                       <Select
                         value={inputs.franchise_id}
@@ -281,10 +281,10 @@ return (
                             <MenuItem value={dataf.id} >{dataf.name}</MenuItem>
                           );
                         })}
-                        <MenuItem value={0}>{'Other'}</MenuItem> 
+                        <MenuItem value={0}>{'All'}</MenuItem> 
                       </Select>
                   </Grid>
-                    <Grid item xs={12} sm={3}>
+                    {/* <Grid item xs={12} sm={3}>
                       <TextField
                         margin="dense"
                         id="otherFranchiseValue"
@@ -297,7 +297,7 @@ return (
                         disabled = {otherDisable}
                         fullWidth
                       />
-                    </Grid>
+                    </Grid> */}
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="contact">Upload Doc/Photo</InputLabel>
                     <TextField

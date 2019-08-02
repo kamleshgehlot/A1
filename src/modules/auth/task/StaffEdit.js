@@ -146,9 +146,16 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
     setTasksList({ ...taskList, [name]: value })
   }
   function todayDate(){
+    var dtToday = new Date();
     
-    const today=new Date();
-    const date= today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+        var date = year + '-' + month + '-' + day;
     setTodayDate(date);
     setTasksList({ ...taskList, updated_date: date })
   }
@@ -171,9 +178,9 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
           </AppBar>
 
           <div className={classes.root}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>
                 <Grid container spacing={4}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                 <Table className={classes.table}>
                     <TableHead>
                       <TableRow>

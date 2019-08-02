@@ -148,7 +148,7 @@ return (
                                       :''
                                       )
                                       
-                                }) : <StyledTableCell> {data.franchise_name}</StyledTableCell>
+                                }) : <StyledTableCell> All</StyledTableCell>
                               }
                               {/* <StyledTableCell></StyledTableCell> */}
                               {data.f_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{
