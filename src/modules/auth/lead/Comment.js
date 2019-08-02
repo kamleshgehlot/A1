@@ -181,7 +181,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="last_name">Franchise</InputLabel>
                       <Select
                         value={leadList.franchise_id}
@@ -194,17 +194,17 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                         fullWidth
                         label="franchise_id"
                       >
-                      <MenuItem disabled  value="" selected>Select Franchise
-                      </MenuItem>
+                        <MenuItem disabled  value="" selected>Select Franchise
+                        </MenuItem>
                           {(franchiseList.length > 0 ? franchiseList : []).map(data => {
                           return (
                             <MenuItem value={data.franchise_id} >{data.franchise_name}</MenuItem>
                           );
                         })}
-                        <MenuItem value={0}>{'Other'}</MenuItem> 
+                        <MenuItem value={0}>{'All'}</MenuItem> 
                       </Select>
                   </Grid>
-                    <Grid item xs={12} sm={3}>
+                    {/* <Grid item xs={12} sm={3}>
                       <TextField
                         margin="dense"
                         id="otherFranchiseValue"
@@ -216,7 +216,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                         disabled 
                         fullWidth
                       />
-                    </Grid>
+                    </Grid> */}
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="contact">Upload Doc/Photo</InputLabel>
                     <TextField

@@ -78,6 +78,10 @@ Lead.prototype.add = function () {
           }
         });
       }
+      
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   });
 }
@@ -174,6 +178,9 @@ Lead.prototype.addComment = function () {
           reject(error);
         }
       });
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   });
 }
@@ -196,6 +203,9 @@ Lead.prototype.allComment = function () {
           reject(error);
         }
       });
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   });
 }
@@ -241,7 +251,7 @@ Lead.prototype.convertedList = function () {
             // resolve(rows);
             const franchise_id=rows[0].franchise_id;
             connection.changeUser({ database: dbName["prod"] });
-            connection.query('select id,lead_id, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by,converted_to from leads where is_active="1" AND converted_to="1" AND (f_id="'+franchise_id+'" OR franchise_id="'+franchise_id+'" OR franchise_id=0) order by id desc', function (error, rows, fields) {
+            connection.query('select id,lead_id, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by,converted_to,converted_by,converted_by_f_id from leads where is_active="1" AND converted_to="1" AND (f_id="'+franchise_id+'" OR franchise_id="'+franchise_id+'" OR franchise_id=0) order by id desc', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
 

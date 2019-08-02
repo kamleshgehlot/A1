@@ -97,8 +97,11 @@ export default function Lead() {
       textTransform:"initial"
     },
     drpdwn:{
-      color:'white'
-    }
+      color: 'white',
+    },
+    icon: {
+      fill: 'white',
+  },
   }));
   const classes = useStyles();
 
@@ -183,6 +186,8 @@ export default function Lead() {
 
   function setLeadListFn(response) {
     setLeadList(response);
+    
+    setFilterId('4');
   }
 
   function setEnquiryListFn(response) {
@@ -227,7 +232,6 @@ export default function Lead() {
               Converted
             </Fab>
           </Grid>
-          
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
@@ -235,7 +239,7 @@ export default function Lead() {
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Lead ID</StyledTableCell>
-                        <StyledTableCell>Franchise</StyledTableCell>
+                        <StyledTableCell>For Franchise</StyledTableCell>
                         {/* <StyledTableCell>Doc/Photo</StyledTableCell> */}
                         <StyledTableCell>
                           <Select
@@ -244,6 +248,9 @@ export default function Lead() {
                               name: 'filter',
                               id: 'filter',
                               label:'filter',
+                              classes: {
+                                  icon: classes.icon,
+                              },
                             }}
                             className={classes.drpdwn}
                             value={filterId}

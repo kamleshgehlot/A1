@@ -6,8 +6,6 @@ const utils = require("../../utils");
 var Enquiry = function (params) {
   console.log("params", params);
   this.user_id = params.user_id;
-
-    
   this.enquiry_id = params.enquiry_id;
   this.customer_name= params.customer_name;
   this.contact= params.contact;
@@ -15,7 +13,10 @@ var Enquiry = function (params) {
   this.is_active = params.is_active;
   this.created_by =params.created_by;
   this.converted_to = params.converted_to;
+  //for lead converted to enquiry
   this.convert_by_lead=params.convert_by_lead;
+  this.userid = params.userid;
+  this.franchise_id=params.franchise_id;
 };
 
 Enquiry.prototype.postenquiry = function () {
@@ -34,17 +35,26 @@ Enquiry.prototype.postenquiry = function () {
         connection.query('INSERT INTO enquiry(enquiry_id, customer_name, contact, interested_product_id, is_active, converted_to, created_by) VALUES ?',[values],function (error, rows, fields) {
             if (!error) {
                 if(that.convert_by_lead!=0){
-                  connection.changeUser({ database: dbName["prod"] });
-                  connection.query('update leads set converted_to="1" where id="'+that.convert_by_lead+'"',function (error, rows, fields) {
+                  connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
                     if (!error) {
-                      // console.log("rows...",rows);
-                        resolve(rows);
-                        } else {
-                          console.log("Error...", error);
-                          reject(error);
-                        }
-                  });
-                }
+                      // resolve(rows);
+                      const franchise_id=rows[0].franchise_id;
+                      connection.changeUser({ database: dbName["prod"] });
+                      connection.query('update leads set converted_to="1",converted_by="'+that.userid+'", converted_by_f_id="'+franchise_id+'" where id="'+that.convert_by_lead+'"',function (error, rows, fields) {
+                        if (!error) {
+                          // console.log("rows...",rows);
+                            resolve(rows);
+                            } else {
+                              console.log("Error...", error);
+                              reject(error);
+                            }
+                      });
+                    }else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                })
+              }
             } else {
               console.log("Error...", error);
               reject(error);
