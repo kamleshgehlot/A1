@@ -177,6 +177,7 @@ export default function Budget({ open, handleBudgetClose, setBudgetList}) {
     inputs.credit_card = 0;
     inputs.loan = 0;
     inputs.other_expenditure =0;
+    inputs.afford_amt = 0;
   }, []);
 
   let income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);

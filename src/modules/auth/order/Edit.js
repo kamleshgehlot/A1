@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {component} from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -9,42 +10,41 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
+import Fab from '@material-ui/core/Fab';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
+import Paper from '@material-ui/core/Paper';
+import Input from "@material-ui/core/Input";
+import Checkbox from "@material-ui/core/Checkbox";
+import ListItemText from "@material-ui/core/ListItemText";
+import FormControl from "@material-ui/core/FormControl";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from '@material-ui/core/RadioGroup';
+import AddIcon from '@material-ui/icons/Add';
+import DoneIcon from '@material-ui/icons/Done';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+import { APP_TOKEN } from '../../../api/Constants';
+
+import Budget from './Budget';
+import ViewCustomer from '../customer/ViewCustomer';
+import FlexOrder from './FlexOrder';
+import FixedOrder from './FixedOrder';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
-
+import Category from '../../../../src/api/Category';
+import OrderAPI from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
+import { FormLabel } from '@material-ui/core';
+import { stringify } from 'querystring';
+import { string } from 'prop-types';
 
 const RESET_VALUES = {
-  id: '',
-  first_name : '',
-  last_name : '',
-  location : '',
-  contact : '',
-  email : '',  
-  pre_company_name : '',
-  pre_company_address : '',
-  pre_company_contact : '',
-  pre_position : '',
-  duration : '',
-  resume : '',
-  cover_letter : '',
-  employment_doc : '',
-  
-  user_id : '',
-  password : '',
-  role : '',
+    
 };
 
 const useStyles = makeStyles(theme => ({
@@ -56,6 +56,14 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+  },
+  labelTitle: {
+    // display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // flex: 1,
+    fontWeight: theme.typography.fontWeightBold,
+    marginTop: 15,
   },
   root: {
     flexGrow: 1,
@@ -77,374 +85,252 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  buttonMargin: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick, franchiseId, role, inputs, setFranchiseList}) {
+
+export default function Add({ open, handleEditClose, handleSnackbarClick, editableData}) {
+
   const classes = useStyles();
+  const [budgetOpen, setBudgetOpen] = useState(false);
+  const [customerOpen, setCustomerOpen] = useState(false);
+  const [fixedOrderOpen, setFixedOrderOpen] = useState(false);
+  const [flexOrderOpen, setFlexOrderOpen]  = useState(false);
+  const [searchCustomerOpen, setSearchCustomerOpen] = useState(false);
+  const [customerId, setCustomerId] = useState(false);
   
-  const [expanded, setExpanded] = React.useState('panel1');
-  const [staffList, setStaffList] = React.useState(inputs);
-  const [assignRole, setAssignRole] = React.useState([]);
-  const [checkRole, setCheckRole] = React.useState(["Delivery","CSR","Finance","HR"]);
-
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const [budgetList,setBudgetList] = useState([]);
+  const [fixedOrderList,setFixedOrderList] = useState(null);
+  const [flexOrderList,setFlexOrderList] = useState(null);
   
-  function handleChangeMultiple(event) {
-    setAssignRole(event.target.value);
-  }
+  const [customer, setCustomer] = useState(null);
+  const [productList, setProductList] = useState([]);
+  const [assignInterest, setAssignInterest] = React.useState([]);
+  const [recData, setRecData] = React.useState(editableData);
 
+    
   useEffect(() => {
-    let assignRoleList = [];
-    (staffList.role.split(',')).map((role,index) =>{
-      assignRoleList.push(role);
-    });
-    setAssignRole(assignRoleList);
-  }, []);
-
-  const addFranchiseStaff = async () => {
-
-    const data = {
-      franchise_id: franchiseId,
-      id: staffList.id,
-      first_name: staffList.first_name,
-      last_name: staffList.last_name,
-      location: staffList.location,
-      contact: staffList.contact,
-      email: staffList.email,
-      
-      pre_company_name: staffList.pre_company_name,
-      pre_company_address: staffList.pre_company_address,
-      pre_company_contact: staffList.pre_company_contact,
-      pre_position: staffList.pre_position,
-      duration: staffList.duration,
-      // resume:  staffList.resume,
-      // cover_letter: staffList.cover_letter,
-      employment_doc: staffList.employment_doc,
-      
-      user_id: staffList.user_id,
-      password: staffList.password,
-      role: assignRole.join(),
-      created_by: 1,
+    const fetchData = async () => {
+      try {
+        const result = await Category.productlist();
+        setProductList(result.productList);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(data));
-    
-    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
-      formData.append('avatar', document.getElementById('employment_docs').files[x])
-    }
+    let assignRoleList = [];
+    (recData.product_id.split(',')).map((product,index) =>{
+      assignRoleList.push(product);
+    });
+    setAssignInterest(assignRoleList);
 
-    const response = await Staff.register( { formData: formData } );
-    handleSnackbarClick(true,'Franchise Updated Successfully');
-    setFranchiseList(response.staffList);
+  fetchData();
+  }, []);
+
+ 
+  function handleBudgetClose(){
+    setBudgetOpen(false);
+  }
+  
+  function handleBudgetOpen(){
+    setBudgetOpen(true);
+  }
+  
+  function handleFixedClose(){
+    setFixedOrderOpen(false);
+  }
+  
+  function handleFixedOpen(){
+    setFlexOrderList(null);
+    setFixedOrderOpen(true);
+  }
+
+  function handleFlexClose(){
+    setFlexOrderOpen(false);
+  }
+  
+  function handleFlexOpen(){
+    setFixedOrderList(null);
+    setFlexOrderOpen(true);
+  }
+
+  function handleCustomerClose(){
+    setCustomerOpen(false);
+  }
+  function handleCustomerOpen(customerId){
+    setCustomerId(customerId);
+    setCustomerOpen(true);
+  }
+ 
+  function handleSearchCustomerClose(){
+    setSearchCustomerOpen(false);
+  }
+  function handleSearchCustomerOpen(){
+    setSearchCustomerOpen(true);
+  }
+
+
+  function handleChangeMultiple(event) {
+    setAssignInterest(event.target.value);
+  }
+
+  console.log('inputs',recData);
+
+  const addOrder = async () => {
+    const response = await OrderAPI.postOrder({ 
+      
+      products_id :  assignInterest.join(),
+      flexOrderType : flexOrderList,
+      fixedOrderType : fixedOrderList,
+      payment_mode: recData.payment_mode,
+      budget_list : budgetList,
+
+      is_active : 1,
+     });
+    console.log('response ', response);
+    assignInterest.length = 0;
+    // handleSnackbarClick(true);
+    // setFranchiseList(response.staffList);
     // handleReset(RESET_VALUES);
-    handleEditClose(false);
+    if(response!='invalid'){
+      handleOrderRecData(response);
+        handleClose(false);
+      }else{
+        alert("Invalid or Incomplete Credentials")
+      }
   };
 
   const handleInputChange = event => {
     const { name, value } = event.target
-    setStaffList({ ...staffList, [name]: value })
+    setRecData({ ...recData, [name]: value })
   }
-  return (
+
+    
+return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
-        <from >
+        <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Edit Staff
+                New Order
               </Typography>
-              <Button onClick={addFranchiseStaff} color="inherit">
-                Update
+              <Button color="inherit" type="submit">
+                save
               </Button>
             </Toolbar>
           </AppBar>
-
+          
           <div className={classes.root}>
-            
-            <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel1a-header"
-              >
-              <Typography className={classes.heading}>Staff Details</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+          <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={3}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
-                      id="first_name"
-                      name="first_name"
-                      label="First Name"
-                      value={staffList.first_name}
-                      onChange={handleInputChange}
+                      id="orderid"
+                      name="orderid"
+                      label="Order #"
+                      value={recData.order_id}
                       fullWidth
-                      required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
+                      disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel htmlFor="order_date">Date*</InputLabel>
                     <TextField
                       margin="dense"
-                      id="last_name"
-                      name="last_name"
-                      label="Last Name"
-                      type="text"
-                      value={staffList.last_name} 
-                      onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="location"
-                      name="location"
-                      label="Location"
-                      type="text"
-                      value={staffList.location}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="contact"
-                      name="contact"
-                      label="Contact"
-                      type="number"
-                      value={staffList.contact} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="email"
-                      name="email"
-                      label="Email Id"
-                      type="email"
-                      value={staffList.email} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      type="email"
-                    />
-                  </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel2'}
-              onChange={handleChange('panel2')}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel2a-header"
-              >
-                <Typography className={classes.heading}>Previous Employer Details</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container spacing={4}>
-                <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="pre_company_name"
-                      name="pre_company_name"
-                      label="Name of Previous Company"
-                      type="text"
-                      value={staffList.pre_company_name} 
-                      onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="pre_company_address"
-                      name="pre_company_address"
-                      label="Address of Previous Company"
-                      type="text"
-                      value={staffList.pre_company_address} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="pre_company_contact"
-                      name="pre_company_contact"
-                      label="Contact# of Previous Company"
-                      type="number"
-                      value={staffList.pre_company_contact} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                  {/* <InputLabel htmlFor="pre_position">Position *</InputLabel> */}
-                  <TextField
-                      margin="dense"
-                      id="pre_position"
-                      name="pre_position"
-                      label="Position/JobRole in Previous Company"
-                      type="text"
-                      value={staffList.pre_position} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                  />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="duration"
-                      name="duration"
-                      label="Work Experience"
-                      type="text"
-                      value={staffList.duration} 
-                      onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="employment_docs">Upload Employement Docs</InputLabel>
-                    <TextField
-                      margin="dense"
-                      id="employment_docs"
-                      name="employment_docs"
-                      label=""
-                      multiple
-                      type="file"
-                      value={staffList.employment_doc} 
-                      onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel3'}
-              onChange={handleChange('panel3')}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel3a-header"
-              >
-                <Typography className={classes.heading}>Current Job Role</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container spacing={4}>
-                <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="user_id"
-                      name="user_id"
-                      label="User Id"
-                      type="text"
-                      value={staffList.user_id} 
-                      // onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
+                      id="order_date"
+                      name="order_date"
+                      type="date"
+                      defaultValue= {recData.order_date}
                       required
                       disabled
                       fullWidth
                     />
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}> */}
-                    {/* <InputLabel htmlFor="last_name">Password</InputLabel> */}
-                    {/* <TextField
-                      margin="dense"
-                      id="password"
-                      name="password"
-                      label="Password"
-                      // onFocus={handlePasswordBlurChange}
-                      value={staffList.password} 
-                      required
-                      fullWidth
-                      // error={errors.password}
-                      // helperText={errors.password ? errors.password : ' '}
-                      disabled
-                    />
-                  </Grid> */}
-                  
+
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
-                  <Select
+                   <InputLabel htmlFor="customer">Customer</InputLabel>
+                    <Typography variant="h6" className={classes.labelTitle}>{recData.customer_name} </Typography>
+                    <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(recData.customer_id); }}>View Profile </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="product">Product*</InputLabel>
+                    <Select
                       multiple
-                      value={assignRole}
+                      value={assignInterest}
                       onChange={handleChangeMultiple}
-                      inputProps={{
-                        name: 'assign_role',
-                        id: 'assign_role',
-                        label:'assign_role'
-                      }}
+                      name= 'product'
+                      id= 'product'
+                      // label='customer'
                       fullWidth
                       required
-                    >
-                    {role.map((ele,index) =>{
-                        return(
-                        <MenuItem value={ele.id.toString()}>{ele.name}</MenuItem>
-                        )
-                    })}
+                    >    
+                     {(productList.length > 0 ? productList : []).map((data,index)=>{
+                      return(
+                         <MenuItem value={data.id}>{data.name}</MenuItem>
+                      ) 
+                     })}
                     </Select>
                   </Grid>
+                  <Grid item xs={12} sm={2}>
+                    {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      Update Budget
+                    </Fab> */}
+                    <Button variant="outlined" size="small"  onClick={handleBudgetOpen}>Update Budget </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
+                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography> */}
+                   </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
+                    <Select
+                      value={recData.payment_mode}
+                      onChange={handleInputChange}
+                      name= 'payment_mode'
+                      id= 'payment_mode'
+                      // label='customer'
+                      fullWidth
+                      required
+                    >    
+                      <MenuItem value={1}>EasyPay</MenuItem>
+                      <MenuItem value={2}>Credit</MenuItem>
+                      <MenuItem value={3}>Debit</MenuItem>
+                      <MenuItem value={4}>PayPal</MenuItem>
+                      <MenuItem value={5}>Cash</MenuItem>
+                    </Select>
+                   </Grid>
+                   <Grid item xs={12} sm={6}>
+                     {editableData.order_type ===1 ? 
+                      <Button variant="outlined" size="small"  onClick={handleFixedOpen}>Update Fixed Order Type Details </Button> :
+                      <Button variant="outlined" size="small"  onClick={handleFlexOpen}>Update Flex Order Type Details </Button>
+                     }
+                    </Grid>
+                   
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-              
+          </Paper>
+            
           </div>
-        </from>
+        </form>
       </Dialog>
+    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList}/> : null }
+    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList}/> : null }
+    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList}/> : null }
+    {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
     </div>
   );
 }

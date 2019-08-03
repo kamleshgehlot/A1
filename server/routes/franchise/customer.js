@@ -31,6 +31,7 @@ customerRouter.route("/register").post(validateToken, upload.array('avatar'), Cu
 customerRouter.route("/list").get(validateToken, Customer.all);
 customerRouter.route("/idtype/list").get(validateToken, Customer.getidtypelist);
 customerRouter.route("/search").post(validateToken, Customer.searchData);
+customerRouter.route("/getsinglecustomer").post(validateToken, Customer.getSingleCustomer);
 // userRouter.route("/getUniqueNames").get(validateToken, User.getUniqueNames);
 
 module.exports = customerRouter;

@@ -18,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Add from './Add';
+import Edit from './Edit';
 // import Edit from './Edit';
 
 // API CALL
@@ -48,13 +49,14 @@ export default function Order() {
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [orderRecData,setOrderRecData] = useState([]);
+  const [editableData,setEditableData] = useState({});
 
   const [budgetData,setBudgetData] = useState([]);
   const [orderListData,setOrderListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [fixedPaymentData, setFixedPaymentData] = useState(null);
   const [flexPaymentData, setFlexPaymentData] = useState(null);
-  const [order,setOrder] = useState([]);
+  const [order,setOrder] = useState({});
 
   
   const useStyles = makeStyles(theme => ({
@@ -103,6 +105,17 @@ export default function Order() {
   function handleClose(){
     setOpen(false);
   }
+
+  function handleEditOpen(data){
+    
+    setEditableData(data);
+    setEditOpen(true);
+  }
+
+  function handleEditClose(){
+    setEditOpen(false);
+  }
+
   function handleSnackbarClick(){
     //don't remove this function
   }
@@ -122,7 +135,6 @@ export default function Order() {
 
         const result = await OrderAPI.getAll();
         setOrder(result.order);
-        console.log('order..',result);
       } catch (error) {
         console.log(error);
       }
@@ -198,25 +210,7 @@ export default function Order() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {console.log('order--',order)}
-                      {/* assigned_to: 4
-                      budget_id: 1
-                      customer_id: 24
-                      customer_name: "kamlesh gethlot"
-                      mobile: "9785241520"
-                      order_date: "2019-08-03"
-                      order_id: "O_95"
-                      order_status: 1
-                      order_type: 2
-                      order_type_id: 1
-                      payment_mode: 5
-                      product_id: "3"
-                      telephone: "" */}
-                   {
-                    //  budgetList: [{…}]
-                    //  fixedPaymentList: [{…}]
-                    //  orderList
-                     (order.length > 0 ? order : []).map((data, index) => {
+                    {(order.length > 0 ? order : []).map((data, index) => {
                        return(
                         <TableRow>
                         <StyledTableCell>{index + 1}</StyledTableCell>
@@ -236,12 +230,11 @@ export default function Order() {
                           }
                         </StyledTableCell>
                         <StyledTableCell>
-                        {/* onClick={(event) => { handleClickEnquiryOpen(data); }} */}
-                        
-                        <Button variant="outlined" size="small" color="primary" >
+                        {/* */}
+                        {/* onClick={(event) => { handleEditOpen(data); }} */}
+                        <Button variant="outlined" size="small" color="primary"  value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} >
                            Update
                         </Button>
-                          
                         <Button variant="outlined" size="small" color="primary">
                             Remove
                         </Button>
@@ -258,8 +251,7 @@ export default function Order() {
           </Grid>
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData}/>
-      
-      {/* {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null} */}
+     {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} editableData={editableData} /> : null}
           
     </div>
   );

@@ -117,7 +117,7 @@ Order.prototype.postOrder = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
@@ -148,7 +148,7 @@ Order.prototype.selectFromOrder = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
   throw error;
@@ -180,7 +180,7 @@ Order.prototype.getBudget = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
@@ -211,7 +211,7 @@ Order.prototype.getFlexOrderDetail = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
@@ -243,7 +243,7 @@ Order.prototype.getFixedOrderDetail = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
@@ -278,12 +278,13 @@ Order.prototype.getCustomerDetails = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
   });
 };
+
 
 
 
@@ -310,7 +311,7 @@ Order.prototype.getOrderList = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
@@ -318,7 +319,7 @@ Order.prototype.getOrderList = function () {
 };
 
 
-// Enquiry.prototype.convertedList = function () {
+// Order.prototype.convertedList = function () {
 //   const that = this;
 //   return new Promise(function (resolve, reject) {
 
@@ -329,7 +330,7 @@ Order.prototype.getOrderList = function () {
     
 //       if (!error) {
 //         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-//         connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 1 order by id desc',function (error, rows, fields) {
+//         connection.query('select id, Order_id, customer_name, contact, interested_product_id, is_active, created_by from Order WHERE converted_to = 1 order by id desc',function (error, rows, fields) {
 //             if (!error) {
 //               // console.log("rows...",rows);
 //                 resolve(rows);
@@ -344,7 +345,7 @@ Order.prototype.getOrderList = function () {
 //         reject(error);
 //       }
 //       connection.release();
-//       console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+//       console.log('Order Added for Franchise Staff %d', connection.threadId);
 //     });
 //   }).catch((error) => {
 //     throw error;
@@ -352,7 +353,7 @@ Order.prototype.getOrderList = function () {
 // };
 
 
-// Enquiry.prototype.convert = function () {
+// Order.prototype.convert = function () {
 //   const that = this;
 //   return new Promise(function (resolve, reject) {
 
@@ -363,7 +364,7 @@ Order.prototype.getOrderList = function () {
     
 //       if (!error) {
 //         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-//         connection.query('update enquiry set converted_to = 1 WHERE id = "'+that.enquiry_id+'"',function (error, rows, fields) {
+//         connection.query('update Order set converted_to = 1 WHERE id = "'+that.Order_id+'"',function (error, rows, fields) {
 //             if (!error) {
 //               // console.log("rows...",rows);
 //                 resolve(rows);
@@ -378,7 +379,7 @@ Order.prototype.getOrderList = function () {
 //         reject(error);
 //       }
 //       connection.release();
-//       console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+//       console.log('Order Added for Franchise Staff %d', connection.threadId);
 //     });
 //   }).catch((error) => {
 //     throw error;
@@ -411,7 +412,7 @@ Order.prototype.getnewid = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;

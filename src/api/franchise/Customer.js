@@ -72,4 +72,21 @@ export default {
     }
   },
 
+  getSingleCustomer: async (customerId) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/getsinglecustomer`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: customerId,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };

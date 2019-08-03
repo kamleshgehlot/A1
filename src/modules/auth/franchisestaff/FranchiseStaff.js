@@ -245,7 +245,7 @@ export default function FranchiseStaff(franchiseId) {
                           </StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>
-                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                              <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                             <CreateIcon/>
                             </Button>
                             </StyledTableCell>

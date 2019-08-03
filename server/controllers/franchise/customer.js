@@ -121,4 +121,23 @@ console.log('body',req.body.searchText);
 };
 
 
-module.exports = { register: register, all: all, getidtypelist: getidtypelist, searchData: searchData};
+
+const getSingleCustomer = function (req, res, next) {
+  // console.log("****************Customer..................", req.body);
+
+  let CustomerParams = {
+    user_id: req.decoded.user_id,
+    customer_id :req.body.customer_id,
+  };
+	try{
+    const newCustomer = new Customer(CustomerParams);
+    newCustomer.getSingleCustomer().then(function(result){
+       res.send({ customer: result });
+    });
+    // }
+	}catch(err){
+    console.log("Error..",err);
+	}
+};
+
+module.exports = { register: register, all: all, getidtypelist: getidtypelist, searchData: searchData, getSingleCustomer: getSingleCustomer};
