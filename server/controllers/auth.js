@@ -25,12 +25,12 @@ const login = function (req, res, next) {
       // console.log("decText....************.", decText)
 
       if (user && user.length > 0) {
-      
-        if(user[0].status === 0) {
+
+        if (user[0].status === 0) {
           status = 401;
           result.errorCode = status;
           result.message = `Account is not verified`;
-        } else if(user[0].password.toString('utf8') === params.password) {
+        } else if (user[0].password.toString('utf8') === params.password) {
           status = 200;
           // Create a token
           const payload = { id: user[0].id, user: params.name, user_id: user[0].user_id, franchise_id: user[0].franchise_id, role: user[0].role_id };
@@ -52,7 +52,7 @@ const login = function (req, res, next) {
           result.message = `Authentication error`;
         }
 
-      res.status(status).send(result);
+        res.status(status).send(result);
       } else {
         status = 401;
         result.errorCode = status;
@@ -67,7 +67,7 @@ const login = function (req, res, next) {
       result.message = 'Application Error, Please contact the administrator.';
       res.status(status).send(result);
     });
-    
+
   } catch (err) {
     console.log("Error: ", err);
   }
@@ -77,31 +77,33 @@ const verifyEmail = function (req, res) {
   let accountId = req.query.accountId;
   let token = req.query.token;
   let name = req.query.name;
-
+  let result = {};
+  let status = 201;
   let params = {
     accountId: req.query.accountId,
     token: 1,
     name: name
   };
+
   const auth = new Auth(params);
 
   auth.verifyEmail(accountId).then((user) => {
     console.log('............. user .........', user);
-      let userToken = user[0].token
-      if (token && token.length > 10 && token === userToken) {
-        new User({}).updateStatus(params.name).then((result) => {
-          // if (userSaveError) {
-            console.log("could not clear the token")
-            res.status(200).json({ message: "verified" })
-          // } else {
-          //   console.log("token cleared")
-          //   res.status(200).json({ message: "verified" })
-          // }
-        });
-      } else {
-        res.status(404).json({ message: "Invalid token" })
-      }
-    
+    let userToken = user[0].token
+    if (token && token.length > 10 && token === userToken) {
+      new User({}).updateStatus(params.name).then((result) => {
+        // if (userSaveError) {
+        console.log("could not clear the token")
+        res.status(200).json({ message: "verified" })
+        // } else {
+        //   console.log("token cleared")
+        //   res.status(200).json({ message: "verified" })
+        // }
+      });
+    } else {
+      res.status(404).json({ message: "Invalid token" })
+    }
+
   }).catch(err => {
     console.log("Error", err)
     status = 500;
@@ -127,33 +129,33 @@ const forgotPassword = function (req, res, next) {
       // console.log("decText....************.", decText)
 
       if (user && user.length > 0) {
-      
+
         // if(user[0].status === 0) {
         //   status = 401;
         //   result.errorCode = status;
         //   result.message = `Account is not verified`;
         // } else {
-          status = 200;
-          // Create a token
-          const mail = {
-            from: 'admin@rentronicsdev.saimrc.com',
-            to:  user[0].email,
-            subject: 'Forgot Password',
-            text: 'forgot password ',
-            html: '<strong> password: </strong>' + user[0].password
+        status = 200;
+        // Create a token
+        const mail = {
+          from: 'admin@rentronicsdev.saimrc.com',
+          to: user[0].email,
+          subject: 'Forgot Password',
+          text: 'forgot password ',
+          html: '<strong> password: </strong>' + user[0].password
+        }
+
+        trans.sendMail(mail, (err, info) => {
+          if (err) {
+            return console.log(err);
           }
+          console.log('Message sent: %s', info.messageId);
+          // Preview only available when sending through an Ethereal account
+          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        });
 
-          // trans.sendMail(mail, (err, info) => {
-          //   if (err) {
-          //     return console.log(err);
-          //   }
-          //   console.log('Message sent: %s', info.messageId);
-          //   // Preview only available when sending through an Ethereal account
-          //   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-          // });
-
-          result.status = status;
-          result.message = `Email send successfully`;
+        result.status = status;
+        result.message = `Email send successfully`;
 
         // }
 
@@ -172,7 +174,7 @@ const forgotPassword = function (req, res, next) {
       result.message = 'Application Error, Please contact the administrator.';
       res.status(status).send(result);
     });
-    
+
   } catch (err) {
     console.log("Error: ", err);
   }
