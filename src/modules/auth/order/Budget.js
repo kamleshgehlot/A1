@@ -93,60 +93,33 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleBudgetClose}) {
+export default function Budget({ open, handleBudgetClose, setBudgetList}) {
 
   const classes = useStyles();
   const [inputs,setInputs] = useState([]);
   const [assignRole, setAssignRole] = React.useState([]);
   
 
-
-  const addFranchiseStaff = async () => {
-
-    const data = {
-      // franchise_id: franchiseId,
-      id: '',
-      first_name: inputs.first_name,
-      last_name: inputs.last_name,
-      location: inputs.location,
-      contact: inputs.contact,
-      email: inputs.email,
-      
-      pre_company_name: inputs.pre_company_name,
-      pre_company_address: inputs.pre_company_address,
-      pre_company_contact: inputs.pre_company_contact,
-      pre_position: inputs.pre_position,
-      duration: inputs.duration,
-      // resume:  inputs.resume,
-      // cover_letter: inputs.cover_letter,
-      employment_docs: inputs.employment_docs,
-      
-      user_id: inputs.user_id,
-      password: inputs.password,
-      role: assignRole.join(),
-      created_by: 1,
-    };
-
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(data));
-    
-    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
-      formData.append('avatar', document.getElementById('employment_docs').files[x])
+  function handleInputBlur(e){
+    if(e.target.value===''){
+      setInputs({
+        ...inputs,
+        [e.target.name]: 0,
+      });
     }
-    
-    const response = await Staff.register( { formData: formData } );
-    assignRole.length = 0;
-    handleSnackbarClick(true);
-    // setFranchiseList(response.staffList);
-    handleReset(RESET_VALUES);
-    handleBudgetClose(false);
-    
-  };
+  }
 
-  
+  function handleInputFocus(e){
+    if(e.target.value==='0'){
+      setInputs({
+        ...inputs,
+        [e.target.name]: '',
+      });
+    }
+  }
   
   function handleInputChange(e){
-    console.log('valueee',e.target.value)
+    // console.log('valueee',e.target.value)
     if(e.target.value===""){
       setInputs({
         ...inputs,
@@ -161,11 +134,32 @@ export default function Budget({ open, handleBudgetClose}) {
   }
 
   }
-  console.log('inputs.',inputs);
+  // console.log('inputs.',inputs);
 
   function handleSubmit(e){
-    handleBudgetClose(false)
     e.preventDefault();
+    handleBudgetClose(false)
+    const data = {
+      work: parseFloat(inputs.work),
+      benefits : parseFloat(inputs.benefits),
+      accomodation : parseFloat(inputs.accomodation),
+      childcare : parseFloat(inputs.childcare),
+      rent : parseFloat(inputs.rent),
+      power : parseFloat(inputs.power),
+      telephone : parseFloat(inputs.telephone),
+      mobile : parseFloat(inputs.mobile),
+      vehicle : parseFloat(inputs.vehicle),
+      transport : parseFloat(inputs.transport),
+      food : parseFloat(inputs.food),
+      credit_card : parseFloat(inputs.credit_card),
+      loan : parseFloat(inputs.loan),
+      other_expenditure : parseFloat(inputs.other_expenditure),
+      income  : parseFloat(income),
+      expenditure : parseFloat(expenditure),
+      surplus  : parseFloat(surplus),
+      afford_amt : parseFloat(inputs.afford_amt),
+    }
+    setBudgetList(data);
   }
 
   useEffect(() => {
@@ -183,46 +177,12 @@ export default function Budget({ open, handleBudgetClose}) {
     inputs.credit_card = 0;
     inputs.loan = 0;
     inputs.other_expenditure =0;
-    
   }, []);
-  let income = parseInt(inputs.work) + parseInt(inputs.benefits) + parseInt(inputs.accomodation) + parseInt(inputs.childcare);
-  let Expenditure = parseInt(inputs.rent) + parseInt(inputs.power) + parseInt(inputs.telephone) + parseInt(inputs.mobile) + parseInt(inputs.vehicle) + parseInt(inputs.transport) + parseInt(inputs.food) + parseInt(inputs.credit_card) + parseInt(inputs.loan) + parseInt(inputs.other_expenditure) ;
-  let surplus = income - Expenditure;
-  
 
-  function handleChangeMultiple(event) {
-    setAssignRole(event.target.value);
-    // inputs['role']=assignRole;
-  }
-  
-  function handleNameBlurChange(e) {
-    setInput('user_id', generate(inputs.first_name, inputs.last_name));
-  }
+  let income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
+  let expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) ;
+  let surplus = income - expenditure;
 
-  function generate(first_name, last_name) {
-    const ts = new Date().getTime().toString();
-    const parts = ts.split( "" ).reverse();
-    let id = "";
-    
-    for( let i = 0; i < 4; ++i ) {
-      let index = Math.floor( Math.random() * (5) );
-      id += parts[index];	 
-    }
-    
-    const uid = APP_TOKEN.get().uid;
-
-    return first_name.substring(0, 4).toLowerCase() + '_' + uid.split('_')[1] + '_' + id;
-  }
-  
-  function handlePasswordBlurChange() {
-    inputs['password']=='' ? 
-    setInput('password', GeneratePassword())
-    :''
-  }
-
-  function GeneratePassword() {
-    return Math.random().toString(36).slice(-8);
-  }
 
 return (
     <div>
@@ -258,6 +218,8 @@ return (
                       label="Work"
                       value={inputs.work}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -276,6 +238,8 @@ return (
                       label="Benefits"
                       value={inputs.benefits}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -294,6 +258,8 @@ return (
                       label="Accomodation Allowance"
                       value={inputs.accomodation}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -313,6 +279,8 @@ return (
                       label="Childcare"
                       value={inputs.childcare}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -337,6 +305,8 @@ return (
                       label="Rent/Mortgage"
                       value={inputs.rent}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -355,6 +325,8 @@ return (
                       label="Power"
                       value={inputs.power}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -373,6 +345,8 @@ return (
                       label="Landline Phone"
                       value={inputs.telephone}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -391,6 +365,8 @@ return (
                       label="Mobile Phone"
                       value={inputs.mobile}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -409,6 +385,8 @@ return (
                       label="Vehicle Finance"
                       value={inputs.vehicle}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -427,6 +405,8 @@ return (
                       label="Public Transport"
                       value={inputs.transport}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -445,6 +425,8 @@ return (
                       label="Food"
                       value={inputs.food}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -463,6 +445,8 @@ return (
                       label="Credit/Store Cards"
                       value={inputs.credit_card}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -481,6 +465,8 @@ return (
                       label="Loans/Hire Purchase"
                       value={inputs.loan}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -499,6 +485,8 @@ return (
                       label="Other"
                       value={inputs.other_expenditure}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // required
                       type="number"
@@ -516,7 +504,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                     Total Expenses = {Expenditure}
+                     Total Expenses = {expenditure}
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -531,7 +519,7 @@ return (
                       name="total_surplus"
                       // label="Other"
                       value={surplus}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                       fullWidth
                       disabled
                       // required
@@ -546,7 +534,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                    How much you can afford to pay on weekly basis?
+                      How much you can afford to pay on weekly basis?
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -557,6 +545,8 @@ return (
                       // label="Other"
                       value={inputs.afford_amt}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
                       // disabled
                       required
@@ -571,7 +561,6 @@ return (
                   </Grid>
                 </Grid>
           </Paper>
-            
           </div>
         </form>
       </Dialog>

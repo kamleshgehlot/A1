@@ -28,6 +28,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
+import AddIcon from '@material-ui/icons/Add';
+import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { APP_TOKEN } from '../../../api/Constants';
@@ -35,32 +37,18 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Budget from './Budget';
 import AddCustomer from '../customer/Add';
 import SearchCustomer from './SearchCustomer';
+import FlexOrder from './FlexOrder';
+import FixedOrder from './FixedOrder';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
-
+import Category from '../../../../src/api/Category';
+import OrderAPI from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 
 const RESET_VALUES = {
-  id: '',
-  first_name : '',
-  last_name : '',
-  location : '',
-  contact : '',
-  email : '',  
-  pre_company_name : '',
-  pre_company_address : '',
-  pre_company_contact : '',
-  pre_position : '',
-  duration : '',
-  resume : '',
-  cover_letter : '',
-  employment_docs : '',
-  
-  user_id : '',
-  password : '',
-  role : '',
+    
 };
 
 const useStyles = makeStyles(theme => ({
@@ -116,24 +104,33 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
   const [customerOpen, setCustomerOpen] = useState(false);
+  const [fixedOrderOpen, setFixedOrderOpen] = useState(false);
+  const [flexOrderOpen, setFlexOrderOpen]  = useState(false);
   const [searchCustomerOpen, setSearchCustomerOpen] = useState(false);
-  const [assignRole, setAssignRole] = React.useState([]);
-  const [customer, setCustomer] = useState({});
-  
+  const [budgetList,setBudgetList] = useState([]);
+  const [fixedOrderList,setFixedOrderList] = useState(null);
+  const [flexOrderList,setFlexOrderList] = useState(null);
+  const [orderDate,setOrderDate] = useState('');
+  const [customer, setCustomer] = useState(null);
+  const [junkData,setJunkData] = useState({});
+  const [productList, setProductList] = useState([]);
+  const [isNewCustomer,setIsNewCustomer] = useState(0);
+  const [assignInterest, setAssignInterest] = React.useState([]);
 
+  // console.log('flex r', flexOrderList);
+  // console.log('flex r', fixedOrderList);
+  // console.log('product list', assignInterest);
 
 
   function validate(values) {
     let errors = {};
-
     return errors;
   };
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-    RESET_VALUES,
-    validate
-  );
+ 
+  
 
+ 
   function handleBudgetClose(){
     setBudgetOpen(false);
   }
@@ -142,6 +139,24 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
     setBudgetOpen(true);
   }
   
+  function handleFixedClose(){
+    setFixedOrderOpen(false);
+  }
+  
+  function handleFixedOpen(){
+    setFlexOrderList(null);
+    setFixedOrderOpen(true);
+  }
+
+  function handleFlexClose(){
+    setFlexOrderOpen(false);
+  }
+  
+  function handleFlexOpen(){
+    setFixedOrderList(null);
+    setFlexOrderOpen(true);
+  }
+
   function handleCustomerClose(){
 
     setCustomerOpen(false);
@@ -157,11 +172,124 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
   }
 
   function handleCustomerList(response){
-    // console.log("response---", response);
-    // setCustomerListData(response);
+    setIsNewCustomer(1);
+    setCustomer(response[0]);
+  }
+  function handleIsExistCustomer(response){
+    setIsNewCustomer(0);
+    
   }
 
-  console.log('cusetomer ', customer);
+  function handleDateChange(e){
+    setOrderDate(e.target.value);
+  }
+
+  function handleChangeMultiple(event) {
+    setAssignInterest(event.target.value);
+  }
+  
+  
+  function pastDate(){
+      var dtToday = new Date();
+      var month = dtToday.getMonth() + 1;
+      var day = dtToday.getDate();
+      var year = dtToday.getFullYear();
+      if(month < 10){
+          month = '0' + month.toString();
+        }
+      if(day < 10){
+          day = '0' + day.toString();
+        }
+          var maxDate = year + '-' + month + '-' + day;
+          document.getElementById('order_date').setAttribute('min', maxDate);
+          setOrderDate(maxDate.toString());
+    }
+    
+    useEffect(() => {
+      var dtToday = new Date();
+      var month = dtToday.getMonth() + 1;
+      var day = dtToday.getDate();
+      var year = dtToday.getFullYear();
+      if(month < 10){
+          month = '0' + month.toString();
+        }
+      if(day < 10){
+          day = '0' + day.toString();
+        }
+          var maxDate = year + '-' + month + '-' + day;
+          setOrderDate(maxDate.toString());
+
+          
+    }, []);
+    
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await Category.productlist();
+        // console.log('rrrr',result);
+        setProductList(result.productList);
+
+        const order_id = await OrderAPI.getnewid();
+        // console.log('order..',order_id);
+        if(order_id.id[0]!=null){
+          setInput('order_id',("O_" + (order_id.id[0].id+ 1)));
+        }
+        else{
+          setInput('order_id','O_1');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+  };
+  fetchData();
+  }, []);
+
+  const addOrder = async () => {
+    const response = await OrderAPI.postOrder({ 
+      order_id :  inputs.order_id,
+      customer_id : customer.id,
+      products_id :  assignInterest.join(),
+      order_type : inputs.order_type,
+      flexOrderType : flexOrderList,
+      fixedOrderType : fixedOrderList,
+      payment_mode: inputs.payment_mode,
+      order_date  : orderDate,
+
+      budget_list : budgetList,
+      is_active : 1,
+     });
+     console.log('response ', response);
+    assignInterest.length = 0;
+    // handleSnackbarClick(true);
+    // setFranchiseList(response.staffList);
+    // handleReset(RESET_VALUES);
+    handleClose(false);
+  };
+
+  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+    RESET_VALUES,
+    addOrder,
+    validate
+  );
+
+    // const data = {
+    //   order_id :  inputs.order_id,
+    //   customer_id : customer.id,
+    //   products_id :  assignInterest.join(),
+    //   order_type : inputs.order_type,
+    //   flexOrderType : flexOrderList,
+    //   fixedOrderType : fixedOrderList,
+    //   payment_mode: inputs.payment_mode,
+    //   order_date  : orderDate,
+
+    //   budget_list : budgetList,
+    //   is_active : 1,
+    // }
+    
+    
+    // console.log('Data.....',data);
+    // console.log('Inputs.....',inputs);
+    
 
 return (
     <div>
@@ -191,7 +319,7 @@ return (
                       name="orderid"
                       label="Order #"
                       value={inputs.order_id}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                       fullWidth
                       // required
                       type="text"
@@ -201,17 +329,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel htmlFor="order_date">Date*</InputLabel>
                     <TextField
                       margin="dense"
                       id="order_date"
                       name="order_date"
-                      label="Date"
-                      type="text"
-                      value={inputs.order_date} 
-                      onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
+                      // label="Date"
+                      type="date"
+                      value={orderDate}
+                      defaultValue= {orderDate}
+                      onChange={handleDateChange}
+                      onFocus={pastDate}
                       required
                       fullWidth
                     />
@@ -222,84 +350,63 @@ return (
                         aria-label="customer"
                         name="customer"
                         className={classes.group}
-                        // value={inputs.gender}
-                        // onChange={handleInputChange}
+                        value={inputs.customer_type}
+                        onChange={handleInputChange}
                         row
                       >
-                        <FormControlLabel labelPlacement="end" value="new" control={<Radio />} label="New Customer" onClick={handleCustomerOpen} />
-                        <FormControlLabel labelPlacement="end" value="exist" control={<Radio />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
-                        <Typography variant="h6" className={classes.labelTitle}>{customer ? customer.customer_name : ''}</Typography>
-                        {/* <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleCustomerOpen}>
-                        Add Customer
-                        </Fab>  
-                        <Fab variant="extended" size="small" className={classes.buttonMargin} onClick={handleSearchCustomerOpen}>
-                        Add Customer
-                        </Fab>   */}
+                        {console.log('customer ',customer)}
+                        <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="New Customer" onClick={handleCustomerOpen} />
+                        <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
+                        {customer  != null  ? 
+                        <FormControlLabel labelPlacement="end" control={<DoneIcon />}  disabled/>
+                        : ''
+                        }
                       </RadioGroup>
                     </Grid>
-                  {/* <Grid item xs={12} sm={4}> */}
-                    {/* <FormLabel htmlFor="customer">Customer</FormLabel> */}
-                    {/* <InputLabel htmlFor="customer">Customer Type *</InputLabel> */}    
-                    {/* <Typography variant="h6" className={classes.labelTitle}>
-                      <Button color="inherit" >Add New Customer</Button>
-                        /    
-                      <Button color="inherit" >Existing Customer</Button>
-                    </Typography>
-                    </Grid> */}
-                    {/* <Grid item xs={12} sm={2}>
-                      <TextField
-                      // margin="normal"
-                      id="customer"
-                      name="customer"
-                      // label="Search"
-                      placeholder = "Search..."
-                      type="text"
-                      value={inputs.customer}
-                      onChange={handleInputChange}
-                      required
-                      disabled
-                      fullWidth
-                    />
-                  </Grid> */}
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
-                    <TextField
-                      margin="dense"
-                      id="product"
-                      name="product"
-                      label="Product"
-                      type="text"
-                      value={inputs.product} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={2}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
-                      Calculate Budget
-                    </Fab>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                  <Typography >TOTAL SURPLUS: $400</Typography>
-                  <Typography > AFFORD TO PAY: $10</Typography>
-                  </Grid>
-                  {/* <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="assigned_to">Assigned To*</InputLabel>
+                    <InputLabel htmlFor="product">Prodcut*</InputLabel>
                     <Select
-                      value={inputs.assigned_to}
-                      onChange={handleInputChange}
-                      name= 'assigned_to'
-                      id= 'assigned_to'
+                      multiple
+                      value={assignInterest}
+                      onChange={handleChangeMultiple}
+                      name= 'product'
+                      id= 'product'
                       // label='customer'
                       fullWidth
                       required
-                    >
-                      <MenuItem value={1}>Finance</MenuItem>
-                      <MenuItem value={2}>Delivery</MenuItem>
+                    >    
+                     {(productList.length > 0 ? productList : []).map((data,index)=>{
+                      return(
+                         <MenuItem value={data.id}>{data.name}</MenuItem>
+                      ) 
+                     })}
                     </Select>
-                   </Grid> */}
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                  {customer  != null && isNewCustomer === 1? 
+                    <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      Calculate Budget
+                    </Fab>
+                    : ''
+                  }
+                  {customer  != null && isNewCustomer === 0? 
+                    <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      Update Budget
+                    </Fab>
+                    : ''
+                  }
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                  {customer  != null  ? 
+                  <div>
+                  <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
+                  <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
+                  </div>
+                  : ''
+                  }
+                  </Grid>
+                
+                  
                     <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
@@ -324,12 +431,13 @@ return (
                         aria-label="order_type"
                         name="order_type"
                         className={classes.group}
-                        // value={inputs.gender}
-                        // onChange={handleInputChange}
+                        value={inputs.order_type}
+                        onChange={handleInputChange}
                         row
                       >
-                        <FormControlLabel labelPlacement="end" value="fixed" control={<Radio />} label="Fixed Order" />
-                        <FormControlLabel labelPlacement="end" value="flex" control={<Radio />} label="Flex Order" />
+                        <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="Fixed Order" onClick={handleFixedOpen} />
+                        <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Flex Order" onClick={handleFlexOpen}  />
+                        <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>
                         {/* <Fab variant="extended" size="small" className={classes.buttonMargin}>
                         Add Details
                         </Fab>   */}
@@ -342,9 +450,11 @@ return (
           </div>
         </form>
       </Dialog>
-      <Budget open={budgetOpen} handleBudgetClose={handleBudgetClose}/>
-    <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer}/>
-    {searchCustomerOpen? <SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomer={setCustomer} /> :''}
+    <Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList}/>
+    <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/>
+    <FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList}/>
+    <FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList}/>
+    <SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} /> 
     </div>
   );
 }

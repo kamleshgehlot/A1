@@ -80,7 +80,7 @@ Task.prototype.all = function () {
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
 
-          connection.query('select t.id,t.task_id, t.task_description,a.id as assignid,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
+          connection.query('select t.id,t.task_id, t.task_description,a.id as assignid,  a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
             if (!error) {
               resolve(rows);
 
@@ -130,7 +130,7 @@ Task.prototype.completedList = function () {
         throw error;
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active, a.start_date, a.completion_date,a.message from task t inner join task_assign a on t.task_id = a.task_id where status="4"', function (error, rows, fields) {
+      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active, a.start_date, a.completion_date,a.message, a.document from task t inner join task_assign a on t.task_id = a.task_id where status="4"', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 

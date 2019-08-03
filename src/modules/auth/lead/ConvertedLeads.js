@@ -128,10 +128,12 @@ return (
                     <TableRow>
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Lead ID</StyledTableCell>
-                        <StyledTableCell>Franchise</StyledTableCell>
+                        <StyledTableCell>For Franchise</StyledTableCell>
                         {/* <StyledTableCell>Doc/Photo</StyledTableCell> */}
                         <StyledTableCell>Created by</StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
+                        <StyledTableCell>Converted By</StyledTableCell>
+                        <StyledTableCell>Converted To</StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -148,7 +150,7 @@ return (
                                       :''
                                       )
                                       
-                                }) : <StyledTableCell> {data.franchise_name}</StyledTableCell>
+                                }) : <StyledTableCell> All</StyledTableCell>
                               }
                               {/* <StyledTableCell></StyledTableCell> */}
                               {data.f_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{
@@ -162,7 +164,17 @@ return (
                                 }) : <StyledTableCell> Master Admin</StyledTableCell>
                               }
                             <StyledTableCell>{data.message}</StyledTableCell>
-                          
+                            {data.converted_by_f_id!=0 ?(franchiseListd.length > 0 ? franchiseListd : []).map((datafrc, index1)=>{
+                                  
+                                  return(
+                                    data.converted_by_f_id===datafrc.id ?
+                                    <StyledTableCell> {datafrc.name +'  ('+ datafrc.city + ' ,' + datafrc.suburb + ' )'} </StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                }):<StyledTableCell></StyledTableCell>
+                              }
+                              <StyledTableCell>{data.converted_to===1? 'Enquiry':'Order'}</StyledTableCell>
                           </TableRow>
                         )
                         })

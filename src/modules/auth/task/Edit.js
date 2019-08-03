@@ -135,6 +135,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
           var maxDate = year + '-' + month + '-' + day;
           document.getElementById('due_date').setAttribute('min', maxDate);
     }
+    
   const rescheduleTask = async () => {
 
     console.log('taskList======',taskList);
@@ -284,7 +285,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 value={taskList.due_date}
                                 onChange={handleInputChange}
                                 fullWidth
-                                required onFocus={pastDate}
+                                required 
+                                onFocus={pastDate}
                                 type="date"
                                 // placeholder="Franchise Name"
                                 margin="dense"

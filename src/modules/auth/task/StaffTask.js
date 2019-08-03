@@ -305,6 +305,8 @@ export default function StaffTask(uid) {
                                     
                               })
                             }
+                            <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+
                              { (taskStatusList.length > 0 ? taskStatusList : []).map((dataTaskStatus, index1)=>{
                                 return(
                                   data.status===dataTaskStatus.id ?
@@ -314,7 +316,6 @@ export default function StaffTask(uid) {
                                     
                               })
                             }
-                          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
                          
                           <StyledTableCell>
                             <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>

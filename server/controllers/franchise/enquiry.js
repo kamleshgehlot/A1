@@ -51,6 +51,8 @@ const postenquiry = function (req, res, next) {
 
 	let EnquiryParams = {
     user_id: req.decoded.user_id,
+    userid: req.decoded.id,
+    franchise_id: req.decoded.franchise_id,
     
     enquiry_id : req.body.enquiry_id,
     customer_name: req.body.customer_name,
