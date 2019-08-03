@@ -238,11 +238,11 @@ export default function Order() {
                         <StyledTableCell>
                         {/* onClick={(event) => { handleClickEnquiryOpen(data); }} */}
                         
-                        <Button  size="small" color="primary"   >
+                        <Button variant="outlined" size="small" color="primary" >
                            Update
                         </Button>
-                        
-                        <Button  size="small" color="primary">
+                          
+                        <Button variant="outlined" size="small" color="primary">
                             Remove
                         </Button>
                         

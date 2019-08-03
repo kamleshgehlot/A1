@@ -189,6 +189,7 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
     inputs.ppsr_fee = 0;
     inputs.liability_fee = 0;
     inputs.weekly_total = 0;
+    inputs.frequency = 0;
     inputs.no_of_payment = 0;
     inputs.each_payment_amt = 0;
     inputs.total_payment_amt     = 0;
@@ -216,9 +217,10 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
     if(minute < 10){
       minute = '0' + minute.toString();
     }
-        // var maxDate = year + '-' + month + '-' + day;
+        var maxDate = year + '-' + month + '-' + day;
         var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
         setExpectedDeliveryDate(maxDateTime.toString());
+        setFirstPaymentDate(maxDate.toString());
   }, []);
 
   function pastDate(){

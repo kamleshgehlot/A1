@@ -171,6 +171,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
     inputs.each_payment_amt= 0;
     inputs.total_payment_amt= 0;
     inputs.before_delivery_amt= 0;
+    inputs.frequency = 0;
     // inputs.exp_delivery_at;
     inputs.minimum_payment_amt= 0;
     inputs.intrest_rate= 0;
