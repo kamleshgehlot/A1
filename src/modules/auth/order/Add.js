@@ -99,7 +99,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick}) {
+export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData}) {
 
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
@@ -258,12 +258,17 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
       budget_list : budgetList,
       is_active : 1,
      });
-     console.log('response ', response);
+    console.log('response ', response);
     assignInterest.length = 0;
     // handleSnackbarClick(true);
     // setFranchiseList(response.staffList);
     // handleReset(RESET_VALUES);
-    handleClose(false);
+    if(response!='invalid'){
+      handleOrderRecData(response);
+        handleClose(false);
+      }else{
+        alert("Invalid or Incomplete Credentials")
+      }
   };
 
   const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
@@ -272,25 +277,7 @@ export default function Add({ open, handleClose, handleSnackbarClick}) {
     validate
   );
 
-    // const data = {
-    //   order_id :  inputs.order_id,
-    //   customer_id : customer.id,
-    //   products_id :  assignInterest.join(),
-    //   order_type : inputs.order_type,
-    //   flexOrderType : flexOrderList,
-    //   fixedOrderType : fixedOrderList,
-    //   payment_mode: inputs.payment_mode,
-    //   order_date  : orderDate,
-
-    //   budget_list : budgetList,
-    //   is_active : 1,
-    // }
     
-    
-    // console.log('Data.....',data);
-    // console.log('Inputs.....',inputs);
-    
-
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>

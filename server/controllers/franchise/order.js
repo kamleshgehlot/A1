@@ -12,11 +12,9 @@ const getnewid = function(req, res, next) {
 
 
 const getAll = function(req, res, next) {
-  
   try {
-    new Order({user_id: req.decoded.user_id}).getAll().then(enquiryList => {
-
-      res.send({ enquiryList });
+    new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+      res.send({ order });
     });
   } catch (error) {
     console.log('Error: ', error);
@@ -80,27 +78,27 @@ const postOrder = function (req, res, next) {
     try{
       const newOrder = new Order(orderParams);
       newOrder.postOrder().then(function(result){
-        const lastInsertId = result.insertId;
-        // console.log('resultid',lastInsertId);
-        new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getBudget().then(function (budgetList) {
-
-          if(orderParams.flexOrderType!=null){
-            new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getFlexOrderDetail().then(function (flexPaymentList) {
-              new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getOrderData().then(function (orderList) {
-                res.send({budgetList : budgetList, flexPaymentList: flexPaymentList, orderList: orderList });
+        new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
+          new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].customer_id}).getCustomerDetails().then(function (customerList) {
+            new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
+              new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+            if(orderParams.flexOrderType!=null && orderList[0].order_type === 2){
+              new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFlexOrderDetail().then(function (flexPaymentList) {
+                  res.send({budgetList : budgetList, flexPaymentList: flexPaymentList, orderList: orderList, customerList: customerList, order: order});
               });
-            });
-          }
-
-          if(orderParams.flexOrderType!=null){
-            new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getFixedOrderDetail().then(function (fixedPaymentList) {
-              new Order({user_id : req.decoded.user_id, lastInsertId : lastInsertId}).getOrderData().then(function (orderList) {
-                res.send({budgetList : budgetList, fixedPaymentList: fixedPaymentList, orderList: orderList });
+            }
+            if(orderParams.fixedOrderType!=null && orderList[0].order_type === 1){
+              new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFixedOrderDetail().then(function (fixedPaymentList) {
+                  res.send({budgetList : budgetList, fixedPaymentList: fixedPaymentList, orderList: orderList, customerList: customerList, order: order });
               });
-            });
-          }
-
+            }
+          });
         });
+        });
+        });
+
+        // console.log('resultid',lastInsertId);
+        
       });
       
     }catch(err){
@@ -108,6 +106,7 @@ const postOrder = function (req, res, next) {
     }
   }else{
     console.log('Invalid or Incomplete Credentials');
+    res.send('invalid');
   }
 };
 

@@ -25,6 +25,7 @@ var Order = function (params) {
 };
 
 
+
 Order.prototype.postOrder = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -87,7 +88,7 @@ Order.prototype.postOrder = function () {
                       connection.query('INSERT INTO orders(order_id, customer_id, product_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
-                          resolve(rows);
+                          resolve(rows.insertId);
                         } else {
                           console.log("Error...", error);
                           reject(error);
@@ -125,6 +126,36 @@ Order.prototype.postOrder = function () {
 
 
 
+Order.prototype.selectFromOrder = function () {
+  const that = this;
+  return new Promise(function(resolve, reject){
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('select * from orders where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+                    console.log("Error...", error);
+                    reject(error);
+                  }
+          });
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+  throw error;
+});
+};
+
+
 
 Order.prototype.getBudget = function () {
   const that = this;
@@ -136,7 +167,7 @@ Order.prototype.getBudget = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from budget where customer_id = 22',function (error, rows, fields) {
+        connection.query('SELECT * from budget where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -167,7 +198,7 @@ Order.prototype.getFlexOrderDetail = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from flex_order where customer_id = 22',function (error, rows, fields) {
+        connection.query('SELECT * from flex_order where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -199,7 +230,7 @@ Order.prototype.getFixedOrderDetail = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from fixed_order where customer_id = 22',function (error, rows, fields) {
+        connection.query('SELECT * from fixed_order where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -222,7 +253,9 @@ Order.prototype.getFixedOrderDetail = function () {
 
 
 
-Order.prototype.getOrderData = function () {
+
+
+Order.prototype.getCustomerDetails = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
 
@@ -232,7 +265,39 @@ Order.prototype.getOrderData = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from orders where customer_id = 22',function (error, rows, fields) {
+        connection.query('SELECT * from customer where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+Order.prototype.getOrderList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT o.order_id, c.id as customer_id, c.customer_name, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.order_type_id, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

@@ -22,7 +22,7 @@ export default {
       throw error;
     }
   },
-  
+
   getAll: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getall`;
     try {

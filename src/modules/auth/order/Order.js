@@ -15,13 +15,13 @@ import TableRow from '@material-ui/core/TableRow';
 import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Add from './Add';
 // import Edit from './Edit';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
-import Role from '../../../api/franchise/Role';
+import OrderAPI from '../../../api/franchise/Order';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -47,19 +47,16 @@ export default function Order() {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [staffData,setStaffData]= useState();
-  const [staffList, setStaffList] = useState({});
-  const [role, setRole] = useState([]);
-  const [position, setPosition] = useState({});
-  
-  // const roleName = APP_TOKEN.get().roleName;
-  // const userName = APP_TOKEN.get().userName;
-  
-  // const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
-  // const [showStaff, setShowStaff] = useState(roleName === 'Admin');
+  const [orderRecData,setOrderRecData] = useState([]);
 
+  const [budgetData,setBudgetData] = useState([]);
+  const [orderListData,setOrderListData] = useState([]);
+  const [customerData, setCustomerData] = useState([]);
+  const [fixedPaymentData, setFixedPaymentData] = useState(null);
+  const [flexPaymentData, setFlexPaymentData] = useState(null);
+  const [order,setOrder] = useState([]);
+
+  
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
@@ -109,6 +106,29 @@ export default function Order() {
   function handleSnackbarClick(){
     //don't remove this function
   }
+
+  function handleOrderRecData(response){
+    setBudgetData(response.budgetList);
+    setOrderListData(response.orderList);
+    setCustomerData(response.customerList);
+    setFixedPaymentData(response.fixedPaymentList);
+    setFlexPaymentData(response.flexPaymentList);
+    setOrder(response.order);
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const result = await OrderAPI.getAll();
+        setOrder(result.order);
+        console.log('order..',result);
+      } catch (error) {
+        console.log(error);
+      }
+  };
+  fetchData();
+  }, []);
 
   return (
     <div>
@@ -167,8 +187,7 @@ export default function Order() {
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Order No.</StyledTableCell>
-                        <StyledTableCell>Name/Order By</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
+                        <StyledTableCell>Order By</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
                         <StyledTableCell>Order Date</StyledTableCell>
                         <StyledTableCell>Order Status</StyledTableCell>
@@ -178,15 +197,67 @@ export default function Order() {
                         <StyledTableCell>Action</StyledTableCell>
                       </TableRow>
                     </TableHead>
-                    {/* <TableBody>
-                   
+                    <TableBody>
+                      {console.log('order--',order)}
+                      {/* assigned_to: 4
+                      budget_id: 1
+                      customer_id: 24
+                      customer_name: "kamlesh gethlot"
+                      mobile: "9785241520"
+                      order_date: "2019-08-03"
+                      order_id: "O_95"
+                      order_status: 1
+                      order_type: 2
+                      order_type_id: 1
+                      payment_mode: 5
+                      product_id: "3"
+                      telephone: "" */}
+                   {
+                    //  budgetList: [{…}]
+                    //  fixedPaymentList: [{…}]
+                    //  orderList
+                     (order.length > 0 ? order : []).map((data, index) => {
+                       return(
+                        <TableRow>
+                        <StyledTableCell>{index + 1}</StyledTableCell>
+                        <StyledTableCell>{data.order_id}</StyledTableCell>
+                        <StyledTableCell>{data.customer_name}</StyledTableCell>
+                        <StyledTableCell>{data.mobile}</StyledTableCell>
+                        <StyledTableCell>{data.order_date}</StyledTableCell>
+                        <StyledTableCell>{'Assigned'}</StyledTableCell>
+                        <StyledTableCell>{'Finance'}</StyledTableCell>
+                        <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                        <StyledTableCell>{
+                          data.payment_mode == 1 ? 'EasyPay' :  
+                          data.payment_mode == 2 ? 'Credit' : 
+                          data.payment_mode == 3 ? 'Debit' : 
+                          data.payment_mode == 4 ? 'PayPal' : 
+                          data.payment_mode == 5 ? 'Cash' : ''
+                          }
+                        </StyledTableCell>
+                        <StyledTableCell>
+                        {/* onClick={(event) => { handleClickEnquiryOpen(data); }} */}
+                        
+                        <Button  size="small" color="primary"   >
+                           Update
+                        </Button>
+                        
+                        <Button  size="small" color="primary">
+                            Remove
+                        </Button>
+                        
+                        </StyledTableCell>
+                      </TableRow>
+                       )
+                     })
+                   }
                               
-                    </TableBody> */}
+                    </TableBody>
                   </Table>
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} />
+      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData}/>
       
       {/* {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null} */}
           

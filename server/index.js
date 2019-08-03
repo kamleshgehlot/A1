@@ -82,7 +82,8 @@ app.use('/api/franchise/order',orderRouter);
 app.use('/', routes);
 
 /** Get port from environment and store in Express. */
-const port = process.env.PORT || '3006'; // DEV
+// const port = process.env.PORT || '3006'; // DEV
+const port = process.env.PORT || '3000'; // DEV
 // const port = process.env.PORT || '3005'; // UAT
 app.set('port', port);
 
