@@ -76,4 +76,72 @@ export default {
       throw error;
     }
   },
+
+  getCurrespondingBudget: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getbudget`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getCurrespondingFixedOrder: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getfixedorder`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getCurrespondingFlexOrder: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getflexorder`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  editPost: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/editorder`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };

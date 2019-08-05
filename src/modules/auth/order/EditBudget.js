@@ -35,7 +35,6 @@ import Divider from '@material-ui/core/Divider';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
 
 import useSignUpForm from '../franchise/CustomHooks';
@@ -93,29 +92,11 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleBudgetClose, setBudgetList}) {
+export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, budgetId}) {
 
   const classes = useStyles();
   const [inputs,setInputs] = useState([]);
-  const [assignRole, setAssignRole] = React.useState([]);
-  
-  useEffect(() => {
-    inputs.work = 0;
-    inputs.benefits = 0;
-    inputs.accomodation = 0;
-    inputs.childcare = 0;
-    inputs.rent = 0;
-    inputs.power = 0;
-    inputs.telephone = 0;
-    inputs.mobile = 0;
-    inputs.vehicle = 0;
-    inputs.transport = 0;
-    inputs.food = 0;
-    inputs.credit_card = 0;
-    inputs.loan = 0;
-    inputs.other_expenditure =0;
-    inputs.afford_amt = 0;
-  }, []);
+
 
   function handleInputBlur(e){
     if(e.target.value===''){
@@ -179,7 +160,23 @@ export default function Budget({ open, handleBudgetClose, setBudgetList}) {
     setBudgetList(data);
   }
 
- 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const order = await Order.getCurrespondingBudget({budgetId: budgetId});
+        if(budgetList!=null){
+          setInputs(budgetList);
+        }else{
+        setInputs(order.order[0]);
+      }
+      } catch (error) {
+        console.log('Error..',error);
+      }
+    };
+    fetchData();
+    
+  }, []);
+
 
   let income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
   let expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) ;

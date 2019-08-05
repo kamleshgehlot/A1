@@ -29,17 +29,16 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { APP_TOKEN } from '../../../api/Constants';
 
-import Budget from './Budget';
+import EditBudget from './EditBudget';
 import ViewCustomer from '../customer/ViewCustomer';
-import FlexOrder from './FlexOrder';
-import FixedOrder from './FixedOrder';
+import EditFlexOrder from './EditFlexOrder';
+import EditFixedOrder from './EditFixedOrder';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
-import { FormLabel } from '@material-ui/core';
+import { FormLabel, InputBase } from '@material-ui/core';
 import { stringify } from 'querystring';
 import { string } from 'prop-types';
 
@@ -95,7 +94,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleEditClose, handleSnackbarClick, editableData}) {
+export default function Add({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData}) {
 
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
@@ -103,9 +102,13 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, editab
   const [fixedOrderOpen, setFixedOrderOpen] = useState(false);
   const [flexOrderOpen, setFlexOrderOpen]  = useState(false);
   const [searchCustomerOpen, setSearchCustomerOpen] = useState(false);
-  const [customerId, setCustomerId] = useState(false);
+  const [customerId, setCustomerId] = useState();
   
-  const [budgetList,setBudgetList] = useState([]);
+  const [budgetId, setBudgetId] = useState();
+  const [fixedOrderId, setFixedOrderId] = useState();
+  const [flexOrderId, setFlexOrderId] = useState();
+
+  const [budgetList,setBudgetList] = useState(null);
   const [fixedOrderList,setFixedOrderList] = useState(null);
   const [flexOrderList,setFlexOrderList] = useState(null);
   
@@ -114,6 +117,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, editab
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [recData, setRecData] = React.useState(editableData);
 
+  // console.log('ddd',recData);
     
   useEffect(() => {
     const fetchData = async () => {
@@ -127,19 +131,20 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, editab
 
     let assignRoleList = [];
     (recData.product_id.split(',')).map((product,index) =>{
-      assignRoleList.push(product);
+      assignRoleList.push(parseInt(product));
     });
     setAssignInterest(assignRoleList);
 
   fetchData();
   }, []);
 
- 
+//  console.log('assign,,,',assignInterest);
   function handleBudgetClose(){
     setBudgetOpen(false);
   }
   
-  function handleBudgetOpen(){
+  function handleBudgetOpen(budgetId){
+    setBudgetId(budgetId);
     setBudgetOpen(true);
   }
   
@@ -147,8 +152,10 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, editab
     setFixedOrderOpen(false);
   }
   
-  function handleFixedOpen(){
+  function handleFixedOpen(fixedOrderId){
+    setFixedOrderId(fixedOrderId);
     setFlexOrderList(null);
+
     setFixedOrderOpen(true);
   }
 
@@ -156,7 +163,8 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, editab
     setFlexOrderOpen(false);
   }
   
-  function handleFlexOpen(){
+  function handleFlexOpen(flexOrderId){
+    setFlexOrderId(flexOrderId);
     setFixedOrderList(null);
     setFlexOrderOpen(true);
   }
@@ -181,27 +189,28 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, editab
     setAssignInterest(event.target.value);
   }
 
-  console.log('inputs',recData);
-
-  const addOrder = async () => {
-    const response = await OrderAPI.postOrder({ 
-      
+  const EditOrder = async (e) => {
+    if (event) {
+      event.preventDefault();
+    }
+    const response = await OrderAPI.editPost({ 
+      id : recData.id,
       products_id :  assignInterest.join(),
+      budget_list : budgetList,
       flexOrderType : flexOrderList,
       fixedOrderType : fixedOrderList,
       payment_mode: recData.payment_mode,
-      budget_list : budgetList,
-
+      order_type : recData.order_type,
+      order_type_id : recData.order_type_id,
+      budget_id: recData.budget_id,
       is_active : 1,
      });
-    console.log('response ', response);
+    // console.log('response ', response);
     assignInterest.length = 0;
-    // handleSnackbarClick(true);
-    // setFranchiseList(response.staffList);
     // handleReset(RESET_VALUES);
     if(response!='invalid'){
       handleOrderRecData(response);
-        handleClose(false);
+      handleEditClose(false);
       }else{
         alert("Invalid or Incomplete Credentials")
       }
@@ -216,7 +225,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, editab
 return (
     <div>
       <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
-        <form > 
+        <form onSubmit={EditOrder}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
@@ -289,7 +298,7 @@ return (
                     {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
                       Update Budget
                     </Fab> */}
-                    <Button variant="outlined" size="small"  onClick={handleBudgetOpen}>Update Budget </Button>
+                    <Button variant="outlined" size="small"  onClick={(event) => { handleBudgetOpen(recData.budget_id); }}>Update Budget </Button>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
@@ -316,8 +325,8 @@ return (
                    </Grid>
                    <Grid item xs={12} sm={6}>
                      {editableData.order_type ===1 ? 
-                      <Button variant="outlined" size="small"  onClick={handleFixedOpen}>Update Fixed Order Type Details </Button> :
-                      <Button variant="outlined" size="small"  onClick={handleFlexOpen}>Update Flex Order Type Details </Button>
+                      <Button variant="outlined" size="small"  onClick={(event) => { handleFixedOpen(recData.order_type_id); }}>Update Fixed Order Type Details </Button> :
+                      <Button variant="outlined" size="small"   onClick={(event) => { handleFlexOpen(recData.order_type_id); }}>Update Flex Order Type Details </Button>
                      }
                     </Grid>
                    
@@ -327,9 +336,9 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList}/> : null }
-    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList}/> : null }
-    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList}/> : null }
+    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} budgetId={budgetId}/> : null }
+    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} /> : null }
+    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
     </div>
   );

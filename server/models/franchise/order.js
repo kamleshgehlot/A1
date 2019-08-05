@@ -5,12 +5,13 @@ const utils = require("../../utils");
 
 var Order = function (params) {
   // console.log("params", params);
-
+  this.id = params.id;
   this.user_id = params.user_id;
   this.order_id = params.order_id;
   this.customer_id = params.customer_id;
   this.products_id = params.products_id;
   this.order_type = params.order_type;
+  this.order_type_id = params.order_type_id;
   this.flexOrderType = params.flexOrderType;
   this.fixedOrderType = params.fixedOrderType;
   this.payment_mode = params.payment_mode;
@@ -20,8 +21,14 @@ var Order = function (params) {
   this.assigned_to = params.assigned_to;
   this.is_active = params.is_active;
   this.created_by =  params.created_by;
+  this.updated_by =  params.updated_by;
 
   this.lastInsertId = params.lastInsertId; 
+  this.budget_id = params.budgetId;
+  this.fixedOrderId = params.fixedOrderId;
+  this.flexOrderId = params.flexOrderId;
+
+  
 };
 
 
@@ -126,6 +133,104 @@ Order.prototype.postOrder = function () {
 
 
 
+Order.prototype.editOrder = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+
+          const budget_list = that.budget_list;
+          // let budgetValues = [
+          //   [budget_list.work, budget_list.benefits, budget_list.accomodation, budget_list.childcare, budget_list.rent, budget_list.power, budget_list.telephone, budget_list.mobile, budget_list.vehicle, budget_list.transport, budget_list.food, budget_list.credit_card, budget_list.loan, budget_list.other_expenditure, budget_list.income, budget_list.expenditure, budget_list.surplus, budget_list.afford_amt, that.is_active, that.updated_by]
+          // ];
+          connection.query('UPDATE budget set work= "'+budget_list.work+'", benefits= "'+budget_list.benefits+'", accomodation= "'+budget_list.accomodation+'", childcare= "'+budget_list.childcare+'", rent= "'+budget_list.rent+'", power= "'+budget_list.power+'", landline_phone= "'+budget_list.telephone+'", mobile_phone= "'+budget_list.mobile+'", vehicle_finance= "'+budget_list.vehicle+'", public_transport= "'+budget_list.transport+'", food= "'+budget_list.food+'", credit_store_cards= "'+budget_list.credit_card+'", loans_hire_purchase= "'+budget_list.loan+'", other_expenditure= "'+budget_list.other_expenditure+'", total_income= "'+budget_list.income+'", total_expenditure= "'+budget_list.expenditure+'", total_surplus= "'+budget_list.surplus+'", afford_amt= "'+budget_list.afford_amt+'", is_active ='+that.is_active+',  updated_by ="'+that.updated_by+'" WHERE id = '+that.budget_id+'',function (error, rows, fields) {
+            if (!error) {
+                if(that.fixedOrderType!=null){
+                  const fixedValues = that.fixedOrderType;
+                  // let fixedOrderValues =[
+                  //   [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_at, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
+                  // ];
+                  connection.query('UPDATE fixed_order set int_unpaid_bal = "'+fixedValues.int_unpaid_bal+'", cash_price = "'+fixedValues.cash_price+'", delivery_fee = "'+fixedValues.delivery_fee+'", ppsr_fee = "'+fixedValues.ppsr_fee+'", frequency = "'+fixedValues.frequency+'", first_payment = "'+fixedValues.first_payment+'", last_payment = "'+fixedValues.last_payment+'", no_of_payment = "'+fixedValues.no_of_payment+'", each_payment_amt = "'+fixedValues.each_payment_amt+'", total_payment_amt = "'+fixedValues.total_payment_amt+'", before_delivery_amt = "'+fixedValues.before_delivery_amt+'", exp_delivery_at = "'+fixedValues.exp_delivery_at+'", minimum_payment_amt = "'+fixedValues.minimum_payment_amt+'", interest_rate = "'+fixedValues.interest_rate+'", interest_rate_per = "'+fixedValues.interest_rate_per+'", total_interest = "'+fixedValues.total_interest+'", is_active = "'+that.is_active+'", updated_by ="'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
+                    if (!error) {
+                      // const lastInsertId = rows.insertId;
+                      // // console.log('fixed ..id', rows.insertId);
+                      // let orderValues = [
+                      //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                      // ];
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                        if (!error) {
+                          // console.log('order inserted', rows.insertId);
+                          resolve(rows);
+                        } else {
+                          console.log("Error...", error);
+                          reject(error);
+                        }
+                      });
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
+                } 
+                if(that.flexOrderType!=null){
+                  const flexValues = that.flexOrderType;
+                  // let flexOrderValues =[
+                  //   [that.customer_id, flexValues.goods_rent_price, flexValues.ppsr_fee, flexValues.liability_fee, flexValues.weekly_total, flexValues.frequency, flexValues.first_payment, flexValues.no_of_payment, flexValues.each_payment_amt, flexValues.total_payment_amt, flexValues.before_delivery_amt, flexValues.exp_delivery_at, flexValues.bond_amt, that.is_active, that.created_by]
+                  // ];
+                  connection.query('UPDATE flex_order set goods_rent_price = "'+flexValues.goods_rent_price+'", ppsr_fee = "'+flexValues.ppsr_fee+'", liability_fee = "'+flexValues.liability_fee+'", weekly_total = "'+flexValues.weekly_total+'", frequency = "'+flexValues.frequency+'", first_payment = "'+flexValues.first_payment+'", no_of_payment = "'+flexValues.no_of_payment+'", each_payment_amt = "'+flexValues.each_payment_amt+'", total_payment_amt = "'+flexValues.total_payment_amt+'", before_delivery_amt = "'+flexValues.before_delivery_amt+'", exp_delivery_at = "'+flexValues.exp_delivery_at+'", bond_amt = "'+flexValues.bond_amt+'", is_active = "'+that.is_active+'", updated_by = "'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
+                    if (!error) {
+                      // const lastInsertId = rows.insertId;
+                      // console.log('fixed ..id', rows.insertId);
+                      // let orderValues = [
+                      //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                      // ];
+
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                        if (!error) {
+                          // console.log('order inserted', rows.insertId);
+                          resolve(rows);
+                        } else {
+                          console.log("Error...", error);
+                          reject(error);
+                        }
+                      });
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
+                }
+            } else {
+                    console.log("Error...", error);
+                    reject(error);
+                  }
+            });
+
+
+          
+          
+          // console.log('budget...',budget);
+
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
 Order.prototype.selectFromOrder = function () {
   const that = this;
   return new Promise(function(resolve, reject){
@@ -167,7 +272,70 @@ Order.prototype.getBudget = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from budget where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+        connection.query('SELECT customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_active, created_by from budget where id = "'+that.budget_id+'"',function (error, rows, fields) {
+            if (!error) {
+              console.log('rows...',rows);
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Order.prototype.getBudget = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_active, created_by from budget where id = "'+that.budget_id+'"',function (error, rows, fields) {
+            if (!error) {
+              console.log('rows...',rows);
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+Order.prototype.getFixedOrder = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT * from fixed_order where id = "'+that.fixedOrderId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -188,7 +356,8 @@ Order.prototype.getBudget = function () {
 };
 
 
-Order.prototype.getFlexOrderDetail = function () {
+
+Order.prototype.getFlexOrder = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
 
@@ -198,7 +367,7 @@ Order.prototype.getFlexOrderDetail = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from flex_order where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+        connection.query('SELECT * from flex_order where id = "'+that.flexOrderId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -298,7 +467,7 @@ Order.prototype.getOrderList = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT o.order_id, c.id as customer_id, c.customer_name, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.order_type_id, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id',function (error, rows, fields) {
+        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.order_type_id, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

@@ -117,10 +117,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [isNewCustomer,setIsNewCustomer] = useState(0);
   const [assignInterest, setAssignInterest] = React.useState([]);
 
-  // console.log('flex r', flexOrderList);
-  // console.log('flex r', fixedOrderList);
-  // console.log('product list', assignInterest);
-
 
   function validate(values) {
     let errors = {};
