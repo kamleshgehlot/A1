@@ -96,6 +96,9 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
 
   const classes = useStyles();
   const [inputs,setInputs] = useState([]);
+  const [oldBudget, setOldBudget] = useState(0);
+  const [oldBudgetList,setOldBudgetList] = useState([]);
+  const [surplusBool, setSurplusBool] = useState();
 
 
   function handleInputBlur(e){
@@ -136,7 +139,7 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
 
   function handleSubmit(e){
     e.preventDefault();
-    handleBudgetClose(false)
+    
     const data = {
       work: parseFloat(inputs.work),
       benefits : parseFloat(inputs.benefits),
@@ -152,36 +155,76 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
       credit_card : parseFloat(inputs.credit_card),
       loan : parseFloat(inputs.loan),
       other_expenditure : parseFloat(inputs.other_expenditure),
-      income  : parseFloat(income),
-      expenditure : parseFloat(expenditure),
-      surplus  : parseFloat(surplus),
+      income  : parseFloat(inputs.income),
+      expenditure : parseFloat(inputs.expenditure),
+      surplus  : parseFloat(inputs.surplus),
       afford_amt : parseFloat(inputs.afford_amt),
     }
     setBudgetList(data);
+    handleBudgetClose(false)
   }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const order = await Order.getCurrespondingBudget({budgetId: budgetId});
+        console.log('respo.,',order);
         if(budgetList!=null){
-          setInputs(budgetList);
+          setInputs(budgetList);          
         }else{
         setInputs(order.order[0]);
+        setOldBudgetList(order.oldBudget);   
+        // let total = 0; 
+        // (oldBudgetList.length > 0 ? oldBudgetList : []).map(data =>{
+        //   return(
+        //   data.is_active ===1 ?
+        //     total = total + data.surplus 
+        //   : ''
+        //   )
+        // });
+        // console.log('budgetOld',total);
       }
       } catch (error) {
         console.log('Error..',error);
       }
     };
     fetchData();
-    
+
+
   }, []);
 
+// console.log('total surplus',oldBudgetList);
+ 
+  useEffect(() => {
+  // console.log('valueee name',e.target.value, e.target.name)
+    // console.log('valueee ',inputs)
+    if(inputs.work == 0 &&
+      inputs.benefits == 0 &&
+      inputs.accomodation == 0 &&
+      inputs.childcare == 0 &&
+      inputs.rent == 0 &&
+      inputs.power == 0 &&
+      inputs.telephone == 0 &&
+      inputs.mobile == 0 &&
+      inputs.vehicle == 0 &&
+      inputs.transport == 0 &&
+      inputs.food == 0 &&
+      inputs.credit_card == 0 &&
+      inputs.loan == 0 &&
+      inputs.other_expenditure == 0)
+    {
+      setSurplusBool(false);
+    }else{
+      setSurplusBool(true);      
+      // console.log('true ho gya ');
+    } 
+  });
 
-  let income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
-  let expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) ;
-  let surplus = income - expenditure;
-
+  if(surplusBool===true){
+    inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
+    inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) ;
+      inputs.surplus = inputs.income - inputs.expenditure;
+    }
 
 return (
     <div>
@@ -496,14 +539,29 @@ return (
                       }}
                     />
                   </Grid>
+                  { (oldBudgetList.length > 0) ?
+                  <Grid item xs={12} sm={12}>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                      Previous Product's Expenditure:
+                      {
+                        oldBudgetList.map((data,index)=>{
+                          return(
+                            data.is_active === 1 ?  data.surplus + ",  " : ''
+                          )
+                        })
+                      }
+                    </Typography>
+                  </Grid>
+                  : null
+                  }
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                     Total Income = {income}
+                     Total Income: {inputs.income}
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                     Total Expenses = {expenditure}
+                     Total Expenses: {inputs.expenditure}
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -514,14 +572,16 @@ return (
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
                     <TextField
-                      id="total_surplus"
-                      name="total_surplus"
+                      id="surplus"
+                      name="surplus"
                       // label="Other"
-                      value={surplus}
-                      // onChange={handleInputChange}
+                      value={inputs.surplus}
+                      onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                       fullWidth
-                      disabled
-                      // required
+                      disabled = {surplusBool}
+                      required
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"

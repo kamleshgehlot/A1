@@ -27,7 +27,6 @@ var Order = function (params) {
   this.budget_id = params.budgetId;
   this.fixedOrderId = params.fixedOrderId;
   this.flexOrderId = params.flexOrderId;
-
   
 };
 
@@ -262,6 +261,38 @@ Order.prototype.selectFromOrder = function () {
 
 
 
+// Order.prototype.getBudget = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//         connection.query('SELECT customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_active, created_by from budget where id = "'+that.budget_id+'"',function (error, rows, fields) {
+//             if (!error) {
+//               console.log('rows...',rows);
+//                 resolve(rows);
+//                 } else {
+//                   console.log("Error...", error);
+//                   reject(error);
+//                 }
+//           })
+//       } else {
+//         console.log("Error...", error);
+//         reject(error);
+//       }
+//       connection.release();
+//       console.log('Order Added for Franchise Staff %d', connection.threadId);
+//     });
+//   }).catch((error) => {
+//     throw error;
+//   });
+// };
+
+
 Order.prototype.getBudget = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -273,6 +304,36 @@ Order.prototype.getBudget = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         connection.query('SELECT customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_active, created_by from budget where id = "'+that.budget_id+'"',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+Order.prototype.getOldBudget = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_active, created_by from budget where id != "'+that.budget_id+'" && customer_id= "'+that.customer_id+'"',function (error, rows, fields) {
             if (!error) {
               console.log('rows...',rows);
                 resolve(rows);
@@ -293,37 +354,6 @@ Order.prototype.getBudget = function () {
   });
 };
 
-
-Order.prototype.getBudget = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
-
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_active, created_by from budget where id = "'+that.budget_id+'"',function (error, rows, fields) {
-            if (!error) {
-              console.log('rows...',rows);
-                resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
-          })
-      } else {
-        console.log("Error...", error);
-        reject(error);
-      }
-      connection.release();
-      console.log('Order Added for Franchise Staff %d', connection.threadId);
-    });
-  }).catch((error) => {
-    throw error;
-  });
-};
 
 Order.prototype.getFixedOrder = function () {
   const that = this;
@@ -467,7 +497,40 @@ Order.prototype.getOrderList = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.order_type_id, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id',function (error, rows, fields) {
+        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.order_type_id, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+
+Order.prototype.assignToFinance = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('UPDATE orders SET assigned_to = 4 WHERE id = "'+that.id+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

@@ -193,6 +193,10 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     if (event) {
       event.preventDefault();
     }
+    // if(budgetList==null ){ <EditBudget />}
+    // if(fixedOrderList==null) { <EditFixedOrder/> }
+    // if(flexOrderList==null) {<EditFlexOrder />}
+
     const response = await OrderAPI.editPost({ 
       id : recData.id,
       products_id :  assignInterest.join(),

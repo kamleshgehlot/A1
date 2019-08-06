@@ -127,6 +127,23 @@ export default {
     }
   },
 
+  assignToFinance: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/assigntofinance`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   editPost: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/editorder`;
     try {

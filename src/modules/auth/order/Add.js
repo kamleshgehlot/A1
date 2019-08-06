@@ -116,6 +116,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [productList, setProductList] = useState([]);
   const [isNewCustomer,setIsNewCustomer] = useState(0);
   const [assignInterest, setAssignInterest] = React.useState([]);
+  
 
 
   function validate(values) {
@@ -250,7 +251,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       fixedOrderType : fixedOrderList,
       payment_mode: inputs.payment_mode,
       order_date  : orderDate,
-
+      assigned_to : 0,
       budget_list : budgetList,
       is_active : 1,
      });
@@ -433,7 +434,7 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList}/> : null }
+    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/> : null }
     {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList}/> : null }
     {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList}/> : null }

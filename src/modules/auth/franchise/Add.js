@@ -29,10 +29,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
-import ConfirmationDialog from '../ConfirmationDialog.js';
+
 // API CALL
 import UserAPI from '../../../api/User';
-
+import ConfirmationDialog from '../ConfirmationDialog.js';
 import LocationAPI from '../../../api/Location';
 
 import useSignUpForm from './CustomHooks';

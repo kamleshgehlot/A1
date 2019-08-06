@@ -11,6 +11,7 @@ orderRouter.route("/getbudget").post(validateToken, Order.getBudget);
 orderRouter.route("/getfixedorder").post(validateToken, Order.getFixedOrder);
 orderRouter.route("/getflexorder").post(validateToken, Order.getFlexOrder);
 orderRouter.route("/editorder").post(validateToken, Order.editOrder);
+orderRouter.route("/assigntofinance").post(validateToken, Order.assignToFinance);
 
 // orderRouter.route("/getall").get(validateToken, Enquiry.getAll);
 // orderRouter.route("/convertedList").get(validateToken, Enquiry.convertedList);
