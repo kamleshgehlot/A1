@@ -93,12 +93,13 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList}) {
+export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList, budgetId}) {
 
   const classes = useStyles();
   const [inputs,setInputs] = useState(budgetList);
   const [assignRole, setAssignRole] = React.useState([]);
   const [surplusBool, setSurplusBool] = useState();
+  const [oldBudgetList,setOldBudgetList] = useState([]);
   console.log('inputs////',inputs);
   console.log('inputs length',inputs.length);
   
@@ -145,18 +146,18 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
   
   function handleInputChange(e){
     // console.log('valueee',e.target.value)
-    if(e.target.value===""){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
-    else{
+    // if(e.target.value===""){
+      // setInputs({
+      //   ...inputs,
+      //   [e.target.name]: 0,
+      // });
+    // }
+    // else{
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
     });
-  }
+  // }
   
     
   }
@@ -184,11 +185,24 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       expenditure : parseFloat(inputs.expenditure),
       surplus  : parseFloat(inputs.surplus),
       afford_amt : parseFloat(inputs.afford_amt),
+      pre_order_exp : parseFloat(0),
     }
     setBudgetList(data);
     handleBudgetClose(false)
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const order = await Order.getExistingBudget({budgetId: 0});
+        console.log('order',order);
+        setOldBudgetList(order.oldBudget);   
+      } catch (error) {
+        console.log('Error..',error);
+      }
+    };
+    fetchData();
+  }, []);
   
   
   useEffect(() => {
@@ -538,6 +552,28 @@ return (
                       }}
                     />
                   </Grid>
+                  { (oldBudgetList.length > 0) ?
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                      Order Going on Rent:
+                    </Typography>
+                  </Grid>
+                  : null
+                  }
+                  { (oldBudgetList.length > 0) ?
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                      {
+                        oldBudgetList.map((data,index)=>{
+                          return(
+                            data.is_active === 1  ?  data.surplus + ",  " : ''
+                          )
+                        })
+                      }
+                    </Typography>
+                  </Grid>
+                  : null
+                  }
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
                      Total Income = {inputs.income}

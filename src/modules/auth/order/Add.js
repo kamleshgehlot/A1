@@ -141,6 +141,26 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
   
   function handleFixedOpen(){
+    if(fixedOrderList==null){
+    setFixedOrderList({
+      int_unpaid_bal  : 0,
+      cash_price : 0,
+      delivery_fee : 0,
+      ppsr_fee : 0,
+      no_of_payment : 0,
+      each_payment_amt : 0,
+      total_payment_amt : 0,
+      before_delivery_amt : 0,
+      frequency  : 0,
+      exp_delivery_at : '',
+      first_payment : '',
+      last_payment : '',
+      minimum_payment_amt : 0,
+      intrest_rate : 0,
+      intrest_rate_per : 0,
+      total_intrest : 0,
+      });
+    }
     setFlexOrderList(null);
     setFixedOrderOpen(true);
   }
@@ -150,6 +170,22 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
   
   function handleFlexOpen(){
+    if(flexOrderList==null){
+      setFlexOrderList({
+        goods_rent_price : 0,
+        ppsr_fee : 0,
+        liability_fee : 0,
+        weekly_total : 0,
+        frequency : 0,
+        first_payment : '',
+        no_of_payment : 0,
+        each_payment_amt : 0,
+        total_payment_amt : 0,
+        before_delivery_amt : 0,
+        exp_delivery_at : '',
+        bond_amt : 0,
+        });
+      }
     setFixedOrderList(null);
     setFlexOrderOpen(true);
   }
@@ -199,9 +235,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         }
           var maxDate = year + '-' + month + '-' + day;
           document.getElementById('order_date').setAttribute('min', maxDate);
-          setOrderDate(maxDate.toString());
+          // setOrderDate(maxDate.toString());
     }
     
+    
+  useEffect(() => {
+    
+
+    setFlexOrderList({
+
+    });
+  }, []);
+
     useEffect(() => {
       var dtToday = new Date();
       var month = dtToday.getMonth() + 1;
@@ -226,14 +271,22 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         // console.log('rrrr',result);
         setProductList(result.productList);
 
-        const order_id = await OrderAPI.getnewid();
-        // console.log('order..',order_id);
-        if(order_id.id[0]!=null){
-          setInput('order_id',("O_" + (order_id.id[0].id+ 1)));
-        }
-        else{
-          setInput('order_id','O_1');
-        }
+        // const order_id = await OrderAPI.getnewid();
+          let now = Date.now().toString() // '1492341545873'
+          now += now + Math.floor(Math.random() * 10)
+          setInput('order_id',([now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
+          
+        //   if(order_id.id[0]!=null){
+        //   let orderNo = "O" + (order_id.id[0].id + 1);
+        //   // setInput('order_id',("O_" + (order_id.id[0].id+ 1)));
+        //   setInput('order_id',(orderNo + "-" + [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
+        //   }
+        //   else{
+        //   let orderNo = ("O1");
+        //   // setInput('order_id',("O_" + (order_id.id[0].id+ 1)));
+        //   setInput('order_id',(orderNo + "-" + [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
+        //   // setInput('order_id','O_1');
+        // }
       } catch (error) {
         console.log(error);
       }
@@ -436,8 +489,8 @@ return (
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/> : null }
-    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList}/> : null }
-    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList}/> : null }
+    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList}/> : null }
+    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList}/> : null }
     {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }
     </div>
   );

@@ -121,7 +121,7 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
     try {
       if(searchText!=''){
           const result = await Customer.search({searchText: searchText});
-          // console.log('list---',result.customerList);
+          console.log('list---',result.customerList);
           setCustomerListData(result.customerList);
           setSearchText('');
        

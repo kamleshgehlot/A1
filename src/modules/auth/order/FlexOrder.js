@@ -101,10 +101,10 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
+export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOrderList}) {
 
   const classes = useStyles();
-  const [inputs,setInputs] = useState([]);
+  const [inputs,setInputs] = useState(flexOrderList);
   const [firstPaymentDate,setFirstPaymentDate] = useState('');
   const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
 
@@ -122,9 +122,15 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
     if(day < 10){
         day = '0' + day.toString();
       }
+    if(hour < 10){
+      hour = '0' + hour.toString();
+    }
+    if(minute < 10){
+      minute = '0' + minute.toString();
+    }
         var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
         document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
-        setExpectedDeliveryDate(maxDateTime.toString());
+        // setExpectedDeliveryDate(maxDateTime.toString());
   }
 
 
@@ -148,18 +154,18 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
   
   function handleInputChange(e){
     // console.log('valueee',e.target.value)
-    if(e.target.value===""){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
-    else{
+    // if(e.target.value===""){
+      // setInputs({
+      //   ...inputs,
+      //   [e.target.name]: 0,
+      // });
+    // }
+    // else{
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
     });
-  }
+  // }
 
   }
   // console.log('inputs.',inputs);
@@ -184,19 +190,21 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
     setFlexOrderList(data);
   }
 
-  useEffect(() => {
-    inputs.goods_rent_price = 0;
-    inputs.ppsr_fee = 0;
-    inputs.liability_fee = 0;
-    inputs.weekly_total = 0;
-    inputs.frequency = 0;
-    inputs.no_of_payment = 0;
-    inputs.each_payment_amt = 0;
-    inputs.total_payment_amt     = 0;
-    inputs.before_delivery_amt = 0;
-    // inputs.exp_delivery_at ;
-    inputs.bond_amt = 0;
-  }, []);
+  // useEffect(() => {
+  //   if(inputs.length ===0){
+  //   inputs.goods_rent_price = 0;
+  //   inputs.ppsr_fee = 0;
+  //   inputs.liability_fee = 0;
+  //   inputs.weekly_total = 0;
+  //   inputs.frequency = 0;
+  //   inputs.no_of_payment = 0;
+  //   inputs.each_payment_amt = 0;
+  //   inputs.total_payment_amt     = 0;
+  //   inputs.before_delivery_amt = 0;
+  //   // inputs.exp_delivery_at ;
+  //   inputs.bond_amt = 0;
+  //   }
+  // }, []);
 
   useEffect(() => {
     var dtToday = new Date();
@@ -219,8 +227,18 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
     }
         var maxDate = year + '-' + month + '-' + day;
         var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-        setExpectedDeliveryDate(maxDateTime.toString());
-        setFirstPaymentDate(maxDate.toString());
+        if(flexOrderList.exp_delivery_at!=''){
+          setExpectedDeliveryDate(flexOrderList.exp_delivery_at);
+        }else{
+          setExpectedDeliveryDate(maxDateTime.toString());
+        }
+        if(flexOrderList.first_payment!=''){
+          setFirstPaymentDate(flexOrderList.first_payment);
+        }else{
+          console.log('entering');
+          setFirstPaymentDate(maxDate.toString());
+        }
+        
   }, []);
 
   function pastDate(){
@@ -236,7 +254,7 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList}) {
       }
         var maxDate = year + '-' + month + '-' + day;
         document.getElementById('first_payment').setAttribute('min', maxDate);
-        setFirstPaymentDate(maxDate.toString());
+        // setFirstPaymentDate(maxDate.toString());
   }
   
 

@@ -17,6 +17,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import SendIcon from '@material-ui/icons/send';
+import Tooltip from '@material-ui/core/Tooltip';
 import PdfIcon from '@material-ui/icons/PictureAsPdf';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -237,14 +238,16 @@ export default function Order() {
                         <StyledTableCell>Contact</StyledTableCell>
                         <StyledTableCell>Order Date</StyledTableCell>
                         <StyledTableCell>Order Status</StyledTableCell>
-                        <StyledTableCell>Assigned To</StyledTableCell>
+                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
                         <StyledTableCell>Rental Type</StyledTableCell>
                         <StyledTableCell>Payment Mode</StyledTableCell>
                         <StyledTableCell>Action</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                      {console.log('eee',order)}
                     {(order.length > 0 ? order : []).map((data, index) => {
+                      if(data.assigned_to != 4){
                        return(
                         <TableRow>
                         <StyledTableCell>{index + 1}</StyledTableCell>
@@ -252,8 +255,8 @@ export default function Order() {
                         <StyledTableCell>{data.customer_name}</StyledTableCell>
                         <StyledTableCell>{data.mobile}</StyledTableCell>
                         <StyledTableCell>{data.order_date}</StyledTableCell>
-                        <StyledTableCell>{'Assigned'}</StyledTableCell>
-                        <StyledTableCell>{'Finance'}</StyledTableCell>
+                        <StyledTableCell>{'In Progress'}</StyledTableCell>
+                        {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
                         <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
                         <StyledTableCell>{
                           data.payment_mode == 1 ? 'EasyPay' :  
@@ -266,15 +269,21 @@ export default function Order() {
                         <StyledTableCell>
                         {/* */}
                         {/* onClick={(event) => { handleEditOpen(data); }} */}
+                        <Tooltip title="Update">
                         <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
                           <EditIcon />  
                         </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Download PDF">
                         <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} >
                           <PdfIcon /> 
                         </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Assign to Finance">
                         <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.assigned_to===4}>
                           <SendIcon />
                         </IconButton>
+                        </Tooltip>
                         
                         {/* <Fab variant="round" tooltip="Update" size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }}>
                             <EditIcon />
@@ -293,6 +302,7 @@ export default function Order() {
                         </StyledTableCell>
                       </TableRow>
                        )
+                      }
                      })
                    }
                               

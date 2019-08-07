@@ -110,7 +110,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleClose, handleSnackbarClick, customerId}) {
+export default function ViewCustomer({ open, handleClose, handleSnackbarClick, customerId}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
@@ -139,7 +139,10 @@ export default function Edit({ open, handleClose, handleSnackbarClick, customerI
         const customer = await Customer.getSingleCustomer({customer_id: customerId});
         console.log(customer.customer);
         setDataCustomerList(customer.customer[0]);
-        console.log('hello bsm..',customerList);
+
+        const idType = await Customer.idtypelist();
+        setIdTypeList(idType.idTypeList);
+
       } catch (error) {
         setIsError(true);
       }
@@ -376,18 +379,19 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                    {console.log(customerList.gender)}
                     <InputLabel htmlFor="gender">Gender</InputLabel>
                     <RadioGroup
-                      aria-label="gender"
+                      id = "gender"
                       name="gender"
-                      className={classes.group}
-                      value={customerList.gender}
-                      onChange={handleInputChange}
+                      className={classes.group}                      
+                      value={customerList.gender == 'female' ? 'female' : customerList.gender== 'male' ? 'male' : ''}
+                      // onChange={handleInputChange}
                       row
-                      disabled
+                      // disabled
                     >
                       <FormControlLabel labelPlacement="start" value="female" control={<Radio />} label="Female" disabled />
-                      <FormControlLabel labelPlacement="start" value="male" control={<Radio />} label="Male"  disabled/>
+                      <FormControlLabel labelPlacement="start" value="male" control={<Radio />} label="Male" disabled />
                       {/* <FormControlLabel labelPlacement="start" value="transgender" control={<Radio />} label="Transgender" /> */}
                     </RadioGroup>
                     

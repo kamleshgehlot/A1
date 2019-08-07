@@ -122,18 +122,18 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   
   function handleInputChange(e){
     // console.log('valueee',e.target.value)
-    if(e.target.value===""){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
-    else{
+    // if(e.target.value===""){
+      // setInputs({
+      //   ...inputs,
+      //   [e.target.name]: 0,
+      // });
+    // }
+    // else{
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
     });
-  }
+  // }
 
   }
   // console.log('inputs.',inputs);

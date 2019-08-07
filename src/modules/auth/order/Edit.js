@@ -116,7 +116,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
   const [productList, setProductList] = useState([]);
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [recData, setRecData] = React.useState(editableData);
-
+  const [inputs, setInputs] = useState([]);
   // console.log('ddd',recData);
     
   useEffect(() => {
@@ -136,6 +136,26 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     setAssignInterest(assignRoleList);
 
   fetchData();
+    setInputs({
+      work : 0,
+      benefits : 0,
+      accomodation : 0,
+      childcare : 0,
+      rent : 0,
+      power : 0,
+      telephone : 0,
+      mobile : 0,
+      vehicle : 0,
+      transport : 0,
+      food : 0,
+      credit_card : 0,
+      loan : 0,
+      other_expenditure : 0,
+      income : 0,
+      expenditure : 0,
+      surplus : 0,
+      afford_amt : 0,
+    });
   }, []);
 
 //  console.log('assign,,,',assignInterest);
@@ -208,6 +228,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       order_type_id : recData.order_type_id,
       budget_id: recData.budget_id,
       is_active : 1,
+      assigned_to : 0,
      });
     // console.log('response ', response);
     assignInterest.length = 0;
@@ -340,7 +361,7 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} budgetId={budgetId}/> : null }
+    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} input={inputs} budgetId={budgetId}/> : null }
     {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} /> : null }
     {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
