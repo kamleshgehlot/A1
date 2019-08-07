@@ -400,7 +400,7 @@ return (
                       </RadioGroup>
                     </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product">Prodcut*</InputLabel>
+                    <InputLabel htmlFor="product">Product*</InputLabel>
                     <Select
                       multiple
                       value={assignInterest}
