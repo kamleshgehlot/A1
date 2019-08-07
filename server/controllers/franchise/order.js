@@ -26,12 +26,27 @@ const getBudget = function(req, res, next) {
   console.log('rows body...',req.body);
   try {
     new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId}).getBudget().then(function (order) {
-      res.send({ order });
+      // console.log('ordler..',order[0].customer_id)
+      new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
+      res.send({ order , oldBudget}); 
+    });
+  });
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+};
+
+const getExistingBudget = function(req, res, next) {
+  console.log('rows body...',req.body);
+  try {
+    new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getExistingBudget().then(function (oldBudget) {
+      res.send({oldBudget}); 
     });
   } catch (error) {
     console.log('Error: ', error);
   }
 };
+
 
 const getFixedOrder = function(req, res, next) {
   console.log('rows body...',req.body);
@@ -56,6 +71,19 @@ const getFlexOrder = function(req, res, next) {
 };
 
 
+
+const assignToFinance = function(req, res, next) {
+  console.log('rows body...',req.body);
+  try {
+    new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToFinance().then(function (order) {
+      new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+        res.send({ order: order});
+      });
+    });
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+};
 // const convertedList = function(req, res, next) {
 //   try {
 //     new Order({user_id: req.decoded.user_id}).convertedList().then(enquiryList => {
@@ -95,7 +123,7 @@ console.log('eeeq.',req);
     order_date : req.body.order_date, 
     budget_list : req.body.budget_list,
 
-    assigned_to : 4,
+    assigned_to : req.body.assigned_to,
     is_active : req.body.is_active,
     created_by: req.decoded.id,
   };
@@ -162,7 +190,7 @@ const editOrder = function (req, res, next) {
       budget_list : req.body.budget_list,
       budgetId: req.body.budget_id,
       order_type_id: req.body.order_type_id,
-      assigned_to : 4,
+      assigned_to : req.body.assigned_to,
       is_active : req.body.is_active,
       updated_by: req.decoded.id,
     };
@@ -213,4 +241,4 @@ const editOrder = function (req, res, next) {
   
 
 
-module.exports = { getnewid, postOrder, getAll, getBudget, getFixedOrder, getFlexOrder, editOrder };
+module.exports = { getnewid, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };

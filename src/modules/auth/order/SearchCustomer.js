@@ -37,9 +37,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-
+import PageViewIcon from '@material-ui/icons/Pageview';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
+import ViewCustomer from '../customer/ViewCustomer';
 
 
 const RESET_VALUES = {
@@ -102,7 +103,8 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
   const classes = useStyles();
   const [searchText, setSearchText]  = useState('');
   const [customerListData, setCustomerListData] = useState([]);
-  
+  const [customerOpen, setCustomerOpen] = useState(false);
+  const [customerId, setCustomerId] = useState();
 
   const StyledTableCell = withStyles(theme => ({
     head: {
@@ -119,7 +121,7 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
     try {
       if(searchText!=''){
           const result = await Customer.search({searchText: searchText});
-          // console.log('list---',result.customerList);
+          console.log('list---',result.customerList);
           setCustomerListData(result.customerList);
           setSearchText('');
        
@@ -131,6 +133,13 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
       }} catch (error) {
         console.log('error',error);
       }
+  }
+  function handleCustomerOpen(customerId){
+    setCustomerId(customerId);
+    setCustomerOpen(true);
+  }
+  function handleCustomerClose(){
+    setCustomerOpen(false);
   }
 
   function handleSearchText(event){
@@ -211,10 +220,13 @@ return (
                           <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                           {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
                           <StyledTableCell> 
-                          <Fab  aria-label="Add" color="primary" size="small" className={classes.fab} onClick={(event) => { handleAddCurrent(data); }}>
+                          <Fab  aria-label="Add" size="small" className={classes.fab} onClick={(event) => { handleAddCurrent(data); }}>
                             <AddIcon />
                           </Fab>
-                          
+                          <Fab  aria-label="Add" size="small" className={classes.fab} onClick={(event) => { handleCustomerOpen(data.id); }}>
+                            <PageViewIcon />
+                          </Fab>
+                          {/* <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(data.id); }}>View Profile </Button> */}
                           </StyledTableCell>
                           </TableRow>
                         )
@@ -228,6 +240,7 @@ return (
           </div>
         </form>
       </Dialog>
+      {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
     </div>
   );
 }

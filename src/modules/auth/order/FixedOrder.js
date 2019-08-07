@@ -93,10 +93,10 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
+export default function Budget({ open, handleFixedClose, setFixedOrderList, fixedOrderList}) {
 
   const classes = useStyles();
-  const [inputs,setInputs] = useState([]);
+  const [inputs,setInputs] = useState(fixedOrderList);
   const [firstPaymentDate,setFirstPaymentDate] = useState('');
   const [lastPaymentDate,setLastPaymentDate] = useState('');
   const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
@@ -122,18 +122,18 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
   
   function handleInputChange(e){
     // console.log('valueee',e.target.value)
-    if(e.target.value===""){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
-    else{
+    // if(e.target.value===""){
+      // setInputs({
+      //   ...inputs,
+      //   [e.target.name]: 0,
+      // });
+    // }
+    // else{
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
     });
-  }
+  // }
 
   }
   // console.log('inputs.',inputs);
@@ -162,22 +162,24 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
     setFixedOrderList(data);
   }
 
-  useEffect(() => {
-    inputs.int_unpaid_bal = 0;
-    inputs.cash_price= 0;
-    inputs.delivery_fee= 0;
-    inputs.ppsr_fee= 0;
-    inputs.no_of_payment= 0;
-    inputs.each_payment_amt= 0;
-    inputs.total_payment_amt= 0;
-    inputs.before_delivery_amt= 0;
-    inputs.frequency = 0;
-    // inputs.exp_delivery_at;
-    inputs.minimum_payment_amt= 0;
-    inputs.intrest_rate= 0;
-    inputs.intrest_rate_per= 0;
-    inputs.total_intrest= 0;
-  }, []);
+  // useEffect(() => {
+  //   if(inputs.length ===0){
+  //   inputs.int_unpaid_bal = 0;
+  //   inputs.cash_price= 0;
+  //   inputs.delivery_fee= 0;
+  //   inputs.ppsr_fee= 0;
+  //   inputs.no_of_payment= 0;
+  //   inputs.each_payment_amt= 0;
+  //   inputs.total_payment_amt= 0;
+  //   inputs.before_delivery_amt= 0;
+  //   inputs.frequency = 0;
+  //   // inputs.exp_delivery_at;
+  //   inputs.minimum_payment_amt= 0;
+  //   inputs.intrest_rate= 0;
+  //   inputs.intrest_rate_per= 0;
+  //   inputs.total_intrest= 0;
+  //   }
+  // }, []);
 
   
   function pastDate(){
@@ -193,7 +195,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
       }
         var maxDate = year + '-' + month + '-' + day;
         document.getElementById('first_payment').setAttribute('min', maxDate);
-        setFirstPaymentDate(maxDate.toString());
+        // setFirstPaymentDate(maxDate.toString());
   }
   
   function pastDateDisabled(){
@@ -209,7 +211,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
       }
         var maxDate = year + '-' + month + '-' + day;
         document.getElementById('last_payment').setAttribute('min', maxDate);
-        setLastPaymentDate(maxDate.toString());
+        // setLastPaymentDate(maxDate.toString());
   }
   function pastDateDisabled2(){
     var dtToday = new Date();
@@ -224,9 +226,15 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
     if(day < 10){
         day = '0' + day.toString();
       }
+    if(hour < 10){
+      hour = '0' + hour.toString();
+    }
+    if(minute < 10){
+      minute = '0' + minute.toString();
+    }
         var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
         document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
-        setExpectedDeliveryDate(maxDateTime.toString());
+        // setExpectedDeliveryDate(maxDateTime.toString());
   }
 
   useEffect(() => {
@@ -250,10 +258,22 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList}) {
     }
         var maxDate = year + '-' + month + '-' + day;
         var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-        
-        setExpectedDeliveryDate(maxDateTime.toString());
-        setFirstPaymentDate(maxDate.toString());
+        console.log('data',fixedOrderList);
+        if(fixedOrderList.exp_delivery_at!=''){
+          setExpectedDeliveryDate(fixedOrderList.exp_delivery_at);
+        }else{
+          setExpectedDeliveryDate(maxDateTime.toString());
+        }
+        if(fixedOrderList.first_payment!=''){
+          setFirstPaymentDate(fixedOrderList.first_payment);
+        }else{
+          setFirstPaymentDate(maxDate.toString());
+        }
+        if(fixedOrderList.last_payment!=''){
+          setLastPaymentDate(fixedOrderList.last_payment);
+        }else{        
         setLastPaymentDate(maxDate.toString());
+        }
   }, []);
   
   
