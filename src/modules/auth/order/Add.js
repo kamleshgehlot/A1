@@ -209,8 +209,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setCustomer(response[0]);
   }
   function handleIsExistCustomer(response){
-    setIsNewCustomer(0);
-    
+    setIsNewCustomer(0);    
   }
 
   function handleDateChange(e){
@@ -487,7 +486,7 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList}/> : null }
+    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/> : null }
     {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList}/> : null }
     {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList}/> : null }

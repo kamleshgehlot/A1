@@ -93,7 +93,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList, budgetId}) {
+export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList, customer_id}) {
 
   const classes = useStyles();
   const [inputs,setInputs] = useState(budgetList);
@@ -194,7 +194,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const order = await Order.getExistingBudget({budgetId: 0});
+        const order = await Order.getExistingBudget({customer_id: customer_id});
         console.log('order',order);
         setOldBudgetList(order.oldBudget);   
       } catch (error) {

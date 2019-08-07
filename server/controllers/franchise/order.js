@@ -36,6 +36,18 @@ const getBudget = function(req, res, next) {
   }
 };
 
+const getExistingBudget = function(req, res, next) {
+  console.log('rows body...',req.body);
+  try {
+    new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getExistingBudget().then(function (oldBudget) {
+      res.send({oldBudget}); 
+    });
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+};
+
+
 const getFixedOrder = function(req, res, next) {
   console.log('rows body...',req.body);
   try {
@@ -229,4 +241,4 @@ const editOrder = function (req, res, next) {
   
 
 
-module.exports = { getnewid, postOrder, getAll, getBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
+module.exports = { getnewid, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };

@@ -93,6 +93,24 @@ export default {
       throw error;
     }
   },
+
+  getExistingBudget: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getoldbudget`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getCurrespondingFixedOrder: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getfixedorder`;
     try {

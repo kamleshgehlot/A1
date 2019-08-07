@@ -8,6 +8,7 @@ const orderRouter = express.Router();
 orderRouter.route("/getnewid").get(validateToken, Order.getnewid);
 orderRouter.route("/getall").get(validateToken, Order.getAll);
 orderRouter.route("/getbudget").post(validateToken, Order.getBudget);
+orderRouter.route("/getoldbudget").post(validateToken, Order.getExistingBudget);
 orderRouter.route("/getfixedorder").post(validateToken, Order.getFixedOrder);
 orderRouter.route("/getflexorder").post(validateToken, Order.getFlexOrder);
 orderRouter.route("/editorder").post(validateToken, Order.editOrder);
