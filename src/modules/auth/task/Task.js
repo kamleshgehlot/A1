@@ -28,6 +28,7 @@ import TaskAPI from '../../../api/Task';
 // import Staff from '../../../api/franchise/Staff';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 
+import Role from '../../../api/franchise/Role';
 import StaffTask from '../task/StaffTask';
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -64,6 +65,7 @@ export default function Task(franchiseId) {
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [dateToday, setTodayDate]= useState();
 
+  const [role, setRole] = useState([]);
   const [showStaffTask, setShowStaffTask] = useState(false);
   const [assignedid,setAssignedid]= useState();
   const roleName = APP_TOKEN.get().roleName;
@@ -143,6 +145,16 @@ useEffect(() => {
     setIsLoading(false);
   };
   fetchData();
+  const roleData = async () => {
+    
+    try {
+      const result = await Role.list();
+      setRole(result.role);
+    } catch (error) {
+      console.log("Error",error);
+    }
+  };
+  roleData();
 }, []);
   //tasks list
   useEffect(() => {
@@ -338,6 +350,7 @@ useEffect(() => {
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assign Role</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
@@ -351,7 +364,13 @@ useEffect(() => {
                         <StyledTableCell> {index+1}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
-                         
+                            {role.map((ele,index) =>{
+                                return(
+                                  data.assign_role===ele.id?
+                                <StyledTableCell>{ele.name}</StyledTableCell>
+                                :''
+                                )
+                              })}
                             { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                                 return(
                                   data.assigned_to===datastaff.id ?

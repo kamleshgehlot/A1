@@ -245,7 +245,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Edit franchaise
+                Edit Franchise
               </Typography>
               {savebtn? <Button onClick={handleSubmit} color="inherit">
                 Update

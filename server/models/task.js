@@ -6,6 +6,7 @@ const Task = function (params) {
   this.id = params.id;
   this.task_id = params.task_id;
   this.task_description = params.task_description;
+  this.assign_role= params.assign_role;
   this.assigned_to = params.assigned_to;
   this.due_date = params.due_date;
   this.updated_date=params.updated_date;
@@ -43,13 +44,13 @@ Task.prototype.add = function () {
         [that.task_id, that.task_description, that.is_active, that.created_by]
       ];
       const values_assign = [
-        [that.task_id, that.assigned_to, that.due_date,1, that.is_active, that.created_by]
+        [that.task_id,that.assign_role, that.assigned_to, that.due_date,1, that.is_active, that.created_by]
       ];
         if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query(`INSERT INTO task(task_id, task_description, is_active, created_by) VALUES ?`, [values], (error, mrows, fields) => {
             if (!error) {
-              connection.query(`INSERT INTO task_assign(task_id, assigned_to, due_date, status, is_active, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
+              connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, due_date, status, is_active, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
                 if (!error) {
                   resolve(arows);
                 } else {
@@ -79,9 +80,10 @@ Task.prototype.all = function () {
         throw error;
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-
-          connection.query('select t.id,t.task_id, t.task_description,a.id as assignid,  a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
+      console.log('that.userid',that.userid);
+          connection.query('select t.id,t.task_id, t.task_description,a.id as assignid,a.assign_role,  a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
             if (!error) {
+              console.log('taskrows-=-==--',rows);
               resolve(rows);
 
             } else {
@@ -130,7 +132,7 @@ Task.prototype.completedList = function () {
         throw error;
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-      connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active, a.start_date, a.completion_date,a.message, a.document from task t inner join task_assign a on t.task_id = a.task_id where status="4"', function (error, rows, fields) {
+      connection.query('select t.id,t.task_id, t.task_description,a.assign_role,  a.assigned_to, a.due_date, a.status, a.is_active, a.start_date, a.completion_date,a.message, a.document from task t inner join task_assign a on t.task_id = a.task_id where status="4"', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 
@@ -157,7 +159,7 @@ Task.prototype.update = function () {
             connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
             connection.query('update task set task_description = "' + that.task_description + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
-                connection.query('update task_assign set assigned_to = "' + that.assigned_to + '", due_date = "' + that.due_date + '", updated_by = "' + that.updated_by + '", status="'+that.status+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
+                connection.query('update task_assign set assign_role="'+that.assign_role+'", assigned_to = "' + that.assigned_to + '", due_date = "' + that.due_date + '", updated_by = "' + that.updated_by + '", status="'+that.status+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
                   if (!error) {
                     resolve({ arows });
                   } else {
@@ -236,7 +238,7 @@ Task.prototype.reschedule = function () {
       connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query('update task_assign set is_active =  0, updated_by = "'+that.updated_by+'" WHERE id = "' + that.assignid + '"', function (error, arows, fields) {
             if (!error) {
-              connection.query(`INSERT INTO task_assign(task_id, assigned_to, due_date, status, is_active, created_by) VALUES ?`, [values_assign], (error, atrows, fields) => {
+              connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, due_date, status, is_active, created_by) VALUES ?`, [values_assign], (error, atrows, fields) => {
                 if (!error) {
                   resolve({atrows});
                 } else {
@@ -268,7 +270,7 @@ Task.prototype.staffTasks = function () {
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
           connection.query('select id as uid from user where user_id="'+that.user_id+'" limit 1', function (error, rows, fields) {
             if (!error) {
-              connection.query('select t.id,t.task_id, t.task_description,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+rows[0].uid+'" AND status <> 4 AND status <> 5 AND a.is_active="1"', function (error, taskrows, fields) {
+              connection.query('select t.id,t.task_id, t.task_description,a.assign_role,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+rows[0].uid+'" AND status <> 4 AND status <> 5 AND a.is_active="1"', function (error, taskrows, fields) {
                 if (!error) {
                   resolve(taskrows);
 

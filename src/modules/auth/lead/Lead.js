@@ -257,7 +257,7 @@ export default function Lead() {
                             label="filter"
                           >
                             <MenuItem value={4}>{'Show All'}</MenuItem> 
-                            <MenuItem value={1}>{'Created By'}</MenuItem> 
+                            <MenuItem value={1}>{'Created By Me'}</MenuItem> 
                             <MenuItem value={2}>{'Created For Me'}</MenuItem> 
                             <MenuItem value={3}>{'Created General'}</MenuItem> 
                           </Select>

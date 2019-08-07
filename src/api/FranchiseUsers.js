@@ -20,6 +20,21 @@ export default {
       throw error;
     }
   },
+  staffRoleList: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/franchiseuser/staffList`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
   user: async () => {
     const URL = `${c.API_CONSUMER}/api/franchiseuser/user`;
     try {

@@ -184,7 +184,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Category Update Panel
+                Update Product Details
               </Typography>
               {savebtn? <Button color="inherit" onClick={handleSubmit}>
                 Update

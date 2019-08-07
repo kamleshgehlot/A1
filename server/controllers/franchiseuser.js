@@ -21,4 +21,24 @@ const user = function(req, res, next) {
   }
 };
 
-module.exports = { all,user };
+const staffList = function (req, res, next) {
+  const staffRoleParam = {
+    selectedRole: req.body.selectedRole,
+    user_id: req.decoded.user_id
+  };
+  try {
+    console.log('staffRoleParam----===',staffRoleParam);
+    const newFranchiseUser = new FranchiseUser(staffRoleParam);
+    newFranchiseUser.staffList().then(staffList => {
+      console.log('staffList----===',staffList); 
+        res.send({ staffList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+
+    res.status(500);
+    res.send('error', { error: err });
+  }
+};
+
+module.exports = { all,user,staffList };

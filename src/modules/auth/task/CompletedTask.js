@@ -236,10 +236,10 @@ return (
                         <StyledTableCell> {data.task_id}  </StyledTableCell>
                         <StyledTableCell> {data.task_description}  </StyledTableCell>
                       
-                          { (staffList.length > 0 ? staffList : []).map((datastaff, index1)=>{
+                        { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                               return(
                                 data.assigned_to===datastaff.id ?
-                                <StyledTableCell> {datastaff.first_name + ' ' + datastaff.last_name}</StyledTableCell>
+                                <StyledTableCell> {datastaff.name}</StyledTableCell>
                                   :''
                                   )
                                   

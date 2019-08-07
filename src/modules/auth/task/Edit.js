@@ -24,6 +24,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
 import Task from '../../../api/Task';
+import Role from '../../../api/franchise/Role';
 // import Staff from '../../../api/franchise/Staff';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 
@@ -93,7 +94,7 @@ const StyledTableRow = withStyles(theme => ({
 export default function Edit({open, handleEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList}) {
   const classes = useStyles();
   
-  const [staffList, setStaffList] = useState({});
+  const [staffListn, setStaffList] = useState({});
   const [taskList, setTasksList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -101,6 +102,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
+  const [role, setRole] = useState([]);
 
   const addTaskMaster = async () => {
     setpLoading(true);
@@ -110,6 +112,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
       id: taskList.id,
       task_id: taskList.task_id,
       task_description:taskList.task_description,
+      assign_role:taskList.staffRole,
       assigned_to:taskList.assigned_to,
       status:taskList.status,
       due_date:taskList.due_date,
@@ -168,7 +171,28 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   //   };
   //   fetchData();
   // }, []);
+  function handleRoleChange(e){
+    // setStaffRole(e.target.value);
+    let selectedRole = e.target.value;
+    const { name, value } = e.target
+    setTasksList({ ...taskList, [name]: value })
+    try{
+   const stafflistForRole = async () => {
+    const response = await FranchiseUsers.staffRoleList({
+      selectedRole:selectedRole
+    });
+    console.log('response.staffList====',response.staffList);
+    setStaffList(response.staffList);
+    // setOtherDisable(false);
+  };
 
+  
+    stafflistForRole();
+  }catch(error){
+    console.log('event',error)
+  }
+
+}
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -182,6 +206,29 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
       setIsLoading(false);
     };
     fetchData();
+    try{
+      const stafflistForRole = async () => {
+       const response = await FranchiseUsers.staffRoleList({
+         selectedRole:taskList.assign_role
+       });
+       console.log('response.staffList====',response.staffList);
+       setStaffList(response.staffList);
+       setOtherDisable(false);
+     };
+       stafflistForRole();
+     }catch(error){
+       console.log('event',error)
+     }
+    const roleData = async () => {
+      
+      try {
+        const result = await Role.list();
+        setRole(result.role);
+      } catch (error) {
+        console.log("Error",error);
+      }
+    };
+    roleData();
   }, []);
 
   const handleInputChange = event => {
@@ -215,6 +262,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                       <TableRow>
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assigned Role</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
                         {/* <StyledTableCell>status</StyledTableCell> */}
@@ -251,6 +299,26 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 margin="dense"
                               /> 
                           </StyledTableCell>
+                          <StyledTableCell>
+
+                            <Select
+                              value={taskList.assign_role}
+                              inputProps={{
+                                name: 'assign_role',
+                                id: 'assign_role',
+                              }}
+                              onChange={handleRoleChange}
+                              fullWidth
+                              required
+                            >
+                              {role.map((ele,index) =>{
+                                return(
+                                <MenuItem value={ele.id}>{ele.name}</MenuItem>
+                                )
+                              })}
+
+                            </Select>
+                            </StyledTableCell>
                           <StyledTableCell>  
                             <Select
                               value={taskList.assigned_to}
@@ -266,13 +334,11 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               required
                             >
                       
-                              { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datauser, index1)=>{
-                          
-                                    return(
-                                <MenuItem value={datauser.id}>{datauser.name} </MenuItem>
-                                )
-                                })
-                              }
+                                { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
+                                  return(
+                                    <MenuItem value={staff.id}>{staff.name} </MenuItem>
+                                )})
+                                }
                             </Select>
                           </StyledTableCell>
                             

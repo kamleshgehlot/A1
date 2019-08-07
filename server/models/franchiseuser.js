@@ -7,6 +7,7 @@ const FranchiseUser = function (params) {
   this.director_id = params.director_id;
   this.name = params.name;
   this.user_id = params.user_id;
+  this.selectedRole = params.selectedRole;
 };
 
 FranchiseUser.prototype.all = function () {
@@ -19,7 +20,7 @@ FranchiseUser.prototype.all = function () {
 
       const that = this;
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-          connection.query('select id, name from user', (error, rows, fields) => {
+          connection.query('select id, name, franchise_id, director_id from user', (error, rows, fields) => {
             if (!error) {
               resolve(rows);
             } else {
@@ -59,4 +60,36 @@ FranchiseUser.prototype.user = function () {
     });
   });
 };
+
+
+FranchiseUser.prototype.staffList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('select id, franchise_id, director_id, name, role_id from user where role_id="'+that.selectedRole+'"', function (error, rows, fields) {
+            if (!error) {
+              resolve( rows );
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+
+          });
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 module.exports = FranchiseUser;

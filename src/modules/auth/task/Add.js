@@ -26,10 +26,13 @@ import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 
+// Helpers
+import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
 import Task from '../../../api/Task';
 // import Staff from '../../../api/franchise/Staff';
 
+import Role from '../../../api/franchise/Role';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 
 import useSignUpForm from '../franchise/CustomHooks';
@@ -106,14 +109,19 @@ const StyledTableRow = withStyles(theme => ({
 export default function Add({ open, handleClose, franchiseId, handleSnackbarClick, setTaskList}) {
   const classes = useStyles();
 
+  const roleName = APP_TOKEN.get().roleName;
   const [taskLast, setTaskLast] = useState({});
   const [taskId, setTaskId] = useState();
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [staffList, setStaffList] = useState({});
+  const [staffListn, setStaffList] = useState([]);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
+  const [staffRole, setStaffRole] = useState();
+  
+  const [otherDisable, setOtherDisable] = useState(true);
+  const [role, setRole] = useState([]);
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   useEffect(() => {
     const fetchData = async () => {
@@ -139,8 +147,19 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
       setIsLoading(false);
     };
     fetchData();
+    const roleData = async () => {
+      
+      try {
+        const result = await Role.list();
+        setRole(result.role);
+      } catch (error) {
+        console.log("Error",error);
+      }
+    };
+    roleData();
   }, []);
 
+ 
   function generate(last_id) {
    const tid=last_id+1;
    const t_id='t_'+tid;
@@ -193,10 +212,12 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     
     setpLoading(true);
     setSavebtn(false);
+    console.log('assign_role---',staffRole);
     const response = await Task.add({
       franchise_id: franchiseId,
       task_id: taskId,
       task_description:inputs.task_description,
+      assign_role:staffRole,
       assigned_to:inputs.assigned_to,
       due_date:inputs.due_date,
     });
@@ -214,6 +235,28 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
 
     return errors;
   };
+
+  function handleRoleChange(e){
+    setStaffRole(e.target.value);
+    let selectedRole = e.target.value;
+
+    try{
+   const stafflistForRole = async () => {
+    const response = await FranchiseUsers.staffRoleList({
+      selectedRole:selectedRole
+    });
+    console.log('response.staffList====',response.staffList);
+    setStaffList(response.staffList);
+    setOtherDisable(false);
+  };
+
+  
+    stafflistForRole();
+  }catch(error){
+    console.log('event',error)
+  }
+
+}
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
@@ -251,6 +294,7 @@ return (
                       <TableRow>
                         <StyledTableCell>Task ID</StyledTableCell>
                         <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assigned Role</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
@@ -286,6 +330,26 @@ return (
                                 margin="dense"
                               /> 
                           </StyledTableCell>
+                          <StyledTableCell>
+
+                            <Select
+                              value={staffRole}
+                              inputProps={{
+                                name: 'assign_role',
+                                id: 'assign_role',
+                              }}
+                              onChange={handleRoleChange}
+                              fullWidth
+                              required
+                            >
+                              {role.map((ele,index) =>{
+                                return(
+                                <MenuItem value={ele.id}>{ele.name}</MenuItem>
+                                )
+                              })}
+
+                            </Select>
+                            </StyledTableCell>
                           <StyledTableCell>  
                             <Select
                               value={inputs.assigned_to}
@@ -295,16 +359,14 @@ return (
                                 id: 'assigned_to',
                                 label:'assigned_to'
                               }}
-                              
-                              fullWidth className={classes.dropdwn}
-                              label="assigned_to"
                               required
-                            >
-                                { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((data, index)=>{
+                              disabled = {otherDisable}
+                              fullWidth className={classes.dropdwn}
+                              label="assigned_to" required >
+                                { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
                                   return(
-                                    <MenuItem value={data.id}>{data.name} </MenuItem>
-                                    )
-                                  })
+                                    <MenuItem value={staff.id}>{staff.name} </MenuItem>
+                                )})
                                 }
                             </Select>
                           </StyledTableCell>

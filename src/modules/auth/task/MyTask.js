@@ -64,7 +64,7 @@ export default function StaffTask(props) {
   const [staffList, setStaffList] = useState({});
   const [dateToday, setTodayDate]= useState();
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
-  const [taskStatusList, setTaskStatusList]=useState();
+  const [taskStatusList, setTaskStatusList]=useState({});
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
    
@@ -137,7 +137,7 @@ export default function StaffTask(props) {
       try {
         const result = await TaskAPI.taskStatus();
         setTaskStatusList(result.taskStatusList);
-        // console.log('task-----',taskStatusList);
+        console.log('task-----',taskStatusList);
       } catch (error) {
         setIsError(true);
       }
