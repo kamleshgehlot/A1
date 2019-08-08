@@ -13,6 +13,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Fab from '@material-ui/core/Fab';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -22,6 +23,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip';
 import Input from "@material-ui/core/Input";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -31,6 +33,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import AddIcon from '@material-ui/icons/Add';
 import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Popover from '@material-ui/core/Popover';
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -92,6 +95,10 @@ const useStyles = makeStyles(theme => ({
   buttonMargin: {
     margin: theme.spacing(1),
   },
+  fab:{
+    marginRight: theme.spacing(1),
+    fontSize: 12,
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -124,10 +131,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     return errors;
   };
 
- 
   
-
- 
   function handleBudgetClose(){
     setBudgetOpen(false);
   }
@@ -237,14 +241,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
           // setOrderDate(maxDate.toString());
     }
     
-    
-  useEffect(() => {
-    
-
-    setFlexOrderList({
-
-    });
-  }, []);
 
     useEffect(() => {
       var dtToday = new Date();
@@ -267,13 +263,20 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     const fetchData = async () => {
       try {
         const result = await Category.productlist();
-        // console.log('rrrr',result);
         setProductList(result.productList);
 
-        // const order_id = await OrderAPI.getnewid();
-          let now = Date.now().toString() // '1492341545873'
-          now += now + Math.floor(Math.random() * 10)
-          setInput('order_id',([now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
+        const order_id = await OrderAPI.getnewid();
+        let zero = 7 - (order_id[0].id.toString().length); 
+        let orderId='';
+        for(let i=0; i< zero ; i++){
+          orderId += '0';
+        }
+        setInput('order_id',(orderId + (order_id[0].id+ 1)));
+        // console.log('order id',inputs.order_id);
+        // setInput('order_id',("" + (order_id.id[0].id+ 1)));
+          // let now = Date.now().toString() // '1492341545873'
+          // now += now + Math.floor(Math.random() * 10)
+          // setInput('order_id',([now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
           
         //   if(order_id.id[0]!=null){
         //   let orderNo = "O" + (order_id.id[0].id + 1);
@@ -294,7 +297,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }, []);
 
   const addOrder = async () => {
-    const response = await OrderAPI.postOrder({ 
+    const response = await OrderAPI.postOrder({
       order_id :  inputs.order_id,
       customer_id : customer.id,
       products_id :  assignInterest.join(),
@@ -307,7 +310,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       budget_list : budgetList,
       is_active : 1,
      });
-    console.log('response ', response);
+    // console.log('response ', response);
     assignInterest.length = 0;
     // handleSnackbarClick(true);
     // setFranchiseList(response.staffList);
@@ -349,11 +352,11 @@ return (
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={3}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel htmlFor="order_id">Order#</InputLabel>
                     <TextField
-                      id="orderid"
-                      name="orderid"
-                      label="Order #"
+                      id="order_id"
+                      name="order_id"
+                      // label="Order #"
                       value={inputs.order_id}
                       // onChange={handleInputChange}
                       fullWidth
@@ -390,12 +393,17 @@ return (
                         onChange={handleInputChange}
                         row
                       >
-                        {console.log('customer ',customer)}
+                        {/* {console.log('customer ',customer)} */}
                         <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="New Customer" onClick={handleCustomerOpen} />
                         <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
                         {customer  != null  ? 
-                        <FormControlLabel labelPlacement="end" control={<DoneIcon />}  disabled/>
-                        : ''
+                          // <FormControlLabel labelPlacement="end" control={<DoneIcon /> }  disabled/>
+                          <Tooltip title={customer.customer_name + ", " + customer.address + ", " + customer.city}>
+                            {/* <IconButton  size="small" className={classes.fab} > */}
+                              <FormControlLabel labelPlacement="end" control={<DoneIcon /> }  disabled/>
+                            {/* </IconButton> */}
+                          </Tooltip>
+                          : ''
                         }
                       </RadioGroup>
                     </Grid>
@@ -410,6 +418,7 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      disabled = {budgetList ==""}
                     >    
                      {(productList.length > 0 ? productList : []).map((data,index)=>{
                       return(
@@ -433,7 +442,7 @@ return (
                   }
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                  {customer  != null  ? 
+                  {customer  != null && budgetList!="" ? 
                   <div>
                   <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
                   <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
@@ -453,6 +462,7 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      disabled = {budgetList ==""}
                     >    
                       <MenuItem value={1}>EasyPay</MenuItem>
                       <MenuItem value={2}>Credit</MenuItem>

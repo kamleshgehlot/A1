@@ -70,7 +70,7 @@ export default {
     } catch (error) {
       throw error;
     }
-  },
+  }, 
 
   getSingleCustomer: async (customerId) => {
     const URL = `${c.API_CONSUMER}/api/franchise/customer/getsinglecustomer`;

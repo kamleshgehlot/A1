@@ -39,6 +39,7 @@ import Order from '../../../api/franchise/Order';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
+import { parse } from 'path';
 
 const RESET_VALUES = {
   
@@ -135,7 +136,6 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
   // }
 
   }
-  // console.log('inputs.',inputs);
 
   function handleSubmit(e){
     e.preventDefault();
@@ -159,7 +159,7 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
       expenditure : parseFloat(inputs.expenditure),
       surplus  : parseFloat(inputs.surplus),
       afford_amt : parseFloat(inputs.afford_amt),
-      pre_order_exp : 0,
+      pre_order_exp : parseFloat(oldBudget),
     }
     setBudgetList(data);
     handleBudgetClose(false)
@@ -175,24 +175,15 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
         }else{
         setInputs(order.order[0]);
         setOldBudgetList(order.oldBudget);   
-        // let total = 0; 
-        // (oldBudgetList.length > 0 ? oldBudgetList : []).map(data =>{
-        //   return(
-        //   data.is_active ===1 ?
-        //     console.log('budgetOld',total) //    total += data.surplus 
-        //   : ''
-        //   )
-        // });
-        // console.log('budgetOld',total);
-      }
+        }
       } catch (error) {
         console.log('Error..',error);
       }
     };
     fetchData();
   }, []);
+ 
 
-// console.log('total surplus',oldBudgetList);
  
   useEffect(() => {
     if(inputs.work == 0 &&
@@ -208,17 +199,26 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
       inputs.food == 0 &&
       inputs.credit_card == 0 &&
       inputs.loan == 0 &&
-      inputs.other_expenditure == 0)
+      inputs.other_expenditure == 0 
+      )
     {
       setSurplusBool(false);
     }else{
       setSurplusBool(true);      
   }
+    if(oldBudgetList!= ''){
+      let sum = oldBudgetList.reduce((acc, val) =>{
+      return (val.is_active == 1 ? acc + val.surplus : acc )
+      }, 0
+      );
+      setOldBudget(sum);
+      inputs.expenditure = sum;
+    }
   });
 
   if(surplusBool===true){
       inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
-      inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) ;
+      inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) + parseFloat(oldBudget);
       inputs.surplus = inputs.income - inputs.expenditure;
       
     }
@@ -541,7 +541,7 @@ return (
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                      Order Going on Rent:
+                     Total Amt. of Orders Going on Rent:
                     </Typography>
                   </Grid>
                   : null
@@ -549,13 +549,7 @@ return (
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                      {
-                        oldBudgetList.map((data,index)=>{
-                          return(
-                            data.is_active === 1  ?  data.surplus + ",  " : ''
-                          )
-                        })
-                      }
+                      { oldBudget }
                     </Typography>
                   </Grid>
                   : null

@@ -21,14 +21,16 @@ import Tooltip from '@material-ui/core/Tooltip';
 import PdfIcon from '@material-ui/icons/PictureAsPdf';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-
-
 import Add from './Add';
 import Edit from './Edit';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 
+import axios from 'axios';
+import { saveAs } from 'file-saver';
+
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
+import PdfAPI from '../../../api/PDF';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -66,7 +68,24 @@ export default function Order() {
   const [flexPaymentData, setFlexPaymentData] = useState(null);
   const [order,setOrder] = useState({});
 
+
   
+
+  function createAndDownloadPdf() {
+    // const state = {
+    //   name: 'Bhagyashree Mathur',
+    //   receiptId: 123,
+    //   price1: 120,
+    //   price2: 125,
+    // }
+    // axios.post('/create-pdf',state)
+    //   .then(() => axios.get('fetch-pdf', { responseType: 'blob' }))
+    //   .then((res) => {
+    //     const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+    //     saveAs(pdfBlob, 'newPdf.pdf');
+    //   })
+  }
+
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
@@ -126,12 +145,13 @@ export default function Order() {
   function handleAssignToFinance(data){;
     setOrderId(data);
     setConfirmation(true);
-    console.log('ddd',orderId);
+    // console.log('ddd',orderId);
   }
+  
 
   function handleConfirmationDialog (response){
 
-    console.log('res..',response);
+    // console.log('res..',response);
     if(response === 1){
       const fetchData = async () => {
         try {
@@ -146,7 +166,7 @@ export default function Order() {
     }
     setConfirmation(false);
   }
-  console.log('ordeerm,',order);
+  // console.log('ordeerm,',order);
   function handleEditClose(){
     setEditOpen(false);
   }
@@ -245,7 +265,7 @@ export default function Order() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {console.log('eee',order)}
+                      {/* {console.log('eee',order)} */}
                     {(order.length > 0 ? order : []).map((data, index) => {
                       if(data.assigned_to != 4){
                        return(
@@ -269,13 +289,14 @@ export default function Order() {
                         <StyledTableCell>
                         {/* */}
                         {/* onClick={(event) => { handleEditOpen(data); }} */}
+                        
                         <Tooltip title="Update">
                         <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
                           <EditIcon />  
                         </IconButton>
                         </Tooltip>
                         <Tooltip title="Download PDF">
-                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} >
+                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={createAndDownloadPdf()}>
                           <PdfIcon /> 
                         </IconButton>
                         </Tooltip>
@@ -311,7 +332,7 @@ export default function Order() {
                </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData}/>
+      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData}/> : null }
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to finance ?"} />: null }
           

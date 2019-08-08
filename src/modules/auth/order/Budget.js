@@ -97,9 +97,10 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
 
   const classes = useStyles();
   const [inputs,setInputs] = useState(budgetList);
-  const [assignRole, setAssignRole] = React.useState([]);
   const [surplusBool, setSurplusBool] = useState();
   const [oldBudgetList,setOldBudgetList] = useState([]);
+  const [oldBudget, setOldBudget] = useState(0);
+
   console.log('inputs////',inputs);
   console.log('inputs length',inputs.length);
   
@@ -185,7 +186,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       expenditure : parseFloat(inputs.expenditure),
       surplus  : parseFloat(inputs.surplus),
       afford_amt : parseFloat(inputs.afford_amt),
-      pre_order_exp : parseFloat(0),
+      pre_order_exp : parseFloat(oldBudget),
     }
     setBudgetList(data);
     handleBudgetClose(false)
@@ -202,6 +203,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       }
     };
     fetchData();
+   
   }, []);
   
   
@@ -226,15 +228,21 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       setSurplusBool(false);
       
     }else{
-      setSurplusBool(true);      
-      
+      setSurplusBool(true);            
+    }
+    if(oldBudgetList!= ''){
+      let sum = oldBudgetList.reduce((acc, val) =>{
+      return (val.is_active == 1 ? acc + val.surplus : acc )
+      }, 0
+      );
+      setOldBudget(sum);
+      inputs.expenditure = sum;
     }
   });
   if(surplusBool===true){
-    console.log('hekk');
-    inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
-    inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) ;
-    inputs.surplus = inputs.income - inputs.expenditure;
+      inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
+      inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) + parseFloat(oldBudget) ;
+      inputs.surplus = inputs.income - inputs.expenditure;
   }
 
 
@@ -555,7 +563,7 @@ return (
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                      Order Going on Rent:
+                     Total Amt. of Orders Going on Rent:
                     </Typography>
                   </Grid>
                   : null
@@ -563,13 +571,7 @@ return (
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                      {
-                        oldBudgetList.map((data,index)=>{
-                          return(
-                            data.is_active === 1  ?  data.surplus + ",  " : ''
-                          )
-                        })
-                      }
+                      { oldBudget }
                     </Typography>
                   </Grid>
                   : null

@@ -35,6 +35,7 @@ import EditFlexOrder from './EditFlexOrder';
 import EditFixedOrder from './EditFixedOrder';
 
 // API CALL
+import Order from '../../../api/franchise/Order';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
@@ -209,14 +210,27 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     setAssignInterest(event.target.value);
   }
 
-  const EditOrder = async (e) => {
+  const EditOrder = async (event) => {
     if (event) {
       event.preventDefault();
     }
-    // if(budgetList==null ){ <EditBudget />}
-    // if(fixedOrderList==null) { <EditFixedOrder/> }
-    // if(flexOrderList==null) {<EditFlexOrder />}
 
+    if(budgetList == null) {
+      const budget = await Order.getCurrespondingBudget({budgetId: recData.budget_id});
+      // console.log('budgetlist',budget.order[0]);
+      setBudgetList(budget.order[0]);
+    }
+    
+    if(flexOrderList==null && fixedOrderList==null && recData.order_type==2){
+      const order = await Order.getCurrespondingFlexOrder({flexOrderId: recData.order_type_id});
+      // console.log('flexlist',order[0]);
+      setFlexOrderList(order[0]);
+    }
+    if(flexOrderList==null && fixedOrderList==null && recData.order_type==1){
+      const order = await Order.getCurrespondingFixedOrder({fixedOrderId: recData.order_type_id});
+      // console.log('fixedlist',order[0]);
+      setFlexOrderList(order[0]);
+    }
     const response = await OrderAPI.editPost({ 
       id : recData.id,
       products_id :  assignInterest.join(),
@@ -230,12 +244,10 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       is_active : 1,
       assigned_to : 0,
      });
-    // console.log('response ', response);
-    assignInterest.length = 0;
-    // handleReset(RESET_VALUES);
     if(response!='invalid'){
       handleOrderRecData(response);
       handleEditClose(false);
+      assignInterest.length = 0;
       }else{
         alert("Invalid or Incomplete Credentials")
       }

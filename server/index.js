@@ -1,10 +1,14 @@
+
 /* eslint-disable no-console */
 const express = require('express');
 const path = require('path');
 const http = require('http');
 const helmet = require('helmet');
 const cors = require('cors');
+const pdf = require('html-pdf');
 const bodyParser = require('body-parser');
+
+// const pdfTemplate = require('../src/modules/documents');
 
 const app = express();
 
@@ -39,6 +43,7 @@ const taskRouter = require('./routes/task');
 const leadRouter = require('./routes/lead/lead');
 const profileRouter = require('./routes/setting/profile');
 const passwordRouter = require('./routes/setting/password');
+// const PDFRouter = require('./routes/Pdf');
 
 // Franchise
 const franchiseUserRouter = require('./routes/franchise/user');
@@ -78,8 +83,26 @@ app.use('/api/franchise/customer', customerRouter);
 app.use('/api/franchise/role', roleRouter);
 app.use('/api/franchise/enquiry',enquiryRouter);
 app.use('/api/franchise/order',orderRouter);
+// app.use('/api/pdf',PDFRouter);
 
 app.use('/', routes);
+
+
+
+// app.post('/create-pdf', (req, res) => {
+//   pdf.create(pdfTemplate(req.body), {}).toFile('result.pdf', (err) => {
+//       if(err) {
+//           res.send(Promise.reject());
+//       }
+
+//       res.send(Promise.resolve());
+//   });
+// });
+
+// app.get('/fetch-pdf', (req, res) => {
+//   res.sendFile(`${__dirname}/result.pdf`)
+// })
+
 
 /** Get port from environment and store in Express. */
 // const port = process.env.PORT || '3006'; // DEV

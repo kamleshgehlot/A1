@@ -25,7 +25,7 @@ const upload = multer({ storage: storage });
 
 const validateToken = require('../../utils').validateToken;
 
-const customerRouter = express.Router();
+const customerRouter = express.Router(); 
 
 customerRouter.route("/register").post(validateToken, upload.array('avatar'), Customer.register);
 customerRouter.route("/list").get(validateToken, Customer.all);

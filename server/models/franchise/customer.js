@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Customer = function (params) {
-  // console.log("params@@@@@@@@@@@", params);
+  // console.log("params@@@@@@@@@@@", params); 
   
   this.id = params.id;
   this.customer_name  = params.customer_name;

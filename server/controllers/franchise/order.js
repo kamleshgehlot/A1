@@ -3,7 +3,7 @@ const Order = require('../../models/franchise/order.js');
 const getnewid = function(req, res, next) {
   try {
     new Order({user_id: req.decoded.user_id}).getnewid().then(id => {
-      res.send({ id });
+      res.send(id);
     });
   } catch (error) {
     console.log('Error: ', error);
@@ -180,7 +180,7 @@ const editOrder = function (req, res, next) {
   console.log('eeeq.',req.body);
     let orderParams = {
       id: req.body.id,
-      user_id: req.decoded.user_id,
+      user_id: req.decoded.user_id,      
       products_id : req.body.products_id,
       order_type : req.body.order_type,
       flexOrderType : req.body.flexOrderType,
@@ -195,10 +195,23 @@ const editOrder = function (req, res, next) {
       updated_by: req.decoded.id,
     };
     
+    // if(orderParams.budget_list == null && orderParams.flexOrderType == null && orderParams.fixedOrderType == null){
+
+    // }
+    // else if(orderParams.flexOrderType == null && orderParams.fixedOrderType == null){
+
+    // }
+    // else if(orderParams.flexOrderType == null && orderParams.budget_list == null ){
+
+    // }
+    // else if(orderParams.fixedOrderType == null &&  orderParams.budget_list == null){
+      
+    // }
+
     if(orderParams.user_id!= '' 
     && orderParams.products_id!= '' 
     && orderParams.order_type!= null 
-    && orderParams.budget_list != "" 
+    && orderParams.budget_list != null 
     && orderParams.payment_mode!= null 
     && orderParams.assigned_to != null 
     && (orderParams.flexOrderType!=null || orderParams.fixedOrderType!= null)){
