@@ -118,6 +118,10 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [recData, setRecData] = React.useState(editableData);
   const [inputs, setInputs] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [mainCategory, setMainCategory] = React.useState('');
+  const [category, setCategory] = React.useState('');
+  const [subCategory, setSubCategory] = React.useState('');
   // console.log('ddd',recData);
     
   useEffect(() => {
@@ -125,6 +129,10 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       try {
         const result = await Category.productlist();
         setProductList(result.productList);
+        
+        const category_list = await Category.list();
+        setCategoryList(category_list.categoryList);
+        
       } catch (error) {
         console.log(error);
       }
@@ -136,6 +144,16 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     });
     setAssignInterest(assignRoleList);
 
+    // console.log(recData)
+    // if(recData.product_related_to.toString().length > 3){
+    let productCategory = [];
+    (recData.product_related_to.split(',')).map((product,index) =>{
+      productCategory.push(parseInt(product));
+    });
+    setMainCategory(productCategory[0]);
+    setCategory(productCategory[1]);
+    setSubCategory(productCategory[2]);
+  // }
   fetchData();
     setInputs({
       work : 0,
@@ -210,10 +228,24 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     setAssignInterest(event.target.value);
   }
 
+  function handleMainCategory(event) {
+    setMainCategory(event.target.value);
+  }
+  function handleCategory(event) {
+    setCategory(event.target.value);
+  }
+  function handleSubCategory(event) {
+    setSubCategory(event.target.value);
+  }
+
+
+
   const EditOrder = async (event) => {
     if (event) {
       event.preventDefault();
     }
+
+    
 
     if(budgetList == null) {
       const budget = await Order.getCurrespondingBudget({budgetId: recData.budget_id});
@@ -231,6 +263,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       // console.log('fixedlist',order[0]);
       setFlexOrderList(order[0]);
     }
+
     const response = await OrderAPI.editPost({ 
       id : recData.id,
       products_id :  assignInterest.join(),
@@ -306,12 +339,91 @@ return (
                       fullWidth
                     />
                   </Grid>
-
+                  
                   <Grid item xs={12} sm={6}>
                    <InputLabel htmlFor="customer">Customer</InputLabel>
                     <Typography variant="h6" className={classes.labelTitle}>{recData.customer_name} </Typography>
                     <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(recData.customer_id); }}>View Profile </Button>
                   </Grid>
+
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="main_category">Main Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={mainCategory}
+                      onChange={handleMainCategory}
+                      name= 'main_category'
+                      id= 'main_category'
+                      // label='customer'
+                      fullWidth
+                      required
+                      // disabled = {budgetList ==""}
+                    >    
+                    {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                      return(
+                        data.type === 1 ? 
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         : ''
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="category">Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={category}
+                      onChange={handleCategory}
+                      name= 'category'
+                      id= 'category'
+                      // label='customer'
+                      fullWidth
+                      required
+                      // disabled = {mainCategory ==""}
+                    >    
+                     {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                      return(
+                        data.type === 2 ? 
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         : ''
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="sub_category">Sub Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={subCategory}
+                      onChange={handleSubCategory}
+                      name= 'sub_category'
+                      id= 'sub_category'
+                      // label='customer'
+                      fullWidth
+                      required
+                      // disabled = {category ==""}
+                    >    
+                    {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                      return(
+                        data.type === 3 ? 
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         : ''
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+
+                  <Grid item xs={12} sm={2}>
+                    {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      Update Budget
+                    </Fab> */}
+                    <Button variant="outlined" size="small"  onClick={(event) => { handleBudgetOpen(recData.budget_id); }}>Update Budget </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
+                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography> */}
+                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="product">Product*</InputLabel>
                     <Select
@@ -331,17 +443,16 @@ return (
                      })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
-                    {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
-                      Update Budget
-                    </Fab> */}
-                    <Button variant="outlined" size="small"  onClick={(event) => { handleBudgetOpen(recData.budget_id); }}>Update Budget </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
-                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography> */}
-                   </Grid>
+                 
 
+                   <Grid item xs={12} sm={6}>
+                     {editableData.order_type ===1 ? 
+                      <Button variant="outlined" size="small"  onClick={(event) => { handleFixedOpen(recData.order_type_id); }}>Update Fixed Order Type Details </Button> :
+                      <Button variant="outlined" size="small"   onClick={(event) => { handleFlexOpen(recData.order_type_id); }}>Update Flex Order Type Details </Button>
+                     }
+                    </Grid>
+
+                    
                     <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
@@ -360,12 +471,6 @@ return (
                       <MenuItem value={5}>Cash</MenuItem>
                     </Select>
                    </Grid>
-                   <Grid item xs={12} sm={6}>
-                     {editableData.order_type ===1 ? 
-                      <Button variant="outlined" size="small"  onClick={(event) => { handleFixedOpen(recData.order_type_id); }}>Update Fixed Order Type Details </Button> :
-                      <Button variant="outlined" size="small"   onClick={(event) => { handleFlexOpen(recData.order_type_id); }}>Update Flex Order Type Details </Button>
-                     }
-                    </Grid>
                    
                 </Grid>
           </Paper>

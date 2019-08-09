@@ -16,9 +16,11 @@ import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import Tooltip from '@material-ui/core/Tooltip';
 import PdfIcon from '@material-ui/icons/PictureAsPdf';
+import PrintIcon from '@material-ui/icons/Print';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Add from './Add';
@@ -91,7 +93,7 @@ export default function Order() {
       display: 'flex',
       flexGrow: 1,
     },
-    appBar: {
+    appBar: { 
       zIndex: theme.zIndex.drawer + 1,
     },
     drawer: {
@@ -135,6 +137,31 @@ export default function Order() {
 
   function handleClose(){
     setOpen(false);
+  }
+
+  function handleDocumentUpload(orderId){
+
+  //   let formData = new FormData();
+
+  //   formData.append('data', JSON.stringify(orderId));
+    
+  //   for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
+  //     formData.append('avatar', document.getElementById('id_proof').files[x])
+  //   }
+  //   // console.log("formadata", formData);
+  //   const response = await Customer.register({ formData: formData });
+    
+
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await OrderAPI.uploadDocument({id: orderId});
+  //       // setOrder(result.order);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  // };
+  // fetchData();
+
   }
 
   function handleEditOpen(data){
@@ -297,7 +324,12 @@ export default function Order() {
                         </Tooltip>
                         <Tooltip title="Download PDF">
                         <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={createAndDownloadPdf()}>
-                          <PdfIcon /> 
+                          <PrintIcon /> 
+                        </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Upload Documents">
+                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleDocumentUpload(data.id); }} disabled= {data.assigned_to===4}>
+                          <CloudUpload />
                         </IconButton>
                         </Tooltip>
                         <Tooltip title="Assign to Finance">
@@ -305,7 +337,7 @@ export default function Order() {
                           <SendIcon />
                         </IconButton>
                         </Tooltip>
-                        
+                       
                         {/* <Fab variant="round" tooltip="Update" size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }}>
                             <EditIcon />
                         </Fab>

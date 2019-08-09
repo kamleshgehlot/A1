@@ -22,6 +22,7 @@ var Order = function (params) {
   this.is_active = params.is_active;
   this.created_by =  params.created_by;
   this.updated_by =  params.updated_by;
+  this.related_to = params.related_to;
 
   this.lastInsertId = params.lastInsertId; 
   this.budget_id = params.budgetId;
@@ -62,9 +63,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, product_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows.insertId);
@@ -89,9 +90,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, product_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows.insertId);
@@ -527,7 +528,7 @@ Order.prototype.getOrderList = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.order_type_id, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1',function (error, rows, fields) {
+        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

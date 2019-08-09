@@ -121,9 +121,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [customer, setCustomer] = useState(null);
   const [junkData,setJunkData] = useState({});
   const [productList, setProductList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
   const [isNewCustomer,setIsNewCustomer] = useState(0);
   const [assignInterest, setAssignInterest] = React.useState([]);
+  const [mainCategory, setMainCategory] = React.useState('');
+  const [category, setCategory] = React.useState('');
+  const [subCategory, setSubCategory] = React.useState('');
   
+  const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
 
 
   function validate(values) {
@@ -223,6 +228,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   function handleChangeMultiple(event) {
     setAssignInterest(event.target.value);
   }
+  function handleMainCategory(event) {
+    setMainCategory(event.target.value);
+  }
+  function handleCategory(event) {
+    setCategory(event.target.value);
+  }
+  function handleSubCategory(event) {
+    setSubCategory(event.target.value);
+  }
+
+
   
   
   function pastDate(){
@@ -265,6 +281,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         const result = await Category.productlist();
         setProductList(result.productList);
 
+        const category_list = await Category.list();
+        setCategoryList(category_list.categoryList);
+
         const order_id = await OrderAPI.getnewid();
         let zero = 7 - (order_id[0].id.toString().length); 
         let orderId='';
@@ -296,6 +315,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   fetchData();
   }, []);
 
+  console.log(categoryList);
+
   const addOrder = async () => {
     const response = await OrderAPI.postOrder({
       order_id :  inputs.order_id,
@@ -308,6 +329,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       order_date  : orderDate,
       assigned_to : 0,
       budget_list : budgetList,
+      related_to : related_to,
       is_active : 1,
      });
     // console.log('response ', response);
@@ -407,26 +429,73 @@ return (
                         }
                       </RadioGroup>
                     </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product">Product*</InputLabel>
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="main_category">Main Category*</InputLabel>
                     <Select
-                      multiple
-                      value={assignInterest}
-                      onChange={handleChangeMultiple}
-                      name= 'product'
-                      id= 'product'
+                      // multiple
+                      value={mainCategory}
+                      onChange={handleMainCategory}
+                      name= 'main_category'
+                      id= 'main_category'
                       // label='customer'
                       fullWidth
                       required
                       disabled = {budgetList ==""}
                     >    
-                     {(productList.length > 0 ? productList : []).map((data,index)=>{
+                    {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
-                         <MenuItem value={data.id}>{data.name}</MenuItem>
+                        data.type === 1 ? 
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         : ''
                       ) 
                      })}
                     </Select>
                   </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="category">Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={category}
+                      onChange={handleCategory}
+                      name= 'category'
+                      id= 'category'
+                      // label='customer'
+                      fullWidth
+                      required
+                      disabled = {mainCategory ==""}
+                    >    
+                     {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                      return(
+                        data.type === 2 ? 
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         : ''
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="sub_category">Sub Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={subCategory}
+                      onChange={handleSubCategory}
+                      name= 'sub_category'
+                      id= 'sub_category'
+                      // label='customer'
+                      fullWidth
+                      required
+                      disabled = {category ==""}
+                    >    
+                    {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                      return(
+                        data.type === 3 ? 
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         : ''
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+
                   <Grid item xs={12} sm={2}>
                   {customer  != null && isNewCustomer === 1? 
                     <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
@@ -450,8 +519,47 @@ return (
                   : ''
                   }
                   </Grid>
-                
+
                   
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="product">Product*</InputLabel>
+                    <Select
+                      multiple
+                      value={assignInterest}
+                      onChange={handleChangeMultiple}
+                      name= 'product'
+                      id= 'product'
+                      // label='customer'
+                      fullWidth
+                      required
+                      disabled = {subCategory ==""}
+                    >    
+                     {(productList.length > 0 ? productList : []).map((data,index)=>{
+                      return(
+                         <MenuItem value={data.id}>{data.name}</MenuItem>
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+                   <Grid item xs={12} sm={6}>
+                   <InputLabel htmlFor="order_type">Order Type</InputLabel>
+                      <RadioGroup
+                        aria-label="order_type"
+                        name="order_type"
+                        className={classes.group}
+                        value={inputs.order_type}
+                        onChange={handleInputChange}
+                        row
+                      >
+                        <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="Fixed Order" onClick={handleFixedOpen} />
+                        <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Flex Order" onClick={handleFlexOpen}  />
+                        <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>
+                        {/* <Fab variant="extended" size="small" className={classes.buttonMargin}>
+                        Add Details
+                        </Fab>   */}
+                      </RadioGroup>
+                    </Grid>
+
                     <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
@@ -471,24 +579,6 @@ return (
                       <MenuItem value={5}>Cash</MenuItem>
                     </Select>
                    </Grid>
-                   <Grid item xs={12} sm={6}>
-                   <InputLabel htmlFor="order_type">Order Type</InputLabel>
-                      <RadioGroup
-                        aria-label="order_type"
-                        name="order_type"
-                        className={classes.group}
-                        value={inputs.order_type}
-                        onChange={handleInputChange}
-                        row
-                      >
-                        <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="Fixed Order" onClick={handleFixedOpen} />
-                        <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Flex Order" onClick={handleFlexOpen}  />
-                        <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>
-                        {/* <Fab variant="extended" size="small" className={classes.buttonMargin}>
-                        Add Details
-                        </Fab>   */}
-                      </RadioGroup>
-                    </Grid>
                    
                 </Grid>
           </Paper>
