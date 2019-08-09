@@ -68,8 +68,8 @@ export default function Order() {
   const [customerData, setCustomerData] = useState([]);
   const [fixedPaymentData, setFixedPaymentData] = useState(null);
   const [flexPaymentData, setFlexPaymentData] = useState(null);
+  const [orderIdForUpload,setOrderIdForUpload] = useState();
   const [order,setOrder] = useState({});
-
 
   
 
@@ -116,6 +116,9 @@ export default function Order() {
       padding:theme.spacing(2),
       borderRadius: theme.spacing(7),
     },
+    input: {
+      display: 'none',
+    },
     fab:{
       marginRight: theme.spacing(1),
       fontSize: 12,
@@ -129,6 +132,9 @@ export default function Order() {
       textTransform:"initial"
     },
   }));
+
+
+  
   const classes = useStyles();
 
   function handleClickOpen(){
@@ -139,29 +145,37 @@ export default function Order() {
     setOpen(false);
   }
 
-  function handleDocumentUpload(orderId){
+  function uploadFileSelector(event){
+  console.log(event.target.files);
 
-  //   let formData = new FormData();
-
-  //   formData.append('data', JSON.stringify(orderId));
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(orderIdForUpload));
     
-  //   for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
-  //     formData.append('avatar', document.getElementById('id_proof').files[x])
-  //   }
-  //   // console.log("formadata", formData);
-  //   const response = await Customer.register({ formData: formData });
-    
+    for (var x = 0; x < document.getElementById('upload_document').files.length; x++) {
+      formData.append('avatar', document.getElementById('upload_document').files[x])
+    }
+    console.log("formadata", formData);
 
-  //   const fetchData = async () => {
-  //     try {
-  //       const result = await OrderAPI.uploadDocument({id: orderId});
-  //       // setOrder(result.order);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  // };
-  // fetchData();
+    const fetchData = async () => {
+      try {
+          const result = await OrderAPI.uploadDocument({formData: formData});
+          if(result.order.length>0){
+            alert('Upload Successfully...');
+            setOrder(result.order);
+            // document.getElementById('upload_document').value = "";
+            // event.target.value = null;
+            console.log(event.target.files);
+          }
+      } catch (error) {
+        console.log(error);
+      }
+  };
+  fetchData();
+  }
 
+  function handleUploadFile(orderId){
+    console.log(orderId);
+    setOrderIdForUpload(orderId);
   }
 
   function handleEditOpen(data){
@@ -327,32 +341,20 @@ export default function Order() {
                           <PrintIcon /> 
                         </IconButton>
                         </Tooltip>
-                        <Tooltip title="Upload Documents">
-                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleDocumentUpload(data.id); }} disabled= {data.assigned_to===4}>
-                          <CloudUpload />
-                        </IconButton>
-                        </Tooltip>
+                        <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
+                          <label htmlFor="upload_document">
+                            <Tooltip title="Upload Documents">                              
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
+                                <CloudUpload />
+                              </IconButton>
+                            </Tooltip>
+                          </label>
                         <Tooltip title="Assign to Finance">
-                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.assigned_to===4}>
+                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.doc_upload_status===0}>
                           <SendIcon />
                         </IconButton>
                         </Tooltip>
-                       
-                        {/* <Fab variant="round" tooltip="Update" size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }}>
-                            <EditIcon />
-                        </Fab>
-                        <Fab variant="round" size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }}>
-                            <PdfIcon />
-                        </Fab>
-                        <Fab variant="round" size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }}>
-                            <SendIcon />
-                        </Fab> */}
-                      
-                        {/* <Button variant="outlined" size="small" color="primary"  value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} >
-                          Update
-                        </Button>                       
-                         */}
-                        </StyledTableCell>
+                       </StyledTableCell>
                       </TableRow>
                        )
                       }

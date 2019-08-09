@@ -235,7 +235,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
       formData.append('avatar', document.getElementById('id_proof').files[x])
     }
-    // console.log("formadata", formData);
+    console.log("formadata", formData);
     const response = await Customer.register({ formData: formData });
     
     

@@ -11,6 +11,23 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 });
 
 export default {
+  uploadDocument: async (data1) => {
+    // console.log("data1 ",data1);
+    const URL = `${c.API_CONSUMER}/api/franchise/order/uploaddoc`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: data1.formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
   
   getnewid: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getnewid`;

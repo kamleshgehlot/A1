@@ -1,4 +1,37 @@
 const Order = require('../../models/franchise/order.js');
+const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
+
+const uploadDoc = function (req, res, next) {
+  // console.log("****************Customer..................", req.body.data);
+  // console.log("%%%%%%%%%%% Customer File %%%%%%%%%%%%%", req.files);
+  // console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
+
+
+
+  const OrderData = JSON.parse(req.body.data);
+  let attachments = '';
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
+	let orderParams = {
+    order_id: OrderData,
+    document :  attachments,
+    created_by : req.decoded.id,
+    user_id : req.decoded.user_id,
+  };
+	try{
+      const newDoc = new UploadDocument(orderParams);
+	     newDoc.uploadDoc().then(function(result){
+            new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+              res.send({ order: order});
+      });
+    });
+	}catch(err){
+    console.log("Error..",err);
+	}
+};
+
 
 const getnewid = function(req, res, next) {
   try {
@@ -254,4 +287,4 @@ const editOrder = function (req, res, next) {
   
 
 
-module.exports = { getnewid, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
+module.exports = { getnewid, uploadDoc, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
