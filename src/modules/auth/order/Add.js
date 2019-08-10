@@ -285,12 +285,19 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         setCategoryList(category_list.categoryList);
 
         const order_id = await OrderAPI.getnewid();
-        let zero = 7 - (order_id[0].id.toString().length); 
-        let orderId='';
-        for(let i=0; i< zero ; i++){
-          orderId += '0';
+        console.log('123',order_id)
+        let zero = 0;
+        if(order_id == ""){
+         setInput('order_id','0000001');
+        }else{
+          zero = 7 - (order_id[0].id.toString().length); 
+          let orderId='';
+          for(let i=0; i< zero ; i++){
+            orderId += '0';
+          }
+         setInput('order_id',(orderId + (order_id[0].id+ 1)));
         }
-        setInput('order_id',(orderId + (order_id[0].id+ 1)));
+          
         // console.log('order id',inputs.order_id);
         // setInput('order_id',("" + (order_id.id[0].id+ 1)));
           // let now = Date.now().toString() // '1492341545873'
