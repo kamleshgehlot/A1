@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Pdf from "react-to-pdf";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
@@ -23,6 +24,8 @@ import PdfIcon from '@material-ui/icons/PictureAsPdf';
 import PrintIcon from '@material-ui/icons/Print';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import * as pdfmake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import Add from './Add';
 import Edit from './Edit';
 import ConfirmationDialog from '../ConfirmationDialog.js';
@@ -70,22 +73,26 @@ export default function Order() {
   const [flexPaymentData, setFlexPaymentData] = useState(null);
   const [orderIdForUpload,setOrderIdForUpload] = useState();
   const [order,setOrder] = useState({});
-
-  
+  const ref = React.createRef();
 
   function createAndDownloadPdf() {
-    // const state = {
-    //   name: 'Bhagyashree Mathur',
-    //   receiptId: 123,
-    //   price1: 120,
-    //   price2: 125,
-    // }
-    // axios.post('/create-pdf',state)
-    //   .then(() => axios.get('fetch-pdf', { responseType: 'blob' }))
-    //   .then((res) => {
-    //     const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-    //     saveAs(pdfBlob, 'newPdf.pdf');
-    //   })
+    // <Pdf targetRef={ref} filename="code-example.pdf">
+    //   {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}
+    // </Pdf>
+          // <div ref={ref}>
+          //   <h1>Hello CodeSandbox</h1>
+          //   <h2>Start editing to see some magic happen!</h2>
+          // </div>
+
+          pdfmake.vfs = pdfFonts.pdfMake.vfs;
+          var dd = {
+            name : 'Shahrukh',
+            price1: 10,
+            price2: 20,
+          }
+
+          pdfmake.createPdf(dd).download();
+
   }
 
   const useStyles = makeStyles(theme => ({
@@ -189,6 +196,7 @@ export default function Order() {
     // console.log('ddd',orderId);
   }
   
+  
 
   function handleConfirmationDialog (response){
 
@@ -239,6 +247,7 @@ export default function Order() {
   }, []);
 
   return (
+    // <div ref={ref}>
     <div>
      <Grid container spacing={2}>
           <Grid item xs={12} sm={3}>
@@ -337,9 +346,15 @@ export default function Order() {
                         </IconButton>
                         </Tooltip>
                         <Tooltip title="Download PDF">
-                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={createAndDownloadPdf()}>
-                          <PrintIcon /> 
-                        </IconButton>
+                        {/* <Pdf targetRef={ref} filename="example.pdf">
+                          {({ toPdf }) => 
+                          <button onClick={toPdf}>Generate Pdf</button>
+                        }
+                        </Pdf> */}
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={createAndDownloadPdf}>
+                                <PrintIcon /> 
+                              </IconButton>
+                       
                         </Tooltip>
                         <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
                           <label htmlFor="upload_document">
