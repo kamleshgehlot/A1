@@ -36,6 +36,7 @@ import { saveAs } from 'file-saver';
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
 import PdfAPI from '../../../api/PDF';
+import { fontSize } from '@material-ui/system';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -73,25 +74,75 @@ export default function Order() {
   const [flexPaymentData, setFlexPaymentData] = useState(null);
   const [orderIdForUpload,setOrderIdForUpload] = useState();
   const [order,setOrder] = useState({});
-  const ref = React.createRef();
 
-  function createAndDownloadPdf() {
-    // <Pdf targetRef={ref} filename="code-example.pdf">
-    //   {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}
-    // </Pdf>
-          // <div ref={ref}>
-          //   <h1>Hello CodeSandbox</h1>
-          //   <h2>Start editing to see some magic happen!</h2>
-          // </div>
+  console.log(order)
 
+  function createAndDownloadPdf(data) {
+          var body = [];
+
+          body.push([{ columns: [{ text: [{ text:  data.customer_name+'\n', style: 'Header1Center' }, { text: '11/822, Chopasni Housing Board,Jodhpur-342008\n', style: 'Header2Center' }, { text: 'GSTIN/UIN: 08AFOPV4001M1Z0\nMobile : 9782152296\n', style: 'Header3Center' }] }], colSpan: 10 }, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+          body.push([{ text: 'Invoice No.: ' + data.order_id, colSpan: 5, style: 'Common' }, {}, {}, {}, {}, { text: 'Order Date: ' + data.order_date, colSpan: 5, style: 'Common', alignment: 'right' }, {}, {}, {}, {}])
+          body.push([{ columns: [{ text: [{ text:  'Consignee'+'\n', style: 'customer', fontSize: 18}, { text: data.customer_name + '\n', style: 'customer' }, { text: data.address + '\n', style: 'customer' }, { text: data.mobile + '\n\n', style: 'customer' }] }], colSpan: 10}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+          body.push([{ columns: [{ text: [{ text:  'Product'+'\n', style: 'customer', fontSize: 18}, { text: data.product_id + '\n\n', style: 'customer' }]}], colSpan: 10}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+          // body.push([{ text: '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCustomer Signature', style: 'Common' }, { text: '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCSR Signature' , style: 'Common', alignment: 'right' }])
+         
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           var dd = {
-            name : 'Shahrukh',
-            price1: 10,
-            price2: 20,
+            content: [
+              // Header
+              {
+                table: {
+                  headerRows: 0,
+                  widths: ['10%', '10%', '10%', '10%', '10%', '10%', '10%', '10%', '10%', '10%'],
+                  dontBreakRows: true,
+                  body: body,
+                }
+              },
+              { text: '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' },
+              [{ text: 'Customer Signature', style: 'Common' }, { text: 'CSR Signature' , style: 'Common', alignment: 'right' }]
+            ],
+            styles: {
+              // Header
+              Header1Center: {
+                fontSize: 14,
+                alignment: 'center',
+              },
+              Header2Center: {
+                fontSize: 12,
+                alignment: 'center',
+              },
+              Header3Center: {
+                fontSize: 10,
+                alignment: 'center',
+              },
+              custoemr: {
+                // fontSize: 10,
+                alignment: 'right',
+              },
+              // Customer: {
+              //   fontSize: 10,
+              //   alignment: 'left',
+              //   margin: [40, 5]
+              // },
+              ItemHeader: {
+                fontSize: 10,
+                bold: true
+              },
+              Common: {
+                fontSize: 10,
+              }
+            },
+            pageSize: 'A4',
+            pageOrientation: 'portrait',
+            //pageMargins: [20, 20, 20, 20]
           }
 
-          pdfmake.createPdf(dd).download();
+
+          // pdfmake.createPdf(dd).download();
+            pdfmake.createPdf(dd).open();
+            // pdfmake.createPdf(dd).print({},window);
+            // pdfmake.createPdf(dd).print();
+            // const pdfDocGenerator = pdfMake.createPdf(dd);
 
   }
 
@@ -244,6 +295,7 @@ export default function Order() {
       }
   };
   fetchData();
+
   }, []);
 
   return (
@@ -351,7 +403,7 @@ export default function Order() {
                           <button onClick={toPdf}>Generate Pdf</button>
                         }
                         </Pdf> */}
-                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={createAndDownloadPdf}>
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
                                 <PrintIcon /> 
                               </IconButton>
                        
