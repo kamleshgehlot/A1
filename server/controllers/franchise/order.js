@@ -47,7 +47,8 @@ const getnewid = function(req, res, next) {
 const getAll = function(req, res, next) {
   try {
     new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-      res.send({ order });
+      console.log('hello --',order);
+      res.send({ order: order });
     });
   } catch (error) {
     console.log('Error: ', error);

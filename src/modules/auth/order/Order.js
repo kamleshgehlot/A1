@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Pdf from "react-to-pdf";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
@@ -72,10 +71,9 @@ export default function Order() {
   const [customerData, setCustomerData] = useState([]);
   const [fixedPaymentData, setFixedPaymentData] = useState(null);
   const [flexPaymentData, setFlexPaymentData] = useState(null);
-  const [orderIdForUpload,setOrderIdForUpload] = useState();
-  const [order,setOrder] = useState({});
+  const [orderIdForUpload,setOrderIdForUpload] = useState(null);
+  const [order,setOrder] = useState([]);
 
-  console.log(order)
 
   function createAndDownloadPdf(data) {
           var body = [];
@@ -84,7 +82,6 @@ export default function Order() {
           body.push([{ text: 'Invoice No.: ' + data.order_id, colSpan: 5, style: 'Common' }, {}, {}, {}, {}, { text: 'Order Date: ' + data.order_date, colSpan: 5, style: 'Common', alignment: 'right' }, {}, {}, {}, {}])
           body.push([{ columns: [{ text: [{ text:  'Consignee'+'\n', style: 'customer', fontSize: 18}, { text: data.customer_name + '\n', style: 'customer' }, { text: data.address + '\n', style: 'customer' }, { text: data.mobile + '\n\n', style: 'customer' }] }], colSpan: 10}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
           body.push([{ columns: [{ text: [{ text:  'Product'+'\n', style: 'customer', fontSize: 18}, { text: data.product_id + '\n\n', style: 'customer' }]}], colSpan: 10}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
-          // body.push([{ text: '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCustomer Signature', style: 'Common' }, { text: '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCSR Signature' , style: 'Common', alignment: 'right' }])
          
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           var dd = {
@@ -212,18 +209,17 @@ export default function Order() {
     for (var x = 0; x < document.getElementById('upload_document').files.length; x++) {
       formData.append('avatar', document.getElementById('upload_document').files[x])
     }
-    console.log("formadata", formData);
 
     const fetchData = async () => {
       try {
+        if(document.getElementById('upload_document').files.length !=0) {
           const result = await OrderAPI.uploadDocument({formData: formData});
           if(result.order.length>0){
             alert('Upload Successfully...');
             setOrder(result.order);
-            // document.getElementById('upload_document').value = "";
-            // event.target.value = null;
-            console.log(event.target.files);
+            setOrderIdForUpload(null);
           }
+        }
       } catch (error) {
         console.log(error);
       }
@@ -232,7 +228,6 @@ export default function Order() {
   }
 
   function handleUploadFile(orderId){
-    console.log(orderId);
     setOrderIdForUpload(orderId);
   }
 
@@ -244,14 +239,11 @@ export default function Order() {
   function handleAssignToFinance(data){;
     setOrderId(data);
     setConfirmation(true);
-    // console.log('ddd',orderId);
   }
   
   
 
   function handleConfirmationDialog (response){
-
-    // console.log('res..',response);
     if(response === 1){
       const fetchData = async () => {
         try {
@@ -266,7 +258,6 @@ export default function Order() {
     }
     setConfirmation(false);
   }
-  // console.log('ordeerm,',order);
   function handleEditClose(){
     setEditOpen(false);
   }
@@ -287,15 +278,14 @@ export default function Order() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const result = await OrderAPI.getAll();
+        // console.log('result',result)
         setOrder(result.order);
       } catch (error) {
         console.log(error);
       }
   };
-  fetchData();
-
+    fetchData();
   }, []);
 
   return (
@@ -367,7 +357,6 @@ export default function Order() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {/* {console.log('eee',order)} */}
                     {(order.length > 0 ? order : []).map((data, index) => {
                       if(data.assigned_to != 4){
                        return(
