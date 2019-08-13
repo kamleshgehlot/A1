@@ -27,6 +27,7 @@ import * as pdfmake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import Add from './Add';
 import Edit from './Edit';
+import DD from './FlexTypeDoc';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 
 import axios from 'axios';
@@ -76,71 +77,14 @@ export default function Order() {
 
 
   function createAndDownloadPdf(data) {
-          var body = [];
-
-          body.push([{ columns: [{ text: [{ text:  data.customer_name+'\n', style: 'Header1Center' }, { text: '11/822, Chopasni Housing Board,Jodhpur-342008\n', style: 'Header2Center' }, { text: 'GSTIN/UIN: 08AFOPV4001M1Z0\nMobile : 9782152296\n', style: 'Header3Center' }] }], colSpan: 10 }, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
-          body.push([{ text: 'Invoice No.: ' + data.order_id, colSpan: 5, style: 'Common' }, {}, {}, {}, {}, { text: 'Order Date: ' + data.order_date, colSpan: 5, style: 'Common', alignment: 'right' }, {}, {}, {}, {}])
-          body.push([{ columns: [{ text: [{ text:  'Consignee'+'\n', style: 'customer', fontSize: 18}, { text: data.customer_name + '\n', style: 'customer' }, { text: data.address + '\n', style: 'customer' }, { text: data.mobile + '\n\n', style: 'customer' }] }], colSpan: 10}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
-          body.push([{ columns: [{ text: [{ text:  'Product'+'\n', style: 'customer', fontSize: 18}, { text: data.product_id + '\n\n', style: 'customer' }]}], colSpan: 10}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
-         
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
-          var dd = {
-            content: [
-              // Header
-              {
-                table: {
-                  headerRows: 0,
-                  widths: ['10%', '10%', '10%', '10%', '10%', '10%', '10%', '10%', '10%', '10%'],
-                  dontBreakRows: true,
-                  body: body,
-                }
-              },
-              { text: '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' },
-              [{ text: 'Customer Signature', style: 'Common' }, { text: 'CSR Signature' , style: 'Common', alignment: 'right' }]
-            ],
-            styles: {
-              // Header
-              Header1Center: {
-                fontSize: 14,
-                alignment: 'center',
-              },
-              Header2Center: {
-                fontSize: 12,
-                alignment: 'center',
-              },
-              Header3Center: {
-                fontSize: 10,
-                alignment: 'center',
-              },
-              custoemr: {
-                // fontSize: 10,
-                alignment: 'right',
-              },
-              // Customer: {
-              //   fontSize: 10,
-              //   alignment: 'left',
-              //   margin: [40, 5]
-              // },
-              ItemHeader: {
-                fontSize: 10,
-                bold: true
-              },
-              Common: {
-                fontSize: 10,
-              }
-            },
-            pageSize: 'A4',
-            pageOrientation: 'portrait',
-            //pageMargins: [20, 20, 20, 20]
-          }
-
+          var dd = DD();
+          pdfmake.createPdf(dd).open();
 
           // pdfmake.createPdf(dd).download();
-            pdfmake.createPdf(dd).open();
-            // pdfmake.createPdf(dd).print({},window);
-            // pdfmake.createPdf(dd).print();
-            // const pdfDocGenerator = pdfMake.createPdf(dd);
-
+          // pdfmake.createPdf(dd).print({},window);
+          // pdfmake.createPdf(dd).print();
+          // const pdfDocGenerator = pdfMake.createPdf(dd);
   }
 
   const useStyles = makeStyles(theme => ({
