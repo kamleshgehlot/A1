@@ -50,7 +50,8 @@ export default {
       throw error;
     }
   },
-
+  
+  
   convertedList: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/convertedList`;
     try {
@@ -197,4 +198,20 @@ export default {
     }
   },
 
+  getFlexOrderDataForPDF: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/get-flex-order-data-for-PDF`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },  
 };

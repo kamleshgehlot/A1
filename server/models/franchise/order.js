@@ -495,7 +495,7 @@ Order.prototype.getCustomerDetails = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from customer where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+        connection.query('SELECT c.*,  i.name as id_type_name from customer as c inner join id_type as i on c.id_type = i.id where c.id = "'+that.lastInsertId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -674,6 +674,72 @@ Order.prototype.getnewid = function () {
         console.log("Error...", error);
         reject(error);
       }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Order.prototype.getCompanyDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select franchise_id from user where id = 1',function (error, rows, fields) {
+            if (!error) {
+              connection.changeUser({ database: dbName["prod"]});
+              connection.query('select company_id from franchise where id = "'+rows[0].franchise_id+'"',function (error, rows, fields) {                
+                connection.query('select name as franchise_name, nbzn, location, director as director_name, email, contact, alt_contact, website from company where company_id = "'+rows[0].company_id+'" limit 1',function (error, rows, fields) {
+                  resolve(rows);
+                });
+              });
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+
+
+Order.prototype.getProductDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName["prod"]});
+        connection.query('select * from product where id IN('+that.products_id+')',function (error, rows, fields) {                
+            resolve(rows);
+        });
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
       connection.release();
       console.log('Order Added for Franchise Staff %d', connection.threadId);
     });

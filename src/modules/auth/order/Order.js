@@ -77,14 +77,28 @@ export default function Order() {
 
 
   function createAndDownloadPdf(data) {
-          pdfmake.vfs = pdfFonts.pdfMake.vfs;
-          var dd = DD();
-          pdfmake.createPdf(dd).open();
+    
+    const fetchData = async () => {
+      try {
+        const result = await OrderAPI.getFlexOrderDataForPDF({data: data});
+        // console.log('result',result)
+        
+        pdfmake.vfs = pdfFonts.pdfMake.vfs;
+        var dd = DD(result,data);
+        pdfmake.createPdf(dd).open();
 
-          // pdfmake.createPdf(dd).download();
-          // pdfmake.createPdf(dd).print({},window);
-          // pdfmake.createPdf(dd).print();
-          // const pdfDocGenerator = pdfMake.createPdf(dd);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+
+
+
+    // pdfmake.createPdf(dd).download();
+    // pdfmake.createPdf(dd).print({},window);
+    // pdfmake.createPdf(dd).print();
+    // const pdfDocGenerator = pdfMake.createPdf(dd);
   }
 
   const useStyles = makeStyles(theme => ({

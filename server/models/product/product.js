@@ -62,7 +62,7 @@ Product.prototype.all = function () {
       }
 
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where status=1 OR status=2 order by id desc', function (error, rows, fields) {
+      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 
