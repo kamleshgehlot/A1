@@ -17,6 +17,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
+
 import Add from './Add';
 import Edit from './Edit';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -57,7 +63,8 @@ export default function Franchise(props) {
   const [franchiseData, setFranchiseData]= useState();
   const [franchiseList, setFranchiseList] = useState({});
   const [franchiseId, setFranchiseId] = useState([]);
-  
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
   const roleName = APP_TOKEN.get().roleName;
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
@@ -68,15 +75,29 @@ export default function Franchise(props) {
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
   
+// function a11yProps(index) {
+//   return {
+//     id: `simple-tab-${index}`,
+//     'aria-controls': `simple-tabpanel-${index}`,
+//   };
+// }
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      width: 900
     },
     drawer: {
       width: drawerWidth,
@@ -121,11 +142,16 @@ export default function Franchise(props) {
     },
     secondaryHeading: {
       fontSize: theme.typography.pxToRem(12),
+      // marginLeft:theme.spacing(3),
       // color: theme.palette.text.secondary,
     },
     button:{
       color:"white",
       fontSize: theme.typography.pxToRem(10),
+    },
+    textsize:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(12),
     }
   }));
   const classes = useStyles();
@@ -143,7 +169,6 @@ export default function Franchise(props) {
 
         result.userList.map(data => {
           let found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
-
           if(!found) {
             franchiseIdTemp.push({
               director_id: data.director_id,
@@ -152,7 +177,8 @@ export default function Franchise(props) {
               company_name: data.company_name,
               suburb: data.suburb,
               city: data.city,
-              contact: data.contact
+              contact: data.contact,
+              status: data.state
             });
           }
         });
@@ -170,7 +196,22 @@ export default function Franchise(props) {
     // })
     
   }, []);
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
   
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
   function handleClickOpen() {
     setOpen(true);
   }
@@ -206,6 +247,10 @@ export default function Franchise(props) {
     setShowFranchise(true);
     setShowStaff(false);
   }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
 
   return (
     <div>
@@ -223,17 +268,28 @@ export default function Franchise(props) {
               Franchise
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <AppBar position="static"  className={classes.appBar}>
+            <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+              <Tab label="Open" />
+              <Tab label="Active" />
+              <Tab label="Inactive"  />
+              <Tab label="Close" />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={value}>
+            {/* <Grid item xs={12} sm={8}> */}
                 
+            {/* {console.log('valuefg cf----==',value)} */}
                     { (franchiseId.length > 0 ? franchiseId : []).map((data, index)=>{
                       // data.franchise_id !== totalFranchise ? console.log("hello ") : console.log("bye")
 
                       return(
-                        <ExpansionPanel
+                       data.status===value+1? <ExpansionPanel
                           className={classes.expansionTitle}
                           expanded={expanded === data.director_id}
                           onChange={handleChange(data.director_id)}
                         >
+                        {console.log('value----==',value)}
                           <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls=""
@@ -241,7 +297,17 @@ export default function Franchise(props) {
                           >
                               {/* <Typography className={classes.expand}>Franchise Details</Typography> */}
                               <Typography className={classes.expandHeading}>{data.franchise_name}</Typography>
-                              <Typography className={classes.secondaryHeading}>{data.company_name +' at '+ data.suburb + ', ' + data.city }</Typography>
+                              <Typography className={classes.secondaryHeading}>{data.company_name +' at '+ data.suburb + ', ' + data.city}</Typography>
+                              
+                              {/* <Typography className={classes.secondaryHeading}>
+                              {
+                                                data.status===1 ? 'Open' 
+                                        : data.status===2 ? 'Active' 
+                                        : data.status===3 ? 'Inactive' 
+                                        : data.status===4 ? 'Close' 
+                                        : ''
+                                    }
+                              </Typography> */}
                           </ExpansionPanelSummary>
                           <ExpansionPanelDetails>
                             <Paper style={{ width: '100%' }}>
@@ -293,12 +359,15 @@ export default function Franchise(props) {
                               </Table>
                             </Paper>
                           </ExpansionPanelDetails>
-                        </ExpansionPanel>
+                        </ExpansionPanel>:''
                       )
                       })
                     }
                    
-          </Grid>
+          {/* </Grid> */}
+          
+          </TabPanel>
+          
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} setFranchiseId={setFranchiseIdFn}/>
       

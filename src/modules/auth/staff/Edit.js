@@ -35,12 +35,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -56,12 +60,21 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+    marginTop:theme.spacing(3),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -95,19 +108,19 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   }
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Edit Staff
               </Typography>
-              <Button onClick={addStaffMaster} color="inherit">
+              {/* <Button onClick={addStaffMaster} color="inherit">
                 Update
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
@@ -115,11 +128,16 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           <Paper className={classes.paper}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">First Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="first_name"
                       name="first_name"
-                      label="First Name"
+                      // label="First Name"
                       value={staffList.first_name}
                       onChange={handleInputChange}
                       fullWidth
@@ -130,12 +148,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Last Name</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="last_name"
                       name="last_name"
-                      label="Last Name"
+                      // label="Last Name"
                       type="text"
                       required
                       value={staffList.last_name} 
@@ -146,12 +169,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="location">Location *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="location"
                       name="location"
-                      label="Location"
+                      // label="Location"
                       type="text"
                       value={staffList.location}
                       onChange={handleInputChange}
@@ -160,12 +188,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="contact"
                       name="contact"
-                      label="Contact"
+                      // label="Contact"
                       type="number"
                       value={staffList.contact} 
                       onChange={handleInputChange}
@@ -174,12 +207,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="email">Email Id *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="email"
                       name="email"
-                      label="Email Id"
+                      // label="Email Id"
                       type="email"
                       value={staffList.email} 
                       onChange={handleInputChange}
@@ -189,28 +227,36 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city">Position *</InputLabel>
+                  <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
                     <Select
                       value={staffList.position}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'position',
                         id: 'position',
-                        label:'position'
+                        // label:'position'
                       }}
-                      fullWidth
-                      label="position"
+                      fullWidth className={classes.textsize}
+                      // label="position"
                       required
                     > 
                       {
                         positions.map(ele =>{
                           return(
-                          <MenuItem value={ele.id}>{ele.position}</MenuItem>
+                          <MenuItem className={classes.textsize} value={ele.id}>{ele.position}</MenuItem>
                           )
                         })
                       }
                     </Select>
                   </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <Button variant="contained"  onClick={addStaffMaster} color="primary" className={classes.button} >
+                      Update
+                    </Button>  
+                    <Button  variant="contained"   onClick={handleEditClose} color="primary" className={classes.button} >
+                      Close
+                    </Button>
+                </Grid>
                 </Grid>
               </Paper>
           </div>

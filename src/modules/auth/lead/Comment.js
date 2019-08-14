@@ -38,12 +38,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -59,12 +63,24 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -148,13 +164,13 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
   
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleViewClose} TransitionComponent={Transition}>
+      <Dialog  maxWidth="sm" open={open} onClose={handleViewClose} TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleViewClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleViewClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 View Lead
               </Typography>
@@ -167,9 +183,15 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
               expanded={expanded === 'panel1'}>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="lead">Lead ID</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel  className={classes.textsize} htmlFor="lead">Lead ID</InputLabel>
+                    <TextField 
+                      
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="lead_id"
                       name="lead_id"
                       label=""
@@ -181,8 +203,8 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Franchise</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Franchise</InputLabel>
                       <Select
                         value={leadList.franchise_id}
                         inputProps={{
@@ -191,21 +213,22 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                           label:'franchise_id'
                         }}
                         className={classes.drpdwn}
-                        fullWidth
-                        label="franchise_id"
+                        fullWidth 
+                        // label="franchise_id"
                       >
-                        <MenuItem disabled  value="" selected>Select Franchise
+                        <MenuItem disabled className={classes.textsize}  value="" selected>Select Franchise
                         </MenuItem>
                           {(franchiseList.length > 0 ? franchiseList : []).map(data => {
                           return (
-                            <MenuItem value={data.franchise_id} >{data.franchise_name}</MenuItem>
+                            <MenuItem className={classes.textsize} value={data.franchise_id} >{data.franchise_name}</MenuItem>
                           );
                         })}
-                        <MenuItem value={0}>{'All'}</MenuItem> 
+                        <MenuItem className={classes.textsize} value={0}>{'All'}</MenuItem> 
                       </Select>
                   </Grid>
                     {/* <Grid item xs={12} sm={3}>
-                      <TextField
+                      <TextField 
+                        
                         margin="dense"
                         id="otherFranchiseValue"
                         name="otherFranchiseValue"
@@ -218,8 +241,14 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       />
                     </Grid> */}
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="contact">Upload Doc/Photo</InputLabel>
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Upload Doc/Photo</InputLabel>
+                    <TextField 
+                      
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="upload"
                       name="upload"
@@ -229,12 +258,18 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={12}>
+                    <InputLabel  className={classes.textsize} htmlFor="email">Description </InputLabel>
+                    <TextField 
+                      
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="description"
                       name="description"
-                      label="Description"
+                      // label="Description"
                       value={leadList.message}
                       fullWidth
                       required
@@ -244,12 +279,18 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="email">Comment</InputLabel>
+                    <TextField 
+                      
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="comment"
                       name="comment"
-                      label="Comment"
+                      // label="Comment"
                       value={leadList.comment}
                       onChange={handleInputChange}
                       fullWidth
@@ -259,11 +300,18 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <TextField
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="email">Comment By</InputLabel>
+                    <TextField 
+                      
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="comment_by"
                       name="comment_by"
-                      label="Comment By"
+                      // label="Comment By"
                       value={leadList.comment_by}
                       onChange={handleInputChange}
                       fullWidth
@@ -273,11 +321,15 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>
                     <Button variant="contained" color="primary" className={classes.button} onClick={addComment} type="submit">
                       Post Comment
                     </Button>
+                    <Button  variant="contained"   onClick={handleViewClose} color="primary" className={classes.button} >
+                      Close
+                    </Button>
                   </Grid>
+                  <Grid item xs={12} sm={12}>
                     <Paper className={classes.paper}>    
                       { (commentList.length > 0 ? commentList : []).map((data, index)=>{
                           return(
@@ -288,6 +340,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                         })
                       }
                   </Paper>
+                  </Grid>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel> 

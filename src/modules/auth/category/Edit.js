@@ -59,10 +59,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
-    marginLeft: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -81,12 +87,23 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
+  }
 }));
 
 
@@ -176,21 +193,21 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
   }
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
       <form >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Update Product Details
               </Typography>
-              {savebtn? <Button color="inherit" onClick={handleSubmit}>
+              {/* {savebtn? <Button color="inherit" onClick={handleSubmit}>
                 Update
               </Button>: <Button color="inherit" onClick={handleSubmit} disabled>
                 Update
-              </Button>}
+              </Button>} */}
             </Toolbar>
           </AppBar>
 
@@ -200,9 +217,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
           <Paper className={classes.paper}>
                 <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Enter Product Title/Name</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Enter Product Title/Name</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="name"
                       name="name"
                       value={product.name}
@@ -214,9 +236,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="productprice">Enter Product Buying Price</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="productprice">Enter Product Buying Price</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="buyingprice"
                       name="buying_price"
                       value={product.buying_price}
@@ -228,8 +255,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="city">Choose Color</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="city">Choose Color</InputLabel>
                     <Select
                       value={product.color_id}
                       onChange={handleInputChange}
@@ -241,19 +268,20 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       label="Choose Color"
                       required
                       className={classes.margin}
+                      className={classes.textsize}
                     >
                     { colorList.map((data, index)=>{
                           return(
-                        <MenuItem value={data.id}>{data.color}</MenuItem>
+                        <MenuItem className={classes.textsize} value={data.id}>{data.color}</MenuItem>
                           )
                       })
                     }
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="brand_id">Choose Brand</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="brand_id">Choose Brand</InputLabel>
                     <Select
-                        
+                         className={classes.textsize}
                         onChange={handleInputChange}
                         value={product.brand_id}
                         inputProps={{
@@ -264,19 +292,25 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         fullWidth
                         label="Choose Brand"
                         required
+                        className={classes.textsize}
                       >
                         { brandList.map((data, index)=>{
                           return(
-                        <MenuItem value={data.id}>{data.brand_name}</MenuItem>
+                        <MenuItem  className={classes.textsize} className={classes.textsize} value={data.id}>{data.brand_name}</MenuItem>
                           )
                       })
                     }
                     </Select>
                   </Grid>
                   
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="description">Enter Product Description</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="description">Enter Product Description</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                         id="description"
                         name="description"
                         fullWidth
@@ -289,9 +323,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         }}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="specification">Enter Product Specification</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="specification">Enter Product Specification</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                         id="specification"
                         multiline
                         fullWidth
@@ -301,9 +340,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         onChange={handleInputChange}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Brought From</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Brought From</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="brought"
                       name="brought"
                       value={product.brought}
@@ -315,9 +359,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Invoice Number</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Invoice Number</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="invoice"
                       name="invoice"
                       value={product.invoice}
@@ -329,9 +378,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Rental Price </InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Rental Price </InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="rental"
                       name="rental"
                       value={product.rental}
@@ -343,9 +397,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product_name">Meta Keywords</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Meta Keywords</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="meta_keywords"
                       name="meta_keywords"
                       value={product.meta_keywords}
@@ -357,9 +416,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="specification">Meta Description</InputLabel>
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="specification">Meta Description</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                         id="meta_description"
                         name="meta_description"
                         multiline
@@ -370,8 +434,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       />
                   </Grid>
                   
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="status">Choose Status</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="status">Choose Status</InputLabel>
                     <Select
                         
                         onChange={handleInputChange}
@@ -384,16 +448,25 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         fullWidth
                         label="Choose Status"
                         required
+                        className={classes.textsize}
                       >
                         { statusList.map((datastatus, index)=>{
                           return(
-                        <MenuItem value={datastatus.id}>{datastatus.status}</MenuItem>
+                        <MenuItem className={classes.textsize} value={datastatus.id}>{datastatus.status}</MenuItem>
                           )
                       })
                     }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>
+                  {savebtn? <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button}>
+                    Update
+                  </Button>:  <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} disabled>
+                    Update
+                  </Button>}
+                    <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
+                      Close
+                    </Button> 
                   </Grid>
                 </Grid>
                 </Paper>

@@ -9,6 +9,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 // import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 import Grid from '@material-ui/core/Grid';
 import { APP_TOKEN } from '../../../api/Constants';
@@ -28,10 +34,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(16),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -57,6 +63,8 @@ export default function ProductList(props) {
   
   const [openArchived, setArchivedOpen] = useState(false);
   const [productList, setProductList] = useState([]);
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
 
@@ -65,9 +73,11 @@ export default function ProductList(props) {
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      // width: 900
     },
     title: {
       flexGrow: 1,
@@ -93,8 +103,17 @@ export default function ProductList(props) {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
     },
+    button:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
+    },
+    textsize:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(12),
+    }
   }));
     const classes = useStyles();
 
@@ -157,6 +176,33 @@ export default function ProductList(props) {
   function handleArchivedClose() {
     setArchivedOpen(false);
   }
+
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
   return (
     <div>
       <Grid container spacing={3}>
@@ -164,7 +210,7 @@ export default function ProductList(props) {
           <Fab
             variant="extended"
             size="small"
-            color="primary"
+            // color="primary"
             aria-label="Add"
             className={classes.fonttransform}
             onClick={handleClickOpen}
@@ -173,19 +219,38 @@ export default function ProductList(props) {
             Product
           </Fab>
         </Grid>
-          <Grid item xs={12} sm={2}>
+          {/* <Grid item xs={12} sm={2}>
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Complete"
               className={classes.fonttransform}
               onClick={handleArchivedClickOpen}
             >
               Archived Products
             </Fab>
-          </Grid>
+          </Grid> */}
         <Grid item xs={12} sm={12} md={10}>
+          
+        <AppBar position="static"  className={classes.appBar}>
+            <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+              
+           
+            { statusList.map((datastatus, index)=>{
+            return(
+              <Tab label={datastatus.status} />
+                )
+                
+                })
+              }
+              {/* <Tab label="Open" />
+              <Tab label="Active" />
+              <Tab label="Inactive"  />
+              <Tab label="Close" /> */}
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={value}>
           <Paper style={{ width: '100%' }}>
             <Table className={classes.table}>
               <TableHead>
@@ -209,7 +274,7 @@ export default function ProductList(props) {
               <TableBody>
               { (productList.length > 0 ? productList : []).map((data, index)=>{
                  return(
-                  <TableRow key={data.id} >
+                  data.status===value+1? <TableRow key={data.id} >
                       <StyledTableCell component="th" scope="row">
                       {index+1}
                       </StyledTableCell>
@@ -262,7 +327,7 @@ export default function ProductList(props) {
                               }
                               
                             </StyledTableCell>
-                  </TableRow>
+                  </TableRow>:''
                  )
                  
                 })
@@ -270,6 +335,7 @@ export default function ProductList(props) {
               </TableBody>
             </Table>
           </Paper>
+          </TabPanel>
         </Grid>
       </Grid>
       

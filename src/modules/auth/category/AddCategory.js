@@ -53,10 +53,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
-    marginLeft: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -72,17 +78,22 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
-  margin:{
-    marginTop: theme.spacing(2),
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
   },
-  button: {
-    margin: theme.spacing(1),
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
   },
   input: {
     display: 'none',
@@ -129,13 +140,13 @@ export default function AddCategory(props) {
 
   return (
     <div>
-      <Dialog maxWidth="lg" open={props.open} onClose={props.handleClose}>
+      <Dialog maxWidth="sm" open={props.open} onClose={props.handleClose}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Category Creation Panel
               </Typography>
@@ -156,8 +167,13 @@ export default function AddCategory(props) {
                 <Grid container spacing={3}>
                   
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="city_selection">Add Category</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Add Category</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="category"
                       name="category"
                       value={inputs.category}
@@ -165,12 +181,17 @@ export default function AddCategory(props) {
                       fullWidth
                       margin="dense"
                       type="text"
-                      label="Add Category"
+                      // label="Add Category"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="city_selection">Add Sub Category</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Add Sub Category</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="subcategory"
                       name="subcategory"
                       value={inputs.subcategory}
@@ -178,15 +199,19 @@ export default function AddCategory(props) {
                       fullWidth
                       margin="dense"
                       type="text"
-                      label="Add Sub Category"
+                      // label="Add Sub Category"
                     />
                   </Grid>
                   
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={12}>
                     <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
                       >
                       Save
                     </Button>
+                    
+                    <Button variant="contained" color="primary" onClick={props.handleClose} className={classes.button}>
+                      Close
+                    </Button> 
                     {/* <Button variant="contained" color="primary" className={classes.button}>
                       Clear
                     </Button> */}

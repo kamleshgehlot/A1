@@ -51,10 +51,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
-    marginLeft: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -70,7 +76,7 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(3),
     fontWeight: theme.typography.fontWeightBold,
@@ -80,9 +86,15 @@ const useStyles = makeStyles(theme => ({
   },
   margin:{
     marginTop: theme.spacing(2),
+    fontSize: theme.typography.pxToRem(12),
   },
-  button: {
-    margin: theme.spacing(1),
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
   },
   input: {
     display: 'none',
@@ -285,13 +297,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
 
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Product
               </Typography>
@@ -310,7 +322,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
               <ExpansionPanelDetails>
                 <Grid container spacing={5} className={classes.margin}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel htmlFor="city_selection">Select Main Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Select Main Category</InputLabel>
                     <Select
                         name="maincat"
                         onChange={handleSelectInputChange}
@@ -327,16 +339,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                         { categoryList.map((data, index)=>{
                           
                               return(data.type===1 ? 
-                            <MenuItem value={data.id}>{data.category}</MenuItem>
+                            <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                             :''
                               )
                           })
                         }
-                        <MenuItem value="0" >Others</MenuItem>
+                        <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel htmlFor="city_selection">Select Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Select Category</InputLabel>
                     <Select
                         name="cat"
                         onChange={handleSelectCatInputChange}
@@ -353,16 +365,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                        { categoryList.map((data, index)=>{
                           
                           return(data.type===2 ? 
-                        <MenuItem value={data.id}>{data.category}</MenuItem>
+                        <MenuItem  className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                         :''
                           )
                       })
                     }
-                    <MenuItem value="0">Others</MenuItem>
+                    <MenuItem className={classes.textsize} value="0">Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel htmlFor="city_selection">Select Sub Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Select Sub Category</InputLabel>
                     <Select
                         name="subcat"
                         onChange={handleSelectSubcatInputChange}
@@ -379,20 +391,23 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                       { categoryList.map((data, index)=>{
                          
                          return(data.type===3 ? 
-                       <MenuItem value={data.id}>{data.category}</MenuItem>
+                       <MenuItem  className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                        :''
                          )
                      })
                    }
-                   <MenuItem value="0">Others</MenuItem>
+                   <MenuItem className={classes.textsize} value="0">Others</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={12}>
                     <Button variant="contained" color="primary" onClick={openProductDialog} className={classes.button} 
                       >
                      Add Product
                     </Button>
                     
+                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                      Close
+                    </Button> 
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

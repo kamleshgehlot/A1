@@ -11,6 +11,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 import Add from './Add';
 import Edit from './Edit';
 
@@ -21,10 +27,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -47,6 +53,8 @@ export default function Staff(props) {
   const [staffList, setStaffList] = useState({});
   const [position, setPosition] = useState({});
 
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
 
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
@@ -59,9 +67,11 @@ export default function Staff(props) {
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      // width: 900
     },
     drawer: {
       width: drawerWidth,
@@ -77,6 +87,9 @@ export default function Staff(props) {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     paper: {
       padding: theme.spacing(2),
@@ -84,8 +97,17 @@ export default function Staff(props) {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
     },
+    button:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
+    },
+    textsize:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(12),
+    }
   }));
   const classes = useStyles();
 
@@ -149,16 +171,42 @@ export default function Staff(props) {
     setShowFranchise(true);
     setShowStaff(false);
   }
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
   return (
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-              <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={12}>
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Add"
               className={classes.fonttransform}
               onClick={handleClickOpen}
@@ -167,7 +215,25 @@ export default function Staff(props) {
               Staff
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={12}>
+          <AppBar position="static"  className={classes.appBar}>
+            <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+              
+            <Tab label="All" />
+            {
+                (position.length>0 ? position : []).map((ele, index) => {
+                  return(
+                    <Tab label={ele.position} />
+                  )
+                })
+              }
+              {/* <Tab label="Open" />
+              <Tab label="Active" />
+              <Tab label="Inactive"  />
+              <Tab label="Close" /> */}
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={value}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
                     <TableHead>
@@ -184,27 +250,12 @@ export default function Staff(props) {
                     <TableBody>
                     { (staffList.length > 0 ? staffList : []).map((data, index)=>{
                       return(
-                        <TableRow key={data.id} >
-                          <StyledTableCell> {data.id}  </StyledTableCell>
+                        value!=0?data.position===value?    <TableRow key={data.id} >
+                          <StyledTableCell> {index+1}  </StyledTableCell>
                           <StyledTableCell> {data.user_id}  </StyledTableCell>
                           <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                             <StyledTableCell>
-
-                            {data.position_name}
-                            {/* {
-                              positions.map(ele =>{
-                                return(
-                                <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                                )
-                              })
-                            } */}
-
-                            {/* {
-                              position.map((pos, index) =>{
-                              if(pos.id===data.position)
-                                return pos.position
-                              }) 
-                            } */}
+                              {data.position_name}
                             </StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>{data.email}</StyledTableCell>
@@ -213,13 +264,45 @@ export default function Staff(props) {
                               Edit
                             </Button>
                             </StyledTableCell>
-                        </TableRow>
+                        </TableRow>:'':
+                        <TableRow key={data.id} >
+                        <StyledTableCell> {index+1}  </StyledTableCell>
+                        <StyledTableCell> {data.user_id}  </StyledTableCell>
+                        <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
+                          <StyledTableCell>
+
+                          {data.position_name}
+                          {data.position}
+                          {/* {
+                            positions.map(ele =>{
+                              return(
+                              <MenuItem value={ele.id}>{ele.position}</MenuItem>
+                              )
+                            })
+                          } */}
+
+                          {/* {
+                            position.map((pos, index) =>{
+                            if(pos.id===data.position)
+                              return pos.position
+                            }) 
+                          } */}
+                          </StyledTableCell>
+                          <StyledTableCell>{data.contact}</StyledTableCell>
+                          <StyledTableCell>{data.email}</StyledTableCell>
+                          <StyledTableCell>
+                          <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                            Edit
+                          </Button>
+                          </StyledTableCell>
+                      </TableRow>
                       )
                       })
                     }
                     </TableBody>
                   </Table>
                </Paper>
+          </TabPanel>
           </Grid>
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} positions={position}/>

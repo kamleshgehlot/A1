@@ -41,12 +41,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -62,12 +66,20 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -153,33 +165,38 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Staff
               </Typography>
-              <Button color="inherit" type="submit">
+              {/* <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
+                <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             {/* Franchise Details */}
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
-                <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">First Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="first_name"
                       name="first_name"
-                      label="First Name"
+                      // label="First Name"
                       value={inputs.first_name}
                       onChange={handleInputChange}
                       fullWidth
@@ -190,12 +207,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Last Name</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="last_name"
                       name="last_name"
-                      label="Last Name"
+                      // label="Last Name"
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
@@ -206,12 +228,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="location">Location *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="location"
                       name="location"
-                      label="Location"
+                      // label="Location"
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
@@ -220,12 +247,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="contact"
                       name="contact"
-                      label="Contact"
+                      // label="Contact"
                       type="number"
                       value={inputs.contact} 
                       onChange={handleInputChange}
@@ -234,12 +266,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="email">Email Id *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="email"
                       name="email"
-                      label="Email Id"
+                      // label="Email Id"
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
@@ -250,40 +287,39 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="city">Position *</InputLabel>
+                  <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
                     <Select
                       value={inputs.position}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'position',
                         id: 'position',
-                        label:'position'
+                        // label:'position'
                       }}
-                      
+                      className={classes.textsize}
                       fullWidth
-                      label="position"
+                      // label="position"
                       required
                     >
                
-                      <MenuItem value={1}>Territory Manager</MenuItem>
-                      <MenuItem value={2}>Marketing Manager</MenuItem>
-                      <MenuItem value={3}>IT Specialist</MenuItem>
-                      <MenuItem value={4}>BDM (Business Development Manager)</MenuItem>
-                      <MenuItem value={5}>Accountant</MenuItem>
-                      <MenuItem value={6}>Sales Specialist</MenuItem>
 
-
-                      {/* {console.log(positions)} */}
-
-                      {/* {
-                        positions.map(ele =>{
+                      {
+                          (positions.length>0 ? positions : []).map((ele, index) => {
                           return(
-                          <MenuItem value={ele.id}>{ele.position}</MenuItem>
+                          <MenuItem  className={classes.textsize} value={ele.id}>{ele.position}</MenuItem>
                           )
                         })
-                      } */}
+                      }
                     </Select>
                   </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
+                      Save
+                    </Button>  
+                    <Button  variant="contained"   onClick={handleClose} color="primary" className={classes.button} >
+                      Close
+                    </Button>
+                </Grid>
                 </Grid>
               </Paper>
 

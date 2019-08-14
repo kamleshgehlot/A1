@@ -15,6 +15,12 @@ import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 import AddLead from './Add';
 import Comment from './Comment';
 import Add from '../enquiry/Add';
@@ -27,10 +33,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -60,14 +66,20 @@ export default function Lead() {
   const [openConvertedLeads,setConvertedLeads] = useState(false);
   const [openView, setViewOpen] = useState(false);
   const [leadList, setLeadList] = useState({});
+  
+  const [convertedLeadList, setConvertedLeadList] = useState({});
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      width: 1000
     },
     drawer: {
       width: drawerWidth,
@@ -87,6 +99,9 @@ export default function Lead() {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     paper: {
       padding: theme.spacing(2),
@@ -94,14 +109,28 @@ export default function Lead() {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
+    },
+    button:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
+    },
+    textsize:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(12),
     },
     drpdwn:{
       color: 'white',
+      fontSize: theme.typography.pxToRem(13),
     },
     icon: {
       fill: 'white',
-  },
+    },
+    textsize:{
+      fontSize: theme.typography.pxToRem(12),
+      color: 'white',
+    }
   }));
   const classes = useStyles();
 
@@ -137,6 +166,22 @@ export default function Lead() {
     
   }, []);
   
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await LeadAPI.convertedList();
+        setConvertedLeadList(result.convertedList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
   function handleClickOpen() {
     setOpen(true);
   }
@@ -202,16 +247,43 @@ export default function Lead() {
     });
     setLeadList(response.leadList);
   };
+
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
   return (
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={8}>
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Add"
               className={classes.fonttransform}
               onClick={handleClickOpen}
@@ -220,19 +292,26 @@ export default function Lead() {
               Lead
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={2}>
+          {/* <Grid item xs={12} sm={2}>
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Complete"
               className={classes.fonttransform}
               onClick={handleConvertedLeadsClickOpen}
             >
               Converted
             </Fab>
-          </Grid>
-          <Grid item xs={12} sm={12}>
+          </Grid> */}
+          <Grid item xs={12} sm={9}>
+          <AppBar position="static"  className={classes.appBar}>
+            <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+              <Tab label="Open" />
+              <Tab label="Converted" />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
             <Paper style={{ width: '100%' }}>
                   <Table className={classes.table}>
                     <TableHead>
@@ -256,10 +335,10 @@ export default function Lead() {
                             value={filterId}
                             label="filter"
                           >
-                            <MenuItem value={4}>{'Show All'}</MenuItem> 
-                            <MenuItem value={1}>{'Created By Me'}</MenuItem> 
-                            <MenuItem value={2}>{'Created For Me'}</MenuItem> 
-                            <MenuItem value={3}>{'Created General'}</MenuItem> 
+                            <MenuItem className={classes.textsize} value={4}>{'Show All'}</MenuItem> 
+                            <MenuItem className={classes.textsize} value={1}>{'Created By Me'}</MenuItem> 
+                            <MenuItem className={classes.textsize} value={2}>{'Created For Me'}</MenuItem> 
+                            <MenuItem className={classes.textsize} value={3}>{'Created For All'}</MenuItem> 
                           </Select>
                         </StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
@@ -319,6 +398,71 @@ export default function Lead() {
                     </TableBody>
                   </Table>
                </Paper>
+               </TabPanel>
+               
+          <TabPanel value={value} index={1}>
+          <Paper style={{ width: '100%' }}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Lead ID</StyledTableCell>
+                        <StyledTableCell>For Franchise</StyledTableCell>
+                        {/* <StyledTableCell>Doc/Photo</StyledTableCell> */}
+                        <StyledTableCell>Created by</StyledTableCell>
+                        <StyledTableCell>Message</StyledTableCell>
+                        <StyledTableCell>Converted By</StyledTableCell>
+                        <StyledTableCell>Converted To</StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  { (convertedLeadList.length > 0 ? convertedLeadList : []).map((data, index)=>{
+                        return(
+                          <TableRow >
+                          <StyledTableCell> {index+1}  </StyledTableCell>
+                            <StyledTableCell> {data.lead_id}  </StyledTableCell>
+                            {data.franchise_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((dataf, index1)=>{
+                                  
+                                  return(
+                                    data.franchise_id===dataf.id ?
+                                    <StyledTableCell> {dataf.name} </StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                }) : <StyledTableCell> All</StyledTableCell>
+                              }
+                              {/* <StyledTableCell></StyledTableCell> */}
+                              {data.f_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{
+                                  
+                                  return(
+                                    data.f_id===datafr.id ?
+                                    <StyledTableCell> {datafr.name +'  ('+ datafr.city + ' ,' + datafr.suburb + ' )'} </StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                }) : <StyledTableCell> Master Admin</StyledTableCell>
+                              }
+                            <StyledTableCell>{data.message}</StyledTableCell>
+                            {data.converted_by_f_id!=0 ?(franchiseListd.length > 0 ? franchiseListd : []).map((datafrc, index1)=>{
+                                  
+                                  return(
+                                    data.converted_by_f_id===datafrc.id ?
+                                    <StyledTableCell> {datafrc.name +'  ('+ datafrc.city + ' ,' + datafrc.suburb + ' )'} </StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                }):<StyledTableCell></StyledTableCell>
+                              }
+                              <StyledTableCell>{data.converted_to===1? 'Enquiry':'Order'}</StyledTableCell>
+                          </TableRow>
+                        )
+                        })
+                      }
+                  </TableBody>
+                </Table>
+            </Paper>
+
+          </TabPanel>
           </Grid>
         </Grid>
       {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}

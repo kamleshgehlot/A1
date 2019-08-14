@@ -99,10 +99,6 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
-  addButton:{
-    backgroundColor:'#CBDF90',
-  },
-
   button:{
     color:"white",
     fontSize: theme.typography.pxToRem(10),
@@ -224,7 +220,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           franchise_name: data.franchise_name,
           company_name: data.company_name,
           suburb: data.suburb,
-          city: data.city
+          city: data.city,
+          status: data.state
         });
       }
     });

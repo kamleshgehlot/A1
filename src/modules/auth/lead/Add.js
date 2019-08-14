@@ -46,12 +46,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -67,11 +71,19 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
   },
   drpdwn:{
     marginTop: theme.spacing(1),
@@ -219,21 +231,21 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Lead
               </Typography>
-              {savebtn? <Button color="inherit" type="submit">
+              {/* {savebtn? <Button color="inherit" type="submit">
                 save
               </Button> : <Button color="inherit" type="submit" disabled>
                 save
-              </Button>}
+              </Button>} */}
             </Toolbar>
           </AppBar>
 
@@ -246,8 +258,13 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="lead">Lead ID</InputLabel>
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="lead">Lead ID</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="lead_id"
                       name="lead_id"
                       label=""
@@ -261,7 +278,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="last_name">Franchise</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Franchise</InputLabel>
                       <Select
                         value={inputs.franchise_id}
                         onChange = {handleFranchise}
@@ -274,18 +291,23 @@ return (
                         fullWidth
                         label="franchise_id"
                       >
-                      <MenuItem disabled  value="" selected>Select Franchise
+                      <MenuItem disabled className={classes.textsize}  value="" selected>Select Franchise
                       </MenuItem>
                           {(franchiseListd.length > 0 ? franchiseListd : []).map(dataf => {
                           return (
-                            <MenuItem value={dataf.id} >{dataf.name}</MenuItem>
+                            <MenuItem className={classes.textsize} value={dataf.id} >{dataf.name}</MenuItem>
                           );
                         })}
-                        <MenuItem value={0}>{'All'}</MenuItem> 
+                        <MenuItem className={classes.textsize} value={0}>{'All'}</MenuItem> 
                       </Select>
                   </Grid>
                     {/* <Grid item xs={12} sm={3}>
-                      <TextField
+                      <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                         margin="dense"
                         id="otherFranchiseValue"
                         name="otherFranchiseValue"
@@ -299,8 +321,13 @@ return (
                       />
                     </Grid> */}
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="contact">Upload Doc/Photo</InputLabel>
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Upload Doc/Photo</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="upload"
                       name="upload"
@@ -311,11 +338,16 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
-                    <TextField
+                    <InputLabel  className={classes.textsize} htmlFor="Description">Description *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="description"
                       name="description"
-                      label="Description"
+                      // label="Description"
                       value={inputs.description}
                       onChange={handleInputChange}
                       fullWidth
@@ -324,6 +356,14 @@ return (
                       type="text"
                       margin="dense"
                     />
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    
+                    {savebtn? <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                      save
+                    </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
+                      save
+                    </Button>}
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

@@ -423,11 +423,11 @@ export default function ClippedDrawer(props) {
         <List>
         {/* {console.log(roleName)} */}
           {roleName === 'Super Admin' 
-            && (<List>
+            && (<List >
               {/* <Link to="auth/franchise"> */}
-                <ListItem button key="ManageFranchise" onClick={handleFranchiseClick}>
+                <ListItem button key="ManageFranchise" onClick={handleFranchiseClick} >
                   <ListItemIcon className={classes.iconwidth}> <BusinessIcon/> </ListItemIcon>
-                  <ListItemText primary="Manage Franchise" />
+                  <ListItemText  primary="Manage Franchise" />
                 </ListItem>
               {/* </Link> */}
               {/* code by Bhagyashree starts from here

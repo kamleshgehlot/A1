@@ -28,12 +28,16 @@ import Status from '../../../api/product/Status';
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -49,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
@@ -70,12 +74,12 @@ const Transition = React.forwardRef((props, ref) => {
 
 const StyledTableCell = withStyles(theme => ({
   head: {
-   
-    color: theme.palette.common.black,
-    fontSize: theme.typography.pxToRem(18),
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
