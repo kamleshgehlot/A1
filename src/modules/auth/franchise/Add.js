@@ -77,12 +77,16 @@ const StyledTableCell = withStyles(theme => ({
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -100,7 +104,7 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   addButton:{
@@ -114,6 +118,14 @@ const useStyles = makeStyles(theme => ({
   },
   deleteBtn: {
     margin: theme.spacing(1),
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
   }
 }));
 
@@ -433,28 +445,28 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Franchise
               </Typography>
-             {savebtn? <Button color="inherit" type="submit">
+             {/* {savebtn? <Button color="inherit" type="submit">
                 save
               </Button>:<Button color="inherit" type="submit" disabled>
                 save
-              </Button>}
+              </Button>} */}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
             {/* Franchise Details */}
             
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
+            <Grid item xs={12} sm={10}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}
@@ -469,57 +481,64 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                <Grid item xs={12} sm={12}>
-                    <TextField
+                <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="city">Franchise Name*</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="franchise_name"
                       name="franchise_name"
-                      label="Franchise Name"
+                      // label=""
                       value={inputs.franchise_name}
                       onChange={handleInputChange}
                       fullWidth
                       required
-                      margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="city">Select City *</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize}  htmlFor="city">Select City *</InputLabel>
                     <Select
                       value={tempCity}
                       onChange={handleCityChange}
                       onBlur = {setCityCodeHandler}
                       name ='city'
                       id = 'city'
-                      label = 'Select City'
+                      // label = 'Select City'
                       fullWidth
                       required
+                      className={classes.textsize} 
                       error={errors.city}
                       helperText={errors.city ? errors.city : ' '}
                     >
                       {(cityList.length > 0 ? cityList : []).map(data => {
                           // console.log("City", data);
                           return (
-                            <MenuItem value={data.city + '_' + data.id + '_' + data.city_code} >{data.city+ ' - ' + data.city_code}</MenuItem>
+                            <MenuItem  className={classes.textsize}  value={data.city + '_' + data.id + '_' + data.city_code} >{data.city+ ' - ' + data.city_code}</MenuItem>
                           );
                         })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="suburb_selection">Area *</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize}  htmlFor="suburb_selection">Area *</InputLabel>
                     <Select
                       value={inputs.suburb}
                       onChange={handleInputChange}
                       name = 'suburb'
                       id = 'suburb_selection'
-                      label = 'Area'
+                      // label = 'Area'
                       fullWidth
-                      label="Suburb"
+                      // label="Suburb"
                       required
                       error={errors.suburb}
                       helperText={errors.suburb ? errors.suburb : ' '}
+                      className={classes.textsize} 
                     >
                       {(selectedArea.length>0 ? selectedArea : []).map((area, index) => {
                         return(
-                          <MenuItem value={area.area_name}>{area.area_name}</MenuItem>
+                          <MenuItem className={classes.textsize}  value={area.area_name}>{area.area_name}</MenuItem>
                         )
                       })
                       }
@@ -548,12 +567,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="company_name">Company Name *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="company_name">Company Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="company_name"
                       name="company_name"
-                      label="Company Name"
+                      // label="Company Name"
                       value={inputs.company_name}
                       fullWidth
                       margin="dense"
@@ -561,12 +585,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="nbzn">Company NBZN *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="nbzn">Company NBZN *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="nbzn"
                       name="nbzn"
-                      label="Company's NBZN"
+                      // label="Company's NBZN"
                       value={inputs.nbzn}
                       fullWidth
                       margin="dense"
@@ -574,12 +603,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="company_location">Company Location *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="company_location">Company Location *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="company_location"
                       name="company_location"
-                      label="Comapny Location"
+                      // label="Comapny Location"
                       value={inputs.company_location}
                       margin="dense"
                       required
@@ -589,12 +623,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                   </Grid>
                   <Paper className={classes.paper}>
                   <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="director">Director Name *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="director">Director Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="director"
                       name="director"
-                      label="Director Name"
+                      // label="Director Name"
                       value={inputs.director}
                       fullWidth
                       type="text"
@@ -604,12 +643,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Address *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="email">Email Address *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="email"
                       name="email"
-                      label="Email"
+                      // label="Email"
                       value={inputs.email}
                       margin="dense"
                       // required
@@ -621,12 +665,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       // helperText={errors.email ? errors.email : ' '}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact # *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact # *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="contact"
                       name="contact"
-                      label="Contact #"
+                      // label="Contact #"
                       value={inputs.contact}
                       margin="dense"
                       // required
@@ -635,12 +684,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="number"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="alt_contact">Alternative #</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="alt_contact">Alternative #</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="alt_contact"
                       name="alt_contact"
-                      label="Alternative Contact"
+                      // label="Alternative Contact"
                       value={inputs.alt_contact}
                       margin="dense"
                       fullWidth
@@ -648,13 +702,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       type="number"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">User Id</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="franchaise_name">User Id</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="uid"
                       name="uid"
-                      label="User Id"
+                      // label="User Id"
                       type="text"
                       value={inputs.uid} 
                       // onChange={handleInputChange}
@@ -665,13 +724,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                     
                   </Grid>
-                  <Grid item xs={6} sm={5}>
-                    {/* <InputLabel htmlFor="password">Password *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={6} sm={2}>
+                    <InputLabel  className={classes.textsize} htmlFor="password">Password *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="password"
                       name="password"
-                      label="Password"
+                      // label="Password"
                       // onChange={handleInputChange}
                       onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
@@ -683,7 +747,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
                   <Grid item xs={6} sm={1}>
-                  <Fab size="small" color="secondary" aria-label="Add" onClick={() => handleDirectorList()} className={classes.margin}>
+                  <Fab size="small" color="primary" aria-label="Add" onClick={() => handleDirectorList()} className={classes.margin}>
                     <AddIcon />
                   </Fab>
                   </Grid>
@@ -693,13 +757,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                           {directorList.length > 0 &&
                           <TableHead>
                               <StyledTableCell>#</StyledTableCell>
-                              <StyledTableCell>Name</StyledTableCell>
-                              <StyledTableCell>Email</StyledTableCell>
-                              <StyledTableCell>Contact</StyledTableCell>
-                              <StyledTableCell>Alt. Contact</StyledTableCell>
-                              <StyledTableCell>User _id</StyledTableCell>
-                              <StyledTableCell>Password</StyledTableCell>
-                              <StyledTableCell>Action</StyledTableCell>
+                              <StyledTableCell className={classes.textsize}>Name</StyledTableCell>
+                              {/* <StyledTableCell>Email</StyledTableCell> */}
+                              {/* <StyledTableCell>Contact</StyledTableCell> */}
+                              {/* <StyledTableCell>Alt. Contact</StyledTableCell> */}
+                              <StyledTableCell  className={classes.textsize}>User _id</StyledTableCell>
+                              <StyledTableCell  className={classes.textsize}>Password</StyledTableCell>
+                              <StyledTableCell  className={classes.textsize}>Action</StyledTableCell>
                           </TableHead>
                           }
                       
@@ -708,15 +772,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       {
                         (directorList || []).map((list, index) =>{
                           return(
-                            <TableRow>
-                              <StyledTableCell>{index+1}</StyledTableCell>
-                              <StyledTableCell>{list.director}</StyledTableCell>
-                              <StyledTableCell>{list.email}</StyledTableCell>
-                              <StyledTableCell>{list.contact}</StyledTableCell>
-                              <StyledTableCell>{list.alt_contact}</StyledTableCell>
-                              <StyledTableCell>{list.uid}</StyledTableCell>
-                              <StyledTableCell>{list.password}</StyledTableCell>
-                              <StyledTableCell>
+                            <TableRow className={classes.textsize}>
+                              <StyledTableCell  className={classes.textsize}>{index+1}</StyledTableCell>
+                              <StyledTableCell  className={classes.textsize}>{list.director}</StyledTableCell>
+                              {/* <StyledTableCell  className={classes.textsize}>{list.email}</StyledTableCell> */}
+                              {/* <StyledTableCell  className={classes.textsize}>{list.contact}</StyledTableCell> */}
+                              {/* <StyledTableCell  className={classes.textsize}>{list.alt_contact}</StyledTableCell> */}
+                              <StyledTableCell  className={classes.textsize}>{list.uid}</StyledTableCell>
+                              <StyledTableCell  className={classes.textsize}>{list.password}</StyledTableCell>
+                              <StyledTableCell  className={classes.textsize}>
                               <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
                                 <DeleteIcon />
                               </IconButton>
@@ -746,12 +810,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="accountant_name">Name *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="accountant_name">Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accountant_name"
                       name="accountant_name"
-                      label="Name"
+                      // label="Name"
                       value={inputs.accountant_name}
                       // placeholder="Accountant name"
                       fullWidth
@@ -761,12 +830,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="accountant_email">Email Address*</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="accountant_email">Email Address*</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accountant_email"
                       name="accountant_email"
-                      label="Email Address"
+                      // label="Email Address"
                       value={inputs.accountant_email}
                       // placeholder="Email"
                       fullWidth
@@ -778,12 +852,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="accountant_contact">Contact #*</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="accountant_contact">Contact #*</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accountant_contact"
                       name="accountant_contact"
-                      label="Contact #"
+                      // label="Contact #"
                       value={inputs.accountant_contact}
                       // placeholder="Contact"
                       fullWidth
@@ -794,18 +873,35 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="website">Website</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="website">Website</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="website"
                       name="website"
-                      label="Website"
+                      // label="Website"
                       value={inputs.website}
                       // placeholder="Accountant name"
                       fullWidth
                       margin="dense"
                       onChange={handleInputChange}
                     />
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={4}>
+               
+              {savebtn?    <Button variant="contained" color="primary" className={classes.button} >
+                     Save
+                    </Button>: <Button variant="contained" color="primary" disabled className={classes.button}  >
+                     Save
+                    </Button>}
+                    <Button variant="contained"  color="primary" className={classes.button}  onClick={handleClose} aria-label="Close">
+                     Close
+                    </Button>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

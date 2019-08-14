@@ -83,27 +83,28 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     
     if(inputs.email === chkEmail){
       alert('Email already registered')
-    }else{
-    setpLoading(true);
-    const response = await StaffMaster.register({
-      id: '',
-      first_name: inputs.first_name,
-      last_name:inputs.last_name,
-      user_id:inputs.user_id,
-      password:'1234',
-      location:inputs.location,
-      contact:inputs.contact,
-      email:inputs.email,
-      position:inputs.position,
-      created_by: 1,
-    });
-  
-    handleSnackbarClick(true);
-    setFranchiseList(response.staffList);
-    handleReset(RESET_VALUES);
-    setpLoading(false);
-    handleClose(false);
-  }
+    }
+    else{
+      setpLoading(true);
+      const response = await StaffMaster.register({
+        id: '',
+        first_name: inputs.first_name,
+        last_name:inputs.last_name,
+        user_id:inputs.user_id,
+        password:'1234',
+        location:inputs.location,
+        contact:inputs.contact,
+        email:inputs.email,
+        position:inputs.position,
+        created_by: 1,
+      });
+    
+      handleSnackbarClick(true);
+      setFranchiseList(response.staffList);
+      handleReset(RESET_VALUES);
+      setpLoading(false);
+      handleClose(false);
+    }
   };
 
   function validate(values) {

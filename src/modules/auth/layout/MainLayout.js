@@ -13,6 +13,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import PeopleIcon from '@material-ui/icons/People';
+import BusinessIcon from '@material-ui/icons/Business';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import InsertCommentIcon from '@material-ui/icons/InsertComment';
+import CardTravelIcon from '@material-ui/icons/CardTravel';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -49,7 +53,7 @@ import UserAPI from '../../../api/User';
 
 import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,6 +62,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    height: theme.spacing(5),
   },
   drawer: {
     width: drawerWidth,
@@ -73,6 +78,9 @@ const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
   title: {
     flexGrow: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   paper: {
     padding: theme.spacing(2),
@@ -80,11 +88,19 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
   },
   fonttransform:{
-    textTransform:"initial"
+    textTransform:"initial",
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   menu:{
     color:"white",
     textTransform:'initial'
+  },
+  iconwidth:{
+    maxWidth:theme.spacing(2),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
   }
 }));
 
@@ -364,7 +380,7 @@ export default function ClippedDrawer(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}  elevation={0}>
         <Toolbar>
           <Typography variant="h6" className={classes.title} noWrap>
           Welcome {userName}
@@ -410,7 +426,7 @@ export default function ClippedDrawer(props) {
             && (<List>
               {/* <Link to="auth/franchise"> */}
                 <ListItem button key="ManageFranchise" onClick={handleFranchiseClick}>
-                  <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                  <ListItemIcon className={classes.iconwidth}> <BusinessIcon/> </ListItemIcon>
                   <ListItemText primary="Manage Franchise" />
                 </ListItem>
               {/* </Link> */}
@@ -418,18 +434,18 @@ export default function ClippedDrawer(props) {
               Category is added to menu */}
               {/* <Link to="category"> */}
                 <ListItem button key="ManageProduct"  onClick={handleCategoryClick}>
-                  <ListItemIcon><PeopleIcon /> </ListItemIcon>
+                  <ListItemIcon><CardTravelIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
                 
                 {/* code by Bhagyashree ends here */}
               {/* </Link> */}
                 <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>
-                  <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                  <ListItemIcon> <AccountCircleIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Staff" />
                 </ListItem>
                 <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
-                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
             </List>
@@ -440,7 +456,7 @@ export default function ClippedDrawer(props) {
               {roleName === 'Admin' && (
               <List>
                 <ListItem button key="ManageStaff"  onClick={handleFranchiseStaffClick}>
-                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemIcon> <AccountCircleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Staff" />
                 </ListItem>
                 <ListItem button key="ManageTask"  onClick={handleTaskClick}>
@@ -452,7 +468,7 @@ export default function ClippedDrawer(props) {
                     <ListItemText primary="My Task List" />
                 </ListItem> */}
                 <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
-                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
                 {/* <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
@@ -481,7 +497,7 @@ export default function ClippedDrawer(props) {
                     <ListItemText primary="Manage Enquiry" />
                 </ListItem>
                 <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
-                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
                 <ListItem button key="ManageOrder"  onClick={handleOrderClick}>

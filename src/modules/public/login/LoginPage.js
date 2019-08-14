@@ -21,7 +21,7 @@ const Container = styled.section`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #d0e1e8;
+  background-color: #ffffff;
 `;
 
 class LoginPage extends Component {

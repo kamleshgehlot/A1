@@ -3,11 +3,12 @@ export default {
   palette: {
     type: 'light',
     primary: {
-      main: '#607d8b',
+      main: '#20a8d8',
     },
-    secondary: {
-      main: '#000',
-    },
+    // secondary: {
+    //   main: '#000',
+    // },
+    
   },
   margin: 15,
   typography: {

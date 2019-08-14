@@ -69,6 +69,12 @@ export default function ProductList(props) {
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
     },
+    title: {
+      flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
+    },
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
@@ -81,9 +87,6 @@ export default function ProductList(props) {
       padding: theme.spacing(3),
     },
     toolbar: theme.mixins.toolbar,
-    title: {
-      flexGrow: 1,
-    },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'left',
@@ -157,7 +160,7 @@ export default function ProductList(props) {
   return (
     <div>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm={8}>
           <Fab
             variant="extended"
             size="small"
@@ -182,7 +185,7 @@ export default function ProductList(props) {
               Archived Products
             </Fab>
           </Grid>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid item xs={12} sm={12} md={10}>
           <Paper style={{ width: '100%' }}>
             <Table className={classes.table}>
               <TableHead>
@@ -191,14 +194,14 @@ export default function ProductList(props) {
                   <StyledTableCell>Product Name</StyledTableCell>
                   <StyledTableCell>Color</StyledTableCell>
                   <StyledTableCell>Brand</StyledTableCell>
-                  <StyledTableCell>Buying Price</StyledTableCell>
-                  <StyledTableCell>Description</StyledTableCell>
-                  <StyledTableCell>Specification</StyledTableCell>
-                  <StyledTableCell>Brought from</StyledTableCell>
+                  {/* <StyledTableCell>Buying Price</StyledTableCell> */}
+                  {/* <StyledTableCell>Description</StyledTableCell> */}
+                  {/* <StyledTableCell>Specification</StyledTableCell> */}
+                  {/* <StyledTableCell>Brought from</StyledTableCell> */}
                   <StyledTableCell>Invoice Number</StyledTableCell>
                   <StyledTableCell>Rental Price</StyledTableCell>
-                  <StyledTableCell>Meta Keywords</StyledTableCell>
-                  <StyledTableCell>Meta Description</StyledTableCell>
+                  {/* <StyledTableCell>Meta Keywords</StyledTableCell> */}
+                  {/* <StyledTableCell>Meta Description</StyledTableCell> */}
                   <StyledTableCell>Status</StyledTableCell>
                   <StyledTableCell>Options</StyledTableCell>
                 </TableRow>
@@ -231,14 +234,14 @@ export default function ProductList(props) {
                             
                            })
                          }
-                      <StyledTableCell>{data.buying_price}</StyledTableCell>
-                      <StyledTableCell>{data.description}</StyledTableCell>
+                      {/* <StyledTableCell>{data.buying_price}</StyledTableCell> */}
+                      {/* <StyledTableCell>{data.description}</StyledTableCell>
                       <StyledTableCell>{data.specification}</StyledTableCell>
-                      <StyledTableCell>{data.brought}</StyledTableCell>
+                      <StyledTableCell>{data.brought}</StyledTableCell> */}
                       <StyledTableCell>{data.invoice}</StyledTableCell>
                       <StyledTableCell>{data.rental}</StyledTableCell>
-                      <StyledTableCell>{data.meta_keywords}</StyledTableCell>
-                      <StyledTableCell>{data.meta_description}</StyledTableCell>
+                      {/* <StyledTableCell>{data.meta_keywords}</StyledTableCell> */}
+                      {/* <StyledTableCell>{data.meta_description}</StyledTableCell> */}
                       { statusList.map((datastatus, index)=>{
                         return(
                           data.status===datastatus.id ?

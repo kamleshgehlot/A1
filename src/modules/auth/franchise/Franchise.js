@@ -31,10 +31,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -92,6 +92,9 @@ export default function Franchise(props) {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     paper: {
       padding: theme.spacing(2),
@@ -99,26 +102,31 @@ export default function Franchise(props) {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
     },
     heading: {
-      fontSize: theme.typography.pxToRem(25),
+      fontSize: theme.typography.pxToRem(15),
       fontWeight: theme.typography.fontWeightBold,
     },
     expand:{
-      fontSize: theme.typography.pxToRem(16),
+      fontSize: theme.typography.pxToRem(12),
       
     },
     expandHeading: {
-      fontSize: theme.typography.pxToRem(15),
+      fontSize: theme.typography.pxToRem(12),
       flexBasis: '33.33%',
       flexShrink: 0,
       fontWeight: theme.typography.fontWeightBold,
     },
     secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
+      fontSize: theme.typography.pxToRem(12),
       // color: theme.palette.text.secondary,
     },
+    button:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
+    }
   }));
   const classes = useStyles();
 
@@ -203,20 +211,19 @@ export default function Franchise(props) {
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={8}>
             <Fab
               variant="extended"
               size="small"
-              color="primary"
               aria-label="Add"
               className={classes.fonttransform}
-              onClick={handleClickOpen}
+              onClick={handleClickOpen} elevation={0} 
             >
-              <AddIcon className={classes.extendedIcon} />
+              <AddIcon className={classes.extendedIcon}  />
               Franchise
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={8}>
                 
                     { (franchiseId.length > 0 ? franchiseId : []).map((data, index)=>{
                       // data.franchise_id !== totalFranchise ? console.log("hello ") : console.log("bye")

@@ -18,11 +18,15 @@ const styles = theme => ({
   },
   button: {
     borderColor: theme.palette.primary.main,
-    marginTop: theme.margin,
+    marginTop: theme.spacing(4),
+    backgroundColor: '#20a8d8',
+    color:"white",
   },
   forgotContainer: {
-    textAlign: 'center',
-    marginTop: theme.margin * 2,
+    textAlign: 'right',
+    fontSize: theme.typography.pxToRem(12),
+    color:"#20a8d8",
+    // marginTop: theme.margin * 2,
   },
 });
 
@@ -49,6 +53,9 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
         fullWidth
         type="password"
       />
+      <p className={classes.forgotContainer}>
+        <Link to="/forgotPassword" >Forgot Password?</Link>
+      </p>
       <Button
         onClick={onSubmit}
         variant="outlined"
@@ -60,9 +67,6 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
       >
         {isLoading ? <CircularProgress size={20} /> : 'Login'}
       </Button>
-      <p className={classes.forgotContainer}>
-        <Link to="/forgotPassword" >Forgot Password?</Link>
-      </p>
     </form>
   );
 };

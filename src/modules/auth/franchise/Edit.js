@@ -66,12 +66,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -89,7 +93,7 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
@@ -99,6 +103,14 @@ const useStyles = makeStyles(theme => ({
     backgroundColor:'#CBDF90',
   },
 
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -127,7 +139,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       try {
         const LocationResult = await LocationAPI.list();
         setCityList(LocationResult.cityList);
-
+        // console.log('franchise-----',franchise)
         const result = await LocationAPI.arealist({
           city_name : franchise.city,
           city_code : franchise.city_code,
@@ -237,21 +249,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
 
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Edit Franchise
               </Typography>
-              {savebtn? <Button onClick={handleSubmit} color="inherit">
-                Update
-              </Button> : <Button onClick={handleSubmit} color="inherit" disabled>
-                Update
-              </Button>} 
+              
             </Toolbar>
           </AppBar>
 
@@ -272,12 +280,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="franchaise_name">Franchise Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="franchise_name"
                       name="franchise_name"
-                      label="Franchise Name"
+                      // label="Franchise Name"
                       margin="dense"
                       required
                       type="text"
@@ -289,8 +302,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // disabled                      
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="status">Status *</InputLabel>
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="status">Status *</InputLabel>
                     <Select
                       value={franchise.state}
                       onChange={handleInputChange}
@@ -300,51 +313,51 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       margin="normal"
                       fullWidth
-                      label="Status"
-                      required
+                      // label="Status"
+                      required className={classes.textsize}
                     >
-                      <MenuItem value={1}>Open</MenuItem>
-                      <MenuItem value={2}>Active</MenuItem>
-                      <MenuItem value={3}>Inactive</MenuItem>
-                      <MenuItem value={4}>Close</MenuItem>
+                      <MenuItem className={classes.textsize} value={1}>Open</MenuItem>
+                      <MenuItem className={classes.textsize} value={2}>Active</MenuItem>
+                      <MenuItem className={classes.textsize} value={3}>Inactive</MenuItem>
+                      <MenuItem className={classes.textsize} value={4}>Close</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="city">Select City *</InputLabel>
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="city">Select City *</InputLabel>
                     <Select
                       value={franchise.city}
-                      onChange={handleInputChange}
+                      onChange={handleInputChange} className={classes.textsize}
                       inputProps={{
                         name: 'city',
                         id: 'city',
                       }}
                       fullWidth
-                      label="City"
+                      // label="City"
                       required
                       disabled
                     >
                       {cityList.length > 0 &&
                         cityList.map(data => {
                           return (
-                            <MenuItem value={data.city}>{data.city+ ' - ' + data.city_code}</MenuItem>
+                            <MenuItem className={classes.textsize} value={data.city}>{data.city+ ' - ' + data.city_code}</MenuItem>
                           );
                         })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="suburb_selection">Area *</InputLabel>
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="suburb_selection">Area *</InputLabel>
                     <Select
                       value={franchise.suburb}
-                      onChange={handleInputChange}
+                      onChange={handleInputChange} className={classes.textsize}
                       name= 'suburb'
                       id= 'suburb_selection'
                       fullWidth
-                      label="Area"
+                      // label="Area"
                       required
                     >
                     {(selectedArea.length>0 ? selectedArea : []).map((area, index) => {
                         return(
-                          <MenuItem value={area.area_name}>{area.area_name}</MenuItem>
+                          <MenuItem className={classes.textsize} value={area.area_name}>{area.area_name}</MenuItem>
                         )
                       })
                     }
@@ -372,12 +385,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="company_name">Company Name *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="company_name">Company Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="company_name"
                       name="company_name"
-                      label="Company Name"
+                      // label="Company Name"
                       value={franchise.company_name}
                       fullWidth
                       margin="dense"
@@ -385,12 +403,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="nbzn">Company NBZN *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="nbzn">Company NBZN *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="nbzn"
                       name="nbzn"
-                      label="Company's NBZN"
+                      // label="Company's NBZN"
                       value={franchise.nbzn}
                       fullWidth
                       margin="dense"
@@ -398,12 +421,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="company_location">Company Location *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="company_location">Company Location *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="company_location"
                       name="company_location"
-                      label="Company Location"
+                      // label="Company Location"
                       value={franchise.company_location}
                       margin="dense"
                       required
@@ -413,12 +441,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   </Grid>
                   {/* <Paper className={classes.paper}> */}
                   {/* <Grid container spacing={3}> */}
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="director">Director Name *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="director">Director Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="director"
                       name="director"
-                      label="Director Name"
+                      // label="Director Name"
                       value={franchise.director}
                       fullWidth
                       margin="dense"
@@ -426,12 +459,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Address *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="email">Email Address *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="email"
                       name="email"
-                      label="Email"
+                      // label="Email"
                       value={franchise.email}
                       margin="dense"
                       required
@@ -441,12 +479,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact # *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="contact">Contact # *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="contact"
                       name="contact"
-                      label="Contact #"
+                      // label="Contact #"
                       value={franchise.contact}
                       margin="dense"
                       required
@@ -455,12 +498,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="number"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="alt_contact">Alternative #</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="alt_contact">Alternative #</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="alt_contact"
                       name="alt_contact"
-                      label="Alternative Contact"
+                      // label="Alternative Contact"
                       value={franchise.alt_contact}
                       margin="dense"
                       // required
@@ -470,12 +518,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                    
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="franchaise_name">Unique Id</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="franchaise_name">Unique Id</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="user_id"
                       name="user_id"
-                      label="User Id"
+                      // label="User Id"
                       margin="dense"
                       required
                       type="text"
@@ -486,7 +539,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       disabled
                     />
                   </Grid>
-                  {/* <Grid item xs={6} sm={1}>
+                  {/* <Grid item xs={3} sm={1}>
                   <Fab size="small" color="secondary" aria-label="Add"  className={classes.margin}>
                     <AddIcon />
                   </Fab>
@@ -538,12 +591,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="accountant_name">Name *</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="accountant_name">Name *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accountant_name"
                       name="accountant_name"
-                      label="Name"
+                      // label="Name"
                       value={franchise.accountant_name}
                       // placeholder="Accountant name"
                       fullWidth
@@ -553,12 +611,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="accountant_email">Email Address*</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="accountant_email">Email Address*</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accountant_email"
                       name="accountant_email"
-                      label="Email Address"
+                      // label="Email Address"
                       value={franchise.accountant_email}
                       // placeholder="Email"
                       fullWidth
@@ -569,12 +632,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="accountant_contact">Contact #*</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="accountant_contact">Contact #*</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accountant_contact"
                       name="accountant_contact"
-                      label="Contact #"
+                      // label="Contact #"
                       value={franchise.accountant_contact}
                       // placeholder="Contact"
                       type="number"
@@ -585,12 +653,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="website">Website</InputLabel> */}
-                    <TextField
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel className={classes.textsize} htmlFor="website">Website</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="website"
                       name="website"
-                      label="Website"
+                      // label="Website"
                       value={franchise.website}
                       // placeholder="Accountant name"
                       fullWidth
@@ -598,6 +671,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     />
                   </Grid>
+                  {savebtn? <Button variant="contained"  onClick={handleSubmit} color="primary" className={classes.button} >
+                Update
+              </Button> : <Button  variant="contained"  onClick={handleSubmit} color="primary" className={classes.button}  disabled>
+                Update
+              </Button>} 
+              <Button  variant="contained"   onClick={handleEditClose} color="primary" className={classes.button} >
+                Close
+              </Button>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
