@@ -748,4 +748,30 @@ Order.prototype.getProductDetail = function () {
   });
 };
 
+Order.prototype.getCSRDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+console.log(that.id);
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select name from user where id = "'+that.id+'"',function (error, rows, fields) {   
+          resolve(rows);
+        });
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
 module.exports = Order;

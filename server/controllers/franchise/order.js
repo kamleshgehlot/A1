@@ -300,21 +300,24 @@ const editOrder = function (req, res, next) {
       };
       
       if(orderParams.order_id!= '' || orderParams.order_id != null){
-        console.log('hello.',orderParams);
+        // console.log('hello.',orderParams);
         try{
           new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget().then(function (budget) {
-              console.log('budget..',budget)
+              // console.log('budget..',budget)
               new Order({user_id : req.decoded.user_id, flexOrderId: req.body.data.order_type_id}).getFlexOrder().then(function (flexOrder) {
-              console.log('flexOrder..',flexOrder)
+              // console.log('flexOrder..',flexOrder)
                   new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails().then(function (customer) {
-                    console.log('customer..',customer)
+                    // console.log('customer..',customer)
                     new Order({user_id : req.decoded.user_id}).getCompanyDetail().then(function (franchise) {
-                      console.log('franchise..',franchise)
+                      // console.log('franchise..',franchise)
                       new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
-                        console.log('product..',product)
+                        // console.log('product..',product)
                         new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
-                          console.log('product..',product)
-                        res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product });
+                          // console.log('product..',product)
+                          new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail().then(function (user) {
+                            // console.log('user..',user)
+                              res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product, user: user });
+                          });
                         });
                       });
                     });
