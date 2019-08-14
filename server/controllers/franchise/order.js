@@ -2,7 +2,7 @@ const Order = require('../../models/franchise/order.js');
 const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 
 const uploadDoc = function (req, res, next) {
-  // console.log("****************Customer..................", req.body.data);
+  // console.log("****************Customer..................", req.body);
   // console.log("%%%%%%%%%%% Customer File %%%%%%%%%%%%%", req.files);
   // console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
 
@@ -47,7 +47,7 @@ const getnewid = function(req, res, next) {
 const getAll = function(req, res, next) {
   try {
     new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-      console.log('hello --',order);
+      // console.log('hello --',order);
       res.send({ order: order });
     });
   } catch (error) {
@@ -284,8 +284,62 @@ const editOrder = function (req, res, next) {
       res.send('invalid');
     }
   };
+
   
+
+  const getFlexOrderDataForPDF = function (req, res, next) {
+    console.log('eeeq.',req.body);
+      let orderParams = {
+        user_id: req.decoded.user_id,
+
+        franchise_id: req.decoded,
+        order_id : req.body.data.id,
+        customer_id: req.body.data.customer_id,
+
+
+      };
+      
+      if(orderParams.order_id!= '' || orderParams.order_id != null){
+        console.log('hello.',orderParams);
+        try{
+          new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget().then(function (budget) {
+              console.log('budget..',budget)
+              new Order({user_id : req.decoded.user_id, flexOrderId: req.body.data.order_type_id}).getFlexOrder().then(function (flexOrder) {
+              console.log('flexOrder..',flexOrder)
+                  new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails().then(function (customer) {
+                    console.log('customer..',customer)
+                    new Order({user_id : req.decoded.user_id}).getCompanyDetail().then(function (franchise) {
+                      console.log('franchise..',franchise)
+                      new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
+                        console.log('product..',product)
+                        res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product });
+                      });
+                    });
+                  });
+              });
+              // new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
+              // res.send({ order , oldBudget}); 
+            // });
+          });
+          
+          // const newOrder = new Order(orderParams);
+          //     newOrder.getFlexOrderDataForPDF().then(function(result){
+          //           console.log('resulut===dd', result);
+          //       //  new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
+          //       //       new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+             
+          //       //         res.send({ order: order});
+          //       //   });
+          //       // });
+          //     });
+        }catch(err){
+          console.log("Error..",err);
+        }
+      }
+      
+    };
+    
   
 
 
-module.exports = { getnewid, uploadDoc, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
+module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
