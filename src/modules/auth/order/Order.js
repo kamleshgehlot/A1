@@ -84,9 +84,9 @@ export default function Order() {
         // console.log('result',result)
         
         pdfmake.vfs = pdfFonts.pdfMake.vfs;
-        var dd = DD(result);
+        var dd = DD(result,data);
         pdfmake.createPdf(dd).open();
-        
+
       } catch (error) {
         console.log(error);
       }

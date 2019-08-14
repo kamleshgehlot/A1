@@ -495,7 +495,7 @@ Order.prototype.getCustomerDetails = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from customer where id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+        connection.query('SELECT c.*,  i.name as id_type_name from customer as c inner join id_type as i on c.id_type = i.id where c.id = "'+that.lastInsertId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

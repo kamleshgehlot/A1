@@ -1,5 +1,5 @@
 
-export default function layout(data) {
+export default function layout(data,order) {
 
   const franchise = data.franchise;
   const products = data.product;
@@ -12,7 +12,7 @@ export default function layout(data) {
   console.log(orderType);
   console.log(customer);
   console.log(budget);
-
+  console.log(order);
 
   const body = [];
 
@@ -39,7 +39,7 @@ export default function layout(data) {
               //  {  text: [{ text: franchise[0].franchise_name , style: 'Header2Center', bold: true }, { text: '\nRENT-FLEX ORDER FORM', style: 'Header2Center', bold: true } ]},
               //  { text: franchise[0].franchise_name , style: 'Header2Center', bold: true },
                { text: '\nRENT-FLEX ORDER FORM', style: 'Header2Center', bold: true }, 
-               { text: 'Application#: ' + '0000007', style: 'Header3Center'},
+               { text: 'Application#: ' + order.order_id , style: 'Header3Center'},
               //  { text: [{text: 'Application# :' + '0000007', style: 'Header3Center'}, {text: '\n\nDate: ' + '13/08/2019', style: 'Header3Center'}]}
             ]
           },
@@ -105,7 +105,7 @@ export default function layout(data) {
                       ],
                       [
                       {style:'margins', text: [  
-                        { text: customer[0].id_type + '\t\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
+                        { text: customer[0].id_type_name + '\t\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
                         { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: 'Header1Center', alignment: screenLeft }, 
                         { text: 'Expiry Date: ' + customer[0].expiry_date +  '\n', style: 'Header1Center', alignment: screenLeft },                         
                       ]}

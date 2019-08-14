@@ -312,7 +312,10 @@ const editOrder = function (req, res, next) {
                       console.log('franchise..',franchise)
                       new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
                         console.log('product..',product)
+                        new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
+                          console.log('product..',product)
                         res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product });
+                        });
                       });
                     });
                   });
