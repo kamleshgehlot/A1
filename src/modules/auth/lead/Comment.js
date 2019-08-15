@@ -212,6 +212,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                           id: 'franchise_id',
                           label:'franchise_id'
                         }}
+                        disabled
                         className={classes.drpdwn}
                         fullWidth 
                         // label="franchise_id"

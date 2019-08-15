@@ -163,6 +163,7 @@ export default function Franchise(props) {
 
       try {
         const result = await UserAPI.list();
+        console.log(result)
         setFranchiseList(result.userList);
 
         let franchiseIdTemp = [];

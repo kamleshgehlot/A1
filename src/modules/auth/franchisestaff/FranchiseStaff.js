@@ -12,6 +12,15 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CreateIcon from '@material-ui/icons/Create';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 import Add from './Add';
 import Edit from './Edit';
 import UploadDoc from './UploadDoc';
@@ -24,10 +33,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -50,6 +59,8 @@ export default function FranchiseStaff(franchiseId) {
   const [staffList, setStaffList] = useState({});
   const [role, setRole] = useState([]);
   const [position, setPosition] = useState({});
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
   
   // Code for testing pls don't remove -- by SRK 
   // const [uploadOpen,setUploadOpen] = useState(false);
@@ -65,9 +76,11 @@ export default function FranchiseStaff(franchiseId) {
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      width: 1000
     },
     drawer: {
       width: drawerWidth,
@@ -83,8 +96,13 @@ export default function FranchiseStaff(franchiseId) {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     button:{
+      color:"white",
+    fontSize: theme.typography.pxToRem(10),
       marginRight: theme.spacing(2),
       padding:theme.spacing(2),
       borderRadius: theme.spacing(7),
@@ -95,8 +113,20 @@ export default function FranchiseStaff(franchiseId) {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
     },
+    drpdwn:{
+      color: 'white',
+      fontSize: theme.typography.pxToRem(13),
+    },
+    icon: {
+      fill: 'white',
+    },
+    textsize:{
+      fontSize: theme.typography.pxToRem(12),
+      color: 'white',
+    }
   }));
   const classes = useStyles();
 
@@ -169,6 +199,31 @@ export default function FranchiseStaff(franchiseId) {
   // console.log("data.role......", staffList)
 
 
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -178,7 +233,7 @@ export default function FranchiseStaff(franchiseId) {
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Add"
               className={classes.fonttransform}
               onClick={handleClickOpen}
@@ -245,9 +300,12 @@ export default function FranchiseStaff(franchiseId) {
                           </StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>
-                              <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                            <CreateIcon/>
-                            </Button>
+                            <Tooltip title="Edit Product">                              
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                              <CreateIcon/>
+                              </IconButton>
+                            </Tooltip>
+                              
                             </StyledTableCell>
                         </TableRow>
                       )

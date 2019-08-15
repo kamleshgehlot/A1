@@ -13,9 +13,17 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Snackbar from '@material-ui/core/Snackbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 import CreateIcon from '@material-ui/icons/Create';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
+import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 //files
 import Add from './Add';
 import MyTask from './MyTask';
@@ -34,10 +42,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -70,6 +78,8 @@ export default function Task(franchiseId) {
   const [assignedid,setAssignedid]= useState();
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
 
   // const [showTask, setShowTask] = useState(roleName === 'Super Admin');
   const [showTask, setShowTask] = useState(roleName === 'Admin');
@@ -80,9 +90,11 @@ export default function Task(franchiseId) {
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      width: 1000
     },
     drawer: {
       width: drawerWidth,
@@ -98,6 +110,9 @@ export default function Task(franchiseId) {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     paper: {
       padding: theme.spacing(2),
@@ -105,9 +120,12 @@ export default function Task(franchiseId) {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
     },
     button:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
       marginRight: theme.spacing(2),
       padding:theme.spacing(2),
       borderRadius: theme.spacing(7),
@@ -126,6 +144,21 @@ export default function Task(franchiseId) {
     fab: {
       margin: theme.spacing(1),
     },
+    textsize:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(12),
+    },
+    drpdwn:{
+      color: 'white',
+      fontSize: theme.typography.pxToRem(13),
+    },
+    icon: {
+      fill: 'white',
+    },
+    textsize:{
+      fontSize: theme.typography.pxToRem(12),
+      color: 'white',
+    }
   }));
   const classes = useStyles();
       
@@ -300,6 +333,32 @@ useEffect(() => {
   //   handleClickDelete,
   //   validate
   // );
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
   return (
     <div>
       {/* {showTask ?  */}
@@ -309,7 +368,7 @@ useEffect(() => {
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Add"
               className={classes.fonttransform}
               onClick={handleClickOpen}
@@ -391,12 +450,23 @@ useEffect(() => {
                           {/* <StyledTableCell><p >{data.status}</p></StyledTableCell> */}
                           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
                           <StyledTableCell>
-                            <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                             <CreateIcon/>
-                            </Button>
-                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}>
+                            <Tooltip title="Update Task">                              
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                              <CreateIcon/>
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Archive Product">                              
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickDel(data); }}>
                               <ArchiveIcon />
-                            </Button>
+                              </IconButton>
+                            </Tooltip>
+                              
+                            {/* <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> */}
+                             {/* <CreateIcon/>
+                            </Button> */}
+                            {/* <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}> */}
+                              {/* <ArchiveIcon />
+                            </Button> */}
                           </StyledTableCell>
                         </TableRow>
                       )

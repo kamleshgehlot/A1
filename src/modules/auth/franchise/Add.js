@@ -123,6 +123,9 @@ const useStyles = makeStyles(theme => ({
     color:"white",
     fontSize: theme.typography.pxToRem(10),
     marginRight: theme.spacing(1),
+    marginTop:theme.spacing(3),
+    marginLeft:theme.spacing(1),
+    marginBottom:theme.spacing(3),
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
@@ -270,7 +273,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
           franchise_name: data.franchise_name,
           company_name: data.company_name,
           suburb: data.suburb,
-          city: data.city
+          city: data.city,
+          status:data.state
         });
       }
     });
@@ -332,7 +336,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       
       if(response.isVerified!=''){
       SetChkEmail(response.isVerified[0].email);
-      alert('Email already registred');
+      alert('Email already registered');
       }
     }
     checkEmail();
@@ -892,9 +896,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
                   
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
                   <Grid item xs={12} sm={4}>
                
-              {savebtn?    <Button variant="contained" color="primary" className={classes.button} >
+              {savebtn?    <Button variant="contained" color="primary" className={classes.button} onClick={handleSubmit}>
                      Save
                     </Button>: <Button variant="contained" color="primary" disabled className={classes.button}  >
                      Save
@@ -903,9 +910,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                      Close
                     </Button>
                   </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
           </div>
         </form>
       </Dialog>

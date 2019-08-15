@@ -21,6 +21,7 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
+//files
 import AddLead from './Add';
 import Comment from './Comment';
 import Add from '../enquiry/Add';
@@ -116,12 +117,8 @@ export default function Lead() {
       color:"white",
       fontSize: theme.typography.pxToRem(10),
     },
-    textsize:{
-      color:"white",
-      fontSize: theme.typography.pxToRem(12),
-    },
     drpdwn:{
-      color: 'white',
+      // color: 'white',
       fontSize: theme.typography.pxToRem(13),
     },
     icon: {
@@ -331,14 +328,14 @@ export default function Lead() {
                                   icon: classes.icon,
                               },
                             }}
-                            className={classes.drpdwn}
+                            className={classes.textsize}
                             value={filterId}
                             label="filter"
                           >
-                            <MenuItem className={classes.textsize} value={4}>{'Show All'}</MenuItem> 
-                            <MenuItem className={classes.textsize} value={1}>{'Created By Me'}</MenuItem> 
-                            <MenuItem className={classes.textsize} value={2}>{'Created For Me'}</MenuItem> 
-                            <MenuItem className={classes.textsize} value={3}>{'Created For All'}</MenuItem> 
+                            <MenuItem className={classes.drpdwn} value={4}>{'Show All'}</MenuItem> 
+                            <MenuItem className={classes.drpdwn} value={1}>{'Created By Me'}</MenuItem> 
+                            <MenuItem className={classes.drpdwn} value={2}>{'Created For Me'}</MenuItem> 
+                            <MenuItem className={classes.drpdwn} value={3}>{'Created For All'}</MenuItem> 
                           </Select>
                         </StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
@@ -443,6 +440,7 @@ export default function Lead() {
                                 }) : <StyledTableCell> Master Admin</StyledTableCell>
                               }
                             <StyledTableCell>{data.message}</StyledTableCell>
+                            {console.log('datafrc.id---',data.converted_by_f_id)}
                             {data.converted_by_f_id!=0 ?(franchiseListd.length > 0 ? franchiseListd : []).map((datafrc, index1)=>{
                                   
                                   return(

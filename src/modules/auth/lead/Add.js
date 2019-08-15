@@ -364,6 +364,9 @@ return (
                     </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
                       save
                     </Button>}
+                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                      Close
+                    </Button> 
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

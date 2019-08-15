@@ -93,7 +93,9 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(-3),
   },
   menu:{
+    fontSize: theme.typography.pxToRem(14),
     color:"white",
+    marginTop:theme.spacing(-3),
     textTransform:'initial'
   },
   iconwidth:{

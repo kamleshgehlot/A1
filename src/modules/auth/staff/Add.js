@@ -140,7 +140,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       
       if(response.isVerified!=''){
       SetChkEmail(response.isVerified[0].email);
-      alert('Email already registred');
+      alert('Email already registered');
       }
     }
     checkEmail();
