@@ -1,4 +1,43 @@
 
+function buildTableBody(data, columns, valueKeys, orderType) {
+  var body = [];
+
+  body.push([
+    { text: 'PRODUCT AND CREDIT DETAILS: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10, colSpan: 3}, {},{}
+  ]);
+
+  var dataRow1 = [];
+
+  dataRow1.push(
+    { text: columns[0], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }
+  );
+  dataRow1.push(    
+    { text: columns[1], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }
+  );
+  dataRow1.push(
+    { text: columns[2], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }                   
+  );
+
+  body.push(dataRow1);
+
+  data.forEach(function(row) {
+    var dataRow = [];
+
+    valueKeys.forEach(function(column) {
+      if(column === 'paymentType') {
+        dataRow.push({ text: orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
+
+      } else {
+        dataRow.push({ text: row[column.toLowerCase()], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
+      }
+    })
+
+    body.push(dataRow);
+  });
+
+  return body;
+}
+
 export default function layout(data,order) {
 
   const franchise = data.franchise;
@@ -9,7 +48,7 @@ export default function layout(data,order) {
   const user = data.user; 
 
   console.log(franchise);
-  console.log(products);
+  console.log("product", products);
   console.log(orderType);
   console.log(customer);
   console.log(budget);
@@ -17,9 +56,6 @@ export default function layout(data,order) {
   console.log(user);
 
   // const productList = [];
-
-
-  var productList = [];
 
 //   products.forEach(function(data) {
 //   var dataRow = [];
@@ -43,10 +79,7 @@ export default function layout(data,order) {
   //   );
   // });
 
-console.log('pdf----', [productList]);
-
-
-
+// console.log('pdf----', [productList]);
 
   var dd = {
     content: 
@@ -187,27 +220,19 @@ console.log('pdf----', [productList]);
                 // margin: [100,20,10,40],
                 // fillColor: 'gray',
                 // background: 'gray',
-                body: [
-                  [
-                    { text: 'PRODUCT AND CREDIT DETAILS: ', colSpan: 3, style: 'margins', bold: true, alignment: screenLeft, fontSize: 10,  }, {},{}, 
-                  ],
-                  [
-                    { text: 'Product', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },
-                    { text: 'Description', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },
-                    { text: 'Payment Type', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },                    
-                  ],
+                body:buildTableBody(products, ['Product', 'Description', 'Payment Type'], ['name', 'description', 'paymentType'], orderType),
                   // productList,
                    // products.map(data =>{
                     // console.log(data)
-                    products.map((data, index) =>{
-                      return(
-                        [[
-                          { text: data.name,  bold: true, alignment: screenLeft, fontSize: 8,  },
-                          { text: data.description,  bold: true, alignment: screenLeft, fontSize: 8,  },
-                          { text: (orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT'),  bold: true, alignment: screenLeft, fontSize: 8,  },    
-                        ],]
-                      )
-                    })
+                    // products.map((data, index) =>{
+                    //   return(
+                    //     [
+                    //       { text: 'Product', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 },
+                    //       { text: 'Description', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 },
+                    //       { text: 'Payment Type', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 },                    
+                    //     ]
+                    //   )
+                    // })
                     
                   // products.map((data) => {
                   // // var dataRow = [];
@@ -222,7 +247,7 @@ console.log('pdf----', [productList]);
                   // dataRow.push(']');
                   // productList.push(dataRow)
                 // })                 
-                ]
+                //]
               },
           }],             
         ],              
