@@ -48,12 +48,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   labelTitle: {
     // display: 'flex',
@@ -77,11 +81,22 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
   },
   buttonMargin: {
     margin: theme.spacing(1),
@@ -317,6 +332,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="int_unpaid_bal"
                       name="int_unpaid_bal"
                       label="Intial Unpaid Balance"
@@ -337,6 +357,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="cash_price"
                       name="cash_price"
                       label="Cash Price"
@@ -357,6 +382,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="delivery_fee"
                       name="delivery_fee"
                       label="Delivery Fee"
@@ -378,6 +408,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="ppsr_fee"
                       name="ppsr_fee"
                       label="PPSR Fee"
@@ -406,6 +441,11 @@ return (
                     Timing of Payments
                   </Typography>
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="frequency"
                       name="frequency"
                       label="Frequency"
@@ -421,6 +461,11 @@ return (
                       
                     />
                      <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="first_payment"
                       name="first_payment"
                       label="First Payment"
@@ -435,6 +480,11 @@ return (
                       margin="dense"
                     />
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="last_payment"
                       name="last_payment"
                       label="Last Payment"
@@ -454,6 +504,11 @@ return (
                       Number of Payments 
                   </Typography>
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="no_of_payment"
                       name="no_of_payment"
                       // label="no_of_payment/Mortgage"
@@ -476,6 +531,11 @@ return (
                     Amount of Each Payments
                   </Typography>
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="each_payment_amt"
                       name="each_payment_amt"
                       // label="each_payment_amt/Mortgage"
@@ -498,6 +558,11 @@ return (
                       Total Amount of Payments
                   </Typography>
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="total_payment_amt"
                       name="total_payment_amt"
                       // label="total_payment_amt/Mortgage"
@@ -522,6 +587,11 @@ return (
                       Minimun Number of Payments before delivery
                   </Typography>
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="before_delivery_amt"
                       name="before_delivery_amt"
                       // label="before_delivery_amt/Mortgage"
@@ -543,6 +613,11 @@ return (
                   Expected Delivery Date/Time
                   </Typography>
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="exp_delivery_at"
                       name="exp_delivery_at"
                       value={expectedDeliveryDate}
@@ -563,6 +638,11 @@ return (
                     Minimum Payment Amt
                   </Typography>
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="minimum_payment_amt"
                       name="minimum_payment_amt"
                       // label="minimum_payment_amt/Mortgage"
@@ -591,6 +671,11 @@ return (
                   </Typography>
                   
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="intrest_rate"
                       name="intrest_rate"
                       label="Weeks"
@@ -608,6 +693,11 @@ return (
                       // }}
                     />
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="intrest_rate_per"
                       name="intrest_rate_per"
                       label="Daily interest rates of (in %)"
@@ -632,6 +722,11 @@ return (
                   </Typography>
                   
                   <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="total_intrest"
                       name="total_intrest"
                       // label=""

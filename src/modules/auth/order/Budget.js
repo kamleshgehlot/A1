@@ -48,12 +48,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   labelTitle: {
     // display: 'flex',
@@ -77,11 +81,22 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
   },
   buttonMargin: {
     margin: theme.spacing(1),
@@ -276,6 +291,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="work"
                       name="work"
                       label="Work"
@@ -296,6 +316,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="benefits"
                       name="benefits"
                       label="Benefits"
@@ -316,6 +341,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accomodation"
                       name="accomodation"
                       label="Accomodation Allowance"
@@ -337,6 +367,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="childcare"
                       name="childcare"
                       label="Childcare"
@@ -363,6 +398,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="rent"
                       name="rent"
                       label="Rent/Mortgage"
@@ -383,6 +423,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="power"
                       name="power"
                       label="Power"
@@ -403,6 +448,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="telephone"
                       name="telephone"
                       label="Landline Phone"
@@ -423,6 +473,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="mobile"
                       name="mobile"
                       label="Mobile Phone"
@@ -443,6 +498,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="vehicle"
                       name="vehicle"
                       label="Vehicle Finance"
@@ -463,6 +523,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="transport"
                       name="transport"
                       label="Public Transport"
@@ -483,6 +548,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="food"
                       name="food"
                       label="Food"
@@ -503,6 +573,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="credit_card"
                       name="credit_card"
                       label="Credit/Store Cards"
@@ -523,6 +598,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="loan"
                       name="loan"
                       label="Loans/Hire Purchase"
@@ -543,6 +623,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="other_expenditure"
                       name="other_expenditure"
                       label="Other"
@@ -594,6 +679,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="surplus"
                       name="surplus"
                       // label="Other"
@@ -621,6 +711,11 @@ return (
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="afford_amt"
                       name="afford_amt"
                       // label="Other"

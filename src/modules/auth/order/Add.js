@@ -57,12 +57,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   labelTitle: {
     // display: 'flex',
@@ -86,11 +90,22 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
   },
   buttonMargin: {
     margin: theme.spacing(1),
@@ -382,7 +397,12 @@ return (
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={3}>
                     <InputLabel htmlFor="order_id">Order#</InputLabel>
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="order_id"
                       name="order_id"
                       // label="Order #"
@@ -398,7 +418,12 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <InputLabel htmlFor="order_date">Date*</InputLabel>
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="order_date"
                       name="order_date"
@@ -446,13 +471,14 @@ return (
                       id= 'main_category'
                       // label='customer'
                       fullWidth
+                      className={classes.textsize}
                       required
                       disabled = {budgetList ==""}
                     >    
                     {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
                         data.type === 1 ? 
-                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                          : ''
                       ) 
                      })}
@@ -466,6 +492,7 @@ return (
                       onChange={handleCategory}
                       name= 'category'
                       id= 'category'
+                      className={classes.textsize}
                       // label='customer'
                       fullWidth
                       required
@@ -474,7 +501,7 @@ return (
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
                         data.type === 2 ? 
-                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                          : ''
                       ) 
                      })}
@@ -489,14 +516,14 @@ return (
                       name= 'sub_category'
                       id= 'sub_category'
                       // label='customer'
-                      fullWidth
+                      fullWidth className={classes.textsize}
                       required
                       disabled = {category ==""}
                     >    
                     {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
                         data.type === 3 ? 
-                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                          : ''
                       ) 
                      })}
@@ -539,11 +566,12 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      className={classes.textsize}
                       disabled = {subCategory ==""}
                     >    
                      {(productList.length > 0 ? productList : []).map((data,index)=>{
                       return(
-                         <MenuItem value={data.id}>{data.name}</MenuItem>
+                         <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>
                       ) 
                      })}
                     </Select>
@@ -576,14 +604,15 @@ return (
                       id= 'payment_mode'
                       // label='customer'
                       fullWidth
+                      className={classes.textsize}
                       required
                       disabled = {budgetList ==""}
                     >    
-                      <MenuItem value={1}>EasyPay</MenuItem>
-                      <MenuItem value={2}>Credit</MenuItem>
-                      <MenuItem value={3}>Debit</MenuItem>
-                      <MenuItem value={4}>PayPal</MenuItem>
-                      <MenuItem value={5}>Cash</MenuItem>
+                      <MenuItem className={classes.textsize} value={1}>EasyPay</MenuItem>
+                      <MenuItem className={classes.textsize} value={2}>Credit</MenuItem>
+                      <MenuItem className={classes.textsize} value={3}>Debit</MenuItem>
+                      <MenuItem className={classes.textsize} value={4}>PayPal</MenuItem>
+                      <MenuItem className={classes.textsize} value={5}>Cash</MenuItem>
                     </Select>
                    </Grid>
                    

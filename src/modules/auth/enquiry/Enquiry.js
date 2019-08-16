@@ -11,6 +11,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
+
 import Add from './Add';
 import ConvertedEnquiry from './ConvertedEnquiry';
 import CustomerAdd from '../customer/Add';
@@ -23,10 +30,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -48,14 +55,18 @@ export default function Enquiry() {
   const [customerOpen, setCustomerOpen] = useState(false);
   const [productList, setProductList] = useState([]);
   const [convertedEnquiryOpen, SetConvertedEnquiryOpen] = useState(false);
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      // width: 1000
     },
     drawer: {
       width: drawerWidth,
@@ -71,15 +82,28 @@ export default function Enquiry() {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'left',
       color: theme.palette.text.secondary,
     },
-    fonttransform:{
-      textTransform:"initial"
+    button:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
+      marginRight: theme.spacing(1),
     },
+    fonttransform:{
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
+    },
+    textsize:{
+      fontSize: theme.typography.pxToRem(12),
+      color: 'white',
+    }
   }));
   const classes = useStyles();
 
@@ -144,6 +168,32 @@ console.log('res=---',response);
   }, []);
 
 
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
 
   return (
     <div>
@@ -154,7 +204,7 @@ console.log('res=---',response);
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Add"
               className={classes.fonttransform}
               onClick={handleClickOpen}
@@ -207,7 +257,7 @@ console.log('res=---',response);
                                   {/* {data.interested_product_id} */}
                               </StyledTableCell>
                               <StyledTableCell>
-                              <Button variant="contained" color="primary" onClick={(event) => { openCustomerPage(data); }}>
+                              <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { openCustomerPage(data); }}>
                                   Convert
                               </Button>
                               </StyledTableCell>

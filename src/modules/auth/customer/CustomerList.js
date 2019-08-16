@@ -17,6 +17,14 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Tooltip from '@material-ui/core/Tooltip';
+import CreateIcon from '@material-ui/icons/Create';
+import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 
 import Add from './Add';
 import Edit from './Edit';
@@ -31,10 +39,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -59,14 +67,18 @@ export default function CustomerList(userId) {
   const [searchText, setSearchText]  = useState('');
   const [customer, setCustomer] = useState({});
   
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      // width: 1000
     },
     drawer: {
       width: drawerWidth,
@@ -82,6 +94,9 @@ export default function CustomerList(userId) {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     paper: {
       padding: theme.spacing(2),
@@ -89,7 +104,12 @@ export default function CustomerList(userId) {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
+    },
+    textsize:{
+      fontSize: theme.typography.pxToRem(12),
+      color: 'white',
     },
     search: {
       position: 'relative',
@@ -208,6 +228,32 @@ export default function CustomerList(userId) {
   }, []);
 
 
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
   return (
     <div>
       
@@ -217,7 +263,7 @@ export default function CustomerList(userId) {
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Add"
               className={classes.fonttransform}
               onClick={handleClickOpen}
@@ -254,7 +300,15 @@ export default function CustomerList(userId) {
               </IconButton> */}
           </Grid>
           <Grid item xs={12} sm={12}>
-            <Paper style={{ width: '100%' }}>
+            <Paper style={{ width: '100%' }}> 
+              <AppBar position="static"  className={classes.appBar}>
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                  <Tab label="Active" />
+                  <Tab label="Hold" />
+                  <Tab label="Completed" />
+                </Tabs>
+              </AppBar>
+              <TabPanel value={value} index={value}>
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -272,7 +326,7 @@ export default function CustomerList(userId) {
                         {(customerListData.length > 0 ? customerListData : []).map((data,index) =>{
                           
                           return(
-                            <TableRow key={data.id} >
+                           data.state===value+1? <TableRow key={data.id} >
                             <StyledTableCell> {index + 1}  </StyledTableCell>
                             <StyledTableCell> {data.customer_name}  </StyledTableCell>
                             {/* <StyledTableCell> {data.mobile + ', ' + data.telephone}  </StyledTableCell> */}
@@ -281,14 +335,20 @@ export default function CustomerList(userId) {
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                             <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell>
                             <StyledTableCell> 
-                              <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button>
+                              <Tooltip title="Update Task">                              
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                                <CreateIcon/>
+                                </IconButton>
+                              </Tooltip>
+                              {/* <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button> */}
                             </StyledTableCell>
-                            </TableRow>
+                            </TableRow>:''
                           )
                         })
                         }
-                    </TableBody>
-                  </Table>
+                      </TableBody>
+                    </Table>
+                  </TabPanel>
                </Paper>
           </Grid>
         </Grid>

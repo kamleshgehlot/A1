@@ -40,12 +40,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -64,8 +68,16 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightBold,
   },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -75,12 +87,11 @@ const Transition = React.forwardRef((props, ref) => {
 
 const StyledTableCell = withStyles(theme => ({
   head: {
-   
     color: theme.palette.common.black,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -112,7 +123,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
       id: taskList.id,
       task_id: taskList.task_id,
       task_description:taskList.task_description,
-      assign_role:taskList.staffRole,
+      assign_role:taskList.assign_role,
       assigned_to:taskList.assigned_to,
       status:taskList.status,
       due_date:taskList.due_date,
@@ -141,7 +152,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     
   const rescheduleTask = async () => {
 
-    console.log('taskList======',taskList);
+    // console.log('taskList======',taskList);
     const response = await Task.reschedule({
       franchise_id: franchiseId,
       assignid: taskList.assignid,
@@ -181,7 +192,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     const response = await FranchiseUsers.staffRoleList({
       selectedRole:selectedRole
     });
-    console.log('response.staffList====',response.staffList);
+    // console.log('response.staffList====',response.staffList);
     setStaffList(response.staffList);
     // setOtherDisable(false);
   };
@@ -211,9 +222,9 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
        const response = await FranchiseUsers.staffRoleList({
          selectedRole:taskList.assign_role
        });
-       console.log('response.staffList====',response.staffList);
+      //  console.log('response.staffList====',response.staffList);
        setStaffList(response.staffList);
-       setOtherDisable(false);
+      //  setOtherDisable(false);
      };
        stafflistForRole();
      }catch(error){
@@ -241,9 +252,9 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Edit Task
               </Typography>
@@ -254,9 +265,9 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
           </AppBar>
 
           <div className={classes.root}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>
                 <Grid container spacing={4}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                 <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -273,10 +284,15 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                     <TableBody>
                         <TableRow>
                           <StyledTableCell> 
-                            <TextField
+                            <TextField 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
                               id="task_id"
                               name="task_id"
-                              label="Task Id"
+                              // label="Task Id"
                               value={taskList.task_id}
                               fullWidth
                               disabled
@@ -286,10 +302,15 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                             /> 
                           </StyledTableCell>
                           <StyledTableCell> 
-                            <TextField
+                            <TextField 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
                                 id="task_description"
                                 name="task_description"
-                                label="Task Description"
+                                // label="Task Description"
                                 value={taskList.task_description}
                                 onChange={handleInputChange}
                                 fullWidth
@@ -308,12 +329,14 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 id: 'assign_role',
                               }}
                               onChange={handleRoleChange}
+                              className={classes.textsize}
                               fullWidth
                               required
                             >
+                              <MenuItem className={classes.textsize} value={2}>Director</MenuItem>
                               {role.map((ele,index) =>{
                                 return(
-                                <MenuItem value={ele.id}>{ele.name}</MenuItem>
+                                <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>
                                 )
                               })}
 
@@ -326,17 +349,17 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               inputProps={{
                                 name: 'assigned_to',
                                 id: 'assigned_to',
-                                label:'assigned_to'
+                                // label:'assigned_to'
                               }}
-                              
+                              className={classes.textsize}
                               fullWidth
-                              label="assigned_to"
+                              // label="assigned_to"
                               required
                             >
                       
                                 { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
                                   return(
-                                    <MenuItem value={staff.id}>{staff.name} </MenuItem>
+                                    <MenuItem className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
                                 )})
                                 }
                             </Select>
@@ -344,7 +367,12 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                             
                             <StyledTableCell>
                               
-                              <TextField
+                              <TextField 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
                                 id="due_date"
                                 name="due_date"
                                 // label="Task Id"
@@ -360,7 +388,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                             </StyledTableCell>
                             {/* <StyledTableCell> */}
                               
-                              {/* <TextField
+                              {/* <TextField className={classes.textsize}
                                 id="status"
                                 name="status"
                                 // label="Task Id"
@@ -376,8 +404,20 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                             {/* </StyledTableCell> */}
                             {taskList.status===3? 
                               <StyledTableCell>
-                                <TextField id="new_due_date" name="new_due_date" value={taskList.new_due_date} onChange={handleInputChange}
-                                  fullWidth required type="date"  margin="dense" /> 
+                                <TextField 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }} 
+                                id="new_due_date" 
+                                name="new_due_date" 
+                                value={taskList.new_due_date} 
+                                onChange={handleInputChange}
+                                fullWidth 
+                                required 
+                                type="date"  
+                                margin="dense" /> 
                               </StyledTableCell>
                             :''}
                             <StyledTableCell>
@@ -386,6 +426,9 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               </Button>: <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask:addTaskMaster}  type="submit" disabled>
                                 Update
                               </Button>}
+                              <Button variant="contained" color="primary" className={classes.button} onClick={handleEditClose}  type="submit">
+                                Close
+                              </Button>
                             </StyledTableCell>
                         </TableRow>
                     </TableBody>

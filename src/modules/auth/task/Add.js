@@ -91,7 +91,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom:theme.spacing(2),
   },
   dropdwn:{
-      marginTop:theme.spacing(2.5),
+      // marginTop:theme.spacing(2.5),
+      fontSize: theme.typography.pxToRem(12),
   }
 }));
 
@@ -101,12 +102,11 @@ const Transition = React.forwardRef((props, ref) => {
 
 const StyledTableCell = withStyles(theme => ({
   head: {
-   
     color: theme.palette.common.black,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -280,13 +280,13 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Assign Task
               </Typography>
@@ -297,10 +297,10 @@ return (
           </AppBar>
 
           <div className={classes.root}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             {/* Franchise Details */}
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                 <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -315,7 +315,12 @@ return (
                     <TableBody>
                         <TableRow  className={classes.tbrow}>
                           <StyledTableCell> 
-                            <TextField
+                            <TextField 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
                               id="task_id"
                               name="task_id"
                               // label="Task Id"
@@ -328,10 +333,15 @@ return (
                             /> 
                           </StyledTableCell>
                           <StyledTableCell> 
-                            <TextField
+                            <TextField 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
                                 id="task_description"
                                 name="task_description"
-                                label="Task Description"
+                                // label="Task Description"
                                 value={inputs.task_description}
                                 onChange={handleInputChange}
                                 fullWidth
@@ -351,12 +361,15 @@ return (
                                 id: 'assign_role',
                               }}
                               onChange={handleRoleChange}
+                              className={classes.textsize}
                               fullWidth
                               required
                             >
+                                
+                                <MenuItem className={classes.textsize} value={2}>Director</MenuItem>
                               {role.map((ele,index) =>{
                                 return(
-                                <MenuItem value={ele.id}>{ele.name}</MenuItem>
+                                <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>
                                 )
                               })}
 
@@ -371,13 +384,15 @@ return (
                                 id: 'assigned_to',
                                 label:'assigned_to'
                               }}
+                              
                               required
                               disabled = {otherDisable}
                               fullWidth className={classes.dropdwn}
                               label="assigned_to" required >
                                 { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
                                   return(
-                                    <MenuItem value={staff.id}>{staff.name} </MenuItem>
+                                    <MenuItem 
+                                    className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
                                 )})
                                 }
                             </Select>
@@ -385,7 +400,12 @@ return (
                             
                             <StyledTableCell>
                               
-                              <TextField
+                              <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                                 id="due_date"
                                 name="due_date"
                                 // label="Task Id"
@@ -405,6 +425,9 @@ return (
                               </Button> : <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
                                 Assign
                               </Button> }
+                              <Button variant="contained" color="primary" className={classes.button} onClick={handleClose} type="submit">
+                                Close
+                              </Button> 
                             </StyledTableCell>
                         </TableRow>
                     </TableBody>

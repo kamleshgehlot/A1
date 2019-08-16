@@ -30,6 +30,7 @@ import MyTask from './MyTask';
 import Edit from './Edit';
 import CompletedTask from './CompletedTask';
 
+import StaffEdit from './StaffEdit';
 import useSignUpForm from '../franchise/CustomHooks';
 // API CALL
 import TaskAPI from '../../../api/Task';
@@ -62,6 +63,8 @@ export default function Task(franchiseId) {
   const [open, setOpen] = useState(false);
   const [openCompleteTask, setCompleteTaskOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  
+  const [staffEditOpen, setStaffEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -69,15 +72,19 @@ export default function Task(franchiseId) {
   const [taskStatusList, setTaskStatusList]=useState([]);
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
+  const [staffTaskList, setStaffTaskList] = useState({});
+  const [completedTaskList, setCompletedTaskList] = useState({});
   const [staffList, setStaffList] = useState({});
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [dateToday, setTodayDate]= useState();
-
+  
   const [role, setRole] = useState([]);
   const [showStaffTask, setShowStaffTask] = useState(false);
   const [assignedid,setAssignedid]= useState();
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
+  
+  const uid = APP_TOKEN.get().uid;
   //value is for tabs  
   const [value, setValue] = React.useState(0);
 
@@ -94,7 +101,7 @@ export default function Task(franchiseId) {
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      width: 1000
+      // width: 1000
     },
     drawer: {
       width: drawerWidth,
@@ -183,6 +190,7 @@ useEffect(() => {
     try {
       const result = await Role.list();
       setRole(result.role);
+      console.log('result.role====-----',result.role);
     } catch (error) {
       console.log("Error",error);
     }
@@ -197,8 +205,63 @@ useEffect(() => {
       try {
         const result = await TaskAPI.list();
         setTaskList(result.taskList);
+        console.log('result.taskList==----',result.taskList);
         setAssignedid(0);
         todayDate();
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await TaskAPI.stafftasks();
+        setStaffTaskList(result.taskList);
+        const currentuser = await FranchiseUsers.user();
+        // console.log('stfftask-899-----', currentuser.currentuser);
+        setAssignedid(currentuser.currentuser[0].uid);
+        currentDate();
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  function currentDate(){
+    
+    const dtToday=new Date();
+
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+    const date= year + '-' + month + '-' + day;
+    setTodayDate(date);
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await TaskAPI.completedlist();
+        // console.log('tasks----------------',result.taskList);
+        // console.log('hsgdhgsyd-----',assignedid);
+        setCompletedTaskList(result.taskList);
       } catch (error) {
         setIsError(true);
       }
@@ -267,8 +330,16 @@ useEffect(() => {
     setTaskData(data);
     setEditOpen(true);
   }
+  function handleClickStaffEditOpen(data) {
+    setTaskData(data);
+    setStaffEditOpen(true);
+  }
   function handleEditClose() {
     setEditOpen(false);
+  }
+  
+  function handleStaffEditClose() {
+    setStaffEditOpen(false);
   }
   ////////////////////////////////////////
   function setTaskListFn(response) {
@@ -377,7 +448,7 @@ useEffect(() => {
               Task
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={2}>
+          {/* <Grid item xs={12} sm={2}>
             <Fab
               variant="extended"
               size="small"
@@ -400,9 +471,18 @@ useEffect(() => {
             >
               Completed Tasks
             </Fab>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
+            <AppBar position="static"  className={classes.appBar}>
+              <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                <Tab label="All" />
+                <Tab label="My Task" />
+                <Tab label="Completed"  />
+                {/* <Tab label="Close" /> */}
+              </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -430,6 +510,7 @@ useEffect(() => {
                                 :''
                                 )
                               })}
+                              {data.assign_role===2? <StyledTableCell>Director</StyledTableCell>:''}
                             { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                                 return(
                                   data.assigned_to===datastaff.id ?
@@ -474,12 +555,158 @@ useEffect(() => {
                     }
                     </TableBody>
                   </Table>
+                  </TabPanel>
+                  
+                  <TabPanel value={value} index={1}>
+                    <Table className={classes.table}>
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell>#</StyledTableCell>
+                          <StyledTableCell>Task ID</StyledTableCell>
+                          <StyledTableCell>Task Description</StyledTableCell>
+                          <StyledTableCell>Assigned To</StyledTableCell>
+                          <StyledTableCell>Due Date</StyledTableCell>
+                          <StyledTableCell>Status</StyledTableCell>
+                          <StyledTableCell>Options</StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                      { (staffTaskList.length > 0 ? staffTaskList : []).map((data, index)=>{
+                        return(
+                          <TableRow >
+                          <StyledTableCell> {index+1}  </StyledTableCell>
+                            <StyledTableCell> {data.task_id}  </StyledTableCell>
+                            <StyledTableCell> {data.task_description}  </StyledTableCell>
+                            
+                            { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
+                                  return(
+                                    data.assigned_to===datastaff.id ?
+                                    <StyledTableCell> {datastaff.name}</StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                })
+                              }
+                              { (taskStatusList.length > 0 ? taskStatusList : []).map((dataTaskStatus, index1)=>{
+                                  return(
+                                    data.status===dataTaskStatus.id ?
+                                    <StyledTableCell> {dataTaskStatus.status}</StyledTableCell>
+                                      :''
+                                      )
+                                      
+                                })
+                              }
+                            <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+                          
+                            <StyledTableCell>
+                              <Tooltip title="Update Task">                              
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickStaffEditOpen(data); }}>
+                                <CreateIcon/>
+                                </IconButton>
+                              </Tooltip>
+                              
+                            </StyledTableCell>
+                          </TableRow>
+                        )
+                        })
+                      }
+                      </TableBody>
+                    </Table>
+                  </TabPanel>
+                  
+                  <TabPanel value={value} index={2}>
+                    <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Task ID</StyledTableCell>
+                        <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assigned To</StyledTableCell>
+                        <StyledTableCell>Status</StyledTableCell>
+                        <StyledTableCell>Due Date</StyledTableCell>
+                        <StyledTableCell>Start Date</StyledTableCell>
+                        <StyledTableCell>Completion Date</StyledTableCell>
+                        <StyledTableCell>Message</StyledTableCell>
+                        <StyledTableCell>Document</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    { (completedTaskList.length > 0 ? completedTaskList : []).map((data, index)=>{
+                      return(
+                      // assignedid!=0? data.assigned_to===assignedid?
+                        <TableRow >
+                        <StyledTableCell> {index+1}  </StyledTableCell>
+                          <StyledTableCell> {data.task_id}  </StyledTableCell>
+                          <StyledTableCell> {data.task_description}  </StyledTableCell>
+                        
+                            { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
+                                return(
+                                  data.assigned_to===datastaff.id ?
+                                  <StyledTableCell> {datastaff.name}</StyledTableCell>
+                                    :''
+                                    )
+                                    
+                              })
+                            }
+                          
+                          { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                                  return(
+                                    data.status===datastatus.id ?
+                                    <StyledTableCell> {datastatus.status}</StyledTableCell>
+                                      :''
+                                      )                                    
+                                })
+                              }
+                          <StyledTableCell>{data.due_date}</StyledTableCell>
+                          <StyledTableCell>{data.start_date}</StyledTableCell>
+                          <StyledTableCell>{data.completion_date}</StyledTableCell>
+                          <StyledTableCell>{data.message}</StyledTableCell>
+                          <StyledTableCell>{data.document}</StyledTableCell>
+                          
+                        </TableRow>
+                    //     :'':
+                    //     <TableRow >
+                    //     <StyledTableCell> {data.id}  </StyledTableCell>
+                    //       <StyledTableCell> {data.task_id}  </StyledTableCell>
+                    //       <StyledTableCell> {data.task_description}  </StyledTableCell>
+                        
+                    //       { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
+                    //             return(
+                    //               data.assigned_to===datastaff.id ?
+                    //               <StyledTableCell> {datastaff.name}</StyledTableCell>
+                    //                 :''
+                    //                 )
+                                    
+                    //           })
+                    //         }
+                    //       { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                    //               return(
+                    //                 data.status===datastatus.id ?
+                    //                 <StyledTableCell> {datastatus.status}</StyledTableCell>
+                    //                   :''
+                    //                   )                                    
+                    //             })
+                    //           }
+                    //       <StyledTableCell>{data.due_date}</StyledTableCell>
+                    //       <StyledTableCell>{data.start_date}</StyledTableCell>
+                    //       <StyledTableCell>{data.completion_date}</StyledTableCell>
+                    //       <StyledTableCell>{data.message}</StyledTableCell>
+                    //       <StyledTableCell>{data.document}</StyledTableCell>
+                          
+                    //     </TableRow>
+                      )
+                      })
+                    }
+                    </TableBody>
+                  </Table>
+                  </TabPanel>
                </Paper>
           </Grid>
         </Grid>
       {open? <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />:null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
+      {staffEditOpen? <StaffEdit open={editOpen} handleStaffEditClose={handleStaffEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}
       {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose}  assignedid={0} />: null}
       {showStaffTask ? <MyTask open={showStaffTask} handleMyTaskClose={handleStaffTaskClose} />: null}
       <Snackbar
@@ -494,7 +721,7 @@ useEffect(() => {
         <MySnackbarContentWrapper
           onClose={handleSnackbarClose}
           variant="success"
-          message="Task successfully!"
+          message="Task updated successfully!"
         />
       </Snackbar>
     </div>
