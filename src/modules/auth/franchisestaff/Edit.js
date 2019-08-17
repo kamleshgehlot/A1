@@ -394,7 +394,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                     {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
@@ -411,9 +411,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       fullWidth
                     />
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}> */}
-                    {/* <InputLabel htmlFor="last_name">Password</InputLabel> */}
-                    {/* <TextField
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <TextField
                       margin="dense"
                       id="password"
                       name="password"
@@ -426,9 +426,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       // helperText={errors.password ? errors.password : ' '}
                       disabled
                     />
-                  </Grid> */}
-                  
-                  <Grid item xs={12} sm={6}>
+                  </Grid>
+                  {console.log(staffList)}
+                  <Grid item xs={12} sm={4}>
                   <InputLabel htmlFor="assign_role">Assign Role</InputLabel>
                   <Select
                       multiple

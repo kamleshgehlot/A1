@@ -99,19 +99,22 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     const fetchData = async () => {
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
-        if(enquiry_id.id[0]!=null){
-          setInput('enquiry_id',("E_" + (enquiry_id.id[0].id+ 1)));
-        }
-        else{
-          setInput('enquiry_id','E_1');
+        console.log('en',enquiry_id);
+        let zero = 0;
+        if(enquiry_id[0]!=null){  
+          zero = 6 - (enquiry_id[0].id.toString().length); 
+          let enquiryId='';
+          for(let i=0; i< zero ; i++){
+            enquiryId += '0';
+          }
+         setInput('enquiry_id',('E' + enquiryId + (enquiry_id[0].id + 1)));
+        }else{
+          setInput('enquiry_id','E000001');
         }
 
         const category_list = await Category.mainCategoryList();
         setMainCategoryList(category_list.mainCategoryList);
-        
-        // const result = await Category.productlist();
-        // setProductList(result.productList);
-
+       
       } catch (error) {
         console.log(error);
       }

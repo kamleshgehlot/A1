@@ -227,7 +227,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
     // inputs.cat = "";
 
     if(e.target.value==='0'){
-      setMainOpen(true);
+      setMainOpen(true);      
     }
     else{
       setProductCatList({
@@ -356,7 +356,7 @@ console.log(inputs)
                               )
                           })
                         }
-                                <MenuItem className={classes.textsize} value={0} >Others</MenuItem>
+                                <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -373,7 +373,7 @@ console.log(inputs)
                         fullWidth
                         label="Category Type"
                         required
-                        disabled = {inputs.maincat != '' || inputs.maincat == 0 ? false : true}
+                        disabled = {inputs.maincat != '' && inputs.maincat != '0' ? false : true}
                       >
                        { categoryList.map((data, index)=>{
                          return(
@@ -381,7 +381,7 @@ console.log(inputs)
                          )
                           })
                         }
-                          <MenuItem className={classes.textsize} value={0}>Others</MenuItem>
+                          <MenuItem className={classes.textsize} value="0">Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -398,7 +398,7 @@ console.log(inputs)
                         fullWidth
                         label="Sub Category"
                         required
-                        disabled = {inputs.cat != '' || inputs.cat == 0 ? false : true }
+                        disabled = {inputs.cat != '' && inputs.cat != '0' && inputs.maincat != '' && inputs.maincat != '0' ? false : true }
                       >
                       { subCategoryList.map((data, index)=>{
                          return(
@@ -406,7 +406,7 @@ console.log(inputs)
                           )
                         })
                       }
-                   <MenuItem className={classes.textsize} value={0}>Others</MenuItem>
+                   <MenuItem className={classes.textsize} value="0">Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>
