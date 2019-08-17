@@ -87,7 +87,14 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   const [productList, setProductList] = useState([]);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
- 
+  const [mainCategoryList, setMainCategoryList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [subCategoryList, setSubCategoryList] = useState([]);
+  const [mainCategory, setMainCategory] = React.useState('');
+  const [category, setCategory] = React.useState('');
+  const [subCategory, setSubCategory] = React.useState('');
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,8 +105,12 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
         else{
           setInput('enquiry_id','E_1');
         }
-        const result = await Category.productlist();
-        setProductList(result.productList);
+
+        const category_list = await Category.mainCategoryList();
+        setMainCategoryList(category_list.mainCategoryList);
+        
+        // const result = await Category.productlist();
+        // setProductList(result.productList);
 
       } catch (error) {
         console.log(error);
@@ -110,6 +121,58 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   }, []);
   
   
+
+  function handleMainCategory(event) {
+    setMainCategory(event.target.value);
+    setCategoryList('');
+    setSubCategoryList('');    
+    setProductList('');
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.categoryList({maincategory: event.target.value});
+        setCategoryList(result.categoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
+  }
+
+  function handleCategory(event) {
+    setCategory(event.target.value);
+    setSubCategoryList('');    
+    setProductList('');
+
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.subCategoryList({category: event.target.value});
+        setSubCategoryList(result.subCategoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
+  }
+  function handleSubCategory(event) {
+    setSubCategory(event.target.value);
+    setProductList('');
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.RelatedproductList({subcategory: event.target.value});
+        setProductList(result.productList);
+        // const result = await Category.productList({subCategory: event.target.value});
+        // setSubCategoryList(result.subCategoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
+  }
+
+
   function handleChangeMultiple(event) {
     setAssignInterest(event.target.value);
   }
@@ -124,14 +187,15 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       enquiry_id : inputs.enquiry_id,
       customer_name: inputs.customer_name,
       contact: inputs.contact,
-      interested_product_id: assignInterest.join(),
+      interested_product_id: assignInterest,
       is_active: 1,
       converted_to: 0,
       convert_by_lead:convert
     });
         console.log('sahgdaud--',response);
 
-    assignInterest.length = 0;
+    // assignInterest.length = 0;
+    setAssignInterest('');
     handleSnackbarClick(true);
     setEnquiryList(response.enquiryList);
     handleReset(RESET_VALUES);
@@ -176,7 +240,7 @@ return (
           <Paper className={classes.paper}>
               <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="enquiry_id"
@@ -191,7 +255,7 @@ return (
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
                     <TextField
                       margin="dense"
@@ -205,7 +269,7 @@ return (
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
                     <TextField
                       margin="dense"
@@ -219,10 +283,70 @@ return (
                       fullWidth
                     />
                   </Grid>
+
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="main_category">Main Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={mainCategory}
+                      onChange={handleMainCategory}
+                      name= 'main_category'
+                      id= 'main_category'
+                      // label='customer'
+                      fullWidth
+                      required
+                    > 
+                    {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
+                      return(
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="category">Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={category}
+                      onChange={handleCategory}
+                      name= 'category'
+                      id= 'category'
+                      // label='customer'
+                      fullWidth
+                      required
+                      disabled = {mainCategory ==""}
+                    >    
+                     {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                      return(
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <InputLabel htmlFor="sub_category">Sub Category*</InputLabel>
+                    <Select
+                      // multiple
+                      value={subCategory}
+                      onChange={handleSubCategory}
+                      name= 'sub_category'
+                      id= 'sub_category'
+                      // label='customer'
+                      fullWidth
+                      required
+                      disabled = {category ==""}
+                    >    
+                    {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
+                      return(
+                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                      ) 
+                     })}
+                    </Select>
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="assign_interest">Interested In*</InputLabel>
                     <Select
-                      multiple
+                      // multiple
                       value={assignInterest}
                       onChange={handleChangeMultiple}
                       inputProps={{
@@ -230,6 +354,7 @@ return (
                         id: 'interested_product_id',
                         // label:'assign_interest'
                       }}
+                      disabled = {subCategory ==""}
                       fullWidth
                       required
                     >

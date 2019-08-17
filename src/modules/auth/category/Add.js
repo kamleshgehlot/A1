@@ -134,31 +134,30 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
 
 const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
   RESET_VALUES,
-  categoryadd,
   validate
 );
 
 
-  const categoryadd = async () => {
-    const response = await Category.add({
-      // cancelToken: this.isTokenSource.token,
+  // const categoryadd = async () => {
+  //   const response = await Category.add({
+  //     // cancelToken: this.isTokenSource.token,
 
-      // category: inputs.category,
-      // type: inputs.type,
-      // parentid: inputs.parentid,
-      // position: inputs.position,
-      // description: inputs.description,
-      // image: inputs.image,
-      // meta_keywords: inputs.meta_keywords,
-      // meta_description: inputs.meta_description,
-      // active: inputs.active,
-    });
+  //     // category: inputs.category,
+  //     // type: inputs.type,
+  //     // parentid: inputs.parentid,
+  //     // position: inputs.position,
+  //     // description: inputs.description,
+  //     // image: inputs.image,
+  //     // meta_keywords: inputs.meta_keywords,
+  //     // meta_description: inputs.meta_description,
+  //     // active: inputs.active,
+  //   });
 
-    handleSnackbarClick(true);
-    setCategoryList(response.categoryList);
-    handleReset(RESET_VALUES);
-    handleClose(false);
-  };
+  //   handleSnackbarClick(true);
+  //   setCategoryList(response.categoryList);
+  //   handleReset(RESET_VALUES);
+  //   handleClose(false);
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -180,23 +179,11 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
     setNewDataList(newdata);
   }
 
-  function updatedData(response){
-    // console.log('respo,,,',response);
-    // let main =[];
-    // response.map(data => {
-    //   data.type===1 ? main.push(data) 
-    //   : ''
-    // });
+  function updatedData(response){   
     setMainCategoryList(response);
     inputs.maincat = '';
     inputs.cat = '';
-    inputs.subcat = '';
-    // (response).map(ele =>{
-    //   return(
-    //   // ele.category == newDataList.maincategory ? console.log( ele.id ): ''
-    //   console.log(newDataList)
-    //   )
-    // });
+    inputs.subcat = '';    
   }
 
   function productData(newdata){
@@ -210,7 +197,6 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
 
   function newCatData(newdata){
     setNewCatDataList(newdata);
-
   }
   
   
@@ -234,9 +220,12 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
   }
 
   const handleSelectInputChange = e =>{
-    // console.log('ddd.',e.target.value);
-    
     handleInputChange(e);
+
+    setCategoryList([]);
+    setSubCategoryList([]);    
+    // inputs.cat = "";
+
     if(e.target.value==='0'){
       setMainOpen(true);
     }
@@ -258,6 +247,8 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
   };
   
   const handleSelectCatInputChange = e =>{
+    setSubCategoryList([]); 
+
     handleInputChange(e);
     if(e.target.value==='0'){
       setCatOpen(true);
@@ -290,7 +281,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
       });
     }
   };
-
+console.log(inputs)
   function openProductDialog(){
     if(inputs.maincat!='' && inputs.cat!='' && inputs.subcat!='' && inputs.maincat!='0' && inputs.cat!='0' && inputs.subcat!='0' && inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
     setProductOpen(true);
@@ -365,7 +356,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                               )
                           })
                         }
-                                <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
+                                <MenuItem className={classes.textsize} value={0} >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -382,7 +373,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                         fullWidth
                         label="Category Type"
                         required
-                        disabled = {inputs.maincat != '' ? false : true}
+                        disabled = {inputs.maincat != '' || inputs.maincat == 0 ? false : true}
                       >
                        { categoryList.map((data, index)=>{
                          return(
@@ -390,7 +381,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                          )
                           })
                         }
-                          <MenuItem className={classes.textsize} value="0">Others</MenuItem>
+                          <MenuItem className={classes.textsize} value={0}>Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -407,7 +398,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                         fullWidth
                         label="Sub Category"
                         required
-                        disabled = {inputs.cat != '' ? false : true}
+                        disabled = {inputs.cat != '' || inputs.cat == 0 ? false : true }
                       >
                       { subCategoryList.map((data, index)=>{
                          return(
@@ -415,7 +406,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                           )
                         })
                       }
-                   <MenuItem className={classes.textsize} value="0">Others</MenuItem>
+                   <MenuItem className={classes.textsize} value={0}>Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>
