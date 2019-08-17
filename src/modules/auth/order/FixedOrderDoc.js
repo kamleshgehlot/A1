@@ -361,16 +361,16 @@ export default function layout(data,order) {
                 [
                   {style:'margins', text: [  
                     { text: 'Summary of your right to cancel under section 36F(1) of the Fair Trading Act 1986',italics: true, alignment: screenLeft,  bold: true, fontSize:8},                    
-                    { text: '\n\t\t\t\tThe Fair Trading Act 1986 gives you a right to cancel this Rent-Fix Contract: at any time before you take possession of the Goods; and in any way (including oral or written) that shows your intention to cancel or withdraw from this Rent-Fix Contract.', alignment: screenLeft,  fontSize:8},                    
+                    { text: '\\t\t\t\tThe Fair Trading Act 1986 gives you a right to cancel this Rent-Fix Contract: at any time before you take possession of the Goods; and in any way (including oral or written) that shows your intention to cancel or withdraw from this Rent-Fix Contract.', alignment: screenLeft,  fontSize:8},                    
                     // { text: '\n(a)\t\tAt any time before you take possession of the Goods; and', alignment: screenLeft,   fontSize:8},
                     // { text: '\n(b)\t\tIn any way (including oral or written) that shows your intention to cancel or withdraw from this Rent-Flex Contract.', alignment: screenLeft,   fontSize:8},
 
-                    { text: '\n\nSummary of your right to cancel under Section 36M(1) of the Fair Trading Act 1986:',italics: true, alignment: screenLeft, bold: true,  fontSize:8},
+                    { text: '\nSummary of your right to cancel under Section 36M(1) of the Fair Trading Act 1986:',italics: true, alignment: screenLeft, bold: true,  fontSize:8},
                     { text: '\n\t\t\t\tWithin 5 working days after the date youreceive a copy of this Rent-Fix Contract; or if we fail to make disclosure under section 36L of the Act, at any time.', alignment: screenLeft,   fontSize:8},
 
                     // { text: '\n(a)\t\tWithin 5 working days after the date you receive a copy of this Rent-Flex Contract; or', alignment: screenLeft,   fontSize:8},
                     // { text: '\n(b)\t\tIf we fail to make disclosure under section 36L of the Act, at any time.', alignment: screenLeft,   fontSize:8},
-                    { text: '\n\nThis statement only contains a summary of your rights and obligations in connection with your right to cancel. If there is anything about your rights or obligations under the Fair Trading Act 1986 that you do not understand, if there is a dispute about your rights, or if you think that we are being unreasonable in any way, you should seek legal advice immediately', alignment: screenLeft,   fontSize:8},
+                    { text: '\nThis statement only contains a summary of your rights and obligations in connection with your right to cancel. If there is anything about your rights or obligations under the Fair Trading Act 1986 that you do not understand, if there is a dispute about your rights, or if you think that we are being unreasonable in any way, you should seek legal advice immediately', alignment: screenLeft,   fontSize:8},
                   ]}
                 ],
               ]
