@@ -40,5 +40,6 @@ orderRouter.route("/editorder").post(validateToken, Order.editOrder);
 orderRouter.route("/assigntofinance").post(validateToken, Order.assignToFinance);
 orderRouter.route("/postorder").post(validateToken, Order.postOrder);
 orderRouter.route("/get-flex-order-data-for-PDF").post(validateToken, Order.getFlexOrderDataForPDF);
+orderRouter.route("/get-fixed-order-data-for-PDF").post(validateToken, Order.getFixedOrderDataForPDF);
 
 module.exports = orderRouter;

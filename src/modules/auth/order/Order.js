@@ -27,7 +27,9 @@ import * as pdfmake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import Add from './Add';
 import Edit from './Edit';
-import DD from './FlexTypeDoc';
+import FlexTypeDD from './FlexTypeDoc';
+import FixedTypeDD from './FixedOrderDoc';
+
 import ConfirmationDialog from '../ConfirmationDialog.js';
 
 import axios from 'axios';
@@ -77,23 +79,37 @@ export default function Order() {
 
 
   function createAndDownloadPdf(data) {
-    
-    const fetchData = async () => {
-      try {
-        const result = await OrderAPI.getFlexOrderDataForPDF({data: data});
-        // console.log('result',result)
-        
-        pdfmake.vfs = pdfFonts.pdfMake.vfs;
-        var dd = DD(result,data);
-        pdfmake.createPdf(dd).open();
+    console.log(data);
+    if(data.order_type === 2){
+      const fetchData = async () => {
+        try {
+          const result = await OrderAPI.getFlexOrderDataForPDF({data: data});
+          pdfmake.vfs = pdfFonts.pdfMake.vfs;
+          var dd = FlexTypeDD(result,data);
+          pdfmake.createPdf(dd).open();
 
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
+    }
+    if(data.order_type === 1){
+      const fetchData = async () => {
+        try {
+          const result = await OrderAPI.getFixedOrderDataForPDF({data: data});
+          // console.log('result',result)
+          
+          pdfmake.vfs = pdfFonts.pdfMake.vfs;
+          var dd = FixedTypeDD(result,data);
+          pdfmake.createPdf(dd).open();
 
-
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
+    }
 
     // pdfmake.createPdf(dd).download();
     // pdfmake.createPdf(dd).print({},window);
@@ -237,7 +253,7 @@ export default function Order() {
     const fetchData = async () => {
       try {
         const result = await OrderAPI.getAll();
-        // console.log('result',result)
+        console.log('result',result)
         setOrder(result.order);
       } catch (error) {
         console.log(error);

@@ -285,7 +285,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         setCategoryList(category_list.categoryList);
 
         const order_id = await OrderAPI.getnewid();
-        console.log('123',order_id)
+        // console.log('123',order_id)
         let zero = 0;
         if(order_id == ""){
          setInput('order_id','0000001');
@@ -322,12 +322,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   fetchData();
   }, []);
 
-  console.log(categoryList);
 
   const addOrder = async () => {
     const response = await OrderAPI.postOrder({
       order_id :  inputs.order_id,
       customer_id : customer.id,
+      customer_type: inputs.customer_type,
       products_id :  assignInterest.join(),
       order_type : inputs.order_type,
       flexOrderType : flexOrderList,
@@ -358,6 +358,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     validate
   );
 
+  console.log(inputs);
     
 return (
     <div>
@@ -413,10 +414,10 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                   <InputLabel htmlFor="customer">Select Customer*</InputLabel>
+                   <InputLabel htmlFor="customer_type">Select Customer*</InputLabel>
                       <RadioGroup
-                        aria-label="customer"
-                        name="customer"
+                        aria-label="customer_type"
+                        name="customer_type"
                         className={classes.group}
                         value={inputs.customer_type}
                         onChange={handleInputChange}

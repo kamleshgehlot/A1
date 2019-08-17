@@ -149,6 +149,7 @@ console.log('eeeq.',req);
 
     order_id : req.body.order_id,
     customer_id : req.body.customer_id,
+    customer_type: req.body.customer_type,
     products_id : req.body.products_id,
     order_type : req.body.order_type,
     flexOrderType : req.body.flexOrderType,
@@ -310,7 +311,6 @@ const editOrder = function (req, res, next) {
                     // console.log('customer..',customer)
                     new Order({user_id : req.decoded.user_id}).getCompanyDetail().then(function (franchise) {
                       // console.log('franchise..',franchise)
-                      new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
                         // console.log('product..',product)
                         new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
                           // console.log('product..',product)
@@ -319,6 +319,63 @@ const editOrder = function (req, res, next) {
                               res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product, user: user });
                           });
                         });
+                    });
+                  });
+              });
+              // new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
+              // res.send({ order , oldBudget}); 
+            // });
+          });
+          
+          // const newOrder = new Order(orderParams);
+          //     newOrder.getFlexOrderDataForPDF().then(function(result){
+          //           console.log('resulut===dd', result);
+          //       //  new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
+          //       //       new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+             
+          //       //         res.send({ order: order});
+          //       //   });
+          //       // });
+          //     });
+        }catch(err){
+          console.log("Error..",err);
+        }
+      }
+      
+    };
+
+
+    
+  const getFixedOrderDataForPDF = function (req, res, next) {
+    console.log('eeeq.',req.body);
+      let orderParams = {
+        user_id: req.decoded.user_id,
+
+        franchise_id: req.decoded,
+        order_id : req.body.data.id,
+        customer_id: req.body.data.customer_id,
+
+
+      };
+      
+      if(orderParams.order_id!= '' || orderParams.order_id != null){
+        // console.log('hello.',orderParams);
+        try{
+          new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget().then(function (budget) {
+              // console.log('budget..',budget)
+              new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.data.order_type_id}).getFixedOrder().then(function (fixedOrder) {
+              // console.log('flexOrder..',flexOrder)
+                  new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails().then(function (customer) {
+                    // console.log('customer..',customer)
+                    new Order({user_id : req.decoded.user_id}).getCompanyDetail().then(function (franchise) {
+                      // console.log('franchise..',franchise)
+                        // console.log('product..',product)
+                        new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
+                          // console.log('product..',product)
+                          new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail().then(function (user) {
+                            // console.log('user..',user)
+                              res.send({ budget: budget, fixedOrder:fixedOrder, customer: customer, franchise: franchise, product:product, user: user });
+                          });
                       });
                     });
                   });
@@ -348,4 +405,4 @@ const editOrder = function (req, res, next) {
   
 
 
-module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
+module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, getFixedOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
