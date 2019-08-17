@@ -226,6 +226,7 @@ const editOrder = function (req, res, next) {
       budgetId: req.body.budget_id,
       order_type_id: req.body.order_type_id,
       assigned_to : req.body.assigned_to,
+      related_to : req.body.related_to,
       is_active : req.body.is_active,
       updated_by: req.decoded.id,
     };

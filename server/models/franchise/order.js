@@ -163,7 +163,7 @@ Order.prototype.editOrder = function () {
                       // let orderValues = [
                       //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       // ];
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows);
@@ -191,7 +191,7 @@ Order.prototype.editOrder = function () {
                       //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       // ];
 
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows);

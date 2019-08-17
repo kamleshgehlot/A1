@@ -93,6 +93,7 @@ export default {
       throw error;
     }
   },
+
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/category/list`;
     try {
@@ -102,6 +103,68 @@ export default {
       throw error;
     }
   },
+
+  
+  mainCategoryList: async () => {
+    const URL = `${c.API_CONSUMER}/api/category/maincategorylist`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  
+
+  categoryList: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/category/categorylist`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  subCategoryList: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/category/subcategorylist`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  RelatedproductList: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/category/relatedproductlist`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   archivedList: async () => {
     const URL = `${c.API_CONSUMER}/api/category/archivedList`;
     try {

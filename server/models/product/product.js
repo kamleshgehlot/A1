@@ -20,6 +20,7 @@ const Product = function (params) {
   this.status = params.status;
 
   this.user_id = params.user_id;
+  this.subcategory = params.subcategory;
 };
 
 Product.prototype.addProduct = function () {
@@ -37,8 +38,7 @@ Product.prototype.addProduct = function () {
       ];
 
       connection.changeUser({ database: dbName["prod"] });
-      connection.query(
-        `INSERT INTO product(maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status) VALUES ?`, [values],
+      connection.query(`INSERT INTO product(maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status) VALUES ?`, [values],
         (error, mrows, fields) => {
           if (!error) {
             resolve(mrows);
@@ -135,4 +135,34 @@ Product.prototype.archivedList = function () {
     });
   });
 }
+
+
+Product.prototype.relatedProductList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+    console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }
+      if(!error){
+      connection.changeUser({ database: dbName["prod"] });
+      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where subcat = "'+that.subcategory+'" order by id desc', function (error, rows, fields) {
+        if (!error) {
+          resolve(rows);
+
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      });
+    }
+    });
+  });
+}
+
+
 module.exports = Product;

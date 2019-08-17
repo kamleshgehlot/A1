@@ -11,7 +11,13 @@ categoryRouter.route('/addSubCategory').post(validateToken, Category.addSubCateg
 categoryRouter.route('/addProduct').post(validateToken, Category.addProduct);
 categoryRouter.route('/productList').get(validateToken, Category.productList);
 categoryRouter.route('/edit').post(validateToken, Category.edit);
+
 categoryRouter.route('/list').get(validateToken, Category.all);
+categoryRouter.route('/maincategorylist').get(validateToken, Category.mainCategoryList);
+categoryRouter.route('/categorylist').post(validateToken, Category.categoryList);
+categoryRouter.route('/subcategorylist').post(validateToken, Category.subCategoryList);
+categoryRouter.route('/relatedproductlist').post(validateToken, Category.relatedProductList);
+
 categoryRouter.route('/archivedList').get(validateToken, Category.archivedList);
 
 module.exports = categoryRouter;
