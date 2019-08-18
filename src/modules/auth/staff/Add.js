@@ -28,6 +28,8 @@ import StaffMaster from '../../../api/StaffMasterAdmin';
 import UserAPI from '../../../api/User';
 import useSignUpForm from '../franchise/CustomHooks';
 
+import validate from '../../common/validation/StaffRuleValidtion';
+
 const RESET_VALUES = {
   id: '',
   first_name: '',
@@ -119,13 +121,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     }
   };
 
-  function validate(values) {
-    let errors = {};
-
-    return errors;
-  };
-
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+ const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addStaffMaster,
     validate
@@ -173,7 +169,7 @@ return (
                 <CloseIcon />
               </IconButton> */}
               <Typography variant="h6" className={classes.title}>
-                Add Staff
+                Add Staff1
               </Typography>
               {/* <Button color="inherit" type="submit">
                 save
@@ -205,6 +201,11 @@ return (
                       // placeholder="Franchise Name"
                       margin="dense"
                     />
+                    {errors.first_name && (
+										<p className="help is-danger">
+											{errors.first_name}
+										</p>
+									)}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="last_name">Last Name</InputLabel>
