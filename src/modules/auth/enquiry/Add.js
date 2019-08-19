@@ -87,6 +87,7 @@ const useStyles = makeStyles(theme => ({
   },
   drpdwn:{
     marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
   }
 }));
 
@@ -258,7 +259,7 @@ return (
             <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>
               <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="first_name">Enquiry Id</InputLabel>
                     <TextField
                       InputProps={{
@@ -278,7 +279,7 @@ return (
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel>
                     <TextField
                       InputProps={{
@@ -297,7 +298,7 @@ return (
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="contact">Contact *</InputLabel>
                     <TextField
                       InputProps={{
@@ -317,27 +318,28 @@ return (
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="main_category">Main Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
                       // multiple
                       value={mainCategory}
                       onChange={handleMainCategory}
                       name= 'main_category'
                       id= 'main_category'
+                      className={classes.drpdwn}
                       // label='customer'
                       fullWidth
                       required
                     > 
                     {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
                       return(
-                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
                       ) 
                      })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="category">Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="category">Category*</InputLabel>
                     <Select
                       // multiple
                       value={category}
@@ -346,24 +348,26 @@ return (
                       id= 'category'
                       // label='customer'
                       fullWidth
+                      className={classes.drpdwn}
                       required
                       disabled = {mainCategory ==""}
                     >    
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
-                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
                       ) 
                      })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="sub_category">Sub Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
                     <Select
                       // multiple
                       value={subCategory}
                       onChange={handleSubCategory}
                       name= 'sub_category'
                       id= 'sub_category'
+                      className={classes.drpdwn}
                       // label='customer'
                       fullWidth
                       required
@@ -371,12 +375,12 @@ return (
                     >    
                     {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
                       return(
-                         <MenuItem value={data.id}>{data.category}</MenuItem>
+                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
                       ) 
                      })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="assign_interest">Interested In*</InputLabel>
                     <Select
                       // multiple

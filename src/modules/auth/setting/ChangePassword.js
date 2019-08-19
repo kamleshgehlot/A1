@@ -51,6 +51,18 @@ export default function ChangePassword(franchiseId) {
     },
     typography:{
       paddingTop: theme.spacing(3),
+    },
+    button:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
+      marginTop: theme.spacing(2),
+    },
+    textsize:{
+      fontSize: theme.typography.pxToRem(12),
+    },
+    margin:{
+      fontSize: theme.typography.pxToRem(12),
+      marginTop: theme.spacing(2),
     }
   }));
   const classes = useStyles();
@@ -113,16 +125,22 @@ const RESET_VALUES = {
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-        <Paper className={classes.paper} style={{ width: '50%' }}>
+        <Paper className={classes.paper} style={{ width: '30%' }}>
           <form onSubmit={handleSubmit}>
-            <Typography variant="h4" className={classes.title}>
+            <Typography variant="h6" className={classes.title}>
                 Change Password 
             </Typography>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
+                <InputLabel className={classes.margin} htmlFor="new_password">Current Password</InputLabel>
                 <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                   id="current_password"
                   name="current_password"
-                  label="Current Password"
+                  // label="Current Password"
                   value={inputs.current_password}
                   onChange={handleInputChange}
                   fullWidth
@@ -132,13 +150,18 @@ const RESET_VALUES = {
                   margin="dense"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                {/* <InputLabel htmlFor="new_password">User Id</InputLabel> */}
+              <Grid item xs={12} sm={12}>
+                <InputLabel className={classes.margin} htmlFor="new_password">New Password</InputLabel>
                 <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                   margin="dense"
                   id="new_password"
                   name="new_password"
-                  label="New Password"
+                  // label="New Password"
                   type="text"
                   value={inputs.new_password} 
                   onChange={handleInputChange}
@@ -147,13 +170,18 @@ const RESET_VALUES = {
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
+              <Grid item xs={12} sm={12}>
+                <InputLabel className={classes.margin} htmlFor="location">Confirm Password</InputLabel>
                 <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                   margin="dense"
                   id="confirm_password"
                   name="confirm_password"
-                  label="Confirm Password"
+                  // label="Confirm Password"
                   type="text"
                   value={inputs.confirm_password}
                   onChange={handleInputChange}

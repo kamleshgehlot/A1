@@ -227,10 +227,6 @@ export default function Staff(props) {
                   )
                 })
               }
-              {/* <Tab label="Open" />
-              <Tab label="Active" />
-              <Tab label="Inactive"  />
-              <Tab label="Close" /> */}
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>

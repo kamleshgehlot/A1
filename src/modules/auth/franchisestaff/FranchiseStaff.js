@@ -80,7 +80,7 @@ export default function FranchiseStaff(franchiseId) {
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      width: 1000
+      width: 1010
     },
     drawer: {
       width: drawerWidth,
@@ -259,8 +259,22 @@ export default function FranchiseStaff(franchiseId) {
 
             </Grid> */}
           
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={9}>
             <Paper style={{ width: '100%' }}>
+              <AppBar position="static"  className={classes.appBar}>
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                  
+                <Tab label="All" />
+                {
+                    (role.length>0 ? role : []).map((ele, index) => {
+                      return(
+                        <Tab label={ele.name} />
+                      )
+                    })
+                  }
+                </Tabs>
+              </AppBar>
+                <TabPanel value={value} index={value}>
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -275,7 +289,8 @@ export default function FranchiseStaff(franchiseId) {
                     <TableBody>
                     { (staffList.length > 0 ? staffList : []).map((data, index)=>{
                       return(
-                        <TableRow key={data.id} >
+                        
+                           <TableRow key={data.id} >
                           <StyledTableCell> {index + 1}  </StyledTableCell>
                           <StyledTableCell> {data.user_id}  </StyledTableCell>
                           <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
@@ -313,6 +328,7 @@ export default function FranchiseStaff(franchiseId) {
                     }
                     </TableBody>
                   </Table>
+                  </TabPanel>
                </Paper>
           </Grid>
         </Grid>
