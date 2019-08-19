@@ -404,10 +404,10 @@ export default function ClippedDrawer(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-                <MenuItem onClick={handleChangePasswordClick}>Change Password</MenuItem>
-                {roleName === 'Admin' && (  <MenuItem onClick={handleFranchiseDetailClick}>Franchise Details</MenuItem>)}
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <MenuItem  className={classes.textsize} onClick={handleProfileClick}>Profile</MenuItem>
+                <MenuItem className={classes.textsize} onClick={handleChangePasswordClick}>Change Password</MenuItem>
+                {roleName === 'Admin' && (  <MenuItem  className={classes.textsize} onClick={handleFranchiseDetailClick}>Franchise Details</MenuItem>)}
+                <MenuItem className={classes.textsize} onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>}
         </Toolbar>

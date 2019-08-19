@@ -50,12 +50,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   labelTitle: {
     // display: 'flex',
@@ -79,11 +83,22 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
   },
   buttonMargin: {
     margin: theme.spacing(1),
@@ -174,6 +189,11 @@ return (
             <Grid item xs={12} sm={12}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="transport"
                       name="transport"
                       // label=""

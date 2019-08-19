@@ -76,12 +76,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -97,14 +101,27 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    margin: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
+  },
   group: {
-    margin: theme.spacing(1, 0),
+    // margin: theme.spacing(1, 0),
+    fontSize: theme.typography.pxToRem(12),
   },
 }));
 
@@ -266,21 +283,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Customer
               </Typography>
-              {savebtn? <Button color="inherit" type="submit">
+              {/* {savebtn? <Button color="inherit" type="submit">
                 save
               </Button>:<Button color="inherit" type="submit" disabled>
                 save
-              </Button>}
+              </Button>} */}
             </Toolbar>
           </AppBar>
 
@@ -302,11 +319,16 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">Full Name *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="customer_name"
                       name="customer_name"
-                      label="Full Name"
+                      // label="Full Name"
                       value={inputs.customer_name}
                       onChange={handleInputChange}
                       fullWidth
@@ -317,12 +339,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="address"
                       name="address"
-                      label="Address"
+                      // label="Address"
                       type="text"
                       value={inputs.address} 
                       onChange={handleInputChange}
@@ -331,12 +358,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">City</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="city"
                       name="city"
-                      label="City"
+                      // label="City"
                       type="text"
                       value={inputs.city} 
                       onChange={handleInputChange}
@@ -345,12 +377,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="location">Location *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="location">Postcode</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="postcode"
                       name="postcode"
-                      label="Postcode"
+                      // label="Postcode"
                       type="number"
                       value={inputs.postcode}
                       onChange={handleInputChange}
@@ -359,12 +396,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Telephone</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="telephone"
                       name="telephone"
-                      label="Telephone"
+                      // label="Telephone"
                       type="number"
                       value={inputs.telephone} 
                       onChange={handleInputChange}
@@ -373,12 +415,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Mobile</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="mobile"
                       name="mobile"
-                      label="Mobile"
+                      // label="Mobile"
                       type="number"
                       value={inputs.mobile} 
                       onChange={handleInputChange}
@@ -387,12 +434,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="email">Email Id *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="email">Email Id *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="email"
                       name="email"
-                      label="Email Id"
+                      // label="Email Id"
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
@@ -403,7 +455,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="Gender">Gender</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="Gender">Gender</InputLabel>
                     <RadioGroup
                       aria-label="Gender"
                       name="gender"
@@ -412,14 +464,14 @@ return (
                       onChange={handleInputChange}
                       row
                     >
-                      <FormControlLabel labelPlacement="start" value="female" control={<Radio />} label="Female" />
-                      <FormControlLabel labelPlacement="start" value="male" control={<Radio />} label="Male" />
+                      <FormControlLabel  className={classes.textsize} labelPlacement="start" value="female" control={<Radio />} label="Female" />
+                      <FormControlLabel  className={classes.textsize} labelPlacement="start" value="male" control={<Radio />} label="Male" />
                       {/* <FormControlLabel labelPlacement="start" value="transgender" control={<Radio />} label="Transgender" /> */}
                     </RadioGroup>
                     
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="is_working">Are you working?</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="is_working">Are you working?</InputLabel>
                     <RadioGroup 
                       aria-label="is_working" 
                       name="is_working" 
@@ -428,13 +480,18 @@ return (
                       onChange={handleInputChange} 
                       row
                     >
-                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" />
-                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" />
+                      <FormControlLabel className={classes.textsize} value={1} control={<Radio />} label="Yes" labelPlacement="start" />
+                      <FormControlLabel className={classes.textsize} value={0} control={<Radio />} label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="dob">Date Of Birth</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="dob"
                       name="dob"
@@ -447,7 +504,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    <InputLabel htmlFor="id_type">ID Proof</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
                     <Select
                         margin="dense"
                         name="id_type"
@@ -456,7 +513,7 @@ return (
                          value={parseInt(inputs.id_type)}
                          name = 'id_type'
                          id = 'id_type'
-                         className={classes.margin}
+                         className={classes.drpdwn}
                          fullWidth
                          label="Select Id Proof"
                          required
@@ -465,20 +522,26 @@ return (
                           
                           ( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
                             return(
-                                <MenuItem value={ele.id}>{ele.name}</MenuItem>    
+                                <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>    
                             )
                           })
                         }
 
-                          <MenuItem value={0}>{'Other'}</MenuItem>    
+                          <MenuItem className={classes.textsize} value={0}>{'Other'}</MenuItem>    
                     </Select>
                     </Grid>
                     <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">Type of ID</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="otherIdTypeValue"
                       name="otherIdTypeValue"
-                      label="Enter type of ID Proof"
+                      // label="Enter type of ID Proof"
                       type="text"
                       value={otherIdTypeValue} 
                       onChange={handleOtherIdType}
@@ -489,12 +552,17 @@ return (
                     </Grid>
                   
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">ID#</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="id_number"
                       name="id_number"
-                      label="ID#"
+                      // label="ID#"
                       type="text"
                       value={inputs.id_number} 
                       onChange={handleInputChange}
@@ -503,8 +571,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="expiry_date">Expiry Date</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="expiry_date">Expiry Date</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="expiry_date"
                       name="expiry_date"
@@ -517,7 +590,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="is_adult">Over 18 Years?</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="is_adult">Over 18 Years?</InputLabel>
                     <RadioGroup 
                       aria-label="is_adult" 
                       name="is_adult" 
@@ -531,18 +604,25 @@ return (
                         control={<Radio />}
                         label="Yes"
                         labelPlacement="start"
+                        className={classes.textsize}
                       />
                       <FormControlLabel
                         value={0}
                         control={<Radio />}
                         label="No"
                         labelPlacement="start"
+                        className={classes.textsize}
                       />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
+                  <InputLabel  className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="id_proof"
                       name="id_proof"
@@ -576,12 +656,17 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #1</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_name"
                       name="alt_c1_name"
-                      label="Name"
+                      // label="Name"
                       type="text"
                       value={inputs.alt_c1_name} 
                       onChange={handleInputChange}
@@ -590,12 +675,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_address"
                       name="alt_c1_address"
-                      label="Address"
+                      // label="Address"
                       type="text"
                       value={inputs.alt_c1_address} 
                       onChange={handleInputChange}
@@ -604,12 +694,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact#</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_contact"
                       name="alt_c1_contact"
-                      label="Contact#"
+                      // label="Contact#"
                       type="number"
                       value={inputs.alt_c1_contact} 
                       onChange={handleInputChange}
@@ -619,12 +714,17 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Relationship To You</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_relation"
                       name="alt_c1_relation"
-                      label="Relationship To You"
+                      // label="Relationship To You"
                       type="text"
                       value={inputs.alt_c1_relation} 
                       onChange={handleInputChange}
@@ -636,12 +736,17 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #2</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_name"
                       name="alt_c2_name"
-                      label="Name"
+                      // label="Name"
                       type="text"
                       value={inputs.alt_c2_name} 
                       onChange={handleInputChange}
@@ -650,12 +755,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_address"
                       name="alt_c2_address"
-                      label="Address"
+                      // label="Address"
                       type="text"
                       value={inputs.alt_c2_address} 
                       onChange={handleInputChange}
@@ -664,12 +774,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact#</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_contact"
                       name="alt_c2_contact"
-                      label="Contact#"
+                      // label="Contact#"
                       type="number"
                       value={inputs.alt_c2_contact} 
                       onChange={handleInputChange}
@@ -679,12 +794,17 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Relationship To You</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_relation"
                       name="alt_c2_relation"
-                      label="Relationship To You"
+                      // label="Relationship To You"
                       type="text"
                       value={inputs.alt_c2_relation} 
                       onChange={handleInputChange}
@@ -710,12 +830,17 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Name</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_name"
                       name="employer_name"
-                      label="Employer Name"
+                      // label="Employer Name"
                       type="text"
                       value={inputs.employer_name} 
                       onChange={handleInputChange}
@@ -724,12 +849,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Address</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_address"
                       name="employer_address"
-                      label="Employer Address"
+                      // label="Employer Address"
                       type="text"
                       value={inputs.employer_address} 
                       onChange={handleInputChange}
@@ -738,12 +868,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Telephone#</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_telephone"
                       name="employer_telephone"
-                      label="Employer Telephone#"
+                      // label="Employer Telephone#"
                       type="number"
                       value={inputs.employer_telephone} 
                       onChange={handleInputChange}
@@ -752,12 +887,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Email</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_email"
                       name="employer_email"
-                      label="Email"
+                      // label="Email"
                       type="email"
                       value={inputs.employer_email} 
                       onChange={handleInputChange}
@@ -767,12 +907,17 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="user_id">User Id</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Tenure of Employer</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_tenure"
                       name="employer_tenure"
-                      label="Tenure of Employer"
+                      // label="Tenure of Employer"
                       type="text"
                       value={inputs.employer_tenure} 
                       onChange={handleInputChange}
@@ -785,6 +930,17 @@ return (
               </ExpansionPanelDetails>
             </ExpansionPanel>
               
+            <Grid item xs={12} sm={12}>
+                    
+              {savebtn? <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                save
+              </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
+                save
+              </Button>}
+              <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                Close
+              </Button> 
+            </Grid>
             
           </div>
         </form>

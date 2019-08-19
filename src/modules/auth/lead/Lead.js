@@ -80,7 +80,7 @@ export default function Lead() {
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      width: 1000
+      // width: 1000
     },
     drawer: {
       width: drawerWidth,
@@ -116,6 +116,7 @@ export default function Lead() {
     button:{
       color:"white",
       fontSize: theme.typography.pxToRem(10),
+      marginRight:theme.spacing(1),
     },
     drpdwn:{
       // color: 'white',
@@ -301,7 +302,8 @@ export default function Lead() {
               Converted
             </Fab>
           </Grid> */}
-          <Grid item xs={12} sm={9}>
+          <Grid item xs={12} sm={12}>
+            <Paper style={{ width: '100%' }}>
           <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
               <Tab label="Open" />
@@ -309,7 +311,6 @@ export default function Lead() {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <Paper className={classes.paper}>
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -394,11 +395,9 @@ export default function Lead() {
                       }
                     </TableBody>
                   </Table>
-               </Paper>
                </TabPanel>
                
           <TabPanel value={value} index={1}>
-          <Paper style={{ width: '100%' }}>
                 <Table className={classes.table}>
                   <TableHead>
                     <TableRow>
@@ -458,9 +457,9 @@ export default function Lead() {
                       }
                   </TableBody>
                 </Table>
-            </Paper>
 
           </TabPanel>
+            </Paper>
           </Grid>
         </Grid>
       {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}

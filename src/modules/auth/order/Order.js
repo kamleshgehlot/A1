@@ -25,6 +25,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import * as pdfmake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
+
 import Add from './Add';
 import Edit from './Edit';
 import FlexTypeDD from './FlexTypeDoc';
@@ -44,11 +51,10 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(16),
-    padding:theme.spacing(1),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
 }))(TableCell);
 
@@ -76,6 +82,8 @@ export default function Order() {
   const [flexPaymentData, setFlexPaymentData] = useState(null);
   const [orderIdForUpload,setOrderIdForUpload] = useState(null);
   const [order,setOrder] = useState([]);
+  //value is for tabs  
+  const [value, setValue] = React.useState(0);
 
 
   function createAndDownloadPdf(data) {
@@ -122,9 +130,11 @@ export default function Order() {
     root: {
       display: 'flex',
       flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
     },
-    appBar: { 
+    appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      // width: 1000
     },
     drawer: {
       width: 240,
@@ -140,6 +150,9 @@ export default function Order() {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      fontSize: theme.typography.pxToRem(14),
+      color:"white",
+      marginTop:theme.spacing(-3),
     },
     button:{
       marginRight: theme.spacing(2),
@@ -159,8 +172,13 @@ export default function Order() {
       color: theme.palette.text.secondary,
     },
     fonttransform:{
-      textTransform:"initial"
+      textTransform:"initial",
+      fontSize: theme.typography.pxToRem(13),
     },
+    textsize:{
+      fontSize: theme.typography.pxToRem(12),
+      color: 'white',
+    }
   }));
 
 
@@ -263,6 +281,32 @@ export default function Order() {
     fetchData();
   }, []);
 
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
+    );
+  }
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+    // console.log('setValue...',value)
+  }
   return (
     // <div ref={ref}>
     <div>
@@ -271,7 +315,7 @@ export default function Order() {
             <Fab
               variant="extended"
               size="small"
-              color="primary"
+              // color="primary"
               aria-label="Add"
               className={classes.fonttransform}
               onClick={handleClickOpen}

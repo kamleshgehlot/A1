@@ -28,7 +28,7 @@ const Task = function (params) {
   if(params.status==='4'){
     this.is_active=0;
   }
-  console.log('params-----',params);
+  // console.log('params-----',params);
 };
 
 Task.prototype.add = function () {
@@ -80,10 +80,10 @@ Task.prototype.all = function () {
         throw error;
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-      console.log('that.userid',that.userid);
+      // console.log('that.userid',that.userid);
           connection.query('select t.id,t.task_id, t.task_description,a.id as assignid,a.assign_role,  a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
             if (!error) {
-              console.log('taskrows-=-==--',rows);
+              // console.log('taskrows-=-==--',rows);
               resolve(rows);
 
             } else {

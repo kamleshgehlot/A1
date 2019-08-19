@@ -46,12 +46,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -67,12 +71,23 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -192,7 +207,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       contact: inputs.contact,
       interested_product_id: assignInterest,
       is_active: 1,
-      converted_to: 0,
+      converted_to: 1,
       convert_by_lead:convert
     });
         console.log('sahgdaud--',response);
@@ -221,34 +236,39 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   // console.log("inputess",inputs);
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
       <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Enquiry
               </Typography>
-              {savebtn? <Button color="inherit" type="submit">
+              {/* {savebtn? <Button color="inherit" type="submit">
                 save
               </Button>:<Button color="inherit" type="submit" disabled>
                 save
-              </Button>}
+              </Button>} */}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>
               <Grid container spacing={4}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel className={classes.textsize}  htmlFor="first_name">Enquiry Id</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="enquiry_id"
                       name="enquiry_id"
-                      label="Enquiry Id"
+                      // label="Enquiry Id"
                       value={inputs.enquiry_id}
                       onChange={handleInputChange}
                       fullWidth
@@ -258,13 +278,18 @@ return (
                       margin="dense"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <InputLabel htmlFor="last_name">User Id</InputLabel> */}
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="customer_name"
                       name="customer_name"
-                      label="Customer Name"
+                      // label="Customer Name"
                       type="text"
                       value={inputs.customer_name} 
                       onChange={handleInputChange}
@@ -272,13 +297,18 @@ return (
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <InputLabel htmlFor="contact">Contact *</InputLabel> */}
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel className={classes.textsize}  htmlFor="contact">Contact *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="contact"
                       name="contact"
-                      label="Contact"
+                      // label="Contact"
                       type="number"
                       value={inputs.contact} 
                       onChange={handleInputChange}
@@ -347,7 +377,7 @@ return (
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="assign_interest">Interested In*</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="assign_interest">Interested In*</InputLabel>
                     <Select
                       // multiple
                       value={assignInterest}
@@ -357,6 +387,7 @@ return (
                         id: 'interested_product_id',
                         // label:'assign_interest'
                       }}
+                      className={classes.textsize}
                       disabled = {subCategory ==""}
                       fullWidth
                       required
@@ -364,7 +395,7 @@ return (
                       {
                         (productList.length != '' ? productList : []).map((data)=> {
                           return(
-                            <MenuItem value={data.id}>{data.name}</MenuItem>      
+                            <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>      
                           )
                         })
 
@@ -379,6 +410,17 @@ return (
                       })} */}
 
                     </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    
+                    {savebtn? <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                      save
+                    </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
+                      save
+                    </Button>}
+                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                      Close
+                    </Button> 
                   </Grid>
                 </Grid>
               </Paper>
