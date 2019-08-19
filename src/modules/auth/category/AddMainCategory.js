@@ -118,18 +118,19 @@ export default function AddMainCategory(props) {
 
 
   const categoryadd = async () => {
-    const response = await Category.add({
-      maincategory: inputs.maincategory,
-      category: inputs.category,
-      subcategory: inputs.subcategory,
-    });
-
+    if(inputs.maincategory != '' && inputs.category != '' && inputs.subcategory!=''){
+      const response = await Category.add({
+        maincategory: inputs.maincategory,
+        category: inputs.category,
+        subcategory: inputs.subcategory,
+      });
     // props.handleSnackbarClick(true);
     // setCategoryList(response.categoryList);
     // handleReset(RESET_VALUES);
-    props.newData(inputs);
-    props.updatedData(response.categoryList);
-    props.handleClose(false);
+      props.newData(inputs);
+      props.updatedData(response.categoryList);
+      props.handleClose(false);
+    }
   };
   
   function validate(values) {
@@ -172,7 +173,7 @@ export default function AddMainCategory(props) {
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Add Main Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="maincategory">Add Main Category</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -190,7 +191,7 @@ export default function AddMainCategory(props) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Add Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="category">Add Category</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -208,7 +209,7 @@ export default function AddMainCategory(props) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Add Sub Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="subcategory">Add Sub Category</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {

@@ -120,50 +120,55 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   
   const [productCatList, setProductCatList] = useState([]);
 
-  const [productList, setProductList] = useState([]);
+  const [mainCategoryList, setMainCategoryList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  const [subCategoryList, setSubCategoryList] = useState([]);
+  
+
   const [mainOpen, setMainOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [subcatOpen, setSubCatOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  
+// console.log(categoryList);
+
+const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  RESET_VALUES,
+  validate
+);
 
 
-  const categoryadd = async () => {
-    const response = await Category.add({
-      // cancelToken: this.isTokenSource.token,
+  // const categoryadd = async () => {
+  //   const response = await Category.add({
+  //     // cancelToken: this.isTokenSource.token,
 
-      // category: inputs.category,
-      // type: inputs.type,
-      // parentid: inputs.parentid,
-      // position: inputs.position,
-      // description: inputs.description,
-      // image: inputs.image,
-      // meta_keywords: inputs.meta_keywords,
-      // meta_description: inputs.meta_description,
-      // active: inputs.active,
-    });
+  //     // category: inputs.category,
+  //     // type: inputs.type,
+  //     // parentid: inputs.parentid,
+  //     // position: inputs.position,
+  //     // description: inputs.description,
+  //     // image: inputs.image,
+  //     // meta_keywords: inputs.meta_keywords,
+  //     // meta_description: inputs.meta_description,
+  //     // active: inputs.active,
+  //   });
 
-    handleSnackbarClick(true);
-    setCategoryList(response.categoryList);
-    handleReset(RESET_VALUES);
-    handleClose(false);
-  };
+  //   handleSnackbarClick(true);
+  //   setCategoryList(response.categoryList);
+  //   handleReset(RESET_VALUES);
+  //   handleClose(false);
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
-
       try {
-        const result = await Category.list();
-        setCategoryList(result.categoryList);
+        const result = await Category.mainCategoryList();
+        setMainCategoryList(result.mainCategoryList);
       } catch (error) {
         setIsError(true);
       }
-
       setIsLoading(false);
     };
 
@@ -173,16 +178,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   function newData(newdata){
     setNewDataList(newdata);
   }
-  function updatedData(response){
-    
-    setCategoryList(response);
 
-    (response).map(ele =>{
-      return(
-      // ele.category == newDataList.maincategory ? console.log( ele.id ): ''
-      console.log(newDataList)
-      )
-    });
+  function updatedData(response){   
+    setMainCategoryList(response);
+    inputs.maincat = '';
+    inputs.cat = '';
+    inputs.subcat = '';    
   }
 
   function productData(newdata){
@@ -192,49 +193,62 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
     // updateProductList(newdata);
     handleClose(false);
   }
+
+
   function newCatData(newdata){
     setNewCatDataList(newdata);
   }
+  
+  
   function updatedCatData(response){
-    
-    setCategoryList(response);
-
-    (response).map(ele =>{
-      return(
-      // ele.category == newDataList.maincategory ? console.log( ele.id ): ''
-      console.log(newCatDataList)
-      )
-    });
+    setCategoryList(response);  
+    inputs.maincat = '';
+    inputs.cat = '';
+    inputs.subcat = '';
   }
 
   
   function newSubCatData(newdata){
     setNewSubCatDataList(newdata);
   }
-  function updatedSubCatData(response){
-    
-    setCategoryList(response);
 
-    (response).map(ele =>{
-      return(
-      // ele.category == newDataList.maincategory ? console.log( ele.id ): ''
-      console.log(newSubCatDataList)
-      )
-    });
+  function updatedSubCatData(response){
+    setSubCategoryList(response); 
+    inputs.maincat = '';
+    inputs.cat = '';
+    inputs.subcat = ''; 
   }
+
   const handleSelectInputChange = e =>{
     handleInputChange(e);
+
+    setCategoryList([]);
+    setSubCategoryList([]);    
+    // inputs.cat = "";
+
     if(e.target.value==='0'){
-      setMainOpen(true);
+      setMainOpen(true);      
     }
     else{
       setProductCatList({
         ...productCatList, 'maincategory': e.target.value
       });
     }
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.categoryList({maincategory: e.target.value});
+        setCategoryList(result.categoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
   };
   
   const handleSelectCatInputChange = e =>{
+    setSubCategoryList([]); 
+
     handleInputChange(e);
     if(e.target.value==='0'){
       setCatOpen(true);
@@ -244,6 +258,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
         ...productCatList, 'category': e.target.value
       });
     }
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.subCategoryList({category: e.target.value});
+        setSubCategoryList(result.subCategoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
   };
   
   const handleSelectSubcatInputChange = e =>{
@@ -257,7 +281,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
       });
     }
   };
-
+console.log(inputs)
   function openProductDialog(){
     if(inputs.maincat!='' && inputs.cat!='' && inputs.subcat!='' && inputs.maincat!='0' && inputs.cat!='0' && inputs.subcat!='0' && inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
     setProductOpen(true);
@@ -289,12 +313,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
     return errors;
   };
 
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
-    categoryadd,
-    validate
-  );
-
+ 
   return (
     <div>
       <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -314,15 +333,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
           </AppBar>
 
           <div className={classes.root}>
-
-          <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}>
-              <ExpansionPanelDetails>
+          <Paper className={classes.paper}>    
                 <Grid container spacing={5} className={classes.margin}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Select Main Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="maincat">Select Main Category</InputLabel>
                     <Select
                         name="maincat"
                         onChange={handleSelectInputChange}
@@ -336,19 +350,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                         label="Main Category"
                         required
                       >
-                        { categoryList.map((data, index)=>{
-                          
-                              return(data.type===1 ? 
-                            <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
-                            :''
+                        { mainCategoryList.map((data, index)=>{                          
+                              return(
+                                <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                               )
                           })
                         }
-                        <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
+                                <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Select Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="cat">Select Category</InputLabel>
                     <Select
                         name="cat"
                         onChange={handleSelectCatInputChange}
@@ -361,20 +373,19 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                         fullWidth
                         label="Category Type"
                         required
+                        disabled = {inputs.maincat != '' && inputs.maincat != '0' ? false : true}
                       >
                        { categoryList.map((data, index)=>{
-                          
-                          return(data.type===2 ? 
-                        <MenuItem  className={classes.textsize} value={data.id}>{data.category}</MenuItem>
-                        :''
-                          )
-                      })
-                    }
-                    <MenuItem className={classes.textsize} value="0">Others</MenuItem>
+                         return(
+                            <MenuItem  className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                         )
+                          })
+                        }
+                          <MenuItem className={classes.textsize} value="0">Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Select Sub Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="subcat">Select Sub Category</InputLabel>
                     <Select
                         name="subcat"
                         onChange={handleSelectSubcatInputChange}
@@ -387,15 +398,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                         fullWidth
                         label="Sub Category"
                         required
+                        disabled = {inputs.cat != '' && inputs.cat != '0' && inputs.maincat != '' && inputs.maincat != '0' ? false : true }
                       >
-                      { categoryList.map((data, index)=>{
-                         
-                         return(data.type===3 ? 
-                       <MenuItem  className={classes.textsize} value={data.id}>{data.category}</MenuItem>
-                       :''
-                         )
-                     })
-                   }
+                      { subCategoryList.map((data, index)=>{
+                         return(
+                           <MenuItem  className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                          )
+                        })
+                      }
                    <MenuItem className={classes.textsize} value="0">Others</MenuItem>
                     </Select>
                   </Grid>
@@ -410,12 +420,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
                     </Button> 
                   </Grid>
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel> 
-            <AddMainCategory open={mainOpen} handleClose={handleMainClose}  updatedData={updatedData} newData={newData}/>
-             
-            <AddCategory open={catOpen} handleClose={handleCatClose} updatedCatData={updatedCatData} newCatData={newCatData} />           
-            <AddSubcategory open={subcatOpen} handleClose={handleSubCatClose} updatedSubCatData={updatedSubCatData} newSubCatData={newSubCatData}  />       
+            </Paper>
+
+         { mainOpen ?    <AddMainCategory open={mainOpen} handleClose={handleMainClose}  updatedData={updatedData} newData={newData}/> : null }
+         {catOpen ?      <AddCategory open={catOpen} handleClose={handleCatClose} updatedCatData={updatedCatData} newCatData={newCatData} selectedMainCategoryId={inputs.maincat} /> : null }
+         {subcatOpen ?   <AddSubcategory open={subcatOpen} handleClose={handleSubCatClose} updatedSubCatData={updatedSubCatData} newSubCatData={newSubCatData} selectedCategoryId={inputs.cat}  />  : null }
          {productOpen?   <AddProduct open={productOpen} handleClose={handleProductClose} productCatList={productCatList} productData={productData} />   :null}
     
           </div>

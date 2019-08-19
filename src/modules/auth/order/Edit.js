@@ -118,25 +118,18 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [recData, setRecData] = React.useState(editableData);
   const [inputs, setInputs] = useState([]);
+  
+  const [mainCategoryList, setMainCategoryList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  const [subCategoryList, setSubCategoryList] = useState([]);
+  
   const [mainCategory, setMainCategory] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
-  // console.log('ddd',recData);
-    
+
+  const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await Category.productlist();
-        setProductList(result.productList);
-        
-        const category_list = await Category.list();
-        setCategoryList(category_list.categoryList);
-        
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
     let assignRoleList = [];
     (recData.product_id.split(',')).map((product,index) =>{
@@ -144,8 +137,6 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     });
     setAssignInterest(assignRoleList);
 
-    // console.log(recData)
-    // if(recData.product_related_to.toString().length > 3){
     let productCategory = [];
     (recData.product_related_to.split(',')).map((product,index) =>{
       productCategory.push(parseInt(product));
@@ -153,8 +144,31 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     setMainCategory(productCategory[0]);
     setCategory(productCategory[1]);
     setSubCategory(productCategory[2]);
-  // }
+
+    const fetchData = async () => {
+      try {
+        const category_list = await Category.mainCategoryList();
+        // console.log('category_list',category_list);
+        setMainCategoryList(category_list.mainCategoryList);
+
+        const category = await Category.categoryList({maincategory: productCategory[0] });
+        // console.log('category',category);
+        setCategoryList(category.categoryList);
+
+        const sub_category = await Category.subCategoryList({category:productCategory[1]});
+        // console.log('sub_category',sub_category);
+        setSubCategoryList(sub_category.subCategoryList);
+
+        const product = await Category.RelatedproductList({subcategory:productCategory[2]});
+        // console.log('product',product);
+        setProductList(product.productList);       
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
   fetchData();
+
     setInputs({
       work : 0,
       benefits : 0,
@@ -230,12 +244,53 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
 
   function handleMainCategory(event) {
     setMainCategory(event.target.value);
+
+    setCategoryList('');
+    setSubCategoryList('');    
+    setProductList('');
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.categoryList({maincategory: event.target.value});
+        setCategoryList(result.categoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
   }
   function handleCategory(event) {
     setCategory(event.target.value);
+
+    setSubCategoryList('');    
+    setProductList('');
+
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.subCategoryList({category: event.target.value});
+        setSubCategoryList(result.subCategoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
   }
   function handleSubCategory(event) {
     setSubCategory(event.target.value);
+    setProductList('');
+
+    const fetchData = async () => {
+      try {
+        const result = await Category.RelatedproductList({subcategory: event.target.value});
+        setProductList(result.productList);
+        // const result = await Category.productList({subCategory: event.target.value});
+        // setSubCategoryList(result.subCategoryList);
+      } catch (error) {
+        console.log('error:',error);
+      }
+    };
+    fetchData();
   }
 
 
@@ -266,7 +321,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
 
     const response = await OrderAPI.editPost({ 
       id : recData.id,
-      products_id :  assignInterest.join(),
+      products_id :  assignInterest,
       budget_list : budgetList,
       flexOrderType : flexOrderList,
       fixedOrderType : fixedOrderList,
@@ -276,11 +331,13 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       budget_id: recData.budget_id,
       is_active : 1,
       assigned_to : 0,
+      related_to : related_to,
      });
     if(response!='invalid'){
       handleOrderRecData(response);
       handleEditClose(false);
-      assignInterest.length = 0;
+      // assignInterest.length = 0;
+      setAssignInterest('');
       }else{
         alert("Invalid or Incomplete Credentials")
       }
@@ -358,14 +415,13 @@ return (
                       fullWidth
                       required
                       // disabled = {budgetList ==""}
-                    >    
-                    {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                    > 
+                     {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
                       return(
-                        data.type === 1 ? 
                          <MenuItem value={data.id}>{data.category}</MenuItem>
-                         : ''
                       ) 
-                     })}
+                     })}   
+                    
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={2}>
@@ -383,9 +439,7 @@ return (
                     >    
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
-                        data.type === 2 ? 
                          <MenuItem value={data.id}>{data.category}</MenuItem>
-                         : ''
                       ) 
                      })}
                     </Select>
@@ -403,11 +457,9 @@ return (
                       required
                       // disabled = {category ==""}
                     >    
-                    {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
+                     {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
                       return(
-                        data.type === 3 ? 
                          <MenuItem value={data.id}>{data.category}</MenuItem>
-                         : ''
                       ) 
                      })}
                     </Select>
@@ -427,7 +479,7 @@ return (
                   <Grid item xs={12} sm={6}>
                     <InputLabel htmlFor="product">Product*</InputLabel>
                     <Select
-                      multiple
+                      // multiple
                       value={assignInterest}
                       onChange={handleChangeMultiple}
                       name= 'product'

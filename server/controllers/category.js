@@ -12,14 +12,11 @@ const add = function(req, res, next) {
   try {
     const newCategory = new Category(categoryParam);
 
-    newCategory
-      .add()
-      .then(result => {
-        new Category({}).all().then(categoryList => {
+    newCategory.add().then(result => {
+        new Category({}).mainCategoryList().then(categoryList => {
           res.send({ categoryList });
         });
-      })
-      .catch(err => {
+      }).catch(err => {
         res.status(500);
         res.render('error', { error: err });
       });
@@ -33,6 +30,7 @@ const add = function(req, res, next) {
 
 const addCategory = function(req, res, next) {
   const categoryParam = {
+    maincategory: req.body.maincategory,
     category: req.body.category,
     subcategory: req.body.subcategory,
     user_id: req.decoded.id,
@@ -41,20 +39,16 @@ const addCategory = function(req, res, next) {
   try {
     const newCategory = new Category(categoryParam);
 
-    newCategory
-      .addCategory()
-      .then(result => {
-        new Category({}).all().then(categoryList => {
+    newCategory.addCategory().then(result => {
+        new Category({}).mainCategoryList().then(categoryList => {
           res.send({ categoryList });
         });
-      })
-      .catch(err => {
+      }).catch(err => {
         res.status(500);
         res.render('error', { error: err });
       });
   } catch (err) {
     console.log('Error: ', err);
-
     res.status(500);
     res.send('error', { error: err });
   }
@@ -63,30 +57,26 @@ const addCategory = function(req, res, next) {
 
 const addSubCategory = function(req, res, next) {
   const categoryParam = {
+    category : req.body.category,
     subcategory: req.body.subcategory,
     user_id: req.decoded.id,
-
   };
 
   try {
     const newCategory = new Category(categoryParam);
 
-    newCategory
-      .addSubCategory()
-      .then(result => {
-        new Category({}).all().then(categoryList => {
+    newCategory.addSubCategory().then(result => {
+        new Category({}).mainCategoryList().then(categoryList => {
           res.send({ categoryList });
         });
-      })
-      .catch(err => {
+      }).catch(err => {
         res.status(500);
         res.render('error', { error: err });
       });
   } catch (err) {
     console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+      res.status(500);
+      res.send('error', { error: err });
   }
 };
 
@@ -190,6 +180,51 @@ const all = function(req, res, next) {
   }
 };
 
+const mainCategoryList = function(req, res, next) {
+  try {
+    new Category({}).mainCategoryList().then(mainCategoryList => {
+      res.send({ mainCategoryList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
+
+
+const categoryList = function(req, res, next) {
+  try {
+    new Category({maincategory: req.body.maincategory}).categoryList().then(categoryList => {
+      res.send({ categoryList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
+
+
+const subCategoryList = function(req, res, next) {
+  try {
+    new Category({category: req.body.category}).subCategoryList().then(subCategoryList => {
+      res.send({ subCategoryList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
+
+
+const relatedProductList = function(req, res, next) {
+  try {
+    new Product({subcategory: req.body.subcategory}).relatedProductList().then(productList => {
+      res.send({ productList });
+    });
+  } catch (err) {
+    console.log('Error: ', err);
+  }
+};
+
+
+
 const archivedList = function(req, res, next) {
   try {
     new Product({}).archivedList().then(archivedList => {
@@ -199,4 +234,4 @@ const archivedList = function(req, res, next) {
     console.log('Error: ', err);
   }
 };
-module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList,archivedList };
+module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList,archivedList, mainCategoryList, categoryList, subCategoryList, relatedProductList  };

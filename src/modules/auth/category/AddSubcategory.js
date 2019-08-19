@@ -120,6 +120,7 @@ export default function AddSubcategory(props) {
 
   const categoryadd = async () => {
     const response = await Category.addsubcategory({
+      category:  props.selectedCategoryId,
       subcategory: inputs.subcategory,
     });
 

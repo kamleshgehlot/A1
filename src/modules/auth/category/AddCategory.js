@@ -113,10 +113,12 @@ export default function AddCategory(props) {
   };
 
   const categoryadd = async () => {
-    const response = await Category.addcategory({
-      category: inputs.category,
-      subcategory: inputs.subcategory,
-    });
+    if(inputs.category != '' && inputs.subcategory!=''){
+      const response = await Category.addcategory({
+        maincategory: props.selectedMainCategoryId,
+        category: inputs.category,
+        subcategory: inputs.subcategory,
+      });
 
     props.newCatData(inputs);
     props.updatedCatData(response.categoryList);
@@ -124,6 +126,7 @@ export default function AddCategory(props) {
     // setCategoryList(response.categoryList);
     // handleReset(RESET_VALUES);
     props.handleClose(false);
+    }
   };
   
   function validate(values) {
@@ -167,7 +170,7 @@ export default function AddCategory(props) {
                 <Grid container spacing={3}>
                   
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Add Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="category">Add Category</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -185,7 +188,7 @@ export default function AddCategory(props) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Add Sub Category</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="subcategory">Add Sub Category</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {

@@ -536,6 +536,29 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       disabled
                     />
                   </Grid>
+                  <Grid item xs={6} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="password">Password</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      // label="Password"
+                      // onChange={handleInputChange}
+                      // onFocus={handlePasswordBlurChange}
+                      value={franchise.password} 
+                      // required
+                      fullWidth
+                      // error={errors.password}
+                      // helperText={errors.password ? errors.password : ' '}
+                      disabled
+                    />
+                  </Grid>
+                  {/* {console.log('franchise',franchise)} */}
                   {/* <Grid item xs={3} sm={1}>
                   <Fab size="small" color="secondary" aria-label="Add"  className={classes.margin}>
                     <AddIcon />

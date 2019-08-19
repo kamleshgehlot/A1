@@ -9,6 +9,7 @@ var Order = function (params) {
   this.user_id = params.user_id;
   this.order_id = params.order_id;
   this.customer_id = params.customer_id;
+  this.customer_type = params.customer_type;
   this.products_id = params.products_id;
   this.order_type = params.order_type;
   this.order_type_id = params.order_type_id;
@@ -63,9 +64,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows.insertId);
@@ -90,9 +91,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows.insertId);
@@ -162,7 +163,7 @@ Order.prototype.editOrder = function () {
                       // let orderValues = [
                       //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       // ];
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows);
@@ -190,7 +191,7 @@ Order.prototype.editOrder = function () {
                       //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
                       // ];
 
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows);
@@ -528,7 +529,7 @@ Order.prototype.getOrderList = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
+        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
