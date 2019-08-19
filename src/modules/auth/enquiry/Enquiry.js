@@ -55,6 +55,8 @@ export default function Enquiry() {
   const [customerOpen, setCustomerOpen] = useState(false);
   const [productList, setProductList] = useState([]);
   const [convertedEnquiryOpen, SetConvertedEnquiryOpen] = useState(false);
+  
+  const [customer, setCustomer] = useState({});
   //value is for tabs  
   const [value, setValue] = React.useState(0);
   const drawerWidth = 240;
@@ -213,12 +215,19 @@ console.log('res=---',response);
               Enquiry
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          {/* <Grid item xs={12} sm={4}>
             <Button variant="contained" color="primary" size="small"  onClick={handleCompleteEnquiryClickOpen} >Converted Enquiries</Button>
-          </Grid>
+          </Grid> */}
           
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={8}>
             <Paper style={{ width: '100%' }}>
+              <AppBar position="static"  className={classes.appBar}>
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                  <Tab label="On-going" />
+                  <Tab label="Converted" />
+                </Tabs>
+              </AppBar>
+              <TabPanel value={value} index={value}>
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -227,14 +236,14 @@ console.log('res=---',response);
                         <StyledTableCell>Customer Name</StyledTableCell>
                         <StyledTableCell>Contact No.</StyledTableCell>
                         <StyledTableCell>Interested In</StyledTableCell>
-                        <StyledTableCell>Options</StyledTableCell>
+                        {value===0? <StyledTableCell>Options</StyledTableCell>:''}
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {
                         (enquiryList.length > 0 ? enquiryList : []).map((data, index) => {
                           return(
-                            <TableRow>
+                            value===data.converted_to ?<TableRow>
                               <StyledTableCell>{index+1}</StyledTableCell>
                               <StyledTableCell>{data.enquiry_id}</StyledTableCell>
                               <StyledTableCell>{data.customer_name}</StyledTableCell>
@@ -256,22 +265,23 @@ console.log('res=---',response);
                                   }
                                   {/* {data.interested_product_id} */}
                               </StyledTableCell>
-                              <StyledTableCell>
-                              <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { openCustomerPage(data); }}>
-                                  Convert
-                              </Button>
-                              </StyledTableCell>
-                            </TableRow>
+                              {data.converted_to===0? <StyledTableCell>
+                                <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { openCustomerPage(data); }}>
+                                    Convert
+                                </Button>
+                              </StyledTableCell>:''}
+                            </TableRow>:''
                           )
                         })
                       }
                     </TableBody>
                   </Table>
-               </Paper>
+                </TabPanel>
+              </Paper>
           </Grid>
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convert={0} />
-      {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} /> : null}
+      {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} setCustomer={setCustomer} /> : null}
       {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null}
       
     </div>

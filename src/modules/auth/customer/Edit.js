@@ -255,17 +255,17 @@ return (
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Edit Customer
               </Typography>
-              {savebtn? <Button color="inherit" type="submit" onClick={editCustomer}>
+              {/* {savebtn? <Button color="inherit" type="submit" onClick={editCustomer}>
                 save
               </Button> : <Button color="inherit" type="submit" onClick={editCustomer} disabled>
                 save
-              </Button>}
+              </Button>} */}
             </Toolbar>
           </AppBar>
 
@@ -432,9 +432,15 @@ return (
                       onChange={handleInputChange}
                       row
                     >
-                      <FormControlLabel labelPlacement="start" value="female" control={<Radio />} label="Female" />
-                      <FormControlLabel labelPlacement="start" value="male" control={<Radio />} label="Male" />
-                      {/* <FormControlLabel labelPlacement="start" value="transgender" control={<Radio />} label="Transgender" /> */}
+                      <FormControlLabel labelPlacement="start" value="female" 
+            control={<Radio color="primary" />}
+                     label="Female" />
+                      <FormControlLabel labelPlacement="start" value="male" 
+            control={<Radio color="primary" />}
+                     label="Male" />
+                      {/* <FormControlLabel labelPlacement="start" value="transgender" 
+            control={<Radio color="primary" />}
+                     label="Transgender" /> */}
                     </RadioGroup>
                     
                   </Grid>
@@ -448,8 +454,12 @@ return (
                       onChange={handleInputChange} 
                       row
                     >
-                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" />
-                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" />
+                      <FormControlLabel value={1} 
+            control={<Radio color="primary" />}
+                     label="Yes" labelPlacement="start" />
+                      <FormControlLabel value={0} 
+            control={<Radio color="primary" />}
+                     label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -547,8 +557,12 @@ return (
                       className={classes.group} 
                       row
                     >
-                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" />
-                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" />                      
+                      <FormControlLabel value={1} 
+            control={<Radio color="primary" />}
+                     label="Yes" labelPlacement="start" />
+                      <FormControlLabel value={0} 
+            control={<Radio color="primary" />}
+                     label="No" labelPlacement="start" />                      
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -572,12 +586,11 @@ return (
                   </Grid>
                   {console.log(customerList)}
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="state">Customer State</InputLabel>
-                  <InputLabel htmlFor="id_proof">Last Uploaded Document :   </InputLabel>
+                  <InputLabel className={classes.textsize} htmlFor="id_proof">Last Uploaded Document :   </InputLabel>
                     <a href={"server\\files\\customer\\" + customerList.id_proof }  download >{customerList.id_proof}</a>
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <InputLabel htmlFor="state">Customer State</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="state">Customer State</InputLabel>
                     <RadioGroup 
                       aria-label="state" 
                       name="state" 
@@ -586,9 +599,14 @@ return (
                       onChange={handleInputChange} 
                       row
                     >
-                      <FormControlLabel value={1} control={<Radio />} label="Active" labelPlacement="start" />
-                      <FormControlLabel value={2} control={<Radio />} label="Hold" labelPlacement="start" />
-                      <FormControlLabel value={3} control={<Radio />} label="Completed" labelPlacement="start" />
+                      <FormControlLabel value={1} 
+            control={<Radio color="primary" />} label="Active" labelPlacement="start" />
+                      <FormControlLabel value={2} 
+            control={<Radio color="primary" />}
+                     label="Hold" labelPlacement="start" />
+                      <FormControlLabel value={3} 
+            control={<Radio color="primary" />}
+                     label="Completed" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                 </Grid>
@@ -885,6 +903,19 @@ return (
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
+              
+              <Grid item xs={12} sm={12}>
+                      
+                {savebtn? <Button  variant="contained"  color="primary" className={classes.button}  onClick={editCustomer}>
+                  save
+                </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
+                  save
+                </Button>}
+                <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
+                  Close
+                </Button> 
+              </Grid>
+              
           </div>
         </form>
       </Dialog>

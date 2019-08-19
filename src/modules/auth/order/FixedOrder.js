@@ -65,6 +65,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
   },
   root: {
@@ -93,6 +94,9 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
   },
   textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  subTitle:{
     fontSize: theme.typography.pxToRem(12),
   },
   drpdwn:{
@@ -305,19 +309,19 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleFixedClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleFixedClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleFixedClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleFixedClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Fixed Order
               </Typography>
-              <Button color="inherit" type="submit">
+              {/* <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
@@ -351,6 +355,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -376,6 +383,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -401,6 +411,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                       
                     />
@@ -427,6 +440,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -436,7 +452,7 @@ return (
                 Payments 
               </Typography>
               </Grid>
-                <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Timing of Payments
                   </Typography>
@@ -460,6 +476,9 @@ return (
                       margin="dense"
                       
                     />
+                    </Grid>
+                    
+                  <Grid item xs={12} sm={4}>
                      <TextField
                       InputProps={{
                         classes: {
@@ -479,6 +498,9 @@ return (
                       // placeholder="Franchise Name"
                       margin="dense"
                     />
+                    </Grid>
+                    
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       InputProps={{
                         classes: {
@@ -499,7 +521,7 @@ return (
                       margin="dense"
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                       Number of Payments 
                   </Typography>
@@ -526,7 +548,7 @@ return (
                       // }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Amount of Each Payments
                   </Typography>
@@ -550,10 +572,13 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                       Total Amount of Payments
                   </Typography>
@@ -577,6 +602,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                      
@@ -657,6 +685,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
@@ -741,9 +772,21 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                    
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                      save
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleFixedClose} className={classes.button}>
+                      Close
+                    </Button> 
+                  </Grid>
               </Grid>
           </Paper>
           </div>

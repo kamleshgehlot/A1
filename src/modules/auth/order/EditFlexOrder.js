@@ -61,6 +61,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
   },
   subTitle: {
@@ -236,7 +237,7 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleFlexClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleFlexClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

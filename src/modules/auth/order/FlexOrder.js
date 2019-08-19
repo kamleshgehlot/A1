@@ -65,6 +65,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
   },
   subTitle: {
@@ -73,6 +74,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(13),
     marginTop: 12,
   },
   root: {
@@ -285,19 +287,19 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleFlexClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleFlexClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Flex Order
               </Typography>
-              <Button color="inherit" type="submit">
+              {/* <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
@@ -331,6 +333,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -356,6 +361,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -381,6 +389,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                       
                     />
@@ -407,6 +418,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -509,6 +523,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
@@ -536,6 +553,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                      
@@ -616,10 +636,21 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
-                  
+                <Grid item xs={12} sm={12}>
+                    
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                      save
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleFlexClose} className={classes.button}>
+                      Close
+                    </Button> 
+                  </Grid>
                 </Grid>
           </Paper>
           </div>
