@@ -61,6 +61,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
   },
   root: {
@@ -267,7 +268,7 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleFixedClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleFixedClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

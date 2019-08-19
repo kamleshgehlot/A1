@@ -63,6 +63,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
   },
   root: {
@@ -351,7 +352,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
         <form onSubmit={EditOrder}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

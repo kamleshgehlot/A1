@@ -18,12 +18,14 @@ import EmailIcon from '@material-ui/icons/Email';
 
 // API CALL
 import ProfileAPI from '../../../api/Profile';
+import Role from '../../../api/franchise/Role';
 export default function Profile() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [profileList, setProfileList] = useState({});
 
+  const [role, setRole] = useState([]);
   const roleName = APP_TOKEN.get().roleName;
   const userName = APP_TOKEN.get().userName;
   const uid = APP_TOKEN.get().userId;
@@ -50,6 +52,7 @@ export default function Profile() {
     toolbar: theme.mixins.toolbar,
     title: {
       flexGrow: 1,
+      // fontSize: theme.typography.pxToRem(14),
     },
     paper: {
       padding: theme.spacing(5),
@@ -61,6 +64,7 @@ export default function Profile() {
     },
     typography:{
       paddingTop: theme.spacing(3),
+      fontSize: theme.typography.pxToRem(12),
     }
   }));
   const classes = useStyles();
@@ -81,6 +85,19 @@ export default function Profile() {
     };
     fetchData();
   }, []);
+  
+  useEffect(() => {
+  const roleData = async () => {
+      
+    try {
+      const result = await Role.list();
+      setRole(result.role);
+    } catch (error) {
+      console.log("Error",error);
+    }
+  };
+  roleData();
+}, []);
   function handleClickOpen() {
     setOpen(true);
   }
@@ -99,50 +116,68 @@ export default function Profile() {
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
         {profileList.role===2 || profileList.role==null?
-            <Paper className={classes.paper} style={{ width: '100%' }}>
-              <Typography variant="h4" className={classes.title}>
+            <Paper className={classes.paper} style={{ width: '40%' }}>
+              <Typography variant="h6" className={classes.title}>
                 {profileList.director}
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <StoreIcon /> {profileList.fname} <br/>
+                <StoreIcon fontSize="small"/> {profileList.fname} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <BusinessIcon /> {profileList.name} <br/>
+                <BusinessIcon fontSize="small" /> {profileList.name} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <LocationCityIcon /> {profileList.location} <br/>
+                <LocationCityIcon fontSize="small" /> {profileList.location} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <DescriptionIcon /> {profileList.nbzn} <br/>
+                <DescriptionIcon fontSize="small" /> {profileList.nbzn} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <EmailIcon /> {profileList.email} <br/>
+                <EmailIcon fontSize="small" /> {profileList.email} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <CallIcon /> {profileList.contact} <br/>
+                <CallIcon fontSize="small" /> {profileList.contact} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <CallIcon /> {profileList.alt_contact===null? 'Not Available':profileList.alt_contact} <br/>
+                <CallIcon fontSize="small" /> {profileList.alt_contact===null? 'Not Available':profileList.alt_contact} <br/>
               </Typography>
             </Paper>:
-            <Paper className={classes.paper} style={{ width: '100%' }}>
-              <Typography variant="h4" className={classes.title}>
+            <Paper className={classes.paper} style={{ width: '40%' }}>
+              <Typography variant="h6" className={classes.title}>
                   {profileList.first_name + ' ' + profileList.last_name} 
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <AccountCircleIcon /> {profileList.user_id} <br/>
+                <AccountCircleIcon fontSize="small" /> {profileList.user_id} <br/>
+              </Typography>
+              <Typography  variant="h6" className={classes.typography}>
+                <AccountCircleIcon fontSize="small" />
+                {
+                  ( (profileList.role && profileList.role.split(',')) || []).map((a, index) =>{
+                    // console.log("index",index);
+                    return(
+                      role.map((ele)=>{
+                        return(
+                          (profileList.role.split(',').length-1)===index ?
+                          profileList.role.split(',')[index] == ele.id ? ele.name  :''
+                          :
+                          profileList.role.split(',')[index] == ele.id ? ele.name + ", " :''
+                        )
+                        })  
+                    ) 
+                    })
+                  } <br/>
               </Typography>
               {/* <Typography  variant="h6" className={classes.typography}>
                 <StoreIcon /> {profileList.fname} <br/>
               </Typography> */}
               <Typography  variant="h6" className={classes.typography}>
-                <LocationCityIcon /> {profileList.location} <br/>
+                <LocationCityIcon fontSize="small" /> {profileList.location} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <EmailIcon /> {profileList.email} <br/>
+                <EmailIcon fontSize="small" /> {profileList.email} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <CallIcon /> {profileList.contact} <br/>
+                <CallIcon fontSize="small" /> {profileList.contact} <br/>
               </Typography>
           </Paper>
         }

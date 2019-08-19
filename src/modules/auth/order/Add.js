@@ -74,6 +74,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(13),
     marginTop: 15,
   },
   root: {
@@ -421,27 +422,27 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 New Order
               </Typography>
-              <Button color="inherit" type="submit">
+              {/* <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={3}>
-                    <InputLabel htmlFor="order_id">Order#</InputLabel>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="order_id">Order#</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -461,8 +462,8 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <InputLabel htmlFor="order_date">Date*</InputLabel>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -482,8 +483,8 @@ return (
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                   <InputLabel htmlFor="customer_type">Select Customer*</InputLabel>
+                  <Grid item xs={12} sm={12}>
+                   <InputLabel  className={classes.textsize} htmlFor="customer_type">Select Customer*</InputLabel>
                       <RadioGroup
                         aria-label="customer_type"
                         name="customer_type"
@@ -506,8 +507,33 @@ return (
                         }
                       </RadioGroup>
                     </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="main_category">Main Category*</InputLabel>
+                    
+                  <Grid item xs={12} sm={6}>
+                    {customer  != null && isNewCustomer === 1? 
+                      <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                        Calculate Budget
+                      </Fab>
+                      : ''
+                    }
+                    {customer  != null && isNewCustomer === 0? 
+                      <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                        Update Budget
+                      </Fab>
+                      : ''
+                    }
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                    {customer  != null && budgetList!="" ? 
+                    <div>
+                    <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
+                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
+                    </div>
+                    : ''
+                    }
+                  </Grid>
+
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
                       // multiple
                       value={mainCategory}
@@ -529,8 +555,8 @@ return (
                      })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="category">Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="category">Category*</InputLabel>
                     <Select
                       // multiple
                       value={category}
@@ -552,8 +578,8 @@ return (
                      })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="sub_category">Sub Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
                     <Select
                       // multiple
                       value={subCategory}
@@ -575,33 +601,9 @@ return (
                     </Select>
                   </Grid>
 
-                  <Grid item xs={12} sm={2}>
-                  {customer  != null && isNewCustomer === 1? 
-                    <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
-                      Calculate Budget
-                    </Fab>
-                    : ''
-                  }
-                  {customer  != null && isNewCustomer === 0? 
-                    <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
-                      Update Budget
-                    </Fab>
-                    : ''
-                  }
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                  {customer  != null && budgetList!="" ? 
-                  <div>
-                  <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
-                  <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
-                  </div>
-                  : ''
-                  }
-                  </Grid>
-
                   
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product">Product*</InputLabel>
+                  <Grid item xs={12} sm={12}>
+                    <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
                     <Select
                       // multiple
                       value={assignInterest}
@@ -622,7 +624,7 @@ return (
                     </Select>
                   </Grid>
                    <Grid item xs={12} sm={6}>
-                   <InputLabel htmlFor="order_type">Order Type</InputLabel>
+                   <InputLabel  className={classes.textsize} htmlFor="order_type">Order Type</InputLabel>
                       <RadioGroup
                         aria-label="order_type"
                         name="order_type"
@@ -641,7 +643,7 @@ return (
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
                       value={inputs.payment_mode}
                       onChange={handleInputChange}
@@ -660,7 +662,16 @@ return (
                       <MenuItem className={classes.textsize} value={5}>Cash</MenuItem>
                     </Select>
                    </Grid>
-                   
+                      
+            <Grid item xs={12} sm={12}>
+                    
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                      save
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                      Close
+                    </Button> 
+                  </Grid>
                 </Grid>
           </Paper>
             

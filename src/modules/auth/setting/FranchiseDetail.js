@@ -62,6 +62,7 @@ export default function FranchiseDetail() {
     },
     typography:{
       paddingTop: theme.spacing(3),
+      fontSize: theme.typography.pxToRem(12),
     }
   }));
   const classes = useStyles();
@@ -100,24 +101,24 @@ export default function FranchiseDetail() {
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-            <Paper className={classes.paper} style={{ width: '100%' }}>
-              <Typography variant="h4" className={classes.title}>
+            <Paper className={classes.paper} style={{ width: '40%' }}>
+              <Typography variant="h6" className={classes.title}>
                 {franchiseDetails.franchise_name}
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <StoreIcon /> {franchiseDetails.franchise_city} <br/>
+                <StoreIcon fontSize="small" /> {franchiseDetails.franchise_city} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <BusinessIcon /> {franchiseDetails.suburb} <br/>
+                <BusinessIcon fontSize="small" /> {franchiseDetails.suburb} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <LocationCityIcon /> {franchiseDetails.company_name} <br/>
+                <LocationCityIcon fontSize="small" /> {franchiseDetails.company_name} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <DescriptionIcon /> {franchiseDetails.company_location} <br/>
+                <DescriptionIcon fontSize="small" /> {franchiseDetails.company_location} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <EmailIcon /> {franchiseDetails.nbzn}<br/>
+                <EmailIcon fontSize="small" /> {franchiseDetails.nbzn}<br/>
               </Typography>
               <Typography  variant="h5" className={classes.typography}>
                   Director Details <br/>
@@ -127,10 +128,10 @@ export default function FranchiseDetail() {
                   <Grid sm={12}>
                     
                     <Typography  variant="h6" className={classes.typography}>
-                      <AccountCircleIcon/> {data.director+'   ' +'   ' } 
-                      <EmailIcon /> {'   ' +data.email+'   '+'   '  }
-                       <CallIcon /> {'   ' +data.contact+'   '+'   '  }
-                      {data.alt_contact? <CallIcon />: ''} {'   ' +data.alt_contact }
+                      <AccountCircleIcon fontSize="small" /> {data.director+'   ' +'   ' } 
+                      <EmailIcon fontSize="small" /> {'   ' +data.email+'   '+'   '  }
+                       <CallIcon fontSize="small" /> {'   ' +data.contact+'   '+'   '  }
+                      {data.alt_contact? <CallIcon fontSize="small" />: ''} {'   ' +data.alt_contact }
                     </Typography>
                   </Grid>
                   )})
