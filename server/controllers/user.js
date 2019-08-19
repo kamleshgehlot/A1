@@ -96,8 +96,8 @@ const register = function (req, res, next) {
 					newCompany.update().then(function (result) {
 
 						// newAccountant.acc_id = result[0].accountant_id;
-						newAccountant.update().then(function (result) {
-							new Franchise({}).all().then(function (userList) {
+						newAccountant.update().then(function (result) { 
+							new Franchise({}).all().then(function (userList) {      
 								res.send({ userList: userList });
 							})
 						})

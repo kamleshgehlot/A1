@@ -134,9 +134,15 @@ Staff.prototype.all = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id, first_name, last_name, location, contact,  email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, role, employment_docs, created_by from staff order by id desc', function (error, rows, fields) {
+        connection.query('select id, first_name, last_name, location, contact,  email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, AES_DECRYPT(`password`, \'secret\') AS password, role, employment_docs, created_by from staff order by id desc', function (error, rows, fields) {
           if (!error) {
-            resolve(rows);
+                let datas = [];
+                (rows && rows.length > 0 ? rows : []).map(data =>{
+                  let pass = data.password.toString('utf8');
+                  data.password = pass;
+                  datas.push(data);
+                });
+            resolve(datas);
           } else {
             console.log("Error...", error);
             reject(error);

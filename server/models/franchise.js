@@ -44,7 +44,7 @@ Franchise.prototype.register = function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
     const frachiseDbName = dbName.getFullName(dbName["prod"], that.city.substring(0, 2).toLowerCase() + that.suburb.substring(0, 2).toLowerCase());
-    console.log("franchise database name..........", frachiseDbName)
+    // console.log("franchise database name..........", frachiseDbName)
 
     connection.getConnection(function (error, connection) {
       if (error) {
@@ -400,10 +400,16 @@ Franchise.prototype.all = function () {
       }
 
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('SELECT u.franchise_id, u.director_id, u.user_id, AES_DECRYPT(u.password, \'secret\') AS password, u.designation, u.role_id, u.is_active, c.name as company_name, c.nbzn, c.location as company_location, c.director, c.email, c.contact, c.alt_contact, c.website, c.accountant_id, f.name as franchise_name, f.company_id, f.city, f.city_code, f.suburb, f.state, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from user u INNER JOIN company c on u.director_id = c.id INNER JOIN franchise f on u.franchise_id = f.id INNER JOIN accountant a on c.accountant_id = a.id order by f.id desc', function (error, rows, fields) {
-        if (!error) {
-          console.log(rows);
-          resolve(rows);
+      connection.query('SELECT u.franchise_id, u.director_id, u.user_id, AES_DECRYPT(`password`, \'secret\') AS password, u.designation, u.role_id, u.is_active, c.name as company_name, c.nbzn, c.location as company_location, c.director, c.email, c.contact, c.alt_contact, c.website, c.accountant_id, f.name as franchise_name, f.company_id, f.city, f.city_code, f.suburb, f.state, a.name as accountant_name, a.email as accountant_email, a.contact as accountant_contact from user u INNER JOIN company c on u.director_id = c.id INNER JOIN franchise f on u.franchise_id = f.id INNER JOIN accountant a on c.accountant_id = a.id order by f.id desc', function (error, rows, fields) {
+        if (!error) {  
+          let datas = [];
+          (rows && rows.length > 0 ? rows : []).map(data =>{
+            let pass = data.password.toString('utf8');
+            data.password = pass;
+            // console.log('passss',data);
+            datas.push(data);
+          });
+          resolve(datas);
         } else {
           console.log("Error...", error);
           reject(error);

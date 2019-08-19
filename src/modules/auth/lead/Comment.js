@@ -15,6 +15,8 @@ import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
+import SendIcon from '@material-ui/icons/send';
+import Tooltip from '@material-ui/core/Tooltip';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -23,7 +25,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import Link from '@material-ui/core/Link';
 // API CALL
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
@@ -115,7 +117,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
   const [isError, setIsError] = useState(false);
   const [franchiseList, setFranchiseList] = useState({});
   const [commentList, setCommentList] = useState({});
-
+  const docPath = "server\\files\\leads\\" + leadList.document ; 
   const addComment = async () => {
     const response = await Lead.addComment({
       lead_id: leadList.id,
@@ -242,22 +244,13 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       />
                     </Grid> */}
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="contact">Upload Doc/Photo</InputLabel>
-                    <TextField 
-                      
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="upload"
-                      name="upload"
-                      type="file"
-                      disabled 
-                      value={leadList.upload} 
-                      fullWidth
-                    />
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Uploaded Doc/Photo</InputLabel>
+                    <a href={"server\\files\\leads\\" + leadList.document }  download >{leadList.document}</a>
+                      {/* <Tooltip title="Download">
+                        <IconButton  size="small"  >
+                          <SendIcon />
+                        </IconButton>
+                      </Tooltip> */}
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     <InputLabel  className={classes.textsize} htmlFor="email">Description </InputLabel>

@@ -96,7 +96,7 @@ export default function Franchise(props) {
       backgroundColor: theme.palette.background.paper,
     },
     appBar: {
-      zIndex: theme.zIndex.drawer + 1,
+      // zIndex: theme.zIndex.drawer + 1,
       width: 900
     },
     drawer: {

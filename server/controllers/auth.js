@@ -31,6 +31,7 @@ const login = function (req, res, next) {
           result.errorCode = status;
           result.message = `Account is not verified`;
         } else if (user[0].password.toString('utf8') === params.password) {
+          // console.log('password',user[0].password.toString('utf8'));
           status = 200;
           // Create a token
           const payload = { id: user[0].id, user: params.name, user_id: user[0].user_id, franchise_id: user[0].franchise_id, role: user[0].role_id };

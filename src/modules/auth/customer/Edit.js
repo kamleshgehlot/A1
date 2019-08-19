@@ -570,8 +570,14 @@ return (
                       fullWidth
                     />
                   </Grid>
+                  {console.log(customerList)}
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="state">Customer State</InputLabel>
+                  <InputLabel htmlFor="id_proof">Last Uploaded Document :   </InputLabel>
+                    <a href={"server\\files\\customer\\" + customerList.id_proof }  download >{customerList.id_proof}</a>
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <InputLabel htmlFor="state">Customer State</InputLabel>
                     <RadioGroup 
                       aria-label="state" 
                       name="state" 
