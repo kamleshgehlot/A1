@@ -102,6 +102,7 @@ export default function Order() {
           
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           var dd = FixedTypeDD(result,data);
+       // pdfmake.createPdf(dd).download('document.pdf');
           pdfmake.createPdf(dd).open();
 
         } catch (error) {

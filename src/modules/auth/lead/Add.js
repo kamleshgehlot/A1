@@ -250,12 +250,9 @@ return (
           </AppBar>
 
           <div className={classes.root}>
+         
           <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-          <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}>
-              <ExpansionPanelDetails>
+            <Paper className={classes.paper}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="lead">Lead ID</InputLabel>
@@ -369,10 +366,7 @@ return (
                     </Button> 
                   </Grid>
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel> 
-            
-            
+            </Paper>
           </div>
         </form>
       </Dialog>

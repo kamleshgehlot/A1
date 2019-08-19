@@ -412,7 +412,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel htmlFor="password">Password</InputLabel>
+                    {/* <InputLabel htmlFor="password">Password</InputLabel> */}
                     <TextField
                       margin="dense"
                       id="password"

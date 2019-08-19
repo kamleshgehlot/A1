@@ -309,7 +309,7 @@ export default function Lead() {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <Paper style={{ width: '100%' }}>
+            <Paper className={classes.paper}>
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
