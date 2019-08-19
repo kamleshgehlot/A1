@@ -447,6 +447,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       fullWidth
                     />
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                        Last Uploaded Document :   
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <a href={"server\\files\\franchiseStaff\\" + staffList.employment_docs }  download >{staffList.employment_docs}</a>
+                  </Grid>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -486,7 +494,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="password">Password</InputLabel> */}
                     <TextField
                       margin="dense"
@@ -501,7 +509,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       // helperText={errors.password ? errors.password : ' '}
                       disabled
                     />
-                  </Grid> */}
+                  </Grid>
                   
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="assign_role">Assign Role</InputLabel>

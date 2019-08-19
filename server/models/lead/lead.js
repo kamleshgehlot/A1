@@ -101,7 +101,7 @@ Lead.prototype.all = function () {
             // resolve(rows);
             const franchise_id=rows[0].franchise_id;
             connection.changeUser({ database: dbName["prod"] });
-            connection.query('select id,lead_id, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (f_id="'+franchise_id+'" OR franchise_id="'+franchise_id+'" OR franchise_id="0") order by id desc', function (error, rows, fields) {
+            connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (f_id="'+franchise_id+'" OR franchise_id="'+franchise_id+'" OR franchise_id="0") order by id desc', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
 
@@ -116,7 +116,7 @@ Lead.prototype.all = function () {
       else{
       
             connection.changeUser({ database: dbName["prod"] });
-            connection.query('select id,lead_id, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND ( f_id="0" OR franchise_id=0 ) order by id desc', function (error, rows, fields) {
+            connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND ( f_id="0" OR franchise_id=0 ) order by id desc', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
 
