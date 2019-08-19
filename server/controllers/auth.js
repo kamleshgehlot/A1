@@ -30,7 +30,7 @@ const login = function (req, res, next) {
           status = 401;
           result.errorCode = status;
           result.message = `Account is not verified`;
-        } else if (user[0].password.toString('utf8') === params.password) {
+        } else if (user[0].password.toString('utf8') === params.password ) {
           // console.log('password',user[0].password.toString('utf8'));
           status = 200;
           // Create a token
@@ -60,6 +60,7 @@ const login = function (req, res, next) {
         result.message = 'Given User Name is not valid.';
         res.status(status).send(result);
       }
+      
       // });
     }).catch(err => {
       console.log("Error", err)

@@ -143,16 +143,23 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
       try {
         const result = await Task.last();
         // setTaskLast(result.taskLast[0]);
-          console.log('taskLast----',result.taskLast[0]);
-        if(result.taskLast[0]!=null){
-          console.log('taskLast----',result.taskLast[0].id);
-          generate(result.taskLast[0].id);
+        // if(result.taskLast[0]!=null){
+        //   console.log('taskLast----',result.taskLast[0].id);
+        //   generate(result.taskLast[0].id);
+        // }
+        console.log('en',result);
+        let zero = 0;
+        if(result[0]!=null){ 
+          zero = 6 - (result[0].id.toString().length); 
+          let task_id='';
+          for(let i=0; i< zero ; i++){
+            task_id += '0';
+          }
+         setInput('task_id',('T' + task_id + (result[0].id + 1)));
+        }else{
+          setInput('task_id','T000001');
         }
-        else{
-          const t_id='t_1';
-          setTaskId(t_id);
-          // console.log('hgrfeuf----',t_id);
-        }
+       
       } catch (error) {
         setIsError(true);
       }
@@ -172,11 +179,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
   }, []);
 
  
-  function generate(last_id) {
-   const tid=last_id+1;
-   const t_id='t_'+tid;
-    setTaskId(t_id);
-  }
+ 
   function pastDate(){
   var dtToday = new Date();
     
@@ -190,21 +193,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
         var maxDate = year + '-' + month + '-' + day;
         document.getElementById('due_date').setAttribute('min', maxDate);
   }
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     setIsError(false);
-    //     setIsLoading(true);
-    //     try {
-    //       const result = await Staff.list();
-    //       setStaffList(result.staffList);
-    //     } catch (error) {
-    //       setIsError(true);
-    //     }
-    //     setIsLoading(false);
-    //   };
-    //   fetchData();
-    // }, []);
-
+    
     useEffect(() => {
       const fetchData = async () => {
         setIsError(false);
@@ -227,7 +216,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     console.log('assign_role---',staffRole);
     const response = await Task.add({
       franchise_id: franchiseId,
-      task_id: taskId,
+      task_id: inputs.task_id,
       task_description:inputs.task_description,
       assign_role:staffRole,
       assigned_to:inputs.assigned_to,
@@ -324,7 +313,7 @@ return (
                               id="task_id"
                               name="task_id"
                               // label="Task Id"
-                              value={taskId}
+                              value={inputs.task_id}
                               fullWidth
                               disabled className={classes.tbrow}
                               type="text"

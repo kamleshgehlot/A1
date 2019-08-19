@@ -536,7 +536,7 @@ useEffect(() => {
                               <CreateIcon/>
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Archive Product">                              
+                            <Tooltip title="Archive Task">                              
                               <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickDel(data); }}>
                               <ArchiveIcon />
                               </IconButton>

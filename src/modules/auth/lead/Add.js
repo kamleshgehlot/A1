@@ -139,6 +139,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     fetchData();
     
   }, []);
+
   
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -151,13 +152,19 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
 
       try {
         const result = await Lead.last();
-        if(result.leadLast[0]!=null){
-          generate(result.leadLast[0].id);
+        console.log('en',result);
+        let zero = 0;
+        if(result[0]!=null){  
+          zero = 6 - (result[0].id.toString().length); 
+          let lead_Id='';
+          for(let i=0; i< zero ; i++){
+            lead_Id += '0';
+          }
+         setInput('lead_id',('L' + lead_Id + (result[0].id + 1)));
+        }else{
+          setInput('lead_id','L000001');
         }
-        else{
-          const l_id='l_1';
-          setLeadId(l_id);
-        }
+        
       } catch (error) {
         setIsError(true);
       }
@@ -166,18 +173,13 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     fetchData();
   }, []);
 
-  function generate(last_id) {
-   const lid=last_id+1;
-   const l_id='l_'+lid;
-    setLeadId(l_id);
-  }
-
+  
   const addLead = async () => {
     setpLoading(true);
     setSavebtn(true);
     let data = {
       franchise_id: inputs.franchise_id,
-      lead_id: leadId,
+      lead_id: inputs.lead_id,
       message: inputs.description,
       is_active: 1,
       franchise_name: otherFranchiseValue,
@@ -222,12 +224,13 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     function handleOtherFranchise(event){
       setOtherFranchiseValue(event.target.value)
     }
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
-    RESET_VALUES,
-    addLead,
-    validate
-  );
-  
+
+    const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+      RESET_VALUES,
+      addLead,
+      validate
+    );
+    
 
 return (
     <div>
@@ -265,7 +268,7 @@ return (
                       id="lead_id"
                       name="lead_id"
                       label=""
-                      value={leadId}
+                      value={inputs.lead_id}
                       onChange={handleInputChange}
                       fullWidth
                       required

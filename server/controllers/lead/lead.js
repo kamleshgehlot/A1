@@ -50,7 +50,7 @@ const all = function (req, res, next) {
 const last = function (req, res, next) {
   try {
     new Lead({ user_id: req.decoded.user_id }).last().then(leadLast => {
-      res.send({ leadLast });
+      res.send( leadLast );
     });
   } catch (err) {
     console.log('Error: ', err);

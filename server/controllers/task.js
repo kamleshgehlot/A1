@@ -14,7 +14,7 @@ const add = function (req, res, next) {
     created_by:req.decoded.id,
     updated_by:req.decoded.id,
   };
-  console.log('req--------------',req.body);
+  // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
 
@@ -29,7 +29,7 @@ const add = function (req, res, next) {
       newTask.add().then(result => {
         new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
           res.send({ taskList });
-          console.log('tasklist---==----',taskList);
+          // console.log('tasklist---==----',taskList);
         });
       })
     }
@@ -44,7 +44,7 @@ const add = function (req, res, next) {
 const all = function (req, res, next) {
   try {
     new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
-      console.log('tasklist controller---',taskList);
+      // console.log('tasklist controller---',taskList);
       res.send({ taskList });
     });
   } catch (err) {
@@ -54,7 +54,7 @@ const all = function (req, res, next) {
 const last = function (req, res, next) {
   try {
     new Task({ user_id: req.decoded.user_id }).last().then(taskLast => {
-      res.send({ taskLast });
+      res.send( taskLast );
     });
   } catch (err) {
     console.log('Error: ', err);
