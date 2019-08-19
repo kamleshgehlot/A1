@@ -116,6 +116,7 @@ export default function Lead() {
     button:{
       color:"white",
       fontSize: theme.typography.pxToRem(10),
+      marginRight:theme.spacing(1),
     },
     drpdwn:{
       // color: 'white',
