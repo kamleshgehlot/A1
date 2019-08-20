@@ -18,12 +18,13 @@ Auth.prototype.login = function () {
 
       let values = [that.name, 1];
 
-      connection.changeUser({ database: dbName["prod"] });
+      
       if (that.name.split('_').length > 2) {
+      connection.changeUser({ database: dbName["prod"] });
       connection.query('Select f.state, u.user_id from franchise f inner join user u on f.id = u.franchise_id where u.user_id=?', [that.name], function (error, rows, fields) {
         if (!error) {
-          if(rows[0].state === 2){
-          // console.log('dddd',rows)
+          console.log('dddd',rows)          
+          if(rows == "" || rows[0].state === 2){
             connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
             connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name, u.status from user u inner join role r on u.role_id = r.id  where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
               // connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name, u.status, f.state as franchise_state from user u inner join role r on u.role_id = r.id inner join franchise f on u.franchise_id = f.id where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
