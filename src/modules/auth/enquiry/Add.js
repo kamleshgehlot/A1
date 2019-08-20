@@ -175,12 +175,14 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     fetchData();
   }
   function handleSubCategory(event) {
+    console.log(event.target.value)
     setSubCategory(event.target.value);
     setProductList('');
 
     const fetchData = async () => {
       try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
+        console.log('rrr',result)
         setProductList(result.productList);
         // const result = await Category.productList({subCategory: event.target.value});
         // setSubCategoryList(result.subCategoryList);
@@ -211,7 +213,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       converted_to:1,
       convert_by_lead:convert
     });
-        console.log('sahgdaud--',response);
+        // console.log('sahgdaud--',response);
 
     // assignInterest.length = 0;
     setAssignInterest('');
