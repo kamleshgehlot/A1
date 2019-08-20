@@ -220,7 +220,7 @@ Lead.prototype.franchiseList = function () {
         throw error;
       }
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select id,name,city,suburb from franchise order by id desc', function (error, rows, fields) {
+      connection.query('select id,name,city,suburb from franchise where state=2 order by id desc', function (error, rows, fields) {
         if (!error) {
           console.log('rows----',rows);
           resolve(rows);

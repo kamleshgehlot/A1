@@ -138,26 +138,6 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
 );
 
 
-  // const categoryadd = async () => {
-  //   const response = await Category.add({
-  //     // cancelToken: this.isTokenSource.token,
-
-  //     // category: inputs.category,
-  //     // type: inputs.type,
-  //     // parentid: inputs.parentid,
-  //     // position: inputs.position,
-  //     // description: inputs.description,
-  //     // image: inputs.image,
-  //     // meta_keywords: inputs.meta_keywords,
-  //     // meta_description: inputs.meta_description,
-  //     // active: inputs.active,
-  //   });
-
-  //   handleSnackbarClick(true);
-  //   setCategoryList(response.categoryList);
-  //   handleReset(RESET_VALUES);
-  //   handleClose(false);
-  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -398,7 +378,7 @@ console.log(inputs)
                         fullWidth
                         label="Sub Category"
                         required
-                        disabled = {inputs.cat != '' && inputs.cat != '0' && inputs.maincat != '' && inputs.maincat != '0' ? false : true }
+                        disabled = {inputs.cat != '' && inputs.cat != '0' && inputs.maincat != '' && inputs.maincat != '0' && subCategoryList.length > 0 ? false : true }
                       >
                       { subCategoryList.map((data, index)=>{
                          return(

@@ -21,15 +21,22 @@ const login = function (req, res, next) {
       // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
 
       console.log("user....************.", user)
+      // console.log("pass...", user[0].password.toString('utf8'));
+
       // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
       // console.log("decText....************.", decText)
 
       if (user && user.length > 0) {
 
+        // if (user[0].)
         if (user[0].status === 0) {
           status = 401;
           result.errorCode = status;
           result.message = `Account is not verified`;
+        } else if (user[0].franchise_status !== 2){
+          status = 401;
+          result.errorCode = status;
+          result.message = 'Franchise is not active, contact to your administrator.';
         } else if (user[0].password.toString('utf8') === params.password ) {
           // console.log('password',user[0].password.toString('utf8'));
           status = 200;
@@ -50,7 +57,8 @@ const login = function (req, res, next) {
         } else {
           status = 401;
           result.errorCode = status;
-          result.message = `Authentication error`;
+          // result.message = `Authentication error`;
+          result.message = `Incorrect Password`;
         }
 
         res.status(status).send(result);
