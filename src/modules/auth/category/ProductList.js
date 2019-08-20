@@ -238,17 +238,14 @@ export default function ProductList(props) {
               
            
             { statusList.map((datastatus, index)=>{
-            return(
-              <Tab label={datastatus.status} />
+              console.log(data)
+              return(
+                <Tab label={datastatus.status} />
                 )
                 
                 })
-              }
-              {/* <Tab label="Open" />
-              <Tab label="Active" />
-              <Tab label="Inactive"  />
-              <Tab label="Close" /> */}
-            </Tabs>
+            }
+          </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>
           <Paper style={{ width: '100%' }}>

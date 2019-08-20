@@ -494,15 +494,18 @@ return (
                         row
                       >
                         {/* {console.log('customer ',customer)} */}
-                        <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="New Customer" onClick={handleCustomerOpen} />
-                        <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
+                        <FormControlLabel labelPlacement="end" value="1"  control={<Radio color="primary" />} label="New Customer" onClick={handleCustomerOpen} />
+                        <FormControlLabel labelPlacement="end" value="2"  control={<Radio color="primary" />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
                         {customer  != null  ? 
+                        <FormControlLabel labelPlacement="end"  control={<InputLabel />} label= {customer.customer_name + ", " + customer.address + ", " + customer.city} disabled />
+                        
+                    // <Typography > {customer.customer_name + ", " + customer.address + ", " + customer.city}</Typography>
                           // <FormControlLabel labelPlacement="end" control={<DoneIcon /> }  disabled/>
-                          <Tooltip title={customer.customer_name + ", " + customer.address + ", " + customer.city}>
-                            {/* <IconButton  size="small" className={classes.fab} > */}
-                              <FormControlLabel labelPlacement="end" control={<DoneIcon /> }  disabled/>
-                            {/* </IconButton> */}
-                          </Tooltip>
+                          // <Tooltip title={customer.customer_name + ", " + customer.address + ", " + customer.city}>
+                          //   {/* <IconButton  size="small" className={classes.fab} > */}
+                          //     <FormControlLabel labelPlacement="end" control={<DoneIcon /> }  disabled/>
+                          //   {/* </IconButton> */}
+                          // </Tooltip>
                           : ''
                         }
                       </RadioGroup>
@@ -633,8 +636,8 @@ return (
                         onChange={handleInputChange}
                         row
                       >
-                        <FormControlLabel labelPlacement="end" value="1" control={<Radio />} label="Fixed Order" onClick={handleFixedOpen} />
-                        <FormControlLabel labelPlacement="end" value="2" control={<Radio />} label="Flex Order" onClick={handleFlexOpen}  />
+                        <FormControlLabel labelPlacement="end" value="1"  control={<Radio color="primary" />} label="Fixed Order" onClick={handleFixedOpen} />
+                        <FormControlLabel labelPlacement="end" value="2"  control={<Radio color="primary" />} label="Flex Order" onClick={handleFlexOpen}  />
                         <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>
                         {/* <Fab variant="extended" size="small" className={classes.buttonMargin}>
                         Add Details

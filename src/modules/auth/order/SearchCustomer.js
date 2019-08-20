@@ -107,6 +107,12 @@ const useStyles = makeStyles(theme => ({
   fab: {
     margin: theme.spacing(1),
   },
+  closebtn:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginTop:theme.spacing(-3),
+
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -126,10 +132,10 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
     head: {
       backgroundColor: theme.palette.common.black,
       color: theme.palette.common.white,
-      fontSize: theme.typography.pxToRem(18),
+      fontSize: theme.typography.pxToRem(13),
     },
     body: {
-      fontSize: 14,
+      fontSize: 11,
     },
   }))(TableCell);
 
@@ -170,12 +176,12 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
+              <IconButton edge="start" color="inherit" className={classes.closebtn} onClick={handleClose} aria-label="Close">
+                <CloseIcon fontSize="small"/>
               </IconButton>
               <Typography variant="h6" className={classes.title}>
                 Search Customer
@@ -188,7 +194,7 @@ return (
         
             <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel className={classes.textsize} htmlFor="first_name">Search Customer *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -202,7 +208,7 @@ return (
                       fullWidth
                       required
                       type="text"
-                      placeholder="Search Customer"
+                      // placeholder="Search Customer"
                       margin="dense"
                       onKeyPress={(ev) => {
                         if (ev.key ===  'Enter') {

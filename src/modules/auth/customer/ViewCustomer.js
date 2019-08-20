@@ -73,12 +73,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -93,16 +97,38 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     width: 100,
   },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 100,
+  },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
-  group: {
-    margin: theme.spacing(1, 0),
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
   },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
+  },
+  group: {
+    // margin: theme.spacing(1, 0),
+  },
+  closebtn:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginTop:theme.spacing(-3),
+
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -240,11 +266,11 @@ function handleIdType(event){
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+              <IconButton edge="start" color="inherit" className={classes.closebtn} onClick={handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
@@ -271,8 +297,13 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="customer_name">Full Name *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="customer_name">Full Name *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="customer_name"
                       name="customer_name"
                       // label="Full Name"
@@ -287,8 +318,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="address">Address*</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="address">Address*</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="address"
                       name="address"
@@ -302,8 +338,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="city">City</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="city">City</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="city"
                       name="city"
@@ -317,8 +358,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="postcode">Postcode *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="postcode">Postcode *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="postcode"
                       name="postcode"
@@ -332,8 +378,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="telephone">Telephone *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="telephone">Telephone *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="telephone"
                       name="telephone"
@@ -347,8 +398,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="mobile">Mobile *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="mobile">Mobile *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="mobile"
                       name="mobile"
@@ -362,8 +418,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="email">Email Id *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="email">Email Id *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="email"
                       name="email"
@@ -380,7 +441,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {console.log(customerList.gender)}
-                    <InputLabel htmlFor="gender">Gender</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="gender">Gender</InputLabel>
                     <RadioGroup
                       id = "gender"
                       name="gender"
@@ -390,14 +451,14 @@ return (
                       row
                       // disabled
                     >
-                      <FormControlLabel labelPlacement="start" value="female" control={<Radio />} label="Female" disabled />
-                      <FormControlLabel labelPlacement="start" value="male" control={<Radio />} label="Male" disabled />
-                      {/* <FormControlLabel labelPlacement="start" value="transgender" control={<Radio />} label="Transgender" /> */}
+                      <FormControlLabel labelPlacement="start" value="female"  control={<Radio color="primary" />} label="Female" disabled />
+                      <FormControlLabel labelPlacement="start" value="male"  control={<Radio color="primary" />} label="Male" disabled />
+                      {/* <FormControlLabel labelPlacement="start" value="transgender"  control={<Radio color="primary" />} label="Transgender" /> */}
                     </RadioGroup>
                     
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="is_working">Are you working?</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="is_working">Are you working?</InputLabel>
                     <RadioGroup 
                       aria-label="is_working" 
                       name="is_working" 
@@ -407,13 +468,18 @@ return (
                       row
                       disabled
                     >
-                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start" disabled />
-                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" disabled />
+                      <FormControlLabel value={1}  control={<Radio color="primary" />} label="Yes" labelPlacement="start" disabled />
+                      <FormControlLabel value={0}  control={<Radio color="primary" />} label="No" labelPlacement="start" disabled />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="dob">Date Of Birth</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="dob">Date Of Birth</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="dob"
                       name="dob"
@@ -427,7 +493,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="id_type">ID Proof</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
                     <Select
                         margin="dense"
                         name="id_type"
@@ -456,8 +522,13 @@ return (
                     </Grid>
                    
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="id_number">Id#</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="id_number">Id#</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="id_number"
                       name="id_number"
@@ -471,8 +542,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="expiry_date">Expiry Date</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="expiry_date">Expiry Date</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="expiry_date"
                       name="expiry_date"
@@ -486,7 +562,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="is_adult">Over 18 Years?</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="is_adult">Over 18 Years?</InputLabel>
                     <RadioGroup 
                       aria-label="is_adult" 
                       name="is_adult" 
@@ -496,13 +572,18 @@ return (
                       row
                       
                     >
-                      <FormControlLabel value={1} control={<Radio />} label="Yes" labelPlacement="start"  disabled />
-                      <FormControlLabel value={0} control={<Radio />} label="No" labelPlacement="start" disabled />                      
+                      <FormControlLabel value={1}  control={<Radio color="primary" />} label="Yes" labelPlacement="start"  disabled />
+                      <FormControlLabel value={0}  control={<Radio color="primary" />} label="No" labelPlacement="start" disabled />                      
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="id_proof"
                       name="id_proof"
@@ -515,8 +596,8 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="state">Customer State</InputLabel>
+                  <Grid item xs={12} sm={12}>
+                    <InputLabel className={classes.textsize} htmlFor="state">Customer State</InputLabel>
                     <RadioGroup 
                       aria-label="state" 
                       name="state" 
@@ -525,9 +606,9 @@ return (
                       onChange={handleInputChange} 
                       row
                     >
-                      <FormControlLabel  value={1} control={<Radio />} label="Active" labelPlacement="start" disabled/>
-                      <FormControlLabel value={2} control={<Radio />} label="Hold" labelPlacement="start" disabled />
-                      <FormControlLabel value={3} control={<Radio />} label="Completed" labelPlacement="start" disabled/>
+                      <FormControlLabel  value={1}  control={<Radio color="primary" />} label="Active" labelPlacement="start" disabled/>
+                      <FormControlLabel value={2}  control={<Radio color="primary" />} label="Hold" labelPlacement="start" disabled />
+                      <FormControlLabel value={3}  control={<Radio color="primary" />} label="Completed" labelPlacement="start" disabled/>
                     </RadioGroup>
                   </Grid>
                 </Grid>
@@ -551,8 +632,13 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #1</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_c1_name">Name</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c1_name">Name</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_name"
                       name="alt_c1_name"
@@ -566,8 +652,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_c1_address">Address</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c1_address">Address</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_address"
                       name="alt_c1_address"
@@ -581,8 +672,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="contact">Contact# *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="contact">Contact# *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_contact"
                       name="alt_c1_contact"
@@ -597,8 +693,13 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_c1_relation">Relationship To You</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c1_relation">Relationship To You</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c1_relation"
                       name="alt_c1_relation"
@@ -615,8 +716,13 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #2</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_c2_name">Name</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c2_name">Name</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_name"
                       name="alt_c2_name"
@@ -630,8 +736,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_c2_address">Address</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c2_address">Address</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_address"
                       name="alt_c2_address"
@@ -645,8 +756,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_c2_contact">Contact# *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c2_contact">Contact# *</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_contact"
                       name="alt_c2_contact"
@@ -661,8 +777,13 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="alt_c2_relation">Relationship To You</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c2_relation">Relationship To You</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="alt_c2_relation"
                       name="alt_c2_relation"
@@ -693,8 +814,13 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="employer_name">Employer Name</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_name">Employer Name</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_name"
                       name="employer_name"
@@ -708,8 +834,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="employer_address">Employer Address</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_address">Employer Address</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_address"
                       name="employer_address"
@@ -723,8 +854,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="employer_telephone">Employer Telephone#</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_telephone">Employer Telephone#</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_telephone"
                       name="employer_telephone"
@@ -738,8 +874,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="employer_email">Email Id</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_email">Email Id</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_email"
                       name="employer_email"
@@ -754,8 +895,13 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="employer_tenure">Tenure of Employer</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_tenure">Tenure of Employer</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="employer_tenure"
                       name="employer_tenure"

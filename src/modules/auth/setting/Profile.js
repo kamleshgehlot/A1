@@ -16,6 +16,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CallIcon from '@material-ui/icons/Call';
 import EmailIcon from '@material-ui/icons/Email';
 
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 // API CALL
 import ProfileAPI from '../../../api/Profile';
 import Role from '../../../api/franchise/Role';
@@ -150,7 +151,7 @@ export default function Profile() {
                 <AccountCircleIcon fontSize="small" /> {profileList.user_id} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <AccountCircleIcon fontSize="small" />
+                <RecentActorsIcon fontSize="small" />
                 {
                   ( (profileList.role && profileList.role.split(',')) || []).map((a, index) =>{
                     // console.log("index",index);

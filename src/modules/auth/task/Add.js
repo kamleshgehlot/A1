@@ -355,7 +355,7 @@ return (
                               required
                             >
                                 
-                                <MenuItem className={classes.textsize} value={2}>Director</MenuItem>
+                                {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
                               {role.map((ele,index) =>{
                                 return(
                                 <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>

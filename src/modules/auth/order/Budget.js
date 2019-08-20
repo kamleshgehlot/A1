@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.pxToRem(14),
+    fontSize: theme.typography.pxToRem(13),
     marginTop: 15,
   },
   root: {

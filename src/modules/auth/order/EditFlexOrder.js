@@ -48,12 +48,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   labelTitle: {
     // display: 'flex',
@@ -69,6 +73,7 @@ const useStyles = makeStyles(theme => ({
     // alignItems: 'center',
     // justifyContent: 'center',
     // flex: 1,
+    fontSize: theme.typography.pxToRem(14),
     fontWeight: theme.typography.fontWeightBold,
     marginTop: 12,
   },
@@ -86,14 +91,28 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
+  },
   buttonMargin: {
     margin: theme.spacing(1),
+  },
+  subTitle:{
+    fontSize: theme.typography.pxToRem(12),
   },
 }));
 
@@ -241,15 +260,15 @@ return (
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
-                Flex Order
+                Update Flex Order
               </Typography>
-              <Button color="inherit" type="submit">
+              {/* <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
@@ -262,7 +281,7 @@ return (
               </Typography>
               </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="goods_rent_price"
                       name="goods_rent_price"
@@ -278,11 +297,14 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="ppsr_fee"
                       name="ppsr_fee"
@@ -298,11 +320,14 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="liability_fee"
                       name="liability_fee"
@@ -318,12 +343,15 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                       
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="weekly_total"
                       name="weekly_total"
@@ -339,6 +367,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -352,7 +383,7 @@ return (
                   <Typography  className={classes.subTitle}>
                     Timing of Payments
                   </Typography>
-                  <InputLabel htmlFor="frequency">Frequency *</InputLabel>
+                  <InputLabel className={classes.textsize}  htmlFor="frequency">Frequency *</InputLabel>
                   <TextField
                       id="frequency"
                       name="frequency"
@@ -362,6 +393,11 @@ return (
                       fullWidth
                       // required
                       type="number"
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       // placeholder="Franchise Name"
                       margin="dense"
                       
@@ -370,6 +406,11 @@ return (
                       id="first_payment"
                       name="first_payment"
                       label="First Payment"
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       onChange={handleFirstPaymentDate}
                       onFocus={pastDate}
                       value={firstPaymentDate}
@@ -394,6 +435,11 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       // required
                       type="number"
                       // placeholder="Franchise Name"
@@ -422,6 +468,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
@@ -444,6 +493,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                      
@@ -466,6 +518,11 @@ return (
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       
                     />
                 </Grid>
@@ -486,6 +543,11 @@ return (
                       margin="dense"
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
@@ -509,9 +571,21 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                    
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                      Save
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleFlexClose} className={classes.button}>
+                      Close
+                    </Button> 
+                  </Grid>
                   
                 </Grid>
           </Paper>

@@ -360,6 +360,14 @@ export default function Order() {
           
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
+              <AppBar position="static"  className={classes.appBar}>
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                  <Tab label="Open" />
+                  <Tab label="Finance" />
+                  <Tab label="Delivery" />
+                </Tabs>
+              </AppBar> 
+              <TabPanel value={value} index={0}>
                   <Table >
                     <TableHead>
                       <TableRow>
@@ -380,55 +388,55 @@ export default function Order() {
                       if(data.assigned_to != 4){
                        return(
                         <TableRow>
-                        <StyledTableCell>{index + 1}</StyledTableCell>
-                        <StyledTableCell>{data.order_id}</StyledTableCell>
-                        <StyledTableCell>{data.customer_name}</StyledTableCell>
-                        <StyledTableCell>{data.mobile}</StyledTableCell>
-                        <StyledTableCell>{data.order_date}</StyledTableCell>
-                        <StyledTableCell>{'In Progress'}</StyledTableCell>
-                        {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-                        <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-                        <StyledTableCell>{
-                          data.payment_mode == 1 ? 'EasyPay' :  
-                          data.payment_mode == 2 ? 'Credit' : 
-                          data.payment_mode == 3 ? 'Debit' : 
-                          data.payment_mode == 4 ? 'PayPal' : 
-                          data.payment_mode == 5 ? 'Cash' : ''
+                          <StyledTableCell>{index + 1}</StyledTableCell>
+                          <StyledTableCell>{data.order_id}</StyledTableCell>
+                          <StyledTableCell>{data.customer_name}</StyledTableCell>
+                          <StyledTableCell>{data.mobile}</StyledTableCell>
+                          <StyledTableCell>{data.order_date}</StyledTableCell>
+                          <StyledTableCell>{'In Progress'}</StyledTableCell>
+                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                          <StyledTableCell>{
+                            data.payment_mode == 1 ? 'EasyPay' :  
+                            data.payment_mode == 2 ? 'Credit' : 
+                            data.payment_mode == 3 ? 'Debit' : 
+                            data.payment_mode == 4 ? 'PayPal' : 
+                            data.payment_mode == 5 ? 'Cash' : ''
+                            }
+                          </StyledTableCell>
+                          <StyledTableCell>
+                          {/* */}
+                          {/* onClick={(event) => { handleEditOpen(data); }} */}
+                          
+                          <Tooltip title="Update">
+                          <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
+                            <EditIcon />  
+                          </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Download PDF">
+                          {/* <Pdf targetRef={ref} filename="example.pdf">
+                            {({ toPdf }) => 
+                            <button onClick={toPdf}>Generate Pdf</button>
                           }
-                        </StyledTableCell>
-                        <StyledTableCell>
-                        {/* */}
-                        {/* onClick={(event) => { handleEditOpen(data); }} */}
+                          </Pdf> */}
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
+                                  <PrintIcon /> 
+                                </IconButton>
                         
-                        <Tooltip title="Update">
-                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
-                          <EditIcon />  
-                        </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Download PDF">
-                        {/* <Pdf targetRef={ref} filename="example.pdf">
-                          {({ toPdf }) => 
-                          <button onClick={toPdf}>Generate Pdf</button>
-                        }
-                        </Pdf> */}
-                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
-                                <PrintIcon /> 
-                              </IconButton>
-                       
-                        </Tooltip>
-                        <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
-                          <label htmlFor="upload_document">
-                            <Tooltip title="Upload Documents">                              
-                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
-                                <CloudUpload />
-                              </IconButton>
-                            </Tooltip>
-                          </label>
-                        <Tooltip title="Assign to Finance">
-                        <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.doc_upload_status===0}>
-                          <SendIcon />
-                        </IconButton>
-                        </Tooltip>
+                          </Tooltip>
+                          <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
+                            <label htmlFor="upload_document">
+                              <Tooltip title="Upload Documents">                              
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
+                                  <CloudUpload />
+                                </IconButton>
+                              </Tooltip>
+                            </label>
+                          <Tooltip title="Assign to Finance">
+                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.doc_upload_status===0}>
+                              <SendIcon />
+                            </IconButton>
+                          </Tooltip>
                        </StyledTableCell>
                       </TableRow>
                        )
@@ -438,7 +446,116 @@ export default function Order() {
                               
                     </TableBody>
                   </Table>
-               </Paper>
+                </TabPanel>
+
+              {/* finance */}
+              
+              <TabPanel value={value} index={1}>
+                  <Table >
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Order No.</StyledTableCell>
+                        <StyledTableCell>Order By</StyledTableCell>
+                        <StyledTableCell>Contact</StyledTableCell>
+                        <StyledTableCell>Order Date</StyledTableCell>
+                        <StyledTableCell>Order Status</StyledTableCell>
+                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
+                        <StyledTableCell>Rental Type</StyledTableCell>
+                        <StyledTableCell>Payment Mode</StyledTableCell>
+                        <StyledTableCell>Action</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {(order.length > 0 ? order : []).map((data, index) => {
+                      if(data.assigned_to === 4){
+                       return(
+                        <TableRow>
+                          <StyledTableCell>{index + 1}</StyledTableCell>
+                          <StyledTableCell>{data.order_id}</StyledTableCell>
+                          <StyledTableCell>{data.customer_name}</StyledTableCell>
+                          <StyledTableCell>{data.mobile}</StyledTableCell>
+                          <StyledTableCell>{data.order_date}</StyledTableCell>
+                          <StyledTableCell>{'In Progress'}</StyledTableCell>
+                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                          <StyledTableCell>{
+                            data.payment_mode == 1 ? 'EasyPay' :  
+                            data.payment_mode == 2 ? 'Credit' : 
+                            data.payment_mode == 3 ? 'Debit' : 
+                            data.payment_mode == 4 ? 'PayPal' : 
+                            data.payment_mode == 5 ? 'Cash' : ''
+                            }
+                          </StyledTableCell>
+                          <StyledTableCell>
+                          {/* */}
+                          {/* onClick={(event) => { handleEditOpen(data); }} */}
+                          
+                          <Tooltip title="Update">
+                          <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
+                            <EditIcon />  
+                          </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Download PDF">
+                          {/* <Pdf targetRef={ref} filename="example.pdf">
+                            {({ toPdf }) => 
+                            <button onClick={toPdf}>Generate Pdf</button>
+                          }
+                          </Pdf> */}
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
+                                  <PrintIcon /> 
+                                </IconButton>
+                        
+                          </Tooltip>
+                          <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
+                            <label htmlFor="upload_document">
+                              <Tooltip title="Upload Documents">                              
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
+                                  <CloudUpload />
+                                </IconButton>
+                              </Tooltip>
+                            </label>
+                          <Tooltip title="Assign to Delivery">
+                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled>
+                              <SendIcon />
+                            </IconButton>
+                          </Tooltip>
+                       </StyledTableCell>
+                      </TableRow>
+                       )
+                      }
+                     })
+                   }
+                              
+                    </TableBody>
+                  </Table>
+                </TabPanel>
+                
+              {/* delivery */}
+              
+              <TabPanel value={value} index={2}>
+                  <Table >
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Order No.</StyledTableCell>
+                        <StyledTableCell>Order By</StyledTableCell>
+                        <StyledTableCell>Contact</StyledTableCell>
+                        <StyledTableCell>Order Date</StyledTableCell>
+                        <StyledTableCell>Order Status</StyledTableCell>
+                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
+                        <StyledTableCell>Rental Type</StyledTableCell>
+                        <StyledTableCell>Payment Mode</StyledTableCell>
+                        <StyledTableCell>Action</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    
+                              
+                    </TableBody>
+                  </Table>
+                </TabPanel>
+              </Paper>
           </Grid>
         </Grid>
       {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData}/> : null }

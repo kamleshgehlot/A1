@@ -48,12 +48,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   labelTitle: {
     // display: 'flex',
@@ -61,7 +65,7 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: 'center',
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.pxToRem(14),
+    fontSize: theme.typography.pxToRem(13),
     marginTop: 15,
   },
   root: {
@@ -78,11 +82,25 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
+  },
+  buttonMargin: {
+    margin: theme.spacing(1),
   },
   buttonMargin: {
     margin: theme.spacing(1),
@@ -232,15 +250,15 @@ return (
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleBudgetClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleBudgetClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Budget
               </Typography>
-              <Button color="inherit" type="submit">
+              {/* <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
 
@@ -254,7 +272,7 @@ return (
               </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
                       id="work"
                       name="work"
                       label="Work"
@@ -269,12 +287,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="benefits"
                       name="benefits"
                       label="Benefits"
@@ -289,12 +315,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="accomodation"
                       name="accomodation"
                       label="Accomodation Allowance"
@@ -309,13 +343,21 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                       
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="childcare"
                       name="childcare"
                       label="Childcare"
@@ -330,6 +372,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -341,7 +386,12 @@ return (
               </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="rent"
                       name="rent"
                       label="Rent/Mortgage"
@@ -356,12 +406,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="power"
                       name="power"
                       label="Power"
@@ -376,12 +434,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="telephone"
                       name="telephone"
                       label="Landline Phone"
@@ -396,12 +462,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="mobile"
                       name="mobile"
                       label="Mobile Phone"
@@ -416,12 +490,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="vehicle"
                       name="vehicle"
                       label="Vehicle Finance"
@@ -436,12 +518,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="transport"
                       name="transport"
                       label="Public Transport"
@@ -456,12 +546,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="food"
                       name="food"
                       label="Food"
@@ -476,12 +574,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="credit_card"
                       name="credit_card"
                       label="Credit/Store Cards"
@@ -496,12 +602,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="loan"
                       name="loan"
                       label="Loans/Hire Purchase"
@@ -516,12 +630,20 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="other_expenditure"
                       name="other_expenditure"
                       label="Other"
@@ -536,6 +658,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -573,7 +698,12 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="surplus"
                       name="surplus"
                       // label="Other"
@@ -589,6 +719,9 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Typography>
@@ -600,7 +733,12 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                    <TextField
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="afford_amt"
                       name="afford_amt"
                       // label="Other"
@@ -616,9 +754,21 @@ return (
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                      save
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleBudgetClose} className={classes.button}>
+                      Close
+                    </Button> 
                   </Grid>
                 </Grid>
           </Paper>

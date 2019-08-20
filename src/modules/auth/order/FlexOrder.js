@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),
-    marginTop: 12,
+    marginTop: 10,
   },
   root: {
     flexGrow: 1,

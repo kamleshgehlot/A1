@@ -71,6 +71,7 @@ const useStyles = makeStyles(theme => ({
   button:{
     color:"white",
     fontSize: theme.typography.pxToRem(10),
+    marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
   textsize:{
@@ -88,13 +89,13 @@ const Transition = React.forwardRef((props, ref) => {
 
 const StyledTableCell = withStyles(theme => ({
   head: {
-   
     color: theme.palette.common.black,
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(13),
   },
   body: {
-    fontSize: 14,
+    fontSize: 11,
   },
+
 }))(TableCell);
 
 const StyledTableRow = withStyles(theme => ({
@@ -104,7 +105,7 @@ const StyledTableRow = withStyles(theme => ({
     },
   },
 }))(TableRow);
-export default function StaffEdit({open, handleEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList,uid}) {
+export default function StaffEdit({open, handleStaffEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList,uid}) {
   const classes = useStyles();
   
   const [staffList, setStaffList] = useState({});
@@ -140,7 +141,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
     setTaskList(response.taskList);
     setpLoading(false);
     setSavebtn(true);
-    handleEditClose(false);
+    handleStaffEditClose(false);
   };
 
   useEffect(() => {
@@ -177,13 +178,13 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
   }
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="lg" open={open} onClose={handleStaffEditClose} TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleStaffEditClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Update Task
               </Typography>
@@ -213,10 +214,15 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                     <TableBody>
                         <TableRow>
                           <StyledTableCell> 
-                            <TextField
+                            <TextField 
+                              InputProps={{
+                                classes: {
+                                  input: classes.textsize,
+                                },
+                              }} 
                               id="task_id"
                               name="task_id"
-                              label="Task Id"
+                              // label="Task Id"
                               value={taskList.task_id}
                               fullWidth
                               disabled
@@ -226,10 +232,15 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                             /> 
                           </StyledTableCell>
                           <StyledTableCell> 
-                            <TextField
+                            <TextField  
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                                 id="task_description"
                                 name="task_description"
-                                label="Task Description"
+                                // label="Task Description"
                                 value={taskList.task_description}
                                 onChange={handleInputChange}
                                 fullWidth
@@ -242,7 +253,12 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                           </StyledTableCell>                            
                             <StyledTableCell>
                               
-                              <TextField
+                              <TextField  
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                                 id="due_date"
                                 name="due_date"
                                 // label="Task Id"
@@ -258,7 +274,7 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                             </StyledTableCell>                          
                             {/* <StyledTableCell>
                               
-                              <TextField
+                              <TextField  
                                 id="updated_date"
                                 name="updated_date"
                                 // label="Task Id"
@@ -275,7 +291,12 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                                               
                             <StyledTableCell>
                               
-                              <TextField
+                              <TextField  
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                                 id="document"
                                 name="document"
                                 // label="Task Id"
@@ -289,7 +310,12 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                             </StyledTableCell>
                             <StyledTableCell>
                               
-                              <TextField
+                              <TextField  
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                                 id="message"
                                 name="message"
                                 // label="Task Id"
@@ -315,12 +341,13 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                                 fullWidth
                                 label="status"
                                 required
+                                className={classes.textsize}
                               >
-                                <MenuItem disabled  value="1" selected>Scheduled
+                                <MenuItem className={classes.textsize} disabled  value="1" selected>Scheduled
                                 </MenuItem>
-                                <MenuItem value="2">In-progress</MenuItem>
-                                <MenuItem value="3">Reschedule </MenuItem>
-                                <MenuItem value="4">Completed </MenuItem>
+                                <MenuItem className={classes.textsize} value="2">In-progress</MenuItem>
+                                <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
+                                <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
                               </Select>
                             </StyledTableCell>
                             <StyledTableCell>
@@ -329,6 +356,9 @@ export default function StaffEdit({open, handleEditClose, franchiseId, handleSna
                               </Button> : <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit" disabled>
                                 Update
                               </Button>}
+                              <Button variant="contained" color="primary" className={classes.button} onClick={handleStaffEditClose}  type="submit">
+                               Close
+                              </Button>
                             </StyledTableCell>
                         </TableRow>
                     </TableBody>

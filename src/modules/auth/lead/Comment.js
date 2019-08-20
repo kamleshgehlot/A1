@@ -327,7 +327,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                     <Paper className={classes.paper}>    
                       { (commentList.length > 0 ? commentList : []).map((data, index)=>{
                           return(
-                            <Typography variant="h6">
+                            <Typography variant="h6"  className={classes.textsize} >
                                 {data.comment + '       -' + data.comment_by}
                             </Typography>
                           )

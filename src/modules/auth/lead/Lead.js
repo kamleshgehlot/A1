@@ -89,10 +89,6 @@ export default function Lead() {
     drawerPaper: {
       width: drawerWidth,
     },
-    button:{
-      marginRight: theme.spacing(2),
-      marginTop: theme.spacing(2),
-    },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
@@ -117,6 +113,7 @@ export default function Lead() {
       color:"white",
       fontSize: theme.typography.pxToRem(10),
       marginRight:theme.spacing(1),
+      marginTop: theme.spacing(2),
     },
     drpdwn:{
       // color: 'white',

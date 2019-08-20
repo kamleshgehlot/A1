@@ -50,12 +50,16 @@ const RESET_VALUES = {
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    height: theme.spacing(5),
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
   },
   labelTitle: {
     // display: 'flex',
@@ -64,7 +68,7 @@ const useStyles = makeStyles(theme => ({
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(14),
-    marginTop: 15,
+    marginTop: 10,
   },
   root: {
     flexGrow: 1,
@@ -80,11 +84,22 @@ const useStyles = makeStyles(theme => ({
     width: 100,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+  drpdwn:{
+    marginTop: theme.spacing(1),
   },
   buttonMargin: {
     margin: theme.spacing(1),
@@ -356,27 +371,32 @@ return (
         <form onSubmit={EditOrder}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
+              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
                 <CloseIcon />
-              </IconButton>
+              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
-                New Order
+                Update Order
               </Typography>
-              <Button color="inherit" type="submit">
+              {/* <Button color="inherit" type="submit">
                 save
-              </Button>
+              </Button> */}
             </Toolbar>
           </AppBar>
           
           <div className={classes.root}>
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={3}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">Order #</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="orderid"
                       name="orderid"
-                      label="Order #"
+                      // label="Order #"
                       value={recData.order_id}
                       fullWidth
                       type="text"
@@ -384,9 +404,14 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <InputLabel htmlFor="order_date">Date*</InputLabel>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
                     <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       margin="dense"
                       id="order_date"
                       name="order_date"
@@ -398,14 +423,21 @@ return (
                     />
                   </Grid>
                   
-                  <Grid item xs={12} sm={6}>
-                   <InputLabel htmlFor="customer">Customer</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                   <InputLabel  className={classes.textsize} htmlFor="customer">Customer</InputLabel>
                     <Typography variant="h6" className={classes.labelTitle}>{recData.customer_name} </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
                     <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(recData.customer_id); }}>View Profile </Button>
                   </Grid>
-
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="main_category">Main Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      Update Budget
+                    </Fab> */}
+                    <Button variant="outlined" size="small" color="primary" className={classes.textsize}  onClick={(event) => { handleBudgetOpen(recData.budget_id); }}>Update Budget </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
                       // multiple
                       value={mainCategory}
@@ -415,6 +447,7 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      className={classes.textsize}
                       // disabled = {budgetList ==""}
                     > 
                      {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
@@ -425,8 +458,8 @@ return (
                     
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="category">Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="category">Category*</InputLabel>
                     <Select
                       // multiple
                       value={category}
@@ -436,6 +469,7 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      className={classes.textsize}
                       // disabled = {mainCategory ==""}
                     >    
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
@@ -445,8 +479,8 @@ return (
                      })}
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <InputLabel htmlFor="sub_category">Sub Category*</InputLabel>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
                     <Select
                       // multiple
                       value={subCategory}
@@ -456,6 +490,7 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      className={classes.textsize}
                       // disabled = {category ==""}
                     >    
                      {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
@@ -466,19 +501,8 @@ return (
                     </Select>
                   </Grid>
 
-                  <Grid item xs={12} sm={2}>
-                    {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
-                      Update Budget
-                    </Fab> */}
-                    <Button variant="outlined" size="small"  onClick={(event) => { handleBudgetOpen(recData.budget_id); }}>Update Budget </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
-                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography> */}
-                   </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="product">Product*</InputLabel>
+                  <Grid item xs={12} sm={12}>
+                    <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
                     <Select
                       // multiple
                       value={assignInterest}
@@ -488,6 +512,7 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      className={classes.textsize}
                     >    
                      {(productList.length > 0 ? productList : []).map((data,index)=>{
                       return(
@@ -497,17 +522,22 @@ return (
                     </Select>
                   </Grid>
                  
+                  {/* <Grid item xs={12} sm={4}> */}
+                    {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
+                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography> */}
+                   {/* </Grid> */}
+
 
                    <Grid item xs={12} sm={6}>
                      {editableData.order_type ===1 ? 
-                      <Button variant="outlined" size="small"  onClick={(event) => { handleFixedOpen(recData.order_type_id); }}>Update Fixed Order Type Details </Button> :
-                      <Button variant="outlined" size="small"   onClick={(event) => { handleFlexOpen(recData.order_type_id); }}>Update Flex Order Type Details </Button>
+                      <Button variant="outlined" size="small" color="primary"  onClick={(event) => { handleFixedOpen(recData.order_type_id); }}>Update Fixed Order Type Details </Button> :
+                      <Button variant="outlined" size="small" color="primary"    onClick={(event) => { handleFlexOpen(recData.order_type_id); }}>Update Flex Order Type Details </Button>
                      }
                     </Grid>
 
                     
                     <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="payment_mode">Payment Mode*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
                       value={recData.payment_mode}
                       onChange={handleInputChange}
@@ -516,15 +546,26 @@ return (
                       // label='customer'
                       fullWidth
                       required
+                      className={classes.textsize}
                     >    
-                      <MenuItem value={1}>EasyPay</MenuItem>
-                      <MenuItem value={2}>Credit</MenuItem>
-                      <MenuItem value={3}>Debit</MenuItem>
-                      <MenuItem value={4}>PayPal</MenuItem>
-                      <MenuItem value={5}>Cash</MenuItem>
+                      <MenuItem className={classes.textsize} value={1}>EasyPay</MenuItem>
+                      <MenuItem className={classes.textsize} value={2}>Credit</MenuItem>
+                      <MenuItem className={classes.textsize} value={3}>Debit</MenuItem>
+                      <MenuItem className={classes.textsize} value={4}>PayPal</MenuItem>
+                      <MenuItem className={classes.textsize} value={5}>Cash</MenuItem>
                     </Select>
                    </Grid>
                    
+                      
+                   <Grid item xs={12} sm={12}>
+                    
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={EditOrder}>
+                      save
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
+                      Close
+                    </Button> 
+                  </Grid>
                 </Grid>
           </Paper>
             

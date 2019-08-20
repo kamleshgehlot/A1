@@ -752,7 +752,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                   </Grid>
                   <Grid item xs={6} sm={1}>
                   <Fab size="small" color="primary" aria-label="Add" onClick={() => handleDirectorList()} className={classes.margin}>
-                    <AddIcon />
+                    <AddIcon  />
                   </Fab>
                   </Grid>
                   </Grid>

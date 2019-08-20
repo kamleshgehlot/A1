@@ -556,7 +556,7 @@ useEffect(() => {
                     </TableBody>
                   </Table>
                   </TabPanel>
-                  
+                  {/* my task */}
                   <TabPanel value={value} index={1}>
                     <Table className={classes.table}>
                       <TableHead>
@@ -706,7 +706,7 @@ useEffect(() => {
       {open? <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />:null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
-      {staffEditOpen? <StaffEdit open={editOpen} handleStaffEditClose={handleStaffEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}
+      {staffEditOpen? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}
       {openCompleteTask ?  <CompletedTask open={openCompleteTask} handleCompleteTaskClose={handleCompleteTaskClose}  assignedid={0} />: null}
       {showStaffTask ? <MyTask open={showStaffTask} handleMyTaskClose={handleStaffTaskClose} />: null}
       <Snackbar
