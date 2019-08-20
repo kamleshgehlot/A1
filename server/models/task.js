@@ -328,7 +328,7 @@ Task.prototype.staffUpdate = function () {
                   });
                 }
                 else{
-                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'" task_id = "' + that.task_id + '" AND is_active<>0', function (error, arows, fields) {
+                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '" AND is_active<>0', function (error, arows, fields) {
                     if (!error) {
                       
                       resolve({ arows });

@@ -238,7 +238,6 @@ export default function ProductList(props) {
               
            
             { statusList.map((datastatus, index)=>{
-              console.log(data)
               return(
                 <Tab label={datastatus.status} />
                 )
