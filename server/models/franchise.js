@@ -292,45 +292,49 @@ Franchise.prototype.verifyEmail = function () {
                               if(rows.length>0){
                                 
                                 (rows.length>0 ? rows : []).map((dbname, index)=>{
-                                  // console.log('fdbname map---',dbname.fdbname);
-                                  connection.changeUser({ database:  dbname.fdbname});
-                                  connection.query('select email from staff where email = "'+that.email+'"', function (error, rows, fields) {
-                                    if (!error) {
-                                      if(rows.length===0){
-                                        connection.query('select email from customer where email = "'+that.email+'"', function (error, rows, fields) {
-                                          if (!error) {
-                                            if(rows.length===0){
-                                              connection.query('select employer_email from customer_income where employer_email = "'+that.email+'"', function (error, rows, fields) {
-                                                if (!error) {
-                                                  resolve(rows);
-                                                }else {
-                                                  console.log("Error...", error);
-                                                  // reject(error);
-                                                }
-                                              });
-                                            }else{
-                                              resolve(rows);
+                                  connection.query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?', dbname.fdbname, function (error, rows, fields) {
+                                    if (rows.length > 0) {
+                                    // console.log('fdbname map---',dbname.fdbname);
+                                    connection.changeUser({ database:  dbname.fdbname});
+                                    connection.query('select email from staff where email = "'+that.email+'"', function (error, rows, fields) {
+                                      if (!error) {
+                                        if(rows.length===0){
+                                          connection.query('select email from customer where email = "'+that.email+'"', function (error, rows, fields) {
+                                            if (!error) {
+                                              if(rows.length===0){
+                                                connection.query('select employer_email from customer_income where employer_email = "'+that.email+'"', function (error, rows, fields) {
+                                                  if (!error) {
+                                                    resolve(rows);
+                                                  }else {
+                                                    console.log("Error...", error);
+                                                    reject(error);
+                                                  }
+                                                });
+                                              }else{
+                                                resolve(rows);
+                                              }
+                                            }else {
+                                              console.log("Error...", error);
+                                              reject(error);
                                             }
-                                          }else {
-                                            console.log("Error...", error);
-                                            // reject(error);
-                                          }
-                                        });
-                                      }else{
-                                        resolve(rows);
+                                          });
+                                        }else{
+                                          resolve(rows);
+                                        }
+                                      }else {
+                                        console.log("Error...", error);
+                                        reject(error);
                                       }
-                                    }else {
-                                      console.log("Error...", error);
-                                      // reject(error);
-                                    }
-                                  })
-                                })
+                                    })
+                                  }
+                                  });
+                                });
                               }else{
                                 resolve(rows);
                               }
                             }else {
                               console.log("Error...", error);
-                              // reject(error);
+                              reject(error);
                             }
                           });
                         }else{
@@ -338,7 +342,7 @@ Franchise.prototype.verifyEmail = function () {
                         }
                       }else {
                         console.log("Error...", error);
-                        // reject(error);
+                        reject(error);
                       }
                     });
                   }else{
@@ -346,7 +350,7 @@ Franchise.prototype.verifyEmail = function () {
                   }
                 }else {
                   console.log("Error...", error);
-                  // reject(error);
+                  reject(error);
                 }
               });
             }else{
@@ -354,7 +358,7 @@ Franchise.prototype.verifyEmail = function () {
             }
           }else {
                 console.log("Error...", error);
-                // reject(error);
+                reject(error);
               }
         });
         // connection.query('select u.id as `u_id`, c.id as `director_id`, c.director, c.email, u.user_id from company as c INNER JOIN user as u on c.id = u.director_id WHERE c.email = "'+that.email+'" AND u.status = 0', function (error, rows, fields) {

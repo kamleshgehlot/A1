@@ -248,14 +248,15 @@ const all = function (req, res, next) {
 
 
 const verifyEmail = function (req, res, next) {
-	console.log('...............', req.decoded);
-	console.log('...............', req.body);
+	console.log('............... verify', req.decoded);
+	console.log('............... verify', req.body);
 
 	try {
 		new Franchise({email: req.body.email}).verifyEmail().then(function (isVerified) {
+			console.log("result: ", isVerified);
 			res.send({ isVerified: isVerified });
 		});
-		}catch (err) {
+	}catch (err) {
 		console.log('Error: ', err);
 		res.status(500);
 		res.send('error', { error: err });
