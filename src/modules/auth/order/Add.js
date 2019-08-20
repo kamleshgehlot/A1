@@ -35,6 +35,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Popover from '@material-ui/core/Popover';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
 import Budget from './Budget';
@@ -148,6 +149,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
   
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
 
 
@@ -383,6 +386,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
 
 
   const addOrder = async () => {
+    setpLoading(true);
+    setSavebtn(true);
     const response = await OrderAPI.postOrder({
       order_id :  inputs.order_id,
       customer_id : customer.id,
@@ -406,8 +411,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     // handleReset(RESET_VALUES);
     if(response!='invalid'){
       handleOrderRecData(response);
+      setSavebtn(false);
         handleClose(false);
       }else{
+        setSavebtn(false);
         alert("Invalid or Incomplete Credentials")
       }
   };
@@ -439,6 +446,7 @@ return (
           </AppBar>
 
           <div className={classes.root}>
+           {ploading ?  <LinearProgress />: null}
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
@@ -666,15 +674,19 @@ return (
                     </Select>
                    </Grid>
                       
-            <Grid item xs={12} sm={12}>
+           
                     
-                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+            {savebtn? <Grid item xs={12} sm={12}> <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
                       save
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                    </Button><Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                       Close
-                    </Button> 
-                  </Grid>
+                    </Button> </Grid> :  <Grid item xs={12} sm={12}><Button  variant="contained"  color="primary" className={classes.button} disabled>
+                      save
+                    </Button><Button variant="contained" color="primary" className={classes.button} disabled>
+                      Close
+                    </Button> </Grid> }
+                    
+                 
                 </Grid>
           </Paper>
             

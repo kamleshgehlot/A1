@@ -344,6 +344,25 @@ useEffect(() => {
   ////////////////////////////////////////
   function setTaskListFn(response) {
     setTaskList(response);
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await TaskAPI.stafftasks();
+        setStaffTaskList(result.taskList);
+        const currentuser = await FranchiseUsers.user();
+        // console.log('stfftask-899-----', currentuser.currentuser);
+        setAssignedid(currentuser.currentuser[0].uid);
+        const complete = await TaskAPI.completedlist();
+        setCompletedTaskList(complete.taskList);
+        currentDate();
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -565,8 +584,8 @@ useEffect(() => {
                           <StyledTableCell>Task ID</StyledTableCell>
                           <StyledTableCell>Task Description</StyledTableCell>
                           <StyledTableCell>Assigned To</StyledTableCell>
-                          <StyledTableCell>Due Date</StyledTableCell>
                           <StyledTableCell>Status</StyledTableCell>
+                          <StyledTableCell>Due Date</StyledTableCell>
                           <StyledTableCell>Options</StyledTableCell>
                         </TableRow>
                       </TableHead>

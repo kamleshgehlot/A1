@@ -125,6 +125,9 @@ export default function Profile() {
                 <StoreIcon fontSize="small"/> {profileList.fname} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
+                <RecentActorsIcon fontSize="small" /> Director <br/>
+                </Typography>
+              <Typography  variant="h6" className={classes.typography}>
                 <BusinessIcon fontSize="small" /> {profileList.name} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>

@@ -27,6 +27,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
 import EditBudget from './EditBudget';
@@ -143,6 +144,8 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
 
+  const [ploading, setpLoading] = React.useState(false);
+  const [savebtn, setSavebtn] = React.useState(true);
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
 
   useEffect(() => {
@@ -335,6 +338,8 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       setFlexOrderList(order[0]);
     }
 
+    setpLoading(true);
+    setSavebtn(true);
     const response = await OrderAPI.editPost({ 
       id : recData.id,
       products_id :  assignInterest,
@@ -357,6 +362,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       }else{
         alert("Invalid or Incomplete Credentials")
       }
+      setSavebtn(false);
   };
 
   const handleInputChange = event => {
@@ -384,6 +390,7 @@ return (
           </AppBar>
           
           <div className={classes.root}>
+           {ploading ?  <LinearProgress />: null}
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
@@ -556,7 +563,7 @@ return (
                     </Select>
                    </Grid>
                    
-                      
+                   {savebtn?     
                    <Grid item xs={12} sm={12}>
                     
                     <Button  variant="contained"  color="primary" className={classes.button} onClick={EditOrder}>
@@ -564,8 +571,18 @@ return (
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
                       Close
-                    </Button> 
+                    </Button>
+                  </Grid>:
+                  <Grid item xs={12} sm={12}>
+                    
+                    <Button  variant="contained"  color="primary" className={classes.button} disabled>
+                      save
+                    </Button>
+                    <Button variant="contained" color="primary" disabled className={classes.button}>
+                      Close
+                    </Button>
                   </Grid>
+                  } 
                 </Grid>
           </Paper>
             

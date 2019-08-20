@@ -109,8 +109,10 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   
   const [leadId, setLeadId] = useState();
   const [franchiseListd, setFranchiseList] = useState({});
+
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -254,7 +256,8 @@ return (
 
           <div className={classes.root}>
          
-          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
+          <Grid item xs={12} sm={12}>  
+           {ploading ?  <LinearProgress />: null}</Grid>
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>

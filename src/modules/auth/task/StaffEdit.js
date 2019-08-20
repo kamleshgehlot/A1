@@ -119,7 +119,7 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
   const addTaskMaster = async () => {
     setpLoading(true);
     setSavebtn(false);
-    // console.log('taskList------------',taskList);
+    console.log('taskList------------',taskList);
     const data={
       franchise_id: franchiseId,
       id: taskList.id,

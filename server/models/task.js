@@ -28,7 +28,7 @@ const Task = function (params) {
   if(params.status==='4'){
     this.is_active=0;
   }
-  // console.log('params-----',params);
+  console.log('params-----',params);
 };
 
 Task.prototype.add = function () {
@@ -159,8 +159,9 @@ Task.prototype.update = function () {
             connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
             connection.query('update task set task_description = "' + that.task_description + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
-                connection.query('update task_assign set assign_role="'+that.assign_role+'", assigned_to = "' + that.assigned_to + '", due_date = "' + that.due_date + '", updated_by = "' + that.updated_by + '", status="'+that.status+'" WHERE task_id = "t_' + that.id + '"', function (error, arows, fields) {
+                connection.query('update task_assign set assign_role="'+that.assign_role+'", assigned_to = "' + that.assigned_to + '", due_date = "' + that.due_date + '", updated_by = "' + that.updated_by + '", status="'+that.status+'" WHERE task_id = "' + that.task_id + '"', function (error, arows, fields) {
                   if (!error) {
+                    console.log('rows9080 uhhj---',rows)
                     resolve({ arows });
                   } else {
                     console.log("Error...", error);
@@ -194,7 +195,7 @@ Task.prototype.deleteTask = function () {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query('update task set is_active = "0" WHERE id = "' + that.id + '"', function (error, rows, fields) {
             if (!error) {
-              connection.query('update task_assign set is_active = "0", status="5", updated_by="'+that.updated_by+'" WHERE task_id = "t_' + that.id + '" AND is_active<>0', function (error, rows, fields) {
+              connection.query('update task_assign set is_active = "0", status="5", updated_by="'+that.updated_by+'" WHERE task_id = "' + that.task_id + '" AND is_active<>0', function (error, rows, fields) {
                 if (!error) {
                   resolve({ rows });
                 } else {
@@ -303,7 +304,8 @@ Task.prototype.staffUpdate = function () {
       if (!error) {
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
                 if(that.status==='2'){
-                  connection.query('update task_assign set message="'+that.message+'", start_date="'+that.start_date+'", document="'+that.document+'", updated_at="'+that.updated_date+'", updated_by = "' +that.updated_by + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '"  AND is_active <> 0', function (error, arows, fields) {
+                  console.log('that.statius==-=',that.task_id)
+                  connection.query('update task_assign set message="'+that.message+'", start_date="'+that.start_date+'", document="'+that.document+'", updated_at="'+that.updated_date+'", updated_by = "' +that.updated_by + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '"  AND is_active <> 0', function (error, arows, fields) {
                     if (!error) {
                       resolve({ arows });
                     } else {
@@ -314,7 +316,7 @@ Task.prototype.staffUpdate = function () {
                   });
                 }
                 else if(that.status==='4'){
-                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'",completion_date="'+that.updated_date+'" WHERE task_id = "t_' + that.id + '" AND is_active <> 0', function (error, arows, fields) {
+                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'",completion_date="'+that.updated_date+'" WHERE task_id = "' + that.task_id + '" AND is_active <> 0', function (error, arows, fields) {
                     if (!error) {
                       
                       resolve({ arows });
@@ -326,7 +328,7 @@ Task.prototype.staffUpdate = function () {
                   });
                 }
                 else{
-                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "t_' + that.id + '" AND is_active<>0', function (error, arows, fields) {
+                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'" task_id = "' + that.task_id + '" AND is_active<>0', function (error, arows, fields) {
                     if (!error) {
                       
                       resolve({ arows });
