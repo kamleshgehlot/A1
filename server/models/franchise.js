@@ -90,7 +90,8 @@ Franchise.prototype.register = function (newUser) {
                             
                             let idTypeData = [
                               [1, 'Passport', 1, 1],
-                              [2, 'Driving Licence', 1, 1]
+                              [2, 'Driving Licence', 1, 1],
+                              [3, 'Medicare', 1, 1]
                             ]
 
                             let cust_state = [

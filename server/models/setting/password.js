@@ -5,7 +5,7 @@ const Password = function (params) {
   this.current_password = params.current_password;
   this.new_password = params.new_password;
   this.user_id = params.user_id;
-  this.franchise_id = params.franchise_id;
+  this.id = params.id;  
 };
 
 Password.prototype.update = function () {
@@ -15,35 +15,65 @@ Password.prototype.update = function () {
       if (error) {
         throw error;
       }
-        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-            connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, rows, fields) {
+      if(!error){
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, mainRows, fields) {
               if (!error) {
-                // console.log('pass-----', rows);
-                resolve({ rows });
+                // console.log('main rows-----', mainRows);
+                // resolve( mainRows );
+                connection.changeUser({ database: dbName["prod"] });
+                connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, rows, fields) {
+                  if (!error) {
+                    // if(rows.changedRows=== 1) {
+                    //   console.log('rows-----', rows);
+                      resolve( mainRows );                      
+                    // }
+                    // else{
+                    //   resolve(mainRows);
+                    // }                    
+                  } else {
+                    console.log("Error...", error);
+                    reject(error);
+                  }
+                });
               } else {
                 console.log("Error...", error);
                 reject(error);
               }
-
             });
-            connection.changeUser({ database: dbName["prod"] });
-            connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, rows, fields) {
-              if (!error) {
-                // console.log('passuser-----', rows);
-                resolve({ rows });
-              } else {
-                console.log("Error...", error);
-                reject(error);
-              }
-
-            });
+            
       connection.release();
       console.log('Process Complete %d', connection.threadId);
+    }
     });
   }).catch((error) => {
     throw error;
   });
 };
+
+
+
+Password.prototype.passwordSelection = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if(!error){
+            connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+            connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, user_id from user where user_id=?',[that.user_id], function (error, rows, fields) {
+                resolve(rows);
+            });
+          connection.release();
+          console.log('Process Complete %d', connection.threadId);
+      }
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 
 Password.prototype.pwd = function () {
 

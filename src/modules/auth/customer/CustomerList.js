@@ -25,7 +25,6 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
-
 import Add from './Add';
 import Edit from './Edit';
 
@@ -291,7 +290,11 @@ export default function CustomerList(userId) {
                 }}
                 onChange={handleSearchText}
                 InputProps={{
-                  endAdornment: <InputAdornment position='end'><IconButton onClick={ searchHandler}><SearchIcon /></IconButton></InputAdornment>,
+                  endAdornment: <InputAdornment position='end'>
+                                  <Tooltip title="Search">
+                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                  </Tooltip>
+                                </InputAdornment>,
                 }}
                 fullWidth
               />

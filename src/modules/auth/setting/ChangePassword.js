@@ -12,6 +12,7 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 // API CALL
 import PasswordAPI from '../../../api/setting/Password';
 import useSignUpForm from '../franchise/CustomHooks';
+
 export default function ChangePassword(franchiseId) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,23 +82,7 @@ export default function ChangePassword(franchiseId) {
     return errors;
   };
   
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
-      try {
-        const result = await PasswordAPI.pwd();
-        setInput('current_password', result.password);
-        document.getElementById('new_password').focus();
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-
+  
 const RESET_VALUES = {
   current_password:'',
   new_password:'',
@@ -105,14 +90,24 @@ const RESET_VALUES = {
 };
 
   const passwordAdd = async () => {
-    const response = await PasswordAPI.change({
-      current_password: inputs.current_password,
-      new_password: inputs.new_password,
-      franchise_id: franchiseId,
-    });
-    setSnackbarOpen(true);
-    setInput('current_password', response.password);
-    setSnackbarOpen(true); 
+
+    if(inputs.new_password === inputs.confirm_password){
+      // console.log('match');
+      const response = await PasswordAPI.change({
+        current_password: inputs.current_password,
+        new_password: inputs.new_password,        
+      });
+      // console.log('pass respo', response);
+      if(response.isChanged === 1){
+        setSnackbarOpen(true);
+      }else if (response.isChanged===0){
+        alert('Existing password enterd wrong. ');
+      } 
+      handleReset(RESET_VALUES);
+    }
+    else{
+      alert('Password not match.');
+    }
   };
 
   const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
@@ -131,7 +126,7 @@ const RESET_VALUES = {
                 Change Password 
             </Typography>
             <Grid item xs={12} sm={12}>
-                <InputLabel className={classes.margin} htmlFor="new_password">Current Password</InputLabel>
+                <InputLabel className={classes.margin} htmlFor="current_password">Current Password*</InputLabel>
                 <TextField
                       InputProps={{
                         classes: {
@@ -145,13 +140,13 @@ const RESET_VALUES = {
                   onChange={handleInputChange}
                   fullWidth
                   required
-                  type="text"
+                  type="password"
                   // placeholder="Franchise Name"
                   margin="dense"
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputLabel className={classes.margin} htmlFor="new_password">New Password</InputLabel>
+                <InputLabel className={classes.margin} htmlFor="new_password">New Password*</InputLabel>
                 <TextField
                       InputProps={{
                         classes: {
@@ -162,7 +157,7 @@ const RESET_VALUES = {
                   id="new_password"
                   name="new_password"
                   // label="New Password"
-                  type="text"
+                  type="password"
                   value={inputs.new_password} 
                   onChange={handleInputChange}
                   required
@@ -171,7 +166,7 @@ const RESET_VALUES = {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputLabel className={classes.margin} htmlFor="location">Confirm Password</InputLabel>
+                <InputLabel className={classes.margin} htmlFor="confirm_password">Confirm Password*</InputLabel>
                 <TextField
                       InputProps={{
                         classes: {
@@ -182,7 +177,7 @@ const RESET_VALUES = {
                   id="confirm_password"
                   name="confirm_password"
                   // label="Confirm Password"
-                  type="text"
+                  type="password"
                   value={inputs.confirm_password}
                   onChange={handleInputChange}
                   required

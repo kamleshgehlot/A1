@@ -350,7 +350,11 @@ export default function Order() {
                 // }}
                 // fullWidth
                 InputProps={{
-                  endAdornment: <InputAdornment position='end'><IconButton><SearchIcon /></IconButton></InputAdornment>,
+                  endAdornment: <InputAdornment position='end'>
+                                  <Tooltip title="Search">
+                                    <IconButton><SearchIcon /></IconButton>
+                                  </Tooltip>
+                                </InputAdornment>,
                 }}
               />
               {/* <IconButton  aria-label="Search" >
