@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Enquiry = function (params) {
-  console.log("params", params);
+  // console.log("params", params);
   this.user_id = params.user_id;
   this.enquiry_id = params.enquiry_id;
   this.customer_name= params.customer_name;
@@ -42,7 +42,7 @@ Enquiry.prototype.postenquiry = function () {
                       connection.changeUser({ database: dbName["prod"] });
                       connection.query('update leads set converted_to="1",converted_by="'+that.userid+'", converted_by_f_id="'+franchise_id+'" where id="'+that.convert_by_lead+'"',function (error, rows, fields) {
                         if (!error) {
-                          // console.log("rows...",rows);
+                          console.log("rows...",rows);
                             resolve(rows);
                             } else {
                               console.log("Error...", error);
@@ -54,6 +54,8 @@ Enquiry.prototype.postenquiry = function () {
                       reject(error);
                     }
                 })
+              }else { 
+                resolve(rows);
               }
             } else {
               console.log("Error...", error);

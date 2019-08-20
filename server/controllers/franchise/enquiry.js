@@ -69,6 +69,7 @@ const postenquiry = function (req, res, next) {
 	  const newEnquiry = new Enquiry(EnquiryParams);
     newEnquiry.postenquiry().then(function(result){
       new Enquiry({user_id : req.decoded.user_id}).getAll().then(function (enquiryList) {
+        console.log('enquiry list',enquiryList);
         res.send({ enquiryList: enquiryList });
       });
     });

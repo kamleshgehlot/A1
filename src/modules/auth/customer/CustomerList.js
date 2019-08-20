@@ -335,7 +335,7 @@ export default function CustomerList(userId) {
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                             <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell>
                             <StyledTableCell> 
-                              <Tooltip title="Update Task">                              
+                              <Tooltip title="Update">                              
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                                 <CreateIcon/>
                                 </IconButton>

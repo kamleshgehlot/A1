@@ -280,7 +280,7 @@ console.log('res=---',response);
               </Paper>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convert={0} />
+      { open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convert={0} /> : null }
       {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} setCustomer={setCustomer} /> : null}
       {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null}
       
