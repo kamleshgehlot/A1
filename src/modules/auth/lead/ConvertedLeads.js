@@ -153,7 +153,7 @@ return (
                                 }) : <StyledTableCell> All</StyledTableCell>
                               }
                               {/* <StyledTableCell></StyledTableCell> */}
-                              {data.f_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{
+                              {data.f_id!=0 ?    (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{
                                   
                                   return(
                                     data.f_id===datafr.id ?

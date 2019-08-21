@@ -146,6 +146,7 @@ const postOrder = function (req, res, next) {
 console.log('eeeq.',req);
 	let orderParams = {
     user_id: req.decoded.user_id,
+    userid: req.decoded.id,
 
     order_id : req.body.order_id,
     customer_id : req.body.customer_id,
@@ -161,6 +162,8 @@ console.log('eeeq.',req);
     assigned_to : req.body.assigned_to,
     is_active : req.body.is_active,
     created_by: req.decoded.id,
+    
+    converted_to : req.body.converted_to,
   };
   
   if(orderParams.user_id!= '' 
@@ -176,6 +179,12 @@ console.log('eeeq.',req);
     try{
       const newOrder = new Order(orderParams);
       newOrder.postOrder().then(function(result){
+        if(req.body.converted_to!==0){
+          newOrder.convertedLead(function(res){
+            
+          });
+        }
+        
         // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
         //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].customer_id}).getCustomerDetails().then(function (customerList) {
         //     new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
@@ -191,7 +200,7 @@ console.log('eeeq.',req);
             //   });
             // }
                 res.send({ order: order});
-          });
+          });          
         });
         // });
         // });

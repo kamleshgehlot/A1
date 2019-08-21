@@ -315,7 +315,7 @@ export default function FranchiseStaff(franchiseId) {
                           </StyledTableCell>
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>
-                            <Tooltip title="Edit Product">                              
+                            <Tooltip title="Update">                              
                               <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                               <CreateIcon/>
                               </IconButton>
