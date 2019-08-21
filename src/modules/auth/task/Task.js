@@ -379,7 +379,8 @@ useEffect(() => {
   }
   function handleClickDel(data) {
 
-    setDelId(data.id);
+    setDelId(data.task_id);
+    
     handleClickDelete(data.id);
     
   }
@@ -388,6 +389,8 @@ useEffect(() => {
     const response = await TaskAPI.delete({
       id:id,
       franchise_id: franchiseId,
+      task_id:delId,
+      
     });
     // handleSnackbarClick(true,'Franchise Updated Successfully');
     // setFranchiseList(response.staffList);

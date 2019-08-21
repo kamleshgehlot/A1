@@ -77,6 +77,7 @@ const deleteTask = function (req, res, next) {
     user_id: req.decoded.user_id,
     updated_by: req.decoded.id,
     franchise_id: req.body.franchise_id.franchiseId,
+    task_id:req.body.task_id,
   };
   try {
     const newTask = new Task(taskParam);

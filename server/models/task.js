@@ -195,7 +195,7 @@ Task.prototype.deleteTask = function () {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query('update task set is_active = "0" WHERE id = "' + that.id + '"', function (error, rows, fields) {
             if (!error) {
-              connection.query('update task_assign set is_active = "0", status="5", updated_by="'+that.updated_by+'" WHERE task_id = "' + that.task_id + '" AND is_active<>0', function (error, rows, fields) {
+              connection.query('update task_assign set is_active = 0, status=5, updated_by="'+that.updated_by+'" WHERE task_id = "' + that.task_id + '" AND is_active!=0', function (error, rows, fields) {
                 if (!error) {
                   resolve({ rows });
                 } else {

@@ -5,13 +5,13 @@ const PLATFORM = process.env.PLATFORM ? process.env.PLATFORM : 'local';
 const VERSION = process.env.VERSION ? process.env.VERSION : 'stag';
 const KEY = `${ENV}-${PLATFORM}-${VERSION}`;
 
-// export const API_URL = 'http://rentronicsdev.saimrc.com'; // Config[KEY].API_URL;
-// export const AUTH_URL = 'http://rentronicsdev.saimrc.com'; // Config[KEY].AUTH_URL;
-// export const API_CONSUMER = 'http://rentronicsdev.saimrc.com'; // Config[KEY].API_URL;
+export const API_URL = 'http://rentronicsdev.saimrc.com'; // Config[KEY].API_URL;
+export const AUTH_URL = 'http://rentronicsdev.saimrc.com'; // Config[KEY].AUTH_URL;
+export const API_CONSUMER = 'http://rentronicsdev.saimrc.com'; // Config[KEY].API_URL;
 
-export const API_URL = 'http://localhost:3000'; // Config[KEY].API_URL;
-export const AUTH_URL = 'http://localhost:3000'; // Config[KEY].AUTH_URL;
-export const API_CONSUMER = 'http://localhost:3000'; // Config[KEY].API_URL;
+// export const API_URL = 'http://localhost:3000'; // Config[KEY].API_URL;
+// export const AUTH_URL = 'http://localhost:3000'; // Config[KEY].AUTH_URL;
+// export const API_CONSUMER = 'http://localhost:3000'; // Config[KEY].API_URL;
 
 
 // Helpers
