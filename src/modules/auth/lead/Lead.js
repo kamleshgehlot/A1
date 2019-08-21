@@ -422,10 +422,10 @@ export default function Lead() {
                             {roleName != 'Super Admin' 
                               && (  
                                     <StyledTableCell>
-                                        <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }} disabled={data.franchise_id!=franchiseId}>
+                                        <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }} disabled={data.franchise_id!=franchiseId  ? data.franchise_id!=0 ? true: false:false }>
                                           Enquiry
                                         </Button>
-                                        <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}  onClick={(event) => {handleClickOrderOpen(data);}} disabled={data.franchise_id!=franchiseId}>
+                                        <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}  onClick={(event) => {handleClickOrderOpen(data);}} disabled={data.franchise_id!=franchiseId  ? data.franchise_id!=0 ? true: false:false }>
                                           Order
                                         </Button>
                                     </StyledTableCell> )

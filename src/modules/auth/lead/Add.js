@@ -87,6 +87,7 @@ const useStyles = makeStyles(theme => ({
   },
   drpdwn:{
     marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
   }
 }));
 
