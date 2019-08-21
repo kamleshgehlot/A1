@@ -210,7 +210,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       contact: inputs.contact,
       interested_product_id: assignInterest,
       is_active: 1,
-      converted_to:1,
+      converted_to:0,
       convert_by_lead:convert
     });
         // console.log('sahgdaud--',response);
