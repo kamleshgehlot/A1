@@ -417,7 +417,7 @@ export default function Lead() {
                                 View
                               </Button>
                             </StyledTableCell>
-                            
+                            {console.log('franchiseId-----',franchiseId)}
         
                             {roleName != 'Super Admin' 
                               && (  
