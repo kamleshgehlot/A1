@@ -248,7 +248,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   }
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>

@@ -373,7 +373,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={EditOrder}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

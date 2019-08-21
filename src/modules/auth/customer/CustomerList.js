@@ -258,7 +258,7 @@ export default function CustomerList(userId) {
       
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={8}>
             <Fab
               variant="extended"
               size="small"
@@ -271,9 +271,7 @@ export default function CustomerList(userId) {
               Customers
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 margin="dense"
                 id="search"

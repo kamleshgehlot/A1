@@ -506,21 +506,21 @@ export default function Order() {
                             <button onClick={toPdf}>Generate Pdf</button>
                           }
                           </Pdf> */}
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled= {data.assigned_to===4}>
                                   <PrintIcon /> 
                                 </IconButton>
                         
                           </Tooltip>
-                          <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
-                            <label htmlFor="upload_document">
+                          {/* <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" disabled= {data.assigned_to===4}/> */}
+                            {/* <label htmlFor="upload_document"> */}
                               <Tooltip title="Upload Documents">                              
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
+                                <IconButton  size="small" className={classes.fab}  disabled>
                                   <CloudUpload />
                                 </IconButton>
                               </Tooltip>
-                            </label>
+                            {/* </label> */}
                           <Tooltip title="Assign to Delivery">
-                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled>
+                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled>
                               <SendIcon />
                             </IconButton>
                           </Tooltip>

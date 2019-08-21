@@ -196,7 +196,7 @@ export default function AddProduct(props) {
   }
   return (
     <div>
-      <Dialog maxWidth="sm" open={props.open} onClose={props.handleClose}>
+      <Dialog maxWidth="sm" open={props.open}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -220,12 +220,8 @@ export default function AddProduct(props) {
           <div className={classes.root}>
 
           <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-          <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
->
-              <ExpansionPanelDetails>
+        
+          <Paper className={classes.paper}> 
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="product_name">Enter Product Title/Name</InputLabel>
@@ -499,9 +495,7 @@ export default function AddProduct(props) {
                   </Grid>
                 
               </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-
+</Paper>
         
           </div>
       </form>

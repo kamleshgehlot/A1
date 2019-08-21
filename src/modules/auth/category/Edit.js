@@ -102,8 +102,9 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(12),
   },
   drpdwn:{
-    marginTop: theme.spacing(1),
-  }
+    marginTop: theme.spacing(2),
+    fontSize: theme.typography.pxToRem(12),
+  },
 }));
 
 
@@ -193,7 +194,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
   }
   return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
       <form >
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -267,8 +268,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       fullWidth
                       label="Choose Color"
                       required
-                      className={classes.margin}
-                      className={classes.textsize}
+                      className={classes.drpdwn}
+                      // className={classes.textsize}
                     >
                     { colorList.map((data, index)=>{
                           return(
@@ -288,11 +289,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                           name: 'brand_id',
                           id: 'brand_id',
                         }}
-                        className={classes.margin}
+                        className={classes.drpdwn}
                         fullWidth
                         label="Choose Brand"
                         required
-                        className={classes.textsize}
+                        className={classes.drpdwn}
                       >
                         { brandList.map((data, index)=>{
                           return(
@@ -444,11 +445,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                           name: 'status',
                           id: 'status',
                         }}
-                        className={classes.margin}
                         fullWidth
                         label="Choose Status"
                         required
-                        className={classes.textsize}
+                        className={classes.drpdwn}
                       >
                         { statusList.map((datastatus, index)=>{
                           return(

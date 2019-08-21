@@ -287,7 +287,7 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleFlexClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

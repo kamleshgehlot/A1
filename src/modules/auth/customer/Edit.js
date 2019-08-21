@@ -251,7 +251,7 @@ function handleIdType(event){
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -439,7 +439,7 @@ return (
             control={<Radio color="primary" />}
                      label="Male" />
                       {/* <FormControlLabel labelPlacement="start" value="transgender" 
-            control={<Radio color="primary" />}
+            control={<Radio color="primary" />}.
                      label="Transgender" /> */}
                     </RadioGroup>
                     

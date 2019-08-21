@@ -178,7 +178,7 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
   }
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} onClose={handleStaffEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>

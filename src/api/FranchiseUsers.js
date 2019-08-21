@@ -43,5 +43,14 @@ export default {
     } catch (error) {
       throw error;
     }
+  },
+  franchiseid: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchiseuser/franchiseid`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      throw error;
+    }
   }
 };

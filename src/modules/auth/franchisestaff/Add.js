@@ -252,7 +252,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

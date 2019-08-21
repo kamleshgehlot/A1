@@ -166,7 +166,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
   
   return (
     <div>
-      <Dialog  maxWidth="sm" open={open} onClose={handleViewClose} TransitionComponent={Transition}>
+      <Dialog  maxWidth="sm" open={open}  TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>

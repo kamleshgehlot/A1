@@ -143,7 +143,7 @@ export default function AddCategory(props) {
 
   return (
     <div>
-      <Dialog maxWidth="sm" open={props.open} onClose={props.handleClose}>
+      <Dialog maxWidth="sm" open={props.open}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -161,12 +161,7 @@ export default function AddCategory(props) {
 
           <div className={classes.root}>
 
-          <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
->
-              <ExpansionPanelDetails>
+          <Paper className={classes.paper}> 
                 <Grid container spacing={3}>
                   
                   <Grid item xs={12} sm={6}>
@@ -221,9 +216,7 @@ export default function AddCategory(props) {
                   </Grid>
                 
               </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-
+            </Paper>
           </div>
       </form>
       </Dialog>

@@ -92,4 +92,30 @@ FranchiseUser.prototype.staffList = function () {
   });
 };
 
+FranchiseUser.prototype.franchiseid = function () {
+  
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+
+      const that = this;
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+        connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
+        if (!error) {
+              console.log('users----hbsd---',rows);
+              resolve(rows);
+            } else {
+              console.log('Error...', error);
+              reject(error);
+            }
+          });
+        
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
 module.exports = FranchiseUser;

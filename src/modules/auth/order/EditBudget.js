@@ -246,7 +246,7 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleBudgetClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

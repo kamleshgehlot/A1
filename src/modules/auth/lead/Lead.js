@@ -30,6 +30,7 @@ import ConvertedLeads from './ConvertedLeads';
 // API CALL
 import LeadAPI from '../../../api/Lead';
 import UserAPI from '../../../api/User';
+import FranchiseUsers from '../../../api/FranchiseUsers';
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -68,6 +69,7 @@ export default function Lead() {
   const [openView, setViewOpen] = useState(false);
   const [leadList, setLeadList] = useState({});
   
+  const [franchiseId, setFranchiseId] = useState();
   const [convertedLeadList, setConvertedLeadList] = useState({});
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -136,6 +138,9 @@ export default function Lead() {
       try {
         const result = await LeadAPI.list();
         setLeadList(result.leadList);
+        
+        const fid = await FranchiseUsers.franchiseid();
+        setFranchiseId(fid.currentfranchise[0].franchise_id);
       } catch (error) {
         setIsError(true);
       }
@@ -376,12 +381,15 @@ export default function Lead() {
                                 View
                               </Button>
                             </StyledTableCell>
+                            
+        
                             {roleName != 'Super Admin' 
-                              && (  <StyledTableCell>
-                                        <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }}>
+                              && (  
+                                    <StyledTableCell>
+                                        <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }} disabled={data.franchise_id!=franchiseId}>
                                           Enquiry
                                         </Button>
-                                        <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}>
+                                        <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} disabled={data.franchise_id!=franchiseId}>
                                           Order
                                         </Button>
                                     </StyledTableCell> )
@@ -393,7 +401,7 @@ export default function Lead() {
                     </TableBody>
                   </Table>
                </TabPanel>
-               
+               {/* convered leads */}
           <TabPanel value={value} index={1}>
                 <Table className={classes.table}>
                   <TableHead>

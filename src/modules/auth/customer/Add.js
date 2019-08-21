@@ -283,7 +283,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -464,9 +464,9 @@ return (
                       onChange={handleInputChange}
                       row
                     >
-                      <FormControlLabel  className={classes.textsize} labelPlacement="start" value="female" control={<Radio />} label="Female" />
-                      <FormControlLabel  className={classes.textsize} labelPlacement="start" value="male" control={<Radio />} label="Male" />
-                      {/* <FormControlLabel labelPlacement="start" value="transgender" control={<Radio />} label="Transgender" /> */}
+                      <FormControlLabel  className={classes.textsize} labelPlacement="start" value="female"  control={<Radio color="primary" />} label="Female" />
+                      <FormControlLabel  className={classes.textsize} labelPlacement="start" value="male"  control={<Radio color="primary" />} label="Male" />
+                      {/* <FormControlLabel labelPlacement="start" value="transgender"  control={<Radio color="primary" />} label="Transgender" /> */}
                     </RadioGroup>
                     
                   </Grid>
@@ -480,8 +480,8 @@ return (
                       onChange={handleInputChange} 
                       row
                     >
-                      <FormControlLabel className={classes.textsize} value={1} control={<Radio />} label="Yes" labelPlacement="start" />
-                      <FormControlLabel className={classes.textsize} value={0} control={<Radio />} label="No" labelPlacement="start" />
+                      <FormControlLabel className={classes.textsize} value={1}  control={<Radio color="primary" />} label="Yes" labelPlacement="start" />
+                      <FormControlLabel className={classes.textsize} value={0}  control={<Radio color="primary" />} label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -601,14 +601,14 @@ return (
                     >
                       <FormControlLabel
                         value={1}
-                        control={<Radio />}
+                         control={<Radio color="primary" />}
                         label="Yes"
                         labelPlacement="start"
                         className={classes.textsize}
                       />
                       <FormControlLabel
                         value={0}
-                        control={<Radio />}
+                         control={<Radio color="primary" />}
                         label="No"
                         labelPlacement="start"
                         className={classes.textsize}

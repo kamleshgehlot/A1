@@ -102,7 +102,7 @@ const useStyles = makeStyles(theme => ({
   button:{
     color:"white",
     fontSize: theme.typography.pxToRem(10),
-    marginRight: theme.spacing(1),
+    margin: theme.spacing(1),
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
@@ -246,7 +246,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   
   return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleEditClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -691,17 +691,21 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  {savebtn? <Button variant="contained"  onClick={handleSubmit} color="primary" className={classes.button} >
-                Update
-              </Button> : <Button  variant="contained"  onClick={handleSubmit} color="primary" className={classes.button}  disabled>
-                Update
-              </Button>} 
-              <Button  variant="contained"   onClick={handleEditClose} color="primary" className={classes.button} >
-                Close
-              </Button>
+                 
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
+            
+            <Grid item xs={12} sm={12}>
+            {savebtn? <Button variant="contained"  onClick={handleSubmit} color="primary" className={classes.button} >
+                    Update
+                  </Button> : <Button  variant="contained"  onClick={handleSubmit} color="primary" className={classes.button}  disabled>
+                    Update
+                  </Button>} 
+                  <Button  variant="contained"   onClick={handleEditClose} color="primary" className={classes.button} >
+                    Close
+                  </Button>
+                  </Grid>
           </div>
         </form>
       </Dialog>

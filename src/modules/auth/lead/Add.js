@@ -236,7 +236,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

@@ -309,7 +309,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleFixedClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>

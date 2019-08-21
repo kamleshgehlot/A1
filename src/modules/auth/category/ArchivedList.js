@@ -125,7 +125,7 @@ export default function ArchivedList({open, handleArchivedClose}) {
   }, []);
 return (
   <div>
-    <Dialog maxWidth="lg" open={open} onClose={handleArchivedClose} TransitionComponent={Transition}>
+    <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleArchivedClose} aria-label="Close">

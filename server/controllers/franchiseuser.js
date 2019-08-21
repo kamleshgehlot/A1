@@ -41,4 +41,14 @@ const staffList = function (req, res, next) {
   }
 };
 
-module.exports = { all,user,staffList };
+const franchiseid = function(req, res, next) {
+  try {
+    new FranchiseUser({user_id: req.decoded.user_id}).franchiseid().then(currentfranchise => {
+      console.log('ffranchise----',currentfranchise);
+      res.send({ currentfranchise });
+    });
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+};
+module.exports = { all,user,staffList,franchiseid };

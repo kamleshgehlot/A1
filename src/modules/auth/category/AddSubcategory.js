@@ -143,7 +143,7 @@ export default function AddSubcategory(props) {
 
   return (
     <div>
-      <Dialog maxWidth="sm" open={props.open} onClose={props.handleClose}>
+      <Dialog maxWidth="sm" open={props.open}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
