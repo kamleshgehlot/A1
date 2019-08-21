@@ -7,6 +7,8 @@ var Order = function (params) {
   // console.log("params", params);
   this.id = params.id;
   this.user_id = params.user_id;
+  this.userid = params.userid;
+
   this.order_id = params.order_id;
   this.customer_id = params.customer_id;
   this.customer_type = params.customer_type;
@@ -30,6 +32,7 @@ var Order = function (params) {
   this.fixedOrderId = params.fixedOrderId;
   this.flexOrderId = params.flexOrderId;
   
+  this.converted_to = params.converted_to;
 };
 
 
@@ -774,5 +777,50 @@ console.log(that.id);
   });
 };
 
+
+
+Order.prototype.convertedLead = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {       
+        if(that.converted_to!==0){
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
+            if (!error) {
+              const franchise_id=rows[0].franchise_id;
+              connection.changeUser({ database: dbName["prod"] });
+              connection.query('update leads set converted_to="2",converted_by="'+that.userid+'", converted_by_f_id="'+franchise_id+'" where id="'+that.converted_to+'"',function (error, rows, fields) {
+                if (!error) {
+                  // console.log("rows...",rows);
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+              });
+            }else {
+              console.log("Error...", error);
+              reject(error);
+            }
+        })
+      }else { 
+        resolve(rows);
+      }
+    } else {
+      console.log("Error...", error);
+      reject(error);
+    }
+        
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
 
 module.exports = Order;

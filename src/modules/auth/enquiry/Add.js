@@ -203,7 +203,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     setpLoading(true);
     setSavebtn(false);
     // setInput('interested_product_id',assignInterest.join())
-// console.log('convert-----',convert);
+console.log('convert-----',convert);
     const response = await EnquiryAPI.postEnquiry({
       enquiry_id : inputs.enquiry_id,
       customer_name: inputs.customer_name,

@@ -26,6 +26,7 @@ import AddLead from './Add';
 import Comment from './Comment';
 import Add from '../enquiry/Add';
 import ConvertedLeads from './ConvertedLeads';
+import ConvertInOrder from '../order/Add';
 
 // API CALL
 import LeadAPI from '../../../api/Lead';
@@ -70,6 +71,8 @@ export default function Lead() {
   const [leadList, setLeadList] = useState({});
   
   const [franchiseId, setFranchiseId] = useState();
+  const [openOrder, setOpenOrder] = useState(false);
+
   const [convertedLeadList, setConvertedLeadList] = useState({});
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -200,6 +203,36 @@ export default function Lead() {
     setConvertLead(data.id);
     setEnquiryOpen(true);
   }
+  
+  function handleClickOrderOpen(data){
+    setConvertLead(data.id);
+    setOpenOrder(true);
+  }
+
+  function handleOrderClose(){
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await LeadAPI.list();
+        setLeadList(result.leadList);
+
+        const convertedLead = await LeadAPI.convertedList();
+        setConvertedLeadList(convertedLead.convertedList);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+
+    setOpenOrder(false);
+  }
+
+  function handleOrderRecData(response){
+    console.log(response);
+  }
+
   function handleEnquiryClose() {
     const fetchData = async () => {
       setIsError(false);
@@ -207,6 +240,9 @@ export default function Lead() {
       try {
         const result = await LeadAPI.list();
         setLeadList(result.leadList);
+
+        const convertedLead = await LeadAPI.convertedList();
+        setConvertedLeadList(convertedLead.convertedList);
       } catch (error) {
         setIsError(true);
       }
@@ -389,7 +425,7 @@ export default function Lead() {
                                         <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }} disabled={data.franchise_id!=franchiseId}>
                                           Enquiry
                                         </Button>
-                                        <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} disabled={data.franchise_id!=franchiseId}>
+                                        <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button}  onClick={(event) => {handleClickOrderOpen(data);}} disabled={data.franchise_id!=franchiseId}>
                                           Order
                                         </Button>
                                     </StyledTableCell> )
@@ -469,6 +505,7 @@ export default function Lead() {
         </Grid>
       {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}
       
+      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertLead={convertLead} /> : null }
       {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn} convert={convertLead}/> :null}
       {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputss={leadData}  /> :null}
       {openConvertedLeads ?  <ConvertedLeads open={openConvertedLeads} handleConvertedLeadsClose={handleConvertedLeadsClose} franchiseListd={franchiseListd} />: null}

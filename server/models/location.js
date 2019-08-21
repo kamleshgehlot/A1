@@ -44,7 +44,7 @@ Location.prototype.getSelectedArea = function () {
       }
     // console.log("params...",that);
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select suburb from franchise WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
+      connection.query('select suburb from franchise WHERE city = ? AND city_code = ? AND state != 4',[that.city_name, that.city_code], (error, rows, fields) => {
         if (!error) {
           let suburb= [''];
           (rows.length > 0 ? rows : []).map((data,index) => { 
@@ -80,7 +80,7 @@ Location.prototype.getCityRelatedAllArea = function (){
       }
     // console.log("params...",that);
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select id from location WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
+      connection.query('select id from location WHERE city = ? AND city_code = ? AND state != 4',[that.city_name, that.city_code], (error, rows, fields) => {
         if (!error) {
           const city_id = rows[0].id;
           // console.log("id..",rows);
