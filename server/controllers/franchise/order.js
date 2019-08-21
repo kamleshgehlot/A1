@@ -180,9 +180,11 @@ console.log('eeeq.',req);
       const newOrder = new Order(orderParams);
       newOrder.postOrder().then(function(result){
         if(req.body.converted_to!==0){
-          newOrder.convertedLead(function(res){
-            
-          });
+          if(req.body.converted_name === 'lead'){
+            newOrder.convertedLead(function(res){});
+          } else if(req.body.converted_name === 'enquiry'){
+            newOrder.convertedEnquiry(function(res){});
+          }
         }
         
         // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {

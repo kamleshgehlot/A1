@@ -230,7 +230,7 @@ export default function Lead() {
   }
 
   function handleOrderRecData(response){
-    console.log(response);
+    // console.log(response);
   }
 
   function handleEnquiryClose() {
@@ -505,7 +505,7 @@ export default function Lead() {
         </Grid>
       {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}
       
-      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertLead={convertLead} /> : null }
+      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertLead}  converted_name={'lead'}/> : null }
       {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn} convert={convertLead}/> :null}
       {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputss={leadData}  /> :null}
       {openConvertedLeads ?  <ConvertedLeads open={openConvertedLeads} handleConvertedLeadsClose={handleConvertedLeadsClose} franchiseListd={franchiseListd} />: null}

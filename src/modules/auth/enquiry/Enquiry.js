@@ -21,6 +21,7 @@ import Box from '@material-ui/core/Box';
 import Add from './Add';
 import ConvertedEnquiry from './ConvertedEnquiry';
 import CustomerAdd from '../customer/Add';
+import ConvertInOrder from '../order/Add';
 // API CALL
 import EnquiryAPI from '../../../api/franchise/Enquiry';
 import Category from '../../../../src/api/Category';
@@ -53,9 +54,11 @@ export default function Enquiry() {
   const [enquiryList, setEnquiryList] = useState([]);
   const [enquiryData,setEnquiryData] = useState([]);
   const [customerOpen, setCustomerOpen] = useState(false);
+  const [openOrder, setOpenOrder] = useState(false);
   const [productList, setProductList] = useState([]);
   const [convertedEnquiryOpen, SetConvertedEnquiryOpen] = useState(false);
-  
+  const [convertEnquiryId,setConvertEnquiryId]= useState();
+
   const [customer, setCustomer] = useState({});
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -135,6 +138,30 @@ export default function Enquiry() {
   }
   function handleCompleteEnquiryClickClose() {
     SetConvertedEnquiryOpen(false)
+  }
+  
+  function handleOrderRecData(response){
+    console.log(response);
+  }
+ 
+  function handleClickOrderOpen(data){
+    console.log('data....',data);
+    setConvertEnquiryId(data.id);
+    setOpenOrder(true);
+  }
+
+  function handleOrderClose(){
+    setEnquiryList('');
+    const fetchData = async () => {
+      try {
+        const result = await EnquiryAPI.getAll();
+        setEnquiryList(result.enquiryList);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+    setOpenOrder(false);
   }
 
   function setEnquiryListFn(response) {
@@ -266,7 +293,7 @@ console.log('res=---',response);
                                   {/* {data.interested_product_id} */}
                               </StyledTableCell>
                               {data.converted_to===0? <StyledTableCell>
-                                <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { openCustomerPage(data); }}>
+                                <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { handleClickOrderOpen(data); }}>
                                     Convert
                                 </Button>
                               </StyledTableCell>:''}
@@ -280,8 +307,9 @@ console.log('res=---',response);
               </Paper>
           </Grid>
         </Grid>
-      { open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convert={0} /> : null }
-      {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} setCustomer={setCustomer} /> : null}
+      { open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convertLead={0} /> : null }
+      {/* {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} setCustomer={setCustomer} /> : null} */}
+      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertEnquiryId} converted_name={'enquiry'} /> : null }
       {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null}
       
     </div>

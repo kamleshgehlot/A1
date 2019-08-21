@@ -123,7 +123,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertLead}) {
+export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertId, converted_name}) {
 
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
@@ -402,7 +402,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       budget_list : budgetList,
       related_to : related_to,
       is_active : 1,
-      converted_to : convertLead,
+      converted_to : convertId,
+      converted_name : converted_name,
+      
      });
     // console.log('response ', response);
     setAssignInterest('');
@@ -426,7 +428,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     validate
   );
 
-  console.log(inputs);
+  // console.log(inputs);
     
 return (
     <div>
@@ -504,10 +506,9 @@ return (
                       >
                         {/* {console.log('customer ',customer)} */}
                         <FormControlLabel labelPlacement="end" value="1"  control={<Radio color="primary" />} label="New Customer" onClick={handleCustomerOpen} />
-                        {convertLead === 0 ?
+                        {/* {convertLead === 0 ? */}
                         <FormControlLabel labelPlacement="end" value="2"  control={<Radio color="primary" />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
-                        : ''
-                        }
+                        {/* : '' } */}
                         {customer  != null  ? 
                         <FormControlLabel labelPlacement="end"  control={<InputLabel />} label= {customer.customer_name + ", " + customer.address + ", " + customer.city} disabled />
                         

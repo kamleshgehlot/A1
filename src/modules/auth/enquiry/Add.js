@@ -146,6 +146,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     setCategoryList('');
     setSubCategoryList('');    
     setProductList('');
+    setAssignInterest('');
 
     const fetchData = async () => {
       try {
@@ -162,7 +163,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     setCategory(event.target.value);
     setSubCategoryList('');    
     setProductList('');
-
+    setAssignInterest('');
 
     const fetchData = async () => {
       try {
@@ -178,7 +179,8 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     console.log(event.target.value)
     setSubCategory(event.target.value);
     setProductList('');
-
+    setAssignInterest('');
+    
     const fetchData = async () => {
       try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
@@ -200,10 +202,12 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   
   const addEnquiry = async () => {
 
+   
+// setInput('interested_product_id',assignInterest.join())
+// console.log('convert-----',convert);
+if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.contact != '' && assignInterest != '' ){
     setpLoading(true);
     setSavebtn(false);
-    // setInput('interested_product_id',assignInterest.join())
-console.log('convert-----',convert);
     const response = await EnquiryAPI.postEnquiry({
       enquiry_id : inputs.enquiry_id,
       customer_name: inputs.customer_name,
@@ -223,7 +227,11 @@ console.log('convert-----',convert);
     setpLoading(false);
     setSavebtn(true);
     handleClose(false);
-  };
+  }
+  else{
+    alert('Select all mandetory fields..');
+  }
+};
 
   function validate(values) {
     let errors = {};

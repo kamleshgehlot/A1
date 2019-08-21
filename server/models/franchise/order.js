@@ -823,4 +823,46 @@ Order.prototype.convertedLead = function () {
   });
 };
 
+
+
+Order.prototype.convertedEnquiry = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {       
+        if(that.converted_to!==0){
+            if (!error) {
+              connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+              connection.query('update enquiry set converted_to = 1 WHERE id = "'+that.converted_to+'"',function (error, rows, fields) {
+                if (!error) {
+                  // console.log("rows...",rows);
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+              });
+            }else {
+              console.log("Error...", error);
+              reject(error);
+            }        
+      }else { 
+        resolve(rows);
+      }
+    } else {
+      console.log("Error...", error);
+      reject(error);
+    }
+        
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 module.exports = Order;
