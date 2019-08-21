@@ -169,7 +169,7 @@ return (
                 <CloseIcon />
               </IconButton> */}
               <Typography variant="h6" className={classes.title}>
-                Add Staff1
+                Add Staff
               </Typography>
               {/* <Button color="inherit" type="submit">
                 save
