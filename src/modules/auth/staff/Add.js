@@ -195,17 +195,14 @@ return (
                       // label="First Name"
                       value={inputs.first_name}
                       onChange={handleInputChange}
+                      error={errors.first_name}
+                      helperText={errors.first_name}
                       fullWidth
                       required
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                     />
-                    {errors.first_name && (
-										<p className="help is-danger">
-											{errors.first_name}
-										</p>
-									)}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="last_name">Last Name</InputLabel>
@@ -223,10 +220,13 @@ return (
                       value={inputs.last_name} 
                       onChange={handleInputChange}
                       onBlur={handleNameBlurChange}
+                      error={errors.last_name}
+                      helperText={errors.last_name}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
+                    
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="location">Location *</InputLabel>
@@ -243,6 +243,8 @@ return (
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
+                      error={errors.location}
+                      helperText={errors.location}
                       required
                       fullWidth
                     />
@@ -262,6 +264,8 @@ return (
                       type="number"
                       value={inputs.contact} 
                       onChange={handleInputChange}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       required
                       fullWidth
                     />
@@ -282,6 +286,8 @@ return (
                       value={inputs.email} 
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
+                      error={errors.email}
+                      helperText={errors.email}
                       required
                       fullWidth
                       type="email"
@@ -292,6 +298,8 @@ return (
                     <Select
                       value={inputs.position}
                       onChange={handleInputChange}
+                      error={errors.position}
+                      helperText={errors.position}
                       inputProps={{
                         name: 'position',
                         id: 'position',
