@@ -152,12 +152,12 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     
   const rescheduleTask = async () => {
 
-    // console.log('taskList======',taskList);
     const response = await Task.reschedule({
       franchise_id: franchiseId,
       assignid: taskList.assignid,
       task_id: taskList.task_id,
       task_description:taskList.task_description,
+      assigned_role: taskList.assign_role,
       assigned_to:taskList.assigned_to,
       due_date:taskList.due_date,
       new_due_date:taskList.new_due_date,
@@ -421,9 +421,10 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               </StyledTableCell>
                             :''}
                             <StyledTableCell>
-                            {savebtn?  <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask:addTaskMaster}  type="submit">
+                            {savebtn?  <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask : addTaskMaster}  type="submit">
                                 Update
-                              </Button>: <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask:addTaskMaster}  type="submit" disabled>
+                              </Button>: 
+                              <Button variant="contained" color="primary" className={classes.button} onClick={() => {}}  type="submit" disabled>
                                 Update
                               </Button>}
                               <Button variant="contained" color="primary" className={classes.button} onClick={handleEditClose}  type="submit">

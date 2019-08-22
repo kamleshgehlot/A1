@@ -101,6 +101,7 @@ const reschedule = function (req, res, next) {
     assignid: req.body.assignid,
     task_id: req.body.task_id,
     task_description: req.body.task_description,
+    assign_role:req.body.assigned_role,
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
     new_due_date: req.body.new_due_date,
@@ -109,7 +110,6 @@ const reschedule = function (req, res, next) {
     created_by: req.decoded.id,
     user_id: req.decoded.user_id
   };
-  // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
       newTask.reschedule().then(result => {
@@ -148,7 +148,6 @@ const staffUpdate = function (req, res, next) {
   const taskParam = {
     id: staffData.id,
     task_id: staffData.task_id,
-    assigned_role:staffData.assigned_role,
     assigned_role:staffData.assigned_role,
     assigned_to: staffData.assigned_to,
     message: staffData.message,

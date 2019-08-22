@@ -72,8 +72,8 @@ export default function Task(franchiseId) {
   const [taskStatusList, setTaskStatusList]=useState([]);
   const [delId,setDelId]= useState();
   const [tasksList, setTaskList] = useState({});
-  const [staffTaskList, setStaffTaskList] = useState({});
-  const [completedTaskList, setCompletedTaskList] = useState({});
+  const [staffTaskList, setStaffTaskList] = useState([]);
+  const [completedTaskList, setCompletedTaskList] = useState([]);
   const [staffList, setStaffList] = useState({});
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [dateToday, setTodayDate]= useState();
@@ -499,8 +499,8 @@ useEffect(() => {
             <AppBar position="static"  className={classes.appBar}>
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
                 <Tab label="All" />
-                <Tab label="My Task" />
-                <Tab label="Completed"  />
+                <Tab label={`My Task (${staffTaskList.length})`} />
+                <Tab label={`Completed (${completedTaskList.length})`}  />
                 {/* <Tab label="Close" /> */}
               </Tabs>
             </AppBar>
@@ -525,14 +525,7 @@ useEffect(() => {
                         <StyledTableCell> {index+1}  </StyledTableCell>
                           <StyledTableCell> {data.task_id}  </StyledTableCell>
                           <StyledTableCell> {data.task_description}  </StyledTableCell>
-                            {role.map((ele,index) =>{
-                                return(
-                                  data.assign_role===ele.id?
-                                <StyledTableCell>{ele.name}</StyledTableCell>
-                                :''
-                                )
-                              })}
-                              {data.assign_role===2? <StyledTableCell>Director</StyledTableCell>:''}
+                              <StyledTableCell>{data.assign_role_name}</StyledTableCell>
                             { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
                                 return(
                                   data.assigned_to===datastaff.id ?

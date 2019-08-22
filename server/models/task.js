@@ -81,7 +81,7 @@ Task.prototype.all = function () {
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
       // console.log('that.userid',that.userid);
-          connection.query('select t.id,t.task_id, t.task_description,a.id as assignid,a.assign_role,  a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
+          connection.query('select t.id,t.task_id, t.task_description,a.id as assignid,a.assign_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
             if (!error) {
               // console.log('taskrows-=-==--',rows);
               resolve(rows);
@@ -234,7 +234,7 @@ Task.prototype.reschedule = function () {
       if (!error) {
       
       const values_assign = [
-        [that.task_id, that.assigned_to, that.new_due_date,1, that.is_active, that.created_by]
+        [that.task_id, that.assign_role, that.assigned_to, that.new_due_date,1, that.is_active, that.created_by]
       ];
       connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query('update task_assign set is_active =  0, updated_by = "'+that.updated_by+'" WHERE id = "' + that.assignid + '"', function (error, arows, fields) {
@@ -269,25 +269,17 @@ Task.prototype.staffTasks = function () {
       }
       if (!error) {
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-          connection.query('select id as uid from user where user_id="'+that.user_id+'" limit 1', function (error, rows, fields) {
+          connection.query('select t.id,t.task_id, t.task_description,a.assign_role,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+that.userid+'" AND t.created_by = CASE WHEN status = 3 THEN "'+that.userid+'" ELSE t.created_by END AND status <> 4 AND status <> 5 AND a.is_active="1"', function (error, taskrows, fields) {
             if (!error) {
-              connection.query('select t.id,t.task_id, t.task_description,a.assign_role,  a.assigned_to, a.due_date, a.status, a.is_active from task t inner join task_assign a on t.task_id = a.task_id where a.assigned_to="'+rows[0].uid+'" AND status <> 4 AND status <> 5 AND a.is_active="1"', function (error, taskrows, fields) {
-                if (!error) {
-                  resolve(taskrows);
+              resolve(taskrows);
 
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
-              });
             } else {
               console.log("Error...", error);
               reject(error);
             }
-
-            connection.release();
-            console.log('Process Complete %d', connection.threadId);
           });
+          connection.release();
+          console.log('Process Complete %d', connection.threadId);
         }
     });
   });
