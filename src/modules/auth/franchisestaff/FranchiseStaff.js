@@ -80,7 +80,7 @@ export default function FranchiseStaff(franchiseId) {
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      width: 1010
+      // width: 1010
     },
     drawer: {
       width: drawerWidth,

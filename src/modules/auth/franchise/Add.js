@@ -29,6 +29,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
+import validate from '../../common/validation/FranchiseRuleValidation';
 
 // API CALL
 import UserAPI from '../../../api/User';
@@ -292,8 +293,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   }
   };
 
-  function validate(values) {
-    let errors = {};
+  // function validate(values) {
+  //   let errors = {};
     // if (!values.email) {
     //   errors.email = 'Email address is required';
     // } else if (!/\S+@\S+\.\S+/.test(values.email)) {
@@ -310,16 +311,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     //     errors.password = "Your password must contain at least one digit.";
     // }
 
-    if (!values.city) {
-      errors.city = 'City is required';
-    } 
+  //   if (!values.city) {
+  //     errors.city = 'City is required';
+  //   } 
 
-    if (!values.suburb) {
-      errors.suburb = 'suburb is required';
-    } 
+  //   if (!values.suburb) {
+  //     errors.suburb = 'suburb is required';
+  //   } 
 
-    return errors;
-  };
+  //   return errors;
+  // };
 
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
@@ -486,7 +487,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                 <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="city">Franchise Name*</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="franchise">Franchise Name*</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -498,6 +499,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       // label=""
                       value={inputs.franchise_name}
                       onChange={handleInputChange}
+                      error={errors.franchise_name}
+                      helperText={errors.franchise_name}
                       fullWidth
                       required
                     />
@@ -583,6 +586,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="company_name"
                       // label="Company Name"
                       value={inputs.company_name}
+                      error={errors.company_name}
+                      helperText={errors.company_name}
                       fullWidth
                       margin="dense"
                       required
@@ -601,6 +606,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="nbzn"
                       // label="Company's NBZN"
                       value={inputs.nbzn}
+                      error={errors.nbzn}
+                      helperText={errors.nbzn}
                       fullWidth
                       margin="dense"
                       required
@@ -619,6 +626,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="company_location"
                       // label="Comapny Location"
                       value={inputs.company_location}
+                      error={errors.company_location}
+                      helperText={errors.company_location}
                       margin="dense"
                       required
                       fullWidth
@@ -639,6 +648,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="director"
                       // label="Director Name"
                       value={inputs.director}
+                      // error={errors.director}
+                      // helperText={errors.director}
                       fullWidth
                       type="text"
                       margin="dense"
@@ -659,6 +670,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="email"
                       // label="Email"
                       value={inputs.email}
+                      // error={errors.email}
+                      // helperText={errors.email}
                       margin="dense"
                       // required
                       type="email"
@@ -681,6 +694,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="contact"
                       // label="Contact #"
                       value={inputs.contact}
+                      // error={errors.contact}
+                      // helperText={errors.contact}
                       margin="dense"
                       // required
                       fullWidth
@@ -824,6 +839,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       }}
                       id="accountant_name"
                       name="accountant_name"
+                      error={errors.accountant_name}
+                      helperText={errors.accountant_name}
                       // label="Name"
                       value={inputs.accountant_name}
                       // placeholder="Accountant name"
@@ -846,6 +863,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="accountant_email"
                       // label="Email Address"
                       value={inputs.accountant_email}
+                      error={errors.accountant_email}
+                      helperText={errors.accountant_email}
                       // placeholder="Email"
                       fullWidth
                       margin="dense"
@@ -868,6 +887,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="accountant_contact"
                       // label="Contact #"
                       value={inputs.accountant_contact}
+                      error={errors.accountant_contact}
+                      helperText={errors.accountant_contact}
                       // placeholder="Contact"
                       fullWidth
                       type="number"

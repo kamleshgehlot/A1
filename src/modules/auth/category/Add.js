@@ -134,7 +134,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
 
 const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
   RESET_VALUES,
-  validate
+  // validate
 );
 
 
@@ -287,11 +287,11 @@ console.log(inputs)
     setSubCatOpen(false);
   }
 
-  function validate(values) {
-    let errors = {};
+  // function validate(values) {
+  //   let errors = {};
 
-    return errors;
-  };
+  //   return errors;
+  // };
 
  
   return (

@@ -27,6 +27,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import validate from '../../common/validation/EnquiryRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -233,12 +234,12 @@ if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.contact != ''
   }
 };
 
-  function validate(values) {
-    let errors = {};
-    return errors;
-  };
+  // function validate(values) {
+  //   let errors = {};
+  //   return errors;
+  // };
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+ const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addEnquiry,
     validate
@@ -304,6 +305,8 @@ return (
                       type="text"
                       value={inputs.customer_name} 
                       onChange={handleInputChange}
+                      error={errors.customer_name}
+                      helperText={errors.customer_name}
                       required
                       fullWidth
                     />
@@ -323,6 +326,8 @@ return (
                       type="number"
                       value={inputs.contact} 
                       onChange={handleInputChange}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       required
                       fullWidth
                     />

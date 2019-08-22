@@ -26,7 +26,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-
+import validate from '../../common/validation/CustomerRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -266,12 +266,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     }
   };
 
-  function validate(values) {
-    let errors = {};
-    return errors;
-  };
+  // function validate(values) {
+  //   let errors = {};
+  //   return errors;
+  // };
 
- const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+ const { inputs, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addCustomer,
     validate
@@ -331,6 +331,8 @@ return (
                       // label="Full Name"
                       value={inputs.customer_name}
                       onChange={handleInputChange}
+                      error={errors.customer_name}
+                      helperText={errors.customer_name}
                       fullWidth
                       required
                       type="text"
@@ -352,6 +354,8 @@ return (
                       // label="Address"
                       type="text"
                       value={inputs.address} 
+                      error={errors.address}
+                      helperText={errors.address}
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -372,6 +376,8 @@ return (
                       type="text"
                       value={inputs.city} 
                       onChange={handleInputChange}
+                      error={errors.city}
+                      helperText={errors.city}
                       required
                       fullWidth
                     />
@@ -391,6 +397,8 @@ return (
                       type="number"
                       value={inputs.postcode}
                       onChange={handleInputChange}
+                      error={errors.postcode}
+                      helperText={errors.postcode}
                       required
                       fullWidth
                     />
@@ -411,6 +419,8 @@ return (
                       value={inputs.telephone} 
                       onChange={handleInputChange}
                       required = {inputs.mobile==='' ? true : false}
+                      error={errors.telephone}
+                      helperText={errors.telephone}
                       fullWidth
                     />
                   </Grid>
@@ -429,7 +439,9 @@ return (
                       type="number"
                       value={inputs.mobile} 
                       onChange={handleInputChange}
-                      required = {inputs.telephone===''?true : false}
+                      required = {inputs.mobile===''?true : false}
+                      error={errors.mobile}
+                      helperText={errors.mobile}
                       fullWidth
                     />
                   </Grid>
@@ -449,6 +461,8 @@ return (
                       value={inputs.email} 
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
+                      error={errors.email}
+                      helperText={errors.email}
                       required
                       fullWidth
                       type="email"
@@ -462,6 +476,8 @@ return (
                       className={classes.group}
                       value={inputs.gender}
                       onChange={handleInputChange}
+                      // error={errors.gender}
+                      // helperText={errors.gender}
                       row
                     >
                       <FormControlLabel  className={classes.textsize} labelPlacement="start" value="female"  control={<Radio color="primary" />} label="Female" />
@@ -499,6 +515,8 @@ return (
                       type="date"
                       value={inputs.dob} 
                       onChange={handleInputChange}
+                      error={errors.dob}
+                      helperText={errors.dob}
                       required
                       fullWidth
                     />
@@ -515,6 +533,8 @@ return (
                          id = 'id_type'
                          className={classes.drpdwn}
                          fullWidth
+                         error={errors.id_type}
+                         helperText={errors.id_type}
                          label="Select Id Proof"
                          required
                       >
@@ -562,6 +582,8 @@ return (
                       margin="dense"
                       id="id_number"
                       name="id_number"
+                      error={errors.id_number}
+                      helperText={errors.id_number}
                       // label="ID#"
                       type="text"
                       value={inputs.id_number} 
@@ -587,6 +609,8 @@ return (
                       onChange={handleInputChange}
                       // required
                       fullWidth
+                      error={errors.expiry_date}
+                      helperText={errors.expiry_date}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -671,6 +695,8 @@ return (
                       value={inputs.alt_c1_name} 
                       onChange={handleInputChange}
                       required
+                      error={errors.alt_c1_name}
+                      helperText={errors.alt_c1_name}
                       fullWidth
                     />
                   </Grid>
@@ -689,6 +715,8 @@ return (
                       type="text"
                       value={inputs.alt_c1_address} 
                       onChange={handleInputChange}
+                      error={errors.alt_c1_name}
+                      helperText={errors.alt_c1_name}
                       required
                       fullWidth
                     />
@@ -708,6 +736,8 @@ return (
                       type="number"
                       value={inputs.alt_c1_contact} 
                       onChange={handleInputChange}
+                      error={errors.alt_c1_contact}
+                      helperText={errors.alt_c1_contact}
                       required
                       fullWidth
                     />
@@ -728,6 +758,8 @@ return (
                       type="text"
                       value={inputs.alt_c1_relation} 
                       onChange={handleInputChange}
+                      error={errors.alt_c1_relation}
+                      helperText={errors.alt_c1_relation}
                       required
                       fullWidth
                     />
@@ -750,6 +782,8 @@ return (
                       type="text"
                       value={inputs.alt_c2_name} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_name}
+                      helperText={errors.alt_c2_name}
                       // required
                       fullWidth
                     />
@@ -769,6 +803,8 @@ return (
                       type="text"
                       value={inputs.alt_c2_address} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_address}
+                      helperText={errors.alt_c2_address}
                       // required
                       fullWidth
                     />
@@ -788,6 +824,8 @@ return (
                       type="number"
                       value={inputs.alt_c2_contact} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_contact}
+                      helperText={errors.alt_c2_contact}
                       // required
                       fullWidth
                     />
@@ -808,6 +846,8 @@ return (
                       type="text"
                       value={inputs.alt_c2_relation} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_relation}
+                      helperText={errors.alt_c2_relation}
                       // required
                       fullWidth
                     />
@@ -844,6 +884,8 @@ return (
                       type="text"
                       value={inputs.employer_name} 
                       onChange={handleInputChange}
+                      error={errors.employer_name}
+                      helperText={errors.employer_name}
                       required
                       fullWidth
                     />
@@ -863,6 +905,8 @@ return (
                       type="text"
                       value={inputs.employer_address} 
                       onChange={handleInputChange}
+                      error={errors.employer_address}
+                      helperText={errors.employer_address}
                       required
                       fullWidth
                     />
@@ -882,6 +926,8 @@ return (
                       type="number"
                       value={inputs.employer_telephone} 
                       onChange={handleInputChange}
+                      error={errors.employer_telephone}
+                      helperText={errors.employer_telephone}
                       required
                       fullWidth
                     />
@@ -902,6 +948,8 @@ return (
                       value={inputs.employer_email} 
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
+                      error={errors.employer_email}
+                      helperText={errors.employer_email}
                       required
                       fullWidth
                     />
@@ -921,6 +969,8 @@ return (
                       type="text"
                       value={inputs.employer_tenure} 
                       onChange={handleInputChange}
+                      error={errors.employer_tenure}
+                      helperText={errors.employer_tenure}
                       required
                       fullWidth
                     />

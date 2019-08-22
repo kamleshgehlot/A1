@@ -26,6 +26,7 @@ import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 
+import validate from '../../common/validation/TaskRuleValidation';
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
@@ -231,11 +232,11 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     handleClose(false);
   };
 
-  function validate(values) {
-    let errors = {};
+  // function validate(values) {
+  //   let errors = {};
 
-    return errors;
-  };
+  //   return errors;
+  // };
 
   function handleRoleChange(e){
     setStaffRole(e.target.value);
@@ -259,7 +260,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
 
 }
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+ const { inputs=null, handleInputChange, handleSubmit, handleReset, errors,setInput } = useSignUpForm(
     RESET_VALUES,
     addTaskMaster,
     validate
@@ -333,8 +334,11 @@ return (
                                 // label="Task Description"
                                 value={inputs.task_description}
                                 onChange={handleInputChange}
+                                error={errors.task_description}
+                                helperText={errors.task_description}
                                 fullWidth
-                                required className={classes.tbrow}
+                                required 
+                                className={classes.tbrow}
                                 type="text"
                                 multiline
                                 // placeholder="Franchise Name"
@@ -377,6 +381,8 @@ return (
                               required
                               disabled = {otherDisable}
                               fullWidth className={classes.dropdwn}
+                              error={errors.assigned_to}
+                              helperText={errors.assigned_to}
                               label="assigned_to" required >
                                 { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
                                   return(
@@ -390,11 +396,11 @@ return (
                             <StyledTableCell>
                               
                               <TextField 
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
                                 id="due_date"
                                 name="due_date"
                                 // label="Task Id"
@@ -404,6 +410,8 @@ return (
                                 required
                                 onFocus={pastDate}
                                 type="date" className={classes.dropdwn}
+                                error={errors.due_date}
+                                helperText={errors.due_date}
                                 // placeholder="Franchise Name"
                                 margin="dense"
                               /> 

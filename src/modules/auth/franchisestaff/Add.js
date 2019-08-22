@@ -27,6 +27,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 
+import validate from '../../common/validation/FranchiseStaffRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -202,13 +203,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   }
   };
 
-  function validate(values) {
-    let errors = {};
+  // function validate(values) {
+  //   let errors = {};
 
-    return errors;
-  };
+  //   return errors;
+  // };
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+ const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addFranchiseStaff,
     validate
@@ -299,6 +300,8 @@ return (
                       name="first_name"
                       // label="First Name"
                       value={inputs.first_name}
+                      error={errors.first_name}
+                      helperText={errors.first_name}
                       onChange={handleInputChange}
                       fullWidth
                       required
@@ -322,6 +325,8 @@ return (
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
+                      error={errors.last_name}
+                      helperText={errors.last_name}
                       // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
@@ -343,6 +348,8 @@ return (
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
+                      error={errors.location}
+                      helperText={errors.location}
                       required
                       fullWidth
                     />
@@ -362,6 +369,8 @@ return (
                       type="number"
                       value={inputs.contact} 
                       onChange={handleInputChange}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       required
                       fullWidth
                     />
@@ -382,6 +391,8 @@ return (
                       value={inputs.email} 
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
+                      error={errors.email}
+                      helperText={errors.email}
                       required
                       fullWidth
                       type="email"
@@ -405,7 +416,7 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name of Previous Company</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name of Previous Company *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -420,12 +431,14 @@ return (
                       value={inputs.pre_company_name} 
                       onChange={handleInputChange}
                       onBlur={handleNameBlurChange}
+                      error={errors.pre_company_name}
+                      helperText={errors.pre_company_name}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address of Previous Company</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address of Previous Company *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -439,12 +452,14 @@ return (
                       type="text"
                       value={inputs.pre_company_address} 
                       onChange={handleInputChange}
+                      error={errors.pre_company_address}
+                      helperText={errors.pre_company_address}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact of Previous Company</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact of Previous Company *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -458,12 +473,14 @@ return (
                       type="number"
                       value={inputs.pre_company_contact} 
                       onChange={handleInputChange}
+                      error={errors.pre_company_contact}
+                      helperText={errors.pre_company_contact}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel  className={classes.textsize} htmlFor="pre_position">Position/JobRole in Previous Company</InputLabel>
+                  <InputLabel  className={classes.textsize} htmlFor="pre_position">Position/JobRole in Previous Company *</InputLabel>
                   <TextField 
                       InputProps={{
                         classes: {
@@ -476,13 +493,15 @@ return (
                       // label="Position/JobRole in Previous Company"
                       type="text"
                       value={inputs.pre_position} 
+                      error={errors.pre_position}
+                      helperText={errors.pre_position}
                       onChange={handleInputChange}
                       required
                       fullWidth
                   />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -497,6 +516,8 @@ return (
                       value={inputs.duration} 
                       onChange={handleInputChange}
                       onBlur={handleNameBlurChange}
+                      error={errors.duration}
+                      helperText={errors.duration}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
@@ -597,6 +618,8 @@ return (
                         // label:'assign_role'
                       }}
                       className={classes.textsize}
+                      // error={errors.assignRole}
+                      // helperText={errors.assignRole}
                       fullWidth
                       required
                     >

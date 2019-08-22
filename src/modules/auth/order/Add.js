@@ -51,6 +51,7 @@ import OrderAPI from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 
+import validate from '../../common/validation/OrderRuleValidation';
 const RESET_VALUES = {
     
 };
@@ -154,10 +155,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
 
 
-  function validate(values) {
-    let errors = {};
-    return errors;
-  };
+  // function validate(values) {
+  //   let errors = {};
+  //   return errors;
+  // };
 
   
   function handleBudgetClose(){
@@ -422,7 +423,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       }
   };
 
-  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addOrder,
     validate
@@ -561,6 +562,7 @@ return (
                       className={classes.textsize}
                       required
                       disabled = {budgetList ==""}
+                      
                     > 
                     {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
                       return(
@@ -668,6 +670,8 @@ return (
                       // label='customer'
                       fullWidth
                       className={classes.textsize}
+                      error={errors.payment_mode}
+                      helperText={errors.payment_mode}
                       required
                       disabled = {budgetList ==""}
                     >    

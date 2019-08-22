@@ -24,6 +24,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import validate from '../../common/validation/ProductRuleValidation';
 // API CALL
 import Category from '../../../api/Category';
 import Brand from '../../../api/product/Brand';
@@ -173,17 +174,17 @@ export default function AddProduct(props) {
     props.handleClose(false);
   };
 
-  function validate(values) {
-    let errors = {};
+  // function validate(values) {
+  //   let errors = {};
 
-    return errors;
-  };
+  //   return errors;
+  // };
   function handleReset() {
     cleanInputs()
     console.log(inputs);
   };
   
-  const { inputs, handleInputChange, handleSubmit,  setInput ,cleanInputs} = useSignUpForm(
+  const { inputs, handleInputChange, handleSubmit,  setInput ,cleanInputs,errors } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
     validate
@@ -224,7 +225,7 @@ export default function AddProduct(props) {
           <Paper className={classes.paper}> 
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="product_name">Enter Product Title/Name</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Enter Product Title/Name *</InputLabel>
                     
                     <TextField
                       InputProps={{
@@ -236,6 +237,8 @@ export default function AddProduct(props) {
                       name="productname"
                       // label="Enter Product Title/Name"
                       value={inputs.productname}
+                      error={errors.productname}
+                      helperText={errors.productname}
                       fullWidth
                       type="text"
                       margin="dense"
@@ -253,7 +256,7 @@ export default function AddProduct(props) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="choose_color">Choose Color</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="choose_color">Choose Color *</InputLabel>
                     <Select
                         name="color"
                         onChange={handleInputChange}
@@ -263,6 +266,8 @@ export default function AddProduct(props) {
                           id: 'color',
                         }}
                         className={classes.drpdwn}
+                        error={errors.color}
+                        helperText={errors.color}
                         fullWidth
                         // label="Choose Color"
                         required
@@ -276,7 +281,7 @@ export default function AddProduct(props) {
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Choose Brand</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="city_selection">Choose Brand *</InputLabel>
                     <Select
                         name="brand"
                         onChange={handleInputChange}
@@ -287,6 +292,8 @@ export default function AddProduct(props) {
                         }}
                         className={classes.drpdwn}
                         fullWidth
+                        error={errors.brand}
+                        helperText={errors.brand}
                         // label="Choose Brand"
                         required
                       >
@@ -314,6 +321,8 @@ export default function AddProduct(props) {
                       fullWidth
                       type="number"
                       margin="dense"
+                      error={errors.productprice}
+                      helperText={errors.productprice}
                       required
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -332,6 +341,8 @@ export default function AddProduct(props) {
                         name="description"
                         fullWidth
                         multiline
+                        error={errors.description}
+                        helperText={errors.description}
                         margin="dense"
                         type="text"
                         // label="Enter Product Description"
@@ -409,6 +420,8 @@ export default function AddProduct(props) {
                       fullWidth
                       required
                       margin="dense"
+                      // error={errors.rental}
+                      // helperText={errors.rental}
                       type="number"
                       // label="Rental Price"
                       InputProps={{
@@ -470,6 +483,8 @@ export default function AddProduct(props) {
                           id: 'status',
                         }}
                         className={classes.drpdwn}
+                        error={errors.status}
+                        helperText={errors.status}
                         fullWidth
                         // label="Choose Status"
                         required

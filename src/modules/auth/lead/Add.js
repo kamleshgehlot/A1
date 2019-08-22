@@ -29,6 +29,7 @@ import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
+import validate from '../../common/validation/LeadRuleValidation';
 // API CALL
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
@@ -206,10 +207,10 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     handleClose(false);
   };
 
-  function validate(values) {
-    let errors = {};
-    return errors;
-  };
+  // function validate(values) {
+  //   let errors = {};
+  //   return errors;
+  // };
 
 
   function handleFranchise(event){
@@ -228,7 +229,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       setOtherFranchiseValue(event.target.value)
     }
 
-    const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+    const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
       RESET_VALUES,
       addLead,
       validate
@@ -291,6 +292,8 @@ return (
                           id: 'franchise_id',
                           label:'franchise_id'
                         }}
+                        error={errors.franchise_id}
+                        helperText={errors.franchise_id}
                         className={classes.drpdwn}
                         fullWidth
                         label="franchise_id"
@@ -354,6 +357,8 @@ return (
                       // label="Description"
                       value={inputs.description}
                       onChange={handleInputChange}
+                      error={errors.description}
+                      helperText={errors.description}
                       fullWidth
                       required
                       multiline
