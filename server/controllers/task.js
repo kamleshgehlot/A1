@@ -6,13 +6,13 @@ const add = function (req, res, next) {
     id: req.body.id,
     task_id: req.body.task_id,
     task_description: req.body.task_description,
-    assign_role:req.body.assign_role,
+    assign_role: req.body.assign_role,
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
     status: req.body.status,
     user_id: req.decoded.user_id,
-    created_by:req.decoded.id,
-    updated_by:req.decoded.id,
+    created_by: req.decoded.id,
+    updated_by: req.decoded.id,
   };
   // console.log('req--------------',req.body);
   try {
@@ -20,14 +20,14 @@ const add = function (req, res, next) {
 
     if (req.body.id) {
       newTask.update().then(function (result) {
-        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
+        new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
           // console.log('controller', { taskList });
           res.send({ taskList });
         });
       });
     } else {
       newTask.add().then(result => {
-        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
+        new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
           res.send({ taskList });
           // console.log('tasklist---==----',taskList);
         });
@@ -43,7 +43,7 @@ const add = function (req, res, next) {
 
 const all = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
+    new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
       // console.log('tasklist controller---',taskList);
       res.send({ taskList });
     });
@@ -54,7 +54,7 @@ const all = function (req, res, next) {
 const last = function (req, res, next) {
   try {
     new Task({ user_id: req.decoded.user_id }).last().then(taskLast => {
-      res.send( taskLast );
+      res.send(taskLast);
     });
   } catch (err) {
     console.log('Error: ', err);
@@ -63,7 +63,7 @@ const last = function (req, res, next) {
 
 const completedList = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).completedList().then(taskList => {
+    new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).completedList().then(taskList => {
       res.send({ taskList });
     });
   } catch (err) {
@@ -77,12 +77,12 @@ const deleteTask = function (req, res, next) {
     user_id: req.decoded.user_id,
     updated_by: req.decoded.id,
     franchise_id: req.body.franchise_id.franchiseId,
-    task_id:req.body.task_id,
+    task_id: req.body.task_id,
   };
   try {
     const newTask = new Task(taskParam);
     newTask.deleteTask().then(result => {
-      new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
+      new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
         res.send({ taskList });
       });
     })
@@ -101,7 +101,7 @@ const reschedule = function (req, res, next) {
     assignid: req.body.assignid,
     task_id: req.body.task_id,
     task_description: req.body.task_description,
-    assign_role:req.body.assigned_role,
+    assign_role: req.body.assigned_role,
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
     new_due_date: req.body.new_due_date,
@@ -112,11 +112,11 @@ const reschedule = function (req, res, next) {
   };
   try {
     const newTask = new Task(taskParam);
-      newTask.reschedule().then(result => {
-        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).all().then(taskList => {
-          res.send({ taskList });
-        });
-      })
+    newTask.reschedule().then(result => {
+      new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
+        res.send({ taskList });
+      });
+    })
   } catch (err) {
     console.log('Error: ', err);
 
@@ -128,7 +128,7 @@ const reschedule = function (req, res, next) {
 // staff task list
 const staffTasks = function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).staffTasks().then(taskList => {
+    new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks().then(taskList => {
       res.send({ taskList });
     });
   } catch (err) {
@@ -137,7 +137,7 @@ const staffTasks = function (req, res, next) {
 };
 
 const staffUpdate = function (req, res, next) {
-  
+
   const staffData = JSON.parse(req.body.data);
 
   let attachments = '';
@@ -148,24 +148,24 @@ const staffUpdate = function (req, res, next) {
   const taskParam = {
     id: staffData.id,
     task_id: staffData.task_id,
-    assigned_role:staffData.assigned_role,
+    assigned_role: staffData.assigned_role,
     assigned_to: staffData.assigned_to,
     message: staffData.message,
     status: staffData.status,
     user_id: req.decoded.user_id,
     updated_by: req.decoded.id,
-    updated_date:staffData.updated_date,
+    updated_date: staffData.updated_date,
     document: attachments,
   };
   // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
-      newTask.staffUpdate().then(function (result) {
-        new Task({ user_id: req.decoded.user_id, userid:req.decoded.id }).staffTasks().then(taskList => {
-          // console.log('controller', { taskList });
-          res.send({ taskList });
-        });
+    newTask.staffUpdate().then(function (result) {
+      new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks().then(taskList => {
+        // console.log('controller', { taskList });
+        res.send({ taskList });
       });
+    });
   } catch (err) {
     console.log('Error: ', err);
 
@@ -173,4 +173,4 @@ const staffUpdate = function (req, res, next) {
     res.send('error', { error: err });
   }
 };
-module.exports = { add, all, last, completedList,deleteTask,reschedule, staffTasks,staffUpdate };
+module.exports = { add, all, last, completedList, deleteTask, reschedule, staffTasks, staffUpdate };
