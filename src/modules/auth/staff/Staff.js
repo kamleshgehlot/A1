@@ -268,7 +268,7 @@ export default function Staff(props) {
                           <StyledTableCell>
 
                           {data.position_name}
-                          {data.position}
+                          {/* {data.position} */}
                           {/* {
                             positions.map(ele =>{
                               return(

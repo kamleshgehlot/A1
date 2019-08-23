@@ -149,6 +149,7 @@ export default function AddProduct(props) {
   }, []);
 
   const categoryadd = async () => {
+    console.log('entere--gasdu----')
     setpLoading(true);
     setSavebtn(false);
     const response = await Category.addproduct({

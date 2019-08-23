@@ -25,6 +25,25 @@ export default function validate(values) {
     errors.description = 'Product Description is required';
   }
 
+  if (!values.specification) {
+    errors.specification = 'Product Specification is required';
+  }
+  
+  if (!values.brought_from) {
+    errors.brought_from = 'Brought From is required';
+  }
+  
+  if (!values.invoice) {
+    errors.invoice = 'Invoice Number is required';
+  }
+  
+  if (!values.meta_keywords) {
+    errors.meta_keywords = 'Meta Keywords is required';
+  }
+  if (!values.meta_description) {
+    errors.meta_description = 'Meta Description is required';
+  }
+  
   if (!values.rental) {
     errors.rental = 'Rental Price is required';
   } else if (!validNumber.test(values.rental)) {

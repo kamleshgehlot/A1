@@ -19,6 +19,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import validate from '../../common/validation/StaffRuleValidtion';
 // API CALL
 import StaffMaster from '../../../api/StaffMasterAdmin';
 
@@ -85,21 +86,30 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const classes = useStyles();
   
   const [staffList, setStaffList] = React.useState(inputs);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addStaffMaster = async () => {
-    const response = await StaffMaster.register({
-      id: staffList.id,
-      first_name: staffList.first_name,
-      last_name:staffList.last_name,
-      location:staffList.location,
-      contact:staffList.contact,
-      email:staffList.email,
-      position:staffList.position,
-      created_by: 1,
-    });
-    handleSnackbarClick(true,'Franchise Updated Successfully');
-    setFranchiseList(response.staffList);
-    handleEditClose(false);
+
+    setIsSubmitting(true);
+    setErrors(validate(staffList));
+    if (Object.keys(errors).length === 0 && isSubmitting) {
+     
+      const response = await StaffMaster.register({
+          id: staffList.id,
+          first_name: staffList.first_name,
+          last_name:staffList.last_name,
+          location:staffList.location,
+          contact:staffList.contact,
+          email:staffList.email,
+          position:staffList.position,
+          created_by: 1,
+        });
+        handleSnackbarClick(true,'Franchise Updated Successfully');
+        setFranchiseList(response.staffList);
+        handleEditClose(false);
+      }
+  
   };
 
   const handleInputChange = event => {
@@ -140,6 +150,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // label="First Name"
                       value={staffList.first_name}
                       onChange={handleInputChange}
+                      error={errors.first_name}
+                      helperText={errors.first_name}
                       fullWidth
                       required
                       type="text"
@@ -163,6 +175,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       required
                       value={staffList.last_name} 
                       onChange={handleInputChange}
+                      error={errors.last_name}
+                      helperText={errors.last_name}
                       // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
@@ -183,6 +197,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="text"
                       value={staffList.location}
                       onChange={handleInputChange}
+                      error={errors.location}
+                      helperText={errors.location}
                       required
                       fullWidth
                     />
@@ -202,6 +218,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="number"
                       value={staffList.contact} 
                       onChange={handleInputChange}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       required
                       fullWidth
                     />
@@ -221,6 +239,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="email"
                       value={staffList.email} 
                       onChange={handleInputChange}
+                      error={errors.email}
+                      helperText={errors.email}
                       required
                       disabled
                       fullWidth
@@ -237,6 +257,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                         // label:'position'
                       }}
                       fullWidth className={classes.textsize}
+                      error={errors.position}
+                      helperText={errors.position}
                       // label="position"
                       required
                     > 
