@@ -24,7 +24,7 @@ const selectedArea = function(req, res, next) {
       });
     }
   } catch (error) {
-    console.log('Error: ', error);
+    console.log('Location Error: ', error);
   }
 };
 

@@ -21,7 +21,6 @@ var Company = function (params) {
   // this.comp_id = params.camp_id;
 };
 
-// console.log("company---",Company);
 
 Company.prototype.register = function () {
   const that = this;
@@ -47,13 +46,14 @@ Company.prototype.register = function () {
 
               connection.query('INSERT INTO company(company_id, name,nbzn,location,director,email,contact,alt_contact,website,accountant_id) VALUES ("' + company_id + '", "' + that.name + '", "' + that.nbzn + '","' + that.location + '", "' + info.director + '","' + info.email + '", "' + info.contact + '","' + info.alt_contact + '","' + that.website + '","' + that.accountant_id + '")', function (error, rows, fields) {
                 if (!error) {
-
+                  // console.log(rows.insertId)
                 } else {
                   console.log("Error...", error);
                   reject(error);
                 }
               });
             })
+            
             resolve(company_id);
           } else {
             console.log("Error...", error);

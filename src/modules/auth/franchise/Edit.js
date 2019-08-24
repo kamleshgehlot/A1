@@ -313,7 +313,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // label="Status"
                       required className={classes.textsize}
                     >
-                      <MenuItem className={classes.textsize} value={1}>Open</MenuItem>
+                    {franchise.state=== 1 ? <MenuItem className={classes.textsize} value={1}>Open</MenuItem> : ''}
                       <MenuItem className={classes.textsize} value={2}>Active</MenuItem>
                       <MenuItem className={classes.textsize} value={3}>Inactive</MenuItem>
                       <MenuItem className={classes.textsize} value={4}>Close</MenuItem>

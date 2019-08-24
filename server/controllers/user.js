@@ -109,14 +109,12 @@ const register = function (req, res, next) {
 			// newAccountant.update();
 		} else {
 			newAccountant.register().then(function (result) {
-
-				newCompany.accountant_id = result.accountant_id;
-				newCompany.register().then(function (result) {
-
-					newFranchise.company_id = result;
-					newUser.company_id = result;
-					newFranchise.register().then(function (result) {
-						console.log("Emaiol started..............")
+			newCompany.accountant_id = result.accountant_id;
+					newCompany.register().then(function (result) {
+						newFranchise.company_id = result;
+						newUser.company_id = result;
+							newFranchise.register().then(function (result) {
+							console.log("Email started..............")
 						const accountId = Miscellaneious.generateAccountId();
 						const token = Miscellaneious.generateRandomToken();
 

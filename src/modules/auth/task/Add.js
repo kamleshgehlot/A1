@@ -260,7 +260,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
 
 }
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, errors,setInput } = useSignUpForm(
+ const { inputs=null, handleInputChange, handleSubmit, handleReset, errors, setInput } = useSignUpForm(
     RESET_VALUES,
     addTaskMaster,
     validate

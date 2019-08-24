@@ -22,21 +22,6 @@ export default function validate(values) {
   if (!values.company_location) {
     errors.company_location = 'Company Location is required';
   }
-  if (!values.director) {
-    errors.director = 'Director Name is required';
-  } else if (!validString.test(values.director)) {
-    errors.director = 'Director Name is invalid';
-  }
-  if (!values.email) {
-    errors.email = 'Email Address is required';
-  } else if (!validEmail.test(values.email)) {
-    errors.email = 'Email Address is invalid';
-  }
-  if (!values.contact) {
-    errors.contact = 'Contact is required';
-  } else if (!validNumber.test(values.contact)) {
-    errors.contact = 'Contact is invalid';
-  }
   
   if (!values.accountant_name) {
     errors.accountant_name = 'Name is required';
