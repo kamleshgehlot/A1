@@ -295,6 +295,50 @@ Task.prototype.staffUpdate = function () {
       }
       if (!error) {
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          
+        if(that.document == '')
+        {
+          
+        if(that.status==='2'){
+          console.log('that.statius==-=',that.task_id)
+          connection.query('update task_assign set message="'+that.message+'", start_date="'+that.start_date+'",  updated_at="'+that.updated_date+'", updated_by = "' +that.updated_by + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '"  AND is_active <> 0', function (error, arows, fields) {
+            if (!error) {
+              resolve({ arows });
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+
+          });
+        }
+        else if(that.status==='4'){
+          connection.query('update task_assign set message="'+that.message+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'",completion_date="'+that.updated_date+'" WHERE task_id = "' + that.task_id + '" AND is_active <> 0', function (error, arows, fields) {
+            if (!error) {
+              
+              resolve({ arows });
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+
+          });
+        }
+        else{
+          connection.query('update task_assign set message="'+that.message+'", updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '" AND is_active<>0', function (error, arows, fields) {
+            if (!error) {
+              
+              resolve({ arows });
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+
+          });
+        }
+ 
+      }
+        else{
+
                 if(that.status==='2'){
                   console.log('that.statius==-=',that.task_id)
                   connection.query('update task_assign set message="'+that.message+'", start_date="'+that.start_date+'", document="'+that.document+'", updated_at="'+that.updated_date+'", updated_by = "' +that.updated_by + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '"  AND is_active <> 0', function (error, arows, fields) {
@@ -331,10 +375,10 @@ Task.prototype.staffUpdate = function () {
       
                   });
                 }
-         
       }
       connection.release();
       console.log('Process Complete %d', connection.threadId);
+    }
     });
   }).catch((error) => {
     throw error;
