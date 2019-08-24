@@ -194,6 +194,7 @@ export default function AddProduct(props) {
   function handleRentalChange(e){
     if(!(e.target.value <='0')){
       setRental(e.target.value)
+      setInput(e.target.name,e.target.value)
     }
   }
   return (
@@ -416,7 +417,7 @@ export default function AddProduct(props) {
                       }}
                       id="rental"
                       name="rental"
-                      value={rental}
+                      value={inputs.rental}
                       onChange={handleRentalChange}
                       fullWidth
                       required

@@ -93,6 +93,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const classes = useStyles(); 
 
   const [ploading, setpLoading] = React.useState(false);
+
+
   const addStaffMaster = async () => {
     
     if(inputs.email === chkEmail){
@@ -294,7 +296,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
+                  <InputLabel  className={classes.textsize} htmlFor="position">Position *</InputLabel>
                     <Select
                       value={inputs.position}
                       onChange={handleInputChange}

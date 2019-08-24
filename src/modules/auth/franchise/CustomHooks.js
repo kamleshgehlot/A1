@@ -47,12 +47,17 @@ const useSignUpForm = (state, callback, validate) => {
     });
   };
 
+  const setInputsAll = e => {
+    setInputs(inputs => e);
+  }
+
   return {
     handleSubmit,
     handleInputChange,
     handleEditSubmit,
     inputs,
     handleReset,
+    setInputsAll,
     setInput,
     errors,
     isSubmitting,
