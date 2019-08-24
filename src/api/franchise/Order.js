@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as c from '../Constants';
 import { authHeader } from '../AuthHeader';
+import checkError from '../HttpClient';
 
 const PARAMS = ({ methodType = 'GET' }) => ({
   method: methodType,
@@ -25,6 +26,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -36,6 +38,7 @@ export default {
       
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -47,6 +50,7 @@ export default {
       console.log('dat....', data);
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -58,6 +62,7 @@ export default {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -75,6 +80,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -92,6 +98,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -109,6 +116,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -126,6 +134,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -143,6 +152,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -160,6 +170,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -177,6 +188,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -194,6 +206,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },
@@ -211,6 +224,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   },  
@@ -228,6 +242,7 @@ export default {
       );
       return data;
     } catch (error) {
+      checkError();
       throw error;
     }
   }, 
