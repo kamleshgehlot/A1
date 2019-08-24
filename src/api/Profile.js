@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as c from './Constants';
 import { authHeader } from './AuthHeader';
+import checkError from './HttpClient';
 
 const PARAMS = ({ methodType = 'GET' }) => ({
   method: methodType,
@@ -17,6 +18,7 @@ export default {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
     } catch (error) {
+      checkError(error);
       throw error;
     }
   },
@@ -26,6 +28,7 @@ export default {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
       return data;
     } catch (error) {
+      checkError(error);
       throw error;
     }
   }

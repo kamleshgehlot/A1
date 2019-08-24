@@ -42,7 +42,7 @@ const login = function (req, res, next) {
           status = 200;
           // Create a token
           const payload = { id: user[0].id, user: params.name, user_id: user[0].user_id, franchise_id: user[0].franchise_id, role: user[0].role_id };
-          const options = { expiresIn: '365d', issuer: 'https://sargatechnology.com' };
+          const options = { expiresIn: '12h', issuer: 'https://sargatechnology.com' };
           const secret = process.env.JWT_SECRET || 'secret';
           const token = jwt.sign(payload, secret, options);
 
@@ -80,6 +80,10 @@ const login = function (req, res, next) {
 
   } catch (err) {
     console.log("Error: ", err);
+    status = 401;
+    result.errorCode = status;
+    result.message = 'Session is expired.';
+    res.status(status).send(result);
   }
 };
 
