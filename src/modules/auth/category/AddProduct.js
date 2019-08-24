@@ -150,8 +150,11 @@ export default function AddProduct(props) {
 
   const categoryadd = async () => {
     console.log('entere--gasdu----')
+    
+    if(inputs.status != ''){
     setpLoading(true);
     setSavebtn(false);
+
     const response = await Category.addproduct({
       maincat:props.productCatList.maincategory,
       category:props.productCatList.category,
@@ -173,6 +176,9 @@ export default function AddProduct(props) {
     setpLoading(false);
     setSavebtn(true);
     props.handleClose(false);
+  }else{
+    alert('choose status..');
+  }
   };
 
   // function validate(values) {
@@ -192,14 +198,15 @@ export default function AddProduct(props) {
   );
 
   function handleRentalChange(e){
-    if(!(e.target.value <='0')){
-      setRental(e.target.value)
+    setRental(e.target.value);
+    if(e.target.value < 0){
+      setRental('')
     }
   }
   return (
     <div>
       <Dialog maxWidth="sm" open={props.open}>
-        <form onSubmit={handleSubmit}>
+        <form>
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
@@ -500,11 +507,10 @@ export default function AddProduct(props) {
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                   {savebtn?   <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} >
-                      Save
-                    </Button>:<Button variant="contained" color="primary" onClick={handleSubmit}  className={classes.button} disabled>
-                      Save
-                    </Button>}
+                   {savebtn?   
+                      <Button variant="contained" color="primary" onClick={categoryadd} className={classes.button} > Save</Button>
+                   :  <Button variant="contained" color="primary" onClick={categoryadd}  className={classes.button} disabled>  Save  </Button>
+                   }
                     <Button variant="contained" color="primary" onClick={props.handleClose} className={classes.button}>
                       Close
                     </Button> 

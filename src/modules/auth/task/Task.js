@@ -646,6 +646,7 @@ useEffect(() => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                      {console.log(completedTaskList)}
                     { (completedTaskList.length > 0 ? completedTaskList : []).map((data, index)=>{
                       return(
                       // assignedid!=0? data.assigned_to===assignedid?
@@ -676,7 +677,9 @@ useEffect(() => {
                           <StyledTableCell>{data.start_date}</StyledTableCell>
                           <StyledTableCell>{data.completion_date}</StyledTableCell>
                           <StyledTableCell>{data.message}</StyledTableCell>
-                          <StyledTableCell>{data.document}</StyledTableCell>
+                          <StyledTableCell>
+                            <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
+                          </StyledTableCell>
                           
                         </TableRow>
                     //     :'':
