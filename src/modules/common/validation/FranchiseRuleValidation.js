@@ -21,8 +21,6 @@ export default function validate(values) {
   }
   if (!values.company_location) {
     errors.company_location = 'Company Location is required';
-  } else if (!validString.test(values.company_location)) {
-    errors.company_location = 'Company Location is invalid';
   }
   if (!values.director) {
     errors.director = 'Director Name is required';

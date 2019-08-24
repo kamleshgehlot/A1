@@ -151,7 +151,7 @@ export default function AddProduct(props) {
   const categoryadd = async () => {
     console.log('entere--gasdu----')
     
-    if(inputs.status != ''){
+    // if(inputs.status != ''){
     setpLoading(true);
     setSavebtn(false);
 
@@ -176,9 +176,9 @@ export default function AddProduct(props) {
     setpLoading(false);
     setSavebtn(true);
     props.handleClose(false);
-  }else{
-    alert('choose status..');
-  }
+  // }else{
+  //   alert('choose status..');
+  // }
   };
 
   // function validate(values) {
@@ -200,8 +200,12 @@ export default function AddProduct(props) {
   function handleRentalChange(e){
     setRental(e.target.value);
     if(e.target.value < 0){
-    // setInput(e.target.name,e.target.value)
+      setInput(e.target.name,'')
       setRental('')
+    }
+    else{
+      setInput(e.target.name,e.target.value)
+
     }
   }
   return (
@@ -376,6 +380,8 @@ export default function AddProduct(props) {
                         // label="Enter Product Specification"
                         value={inputs.specification}
                         onChange={handleInputChange}
+                        error={errors.specification}
+                        helperText={errors.specification}
                       />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -390,6 +396,8 @@ export default function AddProduct(props) {
                       name="brought_from"
                       value={inputs.brought_from}
                       onChange={handleInputChange}
+                      error={errors.brought_from}
+                      helperText={errors.brought_from}
                       fullWidth
                       margin="dense"
                       type="text"
@@ -408,6 +416,8 @@ export default function AddProduct(props) {
                       name="invoice"
                       value={inputs.invoice}
                       onChange={handleInputChange}
+                      error={errors.invoice}
+                      helperText={errors.invoice}
                       fullWidth
                       margin="dense"
                       type="text"
@@ -429,8 +439,8 @@ export default function AddProduct(props) {
                       fullWidth
                       required
                       margin="dense"
-                      // error={errors.rental}
-                      // helperText={errors.rental}
+                      error={errors.rental}
+                      helperText={errors.rental}
                       type="number"
                       // label="Rental Price"
                       InputProps={{
@@ -450,6 +460,8 @@ export default function AddProduct(props) {
                       name="meta_keywords"
                       value={inputs.meta_keywords}
                       onChange={handleInputChange}
+                      error={errors.meta_keywords}
+                      helperText={errors.meta_keywords}
                       fullWidth
                       margin="dense"
                       type="text"
@@ -457,7 +469,7 @@ export default function AddProduct(props) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="specification">Meta Description</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="meta_description">Meta Description</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -471,6 +483,8 @@ export default function AddProduct(props) {
                         fullWidth
                         value={inputs.meta_description}
                         onChange={handleInputChange}
+                        error={errors.meta_description}
+                        helperText={errors.meta_description}
                         margin="dense"
                         type="text"
                         // label="Meta Description"
@@ -509,8 +523,8 @@ export default function AddProduct(props) {
                   </Grid>
                   <Grid item xs={12} sm={12}>
                    {savebtn?   
-                      <Button variant="contained" color="primary" onClick={categoryadd} className={classes.button} > Save</Button>
-                   :  <Button variant="contained" color="primary" onClick={categoryadd}  className={classes.button} disabled>  Save  </Button>
+                      <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} > Save</Button>
+                   :  <Button variant="contained" color="primary" className={classes.button} disabled>  Save  </Button>
                    }
                     <Button variant="contained" color="primary" onClick={props.handleClose} className={classes.button}>
                       Close

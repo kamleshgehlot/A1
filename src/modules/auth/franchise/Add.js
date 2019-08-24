@@ -451,7 +451,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -471,7 +471,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
           <div className={classes.root}>
             {/* Franchise Details */}
             
-            <Grid item xs={12} sm={10}>   {ploading ?  <LinearProgress />: null}</Grid>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
               expanded={expanded === 'panel1'}

@@ -120,10 +120,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     RESET_VALUES,
     addStaffMaster,
     validate
-  );
+  ); 
   useEffect(() => {
     setInputsAll(inputValues);
-
   }, []);
   // console.log(inputs)
   // const handleInputChange = event => {
