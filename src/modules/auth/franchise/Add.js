@@ -293,40 +293,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   }
   };
 
-  // function validate(values) {
-  //   let errors = {};
-    // if (!values.email) {
-    //   errors.email = 'Email address is required';
-    // } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-    //   errors.email = 'Email address is invalid';
-    // }
-
-    // if (!values.password) {
-    //   errors.password = 'password address is required';
-    // } else if (values.password.length < 8) {
-    //   errors.password = "Your password must be at least 8 characters";
-    // } else if (values.password.search(/[a-z]/i) < 0) {
-    //     errors.password = "Your password must contain at least one letter.";
-    // } else if (values.password.search(/[0-9]/) < 0) {
-    //     errors.password = "Your password must contain at least one digit.";
-    // }
-
-  //   if (!values.city) {
-  //     errors.city = 'City is required';
-  //   } 
-
-  //   if (!values.suburb) {
-  //     errors.suburb = 'suburb is required';
-  //   } 
-
-  //   return errors;
-  // };
-
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
-    addFranchise,
-    validate
-  );
+ 
 
   function handleEmailVerification(event){
     // console.log(event.target.value);
@@ -448,10 +415,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     return Math.random().toString(36).slice(-8);
   }
 
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    addFranchise,
+    validate
+  );
+
   return (
-    <div>
+    <div onSubmit={handleSubmit}>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
@@ -897,7 +870,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       onChange={handleInputChange}
                     />
                   </Grid>
-
+{console.log(inputs)}
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="website">Website</InputLabel>
                     <TextField 
@@ -922,12 +895,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
             </ExpansionPanel>
                   <Grid item xs={12} sm={4}>
                
-              {savebtn?    <Button variant="contained" color="primary" className={classes.button} onClick={handleSubmit}>
+              {savebtn?  <Button variant="contained" color="primary" className={classes.button} type="submit">
                      Save
                     </Button>: <Button variant="contained" color="primary" disabled className={classes.button}  >
                      Save
                     </Button>}
-                    <Button variant="contained"  color="primary" className={classes.button}  onClick={handleClose} aria-label="Close">
+                    <Button variant="contained"  color="primary" className={classes.button} onClick={handleClose} aria-label="Close">
                      Close
                     </Button>
                   </Grid>
