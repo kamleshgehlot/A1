@@ -1,54 +1,47 @@
 const FranchiseUser = require('../models/franchiseUser');
 
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   try {
-    new FranchiseUser({user_id: req.decoded.user_id}).all().then(franchiseUserList => {
-      // console.log('fuser----',franchiseUserList);
-      res.send({ franchiseUserList });
-    });
+    const franchiseUserList = await new FranchiseUser({user_id: req.decoded.user_id}).all();
+    
+    res.send({ franchiseUserList });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
-const user = function(req, res, next) {
+const user = async function(req, res, next) {
   try {
-    new FranchiseUser({user_id: req.decoded.user_id}).user().then(currentuser => {
-      // console.log('fuser----',currentuser);
-      res.send({ currentuser });
-    });
+    const currentuser = await new FranchiseUser({user_id: req.decoded.user_id}).user();
+    
+    res.send({ currentuser });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-const staffList = function (req, res, next) {
+const staffList = async function (req, res, next) {
   const staffRoleParam = {
     selectedRole: req.body.selectedRole,
     user_id: req.decoded.user_id
   };
   try {
-    console.log('staffRoleParam----===',staffRoleParam);
     const newFranchiseUser = new FranchiseUser(staffRoleParam);
-    newFranchiseUser.staffList().then(staffList => {
-      console.log('staffList----===',staffList); 
-        res.send({ staffList });
-    });
+    const staffList = await newFranchiseUser.staffList();
+    
+    res.send({ staffList });
   } catch (err) {
-    console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
 
-const franchiseid = function(req, res, next) {
+const franchiseid = async function(req, res, next) {
   try {
-    new FranchiseUser({user_id: req.decoded.user_id}).franchiseid().then(currentfranchise => {
-      console.log('ffranchise----',currentfranchise);
-      res.send({ currentfranchise });
-    });
+    const currentfranchise = await new FranchiseUser({user_id: req.decoded.user_id}).franchiseid();
+    
+    res.send({ currentfranchise });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
-module.exports = { all,user,staffList,franchiseid };
+
+module.exports = { all, user, staffList, franchiseid };

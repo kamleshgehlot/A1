@@ -1,13 +1,6 @@
-const nodemailer = require('nodemailer');
-const { trans } = require("../../lib/mailtransporter"); 
-
 const Customer = require('../../models/franchise/customer.js');
 
-const register = function (req, res, next) {
-  // console.log("****************Customer..................", req.body.data);
-  // console.log("%%%%%%%%%%% Customer File %%%%%%%%%%%%%", req.files);
-  // console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
-
+const register = async function (req, res, next) {
   const customerData = JSON.parse(req.body.data);
 
   let attachments = '';
@@ -55,88 +48,75 @@ const register = function (req, res, next) {
     
   };
 	try{
-	if(CustomerParams.id) {
-    CustomerParams.updated_by = req.decoded.id;
-	  const newCustomer = new Customer(CustomerParams);
+    if(CustomerParams.id) {
+      CustomerParams.updated_by = req.decoded.id;
+      const newCustomer = new Customer(CustomerParams);
 
-    newCustomer.update().then(function(result){
-      new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {
-        res.send({ customerList: customerList });
-      });
-    });
-	} else {
-    CustomerParams.created_by = req.decoded.id;
-	  const newCustomer = new Customer(CustomerParams);
-    newCustomer.register().then(function(result){
-      new Customer({user_id : req.decoded.user_id}).all().then(function (customerList) {
-        res.send({ customerList: customerList });
-      });
-    });
-	}
+      await newCustomer.update();
+      const customerList = await new Customer({user_id : req.decoded.user_id}).all();
+
+      res.send({ customerList: customerList });
+    } else {
+      CustomerParams.created_by = req.decoded.id;
+      const newCustomer = new Customer(CustomerParams);
+
+      await newCustomer.register();
+      await new Customer({user_id : req.decoded.user_id}).all();
+
+      res.send({ customerList: customerList });
+    }
 	}catch(err){
-    console.log("Error..",err);
+    next(error);
 	}
 };
 
-
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   try {
-    new Customer({user_id : req.decoded.user_id}).all().then(customerList => {
-      res.send({ customerList });
-    });
+    const customerList= await new Customer({user_id : req.decoded.user_id}).all();
+
+    res.send({ customerList });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-const getidtypelist = function(req, res, next) {
+const getidtypelist = async function(req, res, next) {
   try {
-    new Customer({user_id : req.decoded.user_id}).getidtypelist().then(idTypeList => {
-      res.send({ idTypeList });
-    });
+    const idTypeList = await new Customer({user_id : req.decoded.user_id}).getidtypelist();
+
+    res.send({ idTypeList });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-const searchData = function (req, res, next) {
-  // console.log("****************Customer..................", req.body);
-
+const searchData = async function (req, res, next) {
   let CustomerParams = {
     user_id: req.decoded.user_id,
     searchText: req.body.searchText,
   };
 	try{
-console.log('body',req.body.searchText);
-    
-    
-     const newCustomer = new Customer(CustomerParams);
-    newCustomer.searchData().then(function(result){
-       res.send({ customerList: result });
-    });
-    // }
+    const newCustomer = new Customer(CustomerParams);
+    const result = await newCustomer.searchData();
+
+    res.send({ customerList: result });
 	}catch(err){
-    console.log("Error..",err);
+    next(error);
 	}
 };
 
-
-
-const getSingleCustomer = function (req, res, next) {
-  // console.log("****************Customer..................", req.body);
-
+const getSingleCustomer = async function (req, res, next) {
   let CustomerParams = {
     user_id: req.decoded.user_id,
     customer_id :req.body.customer_id,
   };
 	try{
     const newCustomer = new Customer(CustomerParams);
-    newCustomer.getSingleCustomer().then(function(result){
-       res.send({ customer: result });
-    });
-    // }
+    const result = await newCustomer.getSingleCustomer();
+
+    res.send({ customer: result });
 	}catch(err){
-    console.log("Error..",err);
+    next(error);
 	}
 };
 

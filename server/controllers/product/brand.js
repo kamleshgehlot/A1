@@ -1,12 +1,12 @@
 const Brand = require('../../models/product/brand.js');
 
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   try {
-    new Brand({}).all().then(brandList => {
-      res.send({ brandList });
-    });
+    const brandList = await new Brand({}).all();
+    
+    res.send({ brandList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 

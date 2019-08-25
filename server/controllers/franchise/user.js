@@ -1,7 +1,6 @@
 const User = require("../../models/franchise/user.js")
-const UserRole = require("../../models/franchise/userRole")
 
-const register = function (req, res, next) {
+const register = async function (req, res, next) {
 	let userParam = {
 		name: req.body.name,
 		user_id: req.body.user_id,
@@ -16,45 +15,38 @@ const register = function (req, res, next) {
 	try {
 		const newUser = new User(userParam);
 	
-		newUser.register().then(function (result) {
-			newUser.all().then(function (userList) {
-				res.json({ credentials: result, userList: userList });
-			});
-		}).catch((err) => {
-			res.status(500);
-			res.render('error', { error: err });
-		});
+		const result = await newUser.register();
+		const userList = await newUser.all();
+		
+		res.json({ credentials: result, userList: userList });
 	} catch (err) {
-		console.log("Error: ", err);
-
-		res.status(500)
-		res.send('error', { error: err })
+		next(err);
 	}
 };
 
-const all = function (req, res, next) {
+const all = async function (req, res, next) {
 	try {
 			const newUser = new User({user_id: req.decoded.user_id});
 
-			newUser.all().then(function (userList) {
-				res.send({ userList: userList });
-			});
+			const userList = await newUser.all();
+			
+			res.send({ userList: userList });
 	} catch (err) {
-		console.log("Error: ", err);
+		next(err);
 	}
 }
 
-const getUniqueNames = function (req, res, next) {
+const getUniqueNames = async function (req, res, next) {
 	try {
 		if (req.decoded.role === 'admin') {
-			new User({}).getUniqueNames().then(function (userList) {
-				res.send({ userList: userList });
-			});
+			const userList = await new User({}).getUniqueNames();
+			
+			res.send({ userList: userList });
 		} else {
 			res.send([]);
 		}
 	} catch (err) {
-		console.log("Error: ", err);
+		next(err);
 	}
 }
 

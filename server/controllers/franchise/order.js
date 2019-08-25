@@ -1,13 +1,7 @@
 const Order = require('../../models/franchise/order.js');
 const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 
-const uploadDoc = function (req, res, next) {
-  // console.log("****************Customer..................", req.body);
-  // console.log("%%%%%%%%%%% Customer File %%%%%%%%%%%%%", req.files);
-  // console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
-
-
-
+const uploadDoc = async function (req, res, next) {
   const OrderData = JSON.parse(req.body.data);
   let attachments = '';
   req.files.map((file) => {
@@ -22,114 +16,99 @@ const uploadDoc = function (req, res, next) {
   };
 	try{
       const newDoc = new UploadDocument(orderParams);
-	     newDoc.uploadDoc().then(function(result){
-            new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-              res.send({ order: order});
-      });
-    });
+
+	    await newDoc.uploadDoc();
+      const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+      
+      res.send({ order: order});
 	}catch(err){
-    console.log("Error..",err);
+    next(error);
 	}
 };
 
-
-const getnewid = function(req, res, next) {
+const getnewid = async function(req, res, next) {
   try {
-    new Order({user_id: req.decoded.user_id}).getnewid().then(id => {
-      res.send(id);
-    });
+    const id = await new Order({user_id: req.decoded.user_id}).getnewid();
+    
+    res.send(id);
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-
-const getAll = function(req, res, next) {
+const getAll = async function(req, res, next) {
   try {
-    new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-      // console.log('hello --',order);
-      res.send({ order: order });
-    });
+    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+
+    res.send({ order: order });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-
-const getBudget = function(req, res, next) {
-  console.log('rows body...',req.body);
+const getBudget = async function(req, res, next) {
   try {
-    new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId}).getBudget().then(function (order) {
-      // console.log('ordler..',order[0].customer_id)
-      new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
-      res.send({ order , oldBudget}); 
-    });
-  });
+    const order = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId}).getBudget();
+    const oldBudget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget();
+    
+    res.send({ order , oldBudget}); 
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-const getExistingBudget = function(req, res, next) {
-  console.log('rows body...',req.body);
+const getExistingBudget = async function(req, res, next) {
   try {
-    new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getExistingBudget().then(function (oldBudget) {
-      res.send({oldBudget}); 
-    });
+    const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getExistingBudget();
+
+    res.send({oldBudget}); 
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-
-const getFixedOrder = function(req, res, next) {
-  console.log('rows body...',req.body);
+const getFixedOrder = async function(req, res, next) {
   try {
-    new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.fixedOrderId}).getFixedOrder().then(function (order) {
-      res.send(order);
-    });
+    const order = await new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.fixedOrderId}).getFixedOrder();
+    
+    res.send(order);
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-const getFlexOrder = function(req, res, next) {
-  console.log('rows body...',req.body);
+const getFlexOrder = async function(req, res, next) {
   try {
-    new Order({user_id : req.decoded.user_id, flexOrderId: req.body.flexOrderId}).getFlexOrder().then(function (order) {
-      res.send(order);
-    });
+    const order = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.flexOrderId});
+    
+    res.send(order);
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-
-
-const assignToFinance = function(req, res, next) {
-  console.log('rows body...',req.body);
+const assignToFinance = async function(req, res, next) {
   try {
-    new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToFinance().then(function (order) {
-      new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-        res.send({ order: order});
-      });
-    });
+    await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToFinance();
+    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+
+    res.send({ order: order});
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
-// const convertedList = function(req, res, next) {
+// const convertedList = async function(req, res, next) {
 //   try {
 //     new Order({user_id: req.decoded.user_id}).convertedList().then(enquiryList => {
 //       res.send({ enquiryList });
 //     });
 //   } catch (error) {
-//     console.log('Error: ', error);
+//     next(error);
 //   }
 // };
 
 
-// const convert = function(req, res, next) {
+// const convert = async function(req, res, next) {
 //   try {
 //     new Order({user_id: req.decoded.user_id, enquiry_id: req.body.enquiry_id}).convert().then(result => {
 //       new Enquiry({user_id: req.decoded.user_id}).getAll().then(enquiryList => {
@@ -137,13 +116,11 @@ const assignToFinance = function(req, res, next) {
 //       });
 //     });
 //   } catch (error) {
-//     console.log('Error: ', error);
+//     next(error);
 //   }
 // };
 
-
-const postOrder = function (req, res, next) {
-console.log('eeeq.',req);
+const postOrder = async function (req, res, next) {
 	let orderParams = {
     user_id: req.decoded.user_id,
     userid: req.decoded.id,
@@ -178,19 +155,20 @@ console.log('eeeq.',req);
   && (orderParams.flexOrderType!=null || orderParams.fixedOrderType!= null)){
     try{
       const newOrder = new Order(orderParams);
-      newOrder.postOrder().then(function(result){
-        if(req.body.converted_to!==0){
-          if(req.body.converted_name === 'lead'){
-            newOrder.convertedLead(function(res){});
-          } else if(req.body.converted_name === 'enquiry'){
-            newOrder.convertedEnquiry(function(res){});
-          }
+
+      await newOrder.postOrder();
+      if(req.body.converted_to !== 0){
+        if(req.body.converted_name === 'lead'){
+          newOrder.convertedLead(function(res){});
+        } else if(req.body.converted_name === 'enquiry'){
+          newOrder.convertedEnquiry(function(res){});
         }
+      }
         
         // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
         //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].customer_id}).getCustomerDetails().then(function (customerList) {
         //     new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
-              new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+        const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
             // if(orderParams.flexOrderType!=null && orderList[0].order_type === 2){
             //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFlexOrderDetail().then(function (flexPaymentList) {
             //       res.send({budgetList : budgetList, flexPaymentList: flexPaymentList, orderList: orderList, customerList: customerList, order: order});
@@ -201,9 +179,7 @@ console.log('eeeq.',req);
             //       res.send({budgetList : budgetList, fixedPaymentList: fixedPaymentList, orderList: orderList, customerList: customerList, order: order });
             //   });
             // }
-                res.send({ order: order});
-          });          
-        });
+        res.send({ order: order});
         // });
         // });
 
@@ -212,7 +188,7 @@ console.log('eeeq.',req);
       // });
       
     }catch(err){
-      console.log("Error..",err);
+      next(err);
     }
   }else{
     console.log('Invalid or Incomplete Credentials');
@@ -220,10 +196,7 @@ console.log('eeeq.',req);
   }
 };
 
-
-
-const editOrder = function (req, res, next) {
-  console.log('eeeq.',req.body);
+const editOrder = async function (req, res, next) {
     let orderParams = {
       id: req.body.id,
       user_id: req.decoded.user_id,      
@@ -264,11 +237,12 @@ const editOrder = function (req, res, next) {
     && (orderParams.flexOrderType!=null || orderParams.fixedOrderType!= null)){
       try{
         const newOrder = new Order(orderParams);
-        newOrder.editOrder().then(function(result){
+        
+        await newOrder.editOrder();
           // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
           //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].customer_id}).getCustomerDetails().then(function (customerList) {
           //     new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
-                new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+        const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
               // if(orderParams.flexOrderType!=null && orderList[0].order_type === 2){
               //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFlexOrderDetail().then(function (flexPaymentList) {
               //       res.send({budgetList : budgetList, flexPaymentList: flexPaymentList, orderList: orderList, customerList: customerList, order: order});
@@ -279,18 +253,14 @@ const editOrder = function (req, res, next) {
               //       res.send({budgetList : budgetList, fixedPaymentList: fixedPaymentList, orderList: orderList, customerList: customerList, order: order });
               //   });
               // }
-              res.send({ order: order});
-            });
+          res.send({ order: order});
           // });
           // });
           // });
   
           // console.log('resultid',lastInsertId);
-          
-        });
-        
       }catch(err){
-        console.log("Error..",err);
+        next(err);
       }
     }else{
       console.log('Invalid or Incomplete Credentials');
@@ -298,46 +268,35 @@ const editOrder = function (req, res, next) {
     }
   };
 
-  
-
-  const getFlexOrderDataForPDF = function (req, res, next) {
-    console.log('eeeq.',req.body);
+  const getFlexOrderDataForPDF = async function (req, res, next) {
       let orderParams = {
         user_id: req.decoded.user_id,
 
         franchise_id: req.decoded,
         order_id : req.body.data.id,
         customer_id: req.body.data.customer_id,
-
-
       };
       
       if(orderParams.order_id!= '' || orderParams.order_id != null){
         // console.log('hello.',orderParams);
         try{
-          new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget().then(function (budget) {
+          const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget();
               // console.log('budget..',budget)
-              new Order({user_id : req.decoded.user_id, flexOrderId: req.body.data.order_type_id}).getFlexOrder().then(function (flexOrder) {
+          const flexOrder = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.data.order_type_id}).getFlexOrder();
               // console.log('flexOrder..',flexOrder)
-                  new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails().then(function (customer) {
+          const customer = await new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails();
                     // console.log('customer..',customer)
-                    new Order({user_id : req.decoded.user_id}).getCompanyDetail().then(function (franchise) {
+          const franchise = await new Order({user_id : req.decoded.user_id}).getCompanyDetail();
                       // console.log('franchise..',franchise)
                         // console.log('product..',product)
-                        new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
+          const product = await new Order({products_id: req.body.data.product_id}).getProductDetail();
                           // console.log('product..',product)
-                          new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail().then(function (user) {
+          const user = await new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail();
                             // console.log('user..',user)
-                              res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product, user: user });
-                          });
-                        });
-                    });
-                  });
-              });
+          res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product, user: user });
               // new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
               // res.send({ order , oldBudget}); 
             // });
-          });
           
           // const newOrder = new Order(orderParams);
           //     newOrder.getFlexOrderDataForPDF().then(function(result){
@@ -349,72 +308,56 @@ const editOrder = function (req, res, next) {
           //       //   });
           //       // });
           //     });
-        }catch(err){
-          console.log("Error..",err);
-        }
+      }catch(err){
+        next(err);
       }
-      
-    };
-
-
+    }
+  };
     
-  const getFixedOrderDataForPDF = function (req, res, next) {
-    console.log('eeeq.',req.body);
-      let orderParams = {
-        user_id: req.decoded.user_id,
+  const getFixedOrderDataForPDF = async function (req, res, next) {
+    let orderParams = {
+      user_id: req.decoded.user_id,
 
-        franchise_id: req.decoded,
-        order_id : req.body.data.id,
-        customer_id: req.body.data.customer_id,
-
-
-      };
+      franchise_id: req.decoded,
+      order_id : req.body.data.id,
+      customer_id: req.body.data.customer_id,
+    };
       
-      if(orderParams.order_id!= '' || orderParams.order_id != null){
-        // console.log('hello.',orderParams);
-        try{
-          new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget().then(function (budget) {
-              // console.log('budget..',budget)
-              new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.data.order_type_id}).getFixedOrder().then(function (fixedOrder) {
-              // console.log('flexOrder..',flexOrder)
-                  new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails().then(function (customer) {
-                    // console.log('customer..',customer)
-                    new Order({user_id : req.decoded.user_id}).getCompanyDetail().then(function (franchise) {
-                      // console.log('franchise..',franchise)
+    if(orderParams.order_id!= '' || orderParams.order_id != null){
+      // console.log('hello.',orderParams);
+      try{
+        const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget();
+            // console.log('budget..',budget)
+        const fixedOrder = await  new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.data.order_type_id}).getFixedOrder();
+            // console.log('flexOrder..',flexOrder)
+        const customer = await new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails();
+                  // console.log('customer..',customer)
+        const franchise = await new Order({user_id : req.decoded.user_id}).getCompanyDetail();
+                    // console.log('franchise..',franchise)
+                      // console.log('product..',product)
+        const product = await new Order({products_id: req.body.data.product_id}).getProductDetail();
                         // console.log('product..',product)
-                        new Order({products_id: req.body.data.product_id}).getProductDetail().then(function (product) {
-                          // console.log('product..',product)
-                          new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail().then(function (user) {
-                            // console.log('user..',user)
-                              res.send({ budget: budget, fixedOrder:fixedOrder, customer: customer, franchise: franchise, product:product, user: user });
-                          });
-                      });
-                    });
-                  });
-              });
-              // new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
-              // res.send({ order , oldBudget}); 
-            // });
-          });
-          
-          // const newOrder = new Order(orderParams);
-          //     newOrder.getFlexOrderDataForPDF().then(function(result){
-          //           console.log('resulut===dd', result);
-          //       //  new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
-          //       //       new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-             
-          //       //         res.send({ order: order});
-          //       //   });
-          //       // });
-          //     });
-        }catch(err){
-          console.log("Error..",err);
-        }
+        const user = await new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail();
+                          // console.log('user..',user)
+        res.send({ budget: budget, fixedOrder:fixedOrder, customer: customer, franchise: franchise, product:product, user: user });
+            // new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
+            // res.send({ order , oldBudget}); 
+          // });
+        
+        // const newOrder = new Order(orderParams);
+        //     newOrder.getFlexOrderDataForPDF().then(function(result){
+        //           console.log('resulut===dd', result);
+        //       //  new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
+        //       //       new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
+            
+        //       //         res.send({ order: order});
+        //       //   });
+        //       // });
+        //     });
+      }catch(err){
+        next(err);
       }
-      
-    };
-    
-  
-
+    }
+  };
 
 module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, getFixedOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };

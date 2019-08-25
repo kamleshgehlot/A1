@@ -5,10 +5,7 @@ const path = require('path');
 const http = require('http');
 const helmet = require('helmet');
 const cors = require('cors');
-const pdf = require('html-pdf');
 const bodyParser = require('body-parser');
-
-// const pdfTemplate = require('../src/modules/documents');
 
 const app = express();
 
@@ -87,21 +84,17 @@ app.use('/api/franchise/order',orderRouter);
 
 app.use('/', routes);
 
+app.use(function(error, req, res, next) {
+  // Any request to this server will get here, and will send an HTTP
+  // response with the error message 'woops'
+  console.log("Server Error....", error);
+  const result = { 
+    error: `Server Error, Please contact administrator`
+  };
 
+  if (!error.statusCode) error.statusCode = 500;
 
-// app.post('/create-pdf', (req, res) => {
-//   pdf.create(pdfTemplate(req.body), {}).toFile('result.pdf', (err) => {
-//       if(err) {
-//           res.send(Promise.reject());
-//       }
-
-//       res.send(Promise.resolve());
-//   });
-// });
-
-// app.get('/fetch-pdf', (req, res) => {
-//   res.sendFile(`${__dirname}/result.pdf`)
-// })
+  res.status(error.statusCode).send(result.message);});
 
 
 /** Get port from environment and store in Express. */

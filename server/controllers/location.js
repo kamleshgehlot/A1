@@ -1,30 +1,25 @@
 const Location = require('../models/location');
 
-const getAll = function(req, res, next) {
+const getAll = async function(req, res, next) {
   try {
-    new Location({}).getAll().then(result => {
-      res.send({ cityList: result });
-    });
+    const result = await new Location({}).getAll();
+    res.send({ cityList: result });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-const selectedArea = function(req, res, next) {
+const selectedArea = async function(req, res, next) {
   try {
-    // console.log("req....",req.body);
-    
     if(!req.body.city_id){
-      new Location({city_name: req.body.city_name, city_code: req.body.city_code}).getCityRelatedAllArea().then(result => {
-        res.send({ selectedArea: result });
-      });
+      const result = await new Location({city_name: req.body.city_name, city_code: req.body.city_code}).getCityRelatedAllArea();
+      res.send({ selectedArea: result });
     }else{
-    new Location({city_id : req.body.city_id, city_name: req.body.city_name, city_code: req.body.city_code}).getSelectedArea().then(result => {
+      const result = await new Location({city_id : req.body.city_id, city_name: req.body.city_name, city_code: req.body.city_code}).getSelectedArea()
         res.send({ selectedArea: result });
-      });
     }
   } catch (error) {
-    console.log('Location Error: ', error);
+    next(error);
   }
 };
 

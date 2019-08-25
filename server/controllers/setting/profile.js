@@ -1,24 +1,23 @@
 const Profile = require('../../models/setting/profile.js');
 
-const info = function(req, res, next) {
+const info = async function(req, res, next) {
   try {
-    console.log('req.decoded----',req.decoded);
-    new Profile({user_id : req.decoded.user_id}).info().then(profile => {
-      res.send({ profile });
-    });
+    const profile = await new Profile({user_id : req.decoded.user_id}).info();
+    
+    res.send({ profile });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-const franchiseDetails = function(req, res, next) {
+const franchiseDetails = async function(req, res, next) {
   try {
-    new Profile({franchise_id : req.decoded.franchise_id}).franchiseDetails().then(fd => {
-      console.log('franchise details------==',fd);
-      res.send({ fd });
-    });
+    const fd = await new Profile({franchise_id : req.decoded.franchise_id}).franchiseDetails();
+    
+    res.send({ fd });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
-module.exports = {info,franchiseDetails};
+
+module.exports = {info, franchiseDetails};

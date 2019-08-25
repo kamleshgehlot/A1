@@ -1,13 +1,12 @@
 const TaskStatus = require('../models/taskStatus.js');
 
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   try {
-    new TaskStatus({}).all().then(taskStatusList => {
-      console.log('task list---',taskStatusList);
-      res.send({ taskStatusList });
-    });
+    const taskStatusList = await new TaskStatus({}).all();
+    
+    res.send({ taskStatusList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 

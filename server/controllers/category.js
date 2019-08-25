@@ -1,7 +1,7 @@
 const Category = require('../models/category.js');
 const Product = require('../models/product/product.js');
 
-const add = function(req, res, next) {
+const add = async function(req, res, next) {
   const categoryParam = {
     maincategory: req.body.maincategory,
     category: req.body.category,
@@ -12,23 +12,16 @@ const add = function(req, res, next) {
   try {
     const newCategory = new Category(categoryParam);
 
-    newCategory.add().then(result => {
-        new Category({}).mainCategoryList().then(categoryList => {
-          res.send({ categoryList });
-        });
-      }).catch(err => {
-        res.status(500);
-        res.render('error', { error: err });
-      });
-  } catch (err) {
-    console.log('Error: ', err);
+    await newCategory.add();
+    const categoryList = await new Category({}).mainCategoryList();
 
-    res.status(500);
-    res.send('error', { error: err });
+    res.send({ categoryList });
+  } catch (err) {
+    next(err);
   }
 };
 
-const addCategory = function(req, res, next) {
+const addCategory = async function(req, res, next) {
   const categoryParam = {
     maincategory: req.body.maincategory,
     category: req.body.category,
@@ -39,23 +32,16 @@ const addCategory = function(req, res, next) {
   try {
     const newCategory = new Category(categoryParam);
 
-    newCategory.addCategory().then(result => {
-        new Category({}).mainCategoryList().then(categoryList => {
-          res.send({ categoryList });
-        });
-      }).catch(err => {
-        res.status(500);
-        res.render('error', { error: err });
-      });
+    await newCategory.addCategory();
+    const categoryList = await new Category({}).mainCategoryList();
+    
+    res.send({ categoryList });
   } catch (err) {
-    console.log('Error: ', err);
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
 
-
-const addSubCategory = function(req, res, next) {
+const addSubCategory = async function(req, res, next) {
   const categoryParam = {
     category : req.body.category,
     subcategory: req.body.subcategory,
@@ -65,22 +51,16 @@ const addSubCategory = function(req, res, next) {
   try {
     const newCategory = new Category(categoryParam);
 
-    newCategory.addSubCategory().then(result => {
-        new Category({}).mainCategoryList().then(categoryList => {
-          res.send({ categoryList });
-        });
-      }).catch(err => {
-        res.status(500);
-        res.render('error', { error: err });
-      });
+    await newCategory.addSubCategory();
+    const categoryList = await new Category({}).mainCategoryList();
+    
+    res.send({ categoryList });
   } catch (err) {
-    console.log('Error: ', err);
-      res.status(500);
-      res.send('error', { error: err });
+    next(err);
   }
 };
 
-const addProduct = function(req, res, next) {
+const addProduct = async function(req, res, next) {
   const productParam = {
     maincat:req.body.maincat,
     category:req.body.category,
@@ -104,36 +84,26 @@ const addProduct = function(req, res, next) {
   try {
     const newProduct = new Product(productParam);
 
-    newProduct
-      .addProduct()
-      .then(result => {
-        new Product({}).all().then(categoryList => {
-          res.send({ categoryList });
-        });
-      })
-      .catch(err => {
-        res.status(500);
-        res.render('error', { error: err });
-      });
+    await newProduct.addProduct();
+    const categoryList = await new Product({}).all();
+    
+    res.send({ categoryList });
   } catch (err) {
-    console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
 
-const productList = function(req, res, next) {
+const productList = async function(req, res, next) {
   try {
-    new Product({}).all().then(productList => {
-      res.send({ productList });
-    });
+    const productList = await new Product({}).all();
+    
+    res.send({ productList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-const edit = function(req, res, next) {
+const edit = async function(req, res, next) {
   const categoryParam = {
     id: req.body.id,
     name: req.body.name,
@@ -153,85 +123,72 @@ const edit = function(req, res, next) {
 
   try {
     const newProduct = new Product(categoryParam);
-    newProduct.update().then(result => {
-        new Product({}).all().then(productList => {
-          res.send( productList );
-        });
-      })
-      .catch(err => {
-        res.status(500);
-        res.render('error', { error: err });
-      });
+    await newProduct.update();
+    const productList = await new Product({}).all();
+    
+    res.send( productList );
   } catch (err) {
-    console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
 
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   try {
-    new Category({}).all().then(categoryList => {
-      res.send({ categoryList });
-    });
+    const categoryList = await new Category({}).all();
+    
+    res.send({ categoryList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-const mainCategoryList = function(req, res, next) {
+const mainCategoryList = async function(req, res, next) {
   try {
-    new Category({}).mainCategoryList().then(mainCategoryList => {
-      res.send({ mainCategoryList });
-    });
+    const mainCategoryList = await new Category({}).mainCategoryList();
+    
+    res.send({ mainCategoryList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-
-const categoryList = function(req, res, next) {
+const categoryList = async function(req, res, next) {
   try {
-    new Category({maincategory: req.body.maincategory}).categoryList().then(categoryList => {
-      res.send({ categoryList });
-    });
+    const categoryList = await new Category({maincategory: req.body.maincategory}).categoryList();
+    
+    res.send({ categoryList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-
-const subCategoryList = function(req, res, next) {
+const subCategoryList = async function(req, res, next) {
   try {
-    new Category({category: req.body.category}).subCategoryList().then(subCategoryList => {
-      res.send({ subCategoryList });
-    });
+    const subCategoryList = await new Category({category: req.body.category}).subCategoryList();
+    
+    res.send({ subCategoryList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-
-const relatedProductList = function(req, res, next) {
+const relatedProductList = async function(req, res, next) {
   try {
-    new Product({subcategory: req.body.subcategory}).relatedProductList().then(productList => {
-      res.send({ productList });
-    });
+    const productList = await new Product({subcategory: req.body.subcategory}).relatedProductList()
+    
+    res.send({ productList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-
-
-const archivedList = function(req, res, next) {
+const archivedList = async function(req, res, next) {
   try {
-    new Product({}).archivedList().then(archivedList => {
-      res.send({ archivedList });
-    });
+    const archivedList = await new Product({}).archivedList();
+    res.send({ archivedList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
+
 module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList,archivedList, mainCategoryList, categoryList, subCategoryList, relatedProductList  };

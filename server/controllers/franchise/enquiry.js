@@ -1,54 +1,47 @@
 const Enquiry = require('../../models/franchise/enquiry.js');
 
-const getnewid = function(req, res, next) {
+const getnewid = async function(req, res, next) {
   try {
-    new Enquiry({user_id: req.decoded.user_id}).getnewid().then(id => {
-      res.send(id);
-    });
+    const id = await new Enquiry({user_id: req.decoded.user_id}).getnewid();
+    
+    res.send(id);
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-
-const getAll = function(req, res, next) {
+const getAll = async function(req, res, next) {
   try {
-    new Enquiry({user_id: req.decoded.user_id}).getAll().then(enquiryList => {
-      res.send({ enquiryList });
-    });
+    const enquiryList = await new Enquiry({user_id: req.decoded.user_id});
+
+    res.send({ enquiryList });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-const convertedList = function(req, res, next) {
+const convertedList = async function(req, res, next) {
   try {
-    new Enquiry({user_id: req.decoded.user_id}).convertedList().then(enquiryList => {
-      res.send({ enquiryList });
-    });
+    const enquiryList = await new Enquiry({user_id: req.decoded.user_id}).convertedList();
+
+    res.send({ enquiryList });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-
-const convert = function(req, res, next) {
+const convert = async function(req, res, next) {
   try {
-    new Enquiry({user_id: req.decoded.user_id, enquiry_id: req.body.enquiry_id}).convert().then(result => {
-      new Enquiry({user_id: req.decoded.user_id}).getAll().then(enquiryList => {
-        res.send({ enquiryList });
-      });
-    });
+    await new Enquiry({user_id: req.decoded.user_id, enquiry_id: req.body.enquiry_id}).convert();
+    const enquiryList = await new Enquiry({user_id: req.decoded.user_id}).getAll();
+    
+    res.send({ enquiryList });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 
-
-const postenquiry = function (req, res, next) {
-  // console.log("****************Enquiry..................", req.body);
-  // console.log("%%%%%%%%%%% Session Data %%%%%%%%%%%%%", req.decoded);
-
+const postenquiry = async function (req, res, next) {
 	let EnquiryParams = {
     user_id: req.decoded.user_id,
     userid: req.decoded.id,
@@ -66,17 +59,15 @@ const postenquiry = function (req, res, next) {
 	try{
 	
     EnquiryParams.created_by = req.decoded.id;
-	  const newEnquiry = new Enquiry(EnquiryParams);
-    newEnquiry.postenquiry().then(function(result){
-      new Enquiry({user_id : req.decoded.user_id}).getAll().then(function (enquiryList) {
-        console.log('enquiry list',enquiryList);
-        res.send({ enquiryList: enquiryList });
-      });
-    });
+    const newEnquiry = new Enquiry(EnquiryParams);
+    
+    await newEnquiry.postenquiry();
+    const enquiryList = await new Enquiry({user_id : req.decoded.user_id}).getAll();
+    
+    res.send({ enquiryList: enquiryList });
 	}catch(err){
-    console.log("Error..",err);
+    next(error);
 	}
 };
-
 
 module.exports = { getnewid, postenquiry, getAll, convert, convertedList};

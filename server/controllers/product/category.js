@@ -1,6 +1,6 @@
 const Category = require('../models/product/category.js');
 
-// const add = function(req, res, next) {
+// const add = async function(req, res, next) {
 //   console.log('...............', req.decoded);
 //   console.log('...............', req.body);
 
@@ -33,14 +33,14 @@ const Category = require('../models/product/category.js');
 //         res.render('error', { error: err });
 //       });
 //   } catch (err) {
-//     console.log('Error: ', err);
+//     next(err);
 
 //     res.status(500);
 //     res.send('error', { error: err });
 //   }
 // };
 
-// const edit = function(req, res, next) {
+// const edit = async function(req, res, next) {
 //   console.log('...............', req.decoded);
 //   console.log('...............', req.body);
 
@@ -74,20 +74,20 @@ const Category = require('../models/product/category.js');
 //         res.render('error', { error: err });
 //       });
 //   } catch (err) {
-//     console.log('Error: ', err);
+//     next(err);
 
 //     res.status(500);
 //     res.send('error', { error: err });
 //   }
 // };
 
-const maincat = function(req, res, next) {
+const maincat = async function(req, res, next) {
   try {
-    new Category({}).all().then(mainCategoryList => {
-      res.send({ mainCategoryList });
-    });
+    const mainCategoryList = await new Category({}).all();
+    
+    res.send({ mainCategoryList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 

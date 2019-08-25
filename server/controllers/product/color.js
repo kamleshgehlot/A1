@@ -1,12 +1,12 @@
 const Color = require('../../models/product/color.js');
 
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   try {
-    new Color({}).all().then(colorList => {
-      res.send({ colorList });
-    });
+    const colorList = await new Color({}).all();
+    
+    res.send({ colorList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 

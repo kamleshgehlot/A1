@@ -1,6 +1,6 @@
 const Task = require('../models/task.js');
 
-const add = function (req, res, next) {
+const add = async function (req, res, next) {
   const taskParam = {
     franchise_id: req.body.franchise_id,
     id: req.body.id,
@@ -14,64 +14,55 @@ const add = function (req, res, next) {
     created_by: req.decoded.id,
     updated_by: req.decoded.id,
   };
-  // console.log('req--------------',req.body);
   try {
     const newTask = new Task(taskParam);
 
     if (req.body.id) {
-      newTask.update().then(function (result) {
-        new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
-          // console.log('controller', { taskList });
-          res.send({ taskList });
-        });
-      });
+      await newTask.update();
+      const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
+      
+      res.send({ taskList });
     } else {
-      newTask.add().then(result => {
-        new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
-          res.send({ taskList });
-          // console.log('tasklist---==----',taskList);
-        });
-      })
+      await newTask.add();
+      const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
+      
+      res.send({ taskList });
     }
   } catch (err) {
-    console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
 
-const all = function (req, res, next) {
+const all = async function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
-      // console.log('tasklist controller---',taskList);
-      res.send({ taskList });
-    });
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
+
+    res.send({ taskList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
-const last = function (req, res, next) {
+const last = async function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id }).last().then(taskLast => {
-      res.send(taskLast);
-    });
+    const taskLast = await new Task({ user_id: req.decoded.user_id }).last();
+    
+    res.send(taskLast);
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-const completedList = function (req, res, next) {
+const completedList = async function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).completedList().then(taskList => {
-      res.send({ taskList });
-    });
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).completedList();
+    
+    res.send({ taskList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-const deleteTask = function (req, res, next) {
+const deleteTask = async function (req, res, next) {
   const taskParam = {
     id: req.body.id,
     user_id: req.decoded.user_id,
@@ -81,21 +72,16 @@ const deleteTask = function (req, res, next) {
   };
   try {
     const newTask = new Task(taskParam);
-    newTask.deleteTask().then(result => {
-      new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
-        res.send({ taskList });
-      });
-    })
+    await newTask.deleteTask();
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
+    
+    res.send({ taskList });
   } catch (err) {
-    console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
 
-
-const reschedule = function (req, res, next) {
+const reschedule = async function (req, res, next) {
   const taskParam = {
     franchise_id: req.body.franchise_id,
     assignid: req.body.assignid,
@@ -112,31 +98,27 @@ const reschedule = function (req, res, next) {
   };
   try {
     const newTask = new Task(taskParam);
-    newTask.reschedule().then(result => {
-      new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all().then(taskList => {
-        res.send({ taskList });
-      });
-    })
+    await newTask.reschedule();
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
+    
+    res.send({ taskList });
   } catch (err) {
-    console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
 
 // staff task list
-const staffTasks = function (req, res, next) {
+const staffTasks = async function (req, res, next) {
   try {
-    new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks().then(taskList => {
-      res.send({ taskList });
-    });
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks();
+    
+    res.send({ taskList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
-const staffUpdate = function (req, res, next) {
+const staffUpdate = async function (req, res, next) {
 
   const staffData = JSON.parse(req.body.data);
 
@@ -145,6 +127,7 @@ const staffUpdate = function (req, res, next) {
   req.files.map((file) => {
     attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
   });
+
   const taskParam = {
     id: staffData.id,
     task_id: staffData.task_id,
@@ -157,20 +140,16 @@ const staffUpdate = function (req, res, next) {
     updated_date: staffData.updated_date,
     document: attachments,
   };
-  // console.log('req--------------',req.body);
+
   try {
     const newTask = new Task(taskParam);
-    newTask.staffUpdate().then(function (result) {
-      new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks().then(taskList => {
-        // console.log('controller', { taskList });
-        res.send({ taskList });
-      });
-    });
+    await newTask.staffUpdate();
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks();
+    
+    res.send({ taskList });
   } catch (err) {
-    console.log('Error: ', err);
-
-    res.status(500);
-    res.send('error', { error: err });
+    next(err);
   }
 };
+
 module.exports = { add, all, last, completedList, deleteTask, reschedule, staffTasks, staffUpdate };

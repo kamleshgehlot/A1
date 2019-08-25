@@ -1,12 +1,6 @@
-const nodemailer = require('nodemailer');
-const { trans } = require("../../lib/mailtransporter");
-
 const Staff = require('../../models/franchise/staff.js');
 
-const register = function (req, res, next) {
-  console.log("****************staff..................", req.body);
-  console.log("%%%%%%%%%%% file %%%%%%%%%%%%%", req.files);
-
+const register = async function (req, res, next) {
   const staffData = JSON.parse(req.body.data);
 
   let attachments = '';
@@ -43,34 +37,31 @@ const register = function (req, res, next) {
 	};
 
 	try{
-    
     if(staffData.id) {
       staffParams.updated_by = req.decoded.id;
       const newStaff = new Staff(staffParams);
 
-      newStaff.update().then(function(result){
-        new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
-          res.send({ staffList: staffList });
-        });
-      });
+      await newStaff.update();
+      const staffList = new Staff({user_id : req.decoded.user_id}).all();
+      
+      res.send({ staffList: staffList });
     } else {
       staffParams.created_by = req.decoded.id;
       const newStaff = new Staff(staffParams);
 
-      newStaff.register().then(function(result){
-        new Staff({user_id : req.decoded.user_id}).all().then(function (staffList) {
-          res.send({ staffList: staffList });
-        });
-      });
+      await newStaff.register();
+      const staffList = await new Staff({user_id : req.decoded.user_id}).all();
+      
+      res.send({ staffList: staffList });
     }
 	}catch(err){
-    console.log("Error..",err);
+    next(err);
 	}
 };
 
 
 
-// const all = function(req, res, next) {
+// const all = async function(req, res, next) {
 //   let staffParams = {
 //     franchise_id: req.body.franchise_id,
 //   }; 
@@ -82,20 +73,20 @@ const register = function (req, res, next) {
 //     });
 //   });
 //   } catch (error) {
-//     console.log('Error: ', error);
+//     next(error);
 //   }
 // };
 
 
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   
   try {
     console.log(req.decoded);
-    new Staff({user_id : req.decoded.user_id}).all().then(staffList => {
-      res.send({ staffList });
-    });
+    const staffList = await new Staff({user_id : req.decoded.user_id}).all();
+    
+    res.send({ staffList });
   } catch (error) {
-    console.log('Error: ', error);
+    next(error);
   }
 };
 

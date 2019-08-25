@@ -9,7 +9,7 @@ const Miscellaneious = require('../lib/miscellaneous.js')
 
 const { trans } = require("../lib/mailtransporter");
 
-const register = function (req, res, next) {
+const register = async function (req, res, next) {
 	let accountantParam = {
 		id: req.body.accountant_id,
 		name: req.body.accountant_name,
@@ -88,80 +88,69 @@ const register = function (req, res, next) {
 
 		if (req.body.id) {
 
-			newUser.update().then(function (result) {
+			await newUser.update();
 
-				newFranchise.update().then(function (result) {
+			await newFranchise.update();
 
 					// newCompany.comp_id= result[0].company_id;
-					newCompany.update().then(function (result) {
+			await newCompany.update();
 
-						// newAccountant.acc_id = result[0].accountant_id;
-						newAccountant.update().then(function (result) { 
-							new Franchise({}).all().then(function (userList) {      
-								res.send({ userList: userList });
-							})
-						})
-					});
-				})
-			})
-
-
+			// newAccountant.acc_id = result[0].accountant_id;
+			await newAccountant.update(); 
+			const userList = await new Franchise({}).all();   
+			
+			res.send({ userList: userList });
 			// newAccountant.update();
 		} else {
-			newAccountant.register().then(function (result) {
+			await newAccountant.register();
 			newCompany.accountant_id = result.accountant_id;
-					newCompany.register().then(function (result) {
-						newFranchise.company_id = result;
-						newUser.company_id = result;
-							newFranchise.register().then(function (result) {
-							console.log("Email started..............")
-						const accountId = Miscellaneious.generateAccountId();
-						const token = Miscellaneious.generateRandomToken();
+			await newCompany.register();
+			newFranchise.company_id = result;
+			newUser.company_id = result;
+			await newFranchise.register();
+			
+			const accountId = Miscellaneious.generateAccountId();
+			const token = Miscellaneious.generateRandomToken();
 
-						newUser.franchise_id = result.franchise_id;
-						newUser.accountId = accountId;
-						newUser.token = token;
-						newUserRole.franchise_id = result.franchise_id;
+			newUser.franchise_id = result.franchise_id;
+			newUser.accountId = accountId;
+			newUser.token = token;
+			newUserRole.franchise_id = result.franchise_id;
 
-						newUser.register().then(function (result) {
-							console.log("Saved Successfully.");
+			await newUser.register();
+			console.log("Saved Successfully.");
 
-							(req.body.directorList || []).map(director => {
-								console.log("director list..............", director)
-								let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
-								console.log("url....", url);
-								const mail = {
-									from: 'admin@rentronicsdev.saimrc.com',
-									//  to: 'mpurohit88@gmail.com',
-									to: director.email,
-									subject: 'Please verify your email address',
-									text: 'activate your account ',
-									html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
-								}
+			(req.body.directorList || []).map(director => {
+				console.log("director list..............", director)
+				let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
+				
+				const mail = {
+					from: 'admin@rentronicsdev.saimrc.com',
+					//  to: 'mpurohit88@gmail.com',
+					to: director.email,
+					subject: 'Please verify your email address',
+					text: 'activate your account ',
+					html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
+				}
 
-								// trans.sendMail(mail, (err, info) => {
-								// 	if (err) {
-								// 		return console.log(err);
-								// 	}
-								// 	console.log('Message sent: %s', info.messageId);
-								// 	// Preview only available when sending through an Ethereal account
-								// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-								// });
-							});
-							// newUserRole.user_id = result.id;
+				// trans.sendMail(mail, (err, info) => {
+				// 	if (err) {
+				// 		return console.log(err);
+				// 	}
+				// 	console.log('Message sent: %s', info.messageId);
+				// 	// Preview only available when sending through an Ethereal account
+				// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+				// });
+			});
+			// newUserRole.user_id = result.id;
 
-							newUserRole.register().then(function (result) {
-								new Franchise({}).all().then(function (userList) {
-									res.send({ userList: userList });
-								});
-							});
-						})
-					})
-				})
-			})
+			await newUserRole.register();
+			const userList = await new Franchise({}).all();
 
+			res.send({ userList: userList });
 		}
 	} catch (err) {
+		next(err);
 	}
 
 	// 	const newFranchise = new Franchise();
@@ -196,7 +185,7 @@ const register = function (req, res, next) {
 	// 				});
 	// 		}
 	// 	} catch (err) {
-	// 		console.log("Error: ", err);
+	// 		next(err);
 
 	// 		res.status(500)
 	// 		res.send('error', { error: err })
@@ -204,7 +193,7 @@ const register = function (req, res, next) {
 };
 
 
-const edit = function (req, res, next) {
+const edit = async function (req, res, next) {
 	// console.log('...............', req.decoded);
 	// console.log('...............', req.body);
 
@@ -216,62 +205,42 @@ const edit = function (req, res, next) {
 		// });
 
 		const newAccountant = new Accountant(accountantParam);
-		newAccountant.update().then(result => {
-			user
-
-		})
-			.catch(err => {
-				res.status(500);
-				res.render('error', { error: err });
-			});
+		await newAccountant.update();
 	} catch (err) {
-		console.log('Error: ', err);
-
-		res.status(500);
-		res.send('error', { error: err });
+		next(err);
 	}
 };
 
-
-const all = function (req, res, next) {
+const all = async function (req, res, next) {
 	try {
-		new Franchise({}).all().then(function (userList) {
-			res.send({ userList: userList });
-		});
+		const userList = await new Franchise({}).all();
+		
+		res.send({ userList: userList });
 	} catch (err) {
-		console.log("Error: ", err);
+		next(err);
 	}
 }
 
-
-
-const verifyEmail = function (req, res, next) {
-	console.log('............... verify', req.decoded);
-	console.log('............... verify', req.body);
-
+const verifyEmail = async function (req, res, next) {
 	try {
-		new Franchise({email: req.body.email}).verifyEmail().then(function (isVerified) {
-			console.log("result: ", isVerified);
-			res.send({ isVerified: isVerified });
-		});
+		const isVerified = await new Franchise({email: req.body.email}).verifyEmail();
+		
+		res.send({ isVerified: isVerified });
 	}catch (err) {
-		console.log('Error: ', err);
-		res.status(500);
-		res.send('error', { error: err });
+		next(err);
 	}
 };
 
-// const getUniqueNames = function (req, res, next) {
+// const getUniqueNames = async function (req, res, next) {
 // 	try {
 // 		if (req.decoded.role === 'admin') {
-// 			new User({}).getUniqueNames().then(function (userList) {
-// 				res.send({ userList: userList });
-// 			});
+// 			const userList = await new User({}).getUniqueNames();
+// 			res.send({ userList: userList });
 // 		} else {
 // 			res.send([]);
 // 		}
 // 	} catch (err) {
-// 		console.log("Error: ", err);
+// 		next(err);
 // 	} 
 // }
 

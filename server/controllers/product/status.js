@@ -1,12 +1,12 @@
 const Status = require('../../models/product/status.js');
 
-const all = function(req, res, next) {
+const all = async function(req, res, next) {
   try {
-    new Status({}).all().then(statusList => {
-      res.send({ statusList });
-    });
+    const statusList = await new Status({}).all();
+    
+    res.send({ statusList });
   } catch (err) {
-    console.log('Error: ', err);
+    next(err);
   }
 };
 
