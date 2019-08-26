@@ -382,7 +382,7 @@ export default function Lead() {
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Options</StyledTableCell>
                       
-                        {roleName != 'Super Admin' 
+                        {roleName === 'CSR' 
                         && (   <StyledTableCell>Convert To</StyledTableCell>)}
                       </TableRow>
                     </TableHead>
@@ -421,7 +421,7 @@ export default function Lead() {
                             </StyledTableCell>
                             {/* {console.log('franchiseId-----',franchiseId)} */}
         
-                            {roleName != 'Super Admin' 
+                            {roleName === 'CSR' 
                               && (  
                                     <StyledTableCell>
                                         <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEnquiryOpen(data); }} disabled={data.franchise_id!=franchiseId  ? data.franchise_id!=0 ? true: false:false }>

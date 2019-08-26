@@ -102,12 +102,12 @@ const register = async function (req, res, next) {
 			res.send({ userList: userList });
 			// newAccountant.update();
 		} else {
-			let accountant_result = await newAccountant.register();
+			const accountant_result = await newAccountant.register();
 			newCompany.accountant_id = accountant_result.accountant_id;
-			let company_result = await newCompany.register();
+			const company_result = await newCompany.register();
 			newFranchise.company_id = company_result;
 			newUser.company_id = company_result;
-			let franchise_result = await newFranchise.register();
+			const franchise_result = await newFranchise.register();
 			
 			const accountId = Miscellaneious.generateAccountId();
 			const token = Miscellaneious.generateRandomToken();
@@ -117,7 +117,7 @@ const register = async function (req, res, next) {
 			newUser.token = token;
 			newUserRole.franchise_id = franchise_result.franchise_id;
 
-			let user_result = await newUser.register();
+			const user_result = await newUser.register();
 			console.log("Saved Successfully.");
 
 			(req.body.directorList || []).map(director => {

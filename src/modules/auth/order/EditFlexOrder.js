@@ -121,7 +121,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId}) {
+export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId}) {
 
   const classes = useStyles();
   const [inputs,setInputs] = useState([]);
@@ -207,10 +207,11 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
 
 
   useEffect(() => {
+    console.log(flexOrderList);
     const fetchData = async () => {
       try {
         const order = await Order.getCurrespondingFlexOrder({flexOrderId: flexOrderId});
-        console.log('dd',order);
+        console.log('dd====',order);
         if(flexOrderList!=null){
           setInputs(flexOrderList);
           setFirstPaymentDate(flexOrderList.first_payment);

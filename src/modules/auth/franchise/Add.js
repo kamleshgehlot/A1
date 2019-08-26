@@ -423,9 +423,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   );
 
   return (
-    <div onSubmit={handleSubmit}>
+    <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form > 
+        <form  onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">

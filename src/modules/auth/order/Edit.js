@@ -319,8 +319,6 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       event.preventDefault();
     }
 
-    
-
     if(budgetList == null) {
       const budget = await Order.getCurrespondingBudget({budgetId: recData.budget_id});
       // console.log('budgetlist',budget.order[0]);
@@ -329,7 +327,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
     
     if(flexOrderList==null && fixedOrderList==null && recData.order_type==2){
       const order = await Order.getCurrespondingFlexOrder({flexOrderId: recData.order_type_id});
-      // console.log('flexlist',order[0]);
+      console.log('flexlist',order[0]);
       setFlexOrderList(order[0]);
     }
     if(flexOrderList==null && fixedOrderList==null && recData.order_type==1){
