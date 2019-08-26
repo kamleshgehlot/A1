@@ -337,7 +337,7 @@ export default function ProductList(props) {
       
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} updateProductList = {setCategoryListFn} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={receivedData} updateProductList={setCategoryListFn}/> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={receivedData} updateProductList={setCategoryListFn}/> : null}
       {openArchived ?  <ArchivedList open={openArchived} handleArchivedClose={handleArchivedClose}  />: null}
       
       <Snackbar

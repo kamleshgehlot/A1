@@ -148,6 +148,7 @@ Staff.prototype.all = function () {
             reject(error);
           }
         });
+          console.log('datas--',datas)
       }
       else {
         console.log("Error...", error);

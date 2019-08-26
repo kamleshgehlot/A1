@@ -2,24 +2,24 @@ import { validString, validNumber, validEmail } from './Regex';
 
 export default function validate(values) {
   let errors = {};
-  if (!values.productname) {
-    errors.productname = 'Product Title/Name is required';
-  } else if (!validString.test(values.productname)) {
-    errors.productname = 'Product Title/Name is invalid';
+  if (!values.name) {
+    errors.name = 'Product Title/Name is required';
+  } else if (!validString.test(values.name)) {
+    errors.name = 'Product Title/Name is invalid';
   }
 
-  if (!values.color) {
-    errors.color = 'Color is required';
+  if (!values.color_id) {
+    errors.color_id = 'Color is required';
   } 
   
-  if (!values.brand) {
-    errors.brand = 'Brand is required';
+  if (!values.brand_id) {
+    errors.brand_id = 'Brand is required';
   } 
 
-  if (!values.productprice) {
-    errors.productprice = 'Product Buying Price is required';
-  } else if (!validNumber.test(values.productprice)) {
-    errors.productprice = 'Product Buying Price is invalid';
+  if (!values.buying_price) {
+    errors.buying_price = 'Product Buying Price is required';
+  } else if (!validNumber.test(values.buying_price)) {
+    errors.buying_price = 'Product Buying Price is invalid';
   }
   if (!values.description) {
     errors.description = 'Product Description is required';
@@ -29,8 +29,8 @@ export default function validate(values) {
     errors.specification = 'Product Specification is required';
   }
   
-  if (!values.brought_from) {
-    errors.brought_from = 'Brought From is required';
+  if (!values.brought) {
+    errors.brought = 'Brought From is required';
   }
   
   if (!values.invoice) {

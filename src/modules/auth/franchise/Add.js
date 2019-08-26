@@ -29,7 +29,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
-import validate from '../../common/validation/FranchiseRuleValidation';
+// import validate from '../../common/validation/FranchiseRuleValidation';
+import validateEdit from '../../common/validation/FranchiseEditValidation';
 
 // API CALL
 import UserAPI from '../../../api/User';
@@ -418,7 +419,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addFranchise,
-    validate
+    validateEdit
   );
 
   return (
@@ -621,8 +622,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="director"
                       // label="Director Name"
                       value={inputs.director}
-                      // error={errors.director}
-                      // helperText={errors.director}
+                      error={errors.director}
+                      helperText={errors.director}
                       fullWidth
                       type="text"
                       margin="dense"
@@ -643,8 +644,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="email"
                       // label="Email"
                       value={inputs.email}
-                      // error={errors.email}
-                      // helperText={errors.email}
+                      error={errors.email}
+                      helperText={errors.email}
                       margin="dense"
                       // required
                       type="email"
@@ -667,8 +668,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       name="contact"
                       // label="Contact #"
                       value={inputs.contact}
-                      // error={errors.contact}
-                      // helperText={errors.contact}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       margin="dense"
                       // required
                       fullWidth

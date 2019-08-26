@@ -86,8 +86,10 @@ Location.prototype.getCityRelatedAllArea = function (){
           (rows.length > 0 ? rows : []).map((data,index) => { 
               suburb.push(data.suburb);
           })
+          // console.log('rowsifs====---',rows)
           connection.query('select id from location WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
             if (!error) {
+         
             const city_id = rows[0].id;
               connection.query('select id, area_name, city_id, is_active from area where city_id = "'+ city_id +'" AND area_name NOT IN (?) order by area_name',[suburb], (error, rows, fields) => {
                 if (!error) {

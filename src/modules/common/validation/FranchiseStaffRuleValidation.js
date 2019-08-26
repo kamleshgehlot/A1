@@ -17,9 +17,7 @@ export default function validate(values) {
   
   if (!values.location) {
     errors.location = 'Location is required';
-  } else if (!validString.test(values.location)) {
-    errors.location = 'Location is invalid';
-  }
+  } 
 
   if (!values.contact) {
     errors.contact = 'Contact is required';
@@ -50,10 +48,7 @@ export default function validate(values) {
   }
   if (!values.pre_position) {
     errors.pre_position = 'Position/JobRole is required';
-  } else if (!validString.test(values.pre_position)) {
-    errors.pre_position = 'Position/JobRole is invalid';
   }
-  
   if (!values.duration) {
     errors.duration = 'Work Experience is required';
   } 

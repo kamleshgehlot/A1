@@ -21,6 +21,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import validate from '../../common/validation/FranchiseStaffRuleValidation';
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
@@ -82,6 +83,15 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  labelTitle: {
+    // display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // flex: 1,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(13),
+    marginTop: 15,
+  },
   button:{
     color:"white",
     fontSize: theme.typography.pxToRem(10),
@@ -99,11 +109,11 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick, franchiseId, role, inputs, setFranchiseList}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick, franchiseId, role, inputValues, setFranchiseList}) {
   const classes = useStyles();
   
   const [expanded, setExpanded] = React.useState('panel1');
-  const [staffList, setStaffList] = React.useState(inputs);
+  const [staffList, setStaffList] = React.useState(inputValues);
   const [assignRole, setAssignRole] = React.useState([]);
   const [checkRole, setCheckRole] = React.useState(["Delivery","CSR","Finance","HR"]);
   const [ploading, setpLoading] = React.useState(false);
@@ -119,7 +129,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
 
   useEffect(() => {
     let assignRoleList = [];
-    (staffList.role.split(',')).map((role,index) =>{
+    (inputValues.role.split(',')).map((role,index) =>{
       assignRoleList.push(role);
     });
     setAssignRole(assignRoleList);
@@ -131,24 +141,24 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
     setSavebtn(true);
     const data = {
       franchise_id: franchiseId,
-      id: staffList.id,
-      first_name: staffList.first_name,
-      last_name: staffList.last_name,
-      location: staffList.location,
-      contact: staffList.contact,
-      email: staffList.email,
+      id: inputs.id,
+      first_name: inputs.first_name,
+      last_name: inputs.last_name,
+      location: inputs.location,
+      contact: inputs.contact,
+      email: inputs.email,
       
-      pre_company_name: staffList.pre_company_name,
-      pre_company_address: staffList.pre_company_address,
-      pre_company_contact: staffList.pre_company_contact,
-      pre_position: staffList.pre_position,
-      duration: staffList.duration,
-      // resume:  staffList.resume,
-      // cover_letter: staffList.cover_letter,
-      employment_doc: staffList.employment_doc,
+      pre_company_name: inputs.pre_company_name,
+      pre_company_address: inputs.pre_company_address,
+      pre_company_contact: inputs.pre_company_contact,
+      pre_position: inputs.pre_position,
+      duration: inputs.duration,
+      // resume:  inputs.resume,
+      // cover_letter: inputs.cover_letter,
+      employment_doc: inputs.employment_doc,
       
-      user_id: staffList.user_id,
-      password: staffList.password,
+      user_id: inputs.user_id,
+      password: inputs.password,
       role: assignRole.join(),
       created_by: 1,
     };
@@ -163,16 +173,26 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
     const response = await Staff.register( { formData: formData } );
     handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.staffList);
+    console.log('response.staffList----',response)
     // handleReset(RESET_VALUES);
     setSavebtn(false);
     setSavebtn(true);
     handleEditClose(false);
   };
 
-  const handleInputChange = event => {
-    const { name, value } = event.target
-    setStaffList({ ...staffList, [name]: value })
-  }
+  // const handleInputChange = event => {
+  //   const { name, value } = event.target
+  //   setStaffList({ ...staffList, [name]: value })
+  // }
+  
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    addFranchiseStaff,
+    validate
+  ); 
+  useEffect(() => {
+    setInputsAll(inputValues);
+  }, []);
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -221,8 +241,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       id="first_name"
                       name="first_name"
                       // label="First Name"
-                      value={staffList.first_name}
+                      value={inputs.first_name}
                       onChange={handleInputChange}
+                      error={errors.first_name}
+                      helperText={errors.first_name}
                       fullWidth
                       required
                       type="text"
@@ -243,8 +265,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="last_name"
                       // label="Last Name"
                       type="text"
-                      value={staffList.last_name} 
+                      value={inputs.last_name} 
                       onChange={handleInputChange}
+                      error={errors.last_name}
+                      helperText={errors.last_name}
                       // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
@@ -264,8 +288,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="location"
                       // label="Location"
                       type="text"
-                      value={staffList.location}
+                      value={inputs.location}
                       onChange={handleInputChange}
+                      error={errors.location}
+                      helperText={errors.location}
                       required
                       fullWidth
                     />
@@ -283,8 +309,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="contact"
                       // label="Contact"
                       type="number"
-                      value={staffList.contact} 
+                      value={inputs.contact} 
                       onChange={handleInputChange}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       required
                       fullWidth
                     />
@@ -302,8 +330,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="email"
                       // label="Email Id"
                       type="email"
-                      value={staffList.email} 
+                      value={inputs.email} 
                       onChange={handleInputChange}
+                      error={errors.email}
+                      helperText={errors.email}
                       required
                       disabled
                       fullWidth
@@ -340,8 +370,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="pre_company_name"
                       // label="Name of Previous Company"
                       type="text"
-                      value={staffList.pre_company_name} 
+                      value={inputs.pre_company_name} 
                       onChange={handleInputChange}
+                      error={errors.pre_company_name}
+                      helperText={errors.pre_company_name}
                       // onBlur={handleNameBlurChange}
                       required
                       fullWidth
@@ -360,8 +392,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="pre_company_address"
                       // label="Address of Previous Company"
                       type="text"
-                      value={staffList.pre_company_address} 
+                      value={inputs.pre_company_address} 
                       onChange={handleInputChange}
+                      error={errors.pre_company_address}
+                      helperText={errors.pre_company_address}
                       required
                       fullWidth
                     />
@@ -379,8 +413,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="pre_company_contact"
                       // label="Contact# of Previous Company"
                       type="number"
-                      value={staffList.pre_company_contact} 
+                      value={inputs.pre_company_contact} 
                       onChange={handleInputChange}
+                      error={errors.pre_company_contact}
+                      helperText={errors.pre_company_contact}
                       required
                       fullWidth
                     />
@@ -398,7 +434,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="pre_position"
                       // label="Position/JobRole in Previous Company"
                       type="text"
-                      value={staffList.pre_position} 
+                      value={inputs.pre_position} 
+                      onChange={handleInputChange}
+                      helperText={errors.pre_position}
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -417,8 +455,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="duration"
                       // label="Work Experience"
                       type="text"
-                      value={staffList.duration} 
+                      value={inputs.duration} 
                       onChange={handleInputChange}
+                      error={errors.duration}
+                      helperText={errors.duration}
                       // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
                       required
@@ -439,7 +479,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       // label=""
                       multiple
                       type="file"
-                      value={staffList.employment_doc} 
+                      value={inputs.employment_doc} 
                       onChange={handleInputChange}
                       // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
@@ -453,7 +493,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <a href={"server\\files\\franchiseStaff\\" + staffList.employment_docs }  download >{staffList.employment_docs}</a>
+                    <a href={"server\\files\\franchiseStaff\\" + inputs.employment_docs }  download >{inputs.employment_docs}</a>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
@@ -485,7 +525,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="user_id"
                       // label="User Id"
                       type="text"
-                      value={staffList.user_id} 
+                      value={inputs.user_id} 
                       // onChange={handleInputChange}
                       // onBlur={handleNameBlurChange}
                       // onFocus={handlePasswordBlurChange}
@@ -502,7 +542,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       name="password"
                       // label="Password"
                       // onFocus={handlePasswordBlurChange}
-                      value={staffList.password} 
+                      value={inputs.password} 
                       required
                       fullWidth
                       // error={errors.password}
@@ -537,10 +577,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <Grid item xs={12} sm={12}>
-            {savebtn? <Button variant="contained" onClick={addFranchiseStaff}  color="primary" className={classes.button} >
+            {savebtn? <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
                 Update
               </Button>  :
-              <Button variant="contained" onClick={addFranchiseStaff}  color="primary" className={classes.button} >
+              <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
               Update
             </Button>}
               <Button  variant="contained"   onClick={handleEditClose} color="primary" className={classes.button} >

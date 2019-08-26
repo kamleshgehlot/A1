@@ -372,7 +372,7 @@ export default function Franchise(props) {
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} setFranchiseId={setFranchiseIdFn}/>
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={franchiseData} setFranchiseList={setFranchiseListFn}  setFranchiseId={setFranchiseIdFn}/> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={franchiseData} setFranchiseList={setFranchiseListFn}  setFranchiseId={setFranchiseIdFn}/> : null}
     </div>
   );
 }

@@ -26,6 +26,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Link from '@material-ui/core/Link';
+import validate from '../../common/validation/CommentRuleValidation';
 // API CALL
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
@@ -107,20 +108,21 @@ const StyledTableRow = withStyles(theme => ({
     },
   },
 }))(TableRow);
-export default function Comment({open, handleViewClose, handleSnackbarClick, inputss}) {
+export default function Comment({open, handleViewClose, handleSnackbarClick, inputValues}) {
   const classes = useStyles();
   
   const [expanded, setExpanded] = React.useState('panel1');
   const [staffList, setStaffList] = useState({});
-  const [leadList, setLeadList] = React.useState(inputss);
+  const [leadList, setLeadList] = React.useState(inputValues);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [franchiseList, setFranchiseList] = useState({});
   const [commentList, setCommentList] = useState({});
-  const docPath = "server\\files\\leads\\" + leadList.document ; 
-  const addComment = async () => {
+  const docPath = "server\\files\\leads\\" + inputValues.document ; 
+
+  const addCommentToLead = async () => {
     const response = await Lead.addComment({
-      lead_id: leadList.id,
+      lead_id: inputs.id,
       comment:inputs.comment,
       comment_by: inputs.comment_by
     });
@@ -137,7 +139,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
         const result = await UserAPI.list();
         setFranchiseList(result.userList);
         allComment();
-        console.log('usrlist---',result.userList);
+        // console.log('usrlist---',result.userList);
       } catch (error) {
         setIsError(true);
       }
@@ -148,21 +150,24 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
   }, []);
   const allComment = async () => {
     const response = await Lead.allComment({
-      lead_id: leadList.id
+      lead_id: inputValues.id
     });
     setCommentList(response.commentList);
-    console.log('res---',response);
+    // console.log('res---',response);
   };
 
-  function validate(values) {
-    let errors = {};
-    return errors;
-  };
-  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
+  // function validate(values) {
+  //   let errors = {};
+  //   return errors;
+  // };
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
-    addComment,
+    addCommentToLead,
     validate
   );
+  useEffect(() => {
+    setInputsAll(inputValues);
+  }, []);
   
   return (
     <div>
@@ -197,7 +202,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       id="lead_id"
                       name="lead_id"
                       label=""
-                      value={leadList.lead_id}
+                      value={inputs.lead_id}
                       fullWidth
                       required
                       type="text"
@@ -208,7 +213,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="last_name">Franchise</InputLabel>
                       <Select
-                        value={leadList.franchise_id}
+                        value={inputs.franchise_id}
                         inputProps={{
                           name: 'franchise_id',
                           id: 'franchise_id',
@@ -237,7 +242,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                         name="otherFranchiseValue"
                         label="Enter Franchise Name"
                         type="text"
-                        value={leadList.franchise_name} 
+                        value={inputs.franchise_name} 
                         required
                         disabled 
                         fullWidth
@@ -245,7 +250,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                     </Grid> */}
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="contact">Uploaded Doc/Photo</InputLabel>
-                    <a href={"server\\files\\leads\\" + leadList.document }  download >{leadList.document}</a>
+                    <a href={"server\\files\\leads\\" + inputs.document }  download >{inputs.document}</a>
                       {/* <Tooltip title="Download">
                         <IconButton  size="small"  >
                           <SendIcon />
@@ -264,7 +269,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       id="description"
                       name="description"
                       // label="Description"
-                      value={leadList.message}
+                      value={inputs.message}
                       fullWidth
                       required
                       disabled 
@@ -285,8 +290,10 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       id="comment"
                       name="comment"
                       // label="Comment"
-                      value={leadList.comment}
+                      value={inputs.comment}
                       onChange={handleInputChange}
+                      error={errors.comment}
+                      helperText={errors.comment}
                       fullWidth
                       required
                       multiline
@@ -306,7 +313,9 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       id="comment_by"
                       name="comment_by"
                       // label="Comment By"
-                      value={leadList.comment_by}
+                      value={inputs.comment_by}
+                      error={errors.comment_by}
+                      helperText={errors.comment_by}
                       onChange={handleInputChange}
                       fullWidth
                       required
@@ -316,7 +325,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={addComment} type="submit">
+                    <Button variant="contained" color="primary" className={classes.button} onClick={handleSubmit} type="submit">
                       Post Comment
                     </Button>
                     <Button  variant="contained"   onClick={handleViewClose} color="primary" className={classes.button} >

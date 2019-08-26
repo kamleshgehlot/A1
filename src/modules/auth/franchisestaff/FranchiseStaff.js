@@ -334,7 +334,7 @@ export default function FranchiseStaff(franchiseId) {
         </Grid>
       <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} setFranchiseList={setFranchiseListFn} />
       
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputs={staffData} setFranchiseList={setFranchiseListFn} /> : null}
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} inputValues={staffData} setFranchiseList={setFranchiseListFn} /> : null}
           
       {/* 
       Code for testing pls don't remove -- by SRK 

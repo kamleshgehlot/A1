@@ -142,8 +142,10 @@ export default function Lead() {
         const result = await LeadAPI.list();
         setLeadList(result.leadList);
         
-        const fid = await FranchiseUsers.franchiseid();
-        setFranchiseId(fid.currentfranchise[0].franchise_id);
+        if(roleName != 'Super Admin'){    
+          const fid = await FranchiseUsers.franchiseid();
+          setFranchiseId(fid.currentfranchise[0].franchise_id);
+        }
       } catch (error) {
         setIsError(true);
       }
@@ -507,7 +509,7 @@ export default function Lead() {
       
       {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertLead}  converted_name={'lead'}/> : null }
       {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn} convert={convertLead}/> :null}
-      {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputss={leadData}  /> :null}
+      {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputValues={leadData}  /> :null}
       {openConvertedLeads ?  <ConvertedLeads open={openConvertedLeads} handleConvertedLeadsClose={handleConvertedLeadsClose} franchiseListd={franchiseListd} />: null}
 
     </div>

@@ -38,10 +38,10 @@ const RESET_VALUES = {
   productname:'',
   color:'',
   brand:'',
-  productprice:'',
+  buying_price:'',
   description:'',
   specification:'',
-  brought_from:'',
+  brought:'',
   invoice:'',
   rental:'',
   meta_keywords:'',
@@ -159,13 +159,13 @@ export default function AddProduct(props) {
       maincat:props.productCatList.maincategory,
       category:props.productCatList.category,
       subcat:props.productCatList.subcategory,
-      name:inputs.productname,
-      color_id:inputs.color,
+      name:inputs.name,
+      color_id:inputs.color_id,
       brand_id:inputs.brand,
-      buying_price:inputs.productprice,
+      buying_price:inputs.buying_price,
       description:inputs.description,
       specification:inputs.specification,
-      brought:inputs.brought_from,
+      brought:inputs.brought,
       invoice:inputs.invoice,
       rental:rental,
       meta_keywords:inputs.meta_keywords,
@@ -198,10 +198,10 @@ export default function AddProduct(props) {
   );
 
   function handleRentalChange(e){
-    setRental(e.target.value);
-    if(e.target.value < 0){
+    // setRental(e.target.value);
+    if(e.target.value <= 0){
       setInput(e.target.name,'')
-      setRental('')
+      // setRental('')
     }
     else{
       setInput(e.target.name,e.target.value)
@@ -246,12 +246,12 @@ export default function AddProduct(props) {
                           input: classes.textsize,
                         },
                       }}
-                      id="productname"
-                      name="productname"
+                      id="name"
+                      name="name"
                       // label="Enter Product Title/Name"
-                      value={inputs.productname}
-                      error={errors.productname}
-                      helperText={errors.productname}
+                      value={inputs.name}
+                      error={errors.name}
+                      helperText={errors.name}
                       fullWidth
                       type="text"
                       margin="dense"
@@ -271,16 +271,16 @@ export default function AddProduct(props) {
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="choose_color">Choose Color *</InputLabel>
                     <Select
-                        name="color"
+                        name="color_id"
                         onChange={handleInputChange}
-                        value={inputs.color}
+                        value={inputs.color_id}
                         inputProps={{
-                          name: 'color',
-                          id: 'color',
+                          name: 'color_id',
+                          id: 'color_id',
                         }}
                         className={classes.drpdwn}
-                        error={errors.color}
-                        helperText={errors.color}
+                        error={errors.color_id}
+                        helperText={errors.color_id}
                         fullWidth
                         // label="Choose Color"
                         required
@@ -296,17 +296,17 @@ export default function AddProduct(props) {
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="city_selection">Choose Brand *</InputLabel>
                     <Select
-                        name="brand"
+                        name="brand_id"
                         onChange={handleInputChange}
-                        value={inputs.brand}
+                        value={inputs.brand_id}
                         inputProps={{
-                          name: 'brand',
-                          id: 'brand',
+                          name: 'brand_id',
+                          id: 'brand_id',
                         }}
                         className={classes.drpdwn}
                         fullWidth
-                        error={errors.brand}
-                        helperText={errors.brand}
+                        error={errors.brand_id}
+                        helperText={errors.brand_id}
                         // label="Choose Brand"
                         required
                       >
@@ -326,16 +326,16 @@ export default function AddProduct(props) {
                           input: classes.textsize,
                         },
                       }}
-                      id="productprice"
-                      name="productprice"
+                      id="buying_price"
+                      name="buying_price"
                       // label="Enter Product Buying Price"
-                      value={inputs.productprice}
+                      value={inputs.buying_price}
                       onChange={handleInputChange}
                       fullWidth
                       type="number"
                       margin="dense"
-                      error={errors.productprice}
-                      helperText={errors.productprice}
+                      error={errors.buying_price}
+                      helperText={errors.buying_price}
                       required
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -392,12 +392,12 @@ export default function AddProduct(props) {
                           input: classes.textsize,
                         },
                       }}
-                      id="brought_from"
-                      name="brought_from"
-                      value={inputs.brought_from}
+                      id="brought"
+                      name="brought"
+                      value={inputs.brought}
                       onChange={handleInputChange}
-                      error={errors.brought_from}
-                      helperText={errors.brought_from}
+                      error={errors.brought}
+                      helperText={errors.brought}
                       fullWidth
                       margin="dense"
                       type="text"

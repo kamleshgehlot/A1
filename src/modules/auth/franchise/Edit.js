@@ -28,6 +28,8 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import useSignUpForm from '../franchise/CustomHooks';
+import validateEdit from '../../common/validation/FranchiseEditValidation';
 
 // API CALL
 
@@ -113,11 +115,11 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setFranchiseList, setFranchiseId}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick,  inputValues, setFranchiseList, setFranchiseId}) {
   const classes = useStyles();
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
-  const [franchise, setFranchise] = React.useState(inputs);
+  const [franchise, setFranchise] = React.useState(inputValues);
   const [directorList, setDirectorList] =useState([]);
   const [selectedArea, setSelectedArea] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
@@ -137,9 +139,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
         setCityList(LocationResult.cityList);
         // console.log('franchise-----',franchise)
         const result = await LocationAPI.arealist({
-          city_name : franchise.city,
-          city_code : franchise.city_code,
-          suburb : franchise.suburb,
+          city_name : inputValues.city,
+          city_code : inputValues.city_code,
+          suburb : inputValues.suburb,
         });
         setSelectedArea(result.selectedArea);
       } catch (error) {
@@ -149,15 +151,15 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     fetchData();
   }, []);
 
-  const handleInputChange = event => {
+  const handleStateChange = event => {
     const { name, value } = event.target
-    // console.log(name, value);
+    console.log(name, value); 
     name =='state' && value =='4' ? setConfirmation(true) : 
-    setFranchise({ ...franchise, [name]: value })
+    setInput(name,value)
   }
 
   function handleConfirmationDialog (response){
-    setFranchise({ ...franchise, 'state': response});
+    setInput('state',response)
     // console.log(franchise);
     setConfirmation(false);
   }
@@ -165,48 +167,48 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
 
   // }
 
-  const setInput = (name, value) => {
-    setFranchise({ ...franchise, [name]: value });
-  };
+  // const setInput = (name, value) => {
+  //   setFranchise({ ...franchise, [name]: value });
+  // };
   
-  const handleSubmit = async () => {
+  const editFranchise = async () => {
     setpLoading(true);
     setSavebtn(false);
     const response = await UserAPI.add({
       // cancelToken: this.isTokenSource.token,
       
-      id: franchise.franchise_id,
-      city: franchise.city,
-      suburb: franchise.suburb,
-      franchise_name: franchise.franchise_name,
+      id: inputs.franchise_id,
+      city: inputs.city,
+      suburb: inputs.suburb,
+      franchise_name: inputs.franchise_name,
 
-      city_code: franchise.city,
+      city_code: inputs.city,
       abn: "1234",
 
-      company_name: franchise.company_name,
-      nbzn: franchise.nbzn,
-      company_location: franchise.company_location,
+      company_name: inputs.company_name,
+      nbzn: inputs.nbzn,
+      company_location: inputs.company_location,
 
-      director_id: franchise.director_id,
-      director: franchise.director,
-      email: franchise.email,
-      contact: franchise.contact,
-      alt_contact: franchise.alt_contact,
-      website: franchise.website,
+      director_id: inputs.director_id,
+      director: inputs.director,
+      email: inputs.email,
+      contact: inputs.contact,
+      alt_contact: inputs.alt_contact,
+      website: inputs.website,
 
-      accountant_id: franchise.accountant_id,
-      accountant_name: franchise.accountant_name,
-      accountant_email: franchise.accountant_email,
-      accountant_contact: franchise.accountant_contact,
+      accountant_id: inputs.accountant_id,
+      accountant_name: inputs.accountant_name,
+      accountant_email: inputs.accountant_email,
+      accountant_contact: inputs.accountant_contact,
 
-      user_name : franchise.director,
-      user_id: franchise.user_id,
-      password: franchise.password,
-      state: franchise.state,
+      user_name : inputs.director,
+      user_id: inputs.user_id,
+      password: inputs.password,
+      state: inputs.state,
 
       designation: "2",
       role_id: "2",
-      company_id: franchise.company_id,
+      company_id: inputs.company_id,
     });
 
     let franchiseIdTemp = [];
@@ -245,10 +247,18 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     return Math.random().toString(36).slice(-8);
   }
   
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    editFranchise,
+    validateEdit
+  );  
+  useEffect(() => {
+    setInputsAll(inputValues);
+  }, []);
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
@@ -292,8 +302,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       required
                       type="text"
-                      value={franchise.franchise_name}
+                      value={inputs.franchise_name}
                       onChange={handleInputChange}
+                      error={errors.franchise_name}
+                      helperText={errors.franchise_name}
                       // onBlur={handleNameBlurChange}/
                       fullWidth
                       required
@@ -303,8 +315,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   <Grid item xs={12} sm={3}>
                     <InputLabel className={classes.textsize} htmlFor="status">Status *</InputLabel>
                     <Select
-                      value={franchise.state}
-                      onChange={handleInputChange}
+                      value={inputs.state}
+                      onChange={handleStateChange}
                       inputProps={{
                         name: 'state',
                         id: 'state',
@@ -314,7 +326,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // label="Status"
                       required className={classes.textsize}
                     >
-                    {franchise.state=== 1 ? <MenuItem className={classes.textsize} value={1}>Open</MenuItem> : ''}
+                    {inputs.state=== 1 ? <MenuItem className={classes.textsize} value={1}>Open</MenuItem> : ''}
                       <MenuItem className={classes.textsize} value={2}>Active</MenuItem>
                       <MenuItem className={classes.textsize} value={3}>Inactive</MenuItem>
                       <MenuItem className={classes.textsize} value={4}>Close</MenuItem>
@@ -323,13 +335,15 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   <Grid item xs={12} sm={3}>
                     <InputLabel className={classes.textsize} htmlFor="city">Select City *</InputLabel>
                     <Select
-                      value={franchise.city}
+                      value={inputs.city}
                       onChange={handleInputChange} className={classes.textsize}
                       inputProps={{
                         name: 'city',
                         id: 'city',
                       }}
                       fullWidth
+                      error={errors.city}
+                      helperText={errors.city ? errors.city : ' '}
                       // label="City"
                       required
                       disabled
@@ -345,13 +359,15 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   <Grid item xs={12} sm={3}>
                     <InputLabel className={classes.textsize} htmlFor="suburb_selection">Area *</InputLabel>
                     <Select
-                      value={franchise.suburb}
+                      value={inputs.suburb}
                       onChange={handleInputChange} className={classes.textsize}
                       name= 'suburb'
                       id= 'suburb_selection'
                       fullWidth
                       // label="Area"
                       required
+                      error={errors.suburb}
+                      helperText={errors.suburb ? errors.suburb : ' '}
                     >
                     {(selectedArea.length>0 ? selectedArea : []).map((area, index) => {
                         return(
@@ -394,7 +410,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="company_name"
                       name="company_name"
                       // label="Company Name"
-                      value={franchise.company_name}
+                      value={inputs.company_name}
+                      error={errors.company_name}
+                      helperText={errors.company_name}
                       fullWidth
                       margin="dense"
                       required
@@ -412,7 +430,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="nbzn"
                       name="nbzn"
                       // label="Company's NBZN"
-                      value={franchise.nbzn}
+                      value={inputs.nbzn}
+                      error={errors.nbzn}
+                      helperText={errors.nbzn}
                       fullWidth
                       margin="dense"
                       required
@@ -430,7 +450,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="company_location"
                       name="company_location"
                       // label="Company Location"
-                      value={franchise.company_location}
+                      value={inputs.company_location}
+                      error={errors.company_location}
+                      helperText={errors.company_location}
                       margin="dense"
                       required
                       fullWidth
@@ -450,7 +472,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="director"
                       name="director"
                       // label="Director Name"
-                      value={franchise.director}
+                      value={inputs.director}
+                      error={errors.director}
+                      helperText={errors.director}
                       fullWidth
                       margin="dense"
                       required
@@ -468,7 +492,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="email"
                       name="email"
                       // label="Email"
-                      value={franchise.email}
+                      value={inputs.email}
+                      error={errors.email}
+                      helperText={errors.email}
                       margin="dense"
                       required
                       type="email"
@@ -488,7 +514,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="contact"
                       name="contact"
                       // label="Contact #"
-                      value={franchise.contact}
+                      value={inputs.contact}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       margin="dense"
                       required
                       fullWidth
@@ -507,7 +535,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="alt_contact"
                       name="alt_contact"
                       // label="Alternative Contact"
-                      value={franchise.alt_contact}
+                      value={inputs.alt_contact}
                       margin="dense"
                       // required
                       fullWidth
@@ -530,7 +558,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       required
                       type="text"
-                      value={franchise.user_id} 
+                      value={inputs.user_id} 
                       // onChange={handleInputChange}
                       // onBlur={handlePasswordBlurChange}
                       fullWidth
@@ -551,7 +579,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // label="Password"
                       // onChange={handleInputChange}
                       // onFocus={handlePasswordBlurChange}
-                      value={franchise.password} 
+                      value={inputs.password} 
                       // required
                       fullWidth
                       // error={errors.password}
@@ -623,7 +651,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="accountant_name"
                       name="accountant_name"
                       // label="Name"
-                      value={franchise.accountant_name}
+                      value={inputs.accountant_name}
+                      error={errors.accountant_name}
+                      helperText={errors.accountant_name}
                       // placeholder="Accountant name"
                       fullWidth
                       margin="dense"
@@ -643,7 +673,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="accountant_email"
                       name="accountant_email"
                       // label="Email Address"
-                      value={franchise.accountant_email}
+                      value={inputs.accountant_email}
+                      error={errors.accountant_email}
+                      helperText={errors.accountant_email}
                       // placeholder="Email"
                       fullWidth
                       margin="dense"
@@ -664,7 +696,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="accountant_contact"
                       name="accountant_contact"
                       // label="Contact #"
-                      value={franchise.accountant_contact}
+                      value={inputs.accountant_contact}
+                      error={errors.accountant_contact}
+                      helperText={errors.accountant_contact}
                       // placeholder="Contact"
                       type="number"
                       fullWidth
@@ -685,7 +719,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="website"
                       name="website"
                       // label="Website"
-                      value={franchise.website}
+                      value={inputs.website}
                       // placeholder="Accountant name"
                       fullWidth
                       margin="dense"
@@ -711,7 +745,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
         </form>
       </Dialog>
       {/* {console.log(confirmation)} */}
-      <ConfirmationDialog open = {confirmation} lastValue={4} handleConfirmationClose={handleConfirmationDialog}  currentState={franchise.state} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
+      <ConfirmationDialog open = {confirmation} lastValue={4} handleConfirmationClose={handleConfirmationDialog}  currentState={inputs.state} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
     </div>
   );
 }

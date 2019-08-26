@@ -32,7 +32,10 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import useSignUpForm from '../franchise/CustomHooks';
+import validate from '../../common/validation/ProductRuleValidation';
 
+import InputAdornment from '@material-ui/core/InputAdornment';
 // API CALL
 import Category from '../../../api/Category';
 import Brand from '../../../api/product/Brand';
@@ -45,10 +48,10 @@ const RESET_VALUES = {
   productname:'',
   color:'',
   brand:'',
-  productprice:'',
+  buying_price:'',
   description:'',
   specification:'',
-  brought_from:'',
+  brought:'',
   invoice:'',
   rental:'',
   meta_keywords:'',
@@ -112,10 +115,10 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Edit({open, handleEditClose, handleSnackbarClick, inputs, updateProductList}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick, inputValues, updateProductList}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [product, setProduct] = useState(inputs);
+  const [product, setProduct] = useState(inputValues);
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
   const [statusList, setStatusList] = useState([]);
@@ -129,11 +132,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleInputChange = event => {
+  const handleStateChange = event => {
     const { name, value } = event.target
 
     name =='status' && value =='3' ? setConfirmation(true) : 
-    setProduct({ ...product, [name]: value })
+    setInput(name,value)
   }
 
   useEffect(() => {
@@ -157,28 +160,29 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     fetchData();
   }, []);
 
-  console.log(product);
-  const handleSubmit = async () => {
+  const handleProductSubmit = async () => {
+    
+  console.log('inputValues',inputValues);
     setpLoading(true);
     setSavebtn(false);
     const response = await Category.edit({
       // cancelToken: this.isTokenSource.token,
-      id: product.id,
-      maincat: product.maincat,
-      category: product.category,
-      subcat: product.subcat,
-      name: product.name,
-      color_id: product.color_id,
-      brand_id: product.brand_id,
-      buying_price: product.buying_price,
-      description: product.description,
-      specification: product.specification,
-      brought: product.brought,
-      invoice: product.invoice,
-      rental: product.rental,
-      meta_keywords: product.meta_keywords,
-      meta_description: product.meta_description,
-      status: product.status,
+      id: inputs.id,
+      maincat: inputs.maincat,
+      category: inputs.category,
+      subcat: inputs.subcat,
+      name: inputs.name,
+      color_id: inputs.color_id,
+      brand_id: inputs.brand_id,
+      buying_price: inputs.buying_price,
+      description: inputs.description,
+      specification: inputs.specification,
+      brought: inputs.brought,
+      invoice: inputs.invoice,
+      rental: inputs.rental,
+      meta_keywords: inputs.meta_keywords,
+      meta_description: inputs.meta_description,
+      status: inputs.status,
     });
 
     // handleSnackbarClick(true, 'Category Updated Successfully.');
@@ -189,9 +193,28 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
     handleEditClose(false);
   };
   function handleConfirmationDialog (response){
-    setProduct({ ...product,'status': response })
+    setInput('status', response )
     setConfirmation(false);
   }
+  
+  function handleRentalChange(e){
+    if(e.target.value <= 0){
+      setInput(e.target.name,'')
+      // setRental('')
+    }
+    else{
+      setInput(e.target.name,e.target.value)
+
+    }
+  }
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    handleProductSubmit,
+    validate
+  ); 
+  useEffect(() => {
+    setInputsAll(inputValues);
+  }, []);
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -214,10 +237,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
 
           <div className={classes.root}>
 
+          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           {/* Franchise Details */}
           <Paper className={classes.paper}>
                 <Grid container spacing={3}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="product_name">Enter Product Title/Name</InputLabel>
                     <TextField 
@@ -228,8 +251,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                       id="name"
                       name="name"
-                      value={product.name}
+                      value={inputs.name}
                       onChange={handleInputChange}
+                      error={errors.name}
+                      helperText={errors.name}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
@@ -247,19 +272,25 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                       id="buyingprice"
                       name="buying_price"
-                      value={product.buying_price}
+                      value={inputs.buying_price}
                       onChange={handleInputChange}
+                      error={errors.buying_price}
+                      helperText={errors.buying_price}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      type="number"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="city">Choose Color</InputLabel>
                     <Select
-                      value={product.color_id}
+                      value={inputs.color_id}
                       onChange={handleInputChange}
                       inputProps={{
                         name: 'color_id',
@@ -269,6 +300,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       label="Choose Color"
                       required
                       className={classes.drpdwn}
+                      error={errors.color_id}
+                      helperText={errors.color_id}
                       // className={classes.textsize}
                     >
                     { colorList.map((data, index)=>{
@@ -284,7 +317,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     <Select
                          className={classes.textsize}
                         onChange={handleInputChange}
-                        value={product.brand_id}
+                        value={inputs.brand_id}
                         inputProps={{
                           name: 'brand_id',
                           id: 'brand_id',
@@ -293,7 +326,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         fullWidth
                         label="Choose Brand"
                         required
-                        className={classes.drpdwn}
+                        error={errors.brand_id}
+                        helperText={errors.brand_id}
                       >
                         { brandList.map((data, index)=>{
                           return(
@@ -317,7 +351,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         fullWidth
                         margin="normal"
                         multiline
-                        value={product.description}
+                        value={inputs.description}
+                        error={errors.description}
+                        helperText={errors.description}
                         onChange={handleInputChange}
                         InputLabelProps={{
                           shrink: true,
@@ -337,8 +373,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         fullWidth
                         name="specification"
                         margin="normal"
-                        value={product.specification}
+                        value={inputs.specification}
                         onChange={handleInputChange}
+                        error={errors.specification}
+                        helperText={errors.specification}
                       />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -351,8 +389,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                       id="brought"
                       name="brought"
-                      value={product.brought}
+                      value={inputs.brought}
                       onChange={handleInputChange}
+                      error={errors.brought}
+                      helperText={errors.brought}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
@@ -370,9 +410,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                       id="invoice"
                       name="invoice"
-                      value={product.invoice}
+                      value={inputs.invoice}
                       onChange={handleInputChange}
                       fullWidth
+                      error={errors.invoice}
+                      helperText={errors.invoice}
                       margin="normal"
                       InputLabelProps={{
                         shrink: true,
@@ -389,12 +431,18 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                       id="rental"
                       name="rental"
-                      value={product.rental}
-                      onChange={handleInputChange}
+                      value={inputs.rental}
+                      onChange={handleRentalChange}
+                      error={errors.rental}
+                      helperText={errors.rental}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      type="number"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
                       }}
                     />
                   </Grid>
@@ -408,8 +456,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                       }}
                       id="meta_keywords"
                       name="meta_keywords"
-                      value={product.meta_keywords}
+                      value={inputs.meta_keywords}
                       onChange={handleInputChange}
+                      error={errors.meta_keywords}
+                      helperText={errors.meta_keywords}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
@@ -430,8 +480,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         multiline
                         margin="normal"
                         fullWidth
-                        value={product.meta_description}
+                        value={inputs.meta_description}
                         onChange={handleInputChange}
+                        error={errors.meta_description}
+                        helperText={errors.meta_description}
                       />
                   </Grid>
                   
@@ -439,8 +491,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                     <InputLabel  className={classes.textsize} htmlFor="status">Choose Status</InputLabel>
                     <Select
                         
-                        onChange={handleInputChange}
-                        value={product.status}
+                        onChange={handleStateChange}
+                        value={inputs.status}
                         inputProps={{
                           name: 'status',
                           id: 'status',
@@ -449,6 +501,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
                         label="Choose Status"
                         required
                         className={classes.drpdwn}
+                        error={errors.status}
+                        helperText={errors.status}
                       >
                         { statusList.map((datastatus, index)=>{
                           return(
@@ -473,7 +527,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputs
           </div>
       </form>
       </Dialog>
-      <ConfirmationDialog open = {confirmation} lastValue={3} handleConfirmationClose={handleConfirmationDialog}  currentState={product.status}  title={"Discontinued"} content={"Do you really want to discontinue this product ?"} />
+      <ConfirmationDialog open = {confirmation} lastValue={3} handleConfirmationClose={handleConfirmationDialog}  currentState={inputs.status}  title={"Discontinued"} content={"Do you really want to discontinue this product ?"} />
 
     </div>
   );
