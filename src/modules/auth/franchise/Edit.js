@@ -139,6 +139,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
         const result = await LocationAPI.arealist({
           city_name : franchise.city,
           city_code : franchise.city_code,
+          suburb : franchise.suburb,
         });
         setSelectedArea(result.selectedArea);
       } catch (error) {

@@ -102,22 +102,22 @@ const register = async function (req, res, next) {
 			res.send({ userList: userList });
 			// newAccountant.update();
 		} else {
-			await newAccountant.register();
-			newCompany.accountant_id = result.accountant_id;
-			await newCompany.register();
-			newFranchise.company_id = result;
-			newUser.company_id = result;
-			await newFranchise.register();
+			let accountant_result = await newAccountant.register();
+			newCompany.accountant_id = accountant_result.accountant_id;
+			let company_result = await newCompany.register();
+			newFranchise.company_id = company_result;
+			newUser.company_id = company_result;
+			let franchise_result = await newFranchise.register();
 			
 			const accountId = Miscellaneious.generateAccountId();
 			const token = Miscellaneious.generateRandomToken();
 
-			newUser.franchise_id = result.franchise_id;
+			newUser.franchise_id = franchise_result.franchise_id;
 			newUser.accountId = accountId;
 			newUser.token = token;
-			newUserRole.franchise_id = result.franchise_id;
+			newUserRole.franchise_id = franchise_result.franchise_id;
 
-			await newUser.register();
+			let user_result = await newUser.register();
 			console.log("Saved Successfully.");
 
 			(req.body.directorList || []).map(director => {
