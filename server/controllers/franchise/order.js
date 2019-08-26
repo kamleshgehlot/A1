@@ -70,7 +70,6 @@ const getExistingBudget = async function(req, res, next) {
 const getFixedOrder = async function(req, res, next) {
   try {
     const order = await new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.fixedOrderId}).getFixedOrder();
-    
     res.send(order);
   } catch (error) {
     next(error);
@@ -79,8 +78,8 @@ const getFixedOrder = async function(req, res, next) {
 
 const getFlexOrder = async function(req, res, next) {
   try {
-    const order = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.flexOrderId});
-    
+    const order = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.flexOrderId}).getFlexOrder();
+    console.log('order',order);
     res.send(order);
   } catch (error) {
     next(error);

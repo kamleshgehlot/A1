@@ -389,6 +389,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const addOrder = async () => {
     setpLoading(true);
     setSavebtn(true);
+    console.log('response ');
+
     const response = await OrderAPI.postOrder({
       order_id :  inputs.order_id,
       customer_id : customer.id,
@@ -407,7 +409,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       converted_name : converted_name,
       
      });
-    // console.log('response ', response);
+    console.log('response ', response);
     setAssignInterest('');
     // assignInterest = '';
     // handleSnackbarClick(true);
@@ -422,17 +424,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         alert("Invalid or Incomplete Credentials")
       }
   };
+  
 
-  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addOrder,
     validate
   );
 
-  // console.log(inputs);
+  console.log(inputs);
     
 return (
-    <div>
+  <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
@@ -685,20 +688,17 @@ return (
                       
            
                     
-            {savebtn? <Grid item xs={12} sm={12}> <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
-                      save
-                    </Button><Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
-                      Close
-                    </Button> </Grid> :  <Grid item xs={12} sm={12}><Button  variant="contained"  color="primary" className={classes.button} disabled>
-                      save
-                    </Button><Button variant="contained" color="primary" className={classes.button} disabled>
-                      Close
-                    </Button> </Grid> }
-                    
-                 
+            {savebtn? <Grid item xs={12} sm={12}> 
+                          <Button  variant="contained" color="primary" onClick={handleSubmit} className={classes.button}>save</Button>
+                          <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>Close</Button> 
+                      </Grid> 
+                    : <Grid item xs={12} sm={12}>
+                          <Button  variant="contained"  color="primary" className={classes.button} disabled>save</Button>
+                          <Button variant="contained" color="primary" className={classes.button} disabled>Close</Button> 
+                      </Grid>
+            }
                 </Grid>
           </Paper>
-            
           </div>
         </form>
       </Dialog>

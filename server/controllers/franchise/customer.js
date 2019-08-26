@@ -61,9 +61,8 @@ const register = async function (req, res, next) {
       const newCustomer = new Customer(CustomerParams);
 
       await newCustomer.register();
-      await new Customer({user_id : req.decoded.user_id}).all();
-
-      res.send({ customerList: customerList });
+      const customerList = await new Customer({user_id : req.decoded.user_id}).all();
+      res.send({ customerList });
     }
 	}catch(err){
     next(error);

@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import PdfIcon from '@material-ui/icons/PictureAsPdf';
 import PrintIcon from '@material-ui/icons/Print';
+import PaymentIcon from '@material-ui/icons/Payment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import * as pdfmake from 'pdfmake/build/pdfmake';
@@ -34,6 +35,7 @@ import Box from '@material-ui/core/Box';
 
 import Add from './Add';
 import Edit from './Edit';
+import PaymentStatus from './PaymentStatus';
 import FlexTypeDD from './FlexTypeDoc';
 import FixedTypeDD from './FixedOrderDoc';
 
@@ -68,11 +70,16 @@ const StyledTableRow = withStyles(theme => ({
 
 
 export default function Order() {
+  const roleName = APP_TOKEN.get().roleName;
+  // const userName = APP_TOKEN.get().userName;
+  
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [paymentStatusOpen, setPaymentStatusOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [orderRecData,setOrderRecData] = useState([]);
   const [editableData,setEditableData] = useState({});
+  const [orderData, setOrderData] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
   const [orderId, setOrderId] = useState();
   const [budgetData,setBudgetData] = useState([]);
@@ -193,6 +200,9 @@ export default function Order() {
     setOpen(false);
   }
 
+  function handlePaymentStatusClose(){
+    setPaymentStatusOpen(false);
+  }
   function uploadFileSelector(event){
   console.log(event.target.files);
 
@@ -234,6 +244,11 @@ export default function Order() {
     setConfirmation(true);
   }
   
+  function handlePaymentStatus(data){
+    // console.log(data);
+    setOrderData(data);
+    setPaymentStatusOpen(true);
+  }
   
 
   function handleConfirmationDialog (response){
@@ -311,7 +326,8 @@ export default function Order() {
     // <div ref={ref}>
     <div>
      <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={8}>
+            {roleName === 'CSR' ? 
             <Fab
               variant="extended"
               size="small"
@@ -323,10 +339,10 @@ export default function Order() {
             <AddIcon className={classes.extendedIcon} />
               Order
             </Fab>
+            : '' }
           </Grid>
-          <Grid item xs={12} sm={3}>
-          </Grid>
-          <Grid item xs={12} sm={6}>
+        
+          <Grid item xs={12} sm={4}>
               <TextField
                 margin="dense"
                 id="search"
@@ -348,7 +364,7 @@ export default function Order() {
                 //     </InputAdornment>
                 //   )
                 // }}
-                // fullWidth
+                fullWidth
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>
                                   <Tooltip title="Search">
@@ -367,10 +383,11 @@ export default function Order() {
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
                   <Tab label="Open" />
-                  <Tab label="Finance" />
+                  {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
                   <Tab label="Delivery" />
                 </Tabs>
               </AppBar> 
+              
               <TabPanel value={value} index={0}>
                   <Table >
                     <TableHead>
@@ -389,7 +406,7 @@ export default function Order() {
                     </TableHead>
                     <TableBody>
                     {(order.length > 0 ? order : []).map((data, index) => {
-                      if(data.assigned_to != 4){
+                      if(data.assigned_to !== 4 && roleName==='CSR'){
                        return(
                         <TableRow>
                           <StyledTableCell>{index + 1}</StyledTableCell>
@@ -408,42 +425,69 @@ export default function Order() {
                             data.payment_mode == 5 ? 'Cash' : ''
                             }
                           </StyledTableCell>
-                          <StyledTableCell>
-                          {/* */}
-                          {/* onClick={(event) => { handleEditOpen(data); }} */}
                           
-                          <Tooltip title="Update">
-                          <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
-                            <EditIcon />  
-                          </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Download PDF">
-                          {/* <Pdf targetRef={ref} filename="example.pdf">
-                            {({ toPdf }) => 
-                            <button onClick={toPdf}>Generate Pdf</button>
-                          }
-                          </Pdf> */}
+                          <StyledTableCell>
+                              <Tooltip title="Update">
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
+                                  <EditIcon />  
+                                </IconButton>
+                              </Tooltip>
+
+                              <Tooltip title="Download PDF">
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
                                   <PrintIcon /> 
                                 </IconButton>
-                        
-                          </Tooltip>
-                          <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
-                            <label htmlFor="upload_document">
-                              <Tooltip title="Upload Documents">                              
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
-                                  <CloudUpload />
+                              </Tooltip>
+                              
+                              <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
+                                <label htmlFor="upload_document">
+                                  <Tooltip title="Upload Documents">                              
+                                    <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
+                                      <CloudUpload />
+                                    </IconButton>
+                                  </Tooltip>
+                                </label>
+                              <Tooltip title="Assign to Finance">
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.doc_upload_status===0}>
+                                  <SendIcon />
                                 </IconButton>
                               </Tooltip>
-                            </label>
-                          <Tooltip title="Assign to Finance">
-                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.doc_upload_status===0}>
-                              <SendIcon />
-                            </IconButton>
-                          </Tooltip>
                        </StyledTableCell>
                       </TableRow>
-                       )
+                      )} else if(data.assigned_to === 4 && roleName==='Finance'){
+                        return(
+                          <TableRow>
+                            <StyledTableCell>{index + 1}</StyledTableCell>
+                            <StyledTableCell>{data.order_id}</StyledTableCell>
+                            <StyledTableCell>{data.customer_name}</StyledTableCell>
+                            <StyledTableCell>{data.mobile}</StyledTableCell>
+                            <StyledTableCell>{data.order_date}</StyledTableCell>
+                            <StyledTableCell>{'In Progress'}</StyledTableCell>
+                            {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                            <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                            <StyledTableCell>{
+                              data.payment_mode == 1 ? 'EasyPay' :  
+                              data.payment_mode == 2 ? 'Credit' : 
+                              data.payment_mode == 3 ? 'Debit' : 
+                              data.payment_mode == 4 ? 'PayPal' : 
+                              data.payment_mode == 5 ? 'Cash' : ''
+                              }
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                <Tooltip title="Payment Status">
+                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handlePaymentStatus(data); }} >
+                                    <PaymentIcon />  
+                                  </IconButton>
+                                </Tooltip>
+  
+                                <Tooltip title="Assign to Delivery">
+                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled>
+                                    <SendIcon />
+                                  </IconButton>
+                                </Tooltip>
+                         </StyledTableCell>
+                        </TableRow>
+                        )
                       }
                      })
                    }
@@ -453,7 +497,7 @@ export default function Order() {
                 </TabPanel>
 
               {/* finance */}
-              
+              { roleName ==='CSR' ? 
               <TabPanel value={value} index={1}>
                   <Table >
                     <TableHead>
@@ -501,11 +545,7 @@ export default function Order() {
                           </IconButton>
                           </Tooltip>
                           <Tooltip title="Download PDF">
-                          {/* <Pdf targetRef={ref} filename="example.pdf">
-                            {({ toPdf }) => 
-                            <button onClick={toPdf}>Generate Pdf</button>
-                          }
-                          </Pdf> */}
+                      
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled= {data.assigned_to===4}>
                                   <PrintIcon /> 
                                 </IconButton>
@@ -534,6 +574,7 @@ export default function Order() {
                     </TableBody>
                   </Table>
                 </TabPanel>
+                : null }
                 
               {/* delivery */}
               
@@ -559,10 +600,12 @@ export default function Order() {
                     </TableBody>
                   </Table>
                 </TabPanel>
+              
               </Paper>
           </Grid>
         </Grid>
      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData} convertLead={0} /> : null }
+     {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} /> : null }
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to finance ?"} />: null }
           
