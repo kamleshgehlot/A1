@@ -270,7 +270,9 @@ return (
                       helperText={errors.contact}
                       required
                       fullWidth
-                      maxLength='12'
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

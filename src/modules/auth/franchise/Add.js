@@ -665,6 +665,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       fullWidth
                       onChange={handleInputChange}
                       type="number"
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -683,6 +686,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       fullWidth
                       onChange={handleInputChange}
                       type="number"
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -859,6 +865,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       margin="dense"
                       required
                       onChange={handleInputChange}
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
 {console.log(inputs)}
