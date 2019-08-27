@@ -115,7 +115,7 @@ const paymentSubmit = async function(req, res, next) {
     }).paymentSubmit();
     console.log('payment',payment);
     const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-    res.send(order);
+      res.send({ order: order});
   } catch (error) {
     next(error);
   }
@@ -125,7 +125,6 @@ const assignToFinance = async function(req, res, next) {
   try {
     await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToFinance();
     const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-
     res.send({ order: order});
   } catch (error) {
     next(error);

@@ -196,12 +196,23 @@ export default function Order() {
     setOpen(true);
   }
 
-  function handleClose(){
+  function handleClose(result){
+    console.log('hhh', result);
     setOpen(false);
   }
 
   function handlePaymentStatusClose(){
-    // setOrder(response);
+    // setOrder([]);
+    const fetchData = async () => {
+      try {
+        const result = await OrderAPI.getAll();
+        console.log('result',result)
+        setOrder(result.order);
+      } catch (error) {
+        console.log(error);
+      }
+  };
+    fetchData();
     setPaymentStatusOpen(false);
   }
   function uploadFileSelector(event){
@@ -284,7 +295,7 @@ export default function Order() {
     setOrder(response.order);
   }
 
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -608,7 +619,7 @@ export default function Order() {
           </Grid>
         </Grid>
      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData} convertLead={0} /> : null }
-     {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} /> : null }
+     {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData}  /> : null }
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to finance ?"} />: null }
           

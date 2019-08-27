@@ -38,6 +38,9 @@ const budget = "CREATE TABLE IF NOT EXISTS budget(`id` bigint(20) UNSIGNED NOT N
 const flex_order = "CREATE TABLE IF NOT EXISTS flex_order(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_id` int(11) UNSIGNED NOT NULL, `goods_rent_price` double(10,2) DEFAULT NULL, `ppsr_fee` double(10,2) DEFAULT NULL, `liability_fee` double(10,2) DEFAULT NULL, `weekly_total` double(10,2) DEFAULT NULL, `frequency` int(11) DEFAULT NULL, `first_payment` varchar(50) DEFAULT NULL, `no_of_payment` double(10,2) DEFAULT NULL, `each_payment_amt` double(10,2) DEFAULT NULL, `total_payment_amt` double(10,2) DEFAULT NULL, `before_delivery_amt` double(10,2) DEFAULT NULL, `exp_delivery_at` timestamp DEFAULT CURRENT_TIMESTAMP, `bond_amt` double(10,2) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const fixed_order = "CREATE TABLE IF NOT EXISTS fixed_order(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_id` int(11) UNSIGNED NOT NULL, `int_unpaid_bal` double(10,2) DEFAULT NULL, `cash_price` double(10,2) DEFAULT NULL, `delivery_fee` double(10,2) DEFAULT NULL, `ppsr_fee` double(10,2) DEFAULT NULL, `frequency` int(11) DEFAULT NULL, `first_payment` varchar(50) DEFAULT NULL, `last_payment` varchar(50) DEFAULT NULL, `no_of_payment` double(10,2) DEFAULT NULL, `each_payment_amt` double(10,2) DEFAULT NULL, `total_payment_amt` double(10,2) DEFAULT NULL, `before_delivery_amt` double(10,2) DEFAULT NULL, `exp_delivery_at` timestamp DEFAULT CURRENT_TIMESTAMP, `minimum_payment_amt` double(10,2) DEFAULT NULL, `interest_rate` double(10,2) DEFAULT NULL, `interest_rate_per` double(10,2) DEFAULT NULL, `total_interest` double(10,2) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const order_document = "CREATE TABLE IF NOT EXISTS order_document(`id` int(11) NOT NULL AUTO_INCREMENT, `order_id` int(11) NOT NULL, `document` varchar(255) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const payment_status = "CREATE TABLE IF NOT EXISTS payment_status (`id` bigint(20) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `payment_date` varchar(50) DEFAULT NULL, `payment_amt` double DEFAULT NULL, `total_paid` double DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const order_status = "CREATE TABLE IF NOT EXISTS order_status (`id` int(11) NOT NULL AUTO_INCREMENT, `order_status` varchar(50) NOT NULL, PRIMARY KEY(id))";
+
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
@@ -74,6 +77,9 @@ Franchise.prototype.register = function (newUser) {
                                           connection.query(flex_order,function(err){
                                             connection.query(fixed_order,function(err){
                                               connection.query(order_document,function(err){
+                                                connection.query(payment_status, function(err){
+                                                  connection.query(order_status, function(err){
+
                                   // connection.query(leads,function(err){
                             if (err) {
                               console.log('error in creating tables', err);
@@ -144,6 +150,8 @@ Franchise.prototype.register = function (newUser) {
                         });
                           });
                         });
+                      });
+                    });
                         });
                       });
                       });

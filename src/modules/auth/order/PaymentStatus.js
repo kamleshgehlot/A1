@@ -155,33 +155,52 @@ export default function Budget({ open, handleClose, handleSnackbarClick, orderDa
           console.log('fixed order',order); 
           
           let payment_table=[];
-          let paymentDate = order[0].first_payment;
+          var paymentDate = new Date(order[0].first_payment);          
           let totalPaid = order[0].each_payment_amt;
 
+          // console.log('paymentDate...',paymentDate)
+          let addDays = order[0].frequency;
+          if(order[0].frequency ===1){addDays = 30;}
+          else if(order[0].frequency ===2){addDays = 15;}
+          else if(order[0].frequency ===4){addDays = 7;}
+
           for(let i=1; i<= order[0].no_of_payment; i++){
+            console.log('date...',paymentDate);
+
+            var month = paymentDate.getMonth() + 1;
+            var day = paymentDate.getDate();
+            var year = paymentDate.getFullYear();
+            if(month < 10){
+                month = '0' + month.toString();
+              }
+            if(day < 10){
+                day = '0' + day.toString();
+              }
+            var date = year + '-' + month + '-' + day;
+
+            // var date = paymentDate.getFullYear() + '-' + paymentDate.getMonth() + '-' + paymentDate.getDate() ;
+
             payment_table.push({
               sr_no : i,
               installment_no: i,
-              payment_date: paymentDate,
+              payment_date: date,
               payment_amt : order[0].each_payment_amt,
               total_paid : totalPaid,
               installment_before_delivery : order[0].before_delivery_amt,
               // status : 1,              
             });
-            paymentDate =  order[0].first_payment;
+            // paymentDate =  order[0].first_payment;
+            paymentDate.setDate(paymentDate.getDate() + addDays)
             totalPaid = totalPaid + order[0].each_payment_amt; 
           }
-          console.log(payment_table);
+          // console.log(payment_table);
           setPaymentStatus(payment_table);
               
         }else if(orderData.order_type === 2) {
           // console.log('flex',orderData.order_type_id);
           const order = await Order.getCurrespondingFlexOrder({flexOrderId: orderData.order_type_id});
           // console.log('flex order',order);
-        }
-        // const order = await Order.getExistingBudget({customer_id: customer_id});
-        // console.log('order',order);
-        // setOldBudgetList(order.oldBudget);   
+        }        
       } catch (error) {
         console.log('Error..',error);
       }
@@ -192,8 +211,6 @@ export default function Budget({ open, handleClose, handleSnackbarClick, orderDa
   
   
   function handlePaymentSubmit(response){
-    // console.log(response);
-
     const fetchData = async () => {
       try {
         const result = await Order.paymentSubmit({
@@ -204,14 +221,12 @@ export default function Budget({ open, handleClose, handleSnackbarClick, orderDa
           payment_amt : response.payment_amt,
           total_paid : response.total_paid,   
           installment_before_delivery : response.installment_before_delivery,
-        });
-        // console.log('result',result);
-        setOrder(result);
+        });        
       } catch (error) {
         console.log('Error..',error);
       }
     };
-    fetchData();       
+    fetchData();   
     handleClose(); 
   }
 
@@ -270,7 +285,7 @@ return (
                             </StyledTableCell>
                             <StyledTableCell>
                               {/* {data.installment_no < paymentHistory[0].installment_no ?  */}
-                               <Button  variant="contained" color="primary" className={classes.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = {data.installment_no === (paymentHistory[0].installment_no + 1) ? false : true}>Paid Installment</Button>
+                               <Button  variant="contained" color={data.installment_no === data.installment_before_delivery ? 'secondary' : 'primary'} className={classes.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = {data.installment_no === (paymentHistory[0].installment_no + 1) ? false : true}>Paid Installment</Button>
                                {/* : null} */}
                             </StyledTableCell>
                           </TableRow>

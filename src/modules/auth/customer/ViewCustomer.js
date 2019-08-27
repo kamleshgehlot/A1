@@ -274,7 +274,7 @@ return (
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Add Customer
+                Customer Detail
               </Typography>
             </Toolbar>
           </AppBar>
