@@ -118,6 +118,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
   const [checkRole, setCheckRole] = React.useState(["Delivery","CSR","Finance","HR"]);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
+  const [assignError, setAssignError] = React.useState();
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -137,47 +138,54 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
 
   const addFranchiseStaff = async () => {
 
-    setpLoading(true);
-    setSavebtn(true);
-    const data = {
-      franchise_id: franchiseId,
-      id: inputs.id,
-      first_name: inputs.first_name,
-      last_name: inputs.last_name,
-      location: inputs.location,
-      contact: inputs.contact,
-      email: inputs.email,
-      
-      pre_company_name: inputs.pre_company_name,
-      pre_company_address: inputs.pre_company_address,
-      pre_company_contact: inputs.pre_company_contact,
-      pre_position: inputs.pre_position,
-      duration: inputs.duration,
-      // resume:  inputs.resume,
-      // cover_letter: inputs.cover_letter,
-      employment_doc: inputs.employment_doc,
-      
-      user_id: inputs.user_id,
-      password: inputs.password,
-      role: assignRole.join(),
-      created_by: 1,
-    };
+    if(assignRole!=''){
 
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(data));
-    
-    for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
-      formData.append('avatar', document.getElementById('employment_docs').files[x])
+      setpLoading(true);
+      setSavebtn(true);
+      const data = {
+        franchise_id: franchiseId,
+        id: inputs.id,
+        first_name: inputs.first_name,
+        last_name: inputs.last_name,
+        location: inputs.location,
+        contact: inputs.contact,
+        email: inputs.email,
+        
+        pre_company_name: inputs.pre_company_name,
+        pre_company_address: inputs.pre_company_address,
+        pre_company_contact: inputs.pre_company_contact,
+        pre_position: inputs.pre_position,
+        duration: inputs.duration,
+        // resume:  inputs.resume,
+        // cover_letter: inputs.cover_letter,
+        employment_doc: inputs.employment_doc,
+        
+        user_id: inputs.user_id,
+        password: inputs.password,
+        role: assignRole.join(),
+        created_by: 1,
+      };
+
+      let formData = new FormData();
+      formData.append('data', JSON.stringify(data));
+      
+      for (var x = 0; x < document.getElementById('employment_docs').files.length; x++) {
+        formData.append('avatar', document.getElementById('employment_docs').files[x])
+      }
+
+      const response = await Staff.register( { formData: formData } );
+      handleSnackbarClick(true,'Franchise Updated Successfully');
+      setFranchiseList(response.staffList);
+      console.log('response.staffList----',response)
+      // handleReset(RESET_VALUES);
+      setSavebtn(false);
+      setSavebtn(true);
+      handleEditClose(false);
     }
-
-    const response = await Staff.register( { formData: formData } );
-    handleSnackbarClick(true,'Franchise Updated Successfully');
-    setFranchiseList(response.staffList);
-    console.log('response.staffList----',response)
-    // handleReset(RESET_VALUES);
-    setSavebtn(false);
-    setSavebtn(true);
-    handleEditClose(false);
+    else{
+      setAssignError('Password is required');
+      console.log('please')
+    }
   };
 
   // const handleInputChange = event => {
@@ -564,6 +572,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       }}
                       className={classes.textsize}
                       fullWidth
+                      error={assignError}
+                      helperText={assignError}
                       required
                     >
                     {role.map((ele,index) =>{
