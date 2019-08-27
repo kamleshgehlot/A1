@@ -28,7 +28,7 @@ UploadDocument.prototype.uploadDoc = function () {
           ];
             connection.query('INSERT INTO order_document(order_id, document, created_by) VALUES ?',[queryData],function (error, rows, fields) {
               if (!error) {
-                  connection.query('UPDATE orders SET doc_upload_status = 1 where id = "'+that.order_id+'"',function (error, rows, fields) {
+                  connection.query('UPDATE orders SET doc_upload_status = 1, order_status = 2 where id = "'+that.order_id+'"',function (error, rows, fields) {
                     if (!error) {
                           resolve(rows);
                         } else {

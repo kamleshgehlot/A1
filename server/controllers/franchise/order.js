@@ -86,6 +86,41 @@ const getFlexOrder = async function(req, res, next) {
   }
 };
 
+
+const getPaymentHistory = async function(req, res, next) {
+  try {
+    const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getPaymentHistory();
+    console.log('payment history',order);
+    res.send(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const paymentSubmit = async function(req, res, next) {
+  try {
+    console.log('paymentllll',req.body);
+    const payment = await new Order({
+      user_id : req.decoded.user_id, 
+      order_id : req.body.order_id,
+      customer_id: req.body.customer_id,
+      installment_no : req.body.installment_no,
+      payment_date: req.body.payment_date,
+      payment_amt : req.body.payment_amt,
+      total_paid : req.body.total_paid,
+      // status : req.body.status, 
+      created_by: req.decoded.id,    
+      installment_before_delivery : req.body.installment_before_delivery,
+    }).paymentSubmit();
+    console.log('payment',payment);
+    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+    res.send(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const assignToFinance = async function(req, res, next) {
   try {
     await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToFinance();
@@ -359,4 +394,4 @@ const editOrder = async function (req, res, next) {
     }
   };
 
-module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, getFixedOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance };
+module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, getFixedOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance, getPaymentHistory, paymentSubmit };

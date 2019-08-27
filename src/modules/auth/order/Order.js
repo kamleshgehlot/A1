@@ -201,6 +201,7 @@ export default function Order() {
   }
 
   function handlePaymentStatusClose(){
+    // setOrder(response);
     setPaymentStatusOpen(false);
   }
   function uploadFileSelector(event){
@@ -282,6 +283,8 @@ export default function Order() {
     setFlexPaymentData(response.flexPaymentList);
     setOrder(response.order);
   }
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -414,7 +417,7 @@ export default function Order() {
                           <StyledTableCell>{data.customer_name}</StyledTableCell>
                           <StyledTableCell>{data.mobile}</StyledTableCell>
                           <StyledTableCell>{data.order_date}</StyledTableCell>
-                          <StyledTableCell>{'In Progress'}</StyledTableCell>
+                          <StyledTableCell>{data.order_status_name}</StyledTableCell>
                           {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
                           <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
                           <StyledTableCell>{
@@ -462,7 +465,7 @@ export default function Order() {
                             <StyledTableCell>{data.customer_name}</StyledTableCell>
                             <StyledTableCell>{data.mobile}</StyledTableCell>
                             <StyledTableCell>{data.order_date}</StyledTableCell>
-                            <StyledTableCell>{'In Progress'}</StyledTableCell>
+                            <StyledTableCell>{data.order_status_name}</StyledTableCell>
                             {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
                             <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
                             <StyledTableCell>{
@@ -524,7 +527,7 @@ export default function Order() {
                           <StyledTableCell>{data.customer_name}</StyledTableCell>
                           <StyledTableCell>{data.mobile}</StyledTableCell>
                           <StyledTableCell>{data.order_date}</StyledTableCell>
-                          <StyledTableCell>{'In Progress'}</StyledTableCell>
+                          <StyledTableCell>{data.order_status_name}</StyledTableCell>
                           {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
                           <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
                           <StyledTableCell>{

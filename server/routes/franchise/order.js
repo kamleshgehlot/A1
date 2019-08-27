@@ -36,6 +36,8 @@ orderRouter.route("/getbudget").post(validateToken, Order.getBudget);
 orderRouter.route("/getoldbudget").post(validateToken, Order.getExistingBudget);
 orderRouter.route("/getfixedorder").post(validateToken, Order.getFixedOrder);
 orderRouter.route("/getflexorder").post(validateToken, Order.getFlexOrder);
+orderRouter.route("/getpaymenthistory").post(validateToken, Order.getPaymentHistory);
+orderRouter.route("/paymentsubmit").post(validateToken, Order.paymentSubmit);
 orderRouter.route("/editorder").post(validateToken, Order.editOrder);
 orderRouter.route("/assigntofinance").post(validateToken, Order.assignToFinance);
 orderRouter.route("/postorder").post(validateToken, Order.postOrder);

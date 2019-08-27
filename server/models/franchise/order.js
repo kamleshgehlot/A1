@@ -33,6 +33,14 @@ var Order = function (params) {
   this.flexOrderId = params.flexOrderId;
   
   this.converted_to = params.converted_to;
+
+  this.installment_no = params.installment_no;
+  this.payment_date= params.payment_date;
+  this.payment_amt = params.payment_amt;
+  this.total_paid = params.total_paid;
+  this.installment_before_delivery = params.installment_before_delivery;
+  // this.status = params.status;
+      
 };
 
 
@@ -67,9 +75,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, 1, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows.insertId);
@@ -94,9 +102,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, 1, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve(rows.insertId);
@@ -454,6 +462,85 @@ Order.prototype.getFlexOrder = function () {
 
 
 
+Order.prototype.getPaymentHistory = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT * from payment_status where order_id = "'+that.id+'" ORDER BY installment_no DESC',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Order.prototype.paymentSubmit = function () {
+  const that = this;
+  // console.log('that', that);
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+
+        let Values = [
+          [that.order_id, that.customer_id, that.installment_no, that.payment_date, that.payment_amt, that.total_paid, that.created_by]
+        ];
+        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, payment_date, payment_amt, total_paid, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+that.payment_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+ that.created_by+'")', function (error, rows, fields) {
+            if (!error) {
+              // if(rows.insertId === 1){
+                
+                  if(that.installment_before_delivery === that.installment_no){
+                    connection.query('UPDATE orders set order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {
+                      if(!error){
+                        resolve(rows);
+                      }else{
+                        console.log("Error...", error);
+                        reject(error);
+                      }
+                    });
+                  }
+                // }
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('payment Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 Order.prototype.getFixedOrderDetail = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -532,7 +619,8 @@ Order.prototype.getOrderList = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
+        // connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
+          connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id, os.order_status as order_status_name from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -565,7 +653,7 @@ Order.prototype.assignToFinance = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('UPDATE orders SET assigned_to = 4 WHERE id = "'+that.id+'"',function (error, rows, fields) {
+        connection.query('UPDATE orders SET assigned_to = 4, order_status = 3 WHERE id = "'+that.id+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
