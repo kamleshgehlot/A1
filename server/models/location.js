@@ -12,7 +12,7 @@ const Location = function (params) {
 };
 
 Location.prototype.getAll = function () {
-  
+
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
       if (error) {
@@ -20,74 +20,72 @@ Location.prototype.getAll = function () {
       }
 
       connection.changeUser({ database: dbName["prod"] });
-          connection.query('select id, city, city_code from location order by city', (error, rows, fields) => {
-            if (!error) {
-              resolve(rows);
-            } else {
-              console.log('Error...', error);
-              reject(error);
-            }
-          });
-        
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
+      connection.query('select id, city, city_code from location order by city', (error, rows, fields) => {
+        if (!error) {
+          resolve(rows);
+        } else {
+          console.log('Error...', error);
+          reject(error);
+        }
+      });
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   });
 };
 
 
 Location.prototype.getSelectedArea = function () {
-  const that =this; 
+  const that = this;
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
       if (error) {
         throw error;
       }
-    // console.log("params...",that);
+      // console.log("params...",that);
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select suburb from franchise WHERE city = ? AND city_code = ? AND state != 4',[that.city_name, that.city_code], (error, rows, fields) => {
+      connection.query('select suburb from franchise WHERE city = ? AND city_code = ? AND state != 4', [that.city_name, that.city_code], (error, rows, fields) => {
         if (!error) {
-          let suburb= [''];
-          (rows.length > 0 ? rows : []).map((data,index) => { 
-              suburb.push(data.suburb);
+          let suburb = [''];
+          (rows.length > 0 ? rows : []).map((data, index) => {
+            suburb.push(data.suburb);
           })
           // console.log("sub..",suburb);
-          connection.query('select id, area_name, city_id, is_active from area where city_id = "'+ that.city_id +'" AND area_name NOT IN (?) order by area_name',[suburb], (error, rows, fields) => {
+          connection.query('select id, area_name, city_id, is_active from area where city_id = "' + that.city_id + '" AND area_name NOT IN (?) order by area_name', [suburb], (error, rows, fields) => {
             if (!error) {
               resolve(rows);
             } else {
               console.log('Error...', error);
               reject(error);
             }
-        }) 
-      }else {
+          })
+        } else {
           console.log('Error...', error);
           reject(error);
         }
-        });
+      });
 
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   });
 };
 
-Location.prototype.getCityRelatedAllArea = function (){
+Location.prototype.getCityRelatedAllArea = function () {
   const that = this;
-  return new Promise((resolve, reject)=> {
+  return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
       if (error) {
         throw error;
       }
+      // console.log("params...",that);
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select suburb from franchise WHERE city = ? AND city_code = ? AND state != 4 AND suburb != ?',[that.city_name, that.city_code, that.suburb], (error, rows, fields) => {
+      connection.query('select id from location WHERE city = ? AND city_code = ? AND state != 4', [that.city_name, that.city_code], (error, rows, fields) => {
         if (!error) {
-          let suburb= [''];
-          (rows.length > 0 ? rows : []).map((data,index) => { 
-              suburb.push(data.suburb);
-          })
-          // console.log('rowsifs====---',rows)
-          connection.query('select id from location WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
+          const city_id = rows[0].id;
+          // console.log("id..",rows);
+          connection.query('select id, area_name, city_id, is_active from area where city_id = ? order by area_name', city_id, (error, rows, fields) => {
             if (!error) {
          
             const city_id = rows[0].id;
@@ -100,34 +98,15 @@ Location.prototype.getCityRelatedAllArea = function (){
                 }
               })
             }
-          }); 
-        }else {
-            console.log('Error...', error);
-            reject(error);
-          }
-          });
-      // connection.changeUser({ database: dbName["prod"] });
-      // connection.query('select id from location WHERE city = ? AND city_code = ?',[that.city_name, that.city_code], (error, rows, fields) => {
-      //   if (!error) {
-      //     const city_id = rows[0].id;
-      //     // console.log("id..",rows);
-      //     connection.query('select id, area_name, city_id, is_active from area where city_id = ? order by area_name',city_id, (error, rows, fields) => {
-      //       if (!error) {
-      //         // console.log(rows);
-      //         resolve(rows);
-      //       } else {
-      //         console.log('Error...', error);
-      //         reject(error);
-      //       }
-      //   }) 
-      // }else {
-      //     console.log('Error...', error);
-      //     reject(error);
-      //   }
-      //   });
+          })
+        } else {
+          console.log('Error...', error);
+          reject(error);
+        }
+      });
 
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   })
 }
