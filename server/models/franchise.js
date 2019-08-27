@@ -115,11 +115,22 @@ Franchise.prototype.register = function (newUser) {
                               [5, 'Cash', 1],
                             ]
 
+                            let order_status_data = [
+                              [1, 'Created'],
+                              [2, 'In Progress'],
+                              [3, 'Awaiting Payment'],
+                              [4, 'Under Delivery'], 
+                              [5, 'Delivered'],
+                              [6, 'Awaiting Remaining'],
+                              [7, 'Completed'],
+                            ]
+
                            connection.changeUser({ database: frachiseDbName });
                             connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
                               connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) {
                                 connection.query('INSERT INTO `customer_state`(`id`, `state_name`, `is_active`) VALUES ?', [cust_state], function (error, rows, fields) {
                                   connection.query('INSERT INTO `payment_mode`(`id`, `payment_mode`, `is_active`) VALUES ?', [pay_mode], function (error, rows, fields) {
+                                    connection.query('INSERT INTO `order_status`(`id`, `order_status`) VALUES ?', [order_status_data], function (error, rows, fields) {
                               if (error) {
                                 console.log("Error in inserting records...", error);
                                 reject(error);
@@ -165,6 +176,7 @@ Franchise.prototype.register = function (newUser) {
                         });
                         });
                       });
+                    });
                     });
                   });
                   console.log('created a new table');
