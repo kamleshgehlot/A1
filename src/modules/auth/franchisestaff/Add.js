@@ -118,6 +118,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   const [temp, setTemp] = React.useState([]);
   const [chkEmail, SetChkEmail] = useState();
   const [assignRole, setAssignRole] = React.useState([]);
+  const [assignError, setAssignError] = React.useState();
   
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
@@ -157,6 +158,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     if(inputs.email === chkEmail){
       alert('Email already registered')
     }else{
+      if(assignRole!=''){
 
     setpLoading(true);
     setSavebtn(true);
@@ -200,6 +202,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setSavebtn(false);
     setSavebtn(true);
     handleClose(false);
+    
+  }
+  else{
+    setAssignError('Password is required');
+    console.log('please')
+  }
   }
   };
 
@@ -598,6 +606,8 @@ return (
                       // label="Password"
                       onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
+                      error={errors.password}
+                      helperText={errors.password}
                       required
                       fullWidth
                       // error={errors.password}
@@ -617,6 +627,9 @@ return (
                         id: 'assign_role',
                         // label:'assign_role'
                       }}
+                      error={assignError}
+                      helperText={assignError}
+                      
                       className={classes.textsize}
                       // error={errors.assignRole}
                       // helperText={errors.assignRole}

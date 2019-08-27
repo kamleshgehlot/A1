@@ -42,8 +42,7 @@ const register = async function (req, res, next) {
       const newStaff = new Staff(staffParams);
 
       await newStaff.update();
-      const staffList = new Staff({user_id : req.decoded.user_id}).all();
-      
+      const staffList = await new Staff({user_id : req.decoded.user_id}).all();
       res.send({ staffList: staffList });
     } else {
       staffParams.created_by = req.decoded.id;

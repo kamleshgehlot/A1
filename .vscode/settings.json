@@ -5,5 +5,7 @@
   "eslint.autoFixOnSave": true,
   "editor.showFoldingControls": "always",
   "editor.folding": true,
-  "editor.foldingStrategy": "indentation", 
+  "editor.foldingStrategy": "indentation",
+  "editor.fontSize": 12,
+  
 }

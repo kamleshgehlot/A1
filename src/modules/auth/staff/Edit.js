@@ -232,6 +232,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       value={inputs.contact} 
                       onChange={handleInputChange}
                       error={errors.contact}
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                       helperText={errors.contact}
                       required
                       fullWidth

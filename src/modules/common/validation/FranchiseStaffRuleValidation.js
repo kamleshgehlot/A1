@@ -52,5 +52,9 @@ export default function validate(values) {
   if (!values.duration) {
     errors.duration = 'Work Experience is required';
   } 
+  if (!values.password) {
+    errors.password = 'Password is required';
+  } 
+  
   return errors;
 };

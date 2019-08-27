@@ -37,12 +37,12 @@ export default function validate(values) {
     errors.invoice = 'Invoice Number is required';
   }
   
-  if (!values.meta_keywords) {
-    errors.meta_keywords = 'Meta Keywords is required';
-  }
-  if (!values.meta_description) {
-    errors.meta_description = 'Meta Description is required';
-  }
+  // if (!values.meta_keywords) {
+  //   errors.meta_keywords = 'Meta Keywords is required';
+  // }
+  // if (!values.meta_description) {
+  //   errors.meta_description = 'Meta Description is required';
+  // }
   
   if (!values.rental) {
     errors.rental = 'Rental Price is required';

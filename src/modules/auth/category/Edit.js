@@ -458,8 +458,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       name="meta_keywords"
                       value={inputs.meta_keywords}
                       onChange={handleInputChange}
-                      error={errors.meta_keywords}
-                      helperText={errors.meta_keywords}
+                      // error={errors.meta_keywords}
+                      // helperText={errors.meta_keywords}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
@@ -482,8 +482,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                         fullWidth
                         value={inputs.meta_description}
                         onChange={handleInputChange}
-                        error={errors.meta_description}
-                        helperText={errors.meta_description}
+                        // error={errors.meta_description}
+                        // helperText={errors.meta_description}
                       />
                   </Grid>
                   
