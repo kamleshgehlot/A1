@@ -175,6 +175,43 @@ export default {
     }
   },
 
+  getPaymentHistory: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getpaymenthistory`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  paymentSubmit: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/paymentsubmit`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+
   assignToFinance: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/assigntofinance`;
     try {

@@ -129,22 +129,55 @@ const StyledTableCell = withStyles(theme => ({
 export default function Budget({ open, handleClose, handleSnackbarClick, orderData}) {
 
   const classes = useStyles();
-  const [status, setStatus] = useState([]);
-  
-
+  const [order, setOrder] = useState([]);
+  const [paymentStatus, setPaymentStatus] = useState([]);
+  const [confirmation, setConfirmation] = React.useState(false);
+  // const [flexPaymentStatus, setFlexPaymentStatus] = useState([]);
+  const [paymentHistory,setPaymentHistory] = useState([]);
+  // setPaymentHistory({installment_no : 0});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const existingPayment = await Order.getPaymentHistory({id: orderData.id});
+        if(existingPayment != ""){
+          setPaymentHistory(existingPayment);
+        }else{          
+          let temp=[];
+            temp.push({
+              installment_no: 0,
+            });
+          setPaymentHistory(temp);
+        }
+        
         if(orderData.order_type === 1 ){
-          // console.log('fixed',orderData.order_type_id);
           const order = await Order.getCurrespondingFixedOrder({fixedOrderId: orderData.order_type_id});
-          console.log('fixed order',order);   
+          console.log('fixed order',order); 
+          
+          let payment_table=[];
+          let paymentDate = order[0].first_payment;
+          let totalPaid = order[0].each_payment_amt;
+
+          for(let i=1; i<= order[0].no_of_payment; i++){
+            payment_table.push({
+              sr_no : i,
+              installment_no: i,
+              payment_date: paymentDate,
+              payment_amt : order[0].each_payment_amt,
+              total_paid : totalPaid,
+              installment_before_delivery : order[0].before_delivery_amt,
+              // status : 1,              
+            });
+            paymentDate =  order[0].first_payment;
+            totalPaid = totalPaid + order[0].each_payment_amt; 
+          }
+          console.log(payment_table);
+          setPaymentStatus(payment_table);
               
         }else if(orderData.order_type === 2) {
-          console.log('flex',orderData.order_type_id);
+          // console.log('flex',orderData.order_type_id);
           const order = await Order.getCurrespondingFlexOrder({flexOrderId: orderData.order_type_id});
-          console.log('flex order',order);
+          // console.log('flex order',order);
         }
         // const order = await Order.getExistingBudget({customer_id: customer_id});
         // console.log('order',order);
@@ -158,12 +191,34 @@ export default function Budget({ open, handleClose, handleSnackbarClick, orderDa
   }, []);
   
   
+  function handlePaymentSubmit(response){
+    // console.log(response);
 
+    const fetchData = async () => {
+      try {
+        const result = await Order.paymentSubmit({
+          order_id : orderData.id,
+          customer_id: orderData.customer_id,
+          installment_no : response.installment_no,
+          payment_date: response.payment_date,
+          payment_amt : response.payment_amt,
+          total_paid : response.total_paid,   
+          installment_before_delivery : response.installment_before_delivery,
+        });
+        // console.log('result',result);
+        setOrder(result);
+      } catch (error) {
+        console.log('Error..',error);
+      }
+    };
+    fetchData();       
+    handleClose(); 
+  }
 
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
+      <Dialog maxWidth open={open} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -193,17 +248,43 @@ return (
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Payment Date</StyledTableCell>
+                        <StyledTableCell>Installment Amt. </StyledTableCell>
+                        <StyledTableCell>Paid Amt.</StyledTableCell>
                         <StyledTableCell>Status</StyledTableCell>
+                        <StyledTableCell>Option</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                      { (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
+                        return(
+                          <TableRow>
+                            <StyledTableCell>{data.sr_no}</StyledTableCell>
+                            <StyledTableCell>{data.payment_date}</StyledTableCell>
+                            <StyledTableCell>{data.payment_amt}</StyledTableCell>
+                            {/* {paymentHistory != "" ? paymentHistory.} */}
+                            <StyledTableCell>
+                                {data.installment_no <= paymentHistory[0].installment_no ? data.total_paid : ''}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {data.installment_no <= paymentHistory[0].installment_no ? 'Paid' : 'Pending' } 
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {/* {data.installment_no < paymentHistory[0].installment_no ?  */}
+                               <Button  variant="contained" color="primary" className={classes.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = {data.installment_no === (paymentHistory[0].installment_no + 1) ? false : true}>Paid Installment</Button>
+                               {/* : null} */}
+                            </StyledTableCell>
+                          </TableRow>
+                        )
+                      })
+
+                      }
                     </TableBody>
                 </Table>
                 </Grid>
                 <Grid item xs={12} sm={12}>                      
-                  <Button  variant="contained"  color="primary" className={classes.button}>
+                  {/* <Button  variant="contained"  color="primary" className={classes.button}>
                     save
-                  </Button>
+                  </Button> */}
                   <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                     Close
                   </Button> 
@@ -213,6 +294,7 @@ return (
           </div>
         </form>
       </Dialog>
+      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to finance ?"} />: null }
     </div>
   );
 }
