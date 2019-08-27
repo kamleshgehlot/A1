@@ -199,102 +199,88 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const addFranchise = async () => {
 
     if(directorList==''){
-      
-      
       handleDirectorList();
-      
-      // const directorListTemp = [...directorList];
-
-      // if(inputs.director === '' || inputs.email === '' || inputs.contact === '' || inputs.uid === '' || inputs.password === '') {
-      //   alert('Please provide required information')
-      // } else {
-      //   directorListTemp.push({
-      //     'director': inputs.director,
-      //     'email' : inputs.email,
-      //     'contact': inputs.contact,
-      //     'alt_contact': inputs.alt_contact,
-      //     'uid' : inputs.uid,
-      //     'password': inputs.password
-      //   });
-         
-      //   inputs.director = '';
-      //   inputs.email = '';
-      //   inputs.contact = '';
-      //   inputs.alt_contact = '';
-      //   inputs.uid = '';
-      //   inputs.password = '';
-    
-      //   setDirectorList(directorListTemp);
-      // }
     }
-
-    if(inputs.accountant_email===chkEmail){
-      alert('Email already registered')
-    }else{
-    setpLoading(true);
-    setSavebtn(false);
-    const response = await UserAPI.add({
-      // cancelToken: this.isTokenSource.token,
-      
-      id: '',
-      city: inputs.city,
-      suburb: inputs.suburb,
-      franchise_name: inputs.franchise_name,
-
-      city_code: inputs.city_code,
-      abn: "1234",
-
-      company_name: inputs.company_name,
-      nbzn: inputs.nbzn,
-      company_location: inputs.company_location,
-      // director: inputs.director,
-      // email: inputs.email,
-      // contact: inputs.contact,
-      // alt_contact: inputs.alt_contact,
-      directorList: directorList,
-      website: inputs.website,
-
-      accountant_name: inputs.accountant_name,
-      accountant_email: inputs.accountant_email,
-      accountant_contact: inputs.accountant_contact,
-
-      user_name : inputs.director,
-      // uid: inputs.uid,
-      // password: inputs.password,
-      designation: "2",
-      role_id: "2",
-      state:1,
-    });
-
-    const franchiseIdTemp = [];
-
-    response.userList.map(data => {
-      const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
-
-      if(!found) {
-        franchiseIdTemp.push({
-          director_id: data.director_id,
-          franchise_id: data.franchise_id,
-          franchise_name: data.franchise_name,
-          company_name: data.company_name,
-          suburb: data.suburb,
-          city: data.city,
-          status:data.state
-        });
+    else{
+      if(inputs.accountant_email===chkEmail){
+        alert('Email already registered')
       }
-    });
+      else{
+        let check = false;
+        (directorList || []).map((list, index) =>{
+           list.email==inputs.accountant_email?
+           check = true :''
+          });
+        if(check===false){
+          setpLoading(true);
+          setSavebtn(false);
+          const response = await UserAPI.add({
+            // cancelToken: this.isTokenSource.token,
+            
+            id: '',
+            city: inputs.city,
+            suburb: inputs.suburb,
+            franchise_name: inputs.franchise_name,
 
-    setFranchiseId(franchiseIdTemp);
-    setTempCity('');
+            city_code: inputs.city_code,
+            abn: "1234",
 
-    handleSnackbarClick(true);
-    setFranchiseList(response.userList);
-    setDirectorList([]);
-    handleReset(RESET_VALUES);
-    setpLoading(false);
-    setSavebtn(true);
-    handleClose(false);
-  }
+            company_name: inputs.company_name,
+            nbzn: inputs.nbzn,
+            company_location: inputs.company_location,
+            // director: inputs.director,
+            // email: inputs.email,
+            // contact: inputs.contact,
+            // alt_contact: inputs.alt_contact,
+            directorList: directorList,
+            website: inputs.website,
+
+            accountant_name: inputs.accountant_name,
+            accountant_email: inputs.accountant_email,
+            accountant_contact: inputs.accountant_contact,
+
+            user_name : inputs.director,
+            // uid: inputs.uid,
+            // password: inputs.password,
+            designation: "2",
+            role_id: "2",
+            state:1,
+          });
+
+          const franchiseIdTemp = [];
+
+          response.userList.map(data => {
+            const found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
+
+            if(!found) {
+              franchiseIdTemp.push({
+                director_id: data.director_id,
+                franchise_id: data.franchise_id,
+                franchise_name: data.franchise_name,
+                company_name: data.company_name,
+                suburb: data.suburb,
+                city: data.city,
+                status:data.state
+              });
+            }
+          });
+
+          setFranchiseId(franchiseIdTemp);
+          setTempCity('');
+
+          handleSnackbarClick(true);
+          setFranchiseList(response.userList);
+          setDirectorList([]);
+          handleReset(RESET_VALUES);
+          setpLoading(false);
+          setSavebtn(true);
+          handleClose(false);
+        }
+        else{          
+          alert('Director Email and Accountant Email cannot be same')
+        }
+      }
+    }
   };
 
  
@@ -320,9 +306,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       alert('Email already registered')
     }else{
     if(inputs.director === '' || inputs.email === '' || inputs.contact === '' || inputs.uid === '' || inputs.password === '') {
-      setpLoading(false);
-      setSavebtn(true);
-      alert('Please provide required information')    
+     
+      alert('Please provide director information')    
     
     } else {
       directorListTemp.push({

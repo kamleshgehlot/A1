@@ -270,6 +270,7 @@ return (
                       helperText={errors.contact}
                       required
                       fullWidth
+                      maxLength='12'
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

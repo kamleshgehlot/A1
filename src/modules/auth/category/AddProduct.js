@@ -460,8 +460,8 @@ export default function AddProduct(props) {
                       name="meta_keywords"
                       value={inputs.meta_keywords}
                       onChange={handleInputChange}
-                      error={errors.meta_keywords}
-                      helperText={errors.meta_keywords}
+                      // error={errors.meta_keywords}
+                      // helperText={errors.meta_keywords}
                       fullWidth
                       margin="dense"
                       type="text"
@@ -483,8 +483,8 @@ export default function AddProduct(props) {
                         fullWidth
                         value={inputs.meta_description}
                         onChange={handleInputChange}
-                        error={errors.meta_description}
-                        helperText={errors.meta_description}
+                        // error={errors.meta_description}
+                        // helperText={errors.meta_description}
                         margin="dense"
                         type="text"
                         // label="Meta Description"

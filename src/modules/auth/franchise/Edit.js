@@ -499,7 +499,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       required
                       type="email"
                       fullWidth
-                      disabled
+                      // disabled
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -680,7 +680,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       margin="dense"
                       required
-                      disabled
+                      // disabled
                       onChange={handleInputChange}
                     />
                   </Grid>
