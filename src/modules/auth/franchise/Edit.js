@@ -522,6 +522,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       onChange={handleInputChange}
                       type="number"
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -539,6 +542,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       // required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                       onChange={handleInputChange}
                       type="number"
                     />
@@ -705,6 +711,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       required
                       onChange={handleInputChange}
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
 
