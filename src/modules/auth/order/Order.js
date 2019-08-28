@@ -81,6 +81,7 @@ export default function Order() {
   const [editableData,setEditableData] = useState({});
   const [orderData, setOrderData] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
+  const [nextStep, setNextStep] = React.useState('');
   const [orderId, setOrderId] = useState();
   const [budgetData,setBudgetData] = useState([]);
   const [orderListData,setOrderListData] = useState([]);
@@ -89,12 +90,15 @@ export default function Order() {
   const [flexPaymentData, setFlexPaymentData] = useState(null);
   const [orderIdForUpload,setOrderIdForUpload] = useState(null);
   const [order,setOrder] = useState([]);
+  const [deliveryTabIndex, setDeliveryTabIndex] = useState(0);
+
+  
+
   //value is for tabs  
   const [value, setValue] = React.useState(0);
 
 
   function createAndDownloadPdf(data) {
-    console.log(data);
     if(data.order_type === 2){
       const fetchData = async () => {
         try {
@@ -113,7 +117,6 @@ export default function Order() {
       const fetchData = async () => {
         try {
           const result = await OrderAPI.getFixedOrderDataForPDF({data: data});
-          // console.log('result',result)
           
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           var dd = FixedTypeDD(result,data);
@@ -197,7 +200,6 @@ export default function Order() {
   }
 
   function handleClose(result){
-    console.log('hhh', result);
     setOpen(false);
   }
 
@@ -206,7 +208,6 @@ export default function Order() {
     const fetchData = async () => {
       try {
         const result = await OrderAPI.getAll();
-        console.log('result',result)
         setOrder(result.order);
       } catch (error) {
         console.log(error);
@@ -216,8 +217,6 @@ export default function Order() {
     setPaymentStatusOpen(false);
   }
   function uploadFileSelector(event){
-  console.log(event.target.files);
-
     let formData = new FormData();
     formData.append('data', JSON.stringify(orderIdForUpload));
     
@@ -253,11 +252,18 @@ export default function Order() {
 
   function handleAssignToFinance(data){;
     setOrderId(data);
+    setNextStep('Finance');
     setConfirmation(true);
   }
+
+  function handleAssignToDelivery(data){;
+    setOrderId(data);
+    setNextStep('Delivery');
+    setConfirmation(true);
+  }
+
   
   function handlePaymentStatus(data){
-    // console.log(data);
     setOrderData(data);
     setPaymentStatusOpen(true);
   }
@@ -266,10 +272,16 @@ export default function Order() {
   function handleConfirmationDialog (response){
     if(response === 1){
       const fetchData = async () => {
-        try {
-  
-          const result = await OrderAPI.assignToFinance({assigned_to: 4, id: orderId});
-          setOrder(result.order);
+        try {  
+          if(nextStep === 'Finance')
+            {
+              const result = await OrderAPI.assignToFinance({assigned_to: 4, id: orderId});
+              setOrder(result.order);
+            }
+          else if(nextStep === 'Delivery'){
+            const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});
+            setOrder(result.order);
+          }
         } catch (error) {
           console.log(error);
         }
@@ -301,13 +313,14 @@ export default function Order() {
     const fetchData = async () => {
       try {
         const result = await OrderAPI.getAll();
-        console.log('result',result)
         setOrder(result.order);
       } catch (error) {
         console.log(error);
       }
   };
     fetchData();
+
+    roleName ==='CSR' ?  setDeliveryTabIndex(2): setDeliveryTabIndex(1) 
   }, []);
 
   
@@ -317,8 +330,7 @@ export default function Order() {
     value: PropTypes.any.isRequired,
   };
   function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
+    const { children, value, index, ...other } = props;  
     return (
       <Typography
         component="div"
@@ -332,10 +344,12 @@ export default function Order() {
       </Typography>
     );
   }
+
   function handleTabChange(event, newValue) {
     setValue(newValue);
-    // console.log('setValue...',value)
   }
+
+
   return (
     // <div ref={ref}>
     <div>
@@ -395,7 +409,7 @@ export default function Order() {
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
-                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
                   <Tab label="Open" />
                   {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
                   <Tab label="Delivery" />
@@ -420,7 +434,7 @@ export default function Order() {
                     </TableHead>
                     <TableBody>
                     {(order.length > 0 ? order : []).map((data, index) => {
-                      if(data.assigned_to !== 4 && roleName==='CSR'){
+                      if(data.assigned_to !== 4 && data.assigned_to !== 5 && roleName==='CSR'){
                        return(
                         <TableRow>
                           <StyledTableCell>{index + 1}</StyledTableCell>
@@ -468,7 +482,7 @@ export default function Order() {
                               </Tooltip>
                        </StyledTableCell>
                       </TableRow>
-                      )} else if(data.assigned_to === 4 && roleName==='Finance'){
+                      )} else if((data.assigned_to === 4 || data.assigned_to === 5) && roleName==='Finance'){
                         return(
                           <TableRow>
                             <StyledTableCell>{index + 1}</StyledTableCell>
@@ -495,7 +509,7 @@ export default function Order() {
                                 </Tooltip>
   
                                 <Tooltip title="Assign to Delivery">
-                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled>
+                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToDelivery(data.id); }} disabled= {data.order_status !==4  || data.assigned_to===5}>
                                     <SendIcon />
                                   </IconButton>
                                 </Tooltip>
@@ -525,7 +539,7 @@ export default function Order() {
                         {/* <StyledTableCell>Assigned To</StyledTableCell> */}
                         <StyledTableCell>Rental Type</StyledTableCell>
                         <StyledTableCell>Payment Mode</StyledTableCell>
-                        <StyledTableCell>Action</StyledTableCell>
+                        {/* <StyledTableCell>Action</StyledTableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -549,36 +563,29 @@ export default function Order() {
                             data.payment_mode == 5 ? 'Cash' : ''
                             }
                           </StyledTableCell>
-                          <StyledTableCell>
-                          {/* */}
-                          {/* onClick={(event) => { handleEditOpen(data); }} */}
-                          
+                          {/* <StyledTableCell>
+                         
                           <Tooltip title="Update">
-                          <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
-                            <EditIcon />  
-                          </IconButton>
+                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
+                              <EditIcon />  
+                            </IconButton>
                           </Tooltip>
                           <Tooltip title="Download PDF">
-                      
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled= {data.assigned_to===4}>
-                                  <PrintIcon /> 
-                                </IconButton>
-                        
+                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled= {data.assigned_to===4}>
+                              <PrintIcon /> 
+                            </IconButton>
                           </Tooltip>
-                          {/* <input multiple accept="image/*" className={classes.input} id="upload_document" type="file" disabled= {data.assigned_to===4}/> */}
-                            {/* <label htmlFor="upload_document"> */}
                               <Tooltip title="Upload Documents">                              
                                 <IconButton  size="small" className={classes.fab}  disabled>
                                   <CloudUpload />
                                 </IconButton>
                               </Tooltip>
-                            {/* </label> */}
                           <Tooltip title="Assign to Delivery">
                             <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled>
                               <SendIcon />
                             </IconButton>
                           </Tooltip>
-                       </StyledTableCell>
+                       </StyledTableCell> */}
                       </TableRow>
                        )
                       }
@@ -592,7 +599,8 @@ export default function Order() {
                 
               {/* delivery */}
               
-              <TabPanel value={value} index={2}>
+              {roleName === 'CSR' || 'Finance' ?               
+              <TabPanel value={value} index={deliveryTabIndex}>
                   <Table >
                     <TableHead>
                       <TableRow>
@@ -605,15 +613,40 @@ export default function Order() {
                         {/* <StyledTableCell>Assigned To</StyledTableCell> */}
                         <StyledTableCell>Rental Type</StyledTableCell>
                         <StyledTableCell>Payment Mode</StyledTableCell>
-                        <StyledTableCell>Action</StyledTableCell>
+                        {/* <StyledTableCell>Action</StyledTableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    
-                              
+                    {(order.length > 0 ? order : []).map((data, index) => {
+                      if(data.assigned_to === 5 ){
+                       return(
+                        <TableRow>
+                          <StyledTableCell>{index + 1}</StyledTableCell>
+                          <StyledTableCell>{data.order_id}</StyledTableCell>
+                          <StyledTableCell>{data.customer_name}</StyledTableCell>
+                          <StyledTableCell>{data.mobile}</StyledTableCell>
+                          <StyledTableCell>{data.order_date}</StyledTableCell>
+                          <StyledTableCell>{data.order_status_name}</StyledTableCell>
+                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                          <StyledTableCell>{
+                            data.payment_mode == 1 ? 'EasyPay' :  
+                            data.payment_mode == 2 ? 'Credit' : 
+                            data.payment_mode == 3 ? 'Debit' : 
+                            data.payment_mode == 4 ? 'PayPal' : 
+                            data.payment_mode == 5 ? 'Cash' : ''
+                            }
+                          </StyledTableCell>
+                          {/* <StyledTableCell></StyledTableCell> */}
+                      </TableRow>
+                       )
+                      }
+                     })
+                   }                              
                     </TableBody>
                   </Table>
                 </TabPanel>
+                : null }
               
               </Paper>
           </Grid>
@@ -621,7 +654,7 @@ export default function Order() {
      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData} convertLead={0} /> : null }
      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData}  /> : null }
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
-     {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to finance ?"} />: null }
+     {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
           
     </div>
   );

@@ -119,10 +119,11 @@ Franchise.prototype.register = function (newUser) {
                               [1, 'Created'],
                               [2, 'In Progress'],
                               [3, 'Awaiting Payment'],
-                              [4, 'Under Delivery'], 
-                              [5, 'Delivered'],
-                              [6, 'Awaiting Remaining'],
-                              [7, 'Completed'],
+                              [4, 'Ready to Deliver'],
+                              [5, 'Under Delivery'], 
+                              [6, 'Delivered'],
+                              [7, 'Awaiting Remaining'],
+                              [8, 'Completed'],
                             ]
 
                            connection.changeUser({ database: frachiseDbName });

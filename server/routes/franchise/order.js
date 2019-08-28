@@ -40,6 +40,7 @@ orderRouter.route("/getpaymenthistory").post(validateToken, Order.getPaymentHist
 orderRouter.route("/paymentsubmit").post(validateToken, Order.paymentSubmit);
 orderRouter.route("/editorder").post(validateToken, Order.editOrder);
 orderRouter.route("/assigntofinance").post(validateToken, Order.assignToFinance);
+orderRouter.route("/assigntodelivery").post(validateToken, Order.assignToDelivery);
 orderRouter.route("/postorder").post(validateToken, Order.postOrder);
 orderRouter.route("/get-flex-order-data-for-PDF").post(validateToken, Order.getFlexOrderDataForPDF);
 orderRouter.route("/get-fixed-order-data-for-PDF").post(validateToken, Order.getFixedOrderDataForPDF);
