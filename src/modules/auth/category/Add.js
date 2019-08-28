@@ -267,7 +267,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
     setProductOpen(true);
     }
     else{
-      alert('Please select all category types');
+      alert('Please select all category details');
     }
   }
   
