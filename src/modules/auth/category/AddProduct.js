@@ -25,6 +25,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import validate from '../../common/validation/ProductRuleValidation';
+import AddColor from './AddColor';
+import AddBrand from './AddBrand';
 // API CALL
 import Category from '../../../api/Category';
 import Brand from '../../../api/product/Brand';
@@ -92,6 +94,14 @@ const useStyles = makeStyles(theme => ({
   textsize:{
     fontSize: theme.typography.pxToRem(12),
   },
+  margin:{
+    fontSize: theme.typography.pxToRem(12),
+    marginTop: theme.spacing(2),
+  },
+  marginStatus:{
+    fontSize: theme.typography.pxToRem(12),
+    marginTop: theme.spacing(2.5),
+  },
   drpdwn:{
     marginTop: theme.spacing(1),
     fontSize: theme.typography.pxToRem(12),
@@ -100,9 +110,6 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
 }));
-
-
-
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -120,6 +127,8 @@ export default function AddProduct(props) {
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
+  const [colorOpen, setColorOpen] = useState(false);
+  const [brandOpen, setBrandOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const handleChange = panel => (event, isExpanded) => {
@@ -161,13 +170,13 @@ export default function AddProduct(props) {
       subcat:props.productCatList.subcategory,
       name:inputs.name,
       color_id:inputs.color_id,
-      brand_id:inputs.brand,
+      brand_id:inputs.brand_id,
       buying_price:inputs.buying_price,
       description:inputs.description,
       specification:inputs.specification,
       brought:inputs.brought,
       invoice:inputs.invoice,
-      rental:rental,
+      rental:inputs.rental,
       meta_keywords:inputs.meta_keywords,
       meta_description:inputs.meta_description,
       status:inputs.status,
@@ -191,6 +200,11 @@ export default function AddProduct(props) {
     console.log(inputs);
   };
   
+  function updatedData(response){   
+    setColorList(response);
+     
+  }
+
   const { inputs, handleInputChange, handleSubmit,  setInput ,cleanInputs,errors } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
@@ -207,6 +221,30 @@ export default function AddProduct(props) {
       setInput(e.target.name,e.target.value)
 
     }
+  }
+  function handleColorInputChange(e){
+    handleInputChange(e);
+    if(e.target.value==='0'){
+      setColorOpen(true);      
+    }
+  }
+  
+  function handleColorClose() {
+    setColorOpen(false);
+  }
+  function handleBrandInputChange(e){
+    handleInputChange(e);
+    if(e.target.value==='0'){
+      setBrandOpen(true);      
+    }
+  }
+  
+  function handleBrandClose() {
+    setBrandOpen(false);
+  } 
+   function updatedBrandData(response){   
+    setBrandList(response);
+     
   }
   return (
     <div>
@@ -272,7 +310,7 @@ export default function AddProduct(props) {
                     <InputLabel  className={classes.textsize} htmlFor="choose_color">Choose Color *</InputLabel>
                     <Select
                         name="color_id"
-                        onChange={handleInputChange}
+                        onChange={handleColorInputChange}
                         value={inputs.color_id}
                         inputProps={{
                           name: 'color_id',
@@ -287,17 +325,18 @@ export default function AddProduct(props) {
                       >
                         { (colorList || []).map((data, index)=>{
                           return(
-                        <MenuItem className={classes.textsize} value={data.id}>{data.color}</MenuItem>
-                          )
-                      })
-                    }
+                          <MenuItem className={classes.textsize} value={data.id}>{data.color}</MenuItem>
+                            )
+                          })
+                        }
+                        <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="city_selection">Choose Brand *</InputLabel>
                     <Select
                         name="brand_id"
-                        onChange={handleInputChange}
+                        onChange={handleBrandInputChange}
                         value={inputs.brand_id}
                         inputProps={{
                           name: 'brand_id',
@@ -313,19 +352,16 @@ export default function AddProduct(props) {
                         { (brandList || []).map((data, index)=>{
                           return(
                             <MenuItem className={classes.textsize} value={data.id}>{data.brand_name}</MenuItem>
-                          )
-                      })
-                    }
+                              )
+                          })
+                        }
+                        <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="productprice">Enter Product Buying Price</InputLabel>
                     <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                    
                       id="buying_price"
                       name="buying_price"
                       // label="Enter Product Buying Price"
@@ -339,6 +375,9 @@ export default function AddProduct(props) {
                       required
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -427,11 +466,6 @@ export default function AddProduct(props) {
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="product_name">Rental Price </InputLabel>
                     <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
                       id="rental"
                       name="rental"
                       value={inputs.rental}
@@ -445,6 +479,9 @@ export default function AddProduct(props) {
                       // label="Rental Price"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -453,7 +490,7 @@ export default function AddProduct(props) {
                     <TextField
                       InputProps={{
                         classes: {
-                          input: classes.textsize,
+                          input: classes.margin,
                         },
                       }}
                       id="meta_keywords"
@@ -485,7 +522,7 @@ export default function AddProduct(props) {
                         onChange={handleInputChange}
                         // error={errors.meta_description}
                         // helperText={errors.meta_description}
-                        margin="dense"
+                        // margin="dense"
                         type="text"
                         // label="Meta Description"
                       />
@@ -493,11 +530,6 @@ export default function AddProduct(props) {
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="city_selection">Choose Status</InputLabel>
                     <Select
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
                         name="status"
                         onChange={handleInputChange}
                         value={inputs.status}
@@ -505,7 +537,7 @@ export default function AddProduct(props) {
                           name: 'status',
                           id: 'status',
                         }}
-                        className={classes.drpdwn}
+                        className={classes.marginStatus}
                         error={errors.status}
                         helperText={errors.status}
                         fullWidth
@@ -532,8 +564,10 @@ export default function AddProduct(props) {
                   </Grid>
                 
               </Grid>
-</Paper>
-        
+            </Paper>
+            { colorOpen ?    <AddColor open={colorOpen} handleClose={handleColorClose}  updatedData={updatedData}/> : null }
+            { brandOpen ?    <AddBrand open={brandOpen} handleClose={handleBrandClose}  updatedBrandData={updatedBrandData}/> : null }
+
           </div>
       </form>
       </Dialog>

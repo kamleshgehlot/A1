@@ -124,7 +124,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
   
-
+  const [errorCat, setErrorCat] = useState();
   const [mainOpen, setMainOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [subcatOpen, setSubCatOpen] = useState(false);
@@ -261,13 +261,13 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
       });
     }
   };
-console.log(inputs)
+// console.log(inputs)
   function openProductDialog(){
     if(inputs.maincat!='' && inputs.cat!='' && inputs.subcat!='' && inputs.maincat!='0' && inputs.cat!='0' && inputs.subcat!='0' && inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
     setProductOpen(true);
     }
     else{
-      console.log("no cat");
+      alert('Please select all category types');
     }
   }
   
@@ -327,6 +327,7 @@ console.log(inputs)
                         }}
                         className={classes.margin}
                         fullWidth
+                        error={errorCat}
                         label="Main Category"
                         required
                       >
@@ -336,7 +337,7 @@ console.log(inputs)
                               )
                           })
                         }
-                                <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
+                        <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -353,6 +354,7 @@ console.log(inputs)
                         fullWidth
                         label="Category Type"
                         required
+                        error={errorCat}
                         disabled = {inputs.maincat != '' && inputs.maincat != '0' ? false : true}
                       >
                        { categoryList.map((data, index)=>{
@@ -378,6 +380,7 @@ console.log(inputs)
                         fullWidth
                         label="Sub Category"
                         required
+                        error={errorCat}
                         disabled = {inputs.cat != '' && inputs.cat != '0' && inputs.maincat != '' && inputs.maincat != '0' && subCategoryList.length > 0 ? false : true }
                       >
                       { subCategoryList.map((data, index)=>{

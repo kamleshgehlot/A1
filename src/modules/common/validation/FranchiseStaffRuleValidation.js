@@ -10,7 +10,9 @@ export default function validate(values) {
 
   if (!values.last_name) {
     errors.last_name = 'Last Name is required';
-  } 
+  } else if (!validString.test(values.first_name)) {
+    errors.last_name = 'Last Name is invalid';
+  }
   // else if (!validString.test(values.last_name)) {
   //   errors.last_name = 'Last Name is invalid';
   // }

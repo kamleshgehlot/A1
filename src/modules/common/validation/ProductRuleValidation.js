@@ -11,10 +11,16 @@ export default function validate(values) {
   if (!values.color_id) {
     errors.color_id = 'Color is required';
   } 
+  else if (values.color_id==0) {
+    errors.color_id = 'Color is required';
+  }
   
   if (!values.brand_id) {
     errors.brand_id = 'Brand is required';
   } 
+  else if (values.brand_id==0) {
+    errors.brand_id = 'Brand is required';
+  }
 
   if (!values.buying_price) {
     errors.buying_price = 'Product Buying Price is required';
