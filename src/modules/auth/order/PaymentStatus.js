@@ -174,16 +174,15 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           let totalPaid = fixOrder[0].each_payment_amt;
           let addDays = fixOrder[0].frequency;
           var date ="";
-
-          if(fixOrder[0].frequency ===1){addDays = 30;}
-          else if(fixOrder[0].frequency ===2){addDays = 15;}
-          else if(fixOrder[0].frequency ===4){addDays = 7;}
+          var monthCount = 0;
+          // if(fixOrder[0].frequency ===1){addDays = 30;}
+          // else if(fixOrder[0].frequency ===2){addDays = 15;}
+          // else if(fixOrder[0].frequency ===4){addDays = 7;}
 
           for(let i=1; i<= fixOrder[0].no_of_payment; i++){
-            //  if(fixOrder[0].frequency ===1){addDays = 30;}
-            // else if(fixOrder[0].frequency ===2){addDays = 15;}
-            // else if(fixOrder[0].frequency ===4){addDays = 7;}
-
+            if(fixOrder[0].frequency ===1){addDays = 30;}
+            else if(fixOrder[0].frequency ===2){addDays = 15;}
+            else if(fixOrder[0].frequency ===4){addDays = 7;}
             var month = paymentDate.getMonth() + 1;
             var day = paymentDate.getDate();
             var year = paymentDate.getFullYear();
@@ -193,11 +192,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             if(day < 10){
                 day = '0' + day.toString();
               }
-            // if(fixOrder[0].frequency===1){
-            //   date = year + '-' + (parseInt(month) + 1)  + '-' + day;           
-            // }else{
-              date = year + '-' + month + '-' + day;           
-            // }
+            
+            date = year + '-' + month + '-' + day;           
 
             payment_table.push({
               sr_no : i,
@@ -209,29 +205,44 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               last_installment_no : fixOrder[0].no_of_payment,
             });
             // let a = new Date(paymentDate.getFullYear, paymentDate.getMonth() + 1, 0).getDate();
-            // let a = new Date(year, month, 0).getDate();
+            let a = new Date(year, month, 0).getDate();
             // // console.log(aa);
             // // paymentDate.setDate();
-            // if(fixOrder[0].frequency===1){
-            //   // let a = new Date(year, month, 0).getDate();
-            //   if(a === 31){
-            //     addDays += 1;
-            //   }else if(a < 30){
-            //     let b = 30 -a;
-            //     addDays -= b;
-            //   }
+            if(fixOrder[0].frequency===1){
+              // let a = new Date(year, month, 0).getDate();
+              if(a === 31){
+                addDays += 1;
+              }else if(a < 30){
+                let b = 30 -a;
+                addDays -= b;
+              }
+            }
             // }else if(fixOrder[0].frequency===2){
-            //   // if(a === 31){
-            //     const m = new Date(paymentDate.getDate());
-            //     let c = new Date(m.getDate() + addDays);
-            //     let n = c.getMonth();
-            //     console.log('m',m);
-            //     console.log('n',n);
-            //     console.log('month',month)
-            //   // }
-              
-            // }
-            paymentDate.setDate(paymentDate.getDate() + addDays)
+            //     var day1 = paymentDate.getDate();
+            //     var day3 = new Date(paymentDate + 15);
+                
+            //     var mon = day3.getMonth() + 1;
+                
+            //     if(mon !== month || monthCount===1){                  
+            //       if(a === 31){
+            //         addDays += 1;
+            //       }else if(a < 30){
+            //         let b = 30 -a;
+            //         addDays -= b;
+            //       }
+            //       monthCount = 0;
+            //     }else{
+            //       monthCount =1 ;
+            //     }
+                // var month = paymentDate.getMonth();
+                // const m = new Date(paymentDate.getDate() + 15);
+                // let c = new Date(m.getDate() + addDays);
+                // let n = c.getMonth();
+                // console.log('m',day1);
+                // console.log('n',month);
+                // console.log('month',day3)
+              // }
+            paymentDate.setDate(paymentDate.getDate() + addDays)            
             totalPaid = totalPaid + fixOrder[0].each_payment_amt; 
           }
             setPaymentStatus(payment_table);             
@@ -244,17 +255,19 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     const getFlexPaymentTable = async () => {
       try {
         const flexOrder = await Order.getCurrespondingFlexOrder({flexOrderId: orderData.order_type_id});
-        console.log('felx' , flexOrder);
           let payment_table=[];
           var paymentDate = new Date(flexOrder[0].first_payment);          
           let totalPaid = flexOrder[0].each_payment_amt;
           let addDays = flexOrder[0].frequency;
 
-          if(flexOrder[0].frequency ===1){addDays = 30;}
-          else if(flexOrder[0].frequency ===2){addDays = 15;}
-          else if(flexOrder[0].frequency ===4){addDays = 7;}
+          // if(flexOrder[0].frequency ===1){addDays = 30;}
+          // else if(flexOrder[0].frequency ===2){addDays = 15;}
+          // else if(flexOrder[0].frequency ===4){addDays = 7;}
 
           for(let i=1; i<= flexOrder[0].no_of_payment; i++){
+            if(flexOrder[0].frequency ===1){addDays = 30;}            
+            else if(flexOrder[0].frequency ===2){addDays = 15;}
+            else if(flexOrder[0].frequency ===4){addDays = 7;}
             var month = paymentDate.getMonth() + 1;
             var day = paymentDate.getDate();
             var year = paymentDate.getFullYear();
@@ -275,6 +288,16 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               installment_before_delivery : flexOrder[0].before_delivery_amt,
               last_installment_no : flexOrder[0].no_of_payment,
             });
+
+            let a = new Date(year, month, 0).getDate();
+            if(flexOrder[0].frequency===1){
+              if(a === 31){
+                addDays += 1;
+              }else if(a < 30){
+                let b = 30 -a;
+                addDays -= b;
+              }
+            }
             
             paymentDate.setDate(paymentDate.getDate() + addDays)
             totalPaid = totalPaid + flexOrder[0].each_payment_amt; 
