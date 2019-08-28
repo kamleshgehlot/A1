@@ -109,6 +109,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
   },
+  errorHeading: {
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
+    color:'red',
+  },
   addButton:{
     backgroundColor:'#CBDF90',
   },
@@ -288,6 +293,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   function handleEmailVerification(event){
     // console.log(event.target.value);
     const email = event.target.value;
+    console.log('email--',email)
+    const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!validEmail.test(email)) {
+      errors.demail = 'Email Address is invalid';
+    }
+    else{
+      
+      errors.demail = '';
+    }
+    // console.log('email--',errors.demail)
 
     const checkEmail = async () => {
       const response = await UserAPI.verifyEmail({email : email});
@@ -300,6 +315,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     checkEmail();
   }
   function handleDirectorList(){
+    if(errors.demail==''||errors.demail==null){
     const directorListTemp = [...directorList];
 
     if(inputs.email === chkEmail){
@@ -330,6 +346,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     }
   }
   }
+  else{
+    if(inputs.email===''){
+      
+    alert('Please Enter Director Email Address');
+    }
+    else{
+    alert('Please Enter Correct Email Address of Director');
+    }
+  }
+}
   // function setCityHandler(city){
   //   setInput('city',city)
   // }
@@ -446,7 +472,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Franchise Details</Typography>
+                <Typography className={(errors.franchise_name||errors.city||errors.suburb) ? classes.errorHeading : classes.heading}>Franchise Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
@@ -466,7 +492,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       error={errors.franchise_name}
                       helperText={errors.franchise_name}
                       fullWidth
-                      required
+                      // required
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -479,7 +505,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       id = 'city'
                       // label = 'Select City'
                       fullWidth
-                      required
+                      // required
                       className={classes.textsize} 
                       error={errors.city}
                       helperText={errors.city ? errors.city : ' '}
@@ -502,7 +528,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       // label = 'Area'
                       fullWidth
                       // label="Suburb"
-                      required
+                      // required
                       error={errors.suburb}
                       helperText={errors.suburb ? errors.suburb : ' '}
                       className={classes.textsize} 
@@ -534,7 +560,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                 aria-controls=""
                 id="panel1a-header"
               >
-             <Typography className={classes.heading}>Company Details</Typography>
+             <Typography className={(errors.company_name||errors.nbzn||errors.company_location) ? classes.errorHeading : classes.heading}>Company Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
@@ -554,7 +580,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       helperText={errors.company_name}
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -574,8 +600,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       helperText={errors.nbzn}
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
+                      onInput={(e)=>{ 
+                        e.target.value = (e.target.value).slice(0,10)
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -593,7 +622,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       error={errors.company_location}
                       helperText={errors.company_location}
                       margin="dense"
-                      required
+                      // required
                       fullWidth
                       onChange={handleInputChange}
                     />
@@ -642,8 +671,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       fullWidth
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
-                      // error={errors.email}
-                      // helperText={errors.email ? errors.email : ' '}
+                      error={errors.demail}
+                      helperText={errors.demail ? errors.demail : ' '}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -671,7 +700,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="alt_contact">Alternative #</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="alt_contact">Alternate Contact #</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -795,7 +824,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Accountant Details</Typography>
+                <Typography className={(errors.accountant_name||errors.accountant_email||errors.accountant_contact) ? classes.errorHeading : classes.heading}>Accountant Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
@@ -816,7 +845,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       // placeholder="Accountant name"
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -838,7 +867,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       // placeholder="Email"
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
                       type="email"
@@ -863,14 +892,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       fullWidth
                       type="number"
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                       onInput={(e)=>{ 
                         e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
-                    }}
+                       }}
                     />
                   </Grid>
-{console.log(inputs)}
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="website">Website</InputLabel>
                     <TextField 
