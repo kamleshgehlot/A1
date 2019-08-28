@@ -299,8 +299,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="franchise_name"
                       name="franchise_name"
                       // label="Franchise Name"
-                      margin="dense"
-                      required
+                      // margin="dense"
                       type="text"
                       value={inputs.franchise_name}
                       onChange={handleInputChange}
@@ -308,7 +307,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       helperText={errors.franchise_name}
                       // onBlur={handleNameBlurChange}/
                       fullWidth
-                      required
+                      // required
                       // disabled                      
                     />
                   </Grid>
@@ -324,7 +323,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="normal"
                       fullWidth
                       // label="Status"
-                      required className={classes.textsize}
+                      // required
+                       className={classes.textsize}
                     >
                     {inputs.state=== 1 ? <MenuItem className={classes.textsize} value={1}>Open</MenuItem> : ''}
                       <MenuItem className={classes.textsize} value={2}>Active</MenuItem>
@@ -345,7 +345,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       error={errors.city}
                       helperText={errors.city ? errors.city : ' '}
                       // label="City"
-                      required
+                      // required
                       disabled
                     >
                       {cityList.length > 0 &&
@@ -365,7 +365,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id= 'suburb_selection'
                       fullWidth
                       // label="Area"
-                      required
+                      // required
                       error={errors.suburb}
                       helperText={errors.suburb ? errors.suburb : ' '}
                     >
@@ -415,7 +415,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       helperText={errors.company_name}
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -435,8 +435,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       helperText={errors.nbzn}
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -454,7 +457,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       error={errors.company_location}
                       helperText={errors.company_location}
                       margin="dense"
-                      required
+                      // required
                       fullWidth
                       onChange={handleInputChange}
                     />
@@ -477,7 +480,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       helperText={errors.director}
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -496,7 +499,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       error={errors.email}
                       helperText={errors.email}
                       margin="dense"
-                      required
+                      // required
                       type="email"
                       fullWidth
                       // disabled
@@ -518,7 +521,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       error={errors.contact}
                       helperText={errors.contact}
                       margin="dense"
-                      required
+                      // required
                       fullWidth
                       onChange={handleInputChange}
                       type="number"
@@ -562,7 +565,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       name="user_id"
                       // label="User Id"
                       margin="dense"
-                      required
+                      // required
                       type="text"
                       value={inputs.user_id} 
                       // onChange={handleInputChange}
@@ -663,7 +666,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // placeholder="Accountant name"
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -685,7 +688,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // placeholder="Email"
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       // disabled
                       onChange={handleInputChange}
                     />
@@ -709,7 +712,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="number"
                       fullWidth
                       margin="dense"
-                      required
+                      // required
                       onChange={handleInputChange}
                       onInput={(e)=>{ 
                         e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
