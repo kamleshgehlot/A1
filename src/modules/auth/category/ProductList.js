@@ -161,6 +161,23 @@ export default function ProductList(props) {
 
   function setCategoryListFn(response) {
     setProductList(response);
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const brand_result = await Brand.list();
+        setBrandList(brand_result.brandList);
+        const color_result = await Color.list();
+        setColorList(color_result.colorList);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
   }
 
   function handleSnackbarClose() {

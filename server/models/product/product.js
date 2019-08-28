@@ -21,6 +21,7 @@ const Product = function (params) {
 
   this.user_id = params.user_id;
   this.subcategory = params.subcategory;
+  console.log('params',params)
 };
 
 Product.prototype.addProduct = function () {

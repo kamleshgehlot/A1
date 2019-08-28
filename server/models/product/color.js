@@ -34,4 +34,37 @@ Color.prototype.all = function () {
     });
   });
 }
+
+
+Color.prototype.add = function () {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+
+      if (!error) {
+        connection.changeUser({ database: dbName["prod"] });
+              connection.query(`INSERT INTO color(color, created_by) VALUES (?,?)`,[that.color,that.user_id],(error, crows, fields) => {
+                if (!error) {
+                   resolve(crows);
+                } else {
+                  console.log('Error...', error);
+                  reject(error);
+                }
+              });
+      } else {
+        console.log('Error...', error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  }).catch(error => {
+    throw error;
+  });
+};
+
+
 module.exports = Color;

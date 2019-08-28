@@ -36,6 +36,8 @@ import useSignUpForm from '../franchise/CustomHooks';
 import validate from '../../common/validation/ProductRuleValidation';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
+import AddColor from './AddColor';
+import AddBrand from './AddBrand';
 // API CALL
 import Category from '../../../api/Category';
 import Brand from '../../../api/product/Brand';
@@ -128,6 +130,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
+  const [colorOpen, setColorOpen] = useState(false);
+  const [brandOpen, setBrandOpen] = useState(false);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -206,6 +210,34 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
       setInput(e.target.name,e.target.value)
 
     }
+  }
+  
+  function handleColorInputChange(e){
+    handleInputChange(e);
+    if(e.target.value==='0'){
+      setColorOpen(true);      
+    }
+  }
+  
+  function handleColorClose() {
+    setColorOpen(false);
+  }
+  function handleBrandInputChange(e){
+    handleInputChange(e);
+    if(e.target.value==='0'){
+      setBrandOpen(true);      
+    }
+  }
+  
+  function handleBrandClose() {
+    setBrandOpen(false);
+  } 
+   function updatedBrandData(response){   
+    setBrandList(response);
+     
+  } function updatedData(response){   
+    setColorList(response);
+     
   }
   const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
@@ -291,7 +323,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                     <InputLabel  className={classes.textsize} htmlFor="city">Choose Color</InputLabel>
                     <Select
                       value={inputs.color_id}
-                      onChange={handleInputChange}
+                      onChange={handleColorInputChange}
                       inputProps={{
                         name: 'color_id',
                         id: 'color_id',
@@ -310,13 +342,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                           )
                       })
                     }
+                    <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="brand_id">Choose Brand</InputLabel>
                     <Select
                          className={classes.textsize}
-                        onChange={handleInputChange}
+                        onChange={handleBrandInputChange}
                         value={inputs.brand_id}
                         inputProps={{
                           name: 'brand_id',
@@ -334,7 +367,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                         <MenuItem  className={classes.textsize} className={classes.textsize} value={data.id}>{data.brand_name}</MenuItem>
                           )
                       })
-                    }
+                    }                        <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
+
                     </Select>
                   </Grid>
                   
@@ -524,6 +558,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                   </Grid>
                 </Grid>
                 </Paper>
+                
+            { colorOpen ?    <AddColor open={colorOpen} handleClose={handleColorClose}  updatedData={updatedData}/> : null }
+            { brandOpen ?    <AddBrand open={brandOpen} handleClose={handleBrandClose}  updatedBrandData={updatedBrandData}/> : null }
+
           </div>
       </form>
       </Dialog>

@@ -305,7 +305,7 @@ return (
                             <MenuItem className={classes.textsize} value={dataf.id} >{dataf.name}</MenuItem>
                           );
                         })}
-                        <MenuItem className={classes.textsize} value={0}>{'All'}</MenuItem> 
+                        <MenuItem className={classes.textsize} value={'0'}>{'All'}</MenuItem> 
                       </Select>
                   </Grid>
                     {/* <Grid item xs={12} sm={3}>
