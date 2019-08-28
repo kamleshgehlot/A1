@@ -100,7 +100,6 @@ const getPaymentHistory = async function(req, res, next) {
 
 const paymentSubmit = async function(req, res, next) {
   try {
-    console.log('paymentllll',req.body);
     const payment = await new Order({
       user_id : req.decoded.user_id, 
       order_id : req.body.order_id,
@@ -112,10 +111,11 @@ const paymentSubmit = async function(req, res, next) {
       // status : req.body.status, 
       created_by: req.decoded.id,    
       installment_before_delivery : req.body.installment_before_delivery,
+      last_installment_no : req.body.last_installment_no,
     }).paymentSubmit();
-    console.log('payment',payment);
-    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-      res.send({ order: order});
+
+    // const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+      res.send({});
   } catch (error) {
     next(error);
   }
@@ -124,6 +124,16 @@ const paymentSubmit = async function(req, res, next) {
 const assignToFinance = async function(req, res, next) {
   try {
     await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToFinance();
+    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+    res.send({ order: order});
+  } catch (error) {
+    next(error);
+  }
+};
+
+const assignToDelivery = async function(req, res, next) {
+  try {
+    await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToDelivery();
     const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
     res.send({ order: order});
   } catch (error) {
@@ -393,4 +403,4 @@ const editOrder = async function (req, res, next) {
     }
   };
 
-module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, getFixedOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance, getPaymentHistory, paymentSubmit };
+module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, getFixedOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance, assignToDelivery, getPaymentHistory, paymentSubmit };

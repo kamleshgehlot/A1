@@ -35,6 +35,7 @@ var Order = function (params) {
   this.converted_to = params.converted_to;
 
   this.installment_no = params.installment_no;
+  this.last_installment_no = params.last_installment_no;
   this.payment_date= params.payment_date;
   this.payment_amt = params.payment_amt;
   this.total_paid = params.total_paid;
@@ -506,15 +507,13 @@ Order.prototype.paymentSubmit = function () {
         
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
-        let Values = [
-          [that.order_id, that.customer_id, that.installment_no, that.payment_date, that.payment_amt, that.total_paid, that.created_by]
-        ];
+        // let Values = [
+        //   [that.order_id, that.customer_id, that.installment_no, that.payment_date, that.payment_amt, that.total_paid, that.created_by]
+        // ];
         connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, payment_date, payment_amt, total_paid, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+that.payment_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+ that.created_by+'")', function (error, rows, fields) {
             if (!error) {
-              // if(rows.insertId === 1){
-                
                   if(that.installment_before_delivery === that.installment_no){
-                    connection.query('UPDATE orders set order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {
+                    connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {
                       if(!error){
                         resolve(rows);
                       }else{
@@ -523,7 +522,18 @@ Order.prototype.paymentSubmit = function () {
                       }
                     });
                   }
-                // }
+                  if(that.installment_no === that.last_installment_no){
+                    connection.query('UPDATE orders SET order_status = 8 where id = "'+that.order_id+'"', function (error, rows, fields) {
+                      if(!error){
+                        resolve(rows);
+                      }else{
+                        console.log("Error...", error);
+                        reject(error);
+                      }
+                    });
+                  }else{
+                    resolve(rows);                    
+                  }
             } else {
               console.log("Error...", error);
               reject(error);
@@ -654,6 +664,37 @@ Order.prototype.assignToFinance = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         connection.query('UPDATE orders SET assigned_to = 4, order_status = 3 WHERE id = "'+that.id+'"',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Order.prototype.assignToDelivery = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('UPDATE orders SET assigned_to= 5, order_status = 5 where id = "'+that.id+'"', function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

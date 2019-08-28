@@ -5,6 +5,7 @@ const Franchise = require("../models/franchise.js")
 const Accountant = require("../models/accountant.js")
 const Company = require("../models/company.js")
 const UserRole = require("../models/franchise/userRole")
+const Testing = require("../models/testing.js")
 const Miscellaneious = require('../lib/miscellaneous.js')
 
 const { trans } = require("../lib/mailtransporter");
@@ -102,6 +103,7 @@ const register = async function (req, res, next) {
 			res.send({ userList: userList });
 			// newAccountant.update();
 		} else {
+			// await new Testing().getAll();
 			const accountant_result = await newAccountant.register();
 			newCompany.accountant_id = accountant_result.accountant_id;
 			const company_result = await newCompany.register();
