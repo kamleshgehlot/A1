@@ -106,7 +106,7 @@ export default function AddColor(props) {
   const [errors, setErrors] = useState();
   const coloradd = async () => {
       
-    if( inputs.color!=''){
+    // if( inputs.color!=''){
       let check=false;
     const validString = /^[a-zA-Z\s]+$/;
     if (!inputs.color) {
@@ -128,7 +128,7 @@ export default function AddColor(props) {
         props.updatedData(response.colorList);
         props.handleClose(false);
       }
-    }
+    // }
   };
   
   function validate(values) {

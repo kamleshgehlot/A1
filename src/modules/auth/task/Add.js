@@ -241,6 +241,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
   function handleRoleChange(e){
     setStaffRole(e.target.value);
     let selectedRole = e.target.value;
+    setInput('assign_role',e.target.value)
 
     try{
    const stafflistForRole = async () => {
@@ -337,7 +338,7 @@ return (
                                 error={errors.task_description}
                                 helperText={errors.task_description}
                                 fullWidth
-                                required 
+                                // required 
                                 className={classes.tbrow}
                                 type="text"
                                 multiline
@@ -348,7 +349,7 @@ return (
                           <StyledTableCell>
 
                             <Select
-                              value={staffRole}
+                              value={inputs.assign_role}
                               inputProps={{
                                 name: 'assign_role',
                                 id: 'assign_role',
@@ -356,7 +357,9 @@ return (
                               onChange={handleRoleChange}
                               className={classes.textsize}
                               fullWidth
-                              required
+                              error={errors.assign_role}
+                              helperText={errors.assign_role}
+                              // required
                             >
                                 
                                 {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
@@ -378,7 +381,7 @@ return (
                                 label:'assigned_to'
                               }}
                               
-                              required
+                              // required
                               disabled = {otherDisable}
                               fullWidth className={classes.dropdwn}
                               error={errors.assigned_to}
@@ -407,7 +410,7 @@ return (
                                 value={inputs.due_date}
                                 onChange={handleInputChange}
                                 fullWidth
-                                required
+                                // required
                                 onFocus={pastDate}
                                 type="date" className={classes.dropdwn}
                                 error={errors.due_date}

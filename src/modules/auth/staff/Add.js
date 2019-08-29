@@ -37,6 +37,7 @@ const RESET_VALUES = {
   location:'',
   contact:'',
   email:'',
+  password: '',
   position:'',
 };
 
@@ -107,7 +108,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
         first_name: inputs.first_name,
         last_name:inputs.last_name,
         user_id:inputs.user_id,
-        password:'1234',
+        password:inputs.password,
         location:inputs.location,
         contact:inputs.contact,
         email:inputs.email,
@@ -122,6 +123,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       handleClose(false);
     }
   };
+
+  function handlePasswordBlurChange() {
+    inputs['password']=='' ? 
+    setInput('password', GeneratePassword())
+    :''
+  }
+
+  function GeneratePassword() {
+    return Math.random().toString(36).slice(-8);
+  }
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
@@ -296,6 +307,22 @@ return (
                       required
                       fullWidth
                       type="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="password">Password *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      onFocus={handlePasswordBlurChange}
+                      value={inputs.password} 
+                      fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

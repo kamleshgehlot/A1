@@ -105,7 +105,7 @@ export default function AddBrand(props) {
   const [errors, setErrors] = useState();
     const brandadd = async () => {
       
-    if( inputs.brand_name!=''){
+    // if( inputs.brand_name!=''){
         let check=false;
       const validString = /^[a-zA-Z\s]+$/;
       if (!inputs.brand_name) {
@@ -126,7 +126,7 @@ export default function AddBrand(props) {
           });
           props.updatedBrandData(response.brandList);
           props.handleClose(false);
-        }
+        // }
         }
   };
   

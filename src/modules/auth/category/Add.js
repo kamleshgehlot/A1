@@ -175,7 +175,10 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
     // updateProductList(newdata);
     handleClose(false);
   }
-
+  function close(){
+    handleReset(RESET_VALUES);
+    handleClose(false);
+  }
 
   function newCatData(newdata){
     setNewCatDataList(newdata);
@@ -415,7 +418,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                      Add Product
                     </Button>
                     
-                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                    <Button variant="contained" color="primary" onClick={close} className={classes.button}>
                       Close
                     </Button> 
                   </Grid>

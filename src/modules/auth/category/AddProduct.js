@@ -213,7 +213,12 @@ export default function AddProduct(props) {
 
   function handleRentalChange(e){
     // setRental(e.target.value);
-    if(e.target.value <= 0){
+    if(e.target.value ==''){
+      setInput(e.target.name,'')
+      // alert('Rental price cannot be zero or less than zero.');
+      // setRental('')
+    }
+    else if(e.target.value <= 0){
       setInput(e.target.name,'0')
       alert('Rental price cannot be zero or less than zero.');
       // setRental('')

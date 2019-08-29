@@ -39,15 +39,7 @@ import useSignUpForm from '../franchise/CustomHooks';
 import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
-  category: '',
-  type: '',
-  parentid: '',
-  position: '',
-  description: '',
-  image: '',
-  meta_keywords: '',
-  meta_description: '',
-  active: '',
+  subcategory:'',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -112,6 +104,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function AddSubcategory(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
+  const [errorSubcat, setErrorSubcat] = useState();
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -119,14 +112,28 @@ export default function AddSubcategory(props) {
 
 
   const categoryadd = async () => {
-    const response = await Category.addsubcategory({
-      category:  props.selectedCategoryId,
-      subcategory: inputs.subcategory,
-    });
+    let check=false;
+    const validString = /^[a-zA-Z\s]+$/;
+  
+    if (!inputs.subcategory) 
+    {setErrorSubcat('sub category required');
+    check=true;
+  } else if (!validString.test(inputs.subcategory)) 
+    {setErrorSubcat('sub category is invalid');
+    check=true;}
+    else{
+      setErrorSubcat('')
+    }
+    if(check===false){
+      const response = await Category.addsubcategory({
+        category:  props.selectedCategoryId,
+        subcategory: inputs.subcategory,
+      });
 
-    props.newSubCatData(inputs);
-    props.updatedSubCatData(response.categoryList);
-    props.handleClose(false);
+      props.newSubCatData(inputs);
+      props.updatedSubCatData(response.categoryList);
+      props.handleClose(false);
+    }
   };
   
   function validate(values) {
@@ -160,13 +167,7 @@ export default function AddSubcategory(props) {
           </AppBar>
 
           <div className={classes.root}>
-
-          <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
->
-              <ExpansionPanelDetails>
+          <Paper className={classes.paper}>  
                 <Grid container spacing={3}>
                   
                   
@@ -187,6 +188,8 @@ export default function AddSubcategory(props) {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      error={errorSubcat}
+                      helperText={errorSubcat}
                     />
                   </Grid>
                   
@@ -205,9 +208,7 @@ export default function AddSubcategory(props) {
                   </Grid>
                 
               </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-
+              </Paper>
           </div>
       </form>
       </Dialog>

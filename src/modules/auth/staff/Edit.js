@@ -107,6 +107,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           location:inputs.location,
           contact:inputs.contact,
           email:inputs.email,
+          password: inputs.password,
           position:inputs.position,
           created_by: 1,
         });
@@ -258,10 +259,32 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       error={errors.email}
                       helperText={errors.email}
                       required
-                      disabled
+                      // disabled
                       fullWidth
                     />
                   </Grid>
+                  {/* <Grid item xs={6} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="password">Password</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="password"
+                      name="password" */}
+                      {/* // label="Password"
+                      // onChange={handleInputChange}
+                      // onFocus={handlePasswordBlurChange}
+                      value={inputs.password} 
+                      // required
+                      fullWidth
+                      // error={errors.password}
+                      // helperText={errors.password ? errors.password : ' '}
+                      disabled
+                    />
+                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
                     <Select
