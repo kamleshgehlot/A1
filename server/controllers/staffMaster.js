@@ -1,6 +1,7 @@
 const StaffMaster = require("../models/staffMaster.js");
 
 const register = async function (req, res, next) {
+	console.log('req.body---------',req.body)
 	let staffMasterParams = {
     id: req.body.id,
     first_name: req.body.first_name,
@@ -11,7 +12,7 @@ const register = async function (req, res, next) {
     contact: req.body.contact,
     email: req.body.email,
     position: req.body.position,
-    created_by: req.body.created_by,
+		created_by: req.body.created_by,
 	};
 	
 	try{

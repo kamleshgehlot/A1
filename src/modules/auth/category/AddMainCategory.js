@@ -112,25 +112,61 @@ export default function AddMainCategory(props) {
   const [expanded, setExpanded] = React.useState('panel1');
 
   const [mainOpen, setMainOpen] = useState(false);
+  const [errorMaincat, setErrorMaincat] = useState();
+  const [errorCat, setErrorCat] = useState();
+  const [errorSubcat, setErrorSubcat] = useState();
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
 
   const categoryadd = async () => {
-    if(inputs.maincategory != '' && inputs.category != '' && inputs.subcategory!=''){
-      const response = await Category.add({
-        maincategory: inputs.maincategory,
-        category: inputs.category,
-        subcategory: inputs.subcategory,
-      });
-    // props.handleSnackbarClick(true);
-    // setCategoryList(response.categoryList);
-    // handleReset(RESET_VALUES);
-      props.newData(inputs);
-      props.updatedData(response.categoryList);
-      props.handleClose(false);
+    
+    let check=false;
+    const validString = /^[a-zA-Z\s]+$/;
+    if (!inputs.maincategory) 
+      {setErrorMaincat('main category required');
+      check=true;
+    } else if (!validString.test(inputs.maincategory)) 
+      {setErrorMaincat('main category is invalid');
+      check=true;}
+      else{
+        setErrorMaincat('')
+      }
+    if (!inputs.category) 
+      {setErrorCat('category required');
+      check=true;
+    } else if (!validString.test(inputs.category)) 
+      {setErrorCat('category is invalid');
+      check=true;}
+      else{
+        setErrorCat('')
+      }
+      
+    if (!inputs.subcategory) 
+    {setErrorSubcat('sub category required');
+    check=true;
+  } else if (!validString.test(inputs.subcategory)) 
+    {setErrorSubcat('sub category is invalid');
+    check=true;}
+    else{
+      setErrorSubcat('')
     }
+    // if(inputs.maincategory != '' && inputs.category != '' && inputs.subcategory!=''){
+      if(check===false){
+        const response = await Category.add({
+          maincategory: inputs.maincategory,
+          category: inputs.category,
+          subcategory: inputs.subcategory,
+        });
+      // props.handleSnackbarClick(true);
+      // setCategoryList(response.categoryList);
+      // handleReset(RESET_VALUES);
+        props.newData(inputs);
+        props.updatedData(response.categoryList);
+        props.handleClose(false);
+      }
+    // }
   };
   
   function validate(values) {
@@ -187,6 +223,8 @@ export default function AddMainCategory(props) {
                       fullWidth
                       margin="dense"
                       type="text"
+                      error={errorMaincat}
+                      helperText={errorMaincat}
                       // label="Add Main Category"
                     />
                   </Grid>
@@ -205,6 +243,8 @@ export default function AddMainCategory(props) {
                       fullWidth
                       margin="dense"
                       type="text"
+                      error={errorCat}
+                      helperText={errorCat}
                       // label="Add Category"
                     />
                   </Grid>
@@ -223,6 +263,8 @@ export default function AddMainCategory(props) {
                       fullWidth
                       margin="dense"
                       type="text"
+                      error={errorSubcat}
+                      helperText={errorSubcat}
                       // label="Add Sub Category"
                     />
                   </Grid>

@@ -323,6 +323,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       helperText={errors.contact}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -343,7 +346,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       error={errors.email}
                       helperText={errors.email}
                       required
-                      disabled
+                      // disabled
                       fullWidth
                       type="email"
                     />
@@ -427,6 +430,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       helperText={errors.pre_company_contact}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -543,7 +549,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="password">Password</InputLabel> */}
+                    <InputLabel className={classes.textsize} htmlFor="password">Password</InputLabel>
                     <TextField
                       margin="dense"
                       id="password"
@@ -553,6 +559,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       value={inputs.password} 
                       required
                       fullWidth
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      
                       // error={errors.password}
                       // helperText={errors.password ? errors.password : ' '}
                       disabled

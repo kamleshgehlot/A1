@@ -201,10 +201,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setSavebtn(true);
     handleClose(false);
     
+<<<<<<< HEAD
   }else{
       setAssignError('Password is required');
       console.log('please')
     }
+=======
+  }
+  else{
+    setAssignError('Role is required');
+    console.log('please')
+  }
+>>>>>>> 13115f42d7f5a4cfe63c297c6e841b90c184dd76
   }
   };
 
@@ -378,6 +386,9 @@ return (
                       helperText={errors.contact}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -482,6 +493,9 @@ return (
                       helperText={errors.pre_company_contact}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

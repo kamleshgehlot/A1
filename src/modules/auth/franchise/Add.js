@@ -186,6 +186,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     fetchData();
   }, []);
 
+
+  function close(){
+    handleReset(RESET_VALUES);
+    handleClose(false);
+  }
+
   // function IDGenerator() {
   //   this.length = 4;
   //   this.timestamp = +new Date;
@@ -223,7 +229,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
             // cancelToken: this.isTokenSource.token,
             
             id: '',
-            city: inputs.city,
+            city: tempCity,
             suburb: inputs.suburb,
             franchise_name: inputs.franchise_name,
 
@@ -368,12 +374,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     setInput('city_code',event.target.value.split('_')[2])
   }
   function handleCityChange(event){
-    setTempCity(event.target.value)
+    // setTempCity(event.target.value)
     const city_name = event.target.value.split('_')[0];
     const city_id = event.target.value.split('_')[1];
     const city_code = event.target.value.split('_')[2];
 
-    setInput('city', city_name);
+    setTempCity(city_name);
+    setInput('city', event.target.value);
     
     // setInput('city_code', city_code);
 
@@ -411,7 +418,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   }
 
   function handleNameBlurChange(e) {
-    setInput('uid', generate(inputs.director, inputs.city, inputs.suburb));
+    setInput('uid', generate(inputs.director, tempCity, inputs.suburb));
   }
 
   function generate(director, city, suburb) {
@@ -503,7 +510,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="city">Select City *</InputLabel>
                     <Select
-                      value={tempCity}
+                      value={inputs.city}
                       onChange={handleCityChange}
                       onBlur = {setCityCodeHandler}
                       name ='city'
@@ -933,7 +940,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     </Button>: <Button variant="contained" color="primary" disabled className={classes.button}  >
                      Save
                     </Button>}
-                    <Button variant="contained"  color="primary" className={classes.button} onClick={handleClose} aria-label="Close">
+                    <Button variant="contained"  color="primary" className={classes.button} onClick={close} aria-label="Close">
                      Close
                     </Button>
                   </Grid>

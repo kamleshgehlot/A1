@@ -203,7 +203,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
   
   function handleRentalChange(e){
     if(e.target.value <= 0){
-      setInput(e.target.name,'')
+      setInput(e.target.name,'0')
+      alert('Rental price cannot be zero or less than zero.');
       // setRental('')
     }
     else{

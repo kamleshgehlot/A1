@@ -16,10 +16,7 @@ export default function validate(values) {
   
   if (!values.location) {
     errors.location = 'Location is required';
-  } else if (!validString.test(values.location)) {
-    errors.location = 'Location is invalid';
-  }
-
+  } 
   if (!values.contact) {
     errors.contact = 'Contact is required';
   } else if (!validNumber.test(values.contact)) {

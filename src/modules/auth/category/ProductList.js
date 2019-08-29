@@ -148,6 +148,7 @@ export default function ProductList(props) {
 
   function handleClose() {
     setOpen(false);
+    handleReset(RESET_VALUES);
   }
 
   function handleClickEditOpen(response) {

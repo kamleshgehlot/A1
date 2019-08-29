@@ -107,26 +107,50 @@ const Transition = React.forwardRef((props, ref) => {
 export default function AddCategory(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
+  const [errorCat, setErrorCat] = useState();
+  const [errorSubcat, setErrorSubcat] = useState();
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const categoryadd = async () => {
-    if(inputs.category != '' && inputs.subcategory!=''){
-      const response = await Category.addcategory({
-        maincategory: props.selectedMainCategoryId,
-        category: inputs.category,
-        subcategory: inputs.subcategory,
-      });
-
-    props.newCatData(inputs);
-    props.updatedCatData(response.categoryList);
-    // handleSnackbarClick(true);
-    // setCategoryList(response.categoryList);
-    // handleReset(RESET_VALUES);
-    props.handleClose(false);
+    let check=false;
+    const validString = /^[a-zA-Z\s]+$/;
+    if (!inputs.category) 
+      {setErrorCat('category required');
+      check=true;
+    } else if (!validString.test(inputs.category)) 
+      {setErrorCat('category is invalid');
+      check=true;}
+      else{
+        setErrorCat('')
+      }
+      
+    if (!inputs.subcategory) 
+    {setErrorSubcat('sub category required');
+    check=true;
+  } else if (!validString.test(inputs.subcategory)) 
+    {setErrorSubcat('sub category is invalid');
+    check=true;}
+    else{
+      setErrorSubcat('')
     }
+
+      if(check===false){
+        const response = await Category.addcategory({
+          maincategory: props.selectedMainCategoryId,
+          category: inputs.category,
+          subcategory: inputs.subcategory,
+        });
+
+        props.newCatData(inputs);
+        props.updatedCatData(response.categoryList);
+        // handleSnackbarClick(true);
+        // setCategoryList(response.categoryList);
+        // handleReset(RESET_VALUES);
+        props.handleClose(false);
+      }
   };
   
   function validate(values) {
@@ -179,6 +203,8 @@ export default function AddCategory(props) {
                       fullWidth
                       margin="dense"
                       type="text"
+                      error={errorCat}
+                      helperText={errorCat}
                       // label="Add Category"
                     />
                   </Grid>
@@ -197,6 +223,8 @@ export default function AddCategory(props) {
                       fullWidth
                       margin="dense"
                       type="text"
+                      error={errorSubcat}
+                      helperText={errorSubcat}
                       // label="Add Sub Category"
                     />
                   </Grid>

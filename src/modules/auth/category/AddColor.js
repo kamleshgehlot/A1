@@ -102,20 +102,43 @@ const Transition = React.forwardRef((props, ref) => {
 export default function AddColor(props) {
   const classes = useStyles();
   const [ploading, setpLoading] = React.useState(false);
-    const coloradd = async () => {
+  
+  const [errors, setErrors] = useState();
+  const coloradd = async () => {
       
-    if( inputs.color!=''){
-      setpLoading(true);
-        const response = await Color.addcolor({
-          color: inputs.color,
-      });
-      props.updatedData(response.colorList);
-      props.handleClose(false);
+    // if( inputs.color!=''){
+      let check=false;
+    const validString = /^[a-zA-Z\s]+$/;
+    if (!inputs.color) {
+      setErrors('Color is required');
+      check=true;
+    } else if (!validString.test(inputs.color)) {
+      setErrors('Color is invalid');
+      check=true;
     }
+    else{
+      
+      setErrors('');
+    }
+    if(check===false){
+        setpLoading(true);
+          const response = await Color.addcolor({
+            color: inputs.color,
+        });
+        props.updatedData(response.colorList);
+        props.handleClose(false);
+      }
+    // }
   };
   
   function validate(values) {
     let errors = {};
+    const validString = /^[a-zA-Z\s]+$/;
+    if (!values.color) {
+      errors.color = 'Color is required';
+    } else if (!validString.test(values.color)) {
+      errors.color = 'Color is invalid';
+    }
 
     return errors;
   };
@@ -123,7 +146,7 @@ export default function AddColor(props) {
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     coloradd,
-    validate
+    // validate
   );
 
   return (
@@ -170,11 +193,13 @@ export default function AddColor(props) {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      error={errors}
+                      helperText={errors}
                     />
                   </Grid>
                   
                   <Grid item xs={12} sm={12}>
-                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
+                    <Button variant="contained" color="primary" onClick={coloradd} className={classes.button} 
                       >
                       Save
                     </Button>

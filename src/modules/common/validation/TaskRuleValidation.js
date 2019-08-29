@@ -9,6 +9,9 @@ export default function validate(values) {
   if (!values.assigned_to) {
     errors.assigned_to = 'Assigned To is required';
   } 
+  if (!values.assign_role) {
+    errors.assign_role = 'Assigned Role is required';
+  } 
   
   if (!values.due_date) {
     errors.due_date = 'Due Date is required';
