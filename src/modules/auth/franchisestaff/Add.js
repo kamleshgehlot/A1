@@ -175,15 +175,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
       pre_company_address: inputs.pre_company_address,
       pre_company_contact: inputs.pre_company_contact,
       pre_position: inputs.pre_position,
-      duration: inputs.duration,
-      // resume:  inputs.resume,
-      // cover_letter: inputs.cover_letter,
+      duration: inputs.duration,      
       employment_docs: inputs.employment_docs,
       
       user_id: inputs.user_id,
       password: inputs.password,
       role: assignRole.join(),
-      created_by: 1,
+      // created_by: 1,
     };
 
     let formData = new FormData();
@@ -203,11 +201,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setSavebtn(true);
     handleClose(false);
     
-  }
-  else{
-    setAssignError('Password is required');
-    console.log('please')
-  }
+  }else{
+      setAssignError('Password is required');
+      console.log('please')
+    }
   }
   };
 

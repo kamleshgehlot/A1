@@ -251,7 +251,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
             role_id: "2",
             state:1,
           });
-
+          if(response.isExist === 0){
           const franchiseIdTemp = [];
 
           response.userList.map(data => {
@@ -280,6 +280,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
           setpLoading(false);
           setSavebtn(true);
           handleClose(false);
+          }else{
+            alert('DB Already Exist for this location, contact to engineer..');
+            setpLoading(false);
+            setSavebtn(true);
+          }
         }
         else{          
           alert('Director Email and Accountant Email cannot be same')

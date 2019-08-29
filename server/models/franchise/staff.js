@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Staff = function (params) {
-  // console.log("params@@@@@@@@@@@", params);
+  console.log("params@@@@@@@@@@@", params);
 
   this.franchise_id = params.franchise_id;
   this.id = params.id;
@@ -42,13 +42,25 @@ Staff.prototype.register = function () {
 
       if (!error) {
 
-        console.log("newStaff model............", that);
+        // console.log("newStaff model............", that);
+        let staffRoles= [];
+        (that.role.split(',')).map((role,index) =>{
+          staffRoles.push(role);
+        });        
+        // console.log('staff roles', staffRoles);
+
 
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
-        connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + 0 + '", "' + 0 + '", "' + that.first_name + ' ' + that.last_name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.role + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
+        connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + 0 + '", "' + 0 + '", "' + that.first_name + ' ' + that.last_name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.role + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
           const savedUserId = rows.insertId;
+          (staffRoles.length > 0 ? staffRoles : []).map((data, index) => {
+              connection.query('INSERT INTO user_role(user_id,role_id,is_active,created_by) VALUES ("' + savedUserId + '", "' + data + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+                  resolve(rows);
+              })
+          });
+
           connection.query('INSERT INTO staff(franchise_user_id, first_name, last_name, location, contact, email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, password, role, employment_docs, created_by) values ("' + savedUserId + '","' + that.first_name + '","' + that.last_name + '","' + that.location + '","' + that.contact + '","' + that.email + '","' + that.pre_company_name + '","' + that.pre_company_address + '","' + that.pre_company_contact + '","' + that.pre_position + '", "' + that.duration + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.role + '", "' + that.employment_docs + '", "' + that.created_by + '")', function (error, rows, fields) {
             if (!error) {
               resolve(rows);
@@ -93,7 +105,15 @@ Staff.prototype.update = function () {
             // connection.query('update staff set first_name = "'+that.first_name+'", last_name = "'+that.last_name+'", location = "'+that.location+'", contact = "'+that.contact+'", email = "'+that.email+'", pre_company_name = "'+that.pre_company_name+'", pre_company_address = "'+that.pre_company_address+'", pre_company_contact = "'+that.pre_company_contact+'", pre_position = "'+that.pre_position+'", duration = "'+that.duration+'", role =  "'+that.role+'", employment_docs = "'+that.employment_docs+'" WHERE id = "'+that.id+'")', function (error, rows, fields) {
             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", updated_by = "'+that.updated_by+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
-                resolve(rows);
+                connection.query('update user set role_id = "'+that.role+'" WHERE id = "' + that.id + '"', function (error, rows, fields) { 
+                  if(!error){
+                    resolve(rows);
+                  }
+                  else {
+                    console.log("Error...", error);
+                    reject(error);
+                  }
+                });
               } else {
                 console.log("Error...", error);
                 reject(error);
@@ -102,7 +122,15 @@ Staff.prototype.update = function () {
             :
             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '", updated_by = "'+that.updated_by+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
-                resolve(rows);
+                connection.query('update user set role_id = "'+that.role+'" WHERE id = "' + that.id + '"', function (error, rows, fields) { 
+                  if(!error){
+                    resolve(rows);
+                  }
+                  else {
+                    console.log("Error...", error);
+                    reject(error);
+                  }
+                });
               } else {
                 console.log("Error...", error);
                 reject(error);

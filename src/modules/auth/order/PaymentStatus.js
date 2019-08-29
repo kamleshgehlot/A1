@@ -217,31 +217,39 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
                 addDays -= b;
               }
             }
-            // }else if(fixOrder[0].frequency===2){
-            //     var day1 = paymentDate.getDate();
-            //     var day3 = new Date(paymentDate + 15);
+            // else if(fixOrder[0].frequency===2){
+            //     // var day1 = paymentDate.getDate();
+            //     var day1 = new Date(fixOrder[0].first_payment);
+            //     var day2 = new Date(fixOrder[0].first_payment);
+            //     day2.setDate(day2.getDate()+15);
+            //     var date1 = day1.getDate();
+            //     var date2 = day2.getDate();
+            //     var mon1 = day1.getMonth();
+            //     var mon2 = day2.getMonth();
                 
-            //     var mon = day3.getMonth() + 1;
                 
-            //     if(mon !== month || monthCount===1){                  
-            //       if(a === 31){
-            //         addDays += 1;
-            //       }else if(a < 30){
-            //         let b = 30 -a;
-            //         addDays -= b;
-            //       }
-            //       monthCount = 0;
-            //     }else{
-            //       monthCount =1 ;
-            //     }
-                // var month = paymentDate.getMonth();
-                // const m = new Date(paymentDate.getDate() + 15);
-                // let c = new Date(m.getDate() + addDays);
-                // let n = c.getMonth();
-                // console.log('m',day1);
-                // console.log('n',month);
-                // console.log('month',day3)
-              // }
+
+            //     // var mon = day2.getMonth() + 1;
+                
+            //     // if(mon !== month || monthCount===1){                  
+            //     //   if(a === 31){
+            //     //     addDays += 1;
+            //     //   }else if(a < 30){
+            //     //     let b = 30 -a;
+            //     //     addDays -= b;
+            //     //   }
+            //     //   monthCount = 0;
+            //     // }else{
+            //     //   monthCount =1 ;
+            //     // }
+            //     // var month = paymentDate.getMonth();
+            //     // const m = new Date(paymentDate.getDate() + 15);
+            //     // let c = new Date(m.getDate() + addDays);
+            //     // let n = c.getMonth();
+            //     console.log('day1',day1);
+            //     // console.log('n',month);
+            //     console.log('day2',day2)
+            //   }
             paymentDate.setDate(paymentDate.getDate() + addDays)            
             totalPaid = totalPaid + fixOrder[0].each_payment_amt; 
           }
