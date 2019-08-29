@@ -124,7 +124,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
   
+  const [errorMaincat, setErrorMaincat] = useState();
   const [errorCat, setErrorCat] = useState();
+  const [errorSubcat, setErrorSubcat] = useState();
   const [mainOpen, setMainOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [subcatOpen, setSubCatOpen] = useState(false);
@@ -267,6 +269,21 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
     setProductOpen(true);
     }
     else{
+      if(inputs.maincat=='' || inputs.maincat=='0')
+      {setErrorMaincat('category required')}
+      else{
+        setErrorMaincat('')
+      }
+      if(inputs.cat=='' || inputs.cat=='0')
+      {setErrorCat('category required')}
+      else{
+        setErrorCat('')
+      }
+      if(inputs.subcat=='' || inputs.subcat=='0')
+      {setErrorSubcat('category required')}
+      else{
+        setErrorSubcat('')
+      }
       alert('Please select all category details');
     }
   }
@@ -327,7 +344,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                         }}
                         className={classes.margin}
                         fullWidth
-                        error={errorCat}
+                        error={errorMaincat}
                         label="Main Category"
                         required
                       >
@@ -380,7 +397,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                         fullWidth
                         label="Sub Category"
                         required
-                        error={errorCat}
+                        error={errorSubcat}
                         disabled = {inputs.cat != '' && inputs.cat != '0' && inputs.maincat != '' && inputs.maincat != '0' && subCategoryList.length > 0 ? false : true }
                       >
                       { subCategoryList.map((data, index)=>{

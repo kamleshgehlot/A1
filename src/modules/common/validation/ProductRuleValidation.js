@@ -4,8 +4,6 @@ export default function validate(values) {
   let errors = {};
   if (!values.name) {
     errors.name = 'Product Title/Name is required';
-  } else if (!validString.test(values.name)) {
-    errors.name = 'Product Title/Name is invalid';
   }
 
   if (!values.color_id) {

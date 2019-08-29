@@ -102,16 +102,32 @@ const Transition = React.forwardRef((props, ref) => {
 export default function AddBrand(props) {
   const classes = useStyles();
   const [ploading, setpLoading] = React.useState(false);
+  const [errors, setErrors] = useState();
     const brandadd = async () => {
       
     if( inputs.brand_name!=''){
-      setpLoading(true);
-        const response = await Brand.addbrand({
-          brand_name: inputs.brand_name,
-      });
-      props.updatedBrandData(response.brandList);
-      props.handleClose(false);
-    }
+        let check=false;
+      const validString = /^[a-zA-Z\s]+$/;
+      if (!inputs.brand_name) {
+        setErrors('Brand name is required');
+        check=true;
+      } else if (!validString.test(inputs.brand_name)) {
+        setErrors('Brand name is invalid');
+        check=true;
+      }
+      else{
+        
+        setErrors('');
+      }
+      if(check===false){
+          setpLoading(true);
+            const response = await Brand.addbrand({
+              brand_name: inputs.brand_name,
+          });
+          props.updatedBrandData(response.brandList);
+          props.handleClose(false);
+        }
+        }
   };
   
   function validate(values) {
@@ -170,11 +186,13 @@ export default function AddBrand(props) {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      error={errors}
+                      helperText={errors}
                     />
                   </Grid>
                   
                   <Grid item xs={12} sm={12}>
-                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} 
+                    <Button variant="contained" color="primary" onClick={brandadd} className={classes.button} 
                       >
                       Save
                     </Button>
