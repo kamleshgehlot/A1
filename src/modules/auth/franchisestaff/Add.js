@@ -201,18 +201,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setSavebtn(true);
     handleClose(false);
     
-<<<<<<< HEAD
-  }else{
-      setAssignError('Password is required');
-      console.log('please')
-    }
-=======
   }
   else{
     setAssignError('Role is required');
     console.log('please')
   }
->>>>>>> 13115f42d7f5a4cfe63c297c6e841b90c184dd76
   }
   };
 

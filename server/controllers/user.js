@@ -103,7 +103,7 @@ const register = async function (req, res, next) {
 			// newAccountant.update();
 		} else {
 			const testing_result = await new Testing({city: req.body.city, suburb: req.body.suburb}).testDB();
-			console.log('testing result',testing_result);
+			// console.log('testing result',testing_result);
 			if(testing_result.isExist===0){
 			
 			const accountant_result = await newAccountant.register();

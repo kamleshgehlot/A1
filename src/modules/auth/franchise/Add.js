@@ -397,7 +397,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
           city_name : city_name,
           city_code : city_code,
         });
-        setSelectedArea(result.selectedArea);
+        // console.log('suburb', result.selectedArea);
+        if(result.selectedArea != ""){
+          setSelectedArea(result.selectedArea);
+        }else{
+          alert('All existing area already assigned to other franchise..');
+        }
       } catch (error) {
         setIsError(true);
       }
@@ -417,8 +422,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     // setDirectorList(directorListTemp);
   }
 
-  function handleNameBlurChange(e) {
-    setInput('uid', generate(inputs.director, tempCity, inputs.suburb));
+   function handleNameBlurChange(e) {
+    setInput('uid', generate(inputs.director, tempCity, inputs.suburb)); 
   }
 
   function generate(director, city, suburb) {
