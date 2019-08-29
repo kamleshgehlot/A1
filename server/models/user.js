@@ -56,7 +56,7 @@ User.prototype.register = function () {
             connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.token + '", "' + that.accountId + '" , "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
 
               if (!error) {
-                console.log("databasename", that.user_details[0].uid.split('_')[1]);
+                // console.log("databasename", that.user_details[0].uid.split('_')[1]);
                 connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_details[0].uid.split('_')[1]) });
                 connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "' + directors_id[index].id + '", "' + data.director + '", "' + data.uid + '", AES_ENCRYPT("' + data.password + '", "secret"), "' + that.token + '", "' + that.accountId + '" , "' + that.designation + '", "' + that.role_id + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
                   if (!error) {

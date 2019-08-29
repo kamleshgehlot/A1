@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-
 const User = require("../models/user.js")
 const Franchise = require("../models/franchise.js")
 const Accountant = require("../models/accountant.js")
@@ -103,54 +102,65 @@ const register = async function (req, res, next) {
 			res.send({ userList: userList });
 			// newAccountant.update();
 		} else {
-			// await new Testing().getAll();
+			const testing_result = await new Testing({city: req.body.city, suburb: req.body.suburb}).testDB();
+			// console.log('testing result',testing_result);
+			if(testing_result.isExist===0){
+			
 			const accountant_result = await newAccountant.register();
 			newCompany.accountant_id = accountant_result.accountant_id;
+
 			const company_result = await newCompany.register();
 			newFranchise.company_id = company_result;
 			newUser.company_id = company_result;
-			const franchise_result = await newFranchise.register();
-			
+
+			const franchise_result = await newFranchise.register();						
 			const accountId = Miscellaneious.generateAccountId();
 			const token = Miscellaneious.generateRandomToken();
+			// console.log('franchise result',franchise_result);
 
-			newUser.franchise_id = franchise_result.franchise_id;
-			newUser.accountId = accountId;
-			newUser.token = token;
-			newUserRole.franchise_id = franchise_result.franchise_id;
-
-			const user_result = await newUser.register();
-			console.log("Saved Successfully.");
-
-			(req.body.directorList || []).map(director => {
-				console.log("director list..............", director)
-				let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
+			// if(franchise_result.isExist === 0){
 				
-				const mail = {
-					from: 'admin@rentronicsdev.saimrc.com',
-					//  to: 'mpurohit88@gmail.com',
-					to: director.email,
-					subject: 'Please verify your email address',
-					text: 'activate your account ',
-					html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
-				}
+				newUser.franchise_id = franchise_result.franchise_id;
+				newUser.accountId = accountId;
+				newUser.token = token;
+				newUserRole.franchise_id = franchise_result.franchise_id;
+				newUserRole.fdbname = franchise_result.fdbname;
 
-				// trans.sendMail(mail, (err, info) => {
-				// 	if (err) {
-				// 		return console.log(err);
-				// 	}
-				// 	console.log('Message sent: %s', info.messageId);
-				// 	// Preview only available when sending through an Ethereal account
-				// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-				// });
-			});
-			// newUserRole.user_id = result.id;
+				const user_result = await newUser.register();
+				console.log("Saved Successfully.");
 
-			await newUserRole.register();
-			const userList = await new Franchise({}).all();
+				(req.body.directorList || []).map(director => {
+					console.log("director list..............", director)
+					let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
+					
+					const mail = {
+						from: 'admin@rentronicsdev.saimrc.com',
+						//  to: 'mpurohit88@gmail.com',
+						to: director.email,
+						subject: 'Please verify your email address',
+						text: 'activate your account ',
+						html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
+					}
 
-			res.send({ userList: userList });
-		}
+					// trans.sendMail(mail, (err, info) => {
+					// 	if (err) {
+					// 		return console.log(err);
+					// 	}
+					// 	console.log('Message sent: %s', info.messageId);
+					// 	// Preview only available when sending through an Ethereal account
+					// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+					// });
+				});
+				// newUserRole.user_id = result.id;
+
+				const userRole = await newUserRole.register();
+				const userList = await new Franchise({}).all();
+
+				res.send({ userList: userList, isExist: 0 });
+			}else{
+				res.send({ userList: [], isExist: 1 });
+			}		
+	}
 	} catch (err) {
 		next(err);
 	}

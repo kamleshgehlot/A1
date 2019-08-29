@@ -33,7 +33,7 @@ const register = async function (req, res, next) {
       role: staffData.role,
       created_by: req.decoded.id,
       updated_by:req.decoded.id,
-      is_active: 1
+      is_active: 1,
 	};
 
 	try{

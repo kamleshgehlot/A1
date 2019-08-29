@@ -21,9 +21,9 @@ const Franchise = function (params) {
 
 
 
-const user = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT, `franchise_id`  INT, `director_id` INT, status bool not null DEFAULT FALSE, name VARCHAR(50) NOT NULL, `user_id` VARCHAR(20) NOT NULL, `password` BLOB NOT NULL, `token` VARCHAR(100) NULL, `account_id` VARCHAR(100) NULL, `designation` VARCHAR(50) NULL, `role_id` INT NOT NULL, `is_active` TINYINT NULL, `created_by` INT NULL, `created_at` timestamp null default current_timestamp, PRIMARY KEY (id));";
+const user = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT, `franchise_id`  INT, `director_id` INT, `status` TINYINT NOT NULL DEFAULT FALSE, `name` VARCHAR(50) NOT NULL, `user_id` VARCHAR(20) NOT NULL, `password` BLOB NOT NULL, `token` VARCHAR(100) DEFAULT NULL, `account_id` VARCHAR(100) DEFAULT NULL, `designation` VARCHAR(50) DEFAULT NULL, `role_id` INT NOT NULL, `is_active` TINYINT DEFAULT NULL, `created_by` INT DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp, PRIMARY KEY (`id`));";
 const role = "CREATE TABLE IF NOT EXISTS `role` (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(50) NOT NULL, `state` TINYINT NULL, `created_by` INT NOT NULL,`created_at` timestamp null default current_timestamp,PRIMARY KEY (id));";
-const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,role_id INT NOT NULL,state TINYINT NULL,created_by INT NOT NULL,created_at timestamp null default current_timestamp,PRIMARY KEY (id));";
+const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,role_id INT NOT NULL, is_active TINYINT NULL,created_by INT NOT NULL,created_at timestamp null default current_timestamp,PRIMARY KEY (id));";
 const staff = "CREATE TABLE IF NOT EXISTS `staff` ( `id` int(11) NOT NULL AUTO_INCREMENT, `franchise_user_id` INT NOT NULL, `first_name` varchar(20) NOT NULL,`last_name` varchar(20) DEFAULT NULL, `location` varchar(200) NOT NULL, `contact` varchar(10) NOT NULL, `email` varchar(50) NOT NULL, `pre_company_name` varchar(30) DEFAULT NULL, `pre_company_address` varchar(200) DEFAULT NULL, `pre_company_contact` varchar(10) DEFAULT NULL, `pre_position` varchar(100) DEFAULT NULL, `duration` varchar(80) DEFAULT NULL, `user_id` varchar(20) NOT NULL, `password` blob NOT NULL, `role` varchar(20) NULL, `employment_docs` varchar(500) DEFAULT NULL, `created_by` tinyint(4) NOT NULL, `updated_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const task = "CREATE TABLE IF NOT EXISTS `task` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL,  `task_description` varchar(255) DEFAULT NULL,  `is_active` TINYINT(5) NOT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
 const taskAssign = "CREATE TABLE IF NOT EXISTS `task_assign` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL, `assign_role` int(11) DEFAULT NULL, `assigned_to` int(11) DEFAULT NULL,  `start_date` varchar(25) DEFAULT NULL, `due_date` varchar(25) DEFAULT NULL,  `completion_date` VARCHAR(25) DEFAULT NULL, `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `status` int(11)  NOT NULL,  `is_active` TINYINT(5) NOT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
@@ -43,7 +43,7 @@ const order_status = "CREATE TABLE IF NOT EXISTS order_status (`id` int(11) NOT 
 
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
-Franchise.prototype.register = function (newUser) {
+Franchise.prototype.register =  function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
     const frachiseDbName = dbName.getFullName(dbName["prod"], that.city.substring(0, 2).toLowerCase() + that.suburb.substring(0, 2).toLowerCase());
@@ -60,128 +60,86 @@ Franchise.prototype.register = function (newUser) {
             connection.query('CREATE DATABASE IF NOT EXISTS ??', frachiseDbName, function (error, rows, fields) {
               if (!error) {
                 connection.changeUser({ database: frachiseDbName });
-                connection.query(user, function (err) {
-                  connection.query(role, function (err) {
-                    connection.query(userRole, function (err) {
-                      connection.query(staff, function (err) {
-                        connection.query(task, function (err) {
-                          connection.query(taskAssign, function (err) {
-                            connection.query(customer,function(err){
-                              connection.query(customer_income,function(err){
-                                connection.query(customer_state,function(err){
-                                connection.query(idProof,function(err){
-                                  connection.query(enquiry,function(err){
-                                    connection.query(orders,function(err){
-                                      connection.query(budget,function(err){
-                                        connection.query(payment_mode,function(err){
-                                          connection.query(flex_order,function(err){
-                                            connection.query(fixed_order,function(err){
-                                              connection.query(order_document,function(err){
-                                                connection.query(payment_status, function(err){
-                                                  connection.query(order_status, function(err){
+                  // connection.query(user,role,userRole,staff,task,taskAssign,customer,customer_income,customer_state,idProof,enquiry,orders,budget,payment_mode,flex_order,fixed_order,order_document,payment_status,order_status, function (err) {});
+                  let values1 = [
+                    [2, 'Admin', 1, 1],
+                    [3, 'CSR', 1, 1],
+                    [4, 'Finance', 1, 1],
+                    [5, 'Delivery', 1, 1],
+                    [6, 'HR', 1, 1]
+                  ]
+                  
+                  let idTypeData = [
+                    [1, 'Passport', 1, 1],
+                    [2, 'Driving Licence', 1, 1],
+                    [3, 'Medicare', 1, 1]
+                  ]
 
-                                  // connection.query(leads,function(err){
-                            if (err) {
-                              console.log('error in creating tables', err);
-                              return;
-                            }
+                  let cust_state = [
+                    [1, 'Active', 1],
+                    [2, 'Hold', 1],
+                    [3, 'Completed', 1]
+                  ]
 
-                            let values1 = [
-                              [2, 'Admin', 1, 1],
-                              [3, 'CSR', 1, 1],
-                              [4, 'Finance', 1, 1],
-                              [5, 'Delivery', 1, 1],
-                              [6, 'HR', 1, 1]
-                            ]
-                            
-                            let idTypeData = [
-                              [1, 'Passport', 1, 1],
-                              [2, 'Driving Licence', 1, 1],
-                              [3, 'Medicare', 1, 1]
-                            ]
+                  
+                  let pay_mode = [
+                    [1, 'EasyPay', 1],
+                    [2, 'Credit', 1],
+                    [3, 'Debit', 1],
+                    [4, 'PayPal', 1],
+                    [5, 'Cash', 1],
+                  ]
 
-                            let cust_state = [
-                              [1, 'Active', 1],
-                              [2, 'Hold', 1],
-                              [3, 'Completed', 1]
-                            ]
+                  let order_status_data = [
+                    [1, 'Created'],
+                    [2, 'In Progress'],
+                    [3, 'Awaiting Payment'],
+                    [4, 'Ready to Deliver'],
+                    [5, 'Under Delivery'], 
+                    [6, 'Delivered'],
+                    [7, 'Awaiting Remaining'],
+                    [8, 'Completed'],
+                  ]
+                  connection.query(role, function (err) {if(err){console.log('Role Table Error: ', err)}});                  
+                  connection.query(user, function (err) {if(err){console.log('user Table Error: ', err)}});
+                  connection.query(userRole, function (err) {if(err){console.log('UserRole Table Error: ', err)}});
+                  connection.query(staff, function (err) {if(err){console.log('Staff Table Error: ', err)}});
+                  connection.query(task, function (err) {if(err){console.log('Task Table Error: ', err)}});
+                  connection.query(taskAssign, function (err) {if(err){console.log('TaskAssign Table Error: ', err)}});
+                  connection.query(customer,function(err){if(err){console.log('Customer Table Error: ', err)}});
+                  connection.query(customer_income,function(err){if(err){console.log('Customer Income Table Error: ', err)}});
+                  connection.query(customer_state,function(err){if(err){console.log('Customer State Table Error: ', err)}});
+                  connection.query(idProof,function(err){if(err){console.log('IdProof Table Error: ', err)}});
+                  connection.query(enquiry,function(err){if(err){console.log('Enquiry Table Error: ', err)}});
+                  connection.query(orders,function(err){if(err){console.log('Order Table Error: ', err)}});
+                  connection.query(budget,function(err){if(err){console.log('Budget Table Error: ', err)}});
+                  connection.query(payment_mode,function(err){if(err){console.log('Payment Mode Table Error: ', err)}});
+                  connection.query(flex_order,function(err){if(err){console.log('Flex_order Table Error: ', err)}});
+                  connection.query(fixed_order,function(err){if(err){console.log('Fixed Order Table Error: ', err)}});
+                  connection.query(order_document,function(err){if(err){console.log('Order Document Table Error: ', err)}});
+                  connection.query(payment_status, function(err){if(err){console.log('Payment Status Table Error: ', err)}});
+                  connection.query(order_status, function(err){if(err){console.log('Order Status Table Error: ', err)}});
 
-                            
-                            let pay_mode = [
-                              [1, 'EasyPay', 1],
-                              [2, 'Credit', 1],
-                              [3, 'Debit', 1],
-                              [4, 'PayPal', 1],
-                              [5, 'Cash', 1],
-                            ]
+                  connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {if(error){console.log('Role Insert Time Error: ', error)}});
+                  connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) {if(error){console.log('IdType Insert Time Error: ', error)}});
+                  connection.query('INSERT INTO `customer_state`(`id`, `state_name`, `is_active`) VALUES ?', [cust_state], function (error, rows, fields) {if(error){console.log('Customer State Insert Time Error: ', error)}});
+                  connection.query('INSERT INTO `payment_mode`(`id`, `payment_mode`, `is_active`) VALUES ?', [pay_mode], function (error, rows, fields) {if(error){console.log('Payment Mode Insert Time Error: ', error)}});
+                  connection.query('INSERT INTO `order_status`(`id`, `order_status`) VALUES ?', [order_status_data], function (error, rows, fields) {if(error){console.log('Order Status Insert Time Error: ', error)}});
 
-                            let order_status_data = [
-                              [1, 'Created'],
-                              [2, 'In Progress'],
-                              [3, 'Awaiting Payment'],
-                              [4, 'Ready to Deliver'],
-                              [5, 'Under Delivery'], 
-                              [6, 'Delivered'],
-                              [7, 'Awaiting Remaining'],
-                              [8, 'Completed'],
-                            ]
+                  connection.changeUser({ database: dbName["prod"] });
+                  connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
 
-                           connection.changeUser({ database: frachiseDbName });
-                            connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {
-                              connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) {
-                                connection.query('INSERT INTO `customer_state`(`id`, `state_name`, `is_active`) VALUES ?', [cust_state], function (error, rows, fields) {
-                                  connection.query('INSERT INTO `payment_mode`(`id`, `payment_mode`, `is_active`) VALUES ?', [pay_mode], function (error, rows, fields) {
-                                    connection.query('INSERT INTO `order_status`(`id`, `order_status`) VALUES ?', [order_status_data], function (error, rows, fields) {
-                              if (error) {
-                                console.log("Error in inserting records...", error);
-                                reject(error);
-                              }
+                    if (!error) {
+                      let franchise_id = rows.insertId;
+                      resolve({ franchise_id: franchise_id, fdbname: frachiseDbName, isExist: 0 });
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });                             
 
-                              if (!error) {
-                                let values = [
-                                  [that.uid, that.password, that.name, that.city, that.city_code, that.suburb, that.abn, that.state, that.created_by, that.company_id]
-                                ]
-
-                                connection.changeUser({ database: dbName["prod"] });
-                                connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
-
-                                  if (!error) {
-                                    let franchise_id = rows.insertId;
-                                    resolve({ franchise_id: franchise_id });
-                                  } else {
-                                    console.log("Error...", error);
-                                    reject(error);
-                                  }
-                                });
-                              }
-
-                              connection.release();
-                              console.log('Process Complete %d', connection.threadId);
-                            });
-                          });
-                        });
-                          });
-                        });
-                      });
-                    });
-                        });
-                      });
-                      });
-                        });
-                      });
-                    });
-                    });
-                  });
-                    });
-                          });
-                        });
-                        });
-                      });
-                    });
-                    });
-                  });
-                  console.log('created a new table');
-                });
+                connection.release();
+                console.log('Process Complete %d', connection.threadId);
               } else {
                 console.log("Error...", error);
                 reject(error);
@@ -192,7 +150,7 @@ Franchise.prototype.register = function (newUser) {
             connection.query('SELECT id from franchise where fdbname = ?', frachiseDbName, function (error, rows, fields) {
               console.log("Frachise DB already exists............", rows);
               if (!error) {
-                resolve({ franchise_id: rows[0].id });
+                resolve({ franchise_id: rows[0].id, fdbname: frachiseDbName, isExist: 1 });
               } else {
                 console.log("Error...", error);
                 reject(error);
@@ -212,7 +170,6 @@ Franchise.prototype.register = function (newUser) {
     console.log("error....", error);
     throw error;
   });
-  // // });
 };
 
 
