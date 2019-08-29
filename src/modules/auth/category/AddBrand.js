@@ -116,7 +116,6 @@ export default function AddBrand(props) {
         check=true;
       }
       else{
-        
         setErrors('');
       }
       if(check===false){

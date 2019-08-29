@@ -50,12 +50,14 @@ export default function validate(values) {
   }
   if (!values.pre_position) {
     errors.pre_position = 'Position/JobRole is required';
+  } else if (!validString.test(values.first_name)) {
+    errors.first_name = 'First Name is invalid';
   }
   if (!values.duration) {
     errors.duration = 'Work Experience is required';
   } 
   if (!values.password) {
-    errors.password = 'Password is required';
+    errors.password = 'Click here to get Password';
   } 
   
   return errors;

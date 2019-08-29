@@ -148,7 +148,7 @@ export default function ProductList(props) {
 
   function handleClose() {
     setOpen(false);
-    handleReset(RESET_VALUES);
+    // handleReset(RESET_VALUES);
   }
 
   function handleClickEditOpen(response) {
@@ -353,7 +353,7 @@ export default function ProductList(props) {
         </Grid>
       </Grid>
       
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} updateProductList = {setCategoryListFn} />
+      {open? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} updateProductList = {setCategoryListFn} /> :null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={receivedData} updateProductList={setCategoryListFn}/> : null}
       {openArchived ?  <ArchivedList open={openArchived} handleArchivedClose={handleArchivedClose}  />: null}

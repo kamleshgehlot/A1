@@ -99,6 +99,11 @@ const useStyles = makeStyles(theme => ({
   input: {
     display: 'none',
   },
+  errorHeading: {
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
+    color:'red',
+  },
 }));
 
 
@@ -124,9 +129,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
   
-  const [errorMaincat, setErrorMaincat] = useState();
-  const [errorCat, setErrorCat] = useState();
-  const [errorSubcat, setErrorSubcat] = useState();
+  const [errorMaincat, setErrorMaincat] = useState('');
+  const [errorCat, setErrorCat] = useState('');
+  const [errorSubcat, setErrorSubcat] = useState('');
   const [mainOpen, setMainOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [subcatOpen, setSubCatOpen] = useState(false);
@@ -287,7 +292,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
       else{
         setErrorSubcat('')
       }
-      alert('Please select all category details');
+      // alert('Please select all category details');
     }
   }
   
@@ -336,7 +341,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
           <Paper className={classes.paper}>    
                 <Grid container spacing={5} className={classes.margin}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="maincat">Select Main Category</InputLabel>
+                    <InputLabel  className={errorMaincat?classes.errorHeading: classes.textsize} htmlFor="maincat">Select Main Category</InputLabel>
                     <Select
                         name="maincat"
                         onChange={handleSelectInputChange}
@@ -361,7 +366,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="cat">Select Category</InputLabel>
+                    <InputLabel  className={errorCat?classes.errorHeading: classes.textsize} htmlFor="cat">Select Category</InputLabel>
                     <Select
                         name="cat"
                         onChange={handleSelectCatInputChange}
@@ -387,7 +392,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="subcat">Select Sub Category</InputLabel>
+                    <InputLabel  className={errorSubcat?classes.errorHeading: classes.textsize} htmlFor="subcat">Select Sub Category</InputLabel>
                     <Select
                         name="subcat"
                         onChange={handleSelectSubcatInputChange}

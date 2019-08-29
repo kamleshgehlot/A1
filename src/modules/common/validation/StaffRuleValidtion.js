@@ -29,6 +29,9 @@ export default function validate(values) {
     errors.email = 'Email Address is invalid';
   }
 
+  if (!values.password) {
+    errors.password = 'Click here to get Password';
+  } 
   if (!values.position) {
     errors.position = 'Position is required';
   }

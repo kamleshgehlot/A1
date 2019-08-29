@@ -322,6 +322,8 @@ return (
                       name="password"
                       onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
+                      error={errors.password}
+                      helperText={errors.password}
                       fullWidth
                     />
                   </Grid>

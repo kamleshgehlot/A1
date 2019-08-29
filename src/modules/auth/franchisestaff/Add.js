@@ -101,6 +101,11 @@ const useStyles = makeStyles(theme => ({
   textsize:{
     fontSize: theme.typography.pxToRem(12),
   },
+  errorHeading: {
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
+    color:'red',
+  },
   drpdwn:{
     marginTop: theme.spacing(1),
   }
@@ -210,7 +215,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   }
   }
   };
-
+function close(){
+  
+  handleReset(RESET_VALUES);
+  handleClose(false);
+}
   // function validate(values) {
   //   let errors = {};
 
@@ -292,7 +301,7 @@ return (
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Staff Details</Typography>
+                <Typography className={(errors.first_name||errors.last_name||errors.location||errors.contact||errors.email)?classes.errorHeading:classes.heading}>Staff Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -422,7 +431,7 @@ return (
                 aria-controls=""
                 id="panel2a-header"
               >
-                <Typography className={classes.heading}>Previous Employer Details</Typography>
+                <Typography className={(errors.pre_company_name||errors.pre_company_address||errors.pre_company_contact||errors.pre_position||errors.duration)?classes.errorHeading:classes.heading}>Previous Employer Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -572,7 +581,7 @@ return (
                 aria-controls=""
                 id="panel3a-header"
               >
-                <Typography className={classes.heading}>Current Job Role</Typography>
+                <Typography className={(errors.password||assignError)?classes.errorHeading:classes.heading}>Current Job Role</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -660,7 +669,7 @@ return (
               <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
               Save
             </Button>}
-              <Button  variant="contained"   onClick={handleClose} color="primary" className={classes.button} >
+              <Button  variant="contained"   onClick={close} color="primary" className={classes.button} >
                 Close
               </Button>
               </Grid>

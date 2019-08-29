@@ -112,27 +112,63 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [role, setRole] = useState([]);
+ function validate(values) {
+   
+    let errors = {};
+    if (!values.task_description) {
+      errors.task_description = 'Task Description is required';
+    } 
+  
+    if (!values.assigned_to) {
+      errors.assigned_to = 'Assigned To is required';
+    } 
+    if (!values.assign_role) {
+      errors.assign_role = 'Assigned Role is required';
+    } 
+    
+    if (!values.due_date) {
+      errors.due_date = 'Due Date is required';
+    } 
+    
+    return errors;
+  };
 
   const addTaskMaster = async () => {
-    setpLoading(true);
-    setSavebtn(false);
-    const response = await Task.add({
-      franchise_id: franchiseId,
-      id: taskList.id,
-      task_id: taskList.task_id,
-      task_description:taskList.task_description,
-      assign_role:taskList.assign_role,
-      assigned_to:taskList.assigned_to,
-      status:taskList.status,
-      due_date:taskList.due_date,
-    });
-    handleSnackbarClick(true,'Task Updated Successfully');
-    // console.log('update======',response.taskList);
-    setTaskList(response.taskList);
-    setpLoading(false);
-    handleEditClose(false);
+    let check=false;
+    setIsSubmitting(true);
+    setErrors(validate(taskList));
+    if (Object.keys(errors).length === 0 && isSubmitting) {
+      check=false;
+    }
+    else {
+      check=true;
+    }
+  
+    console.log(check,isSubmitting)    
+      if(check===false){
+        console.log(check)
+        setpLoading(true);
+        setSavebtn(false);
+        const response = await Task.add({
+          franchise_id: franchiseId,
+          id: taskList.id,
+          task_id: taskList.task_id,
+          task_description:taskList.task_description,
+          assign_role:taskList.assign_role,
+          assigned_to:taskList.assigned_to,
+          status:taskList.status,
+          due_date:taskList.due_date,
+        });
+        handleSnackbarClick(true,'Task Updated Successfully');
+        // console.log('update======',response.taskList);
+        setTaskList(response.taskList);
+        setpLoading(false);
+        handleEditClose(false);
+      }
   };
 
   
@@ -211,6 +247,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
       try {
         const result = await FranchiseUsers.list();
         setFranchiseUsersList(result.franchiseUserList);
+        console.log('inputs----------hd----',inputs)
       } catch (error) {
         setIsError(true);
       }
@@ -315,6 +352,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 onChange={handleInputChange}
                                 fullWidth
                                 required
+                                error={errors.task_description}
+                                helperText={errors.task_description}
                                 type="text"
                                 multiline
                                 margin="dense"
@@ -384,6 +423,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 type="date"
                                 // placeholder="Franchise Name"
                                 margin="dense"
+                                error={errors.due_date}
+                                helperText={errors.due_date}
                               /> 
                             </StyledTableCell>
                             {/* <StyledTableCell> */}
@@ -414,6 +455,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 name="new_due_date" 
                                 value={taskList.new_due_date} 
                                 onChange={handleInputChange}
+                                error={errors.new_due_date}
+                                helperText={errors.new_due_date}
                                 fullWidth 
                                 required 
                                 type="date"  
