@@ -135,57 +135,66 @@ const forgotPassword = async function (req, res, next) {
   let params = {
     name: req.body.username,
   };
+
   const auth = new Auth(params);
   let result = {};
   let status = 201;
+
   try {
+    if(params.name.toLowerCase() === "admin") {
+      status = 500;
+      result.errorCode = status;
+      result.message = 'Please contact system administrator to reset password.';
+      res.status(status).send(result);
+    } else {
+      
     const user = await auth.forgotPassword();
-      // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
+    // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
 
-      console.log("user....************.", user)
-      // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
-      // console.log("decText....************.", decText)
+    console.log("user....************.", user)
+    // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
+    // console.log("decText....************.", decText)
 
-      if (user && user.length > 0) {
+    if (user && user.length > 0) {
 
-        // if(user[0].status === 0) {
-        //   status = 401;
-        //   result.errorCode = status;
-        //   result.message = `Account is not verified`;
-        // } else {
-        status = 200;
-        // Create a token
-        const mail = {
-          from: 'admin@rentronicsdev.saimrc.com',
-          to: user[0].email,
-          subject: 'Forgot Password',
-          text: 'forgot password ',
-          html: '<strong> password: </strong>' + user[0].password
+      // if(user[0].status === 0) {
+      //   status = 401;
+      //   result.errorCode = status;
+      //   result.message = `Account is not verified`;
+      // } else {
+      status = 200;
+      // Create a token
+      const mail = {
+        from: 'admin@rentronicsdev.saimrc.com',
+        to: user[0].email,
+        subject: 'Forgot Password',
+        text: 'forgot password ',
+        html: '<strong> password: </strong>' + user[0].password
+      }
+
+      trans.sendMail(mail, (err, info) => {
+        if (err) {
+          return console.log(err);
         }
 
-        trans.sendMail(mail, (err, info) => {
-          if (err) {
-            return console.log(err);
-          }
+        console.log('Message sent: %s', info.messageId);
+        // Preview only available when sending through an Ethereal account
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      });
 
-          console.log('Message sent: %s', info.messageId);
-          // Preview only available when sending through an Ethereal account
-          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        });
+      result.status = status;
+      result.message = `Email send successfully`;
 
-        result.status = status;
-        result.message = `Email send successfully`;
+      // }
 
-        // }
-
-        res.status(status).send(result);
-      } else {
-        status = 401;
-        result.errorCode = status;
-        result.message = 'Given User Name is not valid.';
-        res.status(status).send(result);
-      }
-      // });
+      res.status(status).send(result);
+    } else {
+      status = 401;
+      result.errorCode = status;
+      result.message = 'Given User Name is not valid.';
+      res.status(status).send(result);
+    }
+    // });
     // }).catch(err => {
     //   console.log("Error", err)
     //   status = 500;
@@ -193,7 +202,7 @@ const forgotPassword = async function (req, res, next) {
     //   result.message = 'Application Error, Please contact the administrator.';
     //   res.status(status).send(result);
     // });
-
+    }
   } catch (err) {
     next(err);
   }
