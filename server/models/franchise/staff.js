@@ -96,40 +96,49 @@ Staff.prototype.update = function () {
       }
 
       if (!error) {
-        connection.changeUser({ database: dbName["prod"] });
-        connection.query('select city from franchise where id = "' + that.franchise_id + '"', function (error, rows, fields) {
-          if (!error) {
+        // connection.changeUser({ database: dbName["prod"] });
+        // connection.query('select city from franchise where id = "' + that.franchise_id + '"', function (error, rows, fields) {
+        //   if (!error) {
             connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
-            that.employment_docs==='' ? 
+            if(that.employment_docs===''){ 
             // connection.query('update staff set first_name = "'+that.first_name+'", last_name = "'+that.last_name+'", location = "'+that.location+'", contact = "'+that.contact+'", email = "'+that.email+'", pre_company_name = "'+that.pre_company_name+'", pre_company_address = "'+that.pre_company_address+'", pre_company_contact = "'+that.pre_company_contact+'", pre_position = "'+that.pre_position+'", duration = "'+that.duration+'", role =  "'+that.role+'", employment_docs = "'+that.employment_docs+'" WHERE id = "'+that.id+'")', function (error, rows, fields) {
             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", updated_by = "'+that.updated_by+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
-                connection.query('update user set role_id = "'+that.role+'" WHERE id = "' + that.id + '"', function (error, rows, fields) { 
+
+                connection.query('select franchise_user_id as id from staff where id = "'+that.id+'"',function (error, rows, fields) {
                   if(!error){
-                    resolve(rows);
-                  }
-                  else {
-                    console.log("Error...", error);
-                    reject(error);
-                  }
-                });
+                  connection.query('update user set role_id = "'+that.role+'" WHERE id = "' + rows[0].id + '"', function (error, rows, fields) { 
+                    if(!error){
+                      resolve(rows);
+                    }
+                    else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
+                }
+              });
               } else {
                 console.log("Error...", error);
                 reject(error);
               }
             })
-            :
+             }else{
             connection.query('update staff set first_name = "' + that.first_name + '", last_name = "' + that.last_name + '", location = "' + that.location + '", contact = "' + that.contact + '", email = "' + that.email + '", pre_company_name = "' + that.pre_company_name + '", pre_company_address = "' + that.pre_company_address + '", pre_company_contact = "' + that.pre_company_contact + '", pre_position = "' + that.pre_position + '", duration = "' + that.duration + '", role =  "' + that.role + '", employment_docs = "' + that.employment_docs + '", updated_by = "'+that.updated_by+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
-                connection.query('update user set role_id = "'+that.role+'" WHERE id = "' + that.id + '"', function (error, rows, fields) { 
-                  if(!error){
-                    resolve(rows);
-                  }
-                  else {
-                    console.log("Error...", error);
-                    reject(error);
-                  }
+                connection.query('select franchise_user_id as id from staff where id = "'+that.id+'"',function (error, rows, fields) {
+                if(!error){
+                  connection.query('update user set role_id = "'+that.role+'" WHERE id = "' + rows[0].id + '"', function (error, rows, fields) { 
+                    if(!error){
+                      resolve(rows);
+                    }
+                    else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
+                }
                 });
               } else {
                 console.log("Error...", error);
@@ -137,8 +146,9 @@ Staff.prototype.update = function () {
               }
             })
           }
-        });
-      }
+        }
+        // });
+      // }
       else {
         console.log("Error...", error);
         reject(error);
