@@ -290,7 +290,7 @@ export default function Franchise(props) {
                           expanded={expanded === data.director_id}
                           onChange={handleChange(data.director_id)}
                         >
-                        {console.log('value----==',value)}
+                        {/* {console.log('value----==',value)} */}
                           <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls=""

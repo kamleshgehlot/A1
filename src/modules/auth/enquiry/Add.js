@@ -143,6 +143,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   
 
   function handleMainCategory(event) {
+    setInput('main_category',event.target.value)
     setMainCategory(event.target.value);
     setCategoryList('');
     setSubCategoryList('');    
@@ -340,7 +341,7 @@ return (
                     <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
                       // multiple
-                      value={mainCategory}
+                      value={inputs.main_category}
                       onChange={handleMainCategory}
                       name= 'main_category'
                       id= 'main_category'

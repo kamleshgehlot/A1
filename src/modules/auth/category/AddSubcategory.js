@@ -116,10 +116,10 @@ export default function AddSubcategory(props) {
     const validString = /^[a-zA-Z\s]+$/;
   
     if (!inputs.subcategory) 
-    {setErrorSubcat('sub category required');
+    {setErrorSubcat('Sub category required');
     check=true;
   } else if (!validString.test(inputs.subcategory)) 
-    {setErrorSubcat('sub category is invalid');
+    {setErrorSubcat('Sub category is invalid');
     check=true;}
     else{
       setErrorSubcat('')

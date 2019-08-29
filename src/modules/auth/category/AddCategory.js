@@ -118,20 +118,20 @@ export default function AddCategory(props) {
     let check=false;
     const validString = /^[a-zA-Z\s]+$/;
     if (!inputs.category) 
-      {setErrorCat('category required');
+      {setErrorCat('Category required');
       check=true;
     } else if (!validString.test(inputs.category)) 
-      {setErrorCat('category is invalid');
+      {setErrorCat('Category is invalid');
       check=true;}
       else{
         setErrorCat('')
       }
       
     if (!inputs.subcategory) 
-    {setErrorSubcat('sub category required');
+    {setErrorSubcat('Sub category required');
     check=true;
   } else if (!validString.test(inputs.subcategory)) 
-    {setErrorSubcat('sub category is invalid');
+    {setErrorSubcat('Sub category is invalid');
     check=true;}
     else{
       setErrorSubcat('')

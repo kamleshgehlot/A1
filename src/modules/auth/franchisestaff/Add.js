@@ -224,6 +224,13 @@ function close(){
   //   return errors;
   // };
 
+  
+  useEffect(() => {
+    
+    inputs['password']=='' ? 
+    setInput('password', GeneratePassword())
+    :''
+  }, []);
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addFranchiseStaff,
@@ -343,7 +350,6 @@ return (
                       error={errors.last_name}
                       helperText={errors.last_name}
                       // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -539,7 +545,6 @@ return (
                       onBlur={handleNameBlurChange}
                       error={errors.duration}
                       helperText={errors.duration}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -561,7 +566,6 @@ return (
                       value={inputs.employment_docs} 
                       onChange={handleInputChange}
                       // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -599,7 +603,6 @@ return (
                       value={inputs.user_id} 
                       // onChange={handleInputChange}
                       // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       disabled
                       fullWidth
@@ -617,15 +620,15 @@ return (
                       id="password"
                       name="password"
                       // label="Password"
-                      onFocus={handlePasswordBlurChange}
+                      // onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
-                      error={errors.password}
-                      helperText={errors.password}
+                      // error={errors.password}
+                      // helperText={errors.password}
                       required
                       fullWidth
                       // error={errors.password}
                       // helperText={errors.password ? errors.password : ' '}
-                      // disabled
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

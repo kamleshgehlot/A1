@@ -125,29 +125,29 @@ export default function AddMainCategory(props) {
     let check=false;
     const validString = /^[a-zA-Z\s]+$/;
     if (!inputs.maincategory) 
-      {setErrorMaincat('main category required');
+      {setErrorMaincat('Main category required');
       check=true;
     } else if (!validString.test(inputs.maincategory)) 
-      {setErrorMaincat('main category is invalid');
+      {setErrorMaincat('Main category is invalid');
       check=true;}
       else{
         setErrorMaincat('')
       }
     if (!inputs.category) 
-      {setErrorCat('category required');
+      {setErrorCat('Category required');
       check=true;
     } else if (!validString.test(inputs.category)) 
-      {setErrorCat('category is invalid');
+      {setErrorCat('Category is invalid');
       check=true;}
       else{
         setErrorCat('')
       }
       
     if (!inputs.subcategory) 
-    {setErrorSubcat('sub category required');
+    {setErrorSubcat('Sub category required');
     check=true;
   } else if (!validString.test(inputs.subcategory)) 
-    {setErrorSubcat('sub category is invalid');
+    {setErrorSubcat('Sub category is invalid');
     check=true;}
     else{
       setErrorSubcat('')
