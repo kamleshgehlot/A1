@@ -12,7 +12,7 @@ const getnewid = async function(req, res, next) {
 
 const getAll = async function(req, res, next) {
   try {
-    const enquiryList = await new Enquiry({user_id: req.decoded.user_id});
+    const enquiryList = await new Enquiry({user_id: req.decoded.user_id}).getAll();
 
     res.send({ enquiryList });
   } catch (error) {

@@ -123,6 +123,11 @@ const useStyles = makeStyles(theme => ({
     // margin: theme.spacing(1, 0),
     fontSize: theme.typography.pxToRem(12),
   },
+  errorHeading: {
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
+    color:'red',
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -314,7 +319,7 @@ return (
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Personal Details</Typography>
+                <Typography className={(errors.customer_name||errors.address||errors.city||errors.postcode||errors.telephone||errors.mobile||errors.email||errors.dob||errors.id_type||errors.id_number||inputs.expiry_date)?classes.errorHeading : classes.heading}>Personal Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -422,6 +427,9 @@ return (
                       error={errors.telephone}
                       helperText={errors.telephone}
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -443,6 +451,9 @@ return (
                       error={errors.mobile}
                       helperText={errors.mobile}
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -715,8 +726,8 @@ return (
                       type="text"
                       value={inputs.alt_c1_address} 
                       onChange={handleInputChange}
-                      error={errors.alt_c1_name}
-                      helperText={errors.alt_c1_name}
+                      error={errors.alt_c1_address}
+                      helperText={errors.alt_c1_address}
                       required
                       fullWidth
                     />
@@ -740,6 +751,9 @@ return (
                       helperText={errors.alt_c1_contact}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
               
@@ -827,6 +841,9 @@ return (
                       error={errors.alt_c2_contact}
                       helperText={errors.alt_c2_contact}
                       // required
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                       fullWidth
                     />
                   </Grid>

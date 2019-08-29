@@ -101,6 +101,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
 
   const classes = useStyles();
   const [assignInterest, setAssignInterest] = React.useState([]);
+  const [assignError, setAssignError] = React.useState();
   const [productList, setProductList] = useState([]);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
@@ -162,6 +163,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   }
 
   function handleCategory(event) {
+    setInput('category',event.target.value)
     setCategory(event.target.value);
     setSubCategoryList('');    
     setProductList('');
@@ -178,7 +180,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     fetchData();
   }
   function handleSubCategory(event) {
-    console.log(event.target.value)
+    setInput('sub_category',event.target.value)
     setSubCategory(event.target.value);
     setProductList('');
     setAssignInterest('');
@@ -203,37 +205,36 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   }
   
   const addEnquiry = async () => {
-
-   
-// setInput('interested_product_id',assignInterest.join())
-// console.log('convert-----',convert);
-if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.contact != '' && assignInterest != '' ){
-    setpLoading(true);
-    setSavebtn(false);
-    const response = await EnquiryAPI.postEnquiry({
-      enquiry_id : inputs.enquiry_id,
-      customer_name: inputs.customer_name,
-      contact: inputs.contact,
-      interested_product_id: assignInterest,
-      is_active: 1,
-      converted_to:0,
-      convert_by_lead:convert
-    });
+    // setInput('interested_product_id',assignInterest.join())
+    // console.log('convert-----',convert);
+    // if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.contact != '' && assignInterest != '' ){
+      if(assignInterest!=''){
+      setpLoading(true);
+      setSavebtn(false);
+      const response = await EnquiryAPI.postEnquiry({
+        enquiry_id : inputs.enquiry_id,
+        customer_name: inputs.customer_name,
+        contact: inputs.contact,
+        interested_product_id: assignInterest,
+        is_active: 1,
+        converted_to:0,
+        convert_by_lead:convert
+      });
         // console.log('sahgdaud--',response);
 
-    // assignInterest.length = 0;
-    setAssignInterest('');
-    handleSnackbarClick(true);
-    setEnquiryList(response.enquiryList);
-    handleReset(RESET_VALUES);
-    setpLoading(false);
-    setSavebtn(true);
-    handleClose(false);
-  }
-  else{
-    alert('Select all mandetory fields..');
-  }
-};
+      // assignInterest.length = 0;
+      setAssignInterest('');
+      handleSnackbarClick(true);
+      setEnquiryList(response.enquiryList);
+      handleReset(RESET_VALUES);
+      setpLoading(false);
+      setSavebtn(true);
+      handleClose(false);
+    }
+    else{
+      setAssignError('error')
+    }
+  };
 
   // function validate(values) {
   //   let errors = {};
@@ -346,6 +347,8 @@ return (
                       name= 'main_category'
                       id= 'main_category'
                       className={classes.drpdwn}
+                      error={errors.main_category}
+                      helperText={errors.main_category}
                       // label='customer'
                       fullWidth
                       required
@@ -361,7 +364,7 @@ return (
                     <InputLabel className={classes.textsize} htmlFor="category">Category*</InputLabel>
                     <Select
                       // multiple
-                      value={category}
+                      value={inputs.category}
                       onChange={handleCategory}
                       name= 'category'
                       id= 'category'
@@ -370,6 +373,8 @@ return (
                       className={classes.drpdwn}
                       required
                       disabled = {mainCategory ==""}
+                      error={errors.category}
+                      helperText={errors.category}
                     >    
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
@@ -382,7 +387,7 @@ return (
                     <InputLabel className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
                     <Select
                       // multiple
-                      value={subCategory}
+                      value={inputs.sub_category}
                       onChange={handleSubCategory}
                       name= 'sub_category'
                       id= 'sub_category'
@@ -391,6 +396,8 @@ return (
                       fullWidth
                       required
                       disabled = {category ==""}
+                      error={errors.sub_category}
+                      helperText={errors.sub_category}
                     >    
                     {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
                       return(
@@ -414,6 +421,7 @@ return (
                       disabled = {subCategory ==""}
                       fullWidth
                       required
+                      error={assignError}
                     >
                       {
                         (productList.length != '' ? productList : []).map((data)=> {

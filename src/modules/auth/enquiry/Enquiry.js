@@ -112,6 +112,22 @@ export default function Enquiry() {
   }));
   const classes = useStyles();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await EnquiryAPI.getAll();
+        setEnquiryList(result.enquiryList);
+        console.log('enquiryList',result.enquiryList)
+        const result1 = await Category.productlist();
+        setProductList(result1.productList);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+    
+  }, []);
+
   function handleClickOpen() {
     setOpen(true);
   }
@@ -179,22 +195,6 @@ console.log('res=---',response);
     fetchData();
   }
   
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await EnquiryAPI.getAll();
-        setEnquiryList(result.enquiryList);
-
-        const result1 = await Category.productlist();
-        setProductList(result1.productList);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-    
-  }, []);
 
 
   
