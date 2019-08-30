@@ -33,6 +33,10 @@ taskRouter.route('/last').get(validateToken, Task.last);
 taskRouter.route('/completedList').get(validateToken, Task.completedList);
 taskRouter.route('/deleteTask').post(validateToken, Task.deleteTask);
 taskRouter.route('/reschedule').post(validateToken, Task.reschedule);
+taskRouter.route('/rescheduledtasklist').get(validateToken, Task.rescheduledTaskList);
+taskRouter.route('/assigntoother').get(validateToken, Task.assignToOther);
+
+
 // staff task list
 taskRouter.route('/staffTasks').get(validateToken, Task.staffTasks);
 taskRouter.route('/staffUpdate').post(validateToken, upload.array('avatar'),  Task.staffUpdate);
