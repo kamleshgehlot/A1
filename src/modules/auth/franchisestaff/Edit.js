@@ -178,7 +178,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
       setFranchiseList(response.staffList);
       console.log('response.staffList----',response)
       // handleReset(RESET_VALUES);
-      setSavebtn(false);
+      // setSavebtn(false);
       setSavebtn(true);
       handleEditClose(false);
     }

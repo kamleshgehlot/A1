@@ -301,7 +301,7 @@ export default function Staff(props) {
           </TabPanel>
           </Grid>
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} positions={position}/>
+      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} positions={position}/> :null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={staffData} setFranchiseList={setFranchiseListFn} positions={position} /> : null}
           

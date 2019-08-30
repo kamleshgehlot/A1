@@ -225,12 +225,12 @@ function close(){
   // };
 
   
-  useEffect(() => {
+  // useEffect(() => {
     
-    inputs['password']=='' ? 
-    setInput('password', GeneratePassword())
-    :''
-  }, []);
+  //   inputs['password']=='' ? 
+  //   setInput('password', GeneratePassword())
+  //   :''
+  // }, []);
  const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addFranchiseStaff,
@@ -620,15 +620,15 @@ return (
                       id="password"
                       name="password"
                       // label="Password"
-                      // onFocus={handlePasswordBlurChange}
+                      onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
-                      // error={errors.password}
-                      // helperText={errors.password}
+                      error={errors.password}
+                      helperText={errors.password}
                       required
                       fullWidth
                       // error={errors.password}
                       // helperText={errors.password ? errors.password : ' '}
-                      disabled
+                      // disabled
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

@@ -25,15 +25,15 @@ export default function validate(values) {
   }
 
   if (!values.telephone) {
-    errors.telephone = 'Telephone is required';
+    errors.telephone = 'Telephone number is required';
   } else if (!validNumber.test(values.telephone)) {
-    errors.telephone = 'Telephone is invalid';
+    errors.telephone = 'Telephone number is invalid';
   }
   
   if (!values.mobile) {
-    errors.mobile = 'Mobile is required';
+    errors.mobile = 'Mobile number is required';
   } else if (!validNumber.test(values.mobile)) {
-    errors.mobile = 'Mobile is invalid';
+    errors.mobile = 'Mobile number is invalid';
   }
   
   if (!values.email) {
@@ -42,17 +42,22 @@ export default function validate(values) {
     errors.email = 'Email Address is invalid';
   }
 
-  if (!values.gender) {
-    errors.gender = 'Gender is required';
-  }
+  // if (!values.gender) {
+  //   errors.gender = 'Gender is required';
+  // }
   if (!values.dob) {
     errors.dob = 'Date Of Birth is required';
   }
   
-  if (!values.id_type) {
+  if (values.id_type=='' ) {
     errors.id_type = 'ID Proof is required';
   }
-  
+  if(values.id_type===0){
+    errors.id_type =''
+    if (!values.other_id_type_value) {
+      errors.other_id_type_value = 'ID Type is required';
+    }
+  }
   if (!values.id_number) {
     errors.id_number = 'ID is required';
   }
@@ -71,9 +76,9 @@ export default function validate(values) {
   } 
 
   if (!values.alt_c1_contact) {
-    errors.alt_c1_contact = 'Contact is required';
+    errors.alt_c1_contact = 'Contact number is required';
   } else if (!validNumber.test(values.alt_c1_contact)) {
-    errors.alt_c1_contact = 'Contact is invalid';
+    errors.alt_c1_contact = 'Contact number is invalid';
   }
   
   if (!values.alt_c1_relation) {
@@ -106,8 +111,6 @@ export default function validate(values) {
   
   if (!values.employer_name) {
     errors.employer_name = 'Employer Name is required';
-  } else if (!validString.test(values.employer_name)) {
-    errors.employer_name = 'Employer Name is invalid';
   }
   
   if (!values.employer_address) {
@@ -115,9 +118,9 @@ export default function validate(values) {
   } 
   
   if (!values.employer_telephone) {
-    errors.employer_telephone = 'Contact is required';
+    errors.employer_telephone = 'Telephone number is required';
   } else if (!validNumber.test(values.employer_telephone)) {
-    errors.employer_telephone = 'Contact is invalid';
+    errors.employer_telephone = 'Telephone number is invalid';
   }
 
   

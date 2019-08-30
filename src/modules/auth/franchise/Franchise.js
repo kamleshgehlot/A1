@@ -370,7 +370,7 @@ export default function Franchise(props) {
           </TabPanel>
           
         </Grid>
-      <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} setFranchiseId={setFranchiseIdFn}/>
+      {open? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setFranchiseList={setFranchiseListFn} setFranchiseId={setFranchiseIdFn}/> :null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={franchiseData} setFranchiseList={setFranchiseListFn}  setFranchiseId={setFranchiseIdFn}/> : null}
     </div>

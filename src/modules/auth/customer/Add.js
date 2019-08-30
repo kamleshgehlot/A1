@@ -26,6 +26,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import validate from '../../common/validation/CustomerRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -51,6 +54,7 @@ const RESET_VALUES = {
   expiry_date : '',
   is_adult :'',
   id_proof : '',
+  other_id_type_value:'',
 
   alt_c1_name:'',
   alt_c1_address:'',
@@ -202,8 +206,29 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
 
     function handleOtherIdType(event){
       setOtherIdTypeValue(event.target.value)
+      setInput('other_id_type_value',event.target.value)
     }
   
+    function handleDate(date){
+      let date1 = new Date(date);
+      let yy = date1.getFullYear();
+      let mm = date1.getMonth() + 1 ;
+      let dd = date1.getDate();
+      if(mm< 10){ mm = '0' + mm.toString()}
+      if(dd< 10){ dd = '0' + dd.toString()}
+      let fullDate = yy+ '-'+mm+'-'+dd;
+      handleInputChange({target:{name: 'dob', value: fullDate}})
+    }
+    function handleExpiryDate(date){
+      let date1 = new Date(date);
+      let yy = date1.getFullYear();
+      let mm = date1.getMonth() + 1 ;
+      let dd = date1.getDate();
+      if(mm< 10){ mm = '0' + mm.toString()}
+      if(dd< 10){ dd = '0' + dd.toString()}
+      let fullDate = yy+ '-'+mm+'-'+dd;
+      handleInputChange({target:{name: 'expiry_date', value: fullDate}})
+    }
 
   const addCustomer = async () => {
     if(inputs.email === chkEmail || inputs.employer_email===chkEmail){
@@ -319,7 +344,7 @@ return (
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={(errors.customer_name||errors.address||errors.city||errors.postcode||errors.telephone||errors.mobile||errors.email||errors.dob||errors.id_type||errors.id_number||inputs.expiry_date)?classes.errorHeading : classes.heading}>Personal Details</Typography>
+                <Typography className={(errors.customer_name||errors.address||errors.city||errors.postcode||errors.telephone||errors.mobile||errors.email||errors.dob||errors.id_type||errors.id_number||errors.expiry_date)?classes.errorHeading : classes.heading}>Personal Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -406,6 +431,9 @@ return (
                       helperText={errors.postcode}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,6)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -513,7 +541,26 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth</InputLabel>
-                    <TextField
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="dob"
+                                name="dob"
+                                format="dd/MM/yyyy"
+                                disableFuture = {true}
+                                value={inputs.dob}
+                                fullWidth 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
+                                onChange={handleDate}
+                                error={errors.dob}
+                                helperText={errors.dob}                               
+                              />
+                            </MuiPickersUtilsProvider>
+                    {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -530,7 +577,7 @@ return (
                       helperText={errors.dob}
                       required
                       fullWidth
-                    />
+                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
@@ -574,10 +621,12 @@ return (
                       name="otherIdTypeValue"
                       // label="Enter type of ID Proof"
                       type="text"
-                      value={otherIdTypeValue} 
+                      value={inputs.other_id_type_value} 
                       onChange={handleOtherIdType}
                       required
                       disabled = {otherIdType}
+                      error={errors.other_id_type_value}
+                      helperText={errors.other_id_type_value}
                       fullWidth
                     />
                     </Grid>
@@ -593,19 +642,38 @@ return (
                       margin="dense"
                       id="id_number"
                       name="id_number"
-                      error={errors.id_number}
-                      helperText={errors.id_number}
                       // label="ID#"
                       type="text"
                       value={inputs.id_number} 
                       onChange={handleInputChange}
+                      error={errors.id_number}
+                      helperText={errors.id_number}
                       // required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="expiry_date">Expiry Date</InputLabel>
-                    <TextField
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="expiry_date"
+                        name="expiry_date"
+                        format="dd/MM/yyyy"
+                        disablePast = {true}
+                        value={inputs.expiry_date}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        onChange={handleExpiryDate}
+                        error={errors.expiry_date}
+                        helperText={errors.expiry_date}                               
+                      />
+                    </MuiPickersUtilsProvider>
+                    {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -622,7 +690,7 @@ return (
                       fullWidth
                       error={errors.expiry_date}
                       helperText={errors.expiry_date}
-                    />
+                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="is_adult">Over 18 Years?</InputLabel>
@@ -683,7 +751,7 @@ return (
                 aria-controls=""
                 id="panel2a-header"
               >
-                <Typography className={classes.heading}>Alternate Contact Details</Typography>
+                <Typography className={(errors.alt_c1_name||errors.alt_c1_address||errors.alt_c1_contact||errors.alt_c1_relation||errors.alt_c2_name||errors.alt_c2_address||errors.alt_c2_contact||errors.alt_c2_relation)?classes.errorHeading :classes.heading}>Alternate Contact Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -882,7 +950,7 @@ return (
                 aria-controls=""
                 id="panel3a-header"
               >
-                <Typography className={classes.heading}>Income Details</Typography>
+                <Typography className={(errors.employer_name || errors.employer_address || errors.employer_telephone || errors.employer_email || errors.employer_tenure)?classes.errorHeading : classes.heading}>Income Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -945,6 +1013,9 @@ return (
                       onChange={handleInputChange}
                       error={errors.employer_telephone}
                       helperText={errors.employer_telephone}
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                       required
                       fullWidth
                     />
