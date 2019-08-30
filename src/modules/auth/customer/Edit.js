@@ -26,6 +26,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import validate from '../../common/validation/CustomerRuleValidation';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -64,12 +68,12 @@ const RESET_VALUES = {
   employer_telephone:'',
   employer_email:'',
   employer_tenure:'',
-  updated_by : '',
+
   state: '',
+
   // is_active:1,
   // created_by: 1,
 };
-
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
@@ -116,6 +120,11 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     fontSize: theme.typography.pxToRem(12),
   },
+  errorHeading: {
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
+    color:'red',
+  },
   group: {
     fontSize: theme.typography.pxToRem(12),
   },
@@ -126,16 +135,16 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleEditClose, handleSnackbarClick, inputs, setCustomerList}) {
+export default function Edit({ open, handleEditClose, handleSnackbarClick, inputValues, setCustomerList}) {
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [customerList, setDataCustomerList] = React.useState(inputs);
+  const [customerList, setDataCustomerList] = React.useState(inputValues);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
-  const [otherIdType, setOtherIdType] = useState(inputs.id_type ===0 ? false : true);
-  const [otherIdTypeValue, setOtherIdTypeValue] = useState(inputs.other_id_type);
+  const [otherIdType, setOtherIdType] = useState(inputValues.id_type ===0 ? false : true);
+  const [otherIdTypeValue, setOtherIdTypeValue] = useState(inputValues.other_id_type);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
@@ -143,9 +152,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
-  
- 
   
   useEffect(() => {
     const fetchData = async () => {
@@ -165,45 +171,43 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
 
 
   const editCustomer = async (e) => {
-      e.preventDefault();
-
       setpLoading(true);
       setSavebtn(false);
       const data = {
-      id: customerList.id,
-      customer_name : customerList.customer_name,
-      address : customerList.address,
-      city : customerList.city,
-      postcode : customerList.postcode,
-      telephone : customerList.telephone,  
-      mobile : customerList.mobile,
-      email : customerList.email,
-      gender : customerList.gender,
-      is_working : customerList.is_working,
-      dob : customerList.dob,
-      id_type :  customerList.id_type,
-      id_number:  customerList.id_number,
-      expiry_date :  customerList.expiry_date,
-      is_adult : customerList.is_adult,
-      id_proof :  customerList.id_proof,
+      id: inputs.id,
+      customer_name : inputs.customer_name,
+      address : inputs.address,
+      city : inputs.city,
+      postcode : inputs.postcode,
+      telephone : inputs.telephone,  
+      mobile : inputs.mobile,
+      email : inputs.email,
+      gender : inputs.gender,
+      is_working : inputs.is_working,
+      dob : inputs.dob,
+      id_type :  inputs.id_type,
+      id_number:  inputs.id_number,
+      expiry_date :  inputs.expiry_date,
+      is_adult : inputs.is_adult,
+      id_proof :  inputs.id_proof,
 
-      alt_c1_name: customerList.alt_c1_name,
-      alt_c1_address: customerList.alt_c1_address,
-      alt_c1_contact: customerList.alt_c1_contact,
-      alt_c1_relation: customerList.alt_c1_relation,
-      alt_c2_name:  customerList.alt_c2_name,
-      alt_c2_address:  customerList.alt_c2_address,
-      alt_c2_contact: customerList.alt_c2_contact,
-      alt_c2_relation: customerList.alt_c2_relation,
+      alt_c1_name: inputs.alt_c1_name,
+      alt_c1_address: inputs.alt_c1_address,
+      alt_c1_contact: inputs.alt_c1_contact,
+      alt_c1_relation: inputs.alt_c1_relation,
+      alt_c2_name:  inputs.alt_c2_name,
+      alt_c2_address:  inputs.alt_c2_address,
+      alt_c2_contact: inputs.alt_c2_contact,
+      alt_c2_relation: inputs.alt_c2_relation,
 
-      employer_name: customerList.employer_name,
-      employer_address: customerList.employer_address,
-      employer_telephone: customerList.employer_telephone,
-      employer_email: customerList.employer_email,
-      employer_tenure: customerList.employer_tenure,
+      employer_name: inputs.employer_name,
+      employer_address: inputs.employer_address,
+      employer_telephone: inputs.employer_telephone,
+      employer_email: inputs.employer_email,
+      employer_tenure: inputs.employer_tenure,
 
-      is_active: customerList.is_active,
-      state : customerList.state,
+      is_active: inputs.is_active,
+      state : inputs.state,
       // updated_by : userId.userId,
 
       other_id_type: otherIdTypeValue,
@@ -222,17 +226,16 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
     
     // handleSnackbarClick(true);
     setCustomerList(response.customerList);
-    // handleReset(RESET_VALUES);
     setpLoading(false);
     setSavebtn(true);
     handleEditClose(false);
   };
 
 
-const handleInputChange = event => {
-  const { name, value } = event.target
-  setDataCustomerList({ ...customerList, [name]: value })
-}
+// const handleInputChange = event => {
+//   const { name, value } = event.target
+//   setDataCustomerList({ ...customerList, [name]: value })
+// }
 
 function handleIdType(event){
   if(event.target.value===0){
@@ -243,13 +246,40 @@ function handleIdType(event){
   }
   setDataCustomerList({...customerList,  id_type: event.target.value});
   }
-
+  
+  function handleDate(date){
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    handleInputChange({target:{name: 'dob', value: fullDate}})
+  }
+  function handleExpiryDate(date){
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    handleInputChange({target:{name: 'expiry_date', value: fullDate}})
+  }
   function handleOtherIdType(event){
     setOtherIdTypeValue(event.target.value)
   }
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    editCustomer,
+    validate
+  ); 
+  useEffect(() => {
+    setInputsAll(inputValues);
+  }, []);
 
-
-return (
+  return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form > 
@@ -282,9 +312,10 @@ return (
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Personal Details</Typography>
+                <Typography className={(errors.customer_name||errors.address||errors.city||errors.postcode||errors.telephone||errors.mobile||errors.email||errors.dob||errors.id_type||errors.id_number||errors.expiry_date)?classes.errorHeading : classes.heading}>Personal Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
+                {/* {console.log(errors.customer_name,errors.address,errors.city,errors.postcode,errors.telephone,errors.mobile,errors.email,errors.dob,errors.id_type,errors.id_number,errors.expiry_date)} */}
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="first_name">Full Name *</InputLabel>
@@ -297,8 +328,10 @@ return (
                       id="customer_name"
                       name="customer_name"
                       // label="Full Name"
-                      value={customerList.customer_name}
+                      value={inputs.customer_name}
                       onChange={handleInputChange}
+                      error={errors.customer_name}
+                      helperText={errors.customer_name}
                       fullWidth
                       required
                       type="text"
@@ -319,8 +352,10 @@ return (
                       name="address"
                       // label="Address"
                       type="text"
-                      value={customerList.address} 
+                      value={inputs.address} 
                       onChange={handleInputChange}
+                      error={errors.address}
+                      helperText={errors.address}
                       required
                       fullWidth
                     />
@@ -338,8 +373,10 @@ return (
                       name="city"
                       // label="City"
                       type="text"
-                      value={customerList.city} 
+                      value={inputs.city} 
                       onChange={handleInputChange}
+                      error={errors.city}
+                      helperText={errors.city}
                       required
                       fullWidth
                     />
@@ -357,9 +394,14 @@ return (
                       name="postcode"
                       // label="Postcode"
                       type="number"
-                      value={customerList.postcode}
+                      value={inputs.postcode}
                       onChange={handleInputChange}
+                      error={errors.postcode}
+                      helperText={errors.postcode}
                       required
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,6)
+                    }}
                       fullWidth
                     />
                   </Grid>
@@ -376,10 +418,15 @@ return (
                       name="telephone"
                       // label="Telephone"
                       type="number"
-                      value={customerList.telephone} 
+                      value={inputs.telephone} 
                       onChange={handleInputChange}
-                      required= {customerList.mobile==='' ? true : false}
+                      error={errors.telephone}
+                      helperText={errors.telephone}
+                      required= {inputs.mobile==='' ? true : false}
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -395,10 +442,15 @@ return (
                       name="mobile"
                       // label="Mobile"
                       type="number"
-                      value={customerList.mobile} 
+                      value={inputs.mobile} 
                       onChange={handleInputChange}
-                      required = {customerList.telephone===''?true : false}
+                      required = {inputs.telephone===''?true : false}
+                      error={errors.mobile}
+                      helperText={errors.mobile}
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -414,8 +466,10 @@ return (
                       name="email"
                       // label="Email Id"
                       type="email"
-                      value={customerList.email} 
+                      value={inputs.email} 
                       onChange={handleInputChange}
+                      error={errors.email}
+                      helperText={errors.email}
                       required
                       disabled
                       fullWidth
@@ -428,15 +482,13 @@ return (
                       aria-label="Gender"
                       name="gender"
                       className={classes.group}
-                      value={customerList.gender}
+                      value={inputs.gender}
                       onChange={handleInputChange}
                       row
                     >
-                      <FormControlLabel labelPlacement="start" value="female" 
-            control={<Radio color="primary" />}
+                      <FormControlLabel labelPlacement="start" value="female" control={<Radio color="primary" />}
                      label="Female" />
-                      <FormControlLabel labelPlacement="start" value="male" 
-            control={<Radio color="primary" />}
+                      <FormControlLabel labelPlacement="start" value="male"  control={<Radio color="primary" />}
                      label="Male" />
                       {/* <FormControlLabel labelPlacement="start" value="transgender" 
             control={<Radio color="primary" />}.
@@ -450,21 +502,19 @@ return (
                       aria-label="is_working" 
                       name="is_working" 
                       className={classes.group}
-                      value={parseInt(customerList.is_working)} 
+                      value={parseInt(inputs.is_working)} 
                       onChange={handleInputChange} 
                       row
                     >
-                      <FormControlLabel value={1} 
-            control={<Radio color="primary" />}
+                      <FormControlLabel value={1} control={<Radio color="primary" />}
                      label="Yes" labelPlacement="start" />
-                      <FormControlLabel value={0} 
-            control={<Radio color="primary" />}
+                      <FormControlLabel value={0}   control={<Radio color="primary" />}
                      label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="dob">Date Of Birth</InputLabel>
-                    <TextField
+                    {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -475,11 +525,32 @@ return (
                       name="dob"
                       // label=""
                       type="date"
-                      value={customerList.dob} 
+                      value={inputs.dob} 
                       onChange={handleInputChange}
+                      error={errors.dob}
+                      helperText={errors.dob}
                       required
                       fullWidth
-                    />
+                    /> */}
+                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="dob"
+                                name="dob"
+                                format="dd/MM/yyyy"
+                                disableFuture = {true}
+                                value={inputs.dob}
+                                fullWidth 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
+                                onChange={handleDate}
+                                error={errors.dob}
+                                helperText={errors.dob}                               
+                              />
+                            </MuiPickersUtilsProvider>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="id_type">ID Proof</InputLabel>
@@ -488,10 +559,12 @@ return (
                         name="id_type"
                         onChange = {handleIdType}
                         // value={parseInt(inputs.id_type)}
-                        value={parseInt(customerList.id_type)}
+                        value={parseInt(inputs.id_type)}
                         name = 'id_type'
                         id = 'id_type'
                         className={classes.textsize}
+                        error={errors.id_type}
+                        helperText={errors.id_type}
                         fullWidth
                         label="Select Id Proof"
                         required
@@ -522,15 +595,36 @@ return (
                       name="id_number"
                       // label="ID#"
                       type="text"
-                      value={customerList.id_number} 
+                      value={inputs.id_number} 
                       onChange={handleInputChange}
+                      error={errors.id_number}
+                      helperText={errors.id_number}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="expiry_date">Expiry Date</InputLabel>
-                    <TextField
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="expiry_date"
+                                name="expiry_date"
+                                format="dd/MM/yyyy"
+                                disablePast = {true}
+                                value={inputs.expiry_date}
+                                fullWidth 
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
+                                onChange={handleExpiryDate}
+                                error={errors.expiry_date}
+                                helperText={errors.expiry_date}                               
+                              />
+                            </MuiPickersUtilsProvider>
+                    {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -541,18 +635,20 @@ return (
                       name="expiry_date"
                       label=""
                       type="date"
-                      value={customerList.expiry_date} 
+                      value={inputs.expiry_date} 
                       onChange={handleInputChange}
+                      error={errors.expiry_date}
+                      helperText={errors.expiry_date}
                       required
                       fullWidth
-                    />
+                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="is_adult">Over 18 Years?</InputLabel>
                     <RadioGroup 
                       aria-label="is_adult" 
                       name="is_adult" 
-                      value={parseInt(customerList.is_adult)} 
+                      value={parseInt(inputs.is_adult)} 
                       onChange={handleInputChange} 
                       className={classes.group} 
                       row
@@ -578,7 +674,7 @@ return (
                       name="id_proof"
                       label=""
                       type="file"
-                      // value={customerList.id_proof} 
+                      // value={inputs.id_proof} 
                       onChange={handleInputChange}
                       // required
                       fullWidth
@@ -587,7 +683,7 @@ return (
                   {console.log(customerList)}
                   <Grid item xs={12} sm={6}>
                   <InputLabel className={classes.textsize} htmlFor="id_proof">Last Uploaded Document :   </InputLabel>
-                    <a href={"server\\files\\customer\\" + customerList.id_proof }  download >{customerList.id_proof}</a>
+                    <a href={"server\\files\\customer\\" + inputs.id_proof }  download >{inputs.id_proof}</a>
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     <InputLabel className={classes.textsize} htmlFor="state">Customer State</InputLabel>
@@ -595,7 +691,7 @@ return (
                       aria-label="state" 
                       name="state" 
                       className={classes.group}
-                      value={parseInt(customerList.state)} 
+                      value={parseInt(inputs.state)} 
                       onChange={handleInputChange} 
                       row
                     >
@@ -622,7 +718,7 @@ return (
                 aria-controls=""
                 id="panel2a-header"
               >
-                <Typography className={classes.heading}>Alternate Contact Details</Typography>
+                <Typography className={(errors.alt_c1_name||errors.alt_c1_address||errors.alt_c1_contact||errors.alt_c1_relation||errors.alt_c2_name||errors.alt_c2_address||errors.alt_c2_contact||errors.alt_c2_relation)?classes.errorHeading :classes.heading}>Alternate Contact Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -642,8 +738,10 @@ return (
                       name="alt_c1_name"
                       // label="Name"
                       type="text"
-                      value={customerList.alt_c1_name} 
+                      value={inputs.alt_c1_name} 
                       onChange={handleInputChange}
+                      error={errors.alt_c1_name}
+                      helperText={errors.alt_c1_name}
                       required
                       fullWidth
                     />
@@ -661,8 +759,10 @@ return (
                       name="alt_c1_address"
                       // label="Address"
                       type="text"
-                      value={customerList.alt_c1_address} 
+                      value={inputs.alt_c1_address} 
                       onChange={handleInputChange}
+                      error={errors.alt_c1_address}
+                      helperText={errors.alt_c1_address}
                       required
                       fullWidth
                     />
@@ -680,8 +780,13 @@ return (
                       name="alt_c1_contact"
                       // label="Contact#"
                       type="number"
-                      value={customerList.alt_c1_contact} 
+                      value={inputs.alt_c1_contact} 
                       onChange={handleInputChange}
+                      error={errors.alt_c1_contact}
+                      helperText={errors.alt_c1_contact}
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                       required
                       fullWidth
                     />
@@ -700,7 +805,9 @@ return (
                       name="alt_c1_relation"
                       // label="Relationship To You"
                       type="text"
-                      value={customerList.alt_c1_relation} 
+                      value={inputs.alt_c1_relation}
+                      error={errors.alt_c1_relation}
+                      helperText={errors.alt_c1_relation} 
                       onChange={handleInputChange}
                       required
                       fullWidth
@@ -722,8 +829,10 @@ return (
                       name="alt_c2_name"
                       // label="Name"
                       type="text"
-                      value={customerList.alt_c2_name} 
+                      value={inputs.alt_c2_name} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_name}
+                      helperText={errors.alt_c2_name}
                       required
                       fullWidth
                     />
@@ -741,8 +850,10 @@ return (
                       name="alt_c2_address"
                       // label="Address"
                       type="text"
-                      value={customerList.alt_c2_address} 
+                      value={inputs.alt_c2_address} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_address}
+                      helperText={errors.alt_c2_address}
                       required
                       fullWidth
                     />
@@ -760,8 +871,13 @@ return (
                       name="alt_c2_contact"
                       // label="Contact#"
                       type="number"
-                      value={customerList.alt_c2_contact} 
+                      value={inputs.alt_c2_contact} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_contact}
+                      helperText={errors.alt_c2_contact}
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                       required
                       fullWidth
                     />
@@ -780,8 +896,10 @@ return (
                       name="alt_c2_relation"
                       // label="Relationship To You"
                       type="text"
-                      value={customerList.alt_c2_relation} 
+                      value={inputs.alt_c2_relation} 
                       onChange={handleInputChange}
+                      error={errors.alt_c2_relation}
+                      helperText={errors.alt_c2_relation}
                       required
                       fullWidth
                     />
@@ -799,7 +917,7 @@ return (
                 aria-controls=""
                 id="panel3a-header"
               >
-                <Typography className={classes.heading}>Income Details</Typography>
+                <Typography className={(errors.employer_name || errors.employer_address || errors.employer_telephone || errors.employer_email || errors.employer_tenure)?classes.errorHeading : classes.heading}>Income Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -816,8 +934,10 @@ return (
                       name="employer_name"
                       // label="Employer Name"
                       type="text"
-                      value={customerList.employer_name} 
+                      value={inputs.employer_name} 
                       onChange={handleInputChange}
+                      error={errors.employer_name}
+                      helperText={errors.employer_name}
                       required
                       fullWidth
                     />
@@ -835,8 +955,10 @@ return (
                       name="employer_address"
                       // label="Employer Address"
                       type="text"
-                      value={customerList.employer_address} 
+                      value={inputs.employer_address} 
                       onChange={handleInputChange}
+                      error={errors.employer_address}
+                      helperText={errors.employer_address}
                       required
                       fullWidth
                     />
@@ -854,9 +976,14 @@ return (
                       name="employer_telephone"
                       // label="Employer Telephone#"
                       type="number"
-                      value={customerList.employer_telephone} 
+                      value={inputs.employer_telephone} 
                       onChange={handleInputChange}
+                      error={errors.employer_telephone}
+                      helperText={errors.employer_telephone}
                       required
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                       fullWidth
                     />
                   </Grid>
@@ -874,8 +1001,10 @@ return (
                       // label="Email"
                       type="email"
                       disabled
-                      value={customerList.employer_email} 
+                      value={inputs.employer_email} 
                       onChange={handleInputChange}
+                      error={errors.employer_email}
+                      helperText={errors.employer_email}
                       required
                       fullWidth
                     />
@@ -893,8 +1022,10 @@ return (
                       name="employer_tenure"
                       // label="Tenure of Employer"
                       type="text"
-                      value={customerList.employer_tenure} 
+                      value={inputs.employer_tenure} 
                       onChange={handleInputChange}
+                      error={errors.employer_tenure}
+                      helperText={errors.employer_tenure}
                       required
                       fullWidth
                     />
@@ -906,7 +1037,7 @@ return (
               
               <Grid item xs={12} sm={12}>
                       
-                {savebtn? <Button  variant="contained"  color="primary" className={classes.button}  onClick={editCustomer}>
+                {savebtn? <Button  variant="contained"  color="primary" className={classes.button}  onClick={handleSubmit}>
                   save
                 </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
                   save

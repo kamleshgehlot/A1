@@ -123,12 +123,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       handleClose(false);
     }
   };
-  useEffect(() => {
-    
-    inputs['password']=='' ? 
-    setInput('password', GeneratePassword())
-    :''
-  }, []);
+ 
   function handlePasswordBlurChange() {
     inputs['password']=='' ? 
     setInput('password', GeneratePassword())
@@ -325,7 +320,7 @@ return (
                       margin="dense"
                       id="password"
                       name="password"
-                      // onFocus={handlePasswordBlurChange}
+                      onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
                       // error={errors.password}
                       // helperText={errors.password}

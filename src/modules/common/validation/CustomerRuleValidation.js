@@ -42,17 +42,22 @@ export default function validate(values) {
     errors.email = 'Email Address is invalid';
   }
 
-  if (!values.gender) {
-    errors.gender = 'Gender is required';
-  }
+  // if (!values.gender) {
+  //   errors.gender = 'Gender is required';
+  // }
   if (!values.dob) {
     errors.dob = 'Date Of Birth is required';
   }
   
-  if (!values.id_type) {
+  if (values.id_type=='' ) {
     errors.id_type = 'ID Proof is required';
   }
-  
+  if(values.id_type===0){
+    errors.id_type =''
+    if (!values.other_id_type_value) {
+      errors.other_id_type_value = 'ID Type is required';
+    }
+  }
   if (!values.id_number) {
     errors.id_number = 'ID is required';
   }
