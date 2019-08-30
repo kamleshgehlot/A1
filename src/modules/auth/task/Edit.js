@@ -20,6 +20,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
@@ -172,19 +175,6 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
   };
 
   
-  function pastDate(){
-    var dtToday = new Date();
-      
-      var month = dtToday.getMonth() + 1;
-      var day = dtToday.getDate();
-      var year = dtToday.getFullYear();
-      if(month < 10)
-          month = '0' + month.toString();
-      if(day < 10)
-          day = '0' + day.toString();
-          var maxDate = year + '-' + month + '-' + day;
-          document.getElementById('due_date').setAttribute('min', maxDate);
-    }
     
   const rescheduleTask = async () => {
 
@@ -283,6 +273,18 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     const { name, value } = event.target
     setTasksList({ ...taskList, [name]: value })
   }
+
+  function handleDate(date){
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    handleInputChange({target:{name: 'due_date', value: fullDate}})
+  }
+
   return (
     <div>
       <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
@@ -406,7 +408,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                             
                             <StyledTableCell>
                               
-                              <TextField 
+                              {/* <TextField 
                                 InputProps={{
                                   classes: {
                                     input: classes.textsize,
@@ -425,7 +427,23 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 margin="dense"
                                 error={errors.due_date}
                                 helperText={errors.due_date}
-                              /> 
+                              />  */}
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="due_date"
+                                name="due_date"
+                                format="dd/MM/yyyy"
+                                disablePast = {true}
+                                value={taskList.due_date}
+                                fullWidth 
+                                onChange={handleDate}
+                                error={errors.due_date}
+                                helperText={errors.due_date}                               
+                              />
+                            </MuiPickersUtilsProvider>
+
+
                             </StyledTableCell>
                             {/* <StyledTableCell> */}
                               

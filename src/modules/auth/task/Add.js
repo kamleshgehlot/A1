@@ -23,6 +23,9 @@ import TableRow from '@material-ui/core/TableRow';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 
@@ -37,6 +40,7 @@ import Role from '../../../api/franchise/Role';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 
 import useSignUpForm from '../franchise/CustomHooks';
+import { width } from '@material-ui/system';
 
 const RESET_VALUES = {
   task_id:'',
@@ -180,22 +184,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
   }, []);
 
  
- 
-  function pastDate(){
-  var dtToday = new Date();
-    
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    if(month < 10)
-        month = '0' + month.toString();
-    if(day < 10)
-        day = '0' + day.toString();
-        var maxDate = year + '-' + month + '-' + day;
-        document.getElementById('due_date').setAttribute('min', maxDate);
-  }
-    
-    useEffect(() => {
+  useEffect(() => {
       const fetchData = async () => {
         setIsError(false);
         setIsLoading(true);
@@ -261,6 +250,17 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
 
 }
 
+function handleDate(date){
+  let date1 = new Date(date);
+  let yy = date1.getFullYear();
+  let mm = date1.getMonth() + 1;
+  let dd = date1.getDate();
+  if(mm< 10){ mm = '0' + mm.toString()}
+  if(dd< 10){ dd = '0' + dd.toString()}
+  let fullDate = yy+ '-'+mm+'-'+dd;
+  handleInputChange({target:{name: 'due_date', value: fullDate}})
+}
+
  const { inputs=null, handleInputChange, handleSubmit, handleReset, errors, setInput } = useSignUpForm(
     RESET_VALUES,
     addTaskMaster,
@@ -291,7 +291,7 @@ return (
             <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             {/* Franchise Details */}
             <Paper className={classes.paper}>
-                <Grid container spacing={4}>
+                <Grid container spacing={4}>                  
                 <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -395,10 +395,32 @@ return (
                                 }
                             </Select>
                           </StyledTableCell>
+                          {console.log('inputs..',inputs)}
                             
                             <StyledTableCell>
-                              
-                              <TextField 
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="due_date"
+                                name="due_date"
+                                // label="Date picker dialog"
+                                format="dd/MM/yyyy"
+                                // inputVariant= "standard"
+                                // variant="inline"
+                                // value={selectedDate}
+                                disablePast = {true}
+                                // defaultValue = {new Date()}
+                                value={inputs.due_date}
+                                fullWidth 
+                                onChange={handleDate}
+                                error={errors.due_date}
+                                helperText={errors.due_date}
+                                // KeyboardButtonProps={{
+                                //   'aria-label': 'change date',
+                                // }}
+                              />
+                            </MuiPickersUtilsProvider>
+                              {/* <TextField 
                                 InputProps={{
                                   classes: {
                                     input: classes.textsize,
@@ -411,13 +433,13 @@ return (
                                 onChange={handleInputChange}
                                 fullWidth
                                 // required
-                                onFocus={pastDate}
-                                type="date" className={classes.dropdwn}
+                                type="date" 
+                                className={classes.dropdwn}
                                 error={errors.due_date}
                                 helperText={errors.due_date}
                                 // placeholder="Franchise Name"
                                 margin="dense"
-                              /> 
+                              />  */}
                             </StyledTableCell>
                             <StyledTableCell>
                             {savebtn? <Button variant="contained" color="primary" className={classes.button}  type="submit">

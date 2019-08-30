@@ -20,6 +20,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
+
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
@@ -176,6 +180,20 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
     setTodayDate(date);
     setTasksList({ ...taskList, updated_date: date })
   }
+
+
+  function handleDate(date){
+    console.log('date',date);
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    handleInputChange({target:{name: 'due_date', value: fullDate}})
+  }
+
   return (
     <div>
       <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
@@ -253,12 +271,12 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
                           </StyledTableCell>                            
                             <StyledTableCell>
                               
-                              <TextField  
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                              {/* <TextField  
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}  
                                 id="due_date"
                                 name="due_date"
                                 // label="Task Id"
@@ -270,7 +288,24 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
                                 type="date"
                                 // placeholder="Franchise Name"
                                 margin="dense"
-                              /> 
+                              />  */}
+
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="due_date"
+                                name="due_date"
+                                format="dd/MM/yyyy"
+                                disablePast = {true}
+                                value={taskList.due_date}
+                                fullWidth 
+                                disabled
+                                onChange={handleDate}
+                                // error={errors.due_date}
+                                // helperText={errors.due_date}
+                               
+                              />
+                            </MuiPickersUtilsProvider>
                             </StyledTableCell>                          
                             {/* <StyledTableCell>
                               

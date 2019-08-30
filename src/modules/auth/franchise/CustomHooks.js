@@ -29,12 +29,13 @@ const useSignUpForm = (state, callback, validate) => {
     callback();
   }
 
-  const handleInputChange = e =>
+  const handleInputChange = e => {
+    
     setInputs({
     ...inputs,
     [e.target.name]: e.target.value,
   });
-
+  }
   const handleReset = RESET_VALUES => {
     setInputs(inputs => RESET_VALUES);
     
