@@ -187,7 +187,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
       assigned_to:taskList.assigned_to,
       due_date:taskList.due_date,
       new_due_date:taskList.new_due_date,
-      status:taskList.status
+      status:taskList.status,
+      // message: taskList.message,
     });
     handleSnackbarClick(true,'Task Rescheduled Successfully');
     // console.log('update======',response.taskList);
@@ -284,6 +285,16 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
     let fullDate = yy+ '-'+mm+'-'+dd;
     handleInputChange({target:{name: 'due_date', value: fullDate}})
   }
+  function handleNewDueDate(date){
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    handleInputChange({target:{name: 'new_due_date', value: fullDate}})
+  }
 
   return (
     <div>
@@ -314,6 +325,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                         <StyledTableCell>Task Description</StyledTableCell>
                         <StyledTableCell>Assigned Role</StyledTableCell>
                         <StyledTableCell>Assigned To</StyledTableCell>
+                        {taskList.status !==1 ?<StyledTableCell>Message</StyledTableCell>: ''}
                         <StyledTableCell>Due Date</StyledTableCell>
                         {/* <StyledTableCell>status</StyledTableCell> */}
                         {taskList.status===3?<StyledTableCell>New Due Date</StyledTableCell>:''}
@@ -358,6 +370,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 helperText={errors.task_description}
                                 type="text"
                                 multiline
+                                disabled={taskList.status ===2}
                                 margin="dense"
                               /> 
                           </StyledTableCell>
@@ -372,6 +385,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                               onChange={handleRoleChange}
                               className={classes.textsize}
                               fullWidth
+                              disabled={taskList.status ===2}
                               required
                             >
                               <MenuItem className={classes.textsize} value={2}>Director</MenuItem>
@@ -385,6 +399,7 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                             </StyledTableCell>
                           <StyledTableCell>  
                             <Select
+                            disabled={taskList.status ===2}
                               value={taskList.assigned_to}
                               onChange={handleInputChange}
                               inputProps={{
@@ -405,29 +420,27 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 }
                             </Select>
                           </StyledTableCell>
-                            
-                            <StyledTableCell>
-                              
-                              {/* <TextField 
-                                InputProps={{
+                          {taskList.status !==1 ?
+                          <StyledTableCell>
+                          <TextField 
+                              InputProps={{
                                   classes: {
                                     input: classes.textsize,
                                   },
                                 }}
-                                id="due_date"
-                                name="due_date"
-                                // label="Task Id"
-                                value={taskList.due_date}
-                                onChange={handleInputChange}
-                                fullWidth
-                                required 
-                                onFocus={pastDate}
-                                type="date"
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                                error={errors.due_date}
-                                helperText={errors.due_date}
-                              />  */}
+                              id="message"
+                              name="message"
+                              // label="Task Id"
+                              value={taskList.message}
+                              onChange={handleInputChange}
+                              fullWidth
+                              disabled = {(taskList.status ===2 || taskList.status === 3) ? true : false}
+                              type="text"
+                              margin="dense"
+                            /> 
+                          </StyledTableCell>
+                          :''}                            
+                            <StyledTableCell>                                                         
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
@@ -436,7 +449,9 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                                 format="dd/MM/yyyy"
                                 disablePast = {true}
                                 value={taskList.due_date}
-                                fullWidth 
+                                fullWidth                       
+                                // disabled={(taskList.status !=1 && taskList.status !=3) ? true : false}          
+                                disabled = {(taskList.status===3 || taskList.status ===2) ? true : false}
                                 onChange={handleDate}
                                 error={errors.due_date}
                                 helperText={errors.due_date}                               
@@ -444,48 +459,30 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
                             </MuiPickersUtilsProvider>
 
 
-                            </StyledTableCell>
-                            {/* <StyledTableCell> */}
-                              
-                              {/* <TextField className={classes.textsize}
-                                id="status"
-                                name="status"
-                                // label="Task Id"
-                                value={taskList.status}
-                                onChange={handleInputChange}
-                                fullWidth
-                                required
-                                type="text"
-                                disabled
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              />  */}
-                            {/* </StyledTableCell> */}
+                            </StyledTableCell>                            
                             {taskList.status===3? 
                               <StyledTableCell>
-                                <TextField 
-                                InputProps={{
-                                  classes: {
-                                    input: classes.textsize,
-                                  },
-                                }} 
-                                id="new_due_date" 
-                                name="new_due_date" 
-                                value={taskList.new_due_date} 
-                                onChange={handleInputChange}
-                                error={errors.new_due_date}
-                                helperText={errors.new_due_date}
-                                fullWidth 
-                                required 
-                                type="date"  
-                                margin="dense" /> 
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                  <KeyboardDatePicker
+                                    margin="dense"
+                                    id="new_due_date"
+                                    name="new_due_date"
+                                    format="dd/MM/yyyy"
+                                    disablePast = {true}
+                                    value={taskList.new_due_date}
+                                    fullWidth                                     
+                                    onChange={handleNewDueDate}
+                                    error={errors.new_due_date}
+                                    helperText={errors.new_due_date}                               
+                                  />
+                                </MuiPickersUtilsProvider>
                               </StyledTableCell>
                             :''}
                             <StyledTableCell>
-                            {savebtn?  <Button variant="contained" color="primary" className={classes.button} onClick={taskList.status===3? rescheduleTask : addTaskMaster}  type="submit">
+                            {savebtn?  <Button variant="contained" color="primary" disabled={(taskList.status !=1 && taskList.status !=3) ? true : false} className={classes.button} onClick={taskList.status===3? rescheduleTask : addTaskMaster}  type="submit">
                                 Update
                               </Button>: 
-                              <Button variant="contained" color="primary" className={classes.button} onClick={() => {}}  type="submit" disabled>
+                              <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
                                 Update
                               </Button>}
                               <Button variant="contained" color="primary" className={classes.button} onClick={handleEditClose}  type="submit">

@@ -68,6 +68,30 @@ export default {
       throw error;
     }
   },
+
+  rescheduledTaskList: async () => {
+    const URL = `${c.API_CONSUMER}/api/task/rescheduledtasklist`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+  
+ 
+  assignToOther: async () => {
+    const URL = `${c.API_CONSUMER}/api/task/assigntoother`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
   delete: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/task/deleteTask`;
     try {

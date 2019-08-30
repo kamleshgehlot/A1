@@ -71,10 +71,11 @@ export default function Task(franchiseId) {
   const [taskData,setTaskData]= useState();
   const [taskStatusList, setTaskStatusList]=useState([]);
   const [delId,setDelId]= useState();
-  const [tasksList, setTaskList] = useState({});
+  const [tasksList, setTaskList] = useState({});  
   const [staffTaskList, setStaffTaskList] = useState([]);
+  const [assignToOther, setAssignToOther] = useState([]);  
+  const [rescheduledTaskList, setRescheduledTaskList] = useState([]);  
   const [completedTaskList, setCompletedTaskList] = useState([]);
-  const [staffList, setStaffList] = useState({});
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [dateToday, setTodayDate]= useState();
   
@@ -190,7 +191,7 @@ useEffect(() => {
     try {
       const result = await Role.list();
       setRole(result.role);
-      console.log('result.role====-----',result.role);
+      
     } catch (error) {
       console.log("Error",error);
     }
@@ -258,10 +259,16 @@ useEffect(() => {
       setIsLoading(true);
 
       try {
-        const result = await TaskAPI.completedlist();
-        // console.log('tasks----------------',result.taskList);
-        // console.log('hsgdhgsyd-----',assignedid);
+        const result = await TaskAPI.completedlist();        
         setCompletedTaskList(result.taskList);
+
+        const rescheduledTask = await TaskAPI.rescheduledTaskList();        
+        setRescheduledTaskList(rescheduledTask.taskList);
+
+        const assignToOtherTask = await TaskAPI.assignToOther();        
+        setAssignToOther(assignToOtherTask.taskList);
+        
+        
       } catch (error) {
         setIsError(true);
       }
@@ -349,13 +356,24 @@ useEffect(() => {
       setIsLoading(true);
 
       try {
+        const all = await TaskAPI.list();
+        setTaskList(all.taskList);
+
         const result = await TaskAPI.stafftasks();
         setStaffTaskList(result.taskList);
+
         const currentuser = await FranchiseUsers.user();
-        // console.log('stfftask-899-----', currentuser.currentuser);
         setAssignedid(currentuser.currentuser[0].uid);
+
         const complete = await TaskAPI.completedlist();
         setCompletedTaskList(complete.taskList);
+
+        const rescheduledTask = await TaskAPI.rescheduledTaskList();        
+        setRescheduledTaskList(rescheduledTask.taskList);
+
+        const assignToOtherTask = await TaskAPI.assignToOther();        
+        setAssignToOther(assignToOtherTask.taskList);
+
         currentDate();
       } catch (error) {
         setIsError(true);
@@ -377,25 +395,19 @@ useEffect(() => {
     setShowTask(true);
     setShowTask(false);
   }
-  function handleClickDel(data) {
+  // function handleClickDel(data) {
+  //   console.log('delete date',data);
+  //   setDelId(data.task_id);    
+  //   handleClickDelete(data.id);    
+  // }
 
-    setDelId(data.task_id);
-    
-    handleClickDelete(data.id);
-    
-  }
-
-  const handleClickDelete = async (id) => {
-    const response = await TaskAPI.delete({
-      id:id,
-      franchise_id: franchiseId,
-      task_id:delId,
-      
-    });
-    // handleSnackbarClick(true,'Franchise Updated Successfully');
-    // setFranchiseList(response.staffList);
-    // handleReset(RESET_VALUES);
-    setTaskList(response.taskList);
+  const handleClickDelete = async (response) => {
+    console.log('response--',response);
+    const result = await TaskAPI.delete({
+      id:response.id,
+      task_id:response.task_table_id,
+    });    
+    setCompletedTaskList(result.taskList);
   };
 
 
@@ -448,9 +460,34 @@ useEffect(() => {
       </Typography>
     );
   }
+  
   function handleTabChange(event, newValue) {
     setValue(newValue);
-    // console.log('setValue...',value)
+
+    // const fetchData = async () => {
+    //   setIsError(false);
+    //   setIsLoading(true);
+    //   try {
+    //     if(newValue ===0){
+    //       const result = await TaskAPI.list();
+    //       setTaskList(result.taskList);        
+    //     }
+        
+    //     else if(newValue ===1){
+    //       const result = await TaskAPI.stafftasks();
+    //       setStaffTaskList(result.taskList);
+    //       setAssignedid(currentuser.currentuser[0].uid);
+    //     }else if(newValue ===2){
+
+     
+    //     }
+        
+    //   } catch (error) {
+    //     setIsError(true);
+    //   }
+    //   setIsLoading(false);
+    // };
+    // fetchData();
   }
   return (
     <div>
@@ -499,7 +536,9 @@ useEffect(() => {
             <AppBar position="static"  className={classes.appBar}>
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
                 <Tab label="All" />
-                <Tab label={`My Task (${staffTaskList.length})`} />
+                <Tab label={`My Task(${staffTaskList.length})`} />
+                <Tab label={`Assigned by Me(${assignToOther.length})`} />
+                <Tab label={`Reschedule Request  (${rescheduledTaskList.length})`} />
                 <Tab label={`Completed (${completedTaskList.length})`}  />
                 {/* <Tab label="Close" /> */}
               </Tabs>
@@ -515,7 +554,7 @@ useEffect(() => {
                         <StyledTableCell>Assigned To</StyledTableCell>
                         <StyledTableCell>Status</StyledTableCell>
                         <StyledTableCell>Due Date</StyledTableCell>
-                        <StyledTableCell>Options</StyledTableCell>
+                        {/* <StyledTableCell>Options</StyledTableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -545,25 +584,13 @@ useEffect(() => {
                             }
                           {/* <StyledTableCell><p >{data.status}</p></StyledTableCell> */}
                           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
-                          <StyledTableCell>
+                          {/* <StyledTableCell>
                             <Tooltip title="Update Task">                              
                               <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                               <CreateIcon/>
                               </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Archive Task">                              
-                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickDel(data); }}>
-                              <ArchiveIcon />
-                              </IconButton>
-                            </Tooltip>
-                              
-                            {/* <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> */}
-                             {/* <CreateIcon/>
-                            </Button> */}
-                            {/* <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickDel(data); }}> */}
-                              {/* <ArchiveIcon />
-                            </Button> */}
-                          </StyledTableCell>
+                            </Tooltip>                            
+                          </StyledTableCell> */}
                         </TableRow>
                       )
                       })
@@ -628,8 +655,147 @@ useEffect(() => {
                       </TableBody>
                     </Table>
                   </TabPanel>
-                  
+
                   <TabPanel value={value} index={2}>
+                    <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Task ID</StyledTableCell>
+                        <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assign Role</StyledTableCell>
+                        <StyledTableCell>Assigned To</StyledTableCell>
+                        <StyledTableCell>Status</StyledTableCell>
+                        {/* <StyledTableCell>Due Date</StyledTableCell> */}
+                        <StyledTableCell>Start Date</StyledTableCell>
+                        {/* <StyledTableCell>Completion Date</StyledTableCell> */}
+                        {/* <StyledTableCell>Message</StyledTableCell> */}
+                        {/* <StyledTableCell>Document</StyledTableCell> */}
+                        <StyledTableCell>Options</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/* {console.log(rescheduledTaskList)} */}
+                    { (assignToOther.length > 0 ? assignToOther : []).map((data, index)=>{
+                      return(
+                      // assignedid!=0? data.assigned_to===assignedid?
+                        <TableRow >
+                        <StyledTableCell> {index+1}  </StyledTableCell>
+                          <StyledTableCell> {data.task_id}  </StyledTableCell>
+                          <StyledTableCell> {data.task_description}  </StyledTableCell>
+                          <StyledTableCell>{data.assign_role_name}</StyledTableCell>
+                            { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
+                                return(
+                                  data.assigned_to===datastaff.id ?
+                                  <StyledTableCell> {datastaff.name}</StyledTableCell>
+                                    :''
+                                    )
+                                    
+                              })
+                            }
+                          
+                          { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                                  return(
+                                    data.status===datastatus.id ?
+                                    <StyledTableCell> {datastatus.status}</StyledTableCell>
+                                      :''
+                                      )                                    
+                                })
+                          }
+                          {/* <StyledTableCell>{data.due_date}</StyledTableCell> */}
+                          <StyledTableCell>{data.start_date}</StyledTableCell>
+                          {/* <StyledTableCell>{data.completion_date}</StyledTableCell> */}
+                          {/* <StyledTableCell>{data.message}</StyledTableCell>
+                          <StyledTableCell>
+                            <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
+                          </StyledTableCell> */}
+                          <StyledTableCell>
+                          <Tooltip title="Update Task">                              
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                              <CreateIcon/>
+                              </IconButton>
+                          </Tooltip>                  
+                          </StyledTableCell>
+                          
+                        </TableRow>
+                      )
+                      })
+                    }
+                    
+                    </TableBody>
+                  </Table>
+                  </TabPanel>
+
+                <TabPanel value={value} index={3}>
+                    <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Task ID</StyledTableCell>
+                        <StyledTableCell>Task Description</StyledTableCell>
+                        <StyledTableCell>Assigned To</StyledTableCell>
+                        {/* <StyledTableCell>Status</StyledTableCell> */}
+                        {/* <StyledTableCell>Due Date</StyledTableCell> */}
+                        <StyledTableCell>Start Date</StyledTableCell>
+                        {/* <StyledTableCell>Completion Date</StyledTableCell> */}
+                        <StyledTableCell>Message</StyledTableCell>
+                        <StyledTableCell>Document</StyledTableCell>
+                        <StyledTableCell>Options</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/* {console.log(rescheduledTaskList)} */}
+                    { (rescheduledTaskList.length > 0 ? rescheduledTaskList : []).map((data, index)=>{
+                      return(
+                      // assignedid!=0? data.assigned_to===assignedid?
+                        <TableRow >
+                        <StyledTableCell> {index+1}  </StyledTableCell>
+                          <StyledTableCell> {data.task_id}  </StyledTableCell>
+                          <StyledTableCell> {data.task_description}  </StyledTableCell>
+                        
+                            { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
+                                return(
+                                  data.assigned_to===datastaff.id ?
+                                  <StyledTableCell> {datastaff.name}</StyledTableCell>
+                                    :''
+                                    )
+                                    
+                              })
+                            }
+                          
+                          {/* { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
+                                  return(
+                                    data.status===datastatus.id ?
+                                    <StyledTableCell> {datastatus.status}</StyledTableCell>
+                                      :''
+                                      )                                    
+                                })
+                              } */}
+                          {/* <StyledTableCell>{data.due_date}</StyledTableCell> */}
+                          <StyledTableCell>{data.start_date}</StyledTableCell>
+                          {/* <StyledTableCell>{data.completion_date}</StyledTableCell> */}
+                          <StyledTableCell>{data.message}</StyledTableCell>
+                          <StyledTableCell>
+                            <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
+                          </StyledTableCell>
+                          <StyledTableCell>
+                          <Tooltip title="Update Task">                              
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                              <CreateIcon/>
+                              </IconButton>
+                          </Tooltip>                  
+                          </StyledTableCell>
+                          
+                        </TableRow>
+                      )
+                      })
+                    }
+                    
+                    </TableBody>
+                  </Table>
+                  </TabPanel>
+                  
+                  <TabPanel value={value} index={4}>
                     <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
@@ -643,10 +809,11 @@ useEffect(() => {
                         <StyledTableCell>Completion Date</StyledTableCell>
                         <StyledTableCell>Message</StyledTableCell>
                         <StyledTableCell>Document</StyledTableCell>
+                        <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {console.log(completedTaskList)}
+                      {/* {console.log(completedTaskList)} */}
                     { (completedTaskList.length > 0 ? completedTaskList : []).map((data, index)=>{
                       return(
                       // assignedid!=0? data.assigned_to===assignedid?
@@ -682,43 +849,12 @@ useEffect(() => {
                           </StyledTableCell>
                           <StyledTableCell>
                           <Tooltip title="Archive Task">                              
-                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickDel(data); }}>
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickDelete(data); }}>
                               <ArchiveIcon />
                               </IconButton>
                             </Tooltip>
-                          </StyledTableCell>
-                          
-                        </TableRow>
-                    //     :'':
-                    //     <TableRow >
-                    //     <StyledTableCell> {data.id}  </StyledTableCell>
-                    //       <StyledTableCell> {data.task_id}  </StyledTableCell>
-                    //       <StyledTableCell> {data.task_description}  </StyledTableCell>
-                        
-                    //       { (franchiseUsersList.length > 0 ? franchiseUsersList : []).map((datastaff, index1)=>{
-                    //             return(
-                    //               data.assigned_to===datastaff.id ?
-                    //               <StyledTableCell> {datastaff.name}</StyledTableCell>
-                    //                 :''
-                    //                 )
-                                    
-                    //           })
-                    //         }
-                    //       { (taskStatusList.length > 0 ? taskStatusList : []).map((datastatus, index1)=>{
-                    //               return(
-                    //                 data.status===datastatus.id ?
-                    //                 <StyledTableCell> {datastatus.status}</StyledTableCell>
-                    //                   :''
-                    //                   )                                    
-                    //             })
-                    //           }
-                    //       <StyledTableCell>{data.due_date}</StyledTableCell>
-                    //       <StyledTableCell>{data.start_date}</StyledTableCell>
-                    //       <StyledTableCell>{data.completion_date}</StyledTableCell>
-                    //       <StyledTableCell>{data.message}</StyledTableCell>
-                    //       <StyledTableCell>{data.document}</StyledTableCell>
-                          
-                    //     </TableRow>
+                          </StyledTableCell>                          
+                        </TableRow>                   
                       )
                       })
                     }
