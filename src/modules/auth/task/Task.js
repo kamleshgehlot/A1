@@ -680,6 +680,13 @@ useEffect(() => {
                           <StyledTableCell>
                             <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
                           </StyledTableCell>
+                          <StyledTableCell>
+                          <Tooltip title="Archive Task">                              
+                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickDel(data); }}>
+                              <ArchiveIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </StyledTableCell>
                           
                         </TableRow>
                     //     :'':

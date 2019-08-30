@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
@@ -119,7 +120,8 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
   const [dateToday, setTodayDate]= useState();
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
-
+  const taskStatus = inputs.status;
+console.log('task status',taskStatus);
   const addTaskMaster = async () => {
     setpLoading(true);
     setSavebtn(false);
@@ -166,6 +168,7 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
     const { name, value } = event.target
     setTasksList({ ...taskList, [name]: value })
   }
+  
   function todayDate(){
     var dtToday = new Date();
     
@@ -346,11 +349,11 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
                             <StyledTableCell>
                               
                               <TextField  
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                                InputProps={{
+                                  classes: {
+                                    input: classes.textsize,
+                                  },
+                                }}
                                 id="message"
                                 name="message"
                                 // label="Task Id"
@@ -378,11 +381,42 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
                                 required
                                 className={classes.textsize}
                               >
-                                <MenuItem className={classes.textsize} disabled  value="1" selected>Scheduled
-                                </MenuItem>
-                                <MenuItem className={classes.textsize} value="2">In-progress</MenuItem>
-                                <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
-                                <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
+                                {console.log(taskList)}
+                                { taskStatus === 1 ?
+                                      <MenuItem className={classes.textsize} disabled  value="1" selected>Scheduled</MenuItem>
+                                  : ''
+                                }
+                                {
+                                  taskStatus === 1 ?
+                                    <MenuItem className={classes.textsize} value="2">In-progress</MenuItem>
+                                  : ''
+                                }
+                                {
+                                  taskStatus === 2 ?
+                                  <MenuItem className={classes.textsize} value="2" disabled selected>In-progress</MenuItem>
+                                  : ''
+                                }
+                                {
+                                  taskStatus === 2 ?
+                                  <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
+                                  : ''
+                                }
+                                {
+                                  taskStatus === 2 ?
+                                  <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
+                                  : ''
+                                }
+                                    
+                               {
+                                 taskStatus !== 2 && taskStatus !== 1 ?
+                                  <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
+                                 : ''
+                               }
+                               {
+                                 taskStatus !== 2 && taskStatus !== 1 ?
+                                  <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
+                                 : ''
+                               }
                               </Select>
                             </StyledTableCell>
                             <StyledTableCell>
