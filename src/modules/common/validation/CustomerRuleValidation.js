@@ -42,9 +42,10 @@ export default function validate(values) {
     errors.email = 'Email Address is invalid';
   }
 
-  // if (!values.gender) {
-  //   errors.gender = 'Gender is required';
-  // }
+  if (!values.gender) {
+    errors.gender = 'Gender is required';
+  } 
+  
   if (!values.dob) {
     errors.dob = 'Date Of Birth is required';
   }
@@ -61,8 +62,14 @@ export default function validate(values) {
   if (!values.id_number) {
     errors.id_number = 'ID is required';
   }
+  if (!values.is_working) {
+    errors.is_working = 'Required';
+  }
   if (!values.expiry_date) {
     errors.expiry_date = 'Expiry Date is required';
+  } 
+  if (!values.is_adult) {
+    errors.is_adult = 'Required';
   }
   
   if (!values.alt_c1_name) {

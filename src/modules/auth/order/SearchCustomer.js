@@ -37,6 +37,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+
 import PageViewIcon from '@material-ui/icons/Pageview';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
@@ -176,7 +178,7 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
 
 return (
     <div>
-      <Dialog maxWidth="sm" open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog maxWidth="md" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>

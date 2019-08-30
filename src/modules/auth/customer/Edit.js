@@ -477,7 +477,7 @@ function handleIdType(event){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="Gender">Gender</InputLabel>
+                    <InputLabel className={errors.gender? classes.errorHeading:classes.textsize}  htmlFor="Gender">Gender</InputLabel>
                     <RadioGroup
                       aria-label="Gender"
                       name="gender"
@@ -497,7 +497,7 @@ function handleIdType(event){
                     
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="is_working">Are you working?</InputLabel>
+                    <InputLabel className={errors.is_working? classes.errorHeading:classes.textsize}  htmlFor="is_working">Are you working?</InputLabel>
                     <RadioGroup 
                       aria-label="is_working" 
                       name="is_working" 
@@ -644,7 +644,7 @@ function handleIdType(event){
                     /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="is_adult">Over 18 Years?</InputLabel>
+                    <InputLabel className={errors.is_adult? classes.errorHeading : classes.textsize}  htmlFor="is_adult">Over 18 Years?</InputLabel>
                     <RadioGroup 
                       aria-label="is_adult" 
                       name="is_adult" 

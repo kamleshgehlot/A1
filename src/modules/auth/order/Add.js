@@ -38,6 +38,9 @@ import Popover from '@material-ui/core/Popover';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import Budget from './Budget';
 import AddCustomer from '../customer/Add';
 import SearchCustomer from './SearchCustomer';
@@ -116,6 +119,11 @@ const useStyles = makeStyles(theme => ({
   fab:{
     marginRight: theme.spacing(1),
     fontSize: 12,
+  },
+  errorHeading: {
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
+    color:'red',
   },
 }));
 
@@ -245,15 +253,26 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setIsNewCustomer(0);    
   }
 
-  function handleDateChange(e){
-    setOrderDate(e.target.value);
+  function handleDateChange(date){
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    handleInputChange({target:{name: 'order_date', value: fullDate}})
+    setOrderDate(fullDate);
   }
 
   function handleChangeMultiple(event) {
+    setInput('product',event.target.value);
     setAssignInterest(event.target.value);
   }
 
   function handleMainCategory(event) {
+    
+    setInput('main_category',event.target.value);
     setMainCategory(event.target.value);
     setCategoryList('');
     setSubCategoryList('');    
@@ -271,6 +290,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
 
   function handleCategory(event) {
+    setInput('category',event.target.value);
     setCategory(event.target.value);
     setSubCategoryList('');    
     setProductList('');
@@ -287,6 +307,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     fetchData();
   }
   function handleSubCategory(event) {
+    
+    setInput('sub_category',event.target.value);
     setSubCategory(event.target.value);
     setProductList('');
 
@@ -336,7 +358,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         }
           var maxDate = year + '-' + month + '-' + day;
           setOrderDate(maxDate.toString());
-
+          handleInputChange({target:{name: 'order_date', value: maxDate.toString()}})
           
     }, []);
     
@@ -400,7 +422,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       flexOrderType : flexOrderList,
       fixedOrderType : fixedOrderList,
       payment_mode: inputs.payment_mode,
-      order_date  : orderDate,
+      order_date  : inputs.order_date,
       assigned_to : 0,
       budget_list : budgetList,
       related_to : related_to,
@@ -479,7 +501,27 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
-                    <TextField 
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="order_date"
+                        name="order_date"
+                        format="dd/MM/yyyy"
+                        disablePast = {true}
+                        value={inputs.order_date}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        onChange={handleDateChange}
+                        // error={errors.order_date}
+                        // helperText={errors.order_date}                               
+                      />
+                    </MuiPickersUtilsProvider>
+                    
+                    {/* <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -490,16 +532,16 @@ return (
                       name="order_date"
                       // label="Date"
                       type="date"
-                      value={orderDate}
+                      value={inputs.order_date}
                       defaultValue= {orderDate}
                       onChange={handleDateChange}
                       onFocus={pastDate}
                       required
                       fullWidth
-                    />
+                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                   <InputLabel  className={classes.textsize} htmlFor="customer_type">Select Customer*</InputLabel>
+                   <InputLabel  className={errors.customer_type? classes.errorHeading : classes.textsize} htmlFor="customer_type">Select Customer*</InputLabel>
                       <RadioGroup
                         aria-label="customer_type"
                         name="customer_type"
@@ -556,7 +598,7 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
                       // multiple
-                      value={mainCategory}
+                      value={inputs.main_category}
                       onChange={handleMainCategory}
                       name= 'main_category'
                       id= 'main_category'
@@ -565,6 +607,8 @@ return (
                       className={classes.textsize}
                       required
                       disabled = {budgetList ==""}
+                      error={errors.main_category}
+                      helperText={errors.main_category}
                       
                     > 
                     {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
@@ -580,7 +624,7 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="category">Category*</InputLabel>
                     <Select
                       // multiple
-                      value={category}
+                      value={inputs.category}
                       onChange={handleCategory}
                       name= 'category'
                       id= 'category'
@@ -589,6 +633,8 @@ return (
                       fullWidth
                       required
                       disabled = {mainCategory ==""}
+                      error={errors.category}
+                      helperText={errors.category}
                     >    
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
@@ -603,7 +649,7 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
                     <Select
                       // multiple
-                      value={subCategory}
+                      value={inputs.sub_category}
                       onChange={handleSubCategory}
                       name= 'sub_category'
                       id= 'sub_category'
@@ -611,6 +657,8 @@ return (
                       fullWidth className={classes.textsize}
                       required
                       disabled = {category ==""}
+                      error={errors.sub_category}
+                      helperText={errors.sub_category}
                     >    
                     {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
                       return(
@@ -627,7 +675,7 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
                     <Select
                       // multiple
-                      value={assignInterest}
+                      value={inputs.product}
                       onChange={handleChangeMultiple}
                       name= 'product'
                       id= 'product'
@@ -636,6 +684,8 @@ return (
                       required
                       className={classes.textsize}
                       disabled = {subCategory ==""}
+                      error={errors.product}
+                      helperText={errors.product}
                     >    
                      {(productList.length > 0 ? productList : []).map((data,index)=>{
                       return(
@@ -645,7 +695,7 @@ return (
                     </Select>
                   </Grid>
                    <Grid item xs={12} sm={6}>
-                   <InputLabel  className={classes.textsize} htmlFor="order_type">Order Type</InputLabel>
+                   <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type</InputLabel>
                       <RadioGroup
                         aria-label="order_type"
                         name="order_type"
