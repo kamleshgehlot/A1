@@ -118,9 +118,9 @@ export default function validate(values) {
   } 
   
   if (!values.employer_telephone) {
-    errors.employer_telephone = 'Contact number is required';
+    errors.employer_telephone = 'Telephone number is required';
   } else if (!validNumber.test(values.employer_telephone)) {
-    errors.employer_telephone = 'Contact number is invalid';
+    errors.employer_telephone = 'Telephone number is invalid';
   }
 
   

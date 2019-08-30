@@ -622,13 +622,13 @@ return (
                       // label="Password"
                       onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
-                      // error={errors.password}
-                      // helperText={errors.password}
+                      error={errors.password}
+                      helperText={errors.password}
                       required
                       fullWidth
                       // error={errors.password}
                       // helperText={errors.password ? errors.password : ' '}
-                      disabled
+                      // disabled
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
