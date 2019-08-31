@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
+import Badge from '@material-ui/core/Badge';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -188,6 +189,9 @@ export default function Order() {
     textsize:{
       fontSize: theme.typography.pxToRem(12),
       color: 'white',
+    },
+    badge: {
+      padding: theme.spacing(0, 2)
     }
   }));
 
@@ -410,7 +414,14 @@ export default function Order() {
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
-                  <Tab label="Open" />
+                  <Tab
+                    label={
+                      <Badge className={classes.badge} color="secondary" badgeContent={order.length}>
+                        Open
+                      </Badge>
+                    }
+                  />
+
                   {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
                   <Tab label="Delivery" />
                 </Tabs>

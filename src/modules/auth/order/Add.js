@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,32 +7,16 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
 import Fab from '@material-ui/core/Fab';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
-import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
-import AddIcon from '@material-ui/icons/Add';
-import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Popover from '@material-ui/core/Popover';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
@@ -52,11 +35,23 @@ import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
-import { FormLabel } from '@material-ui/core';
 
 import validate from '../../common/validation/OrderRuleValidation';
+
+var dtToday = new Date();
+var month = dtToday.getMonth() + 1;
+var day = dtToday.getDate();
+var year = dtToday.getFullYear();
+if(month < 10){
+    month = '0' + month.toString();
+  }
+if(day < 10){
+    day = '0' + day.toString();
+  }
+const maxDate = year + '-' + month + '-' + day;
+
 const RESET_VALUES = {
-    
+  order_date: maxDate
 };
 
 const useStyles = makeStyles(theme => ({
@@ -341,7 +336,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     //       day = '0' + day.toString();
     //     }
     //       var maxDate = year + '-' + month + '-' + day;
+<<<<<<< HEAD
     //       const result = setInput('order_date', maxDate.toString())
+=======
+    //       setOrderDate(maxDate.toString());
+    //       handleInputChange({target:{name: 'order_date', value: maxDate.toString()}})
+>>>>>>> 13c722500f7090f6b9253e8c4bd8de0389d2338c
           
     // }, []);
     
