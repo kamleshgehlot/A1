@@ -4,6 +4,9 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip'; 
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -287,9 +290,14 @@ export default function Staff(props) {
                           <StyledTableCell>{data.contact}</StyledTableCell>
                           <StyledTableCell>{data.email}</StyledTableCell>
                           <StyledTableCell>
-                          <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
+                          <Tooltip title="Edit">
+                            <IconButton  size="small" value={data.id} name={data.id} onClick={(event) => { handleClickEditOpen(data); }} >
+                              <EditIcon />  
+                            </IconButton>
+                          </Tooltip>  
+                          {/* <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
                             Edit
-                          </Button>
+                          </Button> */}
                           </StyledTableCell>
                       </TableRow>
                       )

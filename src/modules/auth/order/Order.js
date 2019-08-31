@@ -16,6 +16,8 @@ import TableRow from '@material-ui/core/TableRow';
 import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
 import EditIcon from '@material-ui/icons/Edit';
+import UnselectedCheckBox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
+import SelectedCheckBox from '@material-ui/icons/CheckBox';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import IconButton from '@material-ui/core/IconButton';
@@ -49,6 +51,7 @@ import { saveAs } from 'file-saver';
 import OrderAPI from '../../../api/franchise/Order';
 import PdfAPI from '../../../api/PDF';
 import { fontSize } from '@material-ui/system';
+import { async } from 'q';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -83,6 +86,8 @@ export default function Order() {
   const [orderData, setOrderData] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
   const [nextStep, setNextStep] = React.useState('');
+  const [uploadType, setUploadType] = useState('');
+  // const [uploadType, setUploadType] = useState('');
   const [orderId, setOrderId] = useState();
   const [budgetData,setBudgetData] = useState([]);
   const [orderListData,setOrderListData] = useState([]);
@@ -91,7 +96,10 @@ export default function Order() {
   const [flexPaymentData, setFlexPaymentData] = useState(null);
   const [orderIdForUpload,setOrderIdForUpload] = useState(null);
   const [order,setOrder] = useState([]);
-  const [deliveryTabIndex, setDeliveryTabIndex] = useState(0);
+  const [deliveryTabIndex, setDeliveryTabIndex] = useState();
+  const [completedTabIndex, setCompletedTabIndex] = useState();
+  const [deliveredTabIndex, setDeliveredTabIndex] = useState();
+  
 
   
 
@@ -107,7 +115,7 @@ export default function Order() {
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           var dd = FlexTypeDD(result,data);
           pdfmake.createPdf(dd).open();
-
+          // pdfmake.createPdf(dd).download('document.pdf');
         } catch (error) {
           console.log(error);
         }
@@ -121,7 +129,7 @@ export default function Order() {
           
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           var dd = FixedTypeDD(result,data);
-       // pdfmake.createPdf(dd).download('document.pdf');
+      //  pdfmake.createPdf(dd).download('document.pdf');
           pdfmake.createPdf(dd).open();
 
         } catch (error) {
@@ -220,32 +228,54 @@ export default function Order() {
     fetchData();
     setPaymentStatusOpen(false);
   }
-  function uploadFileSelector(event){
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(orderIdForUpload));
+  
+  const uploadFileSelector = async (event) =>{
     
-    for (var x = 0; x < document.getElementById('upload_document').files.length; x++) {
-      formData.append('avatar', document.getElementById('upload_document').files[x])
-    }
+    try {      
+        let formData = new FormData();
+        formData.append('data', JSON.stringify(orderIdForUpload));
 
-    const fetchData = async () => {
-      try {
-        if(document.getElementById('upload_document').files.length !=0) {
-          const result = await OrderAPI.uploadDocument({formData: formData});
-          if(result.order.length>0){
-            alert('Upload Successfully...');
-            setOrder(result.order);
-            setOrderIdForUpload(null);
+        if(uploadType === 'Documents'){
+          for (var x = 0; x < document.getElementById('upload_document').files.length; x++) {
+            formData.append('avatar', document.getElementById('upload_document').files[x])
+
+            if(document.getElementById('upload_document').files.length !=0) {
+              const result = await OrderAPI.uploadDocument({formData: formData});
+              if(result.order.length>0){
+                alert('Upload Successfully...');
+                setOrder(result.order);
+                setOrderIdForUpload(null);
+              }
+            }
+          }
+        }else if(uploadType === 'DeliveredDoc'){
+          for (var x = 0; x < document.getElementById('upload_delivery_doc').files.length; x++) {
+            formData.append('avatar', document.getElementById('upload_delivery_doc').files[x])
+          }
+
+          if(document.getElementById('upload_delivery_doc').files.length !=0) {
+            const result = await OrderAPI.uploadDeliveryDoc({formData: formData});
+            if(result.order.length>0){
+              alert('Upload Successfully...');
+              setOrder(result.order);
+              setOrderIdForUpload(null);
+            }
           }
         }
       } catch (error) {
         console.log(error);
       }
   };
-  fetchData();
-  }
+  
+  
 
   function handleUploadFile(orderId){
+    setUploadType('Documents');
+    setOrderIdForUpload(orderId);
+  }
+
+  function handleDeliveryDoc(orderId){
+    setUploadType('DeliveredDoc');
     setOrderIdForUpload(orderId);
   }
 
@@ -266,7 +296,12 @@ export default function Order() {
     setConfirmation(true);
   }
 
-  
+  function handleDelivered(data){
+    setOrderId(data);
+    setNextStep('Delivered');
+    setConfirmation(true);
+  }
+
   function handlePaymentStatus(data){
     setOrderData(data);
     setPaymentStatusOpen(true);
@@ -284,6 +319,9 @@ export default function Order() {
             }
           else if(nextStep === 'Delivery'){
             const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});
+            setOrder(result.order);
+          }else if(nextStep === 'Delivered'){
+            const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_at: new Date().toString()});
             setOrder(result.order);
           }
         } catch (error) {
@@ -323,8 +361,11 @@ export default function Order() {
       }
   };
     fetchData();
+    // console.log('date', new Date().toString());
 
-    roleName ==='CSR' ?  setDeliveryTabIndex(2): setDeliveryTabIndex(1) 
+    roleName ==='CSR' ?  setDeliveryTabIndex(2): roleName ==='Finance' ?  setDeliveryTabIndex(1) :'';
+    roleName ==='CSR' ?  setDeliveredTabIndex(3) : roleName ==='Finance' ? setDeliveredTabIndex(2) : roleName ==='Delivery' ? setDeliveredTabIndex(1) : '';
+    roleName ==='CSR' ?  setCompletedTabIndex(4) : roleName ==='Finance' ? setCompletedTabIndex(3) : '';
   }, []);
 
   
@@ -413,17 +454,14 @@ export default function Order() {
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
+                
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
-                  <Tab
-                    label={
-                      <Badge className={classes.badge} color="secondary" badgeContent={order.length}>
-                        Open
-                      </Badge>
-                    }
-                  />
-
+                  {/* <Tab label={ <Badge className={classes.badge} color="secondary" badgeContent={order.length}>Open</Badge>}/> */}
+                  <Tab label="Open"/>
                   {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
-                  <Tab label="Delivery" />
+                  {roleName !='Delivery' ? <Tab label="Under Delivery" /> : ''}
+                  <Tab label="Delivered" /> 
+                  {roleName !=='Delivery' ? <Tab label="Completed" /> : ''}
                 </Tabs>
               </AppBar> 
               
@@ -471,6 +509,22 @@ export default function Order() {
                                   <EditIcon />  
                                 </IconButton>
                               </Tooltip>
+                              {/*
+                              import SearchIcon from '@material-ui/icons/Search';
+
+                              import Tooltip from '@material-ui/core/Tooltip'; 
+                              import IconButton from '@material-ui/core/IconButton';
+                              import EditIcon from '@material-ui/icons/Edit';
+
+                              import CloudUpload from '@material-ui/icons/CloudUpload';
+                              import SendIcon from '@material-ui/icons/send';
+                              
+
+                              fab:{
+                                marginRight: theme.spacing(1),
+                                fontSize: 12,
+                              },
+                             */}
 
                               <Tooltip title="Download PDF">
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
@@ -493,7 +547,7 @@ export default function Order() {
                               </Tooltip>
                        </StyledTableCell>
                       </TableRow>
-                      )} else if((data.assigned_to === 4 || data.assigned_to === 5) && roleName==='Finance'){
+                      )} else if((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !==8 && roleName==='Finance'){
                         return(
                           <TableRow>
                             <StyledTableCell>{index + 1}</StyledTableCell>
@@ -527,6 +581,54 @@ export default function Order() {
                          </StyledTableCell>
                         </TableRow>
                         )
+                      }else if(data.assigned_to===5 && roleName ==='Delivery'){
+                        if(data.assigned_to === 5 && data.order_status ===5 ){
+                          return(
+                           <TableRow>
+                             <StyledTableCell>{index + 1}</StyledTableCell>
+                             <StyledTableCell>{data.order_id}</StyledTableCell>
+                             <StyledTableCell>{data.customer_name}</StyledTableCell>
+                             <StyledTableCell>{data.mobile}</StyledTableCell>
+                             <StyledTableCell>{data.order_date}</StyledTableCell>
+                             <StyledTableCell>{data.order_status_name}</StyledTableCell>
+                             {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                             <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                             <StyledTableCell>{
+                               data.payment_mode == 1 ? 'EasyPay' :  
+                               data.payment_mode == 2 ? 'Credit' : 
+                               data.payment_mode == 3 ? 'Debit' : 
+                               data.payment_mode == 4 ? 'PayPal' : 
+                               data.payment_mode == 5 ? 'Cash' : ''
+                               }
+                             </StyledTableCell>
+                             <StyledTableCell>
+                                
+                                <Tooltip title="Download Form">
+                                <a href={"server\\files\\order\\" + data.uploaded_doc }  download >
+                                {/* {inputs.id_proof} */}
+                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} >
+                                    <PrintIcon />
+                                  </IconButton>
+                                </a>
+                                </Tooltip>
+                                <input multiple accept="image/*" className={classes.input} id="upload_delivery_doc" type="file" onChange={uploadFileSelector} disabled  = {data.order_status >=6 ? true : false} />
+                                <label htmlFor="upload_delivery_doc">
+                                  <Tooltip title="Upload">                              
+                                    <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleDeliveryDoc(data.id); }} disabled = {data.order_status >=6 ? true : false}>
+                                      <CloudUpload />
+                                    </IconButton>
+                                  </Tooltip>
+                                </label>                                
+                                <Tooltip title="Check if Delivered">
+                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleDelivered(data.id); }} disabled={(data.delivery_doc_uploaded !==1 || data.order_status >=6) ? true : false}>
+                                    {data.order_status ===6 ? <SelectedCheckBox /> : data.order_status !==6 ? <UnselectedCheckBox />  : ''}                                   
+                                  </IconButton>
+                                </Tooltip>                                 
+                         </StyledTableCell>
+                             {/* <StyledTableCell></StyledTableCell> */}
+                         </TableRow>
+                          )
+                         }
                       }
                      })
                    }
@@ -574,29 +676,7 @@ export default function Order() {
                             data.payment_mode == 5 ? 'Cash' : ''
                             }
                           </StyledTableCell>
-                          {/* <StyledTableCell>
                          
-                          <Tooltip title="Update">
-                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
-                              <EditIcon />  
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Download PDF">
-                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled= {data.assigned_to===4}>
-                              <PrintIcon /> 
-                            </IconButton>
-                          </Tooltip>
-                              <Tooltip title="Upload Documents">                              
-                                <IconButton  size="small" className={classes.fab}  disabled>
-                                  <CloudUpload />
-                                </IconButton>
-                              </Tooltip>
-                          <Tooltip title="Assign to Delivery">
-                            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} disabled>
-                              <SendIcon />
-                            </IconButton>
-                          </Tooltip>
-                       </StyledTableCell> */}
                       </TableRow>
                        )
                       }
@@ -629,7 +709,7 @@ export default function Order() {
                     </TableHead>
                     <TableBody>
                     {(order.length > 0 ? order : []).map((data, index) => {
-                      if(data.assigned_to === 5 ){
+                      if(data.assigned_to === 5 && data.order_status ===5 ){
                        return(
                         <TableRow>
                           <StyledTableCell>{index + 1}</StyledTableCell>
@@ -648,6 +728,7 @@ export default function Order() {
                             data.payment_mode == 5 ? 'Cash' : ''
                             }
                           </StyledTableCell>
+                         
                           {/* <StyledTableCell></StyledTableCell> */}
                       </TableRow>
                        )
@@ -658,7 +739,134 @@ export default function Order() {
                   </Table>
                 </TabPanel>
                 : null }
+
+                
+                {/* Delivered */}
+                {/* {roleName === 'Delivery' ?     */}
+              <TabPanel value={value} index={deliveredTabIndex}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Order No.</StyledTableCell>
+                        <StyledTableCell>Customer</StyledTableCell>
+                        <StyledTableCell>Contact</StyledTableCell>
+                        <StyledTableCell>Order Date</StyledTableCell>
+                        {/* <StyledTableCell>Order Status</StyledTableCell> */}
+                        <StyledTableCell>Delivery Date</StyledTableCell>
+                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
+                        <StyledTableCell>Rental Type</StyledTableCell>
+                        <StyledTableCell>Payment Mode</StyledTableCell>
+                        {/* <StyledTableCell>Action</StyledTableCell> */}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {(order.length > 0 ? order : []).map((data, index) => {
+                      if(data.order_status >= 6 && roleName==='Delivery'){
+                       return(
+                        <TableRow>
+                          <StyledTableCell>{index + 1}</StyledTableCell>
+                          <StyledTableCell>{data.order_id}</StyledTableCell>
+                          <StyledTableCell>{data.customer_name}</StyledTableCell>
+                          <StyledTableCell>{data.mobile}</StyledTableCell>
+                          <StyledTableCell>{data.order_date}</StyledTableCell>
+                          <StyledTableCell>{data.delivered_at}</StyledTableCell>
+                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                          <StyledTableCell>{
+                            data.payment_mode == 1 ? 'EasyPay' :  
+                            data.payment_mode == 2 ? 'Credit' : 
+                            data.payment_mode == 3 ? 'Debit' : 
+                            data.payment_mode == 4 ? 'PayPal' : 
+                            data.payment_mode == 5 ? 'Cash' : ''
+                            }
+                          </StyledTableCell>
+                          {/* <StyledTableCell></StyledTableCell> */}
+                      </TableRow>
+                       )
+                      }else if(data.order_status === 6){
+                        return(
+                          <TableRow>
+                            <StyledTableCell>{index + 1}</StyledTableCell>
+                            <StyledTableCell>{data.order_id}</StyledTableCell>
+                            <StyledTableCell>{data.customer_name}</StyledTableCell>
+                            <StyledTableCell>{data.mobile}</StyledTableCell>
+                            <StyledTableCell>{data.order_date}</StyledTableCell>
+                            <StyledTableCell>{data.delivered_at}</StyledTableCell>
+                            {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                            <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                            <StyledTableCell>{
+                              data.payment_mode == 1 ? 'EasyPay' :  
+                              data.payment_mode == 2 ? 'Credit' : 
+                              data.payment_mode == 3 ? 'Debit' : 
+                              data.payment_mode == 4 ? 'PayPal' : 
+                              data.payment_mode == 5 ? 'Cash' : ''
+                              }
+                            </StyledTableCell>
+                            {/* <StyledTableCell></StyledTableCell> */}
+                        </TableRow>
+                         )
+                      }
+                     })
+                   }                              
+                    </TableBody>
+                  </Table>
+                </TabPanel>                
+                {/* : null } */}
+
+                   {/* Completed */}
+              {roleName === 'CSR' || 'Finance' ?    
+              <TabPanel value={value} index={completedTabIndex}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>#</StyledTableCell>
+                        <StyledTableCell>Order No.</StyledTableCell>
+                        <StyledTableCell>Order By</StyledTableCell>
+                        <StyledTableCell>Contact</StyledTableCell>
+                        <StyledTableCell>Order Date</StyledTableCell>
+                        <StyledTableCell>Delivery Date</StyledTableCell>
+                        {/* <StyledTableCell>Order Status</StyledTableCell> */}
+                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
+                        <StyledTableCell>Rental Type</StyledTableCell>
+                        <StyledTableCell>Payment Mode</StyledTableCell>
+                        {/* <StyledTableCell>Action</StyledTableCell> */}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {(order.length > 0 ? order : []).map((data, index) => {
+                      if(data.order_status === 8 ){
+                       return(
+                        <TableRow>
+                          <StyledTableCell>{index + 1}</StyledTableCell>
+                          <StyledTableCell>{data.order_id}</StyledTableCell>
+                          <StyledTableCell>{data.customer_name}</StyledTableCell>
+                          <StyledTableCell>{data.mobile}</StyledTableCell>
+                          <StyledTableCell>{data.order_date}</StyledTableCell>
+                          <StyledTableCell>{data.delivered_at}</StyledTableCell>
+                          {/* <StyledTableCell>{data.order_status_name}</StyledTableCell> */}
+                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
+                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+                          <StyledTableCell>{
+                            data.payment_mode == 1 ? 'EasyPay' :  
+                            data.payment_mode == 2 ? 'Credit' : 
+                            data.payment_mode == 3 ? 'Debit' : 
+                            data.payment_mode == 4 ? 'PayPal' : 
+                            data.payment_mode == 5 ? 'Cash' : ''
+                            }
+                          </StyledTableCell>
+                          {/* <StyledTableCell></StyledTableCell> */}
+                      </TableRow>
+                       )
+                      }
+                     })
+                   }                              
+                    </TableBody>
+                  </Table>
+                </TabPanel>                
+                : null }
               
+             
               </Paper>
           </Grid>
         </Grid>

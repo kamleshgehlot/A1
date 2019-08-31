@@ -3,6 +3,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -21,6 +22,8 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
+import Tooltip from '@material-ui/core/Tooltip'; 
+import IconButton from '@material-ui/core/IconButton';
 //files
 import AddLead from './Add';
 import Comment from './Comment';
@@ -415,9 +418,16 @@ export default function Lead() {
                               }
                             <StyledTableCell>{data.message}</StyledTableCell>
                             <StyledTableCell>
-                              <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickViewOpen(data); }}>
+                            <Tooltip title="View">
+                                <IconButton  size="small"  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data); }} >
+                                  <ViewIcon />
+                                </IconButton>
+                            </Tooltip>
+
+                              
+                              {/* <Button variant="contained" color="primary"  value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickViewOpen(data); }}>
                                 View
-                              </Button>
+                              </Button> */}
                             </StyledTableCell>
                             {/* {console.log('franchiseId-----',franchiseId)} */}
         

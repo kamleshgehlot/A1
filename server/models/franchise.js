@@ -32,7 +32,7 @@ const customer_income = "CREATE TABLE IF NOT EXISTS `customer_income` (`id` bigi
 const customer_state = "CREATE TABLE IF NOT EXISTS customer_state(id tinyint(4) NOT NULL AUTO_INCREMENT, state_name VARCHAR(20) NOT NULL, is_active tinyint(4) NOT NULL, PRIMARY KEY(id));";
 const idProof = "CREATE TABLE  IF NOT EXISTS `id_type` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(100) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const enquiry = "CREATE TABLE IF NOT EXISTS enquiry(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `enquiry_id` varchar(10) NOT NULL, `customer_name` varchar(50) NOT NULL, `contact` varchar(10) DEFAULT NULL, `interested_product_id` varchar(20) NOT NULL, `converted_to` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
-const orders = "CREATE TABLE IF NOT EXISTS orders(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `order_id` varchar(50) NOT NULL, `customer_id` int(11) NOT NULL, `customer_type` TINYINT(4) DEFAULT NULL, `product_id` varchar(255) NOT NULL, `product_related_to` varchar(255) DEFAULT NULL, `order_type` tinyint(4) NOT NULL, `order_type_id` int(11) NOT NULL, `budget_id` int(11) NOT NULL, payment_mode tinyint(4) NOT NULL, `assigned_to` tinyint(4) NOT NULL, `order_date` varchar(50) NOT NULL, `order_status` TINYINT(4) DEFAULT NULL, `doc_upload_status` TINYINT(4) NOT NULL DEFAULT '0', `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const orders = "CREATE TABLE IF NOT EXISTS orders(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `order_id` varchar(50) NOT NULL, `customer_id` int(11) NOT NULL, `customer_type` TINYINT(4) DEFAULT NULL, `product_id` varchar(255) NOT NULL, `product_related_to` varchar(255) DEFAULT NULL, `order_type` tinyint(4) NOT NULL, `order_type_id` int(11) NOT NULL, `budget_id` int(11) NOT NULL, payment_mode tinyint(4) NOT NULL, `assigned_to` tinyint(4) NOT NULL, `order_date` varchar(50) NOT NULL, `order_status` TINYINT(4) DEFAULT NULL, `doc_upload_status` TINYINT(4) NOT NULL DEFAULT '0', `delivery_doc_uploaded` TINYINT(4) NOT NULL DEFAULT '0', `delivered_at` VARCHAR(255) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const payment_mode = "CREATE TABLE IF NOT EXISTS payment_mode(`id` tinyint(4) NOT NULL AUTO_INCREMENT, `payment_mode` VARCHAR(50) NOT NULL, `is_active` tinyint(4) NOT NULL, PRIMARY KEY(id))";
 const budget = "CREATE TABLE IF NOT EXISTS budget(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_id` int(11) UNSIGNED NOT NULL, `work` double(10,2) DEFAULT NULL, `benefits` double(10,2) DEFAULT NULL, `accomodation` double(10,2) DEFAULT NULL, `childcare` double(10,2) DEFAULT NULL, `rent` double(10,2) DEFAULT NULL, `power` double(10,2) DEFAULT NULL, `landline_phone` double(10,2) DEFAULT NULL, `mobile_phone` double(10,2) DEFAULT NULL, `vehicle_finance` double(10,2) DEFAULT NULL, `public_transport` double(10,2) DEFAULT NULL, `food` double(10,2) DEFAULT NULL, `credit_store_cards` double(10,2) DEFAULT NULL, `loans_hire_purchase` double(10,2) DEFAULT NULL, `other_expenditure` double(10,2) DEFAULT NULL, `pre_order_exp` double(10,2) DEFAULT NULL, `total_income` double(10,2) DEFAULT NULL, `total_expenditure`  double(10,2) DEFAULT NULL, `total_surplus` double(10,2) DEFAULT NULL, `afford_amt` double(10,2) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const flex_order = "CREATE TABLE IF NOT EXISTS flex_order(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_id` int(11) UNSIGNED NOT NULL, `goods_rent_price` double(10,2) DEFAULT NULL, `ppsr_fee` double(10,2) DEFAULT NULL, `liability_fee` double(10,2) DEFAULT NULL, `weekly_total` double(10,2) DEFAULT NULL, `frequency` int(11) DEFAULT NULL, `first_payment` varchar(50) DEFAULT NULL, `no_of_payment` double(10,2) DEFAULT NULL, `each_payment_amt` double(10,2) DEFAULT NULL, `total_payment_amt` double(10,2) DEFAULT NULL, `before_delivery_amt` double(10,2) DEFAULT NULL, `exp_delivery_at` timestamp DEFAULT CURRENT_TIMESTAMP, `bond_amt` double(10,2) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
@@ -40,7 +40,7 @@ const fixed_order = "CREATE TABLE IF NOT EXISTS fixed_order(`id` bigint(20) UNSI
 const order_document = "CREATE TABLE IF NOT EXISTS order_document(`id` int(11) NOT NULL AUTO_INCREMENT, `order_id` int(11) NOT NULL, `document` varchar(255) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const payment_status = "CREATE TABLE IF NOT EXISTS payment_status (`id` bigint(20) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `payment_date` varchar(50) DEFAULT NULL, `payment_amt` double DEFAULT NULL, `total_paid` double DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const order_status = "CREATE TABLE IF NOT EXISTS order_status (`id` int(11) NOT NULL AUTO_INCREMENT, `order_status` varchar(50) NOT NULL, PRIMARY KEY(id))";
-
+const delivery_document = "CREATE TABLE IF NOT EXISTS delivery_document (`id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) NOT NULL, `document` VARCHAR(255) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `updated_by` INT(11) DEFAULT NULL, `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register =  function (newUser) {
@@ -100,25 +100,26 @@ Franchise.prototype.register =  function (newUser) {
                     [7, 'Awaiting Remaining'],
                     [8, 'Completed'],
                   ]
-                  connection.query(role, function (err) {if(err){console.log('Role Table Error: ', err)}});                  
-                  connection.query(user, function (err) {if(err){console.log('user Table Error: ', err)}});
-                  connection.query(userRole, function (err) {if(err){console.log('UserRole Table Error: ', err)}});
-                  connection.query(staff, function (err) {if(err){console.log('Staff Table Error: ', err)}});
-                  connection.query(task, function (err) {if(err){console.log('Task Table Error: ', err)}});
-                  connection.query(taskAssign, function (err) {if(err){console.log('TaskAssign Table Error: ', err)}});
-                  connection.query(customer,function(err){if(err){console.log('Customer Table Error: ', err)}});
-                  connection.query(customer_income,function(err){if(err){console.log('Customer Income Table Error: ', err)}});
-                  connection.query(customer_state,function(err){if(err){console.log('Customer State Table Error: ', err)}});
-                  connection.query(idProof,function(err){if(err){console.log('IdProof Table Error: ', err)}});
-                  connection.query(enquiry,function(err){if(err){console.log('Enquiry Table Error: ', err)}});
-                  connection.query(orders,function(err){if(err){console.log('Order Table Error: ', err)}});
-                  connection.query(budget,function(err){if(err){console.log('Budget Table Error: ', err)}});
-                  connection.query(payment_mode,function(err){if(err){console.log('Payment Mode Table Error: ', err)}});
-                  connection.query(flex_order,function(err){if(err){console.log('Flex_order Table Error: ', err)}});
-                  connection.query(fixed_order,function(err){if(err){console.log('Fixed Order Table Error: ', err)}});
-                  connection.query(order_document,function(err){if(err){console.log('Order Document Table Error: ', err)}});
-                  connection.query(payment_status, function(err){if(err){console.log('Payment Status Table Error: ', err)}});
-                  connection.query(order_status, function(err){if(err){console.log('Order Status Table Error: ', err)}});
+                  connection.query(role, function (err) {if(err){console.log('Role Table Create Time Error: ', err)}});                  
+                  connection.query(user, function (err) {if(err){console.log('user Table Create Time Error: ', err)}});
+                  connection.query(userRole, function (err) {if(err){console.log('UserRole Table Create Time Error: ', err)}});
+                  connection.query(staff, function (err) {if(err){console.log('Staff Table Create Time Error: ', err)}});
+                  connection.query(task, function (err) {if(err){console.log('Task Table Create Time Error: ', err)}});
+                  connection.query(taskAssign, function (err) {if(err){console.log('TaskAssign Table Create Time Error: ', err)}});
+                  connection.query(customer,function(err){if(err){console.log('Customer Table Create Time Error: ', err)}});
+                  connection.query(customer_income,function(err){if(err){console.log('Customer Income Table Create Time Error: ', err)}});
+                  connection.query(customer_state,function(err){if(err){console.log('Customer State Table Create Time Error: ', err)}});
+                  connection.query(idProof,function(err){if(err){console.log('IdProof Table Create Time Error: ', err)}});
+                  connection.query(enquiry,function(err){if(err){console.log('Enquiry Table Create Time Error: ', err)}});
+                  connection.query(orders,function(err){if(err){console.log('Order Table Create Time Error: ', err)}});
+                  connection.query(budget,function(err){if(err){console.log('Budget Table Create Time Error: ', err)}});
+                  connection.query(payment_mode,function(err){if(err){console.log('Payment Mode Table Create Time Error: ', err)}});
+                  connection.query(flex_order,function(err){if(err){console.log('Flex_order Table Create Time Error: ', err)}});
+                  connection.query(fixed_order,function(err){if(err){console.log('Fixed Order Table Create Time Error: ', err)}});
+                  connection.query(order_document,function(err){if(err){console.log('Order Document Table Create Time Error: ', err)}});
+                  connection.query(payment_status, function(err){if(err){console.log('Payment Status Table Create Time Error: ', err)}});
+                  connection.query(order_status, function(err){if(err){console.log('Order Status Table Create Time Error: ', err)}});
+                  connection.query(delivery_document, function(err){if(err){console.log('Delivery Document Table Create Time Error: ', err)}});
 
                   connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {if(error){console.log('Role Insert Time Error: ', error)}});
                   connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) {if(error){console.log('IdType Insert Time Error: ', error)}});

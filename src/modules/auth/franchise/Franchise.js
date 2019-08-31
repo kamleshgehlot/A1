@@ -20,6 +20,10 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
+import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@material-ui/core/Tooltip'; 
+import IconButton from '@material-ui/core/IconButton';
+
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 
@@ -116,6 +120,10 @@ export default function Franchise(props) {
       fontSize: theme.typography.pxToRem(14),
       color:"white",
       marginTop:theme.spacing(-3),
+    },
+    fab:{
+      marginRight: theme.spacing(1),
+      fontSize: 12,
     },
     paper: {
       padding: theme.spacing(2),
@@ -346,12 +354,12 @@ export default function Franchise(props) {
                                         : ''
                                     }</StyledTableCell>
                                     <StyledTableCell>
-                                    {childData.state===4 ? 
-                                      <Button disabled  variant="contained" color="primary"  value={childData.id} name={childData.id} className={classes.button} onClick={(event) => { handleClickEditOpen(childData); }}>Edit
-                                      </Button>
-                                      :<Button  variant="contained" color="primary"  value={childData.id} name={childData.id} className={classes.button} onClick={(event) => { handleClickEditOpen(childData); }}>Edit
-                                      </Button>
-                                      }
+                                    
+                                    <Tooltip title="Edit">
+                                        <IconButton  size="small"  className={classes.fab} value={childData.id} name={childData.id} onClick={(event) => { handleClickEditOpen(childData); }} disabled={childData.state===4 ? true : false}>
+                                          <EditIcon />  
+                                        </IconButton>
+                                      </Tooltip>                                    
                                     </StyledTableCell>
                                   </TableRow> : null
                                     })

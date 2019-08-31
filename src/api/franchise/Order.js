@@ -31,6 +31,27 @@ export default {
     }
   },
   
+
+  uploadDeliveryDoc: async (data1) => {
+    // console.log("data1 ",data1);
+    const URL = `${c.API_CONSUMER}/api/franchise/order/uploadDeliveryDoc`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: data1.formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+
   getnewid: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getnewid`;
     try {
@@ -232,6 +253,25 @@ export default {
   
   assignToDelivery: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/assigntodelivery`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  
+  delivered: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/delivered`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',
