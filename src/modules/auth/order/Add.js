@@ -38,20 +38,23 @@ import useSignUpForm from '../franchise/CustomHooks';
 
 import validate from '../../common/validation/OrderRuleValidation';
 
-var dtToday = new Date();
-var month = dtToday.getMonth() + 1;
-var day = dtToday.getDate();
-var year = dtToday.getFullYear();
-if(month < 10){
-    month = '0' + month.toString();
-  }
-if(day < 10){
-    day = '0' + day.toString();
-  }
-const maxDate = year + '-' + month + '-' + day;
+function getOrderDate() {
+  const dtToday = new Date();
+  let month = dtToday.getMonth() + 1;
+  let day = dtToday.getDate();
+  let year = dtToday.getFullYear();
+  if(month < 10){
+      month = '0' + month.toString();
+    }
+  if(day < 10){
+      day = '0' + day.toString();
+    }
+
+    return year + '-' + month + '-' + day;
+}
 
 const RESET_VALUES = {
-  order_date: maxDate
+  order_date: getOrderDate()
 };
 
 const useStyles = makeStyles(theme => ({
@@ -318,48 +321,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     fetchData();
   }
 
-
-  
-  
-  
-    
-
-    // useEffect(() => {
-    //   var dtToday = new Date();
-    //   var month = dtToday.getMonth() + 1;
-    //   var day = dtToday.getDate();
-    //   var year = dtToday.getFullYear();
-    //   if(month < 10){
-    //       month = '0' + month.toString();
-    //     }
-    //   if(day < 10){
-    //       day = '0' + day.toString();
-    //     }
-    //       var maxDate = year + '-' + month + '-' + day;
-<<<<<<< HEAD
-    //       const result = setInput('order_date', maxDate.toString())
-=======
-    //       setOrderDate(maxDate.toString());
-    //       handleInputChange({target:{name: 'order_date', value: maxDate.toString()}})
->>>>>>> 13c722500f7090f6b9253e8c4bd8de0389d2338c
-          
-    // }, []);
-    
-
   useEffect(() => {
-
-    
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
+    const dtToday = new Date();
+    let month = dtToday.getMonth() + 1;
+    let day = dtToday.getDate();
+    let year = dtToday.getFullYear();
     if(month < 10){
         month = '0' + month.toString();
       }
     if(day < 10){
         day = '0' + day.toString();
       }
-  var maxDate = year + '-' + month + '-' + day;
+  let maxDate = year + '-' + month + '-' + day;
   setInput('order_date', maxDate.toString())
   
     const fetchData = async () => {
