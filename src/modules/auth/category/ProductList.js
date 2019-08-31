@@ -21,6 +21,9 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Edit from './Edit';
 import Add from './Add';
 import ArchivedList from './ArchivedList';
+import Tooltip from '@material-ui/core/Tooltip'; 
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 
@@ -331,16 +334,13 @@ export default function ProductList(props) {
                            })
                          }
                          <StyledTableCell>
-                            {data.status===3 ? 
-                              <Button disabled variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Edit
-                              </Button>
-                              :<Button variant="contained" color="primary" key={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                                Edit
-                                </Button>
-                              }
-                              
-                            </StyledTableCell>
+
+                         <Tooltip title="Edit">
+                          <IconButton  size="small" value={data.id} name={data.id}  onClick={(event) => { handleClickEditOpen(data); }} disabled={data.status===3 ? true : false}>                         
+                             <EditIcon />  
+                          </IconButton>
+                        </Tooltip>                                     
+                      </StyledTableCell>
                   </TableRow>:''
                  )
                  

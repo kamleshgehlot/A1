@@ -13,6 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip'; 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -782,9 +783,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
                   <Grid item xs={6} sm={1}>
-                  <Fab size="small" color="primary" aria-label="Add" onClick={() => handleDirectorList()} className={classes.margin}>
+                           <Tooltip title="Click to Add Director">
+                                <IconButton color="primary"  className={classes.fab}  onClick={() => { handleDirectorList(); }} >
+                                    <AddIcon  />                                    
+                                </IconButton>
+                              </Tooltip>
+                  {/* <Fab size="small" color="primary" aria-label="Add" onClick={() => handleDirectorList()} className={classes.margin}>
                     <AddIcon  />
-                  </Fab>
+                  </Fab> */}
                   </Grid>
                   </Grid>
                   <Table >
@@ -816,9 +822,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                               <StyledTableCell  className={classes.textsize}>{list.uid}</StyledTableCell>
                               <StyledTableCell  className={classes.textsize}>{list.password}</StyledTableCell>
                               <StyledTableCell  className={classes.textsize}>
-                              <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
-                                <DeleteIcon />
-                              </IconButton>
+                              <Tooltip title="Click to Remove">
+                                <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Tooltip>  
                               </StyledTableCell>
                             </TableRow>
                           )

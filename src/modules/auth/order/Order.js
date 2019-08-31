@@ -509,6 +509,22 @@ export default function Order() {
                                   <EditIcon />  
                                 </IconButton>
                               </Tooltip>
+                              {/*
+                              import SearchIcon from '@material-ui/icons/Search';
+
+                              import Tooltip from '@material-ui/core/Tooltip'; 
+                              import IconButton from '@material-ui/core/IconButton';
+                              import EditIcon from '@material-ui/icons/Edit';
+
+                              import CloudUpload from '@material-ui/icons/CloudUpload';
+                              import SendIcon from '@material-ui/icons/send';
+                              
+
+                              fab:{
+                                marginRight: theme.spacing(1),
+                                fontSize: 12,
+                              },
+                             */}
 
                               <Tooltip title="Download PDF">
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
