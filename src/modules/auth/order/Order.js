@@ -456,9 +456,10 @@ export default function Order() {
               <AppBar position="static"  className={classes.appBar}>
                 
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
-                  <Tab label={ <Badge className={classes.badge} color="secondary" badgeContent={order.length}>Open</Badge>}/>
+                  {/* <Tab label={ <Badge className={classes.badge} color="secondary" badgeContent={order.length}>Open</Badge>}/> */}
+                  <Tab label="Open"/>
                   {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
-                  {roleName !='Delivery' ? <Tab label="Delivery" /> : ''}
+                  {roleName !='Delivery' ? <Tab label="Under Delivery" /> : ''}
                   <Tab label="Delivered" /> 
                   {roleName !=='Delivery' ? <Tab label="Completed" /> : ''}
                 </Tabs>
