@@ -26,6 +26,35 @@ const uploadDoc = async function (req, res, next) {
 	}
 };
 
+
+
+
+const uploadDeliveryDoc = async function (req, res, next) {
+  const OrderData = JSON.parse(req.body.data);
+  let attachments = '';
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
+	let orderParams = {
+    order_id: OrderData,
+    document :  attachments,
+    created_by : req.decoded.id,
+    user_id : req.decoded.user_id,
+  };
+	try{
+      const newDoc = new UploadDocument(orderParams);
+
+	    await newDoc.uploadDeliveryDoc();
+      const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+      
+      res.send({ order: order});
+	}catch(err){
+    next(error);
+	}
+};
+
+
 const getnewid = async function(req, res, next) {
   try {
     const id = await new Order({user_id: req.decoded.user_id}).getnewid();
@@ -140,28 +169,16 @@ const assignToDelivery = async function(req, res, next) {
     next(error);
   }
 };
-// const convertedList = async function(req, res, next) {
-//   try {
-//     new Order({user_id: req.decoded.user_id}).convertedList().then(enquiryList => {
-//       res.send({ enquiryList });
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
-
-// const convert = async function(req, res, next) {
-//   try {
-//     new Order({user_id: req.decoded.user_id, enquiry_id: req.body.enquiry_id}).convert().then(result => {
-//       new Enquiry({user_id: req.decoded.user_id}).getAll().then(enquiryList => {
-//         res.send({ enquiryList });
-//       });
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const Delivered = async function(req, res, next) {
+  try {
+    await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id, delivered_at: req.body.delivered_at }).Delivered();
+    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+    res.send({ order: order});
+  } catch (error) {
+    next(error);
+  }
+};
 
 const postOrder = async function (req, res, next) {
 	let orderParams = {
@@ -403,4 +420,22 @@ const editOrder = async function (req, res, next) {
     }
   };
 
-module.exports = { getnewid, uploadDoc, getFlexOrderDataForPDF, getFixedOrderDataForPDF, postOrder, getAll, getBudget, getExistingBudget, getFixedOrder, getFlexOrder, editOrder, assignToFinance, assignToDelivery, getPaymentHistory, paymentSubmit };
+module.exports = { 
+  getnewid, 
+  uploadDoc, 
+  uploadDeliveryDoc,
+  getFlexOrderDataForPDF, 
+  getFixedOrderDataForPDF, 
+  postOrder, 
+  getAll, 
+  getBudget, 
+  getExistingBudget,
+  getFixedOrder, 
+  getFlexOrder, 
+  editOrder, 
+  assignToFinance, 
+  assignToDelivery, 
+  getPaymentHistory, 
+  paymentSubmit, 
+  Delivered 
+};

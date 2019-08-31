@@ -517,8 +517,8 @@ export default function ClippedDrawer(props) {
 
 
              <List>
-               {console.log("role-------..",roleName)} 
-               {console.log("user-------..",userName)} 
+               {/* {console.log("role-------..",roleName)} 
+               {console.log("user-------..",userName)}  */}
                {roleName === 'Finance' && (
                <List>
                 <ListItem button key="ManageTask"  onClick={handleTaskClick} >
@@ -537,6 +537,29 @@ export default function ClippedDrawer(props) {
                </List>
                )}
              </List>
+
+             <List>
+               {/* {console.log("role-------..",roleName)} 
+               {console.log("user-------..",userName)}  */}
+               {roleName === 'Delivery' && (
+               <List>
+                <ListItem button key="ManageTask"  onClick={handleTaskClick} >
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Task" />
+                </ListItem>
+
+                <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
+                    <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Leads" />
+                </ListItem>
+                <ListItem button key="ManageOrder"  onClick={handleOrderClick}>
+                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
+                    <ListItemText primary="Manage Order" />
+                </ListItem>               
+               </List>
+               )}
+             </List>
+
         {/* <Divider /> */}
       </Drawer>
       <main className={classes.content}>

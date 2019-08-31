@@ -395,7 +395,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       fixedOrderType : fixedOrderList,
       payment_mode: inputs.payment_mode,
       order_date  : inputs.order_date,
-      assigned_to : 0,
+      assigned_to :  3,
       budget_list : budgetList,
       related_to : related_to,
       is_active : 1,
