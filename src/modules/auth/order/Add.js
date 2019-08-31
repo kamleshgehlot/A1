@@ -143,7 +143,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [budgetList,setBudgetList] = useState([]);
   const [fixedOrderList,setFixedOrderList] = useState(null);
   const [flexOrderList,setFlexOrderList] = useState(null);
-  const [orderDate,setOrderDate] = useState('');
   const [customer, setCustomer] = useState(null);
   const [junkData,setJunkData] = useState({});
   const [productList, setProductList] = useState([]);
@@ -253,7 +252,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setIsNewCustomer(0);    
   }
 
-  function handleDateChange(date){
+   function handleDateChange(date){
     let date1 = new Date(date);
     let yy = date1.getFullYear();
     let mm = date1.getMonth() + 1 ;
@@ -262,7 +261,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     if(dd< 10){ dd = '0' + dd.toString()}
     let fullDate = yy+ '-'+mm+'-'+dd;
     handleInputChange({target:{name: 'order_date', value: fullDate}})
-    setOrderDate(fullDate);
   }
 
   function handleChangeMultiple(event) {
@@ -328,41 +326,42 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
 
   
   
-  function pastDate(){
-      var dtToday = new Date();
-      var month = dtToday.getMonth() + 1;
-      var day = dtToday.getDate();
-      var year = dtToday.getFullYear();
-      if(month < 10){
-          month = '0' + month.toString();
-        }
-      if(day < 10){
-          day = '0' + day.toString();
-        }
-          var maxDate = year + '-' + month + '-' + day;
-          document.getElementById('order_date').setAttribute('min', maxDate);
-          // setOrderDate(maxDate.toString());
-    }
+  
     
 
-    useEffect(() => {
-      var dtToday = new Date();
-      var month = dtToday.getMonth() + 1;
-      var day = dtToday.getDate();
-      var year = dtToday.getFullYear();
-      if(month < 10){
-          month = '0' + month.toString();
-        }
-      if(day < 10){
-          day = '0' + day.toString();
-        }
-          var maxDate = year + '-' + month + '-' + day;
-          setOrderDate(maxDate.toString());
-          handleInputChange({target:{name: 'order_date', value: maxDate.toString()}})
+    // useEffect(() => {
+    //   var dtToday = new Date();
+    //   var month = dtToday.getMonth() + 1;
+    //   var day = dtToday.getDate();
+    //   var year = dtToday.getFullYear();
+    //   if(month < 10){
+    //       month = '0' + month.toString();
+    //     }
+    //   if(day < 10){
+    //       day = '0' + day.toString();
+    //     }
+    //       var maxDate = year + '-' + month + '-' + day;
+    //       const result = setInput('order_date', maxDate.toString())
           
-    }, []);
+    // }, []);
     
+
   useEffect(() => {
+
+    
+    var dtToday = new Date();
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10){
+        month = '0' + month.toString();
+      }
+    if(day < 10){
+        day = '0' + day.toString();
+      }
+  var maxDate = year + '-' + month + '-' + day;
+  setInput('order_date', maxDate.toString())
+  
     const fetchData = async () => {
       try {
         
@@ -373,14 +372,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         // console.log('123',order_id)
         let zero = 0;
         if(order_id == ""){
-         setInput('order_id','0000001');
+            setInput('order_id','0000001');
         }else{
           zero = 7 - (order_id[0].id.toString().length); 
           let orderId='';
           for(let i=0; i< zero ; i++){
             orderId += '0';
           }
-         setInput('order_id',(orderId + (order_id[0].id+ 1)));
+            setInput('order_id',(orderId + (order_id[0].id+ 1)));
         }
           
         // console.log('order id',inputs.order_id);
@@ -405,13 +404,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       }
   };
   fetchData();
+
   }, []);
 
 
   const addOrder = async () => {
     setpLoading(true);
     setSavebtn(true);
-    console.log('response ');
 
     const response = await OrderAPI.postOrder({
       order_id :  inputs.order_id,
@@ -453,8 +452,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     addOrder,
     validate
   );
+  console.log('orders',inputs);
 
-  console.log(inputs);
     
 return (
   <div>
@@ -508,6 +507,7 @@ return (
                         name="order_date"
                         format="dd/MM/yyyy"
                         disablePast = {true}
+                        // defaultValue = {new Date()}
                         value={inputs.order_date}
                         fullWidth 
                         InputProps={{
@@ -550,7 +550,6 @@ return (
                         onChange={handleInputChange}
                         row
                       >
-                        {/* {console.log('customer ',customer)} */}
                         <FormControlLabel labelPlacement="end" value="1"  control={<Radio color="primary" />} label="New Customer" onClick={handleCustomerOpen} />
                         {/* {convertLead === 0 ? */}
                         <FormControlLabel labelPlacement="end" value="2"  control={<Radio color="primary" />} label="Existing Customer" onClick={handleSearchCustomerOpen} />

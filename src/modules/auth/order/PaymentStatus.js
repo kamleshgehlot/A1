@@ -175,6 +175,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           let addDays = fixOrder[0].frequency;
           var date ="";
           var monthCount = 0;
+           var aa =0;
           // if(fixOrder[0].frequency ===1){addDays = 30;}
           // else if(fixOrder[0].frequency ===2){addDays = 15;}
           // else if(fixOrder[0].frequency ===4){addDays = 7;}
@@ -217,39 +218,31 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
                 addDays -= b;
               }
             }
-            // else if(fixOrder[0].frequency===2){
-            //     // var day1 = paymentDate.getDate();
-            //     var day1 = new Date(fixOrder[0].first_payment);
-            //     var day2 = new Date(fixOrder[0].first_payment);
-            //     day2.setDate(day2.getDate()+15);
-            //     var date1 = day1.getDate();
-            //     var date2 = day2.getDate();
-            //     var mon1 = day1.getMonth();
-            //     var mon2 = day2.getMonth();
-                
-                
-
-            //     // var mon = day2.getMonth() + 1;
-                
-            //     // if(mon !== month || monthCount===1){                  
-            //     //   if(a === 31){
-            //     //     addDays += 1;
-            //     //   }else if(a < 30){
-            //     //     let b = 30 -a;
-            //     //     addDays -= b;
-            //     //   }
-            //     //   monthCount = 0;
-            //     // }else{
-            //     //   monthCount =1 ;
-            //     // }
-            //     // var month = paymentDate.getMonth();
-            //     // const m = new Date(paymentDate.getDate() + 15);
-            //     // let c = new Date(m.getDate() + addDays);
-            //     // let n = c.getMonth();
-            //     console.log('day1',day1);
-            //     // console.log('n',month);
-            //     console.log('day2',day2)
-            //   }
+            else if(fixOrder[0].frequency===2){
+                var isDaysOver = paymentDate.getDate() + 15;
+                  if(isDaysOver > a){ 
+                      if(a === 31){
+                        addDays += 1;
+                      }else if(a < 30){
+                        let b = 30 -a;
+                        addDays -= b;
+                      }
+                      aa = 0;
+                  }else{  
+                    if(aa===0){
+                      addDays =  15;
+                      aa = 1;
+                    }else if(aa===1){
+                      if(a === 31){
+                        addDays += 1;
+                      }else if(a < 30){
+                        let b = 30 -a;
+                        addDays -= b;
+                      }
+                      aa = 0;
+                    }
+                }
+              }
             paymentDate.setDate(paymentDate.getDate() + addDays)            
             totalPaid = totalPaid + fixOrder[0].each_payment_amt; 
           }
@@ -267,7 +260,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           var paymentDate = new Date(flexOrder[0].first_payment);          
           let totalPaid = flexOrder[0].each_payment_amt;
           let addDays = flexOrder[0].frequency;
-
+          var aa = 0;
           // if(flexOrder[0].frequency ===1){addDays = 30;}
           // else if(flexOrder[0].frequency ===2){addDays = 15;}
           // else if(flexOrder[0].frequency ===4){addDays = 7;}
@@ -304,6 +297,30 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               }else if(a < 30){
                 let b = 30 -a;
                 addDays -= b;
+              }
+            }else if(flexOrder[0].frequency===2){
+              var isDaysOver = paymentDate.getDate() + 15;
+                if(isDaysOver > a){ 
+                    if(a === 31){
+                      addDays += 1;
+                    }else if(a < 30){
+                      let b = 30 -a;
+                      addDays -= b;
+                    }
+                    aa = 0;
+                }else{  
+                  if(aa===0){
+                    addDays =  15;
+                    aa = 1;
+                  }else if(aa===1){
+                    if(a === 31){
+                      addDays += 1;
+                    }else if(a < 30){
+                      let b = 30 -a;
+                      addDays -= b;
+                    }
+                    aa = 0;
+                  }
               }
             }
             
