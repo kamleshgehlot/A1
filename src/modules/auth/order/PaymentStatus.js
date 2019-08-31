@@ -175,7 +175,9 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           let addDays = fixOrder[0].frequency;
           var date ="";
           var monthCount = 0;
-           var aa =0;
+          var aa =0;
+          var isFeb = 0;          
+          
           // if(fixOrder[0].frequency ===1){addDays = 30;}
           // else if(fixOrder[0].frequency ===2){addDays = 15;}
           // else if(fixOrder[0].frequency ===4){addDays = 7;}
@@ -219,14 +221,20 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               }
             }
             else if(fixOrder[0].frequency===2){
+              
                 var isDaysOver = paymentDate.getDate() + 15;
-                  if(isDaysOver > a){ 
+                  if(isDaysOver > a){                    
                       if(a === 31){
                         addDays += 1;
                       }else if(a < 30){
-                        let b = 30 -a;
-                        addDays -= b;
-                      }
+                        if(isFeb===0){
+                          let b = 30 -a;
+                          addDays -= b;
+                          isFeb = 1;
+                        }else{
+                          isFeb = 0;
+                        }
+                      }                   
                       aa = 0;
                   }else{  
                     if(aa===0){
@@ -236,9 +244,14 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
                       if(a === 31){
                         addDays += 1;
                       }else if(a < 30){
-                        let b = 30 -a;
-                        addDays -= b;
-                      }
+                        if(isFeb===0){
+                          let b = 30 -a;
+                          addDays -= b;
+                          isFeb = 1;
+                        }else{
+                          isFeb = 0;
+                        }
+                      }                     
                       aa = 0;
                     }
                 }
@@ -261,6 +274,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           let totalPaid = flexOrder[0].each_payment_amt;
           let addDays = flexOrder[0].frequency;
           var aa = 0;
+          var isFeb = 0;
           // if(flexOrder[0].frequency ===1){addDays = 30;}
           // else if(flexOrder[0].frequency ===2){addDays = 15;}
           // else if(flexOrder[0].frequency ===4){addDays = 7;}
@@ -304,8 +318,13 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
                     if(a === 31){
                       addDays += 1;
                     }else if(a < 30){
-                      let b = 30 -a;
-                      addDays -= b;
+                      if(isFeb===0){
+                        let b = 30 -a;
+                        addDays -= b;
+                        isFeb = 1;
+                      }else{
+                        isFeb = 0;
+                      }
                     }
                     aa = 0;
                 }else{  
@@ -316,13 +335,18 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
                     if(a === 31){
                       addDays += 1;
                     }else if(a < 30){
-                      let b = 30 -a;
-                      addDays -= b;
+                      if(isFeb===0){
+                        let b = 30 -a;
+                        addDays -= b;
+                        isFeb = 1;
+                      }else{
+                        isFeb = 0;
+                      }
                     }
                     aa = 0;
                   }
+                }
               }
-            }
             
             paymentDate.setDate(paymentDate.getDate() + addDays)
             totalPaid = totalPaid + flexOrder[0].each_payment_amt; 

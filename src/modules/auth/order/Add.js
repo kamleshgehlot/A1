@@ -336,12 +336,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     //       day = '0' + day.toString();
     //     }
     //       var maxDate = year + '-' + month + '-' + day;
-<<<<<<< HEAD
     //       const result = setInput('order_date', maxDate.toString())
-=======
     //       setOrderDate(maxDate.toString());
     //       handleInputChange({target:{name: 'order_date', value: maxDate.toString()}})
->>>>>>> 13c722500f7090f6b9253e8c4bd8de0389d2338c
           
     // }, []);
     
