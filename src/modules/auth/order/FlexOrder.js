@@ -33,7 +33,11 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 
 import { APP_TOKEN } from '../../../api/Constants';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 
+import validate from '../../common/validation/FlexOrderValidation';
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
@@ -121,9 +125,10 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOrderList}) {
 
   const classes = useStyles();
-  const [inputs,setInputs] = useState(flexOrderList);
+  // const [inputs,setInputs] = useState(flexOrderList);
   const [firstPaymentDate,setFirstPaymentDate] = useState('');
   const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
+  // const [errors, setErrors] = useState({});
 
   
   function pastDateDisabled2(){
@@ -152,59 +157,67 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
 
 
   function handleInputBlur(e){
-    if(e.target.value===''){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
+    // if(e.target.value===''){
+    //   setInputs({
+    //     ...inputs,
+    //     [e.target.name]: 0,
+    //   });
+    // }
   }
 
   function handleInputFocus(e){
-    if(e.target.value==='0'){
-      setInputs({
-        ...inputs,
-        [e.target.name]: '',
-      });
-    }
+    // if(e.target.value==='0'){
+    //   setInputs({
+    //     ...inputs,
+    //     [e.target.name]: '',
+    //   });
+    // }
   }
   
-  function handleInputChange(e){
-    // console.log('valueee',e.target.value)
-    // if(e.target.value===""){
-      // setInputs({
-      //   ...inputs,
-      //   [e.target.name]: 0,
-      // });
-    // }
-    // else{
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
-  // }
+  // function handleInputChange(e){
+  //   // console.log('valueee',e.target.value)
+  //   // if(e.target.value===""){
+  //     // setInputs({
+  //     //   ...inputs,
+  //     //   [e.target.name]: 0,
+  //     // });
+  //   // }
+  //   // else{
+  //   setInputs({
+  //     ...inputs,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // // }
 
-  }
+  // }
   // console.log('inputs.',inputs);
 
-  function handleSubmit(e){
-    e.preventDefault();
-    handleFlexClose(false)
-    const data = {
-      goods_rent_price : parseFloat(inputs.goods_rent_price),
-      ppsr_fee : parseFloat(inputs.ppsr_fee),
-      liability_fee : parseFloat(inputs.liability_fee),
-      weekly_total : parseFloat(inputs.weekly_total),
-      frequency : parseFloat(inputs.frequency),
-      first_payment : firstPaymentDate,
-      no_of_payment : parseFloat(inputs.no_of_payment),
-      each_payment_amt : parseFloat(inputs.each_payment_amt),
-      total_payment_amt : parseFloat(inputs.total_payment_amt),
-      before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-      exp_delivery_at : expectedDeliveryDate,
-      bond_amt : parseFloat(inputs.bond_amt),
-    }
-    setFlexOrderList(data);
+  function flex(e){
+    // e.preventDefault();
+    // let check=false;
+    // if (inputs.bond_amt === 0 || inputs.bond_amt === "") {
+    //   errors.bond_amt = 'bond_amt is required';
+    //   check=true;
+    // }
+    // console.log('errors----',errors)
+    // if(check===false){
+        const data = {
+        goods_rent_price : parseFloat(inputs.goods_rent_price),
+        ppsr_fee : parseFloat(inputs.ppsr_fee),
+        liability_fee : parseFloat(inputs.liability_fee),
+        weekly_total : parseFloat(inputs.weekly_total),
+        frequency : parseFloat(inputs.frequency),
+        first_payment : firstPaymentDate,
+        no_of_payment : parseFloat(inputs.no_of_payment),
+        each_payment_amt : parseFloat(inputs.each_payment_amt),
+        total_payment_amt : parseFloat(inputs.total_payment_amt),
+        before_delivery_amt : parseFloat(inputs.before_delivery_amt),
+        exp_delivery_at : expectedDeliveryDate,
+        bond_amt : parseFloat(inputs.bond_amt),
+      }
+      handleFlexClose(false)
+      setFlexOrderList(data);
+    // }                                             
   }
 
   // useEffect(() => {
@@ -218,45 +231,45 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
   //   inputs.each_payment_amt = 0;
   //   inputs.total_payment_amt     = 0;
   //   inputs.before_delivery_amt = 0;
-  //   // inputs.exp_delivery_at ;
+  //   inputs.exp_delivery_at = 0 ;
   //   inputs.bond_amt = 0;
   //   }
   // }, []);
 
-  useEffect(() => {
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    var hour = dtToday.getHours();
-    var minute = dtToday.getMinutes();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-    if(hour < 10){
-      hour = '0' + hour.toString();
-    }
-    if(minute < 10){
-      minute = '0' + minute.toString();
-    }
-        var maxDate = year + '-' + month + '-' + day;
-        var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-        if(flexOrderList.exp_delivery_at!=''){
-          setExpectedDeliveryDate(flexOrderList.exp_delivery_at);
-        }else{
-          setExpectedDeliveryDate(maxDateTime.toString());
-        }
-        if(flexOrderList.first_payment!=''){
-          setFirstPaymentDate(flexOrderList.first_payment);
-        }else{
-          console.log('entering');
-          setFirstPaymentDate(maxDate.toString());
-        }
+  // useEffect(() => {
+  //   var dtToday = new Date();
+  //   var month = dtToday.getMonth() + 1;
+  //   var day = dtToday.getDate();
+  //   var year = dtToday.getFullYear();
+  //   var hour = dtToday.getHours();
+  //   var minute = dtToday.getMinutes();
+  //   if(month < 10){
+  //       month = '0' + month.toString();
+  //     }
+  //   if(day < 10){
+  //       day = '0' + day.toString();
+  //     }
+  //   if(hour < 10){
+  //     hour = '0' + hour.toString();
+  //   }
+  //   if(minute < 10){
+  //     minute = '0' + minute.toString();
+  //   }
+  //       var maxDate = year + '-' + month + '-' + day;
+  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
+  //       if(flexOrderList.exp_delivery_at!=''){
+  //         setExpectedDeliveryDate(flexOrderList.exp_delivery_at);
+  //       }else{
+  //         setExpectedDeliveryDate(maxDateTime.toString());
+  //       }
+  //       if(flexOrderList.first_payment!=''){
+  //         setFirstPaymentDate(flexOrderList.first_payment);
+  //       }else{
+  //         console.log('entering');
+  //         setFirstPaymentDate(maxDate.toString());
+  //       }
         
-  }, []);
+  // }, []);
 
   function pastDate(){
     var dtToday = new Date();
@@ -276,6 +289,15 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
   
 
   function handleExpectedDeliveryDate(e){
+    // let date1 = new Date(date);
+    // let yy = date1.getFullYear();
+    // let mm = date1.getMonth() + 1 ;
+    // let dd = date1.getDate();
+    // if(mm< 10){ mm = '0' + mm.toString()}
+    // if(dd< 10){ dd = '0' + dd.toString()}
+    // let fullDate = yy+ '-'+mm+'-'+dd;
+    // handleInputChange({target:{name: 'exp_delivery_at', value: fullDate}})
+    // console.log('fullDate----',fullDate)
     setExpectedDeliveryDate(e.target.value);
   }
   function handleFirstPaymentDate(e){
@@ -284,11 +306,15 @@ export default function Budget({ open, handleFlexClose, setFlexOrderList, flexOr
 
   
 // {console.log('dddk,',expectedDeliveryDate)}
-
+const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  RESET_VALUES,
+  flex,
+  validate
+);
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
@@ -312,7 +338,7 @@ return (
               </Typography>
               </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel className={classes.textsize} htmlFor="first_name">Rent Price of Goods</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -321,11 +347,13 @@ return (
                       }}
                       id="goods_rent_price"
                       name="goods_rent_price"
-                      label="Rent Price of Goods"
+                      // label="Rent Price of Goods"
                       value={inputs.goods_rent_price}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.goods_rent_price}
+                      helperText={errors.goods_rent_price}
                       fullWidth
                       // required
                       type="number"
@@ -340,7 +368,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel  className={classes.textsize}  htmlFor="first_name">PPSR Fee (if applicable) *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -349,11 +377,13 @@ return (
                       }}
                       id="ppsr_fee"
                       name="ppsr_fee"
-                      label="PPSR Fee (if applicable)"
+                      // label="PPSR Fee (if applicable)"
                       value={inputs.ppsr_fee}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.ppsr_fee}
+                      helperText={errors.ppsr_fee}
                       fullWidth
                       // required
                       type="number"
@@ -368,20 +398,18 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">Liability Waiver Fee*</InputLabel>
                     <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                     
                       id="liability_fee"
                       name="liability_fee"
-                      label="Liability Waiver Fee "
+                      // label="Liability Waiver Fee "
                       value={inputs.liability_fee}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.liability_fee}
+                      helperText={errors.liability_fee}
                       fullWidth
                       // required
                       type="number"
@@ -397,20 +425,18 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">TOTAL PER WEEK/ FORTNIGHT*</InputLabel>
                     <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                     
                       id="weekly_total"
                       name="weekly_total"
-                      label="TOTAL PER WEEK/ FORTNIGHT"
+                      // label="TOTAL PER WEEK/ FORTNIGHT"
                       value={inputs.weekly_total}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.weekly_total}
+                      helperText={errors.weekly_total}
                       fullWidth
                       // required
                       type="number"
@@ -442,9 +468,11 @@ return (
                       }}
                       id="frequency"
                       name="frequency"
-                      label="Frequency"
+                      // label="Frequency"
                       value={inputs.frequency}
                       onChange={handleInputChange}
+                      error={errors.frequency}
+                      helperText={errors.frequency}
                       fullWidth
                       // required
                       type="number"
@@ -460,11 +488,13 @@ return (
                       }}
                       id="first_payment"
                       name="first_payment"
-                      label="First Payment"
+                      // label="First Payment"
                       onChange={handleFirstPaymentDate}
                       onFocus={pastDate}
                       value={firstPaymentDate}
                       defaultValue= {firstPaymentDate}
+                      error={errors.first_payment}
+                      helperText={errors.first_payment}
                       fullWidth
                       // required
                       type="date"
@@ -489,6 +519,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.no_of_payment}
+                      helperText={errors.no_of_payment}
                       fullWidth
                       // required
                       type="number"
@@ -516,6 +548,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.each_payment_amt}
+                      helperText={errors.each_payment_amt}
                       fullWidth
                       // required
                       type="number"
@@ -546,6 +580,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.total_payment_amt}
+                      helperText={errors.total_payment_amt}
                       fullWidth
                       // required
                       type="number"
@@ -578,6 +614,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.before_delivery_amt}
+                      helperText={errors.before_delivery_amt}
                       fullWidth
                       // required
                       type="number"
@@ -591,6 +629,28 @@ return (
                   <Typography  className={classes.subTitle}>
                   Expected Delivery Date/Time
                   </Typography>
+                  {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="exp_delivery_at"
+                        name="exp_delivery_at"
+                        format="dd/MM/yyyy"
+                        disablePast = {true}
+                        // defaultValue = {new Date()}
+                        value={expectedDeliveryDate}
+                        onFocus={pastDateDisabled2}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        onChange={handleExpectedDeliveryDate}
+                        defaultValue={expectedDeliveryDate}
+                        // error={errors.order_date}
+                        // helperText={errors.order_date}                               
+                      />
+                    </MuiPickersUtilsProvider> */}
                   <TextField
                       InputProps={{
                         classes: {
@@ -629,6 +689,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.bond_amt}
+                      helperText={errors.bond_amt}
                       fullWidth
                       // required
                       type="number"

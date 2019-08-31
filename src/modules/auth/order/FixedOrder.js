@@ -40,6 +40,7 @@ import Order from '../../../api/franchise/Order';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
+import validate from '../../common/validation/FixedOrderValidation';
 
 const RESET_VALUES = {
   
@@ -115,51 +116,50 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Budget({ open, handleFixedClose, setFixedOrderList, fixedOrderList}) {
 
   const classes = useStyles();
-  const [inputs,setInputs] = useState(fixedOrderList);
+  // const [inputs,setInputs] = useState(fixedOrderList);
   const [firstPaymentDate,setFirstPaymentDate] = useState('');
   const [lastPaymentDate,setLastPaymentDate] = useState('');
   const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
   
 
   function handleInputBlur(e){
-    if(e.target.value===''){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
+    // if(e.target.value===''){
+    //   setInputs({
+    //     ...inputs,
+    //     [e.target.name]: 0,
+    //   });
+    // }
   }
 
   function handleInputFocus(e){
-    if(e.target.value==='0'){
-      setInputs({
-        ...inputs,
-        [e.target.name]: '',
-      });
-    }
+    // if(e.target.value==='0'){
+    //   setInputs({
+    //     ...inputs,
+    //     [e.target.name]: '',
+    //   });
+    // }
   }
   
-  function handleInputChange(e){
-    // console.log('valueee',e.target.value)
-    // if(e.target.value===""){
-      // setInputs({
-      //   ...inputs,
-      //   [e.target.name]: 0,
-      // });
-    // }
-    // else{
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
-  // }
+  // function handleInputChange(e){
+  //   // console.log('valueee',e.target.value)
+  //   // if(e.target.value===""){
+  //     // setInputs({
+  //     //   ...inputs,
+  //     //   [e.target.name]: 0,
+  //     // });
+  //   // }
+  //   // else{
+  //   setInputs({
+  //     ...inputs,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // // }
 
-  }
+  // }
   // console.log('inputs.',inputs);
 
-  function handleSubmit(e){
-    e.preventDefault();
-    handleFixedClose(false)
+  function fixed(e){
+    // e.preventDefault();
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal),
       cash_price : parseFloat(inputs.cash_price),
@@ -179,6 +179,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
       total_intrest : parseFloat(inputs.total_intrest),
     }
     setFixedOrderList(data);
+    handleFixedClose(false)
   }
 
   // useEffect(() => {
@@ -256,44 +257,44 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
         // setExpectedDeliveryDate(maxDateTime.toString());
   }
 
-  useEffect(() => {
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    var hour = dtToday.getHours();
-    var minute = dtToday.getMinutes();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-    if(hour < 10){
-      hour = '0' + hour.toString();
-    }
-    if(minute < 10){
-      minute = '0' + minute.toString();
-    }
-        var maxDate = year + '-' + month + '-' + day;
-        var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-        console.log('data',fixedOrderList);
-        if(fixedOrderList.exp_delivery_at!=''){
-          setExpectedDeliveryDate(fixedOrderList.exp_delivery_at);
-        }else{
-          setExpectedDeliveryDate(maxDateTime.toString());
-        }
-        if(fixedOrderList.first_payment!=''){
-          setFirstPaymentDate(fixedOrderList.first_payment);
-        }else{
-          setFirstPaymentDate(maxDate.toString());
-        }
-        if(fixedOrderList.last_payment!=''){
-          setLastPaymentDate(fixedOrderList.last_payment);
-        }else{        
-        setLastPaymentDate(maxDate.toString());
-        }
-  }, []);
+  // useEffect(() => {
+  //   var dtToday = new Date();
+  //   var month = dtToday.getMonth() + 1;
+  //   var day = dtToday.getDate();
+  //   var year = dtToday.getFullYear();
+  //   var hour = dtToday.getHours();
+  //   var minute = dtToday.getMinutes();
+  //   if(month < 10){
+  //       month = '0' + month.toString();
+  //     }
+  //   if(day < 10){
+  //       day = '0' + day.toString();
+  //     }
+  //   if(hour < 10){
+  //     hour = '0' + hour.toString();
+  //   }
+  //   if(minute < 10){
+  //     minute = '0' + minute.toString();
+  //   }
+  //       var maxDate = year + '-' + month + '-' + day;
+  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
+  //       console.log('data',fixedOrderList);
+  //       if(fixedOrderList.exp_delivery_at!=''){
+  //         setExpectedDeliveryDate(fixedOrderList.exp_delivery_at);
+  //       }else{
+  //         setExpectedDeliveryDate(maxDateTime.toString());
+  //       }
+  //       if(fixedOrderList.first_payment!=''){
+  //         setFirstPaymentDate(fixedOrderList.first_payment);
+  //       }else{
+  //         setFirstPaymentDate(maxDate.toString());
+  //       }
+  //       if(fixedOrderList.last_payment!=''){
+  //         setLastPaymentDate(fixedOrderList.last_payment);
+  //       }else{        
+  //       setLastPaymentDate(maxDate.toString());
+  //       }
+  // }, []);
   
   
   function handleFirstPaymentDate(e){
@@ -306,7 +307,11 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
     // console.log('ddd',e.target.value);
     setExpectedDeliveryDate(e.target.value);
   }
-
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    fixed,
+    validate
+  );
 return (
     <div>
       <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
@@ -336,11 +341,7 @@ return (
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                     
                       id="int_unpaid_bal"
                       name="int_unpaid_bal"
                       label="Intial Unpaid Balance"
@@ -349,6 +350,8 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      error={errors.int_unpaid_bal}
+                      helperText={errors.int_unpaid_bal}
                       // required
                       type="number"
                       // placeholder="Franchise Name"
@@ -376,6 +379,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.cash_price}
+                      helperText={errors.cash_price}
                       fullWidth
                       // required
                       type="number"
@@ -404,6 +409,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.delivery_fee}
+                      helperText={errors.delivery_fee}
                       fullWidth
                       // required
                       type="number"
@@ -433,6 +440,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.ppsr_fee}
+                      helperText={errors.ppsr_fee}
                       fullWidth
                       // required
                       type="number"
@@ -469,6 +478,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.frequency}
+                      helperText={errors.frequency}
                       fullWidth
                       // required
                       type="number"
@@ -539,6 +550,8 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      error={errors.no_of_payment}
+                      helperText={errors.no_of_payment}
                       // required
                       type="number"
                       // placeholder="Franchise Name"
@@ -565,6 +578,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.each_payment_amt}
+                      helperText={errors.each_payment_amt}
                       fullWidth
                       // required
                       type="number"
@@ -595,6 +610,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.total_payment_amt}
+                      helperText={errors.total_payment_amt}
                       fullWidth
                       // required
                       type="number"
@@ -627,6 +644,9 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.before_delivery_amt}
+                      helperText={errors.before_delivery_amt}
+                      
                       fullWidth
                       // required
                       type="number"
@@ -678,6 +698,9 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.minimum_payment_amt}
+                      helperText={errors.minimum_payment_amt}
+                      
                       fullWidth
                       // required
                       type="number"
@@ -714,6 +737,9 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.intrest_rate}
+                      helperText={errors.intrest_rate}
+                      
                       fullWidth
                       // required
                       type="number"
@@ -736,6 +762,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.intrest_rate_per}
+                      helperText={errors.intrest_rate_per}
                       fullWidth
                       // required
                       type="number"
@@ -765,6 +793,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.total_intrest}
+                      helperText={errors.total_intrest}
                       fullWidth
                       // required
                       type="number"

@@ -179,26 +179,26 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
   
   function handleFixedOpen(){
-    if(fixedOrderList==null){
-    setFixedOrderList({
-      int_unpaid_bal  : 0,
-      cash_price : 0,
-      delivery_fee : 0,
-      ppsr_fee : 0,
-      no_of_payment : 0,
-      each_payment_amt : 0,
-      total_payment_amt : 0,
-      before_delivery_amt : 0,
-      frequency  : 0,
-      exp_delivery_at : '',
-      first_payment : '',
-      last_payment : '',
-      minimum_payment_amt : 0,
-      intrest_rate : 0,
-      intrest_rate_per : 0,
-      total_intrest : 0,
-      });
-    }
+    // if(fixedOrderList==null){
+    // setFixedOrderList({
+    //   int_unpaid_bal  : 0,
+    //   cash_price : 0,
+    //   delivery_fee : 0,
+    //   ppsr_fee : 0,
+    //   no_of_payment : 0,
+    //   each_payment_amt : 0,
+    //   total_payment_amt : 0,
+    //   before_delivery_amt : 0,
+    //   frequency  : 0,
+    //   exp_delivery_at : '',
+    //   first_payment : '',
+    //   last_payment : '',
+    //   minimum_payment_amt : 0,
+    //   intrest_rate : 0,
+    //   intrest_rate_per : 0,
+    //   total_intrest : 0,
+    //   });
+    // }
     setFlexOrderList(null);
     setFixedOrderOpen(true);
   }
@@ -208,22 +208,22 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
   
   function handleFlexOpen(){
-    if(flexOrderList==null){
-      setFlexOrderList({
-        goods_rent_price : 0,
-        ppsr_fee : 0,
-        liability_fee : 0,
-        weekly_total : 0,
-        frequency : 0,
-        first_payment : '',
-        no_of_payment : 0,
-        each_payment_amt : 0,
-        total_payment_amt : 0,
-        before_delivery_amt : 0,
-        exp_delivery_at : '',
-        bond_amt : 0,
-        });
-      }
+    // if(flexOrderList==null){
+    //   setFlexOrderList({
+    //     goods_rent_price : 0,
+    //     ppsr_fee : 0,
+    //     liability_fee : 0,
+    //     weekly_total : 0,
+    //     frequency : 0,
+    //     first_payment : '',
+    //     no_of_payment : 0,
+    //     each_payment_amt : 0,
+    //     total_payment_amt : 0,
+    //     before_delivery_amt : 0,
+    //     exp_delivery_at : '',
+    //     bond_amt : 0,
+    //     });
+    //   }
     setFixedOrderList(null);
     setFlexOrderOpen(true);
   }
