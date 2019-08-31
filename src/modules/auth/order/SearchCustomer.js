@@ -224,45 +224,54 @@ return (
                       }}
                     />
                   </Grid>
-                  <Paper style={{ width: '100%' }}>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Name</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Address</StyledTableCell>
-                        <StyledTableCell>Created By</StyledTableCell>
-                        {/* <StyledTableCell>State</StyledTableCell> */}
-                        <StyledTableCell>Options</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(customerListData.length > 0 ? customerListData :[] ).map((data,index)=>{
-                        // console.log('data...',data);
-                        return(
-                          <TableRow key={data.id} >
-                          <StyledTableCell> {index + 1}  </StyledTableCell>
-                          <StyledTableCell> {data.customer_name}  </StyledTableCell>
-                          <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
-                          <StyledTableCell> {data.address}  </StyledTableCell>
-                          <StyledTableCell> {data.created_by_name}  </StyledTableCell>
-                          {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
-                          <StyledTableCell> 
-                          <Fab  aria-label="Add" size="small" className={classes.fab} onClick={(event) => { handleAddCurrent(data); }}>
-                            <AddIcon />
-                          </Fab>
-                          <Fab  aria-label="Add" size="small" className={classes.fab} onClick={(event) => { handleCustomerOpen(data.id); }}>
-                            <PageViewIcon />
-                          </Fab>
-                          {/* <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(data.id); }}>View Profile </Button> */}
-                          </StyledTableCell>
-                          </TableRow>
-                        )
-                      })}
-                    </TableBody>
-                  </Table>
-               </Paper>
+                  
+                    <Paper style={{ width: '100%' }}>
+                    <Table className={classes.table}>
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell>#</StyledTableCell>
+                          <StyledTableCell>Name</StyledTableCell>
+                          <StyledTableCell>Contact</StyledTableCell>
+                          <StyledTableCell>Address</StyledTableCell>
+                          <StyledTableCell>Created By</StyledTableCell>
+                          {/* <StyledTableCell>State</StyledTableCell> */}
+                          <StyledTableCell>Options</StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                   
+                      <TableBody>
+                        {(customerListData.length > 0 ? customerListData : [] ).map((data,index)=>{
+                          // console.log('data...',data);
+                          return(
+                            <TableRow key={data.id} >
+                            <StyledTableCell> {index + 1}  </StyledTableCell>
+                            <StyledTableCell> {data.customer_name}  </StyledTableCell>
+                            <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
+                            <StyledTableCell> {data.address}  </StyledTableCell>
+                            <StyledTableCell> {data.created_by_name}  </StyledTableCell>
+                            {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
+                            <StyledTableCell> 
+                            <Fab  aria-label="Add" size="small" className={classes.fab} onClick={(event) => { handleAddCurrent(data); }}>
+                              <AddIcon />
+                            </Fab>
+                            <Fab  aria-label="Add" size="small" className={classes.fab} onClick={(event) => { handleCustomerOpen(data.id); }}>
+                              <PageViewIcon />
+                            </Fab>
+                            {/* <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(data.id); }}>View Profile </Button> */}
+                            </StyledTableCell>
+                            </TableRow>
+                          )
+                        })}
+                      </TableBody>
+                     
+
+                    </Table>
+                    {
+                    customerListData.length === 0 ?
+                    <label>Please Search The Customer To Show The Result</label> : null
+                    }
+                </Paper>
+                  
             </Grid>
           </Paper>
             
