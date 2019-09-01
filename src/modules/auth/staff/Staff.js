@@ -259,9 +259,11 @@ export default function Staff(props) {
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>{data.email}</StyledTableCell>
                             <StyledTableCell>
-                            <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                              Edit
-                            </Button>
+                              <Tooltip title="Edit">
+                                <IconButton  size="small" value={data.id} name={data.id} onClick={(event) => { handleClickEditOpen(data); }} >
+                                  <EditIcon />  
+                                </IconButton>
+                              </Tooltip>  
                             </StyledTableCell>
                         </TableRow>:'':
                         <TableRow key={data.id} >

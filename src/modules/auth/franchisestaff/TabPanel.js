@@ -56,7 +56,7 @@ function TabPanel(props) {
   );
 }
 
-export default function FranchiseTabPannel({value, tabIndex, staffList, currentRole, roles}) {
+export default function FranchiseTabPannel({value, tabIndex, staffList, currentRole, roles, handleClickEditOpen}) {
   
   const useStyles = makeStyles(theme => ({
   }));

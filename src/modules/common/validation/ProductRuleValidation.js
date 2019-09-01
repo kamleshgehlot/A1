@@ -53,7 +53,7 @@ export default function validate(values) {
   } else if (!validNumber.test(values.rental)) {
     errors.rental = 'Rental Price is invalid';
   } else if(values.rental == 0) {
-    errors.rental = 'Rental Price can not be Zero';
+    errors.rental = 'Rental Price can not be zero';
   }
   if (!values.status) {
     errors.status = 'Status is required';

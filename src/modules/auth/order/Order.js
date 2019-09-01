@@ -272,6 +272,7 @@ export default function Order() {
   function handleUploadFile(orderId){
     setUploadType('Documents');
     setOrderIdForUpload(orderId);
+    document.getElementById('upload_document').click();
   }
 
   function handleDeliveryDoc(orderId){

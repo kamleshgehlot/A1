@@ -247,12 +247,12 @@ export default function FranchiseStaff(franchiseId) {
                 </Tabs>
               </AppBar>
               {
-                <FranchiseTabPannel value={value} tabIndex={0} staffList={staffList} currentRole={null} roles={role}/>
+                <FranchiseTabPannel value={value} tabIndex={0} staffList={staffList} currentRole={null} roles={role} handleClickEditOpen={handleClickEditOpen}/>
               }
               {
               (role.length>0 ? role : []).map((ele, index) => {
                 return(
-                  <FranchiseTabPannel value={value} tabIndex={index + 1} staffList={staffList} currentRole={ele} roles={role}/>
+                  <FranchiseTabPannel value={value} tabIndex={index + 1} staffList={staffList} currentRole={ele} roles={role} handleClickEditOpen={handleClickEditOpen}/>
                 )
               })
               }

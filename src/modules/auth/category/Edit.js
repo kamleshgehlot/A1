@@ -200,7 +200,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
     setInput('status', response )
     setConfirmation(false);
   }
-  
+
   function handleColorInputChange(e){
     handleInputChange(e);
     if(e.target.value==='0'){
@@ -457,6 +457,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       value={inputs.rental}
                       error={errors.rental}
                       helperText={errors.rental}
+                      onChange={handleInputChange}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
