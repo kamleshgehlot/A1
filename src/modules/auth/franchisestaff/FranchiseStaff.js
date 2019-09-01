@@ -3,28 +3,20 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import CreateIcon from '@material-ui/icons/Create';
-import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
 import Add from './Add';
 import Edit from './Edit';
 import UploadDoc from './UploadDoc';
 
+import FranchiseTabPannel from './TabPanel';
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 import Role from '../../../api/franchise/Role';
@@ -199,27 +191,7 @@ export default function FranchiseStaff(franchiseId) {
   // console.log("data.role......", staffList)
 
 
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
   
-    return (
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
-    );
-  }
   function handleTabChange(event, newValue) {
     setValue(newValue);
     // console.log('setValue...',value)
@@ -274,62 +246,17 @@ export default function FranchiseStaff(franchiseId) {
                   }
                 </Tabs>
               </AppBar>
-                <TabPanel value={value} index={value}>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>User ID</StyledTableCell>
-                        <StyledTableCell>Full Name</StyledTableCell>
-                        <StyledTableCell>Role/Position</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Options</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    { (staffList.length > 0 ? staffList : []).map((data, index)=>{
-                      return(
-                        
-                           <TableRow key={data.id} >
-                          <StyledTableCell> {index + 1}  </StyledTableCell>
-                          <StyledTableCell> {data.user_id}  </StyledTableCell>
-                          <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
-                          <StyledTableCell> 
-                          {console.log("index length",data.role.split(',').length)}
-                            {
-                            ( (data.role && data.role.split(',')) || []).map((a, index) =>{
-                              // console.log("index",index);
-                              return(
-                                role.map((ele)=>{
-                                  return(
-                                    (data.role.split(',').length-1)===index ?
-                                    data.role.split(',')[index] == ele.id ? ele.name  :''
-                                    :
-                                    data.role.split(',')[index] == ele.id ? ele.name + ", " :''
-                                  )
-                                  })  
-                              ) 
-                              })
-                            }
-                              
-                          </StyledTableCell>
-                            <StyledTableCell>{data.contact}</StyledTableCell>
-                            <StyledTableCell>
-                            <Tooltip title="Update">                              
-                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
-                              <CreateIcon/>
-                              </IconButton>
-                            </Tooltip>
-                              
-                            </StyledTableCell>
-                        </TableRow>
-                      )
-                      })
-                    }
-                    </TableBody>
-                  </Table>
-                  </TabPanel>
-               </Paper>
+              {
+                <FranchiseTabPannel value={value} tabIndex={0} staffList={staffList} currentRole={null} roles={role}/>
+              }
+              {
+              (role.length>0 ? role : []).map((ele, index) => {
+                return(
+                  <FranchiseTabPannel value={value} tabIndex={index + 1} staffList={staffList} currentRole={ele} roles={role}/>
+                )
+              })
+              }
+            </Paper>
           </Grid>
         </Grid>
       {open? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} franchiseId={franchiseId.franchiseId} role={role} setFranchiseList={setFranchiseListFn} /> :null}

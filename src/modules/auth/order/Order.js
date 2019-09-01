@@ -394,6 +394,17 @@ export default function Order() {
     setValue(newValue);
   }
 
+  function getOpenCount(order, roleName) {
+    let count = 0;
+
+    (order.length > 0 ? order : []).map((data, index) => {
+      if(data.assigned_to !== 4 && data.assigned_to !== 5 && roleName==='CSR'){
+        count += 1;
+      }
+    });
+
+    return count;
+  }
 
   return (
     // <div ref={ref}>
@@ -456,8 +467,14 @@ export default function Order() {
               <AppBar position="static"  className={classes.appBar}>
                 
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
-                  {/* <Tab label={ <Badge className={classes.badge} color="secondary" badgeContent={order.length}>Open</Badge>}/> */}
-                  <Tab label="Open"/>
+                  <Tab
+                    label={
+                      <Badge className={classes.badge} color="secondary" badgeContent={getOpenCount(order, roleName)}>
+                        Open
+                      </Badge>
+                    }
+                  />
+
                   {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
                   {roleName !='Delivery' ? <Tab label="Under Delivery" /> : ''}
                   <Tab label="Delivered" /> 

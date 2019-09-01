@@ -93,7 +93,7 @@ StaffMaster.prototype.getAll = function () {
           console.log('rows staff', rows)
           let datas = [];
           (rows && rows.length > 0 ? rows : []).map(data =>{
-            let pass = data.password.toString('utf8');
+            let pass = data.password && data.password.toString('utf8');
             data.password = pass;
             console.log('passss',data);
             datas.push(data);

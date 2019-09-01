@@ -263,10 +263,10 @@ useEffect(() => {
         setCompletedTaskList(result.taskList);
 
         const rescheduledTask = await TaskAPI.rescheduledTaskList();        
-        setRescheduledTaskList(rescheduledTask.taskList);
+        setRescheduledTaskList(rescheduledTask.taskList || []);
 
         const assignToOtherTask = await TaskAPI.assignToOther();        
-        setAssignToOther(assignToOtherTask.taskList);
+        setAssignToOther(assignToOtherTask.taskList || []);
         
         
       } catch (error) {
@@ -536,10 +536,10 @@ useEffect(() => {
             <AppBar position="static"  className={classes.appBar}>
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
                 <Tab label="All" />
-                <Tab label={`My Task(${staffTaskList.length})`} />
-                <Tab label={`Assigned by Me(${assignToOther.length})`} />
-                <Tab label={`Reschedule Request  (${rescheduledTaskList.length})`} />
-                <Tab label={`Completed (${completedTaskList.length})`}  />
+                <Tab label={`My Task`} />
+                <Tab label={`Assigned by Me`} />
+                <Tab label={`Reschedule Request`} />
+                <Tab label={`Completed`}  />
                 {/* <Tab label="Close" /> */}
               </Tabs>
             </AppBar>

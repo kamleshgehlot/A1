@@ -465,6 +465,9 @@ return (
                   <Typography  className={classes.subTitle}>
                     Timing of Payments
                   </Typography>
+                  <Typography  className={classes.subTitle}>
+                    Frequency
+                  </Typography>
                   <TextField
                       InputProps={{
                         classes: {
@@ -473,7 +476,7 @@ return (
                       }}
                       id="frequency"
                       name="frequency"
-                      label="Frequency"
+                      // label="Frequency"
                       value={inputs.frequency}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
@@ -490,6 +493,9 @@ return (
                     </Grid>
                     
                   <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                    First Payment
+                  </Typography>
                      <TextField
                       InputProps={{
                         classes: {
@@ -498,7 +504,7 @@ return (
                       }}
                       id="first_payment"
                       name="first_payment"
-                      label="First Payment"
+                      // label="First Payment"
                       onChange={handleFirstPaymentDate}
                       onFocus={pastDate}
                       value={firstPaymentDate}
@@ -512,6 +518,9 @@ return (
                     </Grid>
                     
                   <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                    Last Payment
+                  </Typography>
                     <TextField
                       InputProps={{
                         classes: {
@@ -520,7 +529,7 @@ return (
                       }}
                       id="last_payment"
                       name="last_payment"
-                      label="Last Payment"
+                      // label="Last Payment"
                       onFocus={pastDateDisabled}
                       value={lastPaymentDate}
                       defaultValue= {lastPaymentDate}

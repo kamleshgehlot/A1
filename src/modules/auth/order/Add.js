@@ -116,7 +116,7 @@ const useStyles = makeStyles(theme => ({
   },
   fab:{
     marginRight: theme.spacing(1),
-    fontSize: 12,
+    fontSize: 12
   },
   errorHeading: {
     fontSize: theme.typography.pxToRem(12),
@@ -544,13 +544,13 @@ return (
                     
                   <Grid item xs={12} sm={6}>
                     {customer  != null && isNewCustomer === 1? 
-                      <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      <Fab variant="extended" color="secondary" size="small"  onClick={handleBudgetOpen}>
                         Calculate Budget
                       </Fab>
                       : ''
                     }
                     {customer  != null && isNewCustomer === 0? 
-                      <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
+                      <Fab variant="extended" color="secondary" size="small"  onClick={handleBudgetOpen}>
                         Update Budget
                       </Fab>
                       : ''
@@ -567,7 +567,7 @@ return (
                   </Grid>
 
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
                       // multiple
                       value={inputs.main_category}

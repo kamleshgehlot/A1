@@ -77,9 +77,9 @@ const useStyles = makeStyles(theme => ({
     // alignItems: 'center',
     // justifyContent: 'center',
     // flex: 1,
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.pxToRem(13),
-    marginTop: 10,
+    // fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(12),
+    // marginTop: 10,
   },
   root: {
     flexGrow: 1,
@@ -460,6 +460,9 @@ return (
                   <Typography  className={classes.subTitle}>
                     Timing of Payments
                   </Typography>
+                  <Typography  className={classes.subTitle}>
+                    Frequency
+                  </Typography>
                   <TextField
                       InputProps={{
                         classes: {
@@ -480,6 +483,9 @@ return (
                       margin="dense"
                       
                     />
+                    <Typography  className={classes.subTitle}>
+                    First Payment
+                  </Typography>
                      <TextField
                       InputProps={{
                         classes: {
