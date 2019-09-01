@@ -123,7 +123,6 @@ export default function AddProduct(props) {
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
   const [statusList, setStatusList] = useState([]);
-  const [rental, setRental] = useState([]);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
@@ -211,23 +210,6 @@ export default function AddProduct(props) {
     validate
   );
 
-  function handleRentalChange(e){
-    // setRental(e.target.value);
-    if(e.target.value ==''){
-      setInput(e.target.name,'')
-      // alert('Rental price cannot be zero or less than zero.');
-      // setRental('')
-    }
-    else if(e.target.value <= 0){
-      setInput(e.target.name,'0')
-      alert('Rental price cannot be zero or less than zero.');
-      // setRental('')
-    }
-    else{
-      setInput(e.target.name,e.target.value)
-
-    }
-  }
   function handleColorInputChange(e){
     handleInputChange(e);
     if(e.target.value==='0'){
@@ -475,7 +457,7 @@ export default function AddProduct(props) {
                       id="rental"
                       name="rental"
                       value={inputs.rental}
-                      onChange={handleRentalChange}
+                      onChange={handleInputChange}
                       fullWidth
                       required
                       margin="dense"

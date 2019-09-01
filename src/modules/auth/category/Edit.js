@@ -201,18 +201,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
     setConfirmation(false);
   }
   
-  function handleRentalChange(e){
-    if(e.target.value <= 0){
-      setInput(e.target.name,'0')
-      alert('Rental price cannot be zero or less than zero.');
-      // setRental('')
-    }
-    else{
-      setInput(e.target.name,e.target.value)
-
-    }
-  }
-  
   function handleColorInputChange(e){
     handleInputChange(e);
     if(e.target.value==='0'){
@@ -467,7 +455,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       id="rental"
                       name="rental"
                       value={inputs.rental}
-                      onChange={handleRentalChange}
                       error={errors.rental}
                       helperText={errors.rental}
                       fullWidth
