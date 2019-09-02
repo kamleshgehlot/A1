@@ -80,7 +80,15 @@ app.use('/api/franchise/customer', customerRouter);
 app.use('/api/franchise/role', roleRouter);
 app.use('/api/franchise/enquiry',enquiryRouter);
 app.use('/api/franchise/order',orderRouter);
-// app.use('/api/pdf',PDFRouter);
+
+app.use('/api/download', function(req, res, nex) {
+  try {
+    const file = `${__dirname}/files/${req.query.path}`;
+    res.download(file); // Set disposition and send it.
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use('/', routes);
 

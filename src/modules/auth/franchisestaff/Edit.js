@@ -23,6 +23,8 @@ import * as Yup from 'yup';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
 
+import * as c from '../../../api/Constants';
+
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 
@@ -507,7 +509,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <a href={"server\\files\\franchiseStaff\\" + inputs.employment_docs }  download >{inputs.employment_docs}</a>
+                    <a href={c.API_URL + "/api/download?path=franchiseStaff/" + inputs.employment_docs }  download >{inputs.employment_docs}</a>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
