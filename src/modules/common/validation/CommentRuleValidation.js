@@ -8,9 +8,9 @@ export default function validate(values) {
     errors.comment = 'Comment is required';
   }
 
-  if (!values.comment_by) {
-    errors.comment_by = 'Comment By is required';
-  }
+  // if (!values.comment_by) {
+  //   errors.comment_by = 'Comment By is required';
+  // }
 
   return errors;
 };

@@ -123,6 +123,12 @@ export default function Lead() {
       marginRight:theme.spacing(1),
       marginTop: theme.spacing(2),
     },
+    btnorder:{
+      color:"white",
+      fontSize: theme.typography.pxToRem(10),
+      marginRight:theme.spacing(1),
+      marginTop: theme.spacing(2),
+    },
     drpdwn:{
       // color: 'white',
       fontSize: theme.typography.pxToRem(13),

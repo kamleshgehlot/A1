@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail } from './Regex';
+import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -35,9 +35,11 @@ export default function validate(values) {
   }
 
   if (!values.accountant_contact) {
-    errors.accountant_contact = 'Contact is required';
+    errors.accountant_contact = 'Contact number is required';
   } else if (!validNumber.test(values.accountant_contact)) {
-    errors.accountant_contact = 'Contact is invalid';
+    errors.accountant_contact = 'Contact number is invalid';
+  } else if ((values.accountant_contact).length<10) {
+    errors.accountant_contact = 'Contact number is invalid';
   }
   
   return errors;

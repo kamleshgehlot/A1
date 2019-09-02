@@ -542,7 +542,7 @@ return (
                       </RadioGroup>
                     </Grid>
                     
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     {customer  != null && isNewCustomer === 1? 
                       <Fab variant="extended" color="secondary" size="small"  onClick={handleBudgetOpen}>
                         Calculate Budget
@@ -550,19 +550,19 @@ return (
                       : ''
                     }
                     {customer  != null && isNewCustomer === 0? 
-                      <Fab variant="extended" color="secondary" size="small"  onClick={handleBudgetOpen}>
+                      <Fab variant="extended" color="" size="small"  onClick={handleBudgetOpen}>
                         Update Budget
                       </Fab>
                       : ''
                     }
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={7}>
                     {customer  != null && budgetList!="" ? 
-                    <div>
-                    <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
-                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
-                    </div>
-                    : ''
+                      <div>
+                        <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
+                        <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
+                      </div>
+                      : ''
                     }
                   </Grid>
 

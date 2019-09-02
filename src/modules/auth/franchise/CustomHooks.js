@@ -45,8 +45,7 @@ const useSignUpForm = (state, callback, validate) => {
     setInputs({
       ...inputs,
       [name]: value,
-    });
-    
+    });    
   };
 
   const setInputsAll = e => {

@@ -33,7 +33,10 @@ import Lead from '../../../api/Lead';
 import useSignUpForm from '../franchise/CustomHooks';
 
 import { API_URL } from '../../../api/Constants';
+// Helpers
+import { APP_TOKEN } from '../../../api/Constants';
 
+import FranchiseUsers from '../../../api/FranchiseUsers';
 const RESET_VALUES = {
   id: '',
   comment: '',
@@ -120,13 +123,17 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
   const [isError, setIsError] = useState(false);
   const [franchiseList, setFranchiseList] = useState({});
   const [commentList, setCommentList] = useState({});
+  const [franchiseUser, setFranchiseUser] = useState();
+  const [uname, setUname] = useState();
   const docPath = "server\\files\\leads\\" + inputValues.document ; 
+  const roleName = APP_TOKEN.get().roleName;
+  const userName = APP_TOKEN.get().userName;
 
   const addCommentToLead = async () => {
     const response = await Lead.addComment({
       lead_id: inputs.id,
       comment:inputs.comment,
-      comment_by: inputs.comment_by
+      comment_by: uname
     });
     handleSnackbarClick(true);
     handleViewClose(false);
@@ -140,8 +147,18 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
       try {
         const result = await UserAPI.list();
         setFranchiseList(result.userList);
-        allComment();
-        // console.log('usrlist---',result.userList);
+        if(roleName != 'Super Admin'){    
+          const fid = await FranchiseUsers.franchiseid();
+          setFranchiseUser(fid.currentfranchise[0].name);
+          setUname(userName + ' ( '+fid.currentfranchise[0].name+' )');
+          // setInput('comment_by',uname);
+          allComment();
+        }
+        else{
+          setUname(userName);
+          // setInput('comment_by',uname);
+          allComment();
+        }
       } catch (error) {
         setIsError(true);
       }
@@ -315,14 +332,15 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                       id="comment_by"
                       name="comment_by"
                       // label="Comment By"
-                      value={inputs.comment_by}
-                      error={errors.comment_by}
-                      helperText={errors.comment_by}
+                      value={uname}
+                      // error={errors.comment_by}
+                      // helperText={errors.comment_by}
                       onChange={handleInputChange}
                       fullWidth
                       required
                       type="text"
                       margin="dense"
+                      disabled
                     />
                   </Grid>
 

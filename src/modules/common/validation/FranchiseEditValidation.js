@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail } from './Regex';
+import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
 export default function validateEdit(values) {
   let errors = {};
@@ -36,9 +36,11 @@ export default function validateEdit(values) {
   }
   
   if (!values.contact) {
-    errors.contact = 'Contact is required';
+    errors.contact = 'Contact number is required';
   } else if (!validNumber.test(values.contact)) {
-    errors.contact = 'Contact is invalid';
+    errors.contact = 'Contact number is invalid';
+  } else if ((values.contact).length<10) {
+    errors.contact = 'Contact number is invalid';
   }
   if (!values.accountant_name) {
     errors.accountant_name = 'Name is required';
@@ -52,9 +54,11 @@ export default function validateEdit(values) {
   }
 
   if (!values.accountant_contact) {
-    errors.accountant_contact = 'Contact is required';
+    errors.accountant_contact = 'Contact number is required';
   } else if (!validNumber.test(values.accountant_contact)) {
-    errors.accountant_contact = 'Contact is invalid';
+    errors.accountant_contact = 'Contact number is invalid';
+  } else if ((values.accountant_contact).length<10) {
+    errors.accountant_contact = 'Contact number is invalid';
   }
   
   return errors;

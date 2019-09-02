@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail } from './Regex';
+import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -36,9 +36,7 @@ export default function validate(values) {
   }
   if (values.first_payment==='0' || values.first_payment==="" || values.first_payment<0) {
     errors.first_payment = 'First Payment date is required';
-  } else if (!validNumber.test(values.first_payment)) {
-    errors.first_payment = 'First Payment date is invalid';
-  }
+  } 
   if (values.no_of_payment==='0' || values.no_of_payment==="" || values.no_of_payment<0) {
     errors.no_of_payment = 'Number of Payments  is required';
   } else if (!validNumber.test(values.no_of_payment)) {

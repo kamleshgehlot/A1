@@ -104,8 +104,17 @@ FranchiseUser.prototype.franchiseid = function () {
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
         connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
         if (!error) {
-              console.log('users----hbsd---',rows);
-              resolve(rows);
+            let fid= rows[0].franchise_id;
+            connection.changeUser({ database: dbName["prod"] });
+            connection.query('select id as franchise_id, name from franchise where id="'+fid+'" limit 1', function (error, rows, fields) {
+              if (!error) {
+                    console.log('users----hbsd---',rows);
+                    resolve(rows);
+                  } else {
+                    console.log('Error...', error);
+                    reject(error);
+                  }
+              });
             } else {
               console.log('Error...', error);
               reject(error);

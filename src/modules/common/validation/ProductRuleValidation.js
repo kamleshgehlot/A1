@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail } from './Regex';
+import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};

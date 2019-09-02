@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail } from './Regex';
+import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -10,7 +10,7 @@ export default function validate(values) {
 
   if (!values.last_name) {
     errors.last_name = 'Last Name is required';
-  } else if (!validString.test(values.first_name)) {
+  } else if (!validString.test(values.last_name)) {
     errors.last_name = 'Last Name is invalid';
   }
   // else if (!validString.test(values.last_name)) {
@@ -22,9 +22,11 @@ export default function validate(values) {
   } 
 
   if (!values.contact) {
-    errors.contact = 'Contact is required';
+    errors.contact = 'Contact number is required';
   } else if (!validNumber.test(values.contact)) {
-    errors.contact = 'Contact is invalid';
+    errors.contact = 'Contact number is invalid';
+  } else if ((values.contact).length<10) {
+    errors.contact = 'Contact number is invalid';
   }
   
   if (!values.email) {
@@ -46,6 +48,8 @@ export default function validate(values) {
   if (!values.pre_company_contact) {
     errors.pre_company_contact = 'Contact of Previous Company is required';
   } else if (!validNumber.test(values.pre_company_contact)) {
+    errors.pre_company_contact = 'Contact of Previous Company is invalid';
+  } else if ((values.pre_company_contact).length<10) {
     errors.pre_company_contact = 'Contact of Previous Company is invalid';
   }
   if (!values.pre_position) {

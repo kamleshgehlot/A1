@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail } from './Regex';
+import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -22,17 +22,23 @@ export default function validate(values) {
     errors.postcode = 'Postcode is required';
   } else if (!validNumber.test(values.postcode)) {
     errors.postcode = 'Postcode is invalid';
+  } else if ((values.postcode).length<6) {
+    errors.postcode = 'Postcode is invalid';
   }
 
   if (!values.telephone) {
     errors.telephone = 'Telephone number is required';
   } else if (!validNumber.test(values.telephone)) {
     errors.telephone = 'Telephone number is invalid';
+  } else if ((values.telephone).length<10) {
+    errors.telephone = 'Telephone number is invalid';
   }
   
   if (!values.mobile) {
     errors.mobile = 'Mobile number is required';
   } else if (!validNumber.test(values.mobile)) {
+    errors.mobile = 'Mobile number is invalid';
+  } else if ((values.mobile).length<10) {
     errors.mobile = 'Mobile number is invalid';
   }
   
@@ -86,6 +92,8 @@ export default function validate(values) {
     errors.alt_c1_contact = 'Contact number is required';
   } else if (!validNumber.test(values.alt_c1_contact)) {
     errors.alt_c1_contact = 'Contact number is invalid';
+  } else if ((values.alt_c1_contact).length<10) {
+    errors.alt_c1_contact = 'Contact number is invalid';
   }
   
   if (!values.alt_c1_relation) {
@@ -105,9 +113,11 @@ export default function validate(values) {
   } 
 
   if (!values.alt_c2_contact) {
-    errors.alt_c2_contact = 'Contact is required';
+    errors.alt_c2_contact = 'Contact number is required';
   } else if (!validNumber.test(values.alt_c2_contact)) {
-    errors.alt_c2_contact = 'Contact is invalid';
+    errors.alt_c2_contact = 'Contact number is invalid';
+  } else if ((values.alt_c2_contact).length<10) {
+    errors.alt_c2_contact = 'Contact number is invalid';
   }
   
   if (!values.alt_c2_relation) {
@@ -127,6 +137,8 @@ export default function validate(values) {
   if (!values.employer_telephone) {
     errors.employer_telephone = 'Telephone number is required';
   } else if (!validNumber.test(values.employer_telephone)) {
+    errors.employer_telephone = 'Telephone number is invalid';
+  } else if ((values.employer_telephone).length<10) {
     errors.employer_telephone = 'Telephone number is invalid';
   }
 
