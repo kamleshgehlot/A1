@@ -30,7 +30,7 @@ import validate from '../../common/validation/CustomerRuleValidation';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
-import { APP_TOKEN } from '../../../api/Constants';
+import { API_URL } from '../../../api/Constants';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
@@ -683,7 +683,7 @@ function handleIdType(event){
                   {console.log(customerList)}
                   <Grid item xs={12} sm={6}>
                   <InputLabel className={classes.textsize} htmlFor="id_proof">Last Uploaded Document :   </InputLabel>
-                    <a href={"server\\files\\customer\\" + inputs.id_proof }  download >{inputs.id_proof}</a>
+                    <a href={API_URL + "/api/download?path=customer/" + inputs.id_proof }  download >{inputs.id_proof}</a>
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     <InputLabel className={classes.textsize} htmlFor="state">Customer State</InputLabel>

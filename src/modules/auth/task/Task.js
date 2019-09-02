@@ -3,8 +3,6 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Icon from '@material-ui/core/Icon';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -38,7 +36,9 @@ import TaskAPI from '../../../api/Task';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 
 import Role from '../../../api/franchise/Role';
-import StaffTask from '../task/StaffTask';
+
+import { API_URL } from '../../../api/Constants';
+
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -776,7 +776,7 @@ useEffect(() => {
                           {/* <StyledTableCell>{data.completion_date}</StyledTableCell> */}
                           <StyledTableCell>{data.message}</StyledTableCell>
                           <StyledTableCell>
-                            <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
+                            <a href={API_URL + "/api/download?path=taskFile/" + inputs.document }  download >{data.document}</a>                          
                           </StyledTableCell>
                           <StyledTableCell>
                           <Tooltip title="Update Task">                              
@@ -845,7 +845,7 @@ useEffect(() => {
                           <StyledTableCell>{data.completion_date}</StyledTableCell>
                           <StyledTableCell>{data.message}</StyledTableCell>
                           <StyledTableCell>
-                            <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
+                            <a href={c.API_URL + "/api/download?path=taskFile/" + inputs.document } download >{data.document}</a>                          
                           </StyledTableCell>
                           <StyledTableCell>
                           <Tooltip title="Archive Task">                              

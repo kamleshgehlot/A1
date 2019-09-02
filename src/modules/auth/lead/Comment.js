@@ -32,6 +32,8 @@ import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
 import useSignUpForm from '../franchise/CustomHooks';
 
+import { API_URL } from '../../../api/Constants';
+
 const RESET_VALUES = {
   id: '',
   comment: '',
@@ -250,7 +252,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                     </Grid> */}
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="contact">Uploaded Doc/Photo</InputLabel>
-                    <a href={"server\\files\\leads\\" + inputs.document }  download >{inputs.document}</a>
+                    <a href={API_URL + "/api/download?path=leads/" + inputs.document }  download >{inputs.document}</a>
                       {/* <Tooltip title="Download">
                         <IconButton  size="small"  >
                           <SendIcon />
