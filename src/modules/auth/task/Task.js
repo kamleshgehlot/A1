@@ -776,7 +776,7 @@ useEffect(() => {
                           {/* <StyledTableCell>{data.completion_date}</StyledTableCell> */}
                           <StyledTableCell>{data.message}</StyledTableCell>
                           <StyledTableCell>
-                            <a href={API_URL + "/api/download?path=taskFile/" + inputs.document }  download >{data.document}</a>                          
+                            <a href={API_URL + "/api/download?path=taskFile/" + data.document }  download >{data.document}</a>                          
                           </StyledTableCell>
                           <StyledTableCell>
                           <Tooltip title="Update Task">                              
@@ -845,7 +845,7 @@ useEffect(() => {
                           <StyledTableCell>{data.completion_date}</StyledTableCell>
                           <StyledTableCell>{data.message}</StyledTableCell>
                           <StyledTableCell>
-                            <a href={c.API_URL + "/api/download?path=taskFile/" + inputs.document } download >{data.document}</a>                          
+                            <a href={API_URL + "/api/download?path=taskFile/" + data.document } download >{data.document}</a>                          
                           </StyledTableCell>
                           <StyledTableCell>
                           <Tooltip title="Archive Task">                              

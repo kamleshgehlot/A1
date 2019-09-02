@@ -187,7 +187,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     fetchData();
   }, []);
 
-
+ 
   function close(){
     handleReset(RESET_VALUES);
     handleClose(false);
@@ -321,7 +321,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
       
       if(response.isVerified!=''){
       SetChkEmail(response.isVerified[0].email);
-      alert('Email already registered');
+      errors.demail = 'Email already registered';
+      // alert('Email already registered');
       }
     }
     checkEmail();
@@ -455,6 +456,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     addFranchise,
     validate
   );
+  
+  useEffect(() => {
+    errors
+  });
+
 
   return (
     <div>

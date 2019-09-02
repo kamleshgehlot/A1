@@ -81,7 +81,8 @@ Task.prototype.all = function () {
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
       // console.log('that.userid',that.userid);
-          connection.query('select t.id,t.task_id, t.task_description, a.message, a.document, a.id as assignid,a.assign_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
+          // connection.query('select t.id,t.task_id, t.task_description, a.message, a.document, a.id as assignid,a.assign_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id where a.is_active="1" AND t.created_by="'+that.userid+'"', function (error, rows, fields) {
+            connection.query('select t.id,t.task_id, t.task_description, a.message, a.document, a.id as assignid,a.assign_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id where t.created_by="'+that.userid+'"', function (error, rows, fields) {
             if (!error) {
               // console.log('taskrows-=-==--',rows);
               resolve(rows);

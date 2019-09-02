@@ -246,6 +246,33 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   function GeneratePassword() {
     return Math.random().toString(36).slice(-8);
   }
+
+  function handleEmailVerification(event){
+    // console.log(event.target.value);
+    const email = event.target.value;
+    // console.log('email--',email)
+    // const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // if (!validEmail.test(email)) {
+    //   errors.demail = 'Email Address is invalid';
+    // }
+    // else{
+      
+    //   errors.demail = '';
+    // }
+    // console.log('email--',errors.demail)
+
+    const checkEmail = async () => {
+      const response = await UserAPI.verifyEmail({email : email});
+      
+      if(response.isVerified!=''){
+      // SetChkEmail(response.isVerified[0].email);
+      errors.demail = 'Email already registered';
+      // alert('Email already registered');
+      }
+    }
+    checkEmail();
+  }
+
   
   const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
@@ -503,6 +530,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="email"
                       fullWidth
                       // disabled
+                      onBlur={handleEmailVerification}
                       onChange={handleInputChange}
                     />
                   </Grid>
