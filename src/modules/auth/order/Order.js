@@ -35,6 +35,7 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
+import { API_URL } from '../../../api/Constants';
 
 import Add from './Add';
 import Edit from './Edit';
@@ -622,7 +623,8 @@ export default function Order() {
                              <StyledTableCell>
                                 
                                 <Tooltip title="Download Form">
-                                <a href={"server\\files\\order\\" + data.uploaded_doc }  download >
+                                <a href={API_URL + "/api/download?path=order/" + data.uploaded_doc }  download >
+                                {/* <a href={"server\\files\\order\\" + data.uploaded_doc }  download > */}
                                 {/* {inputs.id_proof} */}
                                   <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} >
                                     <PrintIcon />
