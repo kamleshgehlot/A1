@@ -26,7 +26,7 @@ StaffMaster.prototype.register = function () {
 
       if (!error) {
         connection.changeUser({ database: dbName["prod"] });
-        connection.query('INSERT INTO master_staff(first_name,last_name,user_id,password,location,contact,email,position,created_by) VALUES ("' + that.first_name + '", "' + that.last_name + '","' + that.user_id + '",AES_ENCRYPT("' + that.password + '", "secret"),"'+ that.location + '", "' + that.contact + '" , "' + that.email + '", "' + that.position + '", "' + that.created_by + '")', function (error, rows, fields) {
+        connection.query('INSERT INTO master_staff(first_name,last_name,user_id,password,location,contact,email,position,created_by) VALUES ("' + that.first_name + '", "' + that.last_name + '","' + that.user_id + '", AES_ENCRYPT("' + that.password + '", \'secret\'), "'+ that.location + '", "' + that.contact + '" , "' + that.email + '", "' + that.position + '", "' + that.created_by + '")', function (error, rows, fields) {
           if (!error) {
             resolve({ rows });
           } else {
@@ -93,10 +93,13 @@ StaffMaster.prototype.getAll = function () {
           console.log('rows staff', rows)
           let datas = [];
           (rows && rows.length > 0 ? rows : []).map(data =>{
-            let pass = data.password && data.password.toString('utf8');
-            data.password = pass;
-            console.log('passss',data);
-            datas.push(data);
+            if(data.password != ""){
+              let pass = data.password && data.password.toString('utf8');
+              console.log('passss',pass);
+              data.password = pass;
+              console.log('passss',data);
+            }
+            datas.push(data); 
           });
           resolve(datas);
           // resolve(rows);
