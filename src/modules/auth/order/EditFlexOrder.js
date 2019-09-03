@@ -31,6 +31,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -127,25 +130,57 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   const [inputs,setInputs] = useState([]);
   const [firstPaymentDate,setFirstPaymentDate] = useState('');
   const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
+  const [deliveryTime, setDeliveryTime] = useState('');
 
   
-  function pastDateDisabled2(){
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    var hour = dtToday.getHours();
-    var minute = dtToday.getMinutes();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-        var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-        document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
-        setExpectedDeliveryDate(maxDateTime.toString());
+  // function pastDateDisabled2(){
+  //   var dtToday = new Date();
+  //   var month = dtToday.getMonth() + 1;
+  //   var day = dtToday.getDate();
+  //   var year = dtToday.getFullYear();
+  //   var hour = dtToday.getHours();
+  //   var minute = dtToday.getMinutes();
+  //   if(month < 10){
+  //       month = '0' + month.toString();
+  //     }
+  //   if(day < 10){
+  //       day = '0' + day.toString();
+  //     }
+  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
+  //       document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
+  //       setExpectedDeliveryDate(maxDateTime.toString());
+  // }
+  
+  const setDateFormat = (date) => {
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    return fullDate;
   }
+  
+  function handleDateChange(date){
+    // let fulldate = setDateFormat(date);
+    // let fullDate = yy+ '-'+mm+'-'+dd;
+    // handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    setFirstPaymentDate(setDateFormat(date));
+  }
+
+  function handleDeliveryDate(date){
+    // let fulldate = setDateFormat(date);
+    // handleInputChange({target:{name: 'exp_delivery_at', value: setDateFormat(date)}})
+    setExpectedDeliveryDate(setDateFormat(date));
+  }
+
+  function handleDeliveryTime(time){      
+    // handleInputChange({target:{name: 'delivery_time', value: time}})
+    setDeliveryTime(time)    
+  }
+  // console.log('datell',expectedDeliveryDate)
+  // console.log('time',deliveryTime)
 
 
   function handleInputBlur(e){
@@ -187,6 +222,14 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   function handleSubmit(e){
     e.preventDefault();
     handleFlexClose(false)
+
+    let hour = deliveryTime.getHours();
+    let minute = deliveryTime.getMinutes();
+    if(hour < 10){   hour = '0' + hour.toString(); }
+    if(minute < 10){ minute = '0' + minute.toString(); }    
+    let deliveryDateTime = expectedDeliveryDate +  'T' + hour + ':' + minute;
+    console.log('delDateTime',deliveryDateTime);
+
     const data = {
       goods_rent_price : parseFloat(inputs.goods_rent_price),
       ppsr_fee : parseFloat(inputs.ppsr_fee),
@@ -198,28 +241,32 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       each_payment_amt : parseFloat(inputs.each_payment_amt),
       total_payment_amt : parseFloat(inputs.total_payment_amt),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-      exp_delivery_at : expectedDeliveryDate,
+      exp_delivery_at : deliveryDateTime,
       bond_amt : parseFloat(inputs.bond_amt),
     }
     setFlexOrderList(data);
   }
 
+  // console.log('inputs==',inputs);
+  
 
 
   useEffect(() => {
-    console.log(flexOrderList);
+    // console.log(flexOrderList);
     const fetchData = async () => {
       try {
         const order = await Order.getCurrespondingFlexOrder({flexOrderId: flexOrderId});
-        console.log('dd====',order);
+        // console.log('dd====',order);
         if(flexOrderList!=null){
           setInputs(flexOrderList);
           setFirstPaymentDate(flexOrderList.first_payment);
           setExpectedDeliveryDate(flexOrderList.exp_delivery_at.split('.')[0]);
+          setDeliveryTime(flexOrderList.exp_delivery_at.split('.')[0]);
         }else{
         setInputs(order[0]);
         setFirstPaymentDate(order[0].first_payment);
         setExpectedDeliveryDate(order[0].exp_delivery_at.split('.')[0]);
+        setDeliveryTime(order[0].exp_delivery_at.split('.')[0]);
       }
       } catch (error) {
         console.log('Error..',error);
@@ -228,29 +275,29 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     fetchData();
   }, []);
 
-  function pastDate(){
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-        var maxDate = year + '-' + month + '-' + day;
-        document.getElementById('first_payment').setAttribute('min', maxDate);
-        setFirstPaymentDate(maxDate.toString());
-  }
+  // function pastDate(){
+  //   var dtToday = new Date();
+  //   var month = dtToday.getMonth() + 1;
+  //   var day = dtToday.getDate();
+  //   var year = dtToday.getFullYear();
+  //   if(month < 10){
+  //       month = '0' + month.toString();
+  //     }
+  //   if(day < 10){
+  //       day = '0' + day.toString();
+  //     }
+  //       var maxDate = year + '-' + month + '-' + day;
+  //       document.getElementById('first_payment').setAttribute('min', maxDate);
+  //       setFirstPaymentDate(maxDate.toString());
+  // }
   
 
-  function handleExpectedDeliveryDate(e){
-    setExpectedDeliveryDate(e.target.value);
-  }
-  function handleFirstPaymentDate(e){
-    setFirstPaymentDate(e.target.value);
-  }
+  // function handleExpectedDeliveryDate(e){
+  //   setExpectedDeliveryDate(e.target.value);
+  // }
+  // function handleFirstPaymentDate(e){
+  //   setFirstPaymentDate(e.target.value);
+  // }
 
   
 // {console.log('dddk,',expectedDeliveryDate)}
@@ -376,11 +423,62 @@ return (
                   </Grid>
 
                   <Grid item xs={12} sm={12}>
-              <Typography variant="h6" className={classes.labelTitle}>
-                Payments 
-              </Typography>
+                  <Typography variant="h6" className={classes.labelTitle}>
+                      Payments 
+                  </Typography>
+                  <Typography  className={classes.subTitle}>
+                      Timing of Payments
+                  </Typography>
               </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>                 
+                  <InputLabel className={classes.textsize}  htmlFor="frequency">Frequency *</InputLabel>
+                  <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="frequency"
+                      name="frequency"
+                      // label="Frequency"
+                      value={inputs.frequency}
+                      onChange={handleInputChange}
+                      // error={errors.frequency}
+                      // helperText={errors.frequency}
+                      fullWidth
+                      required
+                      type="number"
+                      // placeholder="Franchise Name"
+                      margin="dense"                      
+                    />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                    First Payment Date
+                  </Typography>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="first_payment"
+                        name="first_payment"
+                        format="dd/MM/yyyy"
+                        disablePast = {true}
+                        // defaultValue = {new Date()}
+                        defaultValue = {""}
+                        value={firstPaymentDate}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        onChange={handleDateChange}
+                        // error={errors.first_payment}
+                        // helperText={errors.first_payment}                               
+                      />
+                    </MuiPickersUtilsProvider>
+                </Grid>
+                {/* <Grid item xs={12} sm={3}>
                   <Typography  className={classes.subTitle}>
                     Timing of Payments
                   </Typography>
@@ -422,8 +520,8 @@ return (
                       // placeholder="Franchise Name"
                       margin="dense"
                     />
-                </Grid>
-                <Grid item xs={12} sm={3}>
+                </Grid> */}
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                       Number of Payments 
                   </Typography>
@@ -450,7 +548,7 @@ return (
                       // }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Amount of Each Payments
                   </Typography>
@@ -475,7 +573,7 @@ return (
                       }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                       Total Amount of Payments
                   </Typography>
@@ -528,7 +626,7 @@ return (
                     />
                 </Grid>
                 
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                   Expected Delivery Date/Time
                   </Typography>
@@ -551,7 +649,62 @@ return (
                         },
                       }}
                     />
-                </Grid>
+                </Grid> */}
+
+                  <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                   Expected Delivery Date
+                  </Typography>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          margin="dense"
+                          id="exp_delivery_at"
+                          name="exp_delivery_at"
+                          format="dd/MM/yyyy"
+                          disablePast = {true}
+                          defaultValue = {""}
+                          value={expectedDeliveryDate}
+                          // fullWidth 
+                          // type="datetime-local"
+                          InputProps={{
+                            classes: {
+                              input: classes.textsize,
+                            },
+                          }}
+                          onChange={handleDeliveryDate}
+                          // error={errors.exp_delivery_at}
+                          // helperText={errors.exp_delivery_at}                               
+                        />
+                        </MuiPickersUtilsProvider>
+                        </Grid>
+                        
+                        <Grid item xs={12} sm={4}>
+                          <Typography  className={classes.subTitle}>
+                            Expected Delivery Time
+                          </Typography>
+                          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <KeyboardTimePicker
+                            margin="dense"
+                            id="delivery_time"
+                            name="delivery_time"
+                            // label="Time picker" 
+                            defaultValue = {""}
+                            value={deliveryTime}
+                            onChange={handleDeliveryTime}
+                            InputProps={{
+                              classes: {
+                                input: classes.textsize,
+                              },
+                            }}
+                            // error={errors.delivery_time}
+                            // helperText={errors.delivery_time}
+                            // KeyboardButtonProps={{
+                            //   'aria-label': 'change time',
+                            // }}
+                          />
+                      </MuiPickersUtilsProvider>
+                  </Grid>
+                
                 
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>

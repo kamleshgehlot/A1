@@ -70,5 +70,17 @@ export default function validate(values) {
   } else if (!validNumber.test(values.total_intrest)) {
     errors.total_intrest = 'Total Interest Charges are invalid';
   }
+  if(values.first_payment === ""){
+    errors.first_payment = 'First Payment Date is Required';
+  }
+  if(values.last_payment === ""){
+    errors.first_payment = 'Last Payment Date is Required';
+  }
+  if(values.exp_delivery_at === ""){
+    errors.first_payment = 'Expected Date is Required';
+  }
+  if(values.delivery_time === ""){
+    errors.first_payment = 'Expected Time Date is Required';
+  }
   return errors;
 };

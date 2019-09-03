@@ -31,7 +31,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
-
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -117,28 +119,28 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
 
   const classes = useStyles();
   // const [inputs,setInputs] = useState(fixedOrderList);
-  const [firstPaymentDate,setFirstPaymentDate] = useState('');
-  const [lastPaymentDate,setLastPaymentDate] = useState('');
-  const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
-  
+  // const [firstPaymentDate,setFirstPaymentDate] = useState('');
+  // const [lastPaymentDate,setLastPaymentDate] = useState('');
+  // const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
+  // const [deliveryTime, setDeliveryTime] = useState('');
 
-  function handleInputBlur(e){
-    // if(e.target.value===''){
-    //   setInputs({
-    //     ...inputs,
-    //     [e.target.name]: 0,
-    //   });
-    // }
-  }
+  // function handleInputBlur(e){
+  //   // if(e.target.value===''){
+  //   //   setInputs({
+  //   //     ...inputs,
+  //   //     [e.target.name]: 0,
+  //   //   });
+  //   // }
+  // }
 
-  function handleInputFocus(e){
-    // if(e.target.value==='0'){
-    //   setInputs({
-    //     ...inputs,
-    //     [e.target.name]: '',
-    //   });
-    // }
-  }
+  // function handleInputFocus(e){
+  //   // if(e.target.value==='0'){
+  //   //   setInputs({
+  //   //     ...inputs,
+  //   //     [e.target.name]: '',
+  //   //   });
+  //   // }
+  // }
   
   // function handleInputChange(e){
   //   // console.log('valueee',e.target.value)
@@ -156,23 +158,29 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
   // // }
 
   // }
-  // console.log('inputs.',inputs);
-
   function fixed(e){
-    // e.preventDefault();
+    // e.preventDefault();   
+
+    let hour = inputs.delivery_time.getHours();
+    let minute = inputs.delivery_time.getMinutes();
+    if(hour < 10){   hour = '0' + hour.toString(); }
+    if(minute < 10){ minute = '0' + minute.toString(); }    
+
+    let deliveryDateTime = inputs.exp_delivery_at +  'T' + hour + ':' + minute;
+
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal),
       cash_price : parseFloat(inputs.cash_price),
       delivery_fee : parseFloat(inputs.delivery_fee),
       ppsr_fee : parseFloat(inputs.ppsr_fee),
       frequency : inputs.frequency,
-      first_payment : firstPaymentDate,
-      last_payment : lastPaymentDate,
+      first_payment : inputs.first_payment,
+      last_payment : inputs.last_payment,
       no_of_payment : parseFloat(inputs.no_of_payment),
       each_payment_amt : parseFloat(inputs.each_payment_amt),
       total_payment_amt : parseFloat(inputs.total_payment_amt),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-      exp_delivery_at : expectedDeliveryDate,
+      exp_delivery_at : deliveryDateTime,
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt),
       intrest_rate : parseFloat(inputs.intrest_rate),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per),
@@ -202,60 +210,93 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
   // }, []);
 
   
-  function pastDate(){
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-        var maxDate = year + '-' + month + '-' + day;
-        document.getElementById('first_payment').setAttribute('min', maxDate);
-        // setFirstPaymentDate(maxDate.toString());
+  // function pastDate(){
+  //   var dtToday = new Date();
+  //   var month = dtToday.getMonth() + 1;
+  //   var day = dtToday.getDate();
+  //   var year = dtToday.getFullYear();
+  //   if(month < 10){
+  //       month = '0' + month.toString();
+  //     }
+  //   if(day < 10){
+  //       day = '0' + day.toString();
+  //     }
+  //       var maxDate = year + '-' + month + '-' + day;
+  //       document.getElementById('first_payment').setAttribute('min', maxDate);
+  //       // setFirstPaymentDate(maxDate.toString());
+  // }
+  const setDateFormat = (date) => {
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    return fullDate;
+  }
+
+  function handleDateChange(date){
+    // let fulldate = setDateFormat(date);
+    // let fullDate = yy+ '-'+mm+'-'+dd;
+    handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+  }
+
+  function handleLastDate(date){
+    // let fulldate = setDateFormat(date);
+    handleInputChange({target:{name: 'last_payment', value: setDateFormat(date)}})
+  }
+
+  function handleDeliveryDate(date){
+    // let fulldate = setDateFormat(date);
+    handleInputChange({target:{name: 'exp_delivery_at', value: setDateFormat(date)}})
+  }
+
+  function handleDeliveryTime(time){      
+    handleInputChange({target:{name: 'delivery_time', value: time}})
+    // setDeliveryTime(time)    
   }
   
-  function pastDateDisabled(){
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-        var maxDate = year + '-' + month + '-' + day;
-        document.getElementById('last_payment').setAttribute('min', maxDate);
-        // setLastPaymentDate(maxDate.toString());
-  }
-  function pastDateDisabled2(){
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    var hour = dtToday.getHours();
-    var minute = dtToday.getMinutes();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-    if(hour < 10){
-      hour = '0' + hour.toString();
-    }
-    if(minute < 10){
-      minute = '0' + minute.toString();
-    }
-        var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-        document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
-        // setExpectedDeliveryDate(maxDateTime.toString());
-  }
+
+  // function pastDateDisabled(){
+  //   var dtToday = new Date();
+  //   var month = dtToday.getMonth() + 1;
+  //   var day = dtToday.getDate();
+  //   var year = dtToday.getFullYear();
+  //   if(month < 10){
+  //       month = '0' + month.toString();
+  //     }
+  //   if(day < 10){
+  //       day = '0' + day.toString();
+  //     }
+  //       var maxDate = year + '-' + month + '-' + day;
+  //       document.getElementById('last_payment').setAttribute('min', maxDate);
+  //       // setLastPaymentDate(maxDate.toString());
+  // }
+
+  // function pastDateDisabled2(){
+  //   var dtToday = new Date();
+  //   var month = dtToday.getMonth() + 1;
+  //   var day = dtToday.getDate();
+  //   var year = dtToday.getFullYear();
+  //   var hour = dtToday.getHours();
+  //   var minute = dtToday.getMinutes();
+  //   if(month < 10){
+  //       month = '0' + month.toString();
+  //     }
+  //   if(day < 10){
+  //       day = '0' + day.toString();
+  //     }
+  //   if(hour < 10){
+  //     hour = '0' + hour.toString();
+  //   }
+  //   if(minute < 10){
+  //     minute = '0' + minute.toString();
+  //   }
+  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
+  //       document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
+  //       // setExpectedDeliveryDate(maxDateTime.toString());
+  // }
 
   // useEffect(() => {
   //   var dtToday = new Date();
@@ -297,16 +338,16 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
   // }, []);
   
   
-  function handleFirstPaymentDate(e){
-    setFirstPaymentDate(e.target.value);
-  }
-  function handleLastPaymentDate(e){
-    setLastPaymentDate(e.target.value);
-  }
-  function handleExpectedDeliveryDate(e){
-    // console.log('ddd',e.target.value);
-    setExpectedDeliveryDate(e.target.value);
-  }
+  // function handleFirstPaymentDate(e){
+  //   setFirstPaymentDate(e.target.value);
+  // }
+  // function handleLastPaymentDate(e){
+  //   setLastPaymentDate(e.target.value);
+  // }
+  // function handleExpectedDeliveryDate(e){
+  //   // console.log('ddd',e.target.value);
+  //   setExpectedDeliveryDate(e.target.value);
+  // }
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     fixed,
@@ -347,8 +388,8 @@ return (
                       label="Intial Unpaid Balance"
                       value={inputs.int_unpaid_bal}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       fullWidth
                       error={errors.int_unpaid_bal}
                       helperText={errors.int_unpaid_bal}
@@ -377,8 +418,8 @@ return (
                       label="Cash Price"
                       value={inputs.cash_price}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.cash_price}
                       helperText={errors.cash_price}
                       fullWidth
@@ -407,8 +448,8 @@ return (
                       label="Delivery Fee"
                       value={inputs.delivery_fee}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.delivery_fee}
                       helperText={errors.delivery_fee}
                       fullWidth
@@ -438,8 +479,8 @@ return (
                       label="PPSR Fee"
                       value={inputs.ppsr_fee}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.ppsr_fee}
                       helperText={errors.ppsr_fee}
                       fullWidth
@@ -460,11 +501,11 @@ return (
               <Typography variant="h6" className={classes.labelTitle}>
                 Payments 
               </Typography>
-              </Grid>
-                  <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Timing of Payments
                   </Typography>
+              </Grid>
+                  <Grid item xs={12} sm={4}>              
                   <Typography  className={classes.subTitle}>
                     Frequency
                   </Typography>
@@ -479,8 +520,8 @@ return (
                       // label="Frequency"
                       value={inputs.frequency}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.frequency}
                       helperText={errors.frequency}
                       fullWidth
@@ -494,9 +535,30 @@ return (
                     
                   <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                    First Payment
+                    First Payment Date
                   </Typography>
-                     <TextField
+                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="first_payment"
+                        name="first_payment"
+                        format="dd/MM/yyyy"
+                        disablePast = {true}
+                        // defaultValue = {new Date()}
+                        defaultValue = {""}
+                        value={inputs.first_payment}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        onChange={handleDateChange}
+                        error={errors.first_payment}
+                        helperText={errors.first_payment}                               
+                      />
+                    </MuiPickersUtilsProvider>
+                     {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -514,14 +576,35 @@ return (
                       type="date"
                       // placeholder="Franchise Name"
                       margin="dense"
-                    />
+                    /> */}
                     </Grid>
                     
                   <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                    Last Payment
+                    Last Payment Date
                   </Typography>
-                    <TextField
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="last_payment"
+                        name="last_payment"
+                        format="dd/MM/yyyy"
+                        disablePast = {true}
+                        defaultValue = {""}
+                        // defaultValue = {new Date()}
+                        value={inputs.last_payment}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        onChange={handleLastDate}
+                        error={errors.last_payment}
+                        helperText={errors.last_payment}                               
+                      />
+                    </MuiPickersUtilsProvider>
+                    {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -539,7 +622,7 @@ return (
                       type="date"
                       // placeholder="Franchise Name"
                       margin="dense"
-                    />
+                    /> */}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
@@ -556,8 +639,8 @@ return (
                       // label="no_of_payment/Mortgage"
                       value={inputs.no_of_payment}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       fullWidth
                       error={errors.no_of_payment}
                       helperText={errors.no_of_payment}
@@ -585,8 +668,8 @@ return (
                       // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
@@ -617,8 +700,8 @@ return (
                       // label="total_payment_amt/Mortgage"
                       value={inputs.total_payment_amt}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.total_payment_amt}
                       helperText={errors.total_payment_amt}
                       fullWidth
@@ -636,7 +719,7 @@ return (
                      
                 </Grid>
                 
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={8}>
                   <Typography  className={classes.subTitle}>
                       Minimun Number of Payments before delivery
                   </Typography>
@@ -651,8 +734,8 @@ return (
                       // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       
@@ -660,36 +743,9 @@ return (
                       // required
                       type="number"
                       // placeholder="Franchise Name"
-                      margin="dense"
-                      
+                      margin="dense"                      
                     />
                 </Grid>
-                
-                <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                  Expected Delivery Date/Time
-                  </Typography>
-                  <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="exp_delivery_at"
-                      name="exp_delivery_at"
-                      value={expectedDeliveryDate}
-                      onChange={handleExpectedDeliveryDate}
-                      onFocus={pastDateDisabled2}
-                      fullWidth
-                      type="datetime-local"
-                      defaultValue={expectedDeliveryDate}
-                      margin="dense"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                </Grid>
-                
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Minimum Payment Amt
@@ -705,8 +761,8 @@ return (
                       // label="minimum_payment_amt/Mortgage"
                       value={inputs.minimum_payment_amt}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.minimum_payment_amt}
                       helperText={errors.minimum_payment_amt}
                       
@@ -723,6 +779,84 @@ return (
                       }}
                     />
                 </Grid>
+                
+                <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                   Expected Delivery Date
+                  </Typography>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          margin="dense"
+                          id="exp_delivery_at"
+                          name="exp_delivery_at"
+                          format="dd/MM/yyyy"
+                          disablePast = {true}
+                          defaultValue = {""}
+                          value={inputs.exp_delivery_at}
+                          // fullWidth 
+                          // type="datetime-local"
+                          InputProps={{
+                            classes: {
+                              input: classes.textsize,
+                            },
+                          }}
+                          onChange={handleDeliveryDate}
+                          error={errors.exp_delivery_at}
+                          helperText={errors.exp_delivery_at}                               
+                        />
+                        </MuiPickersUtilsProvider>
+                        </Grid>
+                        
+                        <Grid item xs={12} sm={4}>
+
+                            <Typography  className={classes.subTitle}>
+                              Expected Delivery Time
+                            </Typography>
+                          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <KeyboardTimePicker
+                            margin="dense"
+                            id="delivery_time"
+                            name="delivery_time"
+                            // label="Time picker" 
+                            defaultValue = {""}
+                            value={inputs.delivery_time}
+                            onChange={handleDeliveryTime}
+                            InputProps={{
+                              classes: {
+                                input: classes.textsize,
+                              },
+                            }}
+                            error={errors.delivery_time}
+                            helperText={errors.delivery_time}
+                            // KeyboardButtonProps={{
+                            //   'aria-label': 'change time',
+                            // }}
+                          />
+                      </MuiPickersUtilsProvider>
+                      
+                    
+                    {/* <TextField
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        id="exp_delivery_at"
+                        name="exp_delivery_at"
+                        value={expectedDeliveryDate}
+                        onChange={handleExpectedDeliveryDate}
+                        // onFocus={pastDateDisabled2}
+                        fullWidth
+                        type="datetime-local"
+                        defaultValue={expectedDeliveryDate}
+                        margin="dense"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      /> */}
+                </Grid>
+                {console.log(inputs)}
+                
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
                     Interest
@@ -744,8 +878,8 @@ return (
                       label="Weeks"
                       value={inputs.intrest_rate}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.intrest_rate}
                       helperText={errors.intrest_rate}
                       
@@ -769,8 +903,8 @@ return (
                       label="Daily interest rates of (in %)"
                       value={inputs.intrest_rate_per}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.intrest_rate_per}
                       helperText={errors.intrest_rate_per}
                       fullWidth
@@ -800,8 +934,8 @@ return (
                       // label=""
                       value={inputs.total_intrest}
                       onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.total_intrest}
                       helperText={errors.total_intrest}
                       fullWidth

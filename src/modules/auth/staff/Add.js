@@ -95,6 +95,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   const [ploading, setpLoading] = React.useState(false);
 
+    
+  useEffect(() => {
+    inputs['password']=='' ? setInput('password', GeneratePassword()) :''
+  }, []);
+  
+
 
   const addStaffMaster = async () => {
     
@@ -124,11 +130,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     }
   };
  
-  function handlePasswordBlurChange() {
-    inputs['password']=='' ? 
-    setInput('password', GeneratePassword())
-    :''
-  }
+  // function handlePasswordBlurChange() {
+  //   inputs['password']=='' ? 
+  //   setInput('password', GeneratePassword())
+  //   :''
+  // }
 
   function GeneratePassword() {
     return Math.random().toString(36).slice(-8);
@@ -256,6 +262,7 @@ return (
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
+                      onBlur={handleNameBlurChange}
                       error={errors.location}
                       helperText={errors.location}
                       required
@@ -310,24 +317,6 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="password">Password *</InputLabel>
-                    <TextField 
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="password"
-                      name="password"
-                      onFocus={handlePasswordBlurChange}
-                      value={inputs.password} 
-                      error={errors.password}
-                      helperText={errors.password}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="position">Position *</InputLabel>
                     <Select
                       value={inputs.position}
@@ -355,6 +344,49 @@ return (
                       }
                     </Select>
                   </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">User Id *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="user_id"
+                      name="user_id"
+                      // label="user_id"
+                      type="user_id"
+                      value={inputs.user_id} 
+                      // onChange={handleInputChange}
+                      // error={errors.email}
+                      // helperText={errors.email}
+                      // required
+                      disabled
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="password">Password *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      // onFocus={handlePasswordBlurChange}
+                      value={inputs.password} 
+                      error={errors.password}
+                      helperText={errors.password}
+                      fullWidth
+                      disabled
+                    />
+                  </Grid>
+                  
                   <Grid item xs={12} sm={12}>
                     <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
                       Save
