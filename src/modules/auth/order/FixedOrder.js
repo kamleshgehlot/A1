@@ -44,9 +44,28 @@ import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 import validate from '../../common/validation/FixedOrderValidation';
 
+
 const RESET_VALUES = {
-  
+  exp_delivery_date : '',
+  first_payment : '',
+  last_payment : '',
+  delivery_time : '',
+
+  int_unpaid_bal : '',
+  cash_price  : '',
+  delivery_fee : '',
+  ppsr_fee : '',
+  frequency  : '',
+  no_of_payment : '',
+  each_payment_amt : '',
+  total_payment_amt : '',
+  before_delivery_amt : '',
+  minimum_payment_amt : '',
+  intrest_rate : '',
+  intrest_rate_per : '',
+  total_intrest : '',
 };
+
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -117,57 +136,12 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Budget({ open, handleFixedClose, setFixedOrderList, fixedOrderList}) {
 
+  console.log('inputs',inputs)
   const classes = useStyles();
-  // const [inputs,setInputs] = useState(fixedOrderList);
-  // const [firstPaymentDate,setFirstPaymentDate] = useState('');
-  // const [lastPaymentDate,setLastPaymentDate] = useState('');
-  // const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
-  // const [deliveryTime, setDeliveryTime] = useState('');
-
-  // function handleInputBlur(e){
-  //   // if(e.target.value===''){
-  //   //   setInputs({
-  //   //     ...inputs,
-  //   //     [e.target.name]: 0,
-  //   //   });
-  //   // }
-  // }
-
-  // function handleInputFocus(e){
-  //   // if(e.target.value==='0'){
-  //   //   setInputs({
-  //   //     ...inputs,
-  //   //     [e.target.name]: '',
-  //   //   });
-  //   // }
-  // }
   
-  // function handleInputChange(e){
-  //   // console.log('valueee',e.target.value)
-  //   // if(e.target.value===""){
-  //     // setInputs({
-  //     //   ...inputs,
-  //     //   [e.target.name]: 0,
-  //     // });
-  //   // }
-  //   // else{
-  //   setInputs({
-  //     ...inputs,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // // }
-
-  // }
   function fixed(e){
     // e.preventDefault();   
-
-    let hour = inputs.delivery_time.getHours();
-    let minute = inputs.delivery_time.getMinutes();
-    if(hour < 10){   hour = '0' + hour.toString(); }
-    if(minute < 10){ minute = '0' + minute.toString(); }    
-
-    let deliveryDateTime = inputs.exp_delivery_at +  'T' + hour + ':' + minute;
-
+   
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal),
       cash_price : parseFloat(inputs.cash_price),
@@ -180,7 +154,8 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
       each_payment_amt : parseFloat(inputs.each_payment_amt),
       total_payment_amt : parseFloat(inputs.total_payment_amt),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-      exp_delivery_at : deliveryDateTime,
+      exp_delivery_date : inputs.exp_delivery_date,
+      exp_delivery_time : inputs.delivery_time,
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt),
       intrest_rate : parseFloat(inputs.intrest_rate),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per),
@@ -189,42 +164,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
     setFixedOrderList(data);
     handleFixedClose(false)
   }
-
-  // useEffect(() => {
-  //   if(inputs.length ===0){
-  //   inputs.int_unpaid_bal = 0;
-  //   inputs.cash_price= 0;
-  //   inputs.delivery_fee= 0;
-  //   inputs.ppsr_fee= 0;
-  //   inputs.no_of_payment= 0;
-  //   inputs.each_payment_amt= 0;
-  //   inputs.total_payment_amt= 0;
-  //   inputs.before_delivery_amt= 0;
-  //   inputs.frequency = 0;
-  //   // inputs.exp_delivery_at;
-  //   inputs.minimum_payment_amt= 0;
-  //   inputs.intrest_rate= 0;
-  //   inputs.intrest_rate_per= 0;
-  //   inputs.total_intrest= 0;
-  //   }
-  // }, []);
-
-  
-  // function pastDate(){
-  //   var dtToday = new Date();
-  //   var month = dtToday.getMonth() + 1;
-  //   var day = dtToday.getDate();
-  //   var year = dtToday.getFullYear();
-  //   if(month < 10){
-  //       month = '0' + month.toString();
-  //     }
-  //   if(day < 10){
-  //       day = '0' + day.toString();
-  //     }
-  //       var maxDate = year + '-' + month + '-' + day;
-  //       document.getElementById('first_payment').setAttribute('min', maxDate);
-  //       // setFirstPaymentDate(maxDate.toString());
-  // }
+ 
   const setDateFormat = (date) => {
     let date1 = new Date(date);
     let yy = date1.getFullYear();
@@ -236,123 +176,40 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
     return fullDate;
   }
 
+  // const setTimeFormat = (time) => {
+  //   let date = new Date(time);
+  //   let hh = date.getHours();
+  //   let mm = date.getMinutes();
+  //   if(hh<10) { hh = '0' + hh.toString()}
+  //   if(mm<10) { mm = '0' + mm.toString()}
+  //   let fullTime = hh + ':' + mm ;
+  //   return fullTime;
+  // }
+
+
   function handleDateChange(date){
-    // let fulldate = setDateFormat(date);
-    // let fullDate = yy+ '-'+mm+'-'+dd;
     handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
   }
 
   function handleLastDate(date){
-    // let fulldate = setDateFormat(date);
     handleInputChange({target:{name: 'last_payment', value: setDateFormat(date)}})
   }
 
   function handleDeliveryDate(date){
-    // let fulldate = setDateFormat(date);
-    handleInputChange({target:{name: 'exp_delivery_at', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
   }
 
   function handleDeliveryTime(time){      
-    handleInputChange({target:{name: 'delivery_time', value: time}})
-    // setDeliveryTime(time)    
+    let dTime = new Date(time);
+    handleInputChange({target:{name: 'delivery_time', value: dTime}})
   }
   
-
-  // function pastDateDisabled(){
-  //   var dtToday = new Date();
-  //   var month = dtToday.getMonth() + 1;
-  //   var day = dtToday.getDate();
-  //   var year = dtToday.getFullYear();
-  //   if(month < 10){
-  //       month = '0' + month.toString();
-  //     }
-  //   if(day < 10){
-  //       day = '0' + day.toString();
-  //     }
-  //       var maxDate = year + '-' + month + '-' + day;
-  //       document.getElementById('last_payment').setAttribute('min', maxDate);
-  //       // setLastPaymentDate(maxDate.toString());
-  // }
-
-  // function pastDateDisabled2(){
-  //   var dtToday = new Date();
-  //   var month = dtToday.getMonth() + 1;
-  //   var day = dtToday.getDate();
-  //   var year = dtToday.getFullYear();
-  //   var hour = dtToday.getHours();
-  //   var minute = dtToday.getMinutes();
-  //   if(month < 10){
-  //       month = '0' + month.toString();
-  //     }
-  //   if(day < 10){
-  //       day = '0' + day.toString();
-  //     }
-  //   if(hour < 10){
-  //     hour = '0' + hour.toString();
-  //   }
-  //   if(minute < 10){
-  //     minute = '0' + minute.toString();
-  //   }
-  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-  //       document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
-  //       // setExpectedDeliveryDate(maxDateTime.toString());
-  // }
-
-  // useEffect(() => {
-  //   var dtToday = new Date();
-  //   var month = dtToday.getMonth() + 1;
-  //   var day = dtToday.getDate();
-  //   var year = dtToday.getFullYear();
-  //   var hour = dtToday.getHours();
-  //   var minute = dtToday.getMinutes();
-  //   if(month < 10){
-  //       month = '0' + month.toString();
-  //     }
-  //   if(day < 10){
-  //       day = '0' + day.toString();
-  //     }
-  //   if(hour < 10){
-  //     hour = '0' + hour.toString();
-  //   }
-  //   if(minute < 10){
-  //     minute = '0' + minute.toString();
-  //   }
-  //       var maxDate = year + '-' + month + '-' + day;
-  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-  //       console.log('data',fixedOrderList);
-  //       if(fixedOrderList.exp_delivery_at!=''){
-  //         setExpectedDeliveryDate(fixedOrderList.exp_delivery_at);
-  //       }else{
-  //         setExpectedDeliveryDate(maxDateTime.toString());
-  //       }
-  //       if(fixedOrderList.first_payment!=''){
-  //         setFirstPaymentDate(fixedOrderList.first_payment);
-  //       }else{
-  //         setFirstPaymentDate(maxDate.toString());
-  //       }
-  //       if(fixedOrderList.last_payment!=''){
-  //         setLastPaymentDate(fixedOrderList.last_payment);
-  //       }else{        
-  //       setLastPaymentDate(maxDate.toString());
-  //       }
-  // }, []);
-  
-  
-  // function handleFirstPaymentDate(e){
-  //   setFirstPaymentDate(e.target.value);
-  // }
-  // function handleLastPaymentDate(e){
-  //   setLastPaymentDate(e.target.value);
-  // }
-  // function handleExpectedDeliveryDate(e){
-  //   // console.log('ddd',e.target.value);
-  //   setExpectedDeliveryDate(e.target.value);
-  // }
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     fixed,
     validate
   );
+
 return (
     <div>
       <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
@@ -466,6 +323,7 @@ return (
                       
                     />
                   </Grid>
+                  
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
@@ -787,12 +645,12 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
-                          id="exp_delivery_at"
-                          name="exp_delivery_at"
+                          id="exp_delivery_date"
+                          name="exp_delivery_date"
                           format="dd/MM/yyyy"
                           disablePast = {true}
                           defaultValue = {""}
-                          value={inputs.exp_delivery_at}
+                          value={inputs.exp_delivery_date}
                           // fullWidth 
                           // type="datetime-local"
                           InputProps={{
@@ -801,8 +659,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          error={errors.exp_delivery_at}
-                          helperText={errors.exp_delivery_at}                               
+                          error={errors.exp_delivery_date}
+                          helperText={errors.exp_delivery_date}                               
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>
@@ -832,41 +690,21 @@ return (
                             //   'aria-label': 'change time',
                             // }}
                           />
-                      </MuiPickersUtilsProvider>
-                      
-                    
-                    {/* <TextField
-                        InputProps={{
-                          classes: {
-                            input: classes.textsize,
-                          },
-                        }}
-                        id="exp_delivery_at"
-                        name="exp_delivery_at"
-                        value={expectedDeliveryDate}
-                        onChange={handleExpectedDeliveryDate}
-                        // onFocus={pastDateDisabled2}
-                        fullWidth
-                        type="datetime-local"
-                        defaultValue={expectedDeliveryDate}
-                        margin="dense"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      /> */}
-                </Grid>
-                {console.log(inputs)}
-                
+                      </MuiPickersUtilsProvider>                   
+                </Grid>               
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
                     Interest
                   </Typography>
-              </Grid>
-                <Grid item xs={12} sm={6}>
                   <Typography  className={classes.subTitle}>
                     Annual Interest Rates
                   </Typography>
-                  
+                </Grid>
+
+                <Grid item xs={12} sm={4}> 
+                  <Typography  className={classes.subTitle}>
+                    Weeks
+                  </Typography>                
                   <TextField
                       InputProps={{
                         classes: {
@@ -875,7 +713,7 @@ return (
                       }}
                       id="intrest_rate"
                       name="intrest_rate"
-                      label="Weeks"
+                      // label="Weeks"
                       value={inputs.intrest_rate}
                       onChange={handleInputChange}
                       // onFocus={handleInputFocus}
@@ -888,10 +726,20 @@ return (
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"
+                      InputProps={{                        
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       // InputProps={{
                       //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                       // }}
                     />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>       
+                        <Typography  className={classes.subTitle}>
+                          Daily interest rates of (in %)
+                        </Typography>   
                     <TextField
                       InputProps={{
                         classes: {
@@ -900,7 +748,7 @@ return (
                       }}
                       id="intrest_rate_per"
                       name="intrest_rate_per"
-                      label="Daily interest rates of (in %)"
+                      // label="Daily interest rates of (in %)"
                       value={inputs.intrest_rate_per}
                       onChange={handleInputChange}
                       // onFocus={handleInputFocus}
@@ -912,13 +760,17 @@ return (
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"
+                      InputProps={{                        
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       // InputProps={{
                       //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                       // }}
                     />
-                    
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Total Interest Charges
                   </Typography>
@@ -943,14 +795,15 @@ return (
                       type="number"
                       // placeholder="Franchise Name"
                       margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      InputProps={{                        
                         classes: {
                           input: classes.textsize,
                         },
-                      }}
+                      }}                      
                     />
                 </Grid>
+
+                
                 <Grid item xs={12} sm={12}>
                     
                     <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>

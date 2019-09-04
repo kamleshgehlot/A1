@@ -46,7 +46,19 @@ import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 
 const RESET_VALUES = {
-  
+  goods_rent_price : '',
+  ppsr_fee : '',
+  liability_fee : '',
+  weekly_total : '',
+  frequency : '',
+  first_payment : '',
+  no_of_payment : '',
+  each_payment_amt : '',
+  total_payment_amt : '',
+  before_delivery_amt : '',
+  exp_delivery_date : '',
+  delivery_time : '',
+  bond_amt : '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -125,72 +137,8 @@ const Transition = React.forwardRef((props, ref) => {
 export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList}) {
 
   const classes = useStyles();
-  // const [inputs,setInputs] = useState(flexOrderList);
-  const [firstPaymentDate,setFirstPaymentDate] = useState('');
-  const [expectedDeliveryDate,setExpectedDeliveryDate] = useState('');
   // const [errors, setErrors] = useState({});
 
-  
-  // function pastDateDisabled2(){
-  //   var dtToday = new Date();
-  //   var month = dtToday.getMonth() + 1;
-  //   var day = dtToday.getDate();
-  //   var year = dtToday.getFullYear();
-  //   var hour = dtToday.getHours();
-  //   var minute = dtToday.getMinutes();
-  //   if(month < 10){
-  //       month = '0' + month.toString();
-  //     }
-  //   if(day < 10){
-  //       day = '0' + day.toString();
-  //     }
-  //   if(hour < 10){
-  //     hour = '0' + hour.toString();
-  //   }
-  //   if(minute < 10){
-  //     minute = '0' + minute.toString();
-  //   }
-  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-  //       document.getElementById('exp_delivery_at').setAttribute('min', maxDateTime);
-  //       // setExpectedDeliveryDate(maxDateTime.toString());
-  // }
-
-
-  // function handleInputBlur(e){
-  //   // if(e.target.value===''){
-  //   //   setInputs({
-  //   //     ...inputs,
-  //   //     [e.target.name]: 0,
-  //   //   });
-  //   // }
-  // }
-
-  // function handleInputFocus(e){
-  //   // if(e.target.value==='0'){
-  //   //   setInputs({
-  //   //     ...inputs,
-  //   //     [e.target.name]: '',
-  //   //   });
-  //   // }
-  // }
-  
-  // function handleInputChange(e){
-  //   // console.log('valueee',e.target.value)
-  //   // if(e.target.value===""){
-  //     // setInputs({
-  //     //   ...inputs,
-  //     //   [e.target.name]: 0,
-  //     // });
-  //   // }
-  //   // else{
-  //   setInputs({
-  //     ...inputs,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // // }
-
-  // }
-  // console.log('inputs.',inputs);
 
   const setDateFormat = (date) => {
     let date1 = new Date(date);
@@ -203,6 +151,16 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
     return fullDate;
   }
 
+  const setTimeFormat = (time) => {
+    let date = new Date(time);
+    let hh = date.getHours();
+    let mm = date.getMinutes();
+    if(hh<10) { hh = '0' + hh.toString()}
+    if(mm<10) { mm = '0' + mm.toString()}
+    let fullTime = hh + ':' + mm ;
+    return fullTime;
+  }
+
   function handleDateChange(date){
     // let fulldate = setDateFormat(date);
     // let fullDate = yy+ '-'+mm+'-'+dd;
@@ -211,46 +169,36 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
   function handleDeliveryDate(date){
     // let fulldate = setDateFormat(date);
-    handleInputChange({target:{name: 'exp_delivery_at', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
   }
 
   function handleDeliveryTime(time){      
-    handleInputChange({target:{name: 'delivery_time', value: time}})
+    let dTime = new Date(time);
+    handleInputChange({target:{name: 'delivery_time', value: dTime}})
     // setDeliveryTime(time)    
   }
 
   function flex(e){
     // e.preventDefault();
-    // let check=false;
-    // if (inputs.bond_amt === 0 || inputs.bond_amt === "") {
-    //   errors.bond_amt = 'bond_amt is required';
-    //   check=true;
-    // }
-    // console.log('errors----',errors)
-    // if(check===false){
-      let hour = inputs.delivery_time.getHours();
-      let minute = inputs.delivery_time.getMinutes();
-      if(hour < 10){   hour = '0' + hour.toString(); }
-      if(minute < 10){ minute = '0' + minute.toString(); }    
-      let deliveryDateTime = inputs.exp_delivery_at +  'T' + hour + ':' + minute;
-
+   
         const data = {
         goods_rent_price : parseFloat(inputs.goods_rent_price),
         ppsr_fee : parseFloat(inputs.ppsr_fee),
         liability_fee : parseFloat(inputs.liability_fee),
         weekly_total : parseFloat(inputs.weekly_total),
-        frequency : parseFloat(inputs.frequency),
-        first_payment : inputs.first_payment,
+        frequency : parseFloat(inputs.frequency),        
         no_of_payment : parseFloat(inputs.no_of_payment),
         each_payment_amt : parseFloat(inputs.each_payment_amt),
         total_payment_amt : parseFloat(inputs.total_payment_amt),
         before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-        exp_delivery_at : deliveryDateTime,
         bond_amt : parseFloat(inputs.bond_amt),
+        exp_delivery_date : inputs.exp_delivery_date,
+        exp_delivery_time : inputs.delivery_time,
+        first_payment : inputs.first_payment,
+        
       }
       handleFlexClose(false)
       setFlexOrderList(data);
-    // }                                             
   }
 
   // useEffect(() => {
@@ -268,97 +216,22 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
   //   inputs.bond_amt = 0;
   //   }
   // }, []);
-
-  // useEffect(() => {
-  //   var dtToday = new Date();
-  //   var month = dtToday.getMonth() + 1;
-  //   var day = dtToday.getDate();
-  //   var year = dtToday.getFullYear();
-  //   var hour = dtToday.getHours();
-  //   var minute = dtToday.getMinutes();
-  //   if(month < 10){
-  //       month = '0' + month.toString();
-  //     }
-  //   if(day < 10){
-  //       day = '0' + day.toString();
-  //     }
-  //   if(hour < 10){
-  //     hour = '0' + hour.toString();
-  //   }
-  //   if(minute < 10){
-  //     minute = '0' + minute.toString();
-  //   }
-  //       var maxDate = year + '-' + month + '-' + day;
-  //       var maxDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
-  //       if(flexOrderList.exp_delivery_at!=''){
-  //         setExpectedDeliveryDate(flexOrderList.exp_delivery_at);
-  //       }else{
-  //         setExpectedDeliveryDate(maxDateTime.toString());
-  //       }
-  //       if(flexOrderList.first_payment!=''){
-  //         setFirstPaymentDate(flexOrderList.first_payment);
-  //       }else{
-  //         console.log('entering');
-  //         setFirstPaymentDate(maxDate.toString());
-  //       }
-        
-  // }, []);
-
-  function pastDate(){
-    var dtToday = new Date();
-    var month = dtToday.getMonth() + 1;
-    var day = dtToday.getDate();
-    var year = dtToday.getFullYear();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-        var maxDate = year + '-' + month + '-' + day;
-        document.getElementById('first_payment').setAttribute('min', maxDate);
-        // setFirstPaymentDate(maxDate.toString());
-  }
-  
-
-  // function handleExpectedDeliveryDate(e){
-  //   // let date1 = new Date(date);
-  //   // let yy = date1.getFullYear();
-  //   // let mm = date1.getMonth() + 1 ;
-  //   // let dd = date1.getDate();
-  //   // if(mm< 10){ mm = '0' + mm.toString()}
-  //   // if(dd< 10){ dd = '0' + dd.toString()}
-  //   // let fullDate = yy+ '-'+mm+'-'+dd;
-  //   // handleInputChange({target:{name: 'exp_delivery_at', value: fullDate}})
-  //   // console.log('fullDate----',fullDate)
-  //   setExpectedDeliveryDate(e.target.value);
-  // }
-  // function handleFirstPaymentDate(e){
-  //   setFirstPaymentDate(e.target.value);
-  // }
-
-  
-// {console.log('dddk,',expectedDeliveryDate)}
 const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
   RESET_VALUES,
   flex,
   validate
 );
+
+{console.log('inputs',inputs)}
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Flex Order
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
             </Toolbar>
           </AppBar>
 
@@ -672,12 +545,12 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
-                          id="exp_delivery_at"
-                          name="exp_delivery_at"
+                          id="exp_delivery_date"
+                          name="exp_delivery_date"
                           format="dd/MM/yyyy"
                           disablePast = {true}
                           defaultValue = {""}
-                          value={inputs.exp_delivery_at}
+                          value={inputs.exp_delivery_date}
                           // fullWidth 
                           // type="datetime-local"
                           InputProps={{
@@ -686,8 +559,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          error={errors.exp_delivery_at}
-                          helperText={errors.exp_delivery_at}                               
+                          error={errors.exp_delivery_date}
+                          helperText={errors.exp_delivery_date}                               
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>
