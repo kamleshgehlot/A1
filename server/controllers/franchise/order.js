@@ -128,6 +128,7 @@ const getPaymentHistory = async function(req, res, next) {
 
 
 const paymentSubmit = async function(req, res, next) {
+  console.log('req.body  order',req.body)
   try {
     const payment = await new Order({
       user_id : req.decoded.user_id, 
@@ -141,6 +142,7 @@ const paymentSubmit = async function(req, res, next) {
       created_by: req.decoded.id,    
       installment_before_delivery : req.body.installment_before_delivery,
       last_installment_no : req.body.last_installment_no,
+      payment_rec_date : req.body.payment_rec_date,
     }).paymentSubmit();
 
     // const order = await new Order({user_id : req.decoded.user_id}).getOrderList();

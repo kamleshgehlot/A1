@@ -41,6 +41,7 @@ var Order = function (params) {
   this.total_paid = params.total_paid;
   this.installment_before_delivery = params.installment_before_delivery;
   this.delivered_at = params.delivered_at;
+  this.payment_rec_date = params.payment_rec_date;
   // this.status = params.status;
       
 };
@@ -513,7 +514,7 @@ Order.prototype.paymentSubmit = function () {
         // let Values = [
         //   [that.order_id, that.customer_id, that.installment_no, that.payment_date, that.payment_amt, that.total_paid, that.created_by]
         // ];
-        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, payment_date, payment_amt, total_paid, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+that.payment_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+ that.created_by+'")', function (error, rows, fields) {
+        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, payment_date, payment_rec_date, payment_amt, total_paid, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+ that.created_by+'")', function (error, rows, fields) {
             if (!error) {
                   if(that.installment_before_delivery === that.installment_no){
                     connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {

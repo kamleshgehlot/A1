@@ -134,7 +134,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleFixedClose, setFixedOrderList, fixedOrderList}) {
+export default function Budget({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType}) {
 
   console.log('inputs',inputs)
   const classes = useStyles();
@@ -162,6 +162,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
       total_intrest : parseFloat(inputs.total_intrest),
     }
     setFixedOrderList(data);
+    handleOrderType(1);
     handleFixedClose(false)
   }
  

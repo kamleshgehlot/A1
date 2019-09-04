@@ -134,7 +134,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList}) {
+export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType}) {
 
   const classes = useStyles();
   // const [errors, setErrors] = useState({});
@@ -199,6 +199,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
       }
       handleFlexClose(false)
       setFlexOrderList(data);
+      handleOrderType(2);
   }
 
   // useEffect(() => {

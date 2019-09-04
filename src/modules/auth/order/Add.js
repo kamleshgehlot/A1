@@ -90,8 +90,8 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 100,
+    // marginRight: theme.spacing(1),
+    // width: 100,
   },
   heading: {
     fontSize: theme.typography.pxToRem(12),
@@ -159,12 +159,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [savebtn, setSavebtn] = React.useState(true);
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
 
-
+  // fixedOrderList !== null ? inputs.order_type = 1 : '' ;
+  // flexOrderList  !== null ? inputs.order_date = 2 : '';
   // function validate(values) {
   //   let errors = {};
   //   return errors;
   // };
-
   
   function handleBudgetClose(){
     setBudgetOpen(false);
@@ -174,7 +174,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setBudgetOpen(true);
   }
   
-  function handleFixedClose(){
+  function handleFixedClose(){      
     setFixedOrderOpen(false);
   }
   
@@ -203,7 +203,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setFixedOrderOpen(true);
   }
 
-  function handleFlexClose(){
+  function handleFlexClose(){      
     setFlexOrderOpen(false);
   }
   
@@ -233,20 +233,32 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setCustomerOpen(false);
   }
   function handleCustomerOpen(){
+    
     setCustomerOpen(true);
   }
   function handleSearchCustomerClose(){
     setSearchCustomerOpen(false);
   }
   function handleSearchCustomerOpen(){
+    
     setSearchCustomerOpen(true);
   }
 
+  function handleFixedOrderType(response){
+    inputs.order_type = 1;
+  }
+
+  function handleFlexOrderType(response){
+    inputs.order_type = 2;
+  }
+
   function handleCustomerList(response){
+    inputs.customer_type = 1;
     setIsNewCustomer(1);
     setCustomer(response[0]);
   }
   function handleIsExistCustomer(response){
+    inputs.customer_type = 2;
     setIsNewCustomer(0);    
   }
 
@@ -493,79 +505,35 @@ return (
                         // helperText={errors.order_date}                               
                       />
                     </MuiPickersUtilsProvider>
-                    
-                    {/* <TextField 
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="order_date"
-                      name="order_date"
-                      // label="Date"
-                      type="date"
-                      value={inputs.order_date}
-                      defaultValue= {orderDate}
-                      onChange={handleDateChange}
-                      onFocus={pastDate}
-                      required
-                      fullWidth
-                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                   <InputLabel  className={errors.customer_type? classes.errorHeading : classes.textsize} htmlFor="customer_type">Select Customer*</InputLabel>
-                      <RadioGroup
-                        aria-label="customer_type"
-                        name="customer_type"
-                        className={classes.group}
-                        value={inputs.customer_type}
-                        onChange={handleInputChange}
-                        row
-                      >
-                        <FormControlLabel labelPlacement="end" value="1"  control={<Radio color="primary" />} label="New Customer" onClick={handleCustomerOpen} />
-                        {/* {convertLead === 0 ? */}
-                        <FormControlLabel labelPlacement="end" value="2"  control={<Radio color="primary" />} label="Existing Customer" onClick={handleSearchCustomerOpen} />
-                        {/* : '' } */}
-                        {customer  != null  ? 
-                        <FormControlLabel labelPlacement="end"  control={<InputLabel />} label= {customer.customer_name + ", " + customer.address + ", " + customer.city} disabled />
-                        
-                    // <Typography > {customer.customer_name + ", " + customer.address + ", " + customer.city}</Typography>
-                          // <FormControlLabel labelPlacement="end" control={<DoneIcon /> }  disabled/>
-                          // <Tooltip title={customer.customer_name + ", " + customer.address + ", " + customer.city}>
-                          //   {/* <IconButton  size="small" className={classes.fab} > */}
-                          //     <FormControlLabel labelPlacement="end" control={<DoneIcon /> }  disabled/>
-                          //   {/* </IconButton> */}
-                          // </Tooltip>
-                          : ''
-                        }
-                      </RadioGroup>
-                    </Grid>
                     
-                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                      Select Customer*
+                    </Typography>
+                    <Button variant= {inputs.customer_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleCustomerOpen} className={classes.textField} > New </Button>
+                    <Button variant= {inputs.customer_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleSearchCustomerOpen}  className={classes.textField}>Existing </Button>
+                    
                     {customer  != null && isNewCustomer === 1? 
-                      <Fab variant="extended" color="secondary" size="small"  onClick={handleBudgetOpen}>
-                        Calculate Budget
-                      </Fab>
+                      <Button variant="outlined" size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}>Calculate Budget </Button>
                       : ''
                     }
                     {customer  != null && isNewCustomer === 0? 
-                      <Fab variant="extended" color="" size="small"  onClick={handleBudgetOpen}>
-                        Update Budget
-                      </Fab>
+                      <Button variant="outlined" size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}> Update Budget </Button>                       
                       : ''
-                    }
-                    </Grid>
-                    <Grid item xs={12} sm={7}>
+                    }                    
+                    {customer  != null  ? 
+                    <Typography variant="h6" className={classes.labelTitle}>
+                      {customer.customer_name + ", " + customer.address + ", " + customer.city}
+                    </Typography>
+                    : ''}
+
                     {customer  != null && budgetList!="" ? 
-                      <div>
-                        <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
-                        <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
-                      </div>
+                        <Typography variant="h6" className={classes.labelTitle}> TOTAL SURPLUS $ {budgetList.surplus} {"  "}AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
                       : ''
                     }
                   </Grid>
-
+                 
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
@@ -667,22 +635,15 @@ return (
                     </Select>
                   </Grid>
                    <Grid item xs={12} sm={6}>
-                   <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type</InputLabel>
-                      <RadioGroup
-                        aria-label="order_type"
-                        name="order_type"
-                        className={classes.group}
-                        value={inputs.order_type}
-                        onChange={handleInputChange}
-                        row
-                      >
-                        <FormControlLabel labelPlacement="end" value="1"  control={<Radio color="primary" />} label="Fixed Order" onClick={handleFixedOpen} />
-                        <FormControlLabel labelPlacement="end" value="2"  control={<Radio color="primary" />} label="Flex Order" onClick={handleFlexOpen}  />
-                        <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>
-                        {/* <Fab variant="extended" size="small" className={classes.buttonMargin}>
-                        Add Details
-                        </Fab>   */}
-                      </RadioGroup>
+                    <Typography variant="h6" className={errors.order_type? classes.errorHeading : classes.labelTitle}>
+                      Order Type*
+                    </Typography>                    
+                    {/* <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type*</InputLabel> */}
+                    <Button variant= {inputs.order_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleFixedOpen} className={classes.textField} > Fixed Order </Button>
+                    <Button variant= {inputs.order_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleFlexOpen}  className={classes.textField}>Flex Order </Button>
+{/*                     
+                    <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type</InputLabel>*/}
+                    <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography> 
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
@@ -712,7 +673,7 @@ return (
                     
             {savebtn? <Grid item xs={12} sm={12}> 
                           <Button  variant="contained" color="primary" onClick={handleSubmit} className={classes.button}>save</Button>
-                          <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>Close</Button> 
+                          <Button variant="contained" color="primary"  onClick={handleClose} className={classes.button}>Close</Button> 
                       </Grid> 
                     : <Grid item xs={12} sm={12}>
                           <Button  variant="contained"  color="primary" className={classes.button} disabled>save</Button>
@@ -726,8 +687,8 @@ return (
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/> : null }
-    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList}/> : null }
-    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList}/> : null }
+    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} /> : null }
+    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType}/> : null }
     {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }
     </div>
   );
