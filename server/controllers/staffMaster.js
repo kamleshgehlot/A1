@@ -1,5 +1,8 @@
 const StaffMaster = require("../models/staffMaster.js");
 const Miscellaneious = require('../lib/miscellaneous.js');
+const nodemailer = require('nodemailer');
+const { trans } = require("../lib/mailtransporter");
+
 
 const register = async function (req, res, next) {
 	console.log('req.body---------',req.body)
@@ -38,6 +41,27 @@ const register = async function (req, res, next) {
 			newStaffMaster.token = token;
 
 			await newStaffMaster.register();
+
+			let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + req.body.user_id + '&token=' + token;
+					
+			const mail = {
+				from: 'admin@rentronicsdev.saimrc.com',
+				to: req.body.email,
+				subject: 'Please verify your email address',
+				text: 'activate your account ',
+				html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + req.body.user_id + '<br />password: ' + req.body.password
+			}
+
+			// trans.sendMail(mail, (err, info) => {
+			// 	if (err) {
+			// 		return console.log(err);
+			// 	}
+			// 	console.log('Message sent: %s', info.messageId);
+			// 	// Preview only available when sending through an Ethereal account
+			// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+			// });
+
+
 			const staffList = await new StaffMaster({}).getAll();
 			
 			res.send({ staffList });

@@ -136,11 +136,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   //   :''
   // }
 
+  // useEffect(() => {
+  //   setInput('user_id', generate(inputs.first_name, inputs.last_name));
+  // },);
+
   function GeneratePassword() {
     return Math.random().toString(36).slice(-8);
   }
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addStaffMaster,
     validate
@@ -165,17 +169,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
   }
 
+  
   function generate(first_name, last_name) {
+
     const ts = new Date().getTime().toString();
     const parts = ts.split( "" ).reverse();
     let id = "";
     
     for( let i = 0; i < 4; ++i ) {
-    let index = Math.floor( Math.random() * (5) );
-    id += parts[index];	 
-    }
-    
-    return first_name.substring(first_name.length - 4).toLowerCase() + '_' + id;
+      let index = Math.floor( Math.random() * (5) );
+      id += parts[index];	 
+    }    
+    return first_name.substring(0,2).toLowerCase() + last_name.substring(0,2).toLowerCase() + '_' + 'admin' + '_' + id;
   }
 
 return (
@@ -238,7 +243,7 @@ return (
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}
                       error={errors.last_name}
                       helperText={errors.last_name}
                       // onFocus={handlePasswordBlurChange}
