@@ -83,6 +83,29 @@ const all = async function(req, res, next) {
     console.log(req.decoded);
     const staffList = await new Staff({user_id : req.decoded.user_id}).all();
     
+    let staffListNew = [];
+
+    staffList.map(staff =>  {
+      staffListNew.push({
+        id: staff.id,
+        first_name: staff.first_name,
+        last_name: staff.last_name,
+        location: staff.location,
+        contact: staff.contact,
+        email: staff.email,
+        pre_company_name: staff.pre_company_name,
+        pre_company_address: staff.pre_company_address,
+        pre_company_contact: staff.pre_company_contact,
+        pre_position: staff.pre_position,
+        duration: staff.duration,
+        user_id: staff.user_id,
+        password: staff.password.toString('utf8'),
+        role: staff.role,
+        employment_docs: staff.employment_docs,
+        created_by: staff.created_by
+      })
+    });
+
     res.send({ staffList });
   } catch (error) {
     next(error);
