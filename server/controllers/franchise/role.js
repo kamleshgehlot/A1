@@ -10,5 +10,17 @@ const all = async function(req, res, next) {
   }
 };
 
+const getAll = async function(req, res, next) {
+  try {
+    console.log('role controller..')
+    const role = await new Role({}).getAll();
+    
+    res.send({ role });
+  } catch (error) {
+    next(error);
+  }
+};
 
-module.exports = { all: all};
+
+
+module.exports = { all: all, getAll: getAll};

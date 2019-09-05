@@ -52,7 +52,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Enquiry() {
+export default function Enquiry({roleName}) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

@@ -58,8 +58,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Lead() {
-  const roleName = APP_TOKEN.get().roleName;
+export default function Lead({roleName}) {
   const userName = APP_TOKEN.get().userName;
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);

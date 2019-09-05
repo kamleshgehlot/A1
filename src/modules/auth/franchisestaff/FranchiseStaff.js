@@ -41,7 +41,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function FranchiseStaff(franchiseId) {
+export default function FranchiseStaff({franchiseId, roleName}) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -57,8 +57,6 @@ export default function FranchiseStaff(franchiseId) {
   // Code for testing pls don't remove -- by SRK 
   // const [uploadOpen,setUploadOpen] = useState(false);
 
-  const roleName = APP_TOKEN.get().roleName;
-  const userName = APP_TOKEN.get().userName;
   
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');

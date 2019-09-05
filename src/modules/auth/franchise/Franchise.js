@@ -57,7 +57,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Franchise(props) {
+export default function Franchise({roleName}) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [staffOpen, setStaffOpen] = useState(false);
@@ -69,7 +69,7 @@ export default function Franchise(props) {
   const [franchiseId, setFranchiseId] = useState([]);
   //value is for tabs  
   const [value, setValue] = React.useState(0);
-  const roleName = APP_TOKEN.get().roleName;
+  
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');

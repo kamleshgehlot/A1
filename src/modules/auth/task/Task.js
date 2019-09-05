@@ -59,7 +59,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Task(franchiseId) {
+export default function Task({franchiseId, roleName}) {
   const [open, setOpen] = useState(false);
   const [openCompleteTask, setCompleteTaskOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -82,8 +82,8 @@ export default function Task(franchiseId) {
   const [role, setRole] = useState([]);
   const [showStaffTask, setShowStaffTask] = useState(false);
   const [assignedid,setAssignedid]= useState();
-  const roleName = APP_TOKEN.get().roleName;
-  const userName = APP_TOKEN.get().userName;
+  
+  
   
   const uid = APP_TOKEN.get().uid;
   //value is for tabs  

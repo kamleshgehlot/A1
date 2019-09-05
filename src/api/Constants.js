@@ -20,19 +20,22 @@ export const API_CONSUMER = 'http://localhost:3000'; // Config[KEY].API_URL;
 
 // Helpers
 export const APP_TOKEN = {
-  set: ({ token, refreshToken, roleName, franchiseId, userName, userId, uid }) => {
+  set: ({ token, refreshToken, roleName, role_id, franchiseId, userName, userId, uid }) => {
     localStorage.setItem('token', token);
     localStorage.setItem('refresh_token', refreshToken);
     localStorage.setItem('role_name', roleName);
+    localStorage.setItem('role_id', role_id);
     localStorage.setItem('franchise_id', franchiseId);
     localStorage.setItem('user_name', userName);
     localStorage.setItem('user_id', userId);
     localStorage.setItem('uid', uid);
+    
   },
   remove: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('role_name');
+    localStorage.removeItem('role_id');
     localStorage.removeItem('user_name');
     localStorage.removeItem('user_id');
     localStorage.removeItem('uid');
@@ -41,6 +44,7 @@ export const APP_TOKEN = {
     token: localStorage.getItem('token'),
     refreshToken: localStorage.getItem('refresh_token'),
     roleName: localStorage.getItem('role_name'),
+    role_id: localStorage.getItem('role_id'),
     franchiseId: localStorage.getItem('franchise_id'),
     userName: localStorage.getItem('user_name'),
     userId: localStorage.getItem('user_id'),

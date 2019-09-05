@@ -71,7 +71,7 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function MainDashboard() {
+export default function MainDashboard({roleName}) {
  
   return (
     <div>

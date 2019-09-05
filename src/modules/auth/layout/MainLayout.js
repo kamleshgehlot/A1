@@ -19,9 +19,20 @@ import InsertCommentIcon from '@material-ui/icons/InsertComment';
 import CardTravelIcon from '@material-ui/icons/CardTravel';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import TreeView from "@material-ui/lab/TreeView";
+import TreeItem from "@material-ui/lab/TreeItem"; 
+import MailIcon from "@material-ui/icons/Mail";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Label from "@material-ui/icons/Label";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import InfoIcon from "@material-ui/icons/Info";
+import ForumIcon from "@material-ui/icons/Forum";
+import LocalOfferIcon from "@material-ui/icons/LocalOffer";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+
 import Popper from '@material-ui/core/Popper';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -30,9 +41,9 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
+import PropTypes from "prop-types";
 
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
-
 import Franchise from '../franchise/Franchise';
 import Product from '../category/ProductList';
 import Staff from '../staff/Staff';
@@ -52,6 +63,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
 import UserAPI from '../../../api/User';
+import RoleAPI from '../../../api/franchise/Role';
 
 import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 
@@ -105,11 +117,113 @@ const useStyles = makeStyles(theme => ({
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
+  },
+  treeRoot: {
+    height: 264,
+    flexGrow: 1,
+    marginTop:theme.spacing(8),
+    maxWidth: 250,
+    minWidth: 200
   }
 }));
 
+
+const useTreeItemStyles = makeStyles(theme => ({
+  root: {
+    color: theme.palette.text.secondary,
+    "&:focus > $content": {
+      backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
+      color: "var(--tree-view-color)"
+    }
+  },
+  content: {
+    color: theme.palette.text.secondary,
+    borderTopRightRadius: theme.spacing(2),
+    borderBottomRightRadius: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+    fontWeight: theme.typography.fontWeightMedium,
+    "$expanded > &": {
+      fontWeight: theme.typography.fontWeightRegular
+    }
+  },
+  group: {
+    marginLeft: 0,
+    "& $content": {
+      paddingLeft: theme.spacing(2)
+    }
+  },
+  expanded: {},
+  label: {
+    fontWeight: "inherit",
+    color: "inherit"
+  },
+  labelRoot: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0.5, 0)
+  },
+  labelIcon: {
+    marginRight: theme.spacing(1)
+  },
+  labelText: {
+    fontWeight: "inherit",
+    flexGrow: 1
+  }
+}));
+
+function StyledTreeItem(props) {
+  // console.log('props',props)
+  const classes = useTreeItemStyles();
+  const {    
+    labelText,
+    labelIcon: LabelIcon,
+    labelInfo,
+    color,
+    bgColor,
+    ...other
+  } = props;
+
+  return (
+    <TreeItem
+      label={
+        <div className={classes.labelRoot}>
+          <LabelIcon color="inherit" className={classes.labelIcon} />
+          <Typography variant="body2" className={classes.labelText}>
+            {labelText}
+          </Typography>
+          <Typography variant="caption" color="inherit">
+            {labelInfo}
+          </Typography>
+        </div>
+      }
+      style={{
+        "--tree-view-color": color,
+        "--tree-view-bg-color": bgColor
+      }}
+      classes={{
+        root: classes.root,
+        content: classes.content,
+        expanded: classes.expanded,
+        group: classes.group,
+        label: classes.label
+      }}
+      {...other}
+    />
+  );
+}
+
+StyledTreeItem.propTypes = {
+  bgColor: PropTypes.string,
+  color: PropTypes.string,
+  labelIcon: PropTypes.elementType.isRequired,
+  labelInfo: PropTypes.string,
+  labelText: PropTypes.string.isRequired
+};
+
+
 export default function ClippedDrawer(props) {
   const roleName = APP_TOKEN.get().roleName;
+  const roleId = APP_TOKEN.get().role_id;
   const userName = APP_TOKEN.get().userName;
   const franchiseId = APP_TOKEN.get().franchiseId;
   const userId = APP_TOKEN.get().userId;
@@ -132,6 +246,32 @@ export default function ClippedDrawer(props) {
   const [showFranchiseDetail, setShowFranchiseDetail] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
   const [showOrder,setShowOrder] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [roleAs, setRoleAs]= useState('');
+  console.log('role id',roleId)
+  console.log('role name ',roleName)
+
+  useEffect(()=>{
+      const fetchData = async () => {
+        try {
+          const result = await RoleAPI.getAll();
+          let roleArray = [];
+
+          (result.role).map((role)=>{
+            (roleId.split(',')).map((assignedRole)=>{
+              if(role.id==assignedRole){
+                roleArray.push(role.name);
+              }
+            }); 
+          });
+          setRoles(roleArray);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();      
+  },[]);
+  
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -161,7 +301,10 @@ export default function ClippedDrawer(props) {
   function handleSnackbarClick(flag, message) {
     setSnackbarOpen(true);
   }
-  function handleDashboardClick(){
+  console.log('role',roleAs);
+  function handleDashboardClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowFranchise(false);
     setShowStaff(false);
     setShowCategory(false);
@@ -179,7 +322,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(true);
   }
 
-  function handleFranchiseClick() {
+  function handleFranchiseClick(role) {
+    console.log('role',role);
+    setRoleAs(role);
     setShowFranchise(true);
     setShowStaff(false);
     setShowCategory(false);
@@ -197,7 +342,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
   }
 
-  function handleCategoryClick() {
+  function handleCategoryClick(role) {
+    console.log('role',role);
+    setRoleAs(role);
     setShowCategory(true);
     setShowFranchise(false);
     setShowMasterStaff(false);
@@ -215,7 +362,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
   }
 
-  function handleMasterStaffClick(){
+  function handleMasterStaffClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowMasterStaff(true);
     setShowFranchise(false);
     setShowCategory(false);
@@ -232,7 +381,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
   }
 
-  function handleFranchiseStaffClick(){
+  function handleFranchiseStaffClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowFranchiseStaff(true);
     setShowMasterStaff(false);
     setShowFranchise(false);
@@ -250,7 +401,9 @@ export default function ClippedDrawer(props) {
 
   }
   
-  function handleTaskClick(){
+  function handleTaskClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowTask(true);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
@@ -265,9 +418,10 @@ export default function ClippedDrawer(props) {
     setShowOrder(false);
     setShowFranchiseDetail(false);
     setShowdashboard(false);
-
   }
-  function handleProfileClick(){
+  function handleProfileClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowProfile(true);setAnchorEl(null);
     setShowTask(false);
     setShowFranchiseStaff(false);
@@ -284,7 +438,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
 
   }
-  function handleChangePasswordClick(){
+  function handleChangePasswordClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowPwd(true);
     setAnchorEl(null);
     setShowProfile(false);
@@ -303,7 +459,9 @@ export default function ClippedDrawer(props) {
 
   }
 
-  function handleFranchiseDetailClick(){
+  function handleFranchiseDetailClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowFranchiseDetail(true);
     setShowPwd(false);
     setAnchorEl(null);
@@ -322,7 +480,9 @@ export default function ClippedDrawer(props) {
 
   }
 
-  function handleCustomerClick(){
+  function handleCustomerClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowCustomer(true);
     setShowTask(false);
     setShowFranchiseStaff(false);
@@ -339,7 +499,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
 
   }
-  function handleStaffTaskClick(){
+  function handleStaffTaskClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowStaffTask(true);
     setShowCustomer(false);
     setShowTask(false);
@@ -358,7 +520,10 @@ export default function ClippedDrawer(props) {
   }
 
   
-  function handleEnquiryClick(){
+  function handleEnquiryClick(role){
+    console.log('role',role);
+    setRoleAs(role);
+
     setShowEnquiry(true);
     setShowCustomer(false);
     setShowTask(false);
@@ -375,7 +540,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
 
   }
-  function handleLeadsClick(){
+  function handleLeadsClick(role){
+    console.log('role',role);
+    setRoleAs(role);    
     setShowLead(true);
     setShowEnquiry(false);
     setShowCustomer(false);
@@ -391,7 +558,9 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowFranchiseDetail(false);
   }
-  function handleOrderClick(){
+  function handleOrderClick(role){
+    console.log('role',role);
+    setRoleAs(role);
     setShowOrder(true);
     setShowLead(false);
     setShowEnquiry(false);
@@ -446,6 +615,171 @@ export default function ClippedDrawer(props) {
         </Toolbar>
       </AppBar>
 
+{/*      
+        {roles.find(role => role === 'Super Admin')
+        && ( <div>
+          <TreeView
+            className={classes.treeRoot}
+            // defaultExpanded={["3"]}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            defaultEndIcon={<div style={{ width: 24 }} />}
+          >
+            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin'); }} />
+            <StyledTreeItem nodeId="2" labelText="Manage Franchise" labelIcon={BusinessIcon} onClick={(event) => { handleFranchiseClick('Super Admin'); }}/>
+            <StyledTreeItem nodeId="3" labelText="Manage Products Catalogue" labelIcon={CardTravelIcon} onClick={(event) => { handleCategoryClick('Super Admin'); }}/>
+            <StyledTreeItem nodeId="4" labelText="Manage Staff" labelIcon={AccountCircleIcon} onClick={(event) => { handleMasterStaffClick('Super Admin'); }} />
+            <StyledTreeItem nodeId="5" labelText="Manage Leads" labelIcon={InsertCommentIcon} onClick={(event) => { handleLeadsClick('Super Admin'); }}/>
+          </TreeView>
+        </div> )}
+
+        {roles.find(role => role === 'Admin')
+        && ( <div>
+          <TreeView
+            className={classes.treeRoot}
+            // defaultExpanded={["3"]}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            defaultEndIcon={<div style={{ width: 24 }} />}
+          >
+            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin'); }} />
+            <StyledTreeItem nodeId="2" labelText="Manage Staff" labelIcon={AccountCircleIcon} onClick={(event) => { handleFranchiseStaffClick('Admin'); }} />
+            <StyledTreeItem nodeId="3" labelText="Manage Task" labelIcon={AccountCircleIcon} onClick={(event) => { handleTaskClick('Admin'); }} />
+            <StyledTreeItem nodeId="4" labelText="Manage Leads" labelIcon={InsertCommentIcon} onClick={(event) => { handleLeadsClick('Admin'); }}/>
+          </TreeView>
+        </div> )}
+
+        {roles.find(role => role === 'CSR' || role === 'Finance' || role === 'Delivery' || role === 'HR')
+        && ( <div> 
+          <TreeView
+            className={classes.treeRoot}
+            // defaultExpanded={["3"]}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            defaultEndIcon={<div style={{ width: 24 }} />}
+          >
+            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick(roles); }} />
+            {roles.find(role => role === 'CSR')
+            && ( <div> 
+              <StyledTreeItem nodeId="2" labelText="CSR Roles" labelIcon={AccountCircleIcon}>  
+                <StyledTreeItem
+                  nodeId="5"
+                  labelText="Manage Customer"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleCustomerClick('CSR'); }}
+                />
+                <StyledTreeItem
+                  nodeId="6"
+                  labelText="Manage Task"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleTaskClick('CSR'); }}
+                />
+                <StyledTreeItem
+                  nodeId="7"
+                  labelText="Manage Enquiry"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleEnquiryClick('CSR'); }}
+                />
+                <StyledTreeItem
+                  nodeId="8"
+                  labelText="Manage Leads"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleLeadsClick('CSR'); }}
+                />
+                <StyledTreeItem
+                  nodeId="9"
+                  labelText="Manage Order"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleOrderClick('CSR'); }}
+                />
+              </StyledTreeItem>
+            </div> )}
+
+            {roles.find(role => role === 'Finance')
+            && ( <div> 
+              <StyledTreeItem nodeId="3" labelText="Finance Roles" labelIcon={AccountCircleIcon}>  
+                <StyledTreeItem
+                  nodeId="10"
+                  labelText="Manage Task"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleTaskClick('Finance'); }}
+                />
+                <StyledTreeItem
+                  nodeId="11"
+                  labelText="Manage Leads"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleLeadsClick('Finance'); }}
+                />
+                <StyledTreeItem
+                  nodeId="12"
+                  labelText="Manage Order"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleOrderClick('Finance'); }}
+                />
+              </StyledTreeItem>
+            </div> )}
+            
+
+            {roles.find(role => role === 'Delivery')
+            && ( <div> 
+              <StyledTreeItem nodeId="4" labelText="Delivery Roles" labelIcon={AccountCircleIcon}>  
+                <StyledTreeItem
+                  nodeId="13"
+                  labelText="Manage Task"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleTaskClick('Delivery'); }}
+                />
+                <StyledTreeItem
+                  nodeId="14"
+                  labelText="Manage Leads"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleLeadsClick('Delivery'); }}
+                />
+                <StyledTreeItem
+                  nodeId="15"
+                  labelText="Manage Order"
+                  labelIcon={PeopleIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleOrderClick('Delivery'); }}
+                />
+              </StyledTreeItem>
+            </div> )}
+
+          </TreeView>
+        </div> )} */}
+
 
       <Drawer
         className={classes.drawer}
@@ -454,120 +788,106 @@ export default function ClippedDrawer(props) {
           paper: classes.drawerPaper,
         }}
       >
+        
         <div className={classes.toolbar} />
-        <List>
-        {/* {console.log(roleName)} */}
-          {roleName === 'Super Admin' 
+        <List>        
+          {roles.find(role => role === 'Super Admin')
             && (<List >
-              {/* <Link to="auth/franchise"> */}
-              <ListItem button key="Dashboard" onClick={handleDashboardClick} >
+              <ListItem button key="Dashboard" onClick={(event) => { handleDashboardClick('Super Admin'); }}  >
                   <ListItemIcon className={classes.iconwidth}> <BusinessIcon/> </ListItemIcon>
                   <ListItemText  primary="Dashboard" />
                 </ListItem>
 
-                <ListItem button key="ManageFranchise" onClick={handleFranchiseClick} >
+                <ListItem button key="ManageFranchise" onClick={(event) => { handleFranchiseClick('Super Admin'); }}>
                   <ListItemIcon className={classes.iconwidth}> <BusinessIcon/> </ListItemIcon>
                   <ListItemText  primary="Manage Franchise" />
                 </ListItem>
-              {/* </Link> */}
-              {/* code by Bhagyashree starts from here
-              Category is added to menu */}
-              {/* <Link to="category"> */}
-                <ListItem button key="ManageProduct"  onClick={handleCategoryClick}>
+              
+                <ListItem button key="ManageProduct"  onClick={(event) => { handleCategoryClick('Super Admin'); }}>
                   <ListItemIcon><CardTravelIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Products Catalogue" />
                 </ListItem>
-                
-                {/* code by Bhagyashree ends here */}
-              {/* </Link> */}
-                <ListItem button key="ManageStaff" onClick={handleMasterStaffClick}>
+
+                <ListItem button key="ManageStaff" onClick={(event) => { handleMasterStaffClick('Super Admin'); }}>
                   <ListItemIcon> <AccountCircleIcon /> </ListItemIcon>
                   <ListItemText primary="Manage Staff" />
                 </ListItem>
-                <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
+                <ListItem button key="ManageLeads" onClick={(event) => { handleLeadsClick('Super Admin'); }}>
                     <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
             </List>
             )}
             </List>
-             <List>
-               
-              {roleName === 'Admin' && (
+            
+            <List>            
+              {roles.find(role => role === 'Admin')
+              && (
               <List>
-                <ListItem button key="ManageStaff"  onClick={handleFranchiseStaffClick}>
+                <ListItem button key="ManageStaff" onClick={(event) => { handleFranchiseStaffClick('Admin'); }} >
                     <ListItemIcon> <AccountCircleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Staff" />
                 </ListItem>
-                <ListItem button key="ManageTask"  onClick={handleTaskClick}>
+            
+                <ListItem button key="ManageTask"   onClick={(event) => { handleTaskClick('Admin'); }} >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
-                {/* <ListItem button key="MyTask"  onClick={handleStaffTaskClick}>
-                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
-                    <ListItemText primary="My Task List" />
-                </ListItem> */}
-                <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
+            
+                <ListItem button key="ManageLeads" onClick={(event) => { handleLeadsClick('Admin'); }} >
                     <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
-                {/* <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
-                    <ListItemIcon> <PeopleIcon /> </ListItemIcon>
-                    <ListItemText primary="Manage Customer" />
-                </ListItem> */}
               </List>
               )}
             </List>
 
             <List>
-               {/* {console.log("role-------..",roleName)}
-               {console.log("user-------..",userName)} */}
-               {roleName === 'CSR' && (
+               {roles.find(role => role === 'CSR')
+               && (
                <List>
-                 <ListItem button key="ManageCustomer"  onClick={handleCustomerClick}>
+                 <ListItem button key="ManageCustomer" onClick={(event) => { handleCustomerClick('CSR'); }} >
                      <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                      <ListItemText primary="Manage Customer" />
                  </ListItem>
-                <ListItem button key="ManageTask"  onClick={handleTaskClick} >
+                
+                <ListItem button key="ManageTask" onClick={(event) => { handleTaskClick('CSR'); }}  >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
-                <ListItem button key="ManageEnquiry"  onClick={handleEnquiryClick}>
+                
+                <ListItem button key="ManageEnquiry"  onClick={(event) => { handleEnquiryClick('CSR'); }} >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Enquiry" />
                 </ListItem>
-                <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
+               
+                <ListItem button key="ManageLeads"  onClick={(event) => { handleLeadsClick('CSR'); }} >
                     <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
-                <ListItem button key="ManageOrder"  onClick={handleOrderClick}>
+               
+                <ListItem button key="ManageOrder"   onClick={(event) => { handleOrderClick('CSR'); }} >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Order" />
                 </ListItem>
-                 {/* <ListItem button key="ManageTask"  onClick={handleTaskClick}>
-                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
-                     <ListItemText primary="Manage Task" />
-                 </ListItem> */}
                </List>
                )}
              </List>
 
-
              <List>
-               {/* {console.log("role-------..",roleName)} 
-               {console.log("user-------..",userName)}  */}
-               {roleName === 'Finance' && (
+               {roles.find(role => role === 'Finance')
+               && (
                <List>
-                <ListItem button key="ManageTask"  onClick={handleTaskClick} >
+                <ListItem button key="ManageTask" onClick={(event) => { handleTaskClick('Finance'); }} >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
 
-                <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
+                <ListItem button key="ManageLeads" onClick={(event) => { handleLeadsClick('Finance'); }} >
                     <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
-                <ListItem button key="ManageOrder"  onClick={handleOrderClick}>
+                <ListItem button key="ManageOrder" onClick={(event) => { handleOrderClick('Finance'); }}  >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Order" />
                 </ListItem>               
@@ -576,73 +896,74 @@ export default function ClippedDrawer(props) {
              </List>
 
              <List>
-               {/* {console.log("role-------..",roleName)} 
-               {console.log("user-------..",userName)}  */}
-               {roleName === 'Delivery' && (
+               {roles.find(role => role === 'Delivery')
+               && (
                <List>
-                <ListItem button key="ManageTask"  onClick={handleTaskClick} >
+                <ListItem button key="ManageTask" onClick={(event) => { handleTaskClick('Delivery'); }}  >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Task" />
                 </ListItem>
 
-                <ListItem button key="ManageLeads"  onClick={handleLeadsClick}>
+                <ListItem button key="ManageLeads" onClick={(event) => { handleLeadsClick('Delivery'); }} >
                     <ListItemIcon> <InsertCommentIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Leads" />
                 </ListItem>
-                <ListItem button key="ManageOrder"  onClick={handleOrderClick}>
+
+                <ListItem button key="ManageOrder" onClick={(event) => { handleOrderClick('Delivery'); }} >
                     <ListItemIcon> <PeopleIcon /> </ListItemIcon>
                     <ListItemText primary="Manage Order" />
                 </ListItem>               
                </List>
                )}
              </List>
+      </Drawer>  
 
-        {/* <Divider /> */}
-      </Drawer>
+
+
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {
-          showFranchise ? <Franchise /> : null
+          showFranchise ? <Franchise roleName={roleAs}/> : null
         }
 
         {
-          showCategory ? <Product /> : null
+          showCategory ? <Product roleName={roleAs}/> : null
         }
         {
-          showMasterStaff ? <Staff /> : null
+          showMasterStaff ? <Staff roleName={roleAs}/> : null
         }
         {
-          showFranchiseStaff ? <FranchiseStaff  franchiseId={franchiseId}/> : null
+          showFranchiseStaff ? <FranchiseStaff  franchiseId={franchiseId} roleName={roleAs}/> : null
         }
         {
-          showTask ? <Task franchiseId={franchiseId} /> : null
+          showTask ? <Task franchiseId={franchiseId} roleName={roleAs}/> : null
         }
         {
-          showCustomer ? <Customer userId={userId} /> : null
+          showCustomer ? <Customer userId={userId} roleName={roleAs}/> : null
         }
         {
-          showProfile ? <Profile /> : null
+          showProfile ? <Profile roleName={roleAs}/> : null
         }
         {
-          showPwd ? <ChangePassword  franchiseId={franchiseId} /> : null
+          showPwd ? <ChangePassword  franchiseId={franchiseId} roleName={roleAs}/> : null
         }
         {
-          showStaffTask ? <StaffTask  uid={uid} /> : null
+          showStaffTask ? <StaffTask  uid={uid} roleName={roleAs}/> : null
         }
         {
-          showEnquiry ? <Enquiry />:null
+          showEnquiry ? <Enquiry roleName={roleAs}/>:null
         }
         {
-          showLead ? <Lead />:null
+          showLead ? <Lead roleName={roleAs}/>:null
         }
         {
-          showOrder ? <Order />:null
+          showOrder ? <Order roleName={roleAs}/>:null
         }
         {
-          showFranchiseDetail ? <FranchiseDetail />:null
+          showFranchiseDetail ? <FranchiseDetail roleName={roleAs}/>:null
         }
         {
-          showDashboard ? <MainDashboard />:null
+          showDashboard ? <MainDashboard roleName={roleAs}/>:null
         }
         {/* {props.children} */}
       </main>
