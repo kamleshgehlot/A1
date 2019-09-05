@@ -1,4 +1,7 @@
 const Staff = require('../../models/franchise/staff.js');
+const nodemailer = require('nodemailer');
+const { trans } = require("../../lib/mailtransporter");
+const Miscellaneious = require('../../lib/miscellaneous.js');
 
 const register = async function (req, res, next) {
   const staffData = JSON.parse(req.body.data);
@@ -46,9 +49,37 @@ const register = async function (req, res, next) {
       res.send({ staffList: staffList });
     } else {
       staffParams.created_by = req.decoded.id;
+      
+      const accountId = Miscellaneious.generateAccountId();
+      const token = Miscellaneious.generateRandomToken();
+      
       const newStaff = new Staff(staffParams);
+      newStaff.accountId = accountId;      
+      newStaff.token = token;
+      
+      
 
       await newStaff.register();
+
+      let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + staffData.user_id + '&token=' + token;
+					
+			const mail = {
+				from: 'admin@rentronicsdev.saimrc.com',
+				to: staffData.email,
+				subject: 'Please verify your email address',
+				text: 'activate your account ',
+				html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + staffData.user_id + '<br />password: ' + staffData.password
+			}
+
+			// trans.sendMail(mail, (err, info) => {
+			// 	if (err) {
+			// 		return console.log(err);
+			// 	}
+			// 	console.log('Message sent: %s', info.messageId);
+			// 	// Preview only available when sending through an Ethereal account
+			// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      // });
+      
       const staffList = await new Staff({user_id : req.decoded.user_id}).all();
       
       res.send({ staffList: staffList });

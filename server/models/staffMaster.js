@@ -12,7 +12,12 @@ const StaffMaster = function (params) {
   this.email = params.email;
   this.position = params.position;
   this.created_by = params.created_by;
-  console.log('params---',params)
+  this.token = params.token;
+  this.accountId = params.accountId;
+  this.franchise_id = params.franchise_id;
+  this.is_active = params.is_active;
+  // console.log('params---',params)
+  // console.log('params---',params)
 };
 
 
@@ -26,9 +31,16 @@ StaffMaster.prototype.register = function () {
 
       if (!error) {
         connection.changeUser({ database: dbName["prod"] });
-        connection.query('INSERT INTO master_staff(first_name,last_name,user_id,password,location,contact,email,position,created_by) VALUES ("' + that.first_name + '", "' + that.last_name + '","' + that.user_id + '",AES_ENCRYPT("' + that.password + '", "secret"),"'+ that.location + '", "' + that.contact + '" , "' + that.email + '", "' + that.position + '", "' + that.created_by + '")', function (error, rows, fields) {
+        connection.query('INSERT INTO master_staff(first_name,last_name,user_id,password,location,contact,email,position,created_by) VALUES ("' + that.first_name + '", "' + that.last_name + '","' + that.user_id + '", AES_ENCRYPT("' + that.password + '", \'secret\'), "'+ that.location + '", "' + that.contact + '" , "' + that.email + '", "' + that.position + '", "' + that.created_by + '")', function (error, rows, fields) {
           if (!error) {
-            resolve({ rows });
+            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "1", "' + that.first_name + '' + that.last_name + '", "' +  that.user_id + '", AES_ENCRYPT("' + that.password + '", \'secret\'), "' + that.token + '", "' + that.accountId + '" , null , "0", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+              if (!error) {
+              resolve({ rows });
+              }else {
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
           } else {
             console.log("Error...", error);
             reject(error);
@@ -90,13 +102,16 @@ StaffMaster.prototype.getAll = function () {
       connection.changeUser({ database: dbName["prod"] });
       connection.query('select ms.id, ms.first_name, ms.last_name, ms.user_id,AES_DECRYPT(`password`, \'secret\') AS password, ms.location, ms.contact, ms.email, ms.position, sp.position as position_name, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id order by id desc', (error, rows, fields) => {
         if (!error) {
-          console.log('rows staff', rows)
+          // console.log('rows staff', rows)
           let datas = [];
           (rows && rows.length > 0 ? rows : []).map(data =>{
-            let pass = data.password && data.password.toString('utf8');
-            data.password = pass;
-            console.log('passss',data);
-            datas.push(data);
+            if(data.password != ""){
+              let pass = data.password && data.password.toString('utf8');
+              console.log('passss',pass);
+              data.password = pass;
+              // console.log('passss',data);
+            }
+            datas.push(data); 
           });
           resolve(datas);
           // resolve(rows);

@@ -62,6 +62,19 @@ export default function validate(values) {
   } else if (!validNumber.test(values.before_delivery_amt)) {
     errors.before_delivery_amt = 'Amount is invalid';
   }
+
+  // if(values.first_payment === ""){
+  //   errors.first_payment = 'First Payment Date is Required';
+  // }
+  // if(values.last_payment === ""){
+  //   errors.first_payment = 'Last Payment Date is Required';
+  // }
+  if(values.exp_delivery_at === ""){
+    errors.first_payment = 'Expected Date is Required';
+  }
+  if(values.delivery_time === ""){
+    errors.first_payment = 'Expected Time Date is Required';
+  }
  
   return errors;
 };

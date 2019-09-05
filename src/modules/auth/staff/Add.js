@@ -95,6 +95,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
   const [ploading, setpLoading] = React.useState(false);
 
+    
+  useEffect(() => {
+    inputs['password']=='' ? setInput('password', GeneratePassword()) :''
+  }, []);
+  
+
 
   const addStaffMaster = async () => {
     
@@ -124,17 +130,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     }
   };
  
-  function handlePasswordBlurChange() {
-    inputs['password']=='' ? 
-    setInput('password', GeneratePassword())
-    :''
-  }
+  // function handlePasswordBlurChange() {
+  //   inputs['password']=='' ? 
+  //   setInput('password', GeneratePassword())
+  //   :''
+  // }
+
+  // useEffect(() => {
+  //   setInput('user_id', generate(inputs.first_name, inputs.last_name));
+  // },);
 
   function GeneratePassword() {
     return Math.random().toString(36).slice(-8);
   }
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addStaffMaster,
     validate
@@ -159,17 +169,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
   }
 
+  
   function generate(first_name, last_name) {
+
     const ts = new Date().getTime().toString();
     const parts = ts.split( "" ).reverse();
     let id = "";
     
     for( let i = 0; i < 4; ++i ) {
-    let index = Math.floor( Math.random() * (5) );
-    id += parts[index];	 
-    }
-    
-    return first_name.substring(first_name.length - 4).toLowerCase() + '_' + id;
+      let index = Math.floor( Math.random() * (5) );
+      id += parts[index];	 
+    }    
+    return first_name.substring(0,2).toLowerCase() + last_name.substring(0,2).toLowerCase() + '_' + 'admin' + '_' + id;
   }
 
 return (
@@ -232,7 +243,7 @@ return (
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
-                      onBlur={handleNameBlurChange}
+                      // onBlur={handleNameBlurChange}
                       error={errors.last_name}
                       helperText={errors.last_name}
                       // onFocus={handlePasswordBlurChange}
@@ -256,6 +267,7 @@ return (
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
+                      onBlur={handleNameBlurChange}
                       error={errors.location}
                       helperText={errors.location}
                       required
@@ -310,24 +322,6 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="password">Password *</InputLabel>
-                    <TextField 
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="password"
-                      name="password"
-                      onFocus={handlePasswordBlurChange}
-                      value={inputs.password} 
-                      error={errors.password}
-                      helperText={errors.password}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="position">Position *</InputLabel>
                     <Select
                       value={inputs.position}
@@ -355,6 +349,49 @@ return (
                       }
                     </Select>
                   </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">User Id *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="user_id"
+                      name="user_id"
+                      // label="user_id"
+                      type="user_id"
+                      value={inputs.user_id} 
+                      // onChange={handleInputChange}
+                      // error={errors.email}
+                      // helperText={errors.email}
+                      // required
+                      disabled
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="password">Password *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      // onFocus={handlePasswordBlurChange}
+                      value={inputs.password} 
+                      error={errors.password}
+                      helperText={errors.password}
+                      fullWidth
+                      disabled
+                    />
+                  </Grid>
+                  
                   <Grid item xs={12} sm={12}>
                     <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
                       Save

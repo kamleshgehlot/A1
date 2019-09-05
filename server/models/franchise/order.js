@@ -41,6 +41,7 @@ var Order = function (params) {
   this.total_paid = params.total_paid;
   this.installment_before_delivery = params.installment_before_delivery;
   this.delivered_at = params.delivered_at;
+  this.payment_rec_date = params.payment_rec_date;
   // this.status = params.status;
       
 };
@@ -70,9 +71,11 @@ Order.prototype.postOrder = function () {
                 if(that.fixedOrderType!=null){
                   const fixedValues = that.fixedOrderType;
                   let fixedOrderValues =[
-                    [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_at, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
+                    [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
                   ];
-                  connection.query('INSERT INTO fixed_order(customer_id, int_unpaid_bal, cash_price, delivery_fee, ppsr_fee, frequency, first_payment, last_payment, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_at, minimum_payment_amt, interest_rate, interest_rate_per, total_interest, is_active, created_by) VALUES ?',[fixedOrderValues],function (error, rows, fields) {
+                  console.log('fixedValues',fixedOrderValues);
+                  console.log('fixedValues2', that.fixedOrderType);
+                  connection.query('INSERT INTO fixed_order(customer_id, int_unpaid_bal, cash_price, delivery_fee, ppsr_fee, frequency, first_payment, last_payment, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, minimum_payment_amt, interest_rate, interest_rate_per, total_interest, is_active, created_by) VALUES ?',[fixedOrderValues],function (error, rows, fields) {
                     if (!error) {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
@@ -94,12 +97,12 @@ Order.prototype.postOrder = function () {
                     }
                   });
                 } 
-                if(that.flexOrderType!=null){
+                if(that.flexOrderType!=null){  
                   const flexValues = that.flexOrderType;
                   let flexOrderValues =[
-                    [that.customer_id, flexValues.goods_rent_price, flexValues.ppsr_fee, flexValues.liability_fee, flexValues.weekly_total, flexValues.frequency, flexValues.first_payment, flexValues.no_of_payment, flexValues.each_payment_amt, flexValues.total_payment_amt, flexValues.before_delivery_amt, flexValues.exp_delivery_at, flexValues.bond_amt, that.is_active, that.created_by]
+                    [that.customer_id, flexValues.goods_rent_price, flexValues.ppsr_fee, flexValues.liability_fee, flexValues.weekly_total, flexValues.frequency, flexValues.first_payment, flexValues.no_of_payment, flexValues.each_payment_amt, flexValues.total_payment_amt, flexValues.before_delivery_amt, flexValues.exp_delivery_date, flexValues.exp_delivery_time, flexValues.bond_amt, that.is_active, that.created_by]
                   ];
-                  connection.query('INSERT INTO flex_order(customer_id, goods_rent_price, ppsr_fee, liability_fee, weekly_total, frequency, first_payment, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_at, bond_amt, is_active, created_by) VALUES ?',[flexOrderValues],function (error, rows, fields) {
+                  connection.query('INSERT INTO flex_order(customer_id, goods_rent_price, ppsr_fee, liability_fee, weekly_total, frequency, first_payment, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, bond_amt, is_active, created_by) VALUES ?',[flexOrderValues],function (error, rows, fields) {
                     if (!error) {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
@@ -169,7 +172,7 @@ Order.prototype.editOrder = function () {
                   // let fixedOrderValues =[
                   //   [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_at, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
                   // ];
-                  connection.query('UPDATE fixed_order set int_unpaid_bal = "'+fixedValues.int_unpaid_bal+'", cash_price = "'+fixedValues.cash_price+'", delivery_fee = "'+fixedValues.delivery_fee+'", ppsr_fee = "'+fixedValues.ppsr_fee+'", frequency = "'+fixedValues.frequency+'", first_payment = "'+fixedValues.first_payment+'", last_payment = "'+fixedValues.last_payment+'", no_of_payment = "'+fixedValues.no_of_payment+'", each_payment_amt = "'+fixedValues.each_payment_amt+'", total_payment_amt = "'+fixedValues.total_payment_amt+'", before_delivery_amt = "'+fixedValues.before_delivery_amt+'", exp_delivery_at = "'+fixedValues.exp_delivery_at+'", minimum_payment_amt = "'+fixedValues.minimum_payment_amt+'", interest_rate = "'+fixedValues.interest_rate+'", interest_rate_per = "'+fixedValues.interest_rate_per+'", total_interest = "'+fixedValues.total_interest+'", is_active = "'+that.is_active+'", updated_by ="'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
+                  connection.query('UPDATE fixed_order set int_unpaid_bal = "'+fixedValues.int_unpaid_bal+'", cash_price = "'+fixedValues.cash_price+'", delivery_fee = "'+fixedValues.delivery_fee+'", ppsr_fee = "'+fixedValues.ppsr_fee+'", frequency = "'+fixedValues.frequency+'", first_payment = "'+fixedValues.first_payment+'", last_payment = "'+fixedValues.last_payment+'", no_of_payment = "'+fixedValues.no_of_payment+'", each_payment_amt = "'+fixedValues.each_payment_amt+'", total_payment_amt = "'+fixedValues.total_payment_amt+'", before_delivery_amt = "'+fixedValues.before_delivery_amt+'", exp_delivery_date = "'+fixedValues.exp_delivery_date+'", exp_delivery_time = "'+fixedValues.exp_delivery_time+'", minimum_payment_amt = "'+fixedValues.minimum_payment_amt+'", interest_rate = "'+fixedValues.interest_rate+'", interest_rate_per = "'+fixedValues.interest_rate_per+'", total_interest = "'+fixedValues.total_interest+'", is_active = "'+that.is_active+'", updated_by ="'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
                     if (!error) {
                       // const lastInsertId = rows.insertId;
                       // // console.log('fixed ..id', rows.insertId);
@@ -196,7 +199,7 @@ Order.prototype.editOrder = function () {
                   // let flexOrderValues =[
                   //   [that.customer_id, flexValues.goods_rent_price, flexValues.ppsr_fee, flexValues.liability_fee, flexValues.weekly_total, flexValues.frequency, flexValues.first_payment, flexValues.no_of_payment, flexValues.each_payment_amt, flexValues.total_payment_amt, flexValues.before_delivery_amt, flexValues.exp_delivery_at, flexValues.bond_amt, that.is_active, that.created_by]
                   // ];
-                  connection.query('UPDATE flex_order set goods_rent_price = "'+flexValues.goods_rent_price+'", ppsr_fee = "'+flexValues.ppsr_fee+'", liability_fee = "'+flexValues.liability_fee+'", weekly_total = "'+flexValues.weekly_total+'", frequency = "'+flexValues.frequency+'", first_payment = "'+flexValues.first_payment+'", no_of_payment = "'+flexValues.no_of_payment+'", each_payment_amt = "'+flexValues.each_payment_amt+'", total_payment_amt = "'+flexValues.total_payment_amt+'", before_delivery_amt = "'+flexValues.before_delivery_amt+'", exp_delivery_at = "'+flexValues.exp_delivery_at+'", bond_amt = "'+flexValues.bond_amt+'", is_active = "'+that.is_active+'", updated_by = "'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
+                  connection.query('UPDATE flex_order set goods_rent_price = "'+flexValues.goods_rent_price+'", ppsr_fee = "'+flexValues.ppsr_fee+'", liability_fee = "'+flexValues.liability_fee+'", weekly_total = "'+flexValues.weekly_total+'", frequency = "'+flexValues.frequency+'", first_payment = "'+flexValues.first_payment+'", no_of_payment = "'+flexValues.no_of_payment+'", each_payment_amt = "'+flexValues.each_payment_amt+'", total_payment_amt = "'+flexValues.total_payment_amt+'", before_delivery_amt = "'+flexValues.before_delivery_amt+'", exp_delivery_date = "'+flexValues.exp_delivery_date+'", exp_delivery_time = "'+flexValues.exp_delivery_time+'", bond_amt = "'+flexValues.bond_amt+'", is_active = "'+that.is_active+'", updated_by = "'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
                     if (!error) {
                       // const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
@@ -511,7 +514,7 @@ Order.prototype.paymentSubmit = function () {
         // let Values = [
         //   [that.order_id, that.customer_id, that.installment_no, that.payment_date, that.payment_amt, that.total_paid, that.created_by]
         // ];
-        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, payment_date, payment_amt, total_paid, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+that.payment_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+ that.created_by+'")', function (error, rows, fields) {
+        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, payment_date, payment_rec_date, payment_amt, total_paid, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+ that.created_by+'")', function (error, rows, fields) {
             if (!error) {
                   if(that.installment_before_delivery === that.installment_no){
                     connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {

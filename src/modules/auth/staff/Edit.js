@@ -263,28 +263,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                     />
                   </Grid>
-                  {/* <Grid item xs={6} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="password">Password</InputLabel>
-                    <TextField 
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="password"
-                      name="password" */}
-                      {/* // label="Password"
-                      // onChange={handleInputChange}
-                      // onFocus={handlePasswordBlurChange}
-                      value={inputs.password} 
-                      // required
-                      fullWidth
-                      // error={errors.password}
-                      // helperText={errors.password ? errors.password : ' '}
-                      disabled
-                    />
-                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
                     <Select
@@ -310,6 +288,51 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }
                     </Select>
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">User Id *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="user_id"
+                      name="user_id"
+                      // label="user_id"
+                      type="user_id"
+                      value={inputs.user_id} 
+                      // onChange={handleInputChange}
+                      // error={errors.email}
+                      // helperText={errors.email}
+                      // required
+                      disabled
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="password">Password *</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="password"
+                      name="password" 
+                      // label="Password"
+                      // onChange={handleInputChange}
+                      // onFocus={handlePasswordBlurChange}
+                      value={inputs.password} 
+                      // required
+                      fullWidth
+                      // error={errors.password}
+                      // helperText={errors.password ? errors.password : ' '}
+                      disabled
+                    />
+                  </Grid>
+                  
                   <Grid item xs={12} sm={12}>
                     <Button variant="contained"  onClick={handleSubmit} color="primary" className={classes.button} >
                       Update
