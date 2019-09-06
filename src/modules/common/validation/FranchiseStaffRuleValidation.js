@@ -59,7 +59,9 @@ export default function validate(values) {
   }
   if (!values.duration) {
     errors.duration = 'Work Experience is required';
-  } 
+  }  else if (!validAlpha.test(values.duration)) {
+    errors.duration = 'Work Experience is invalid';
+  }
   if (!values.password) {
     errors.password = 'Click here to get Password';
   } 
