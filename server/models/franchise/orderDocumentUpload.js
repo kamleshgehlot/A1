@@ -28,17 +28,21 @@ UploadDocument.prototype.uploadDoc = function () {
           ];
             connection.query('INSERT INTO order_document(order_id, document, created_by) VALUES ?',[queryData],function (error, rows, fields) {
               if (!error) {
+                  // console.log("INSERT...", rows.insertId);
                   connection.query('UPDATE orders SET doc_upload_status = 1, order_status = 2 where id = "'+that.order_id+'"',function (error, rows, fields) {
                     if (!error) {
-                          resolve(rows);
+                      // console.log("rows...", rows);
+                          resolve({rows, isUploaded: 1});
                         } else {
                           console.log("Error...", error);
-                          reject(error);
+                          // reject(error);
+                          resolve();
                         }
                       });
                     } else {
                       console.log("Error...", error);
-                      reject(error);
+                      // reject(error);
+                      resolve();
                     }
                   });
                 } else {
@@ -71,15 +75,18 @@ UploadDocument.prototype.uploadDeliveryDoc = function () {
               if (!error) {              
                   connection.query('UPDATE orders SET delivery_doc_uploaded = 1 where id = "'+that.order_id+'"',function (error, rows, fields) {
                     if (!error) {
-                          resolve(rows);
+                          resolve({rows, isUploaded: 1});
+                          // resolve(rows);
                         } else {
                           console.log("Error...", error);
-                          reject(error);
+                          // reject(error);
+                          resolve();
                         }
                       });
                     } else {
                       console.log("Error...", error);
-                      reject(error);
+                      // reject(error);
+                      resolve();
                     }
                   });
                 } else {

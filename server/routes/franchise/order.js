@@ -12,9 +12,7 @@ const storage = multer.diskStorage({
     // }
   },
   filename: function (req, file, callback) {
-
-    // if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
-      
+    // if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {      
       callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
     // }
   }
@@ -23,7 +21,7 @@ const storage = multer.diskStorage({
 
 const Delivery = multer.diskStorage({
   destination: function (req, file, callback) {
-
+    console.log('callback',callback)
     // if (process.env.NODE_ENV === 'development') {
       callback(null, './files/DeliveredDoc');
     // } else {
@@ -40,6 +38,7 @@ const Delivery = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
 const DeliveredDoc = multer({ storage: Delivery });
 const validateToken = require('../../utils').validateToken;
 

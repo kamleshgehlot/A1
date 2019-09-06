@@ -609,7 +609,9 @@ return (
                     </Select>
                     </Grid>
                     <Grid item xs={12} sm={3}>
-                    <InputLabel  className={classes.textsize} htmlFor="id_type">Type of ID</InputLabel>
+                    {!otherIdType &&
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">Type of ID</InputLabel>}
+                    {!otherIdType &&
                     <TextField
                       InputProps={{
                         classes: {
@@ -629,6 +631,7 @@ return (
                       helperText={errors.other_id_type_value}
                       fullWidth
                     />
+                    }
                     </Grid>
                   
                   <Grid item xs={12} sm={6}>

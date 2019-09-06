@@ -119,11 +119,12 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(12),
   },
   treeRoot: {
-    height: 264,
+    // height: 264,
     flexGrow: 1,
     marginTop:theme.spacing(8),
     maxWidth: 250,
-    minWidth: 200
+    minWidth: 200,
+    // backgroundColor: 'red',
   }
 }));
 
@@ -172,8 +173,9 @@ const useTreeItemStyles = makeStyles(theme => ({
 }));
 
 function StyledTreeItem(props) {
-  // console.log('props',props)
+  
   const classes = useTreeItemStyles();
+  
   const {    
     labelText,
     labelIcon: LabelIcon,
@@ -185,6 +187,7 @@ function StyledTreeItem(props) {
 
   return (
     <TreeItem
+
       label={
         <div className={classes.labelRoot}>
           <LabelIcon color="inherit" className={classes.labelIcon} />
@@ -615,7 +618,13 @@ export default function ClippedDrawer(props) {
         </Toolbar>
       </AppBar>
 
-{/*      
+      {/* <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
         {roles.find(role => role === 'Super Admin')
         && ( <div>
           <TreeView
@@ -650,7 +659,7 @@ export default function ClippedDrawer(props) {
         </div> )}
 
         {roles.find(role => role === 'CSR' || role === 'Finance' || role === 'Delivery' || role === 'HR')
-        && ( <div> 
+        && ( 
           <TreeView
             className={classes.treeRoot}
             // defaultExpanded={["3"]}
@@ -660,17 +669,17 @@ export default function ClippedDrawer(props) {
           >
             <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick(roles); }} />
             {roles.find(role => role === 'CSR')
-            && ( <div> 
-              <StyledTreeItem nodeId="2" labelText="CSR Roles" labelIcon={AccountCircleIcon}>  
+            && ( 
+              <StyledTreeItem nodeId="2" labelText="CSR" labelIcon={AccountCircleIcon}>  
                 <StyledTreeItem
                   nodeId="5"
                   labelText="Manage Customer"
                   labelIcon={PeopleIcon}
                   // labelInfo="90"
                   color="#1a73e8"
-                  bgColor="#e8f0fe"
+                  bgColor="#e8f0fe"                  
                   onClick={(event) => { handleCustomerClick('CSR'); }}
-                />
+                />               
                 <StyledTreeItem
                   nodeId="6"
                   labelText="Manage Task"
@@ -708,11 +717,11 @@ export default function ClippedDrawer(props) {
                   onClick={(event) => { handleOrderClick('CSR'); }}
                 />
               </StyledTreeItem>
-            </div> )}
+            )}
 
             {roles.find(role => role === 'Finance')
-            && ( <div> 
-              <StyledTreeItem nodeId="3" labelText="Finance Roles" labelIcon={AccountCircleIcon}>  
+            && ( 
+              <StyledTreeItem nodeId="3" labelText="Finance" labelIcon={AccountCircleIcon}>  
                 <StyledTreeItem
                   nodeId="10"
                   labelText="Manage Task"
@@ -741,12 +750,12 @@ export default function ClippedDrawer(props) {
                   onClick={(event) => { handleOrderClick('Finance'); }}
                 />
               </StyledTreeItem>
-            </div> )}
+            )}
             
 
             {roles.find(role => role === 'Delivery')
-            && ( <div> 
-              <StyledTreeItem nodeId="4" labelText="Delivery Roles" labelIcon={AccountCircleIcon}>  
+            && ( 
+              <StyledTreeItem nodeId="4" labelText="Delivery" labelIcon={AccountCircleIcon}>  
                 <StyledTreeItem
                   nodeId="13"
                   labelText="Manage Task"
@@ -775,13 +784,12 @@ export default function ClippedDrawer(props) {
                   onClick={(event) => { handleOrderClick('Delivery'); }}
                 />
               </StyledTreeItem>
-            </div> )}
-
+            )}
           </TreeView>
-        </div> )} */}
+         )}  
+      </Drawer> */}
 
-
-      <Drawer
+       <Drawer
         className={classes.drawer}
         variant="permanent"
         classes={{
@@ -917,7 +925,7 @@ export default function ClippedDrawer(props) {
                )}
              </List>
       </Drawer>  
-
+ 
 
 
       <main className={classes.content}>

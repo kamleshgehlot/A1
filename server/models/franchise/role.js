@@ -45,7 +45,6 @@ Role.prototype.getAll = function () {
       connection.changeUser({ database: dbName["prod"] });
       connection.query('select id, name from role', (error, rows, fields) => {
         if (!error) {
-          console.log('role...',rows);
           resolve(rows);
         } else {
           console.log('Error...', error);

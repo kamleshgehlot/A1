@@ -12,7 +12,6 @@ const all = async function(req, res, next) {
 
 const getAll = async function(req, res, next) {
   try {
-    console.log('role controller..')
     const role = await new Role({}).getAll();
     
     res.send({ role });
