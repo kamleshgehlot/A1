@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail, validAlpha } from './Regex';
+import { validString, validNumber, validDecimalNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -62,13 +62,25 @@ export default function validate(values) {
   }
   if (values.intrest_rate_per==='0' || values.intrest_rate_per==="" || values.intrest_rate_per<0) {
     errors.intrest_rate_per = 'Daily interest rates are required';
-  } else if (!validNumber.test(values.intrest_rate_per)) {
+  } else if (!validDecimalNumber.test(values.intrest_rate_per)) {
     errors.intrest_rate_per = 'Daily interest rates are invalid';
   }
   if (values.total_intrest==='0' || values.total_intrest==="" || values.total_intrest<0) {
     errors.total_intrest = 'Total Interest Charges are required';
-  } else if (!validNumber.test(values.total_intrest)) {
+  } else if (!validDecimalNumber.test(values.total_intrest)) {
     errors.total_intrest = 'Total Interest Charges are invalid';
+  }
+  if(values.first_payment === ""){
+    errors.first_payment = 'First Payment Date is Required';
+  }
+  if(values.last_payment === ""){
+    errors.first_payment = 'Last Payment Date is Required';
+  }
+  if(values.exp_delivery_at === ""){
+    errors.first_payment = 'Expected Date is Required';
+  }
+  if(values.delivery_time === ""){
+    errors.first_payment = 'Expected Time Date is Required';
   }
   return errors;
 };

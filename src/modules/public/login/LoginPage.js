@@ -71,6 +71,7 @@ class LoginPage extends Component {
         token: result.token,
         refreshToken: '',
         roleName: result.role_name,
+        role_id: result.role_id,
         franchiseId: result.franchise_id,
         userName: result.user_name,
         userId: result.user_id,

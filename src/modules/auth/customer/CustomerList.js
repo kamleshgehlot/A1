@@ -54,7 +54,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function CustomerList(userId) {
+export default function CustomerList({userId, roleName}) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);

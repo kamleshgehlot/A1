@@ -264,6 +264,31 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                  <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
+                    <Select
+                      value={inputs.position}
+                      onChange={handleInputChange}
+                      inputProps={{
+                        name: 'position',
+                        id: 'position',
+                        // label:'position'
+                      }}
+                      fullWidth className={classes.textsize}
+                      error={errors.position}
+                      helperText={errors.position}
+                      // label="position"
+                      required
+                    > 
+                      {
+                        positions.map(ele =>{
+                          return(
+                          <MenuItem className={classes.textsize} value={ele.id}>{ele.position}</MenuItem>
+                          )
+                        })
+                      }
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="user_id">User Id *</InputLabel>
                     <TextField 
                       InputProps={{
@@ -307,31 +332,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                  <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
-                    <Select
-                      value={inputs.position}
-                      onChange={handleInputChange}
-                      inputProps={{
-                        name: 'position',
-                        id: 'position',
-                        // label:'position'
-                      }}
-                      fullWidth className={classes.textsize}
-                      error={errors.position}
-                      helperText={errors.position}
-                      // label="position"
-                      required
-                    > 
-                      {
-                        positions.map(ele =>{
-                          return(
-                          <MenuItem className={classes.textsize} value={ele.id}>{ele.position}</MenuItem>
-                          )
-                        })
-                      }
-                    </Select>
-                  </Grid>
+                  
                   <Grid item xs={12} sm={12}>
                     <Button variant="contained"  onClick={handleSubmit} color="primary" className={classes.button} >
                       Update

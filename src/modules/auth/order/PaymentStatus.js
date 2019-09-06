@@ -36,6 +36,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
+import 'date-fns';
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -143,8 +146,27 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [payResopnse, setPayResopnse] = React.useState([]);
   // const [flexPaymentStatus, setFlexPaymentStatus] = useState([]);
   const [paymentHistory,setPaymentHistory] = useState([]);
+  const [paymentRecDate, setPaymentRecDate] = useState(new Date());
 
 
+  const setDateFormat = (date) => {
+    let date1 = new Date(date);
+    let yy = date1.getFullYear();
+    let mm = date1.getMonth() + 1 ;
+    let dd = date1.getDate();
+    if(mm< 10){ mm = '0' + mm.toString()}
+    if(dd< 10){ dd = '0' + dd.toString()}
+    let fullDate = yy+ '-'+mm+'-'+dd;
+    return fullDate;
+  }
+
+  function handleDateChange(date){
+    setPaymentRecDate(setDateFormat(date));    
+  }
+
+
+console.log(paymentHistory);
+console.log(paymentRecDate);
   
     const getPaymentHistory = async () => {
       try {
@@ -360,7 +382,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   useEffect(() => {
     const fetchData = async () => {
       try{
-        await getPaymentHistory();
+        await getPaymentHistory();        
         if(orderData.order_type===1){
           await getFixedPaymentTable();
         }else if(orderData.order_type===2){
@@ -392,6 +414,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               total_paid : payResopnse.total_paid,   
               installment_before_delivery : payResopnse.installment_before_delivery,
               last_installment_no : payResopnse.last_installment_no,
+              payment_rec_date : paymentRecDate,
             });              
             await getPaymentHistory();
             if(orderData.order_type===1){
@@ -441,6 +464,7 @@ return (
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Payment Date</StyledTableCell>
+                        <StyledTableCell>Payment Rec. Date</StyledTableCell>
                         <StyledTableCell>Installment Amt. </StyledTableCell>
                         <StyledTableCell>Paid Amt.</StyledTableCell>
                         <StyledTableCell>Status</StyledTableCell>
@@ -453,6 +477,33 @@ return (
                           <TableRow className={ data.installment_no === data.installment_before_delivery ? classes.highlightRow : null}>
                             <StyledTableCell>{data.sr_no}</StyledTableCell>
                             <StyledTableCell>{data.payment_date}</StyledTableCell>
+                            <StyledTableCell>
+                              {data.installment_no === (paymentHistory[0].installment_no + 1) ?
+                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <KeyboardDatePicker
+                                      margin="dense"
+                                      id="payment_rec_date"
+                                      name="payment_rec_date"
+                                      format="dd/MM/yyyy"
+                                      value={paymentRecDate}
+                                      fullWidth 
+                                      InputProps={{
+                                        classes: {
+                                          input: classes.textsize,
+                                        },
+                                      }}
+                                      onChange={handleDateChange}
+                                      // error={errors.first_payment}
+                                      // helperText={errors.first_payment}                               
+                                    />
+                                    </MuiPickersUtilsProvider>
+                                :   (paymentHistory.length > 0 ? paymentHistory : []).map((hdata, index) => {
+                                        return(
+                                          hdata.installment_no === data.installment_no ? hdata.payment_rec_date : ''
+                                        )
+                                    })
+                                }   
+                            </StyledTableCell>
                             <StyledTableCell>{data.payment_amt}</StyledTableCell>
                             {/* {paymentHistory != "" ? paymentHistory.} */}
                             <StyledTableCell >

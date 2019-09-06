@@ -13,7 +13,7 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 import PasswordAPI from '../../../api/setting/Password';
 import useSignUpForm from '../franchise/CustomHooks';
 
-export default function ChangePassword(franchiseId) {
+export default function ChangePassword({franchiseId, roleName}) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);

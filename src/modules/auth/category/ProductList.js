@@ -52,7 +52,7 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-export default function ProductList(props) {
+export default function ProductList({roleName}) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [staffOpen, setStaffOpen] = useState(false);
@@ -68,8 +68,7 @@ export default function ProductList(props) {
   const [productList, setProductList] = useState([]);
   //value is for tabs  
   const [value, setValue] = React.useState(0);
-  const roleName = APP_TOKEN.get().roleName;
-  const userName = APP_TOKEN.get().userName;
+  
 
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({

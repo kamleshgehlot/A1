@@ -62,8 +62,6 @@ export default function FranchiseTabPannel({value, tabIndex, staffList, currentR
   }));
 
   const classes = useStyles();
-  console.log("****************tabIndex****************", tabIndex);
-
     return (
       staffList ?
     <TabPanel value={value} index={tabIndex}>
@@ -72,6 +70,7 @@ export default function FranchiseTabPannel({value, tabIndex, staffList, currentR
                     <TableRow>
                       <StyledTableCell>#</StyledTableCell>
                       <StyledTableCell>User ID</StyledTableCell>
+                      <StyledTableCell>Password</StyledTableCell>
                       <StyledTableCell>Full Name</StyledTableCell>
                       <StyledTableCell>Role/Position</StyledTableCell>
                       <StyledTableCell>Contact</StyledTableCell>
@@ -85,6 +84,7 @@ export default function FranchiseTabPannel({value, tabIndex, staffList, currentR
                         <TableRow key={data.id} >
                           <StyledTableCell> {index + 1}  </StyledTableCell>
                           <StyledTableCell> {data.user_id}  </StyledTableCell>
+                          <StyledTableCell> {data.password}  </StyledTableCell>
                           <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                           <StyledTableCell> 
                             {

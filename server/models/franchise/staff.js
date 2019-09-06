@@ -29,6 +29,8 @@ var Staff = function (params) {
   this.created_by = params.created_by;
   this.updated_by = params.updated_by;
   this.is_active = params.is_active;
+  this.token = params.token;
+  this.accountId = params.accountId;
 };
 
 Staff.prototype.register = function () {
@@ -53,7 +55,8 @@ Staff.prototype.register = function () {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
 
-        connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,designation,role_id,is_active,created_by) VALUES ("' + 0 + '", "' + 0 + '", "' + that.first_name + ' ' + that.last_name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.role + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+        connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + 0 + '", "' + 0 + '", "' + that.first_name + " " + that.last_name + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"),  "' + that.token + '", "' + that.accountId + '" , "' + that.designation + '", "' + that.role + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+        
           const savedUserId = rows.insertId;
           (staffRoles.length > 0 ? staffRoles : []).map((data, index) => {
               connection.query('INSERT INTO user_role(user_id,role_id,is_active,created_by) VALUES ("' + savedUserId + '", "' + data + '", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {

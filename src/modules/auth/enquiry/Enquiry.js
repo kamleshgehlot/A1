@@ -17,6 +17,11 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
 
 import Add from './Add';
 import ConvertedEnquiry from './ConvertedEnquiry';
@@ -47,7 +52,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Enquiry() {
+export default function Enquiry({roleName}) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -228,25 +233,60 @@ console.log('res=---',response);
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-
-          <Grid item xs={12} sm={8}>
-            <Fab
-              variant="extended"
-              size="small"
-              // color="primary"
-              aria-label="Add"
-              className={classes.fonttransform}
-              onClick={handleClickOpen}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              Enquiry
-            </Fab>
+            <Grid item xs={12} sm={8}>
+              <Fab
+                variant="extended"
+                size="small"
+                // color="primary"
+                aria-label="Add"
+                className={classes.fonttransform}
+                onClick={handleClickOpen}
+              >
+                <AddIcon className={classes.extendedIcon} />
+                Enquiry
+              </Fab>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                id="search"
+                name="search"
+                label="Search"
+                type="text"
+                // value={searchText} 
+                // onKeyPress={(ev) => {
+                //   if (ev.key ===  'Enter') {
+                //     searchHandler()
+                //     ev.preventDefault();
+                //   }
+                // }}
+                // onChange={handleSearchText}
+                // inputProps={{
+                //   endAdorment:(
+                //     <InputAdornment position='start'>
+                //       <SearchIcon />  ll 
+                //     </InputAdornment>
+                //   )
+                // }}
+                fullWidth
+                InputProps={{
+                  endAdornment: <InputAdornment position='end'>
+                                  <Tooltip title="Search">
+                                    <IconButton><SearchIcon /></IconButton>
+                                  </Tooltip>
+                                </InputAdornment>,
+                }}
+              />
+              {/* <IconButton  aria-label="Search" >
+                <SearchIcon />   
+              </IconButton> */}
           </Grid>
+         
           {/* <Grid item xs={12} sm={4}>
             <Button variant="contained" color="primary" size="small"  onClick={handleCompleteEnquiryClickOpen} >Converted Enquiries</Button>
           </Grid> */}
           
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">

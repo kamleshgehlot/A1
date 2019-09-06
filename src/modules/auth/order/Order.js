@@ -44,6 +44,8 @@ import FlexTypeDD from './FlexTypeDoc';
 import FixedTypeDD from './FixedOrderDoc';
 
 import ConfirmationDialog from '../ConfirmationDialog.js';
+import ProcessDialog from '../ProcessDialog.js';
+import PageLoader from '../../../Routes.js';
 
 import axios from 'axios';
 import { saveAs } from 'file-saver';
@@ -74,9 +76,8 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Order() {
-  const roleName = APP_TOKEN.get().roleName;
-  // const userName = APP_TOKEN.get().userName;
+export default function Order({roleName}) {
+  
   
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -100,7 +101,7 @@ export default function Order() {
   const [deliveryTabIndex, setDeliveryTabIndex] = useState();
   const [completedTabIndex, setCompletedTabIndex] = useState();
   const [deliveredTabIndex, setDeliveredTabIndex] = useState();
-  
+  const [processDialog,setProcessDialog] = useState(false);
 
   
 
@@ -231,7 +232,7 @@ export default function Order() {
   }
   
   const uploadFileSelector = async (event) =>{
-    
+    setProcessDialog(true);
     try {      
         let formData = new FormData();
         formData.append('data', JSON.stringify(orderIdForUpload));
@@ -243,9 +244,10 @@ export default function Order() {
             if(document.getElementById('upload_document').files.length !=0) {
               const result = await OrderAPI.uploadDocument({formData: formData});
               if(result.order.length>0){
+                setProcessDialog(false);
                 alert('Upload Successfully...');
                 setOrder(result.order);
-                setOrderIdForUpload(null);
+                setOrderIdForUpload(null);                
               }
             }
           }
@@ -257,6 +259,7 @@ export default function Order() {
           if(document.getElementById('upload_delivery_doc').files.length !=0) {
             const result = await OrderAPI.uploadDeliveryDoc({formData: formData});
             if(result.order.length>0){
+              setProcessDialog(false);
               alert('Upload Successfully...');
               setOrder(result.order);
               setOrderIdForUpload(null);
@@ -268,12 +271,15 @@ export default function Order() {
       }
   };
   
+  function handleProcessDialogClose(){
+    setProcessDialog(false);
+  }
   
 
   function handleUploadFile(orderId){
     setUploadType('Documents');
     setOrderIdForUpload(orderId);
-    document.getElementById('upload_document').click();
+    // document.getElementById('upload_document').click();
   }
 
   function handleDeliveryDoc(orderId){
@@ -528,23 +534,6 @@ export default function Order() {
                                   <EditIcon />  
                                 </IconButton>
                               </Tooltip>
-                              {/*
-                              import SearchIcon from '@material-ui/icons/Search';
-
-                              import Tooltip from '@material-ui/core/Tooltip'; 
-                              import IconButton from '@material-ui/core/IconButton';
-                              import EditIcon from '@material-ui/icons/Edit';
-
-                              import CloudUpload from '@material-ui/icons/CloudUpload';
-                              import SendIcon from '@material-ui/icons/send';
-                              
-
-                              fab:{
-                                marginRight: theme.spacing(1),
-                                fontSize: 12,
-                              },
-                             */}
-
                               <Tooltip title="Download PDF">
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
                                   <PrintIcon /> 
@@ -894,6 +883,7 @@ export default function Order() {
      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData}  /> : null }
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
+     {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }
           
     </div>
   );
