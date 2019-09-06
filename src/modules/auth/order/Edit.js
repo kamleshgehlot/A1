@@ -147,7 +147,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
-
+ console.log(recData)
   useEffect(() => {
 
     let assignRoleList = [];

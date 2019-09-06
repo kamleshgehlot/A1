@@ -719,8 +719,8 @@ return (
                       onChange={handleInputChange}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
-                      error={errors.intrest_rate}
-                      helperText={errors.intrest_rate}
+                      // error={errors.intrest_rate}
+                      // helperText={errors.intrest_rate}
                       
                       fullWidth
                       // required
@@ -754,8 +754,8 @@ return (
                       onChange={handleInputChange}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
-                      error={errors.intrest_rate_per}
-                      helperText={errors.intrest_rate_per}
+                      // error={errors.intrest_rate_per}
+                      // helperText={errors.intrest_rate_per}
                       fullWidth
                       // required
                       type="number"
@@ -789,8 +789,8 @@ return (
                       onChange={handleInputChange}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
-                      error={errors.total_intrest}
-                      helperText={errors.total_intrest}
+                      // error={errors.total_intrest}
+                      // helperText={errors.total_intrest}
                       fullWidth
                       // required
                       type="number"

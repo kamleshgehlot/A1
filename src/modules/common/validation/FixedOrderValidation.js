@@ -55,21 +55,21 @@ export default function validate(values) {
   } else if (!validNumber.test(values.minimum_payment_amt)) {
     errors.minimum_payment_amt = 'Amount is invalid';
   }
-  if (values.intrest_rate==='0' || values.intrest_rate==="" || values.intrest_rate<0) {
-    errors.intrest_rate = 'Weeks is required';
-  } else if (!validNumber.test(values.intrest_rate)) {
-    errors.intrest_rate = 'Weeks is invalid';
-  }
-  if (values.intrest_rate_per==='0' || values.intrest_rate_per==="" || values.intrest_rate_per<0) {
-    errors.intrest_rate_per = 'Daily interest rates are required';
-  } else if (!validDecimalNumber.test(values.intrest_rate_per)) {
-    errors.intrest_rate_per = 'Daily interest rates are invalid';
-  }
-  if (values.total_intrest==='0' || values.total_intrest==="" || values.total_intrest<0) {
-    errors.total_intrest = 'Total Interest Charges are required';
-  } else if (!validDecimalNumber.test(values.total_intrest)) {
-    errors.total_intrest = 'Total Interest Charges are invalid';
-  }
+  // if (values.intrest_rate==='0' || values.intrest_rate==="" || values.intrest_rate<0) {
+  //   errors.intrest_rate = 'Weeks is required';
+  // } else if (!validNumber.test(values.intrest_rate)) {
+  //   errors.intrest_rate = 'Weeks is invalid';
+  // }
+  // if (values.intrest_rate_per==='0' || values.intrest_rate_per==="" || values.intrest_rate_per<0) {
+  //   errors.intrest_rate_per = 'Daily interest rates are required';
+  // } else if (!validDecimalNumber.test(values.intrest_rate_per)) {
+  //   errors.intrest_rate_per = 'Daily interest rates are invalid';
+  // }
+  // if (values.total_intrest==='0' || values.total_intrest==="" || values.total_intrest<0) {
+  //   errors.total_intrest = 'Total Interest Charges are required';
+  // } else if (!validDecimalNumber.test(values.total_intrest)) {
+  //   errors.total_intrest = 'Total Interest Charges are invalid';
+  // }
   if(values.first_payment === ""){
     errors.first_payment = 'First Payment Date is Required';
   }

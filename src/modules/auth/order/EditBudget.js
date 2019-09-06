@@ -119,6 +119,8 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
   const [oldBudget, setOldBudget] = useState(0);
   const [oldBudgetList,setOldBudgetList] = useState([]);
   const [surplusBool, setSurplusBool] = useState();
+  const [errorSurplus, setErrorSurplus] = useState();
+  const [errorAfford, setErrorAfford] = useState();
 
 
   function handleInputBlur(e){
@@ -158,30 +160,46 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
 
   function handleSubmit(e){
     e.preventDefault();
-    
-    const data = {
-      work: parseFloat(inputs.work),
-      benefits : parseFloat(inputs.benefits),
-      accomodation : parseFloat(inputs.accomodation),
-      childcare : parseFloat(inputs.childcare),
-      rent : parseFloat(inputs.rent),
-      power : parseFloat(inputs.power),
-      telephone : parseFloat(inputs.telephone),
-      mobile : parseFloat(inputs.mobile),
-      vehicle : parseFloat(inputs.vehicle),
-      transport : parseFloat(inputs.transport),
-      food : parseFloat(inputs.food),
-      credit_card : parseFloat(inputs.credit_card),
-      loan : parseFloat(inputs.loan),
-      other_expenditure : parseFloat(inputs.other_expenditure),
-      income  : parseFloat(inputs.income),
-      expenditure : parseFloat(inputs.expenditure),
-      surplus  : parseFloat(inputs.surplus),
-      afford_amt : parseFloat(inputs.afford_amt),
-      pre_order_exp : parseFloat(oldBudget),
+    let check = false;
+    if(inputs.surplus<=0){
+      setErrorSurplus('Total Surplus/Defict is cannot be zero or less than zero');
+      check=true;
     }
-    setBudgetList(data);
-    handleBudgetClose(false)
+    else{
+      setErrorSurplus('');
+    }
+    if(inputs.afford_amt<=0){
+      setErrorAfford('This field is required');
+      check=true;
+    }
+    else{
+      setErrorAfford('');
+    }
+    if(check===false){
+        const data = {
+        work: parseFloat(inputs.work),
+        benefits : parseFloat(inputs.benefits),
+        accomodation : parseFloat(inputs.accomodation),
+        childcare : parseFloat(inputs.childcare),
+        rent : parseFloat(inputs.rent),
+        power : parseFloat(inputs.power),
+        telephone : parseFloat(inputs.telephone),
+        mobile : parseFloat(inputs.mobile),
+        vehicle : parseFloat(inputs.vehicle),
+        transport : parseFloat(inputs.transport),
+        food : parseFloat(inputs.food),
+        credit_card : parseFloat(inputs.credit_card),
+        loan : parseFloat(inputs.loan),
+        other_expenditure : parseFloat(inputs.other_expenditure),
+        income  : parseFloat(inputs.income),
+        expenditure : parseFloat(inputs.expenditure),
+        surplus  : parseFloat(inputs.surplus),
+        afford_amt : parseFloat(inputs.afford_amt),
+        pre_order_exp : parseFloat(oldBudget),
+      }
+      setBudgetList(data);
+      handleBudgetClose(false)
+    }
   }
 
   useEffect(() => {
@@ -711,6 +729,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errorSurplus}
+                      helperText={errorSurplus}
                       fullWidth
                       disabled = {surplusBool}
                       required
@@ -746,6 +766,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errorAfford}
+                      helperText={errorAfford}
                       fullWidth
                       // disabled
                       required
