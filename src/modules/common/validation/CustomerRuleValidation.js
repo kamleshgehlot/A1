@@ -22,8 +22,6 @@ export default function validate(values) {
     errors.postcode = 'Postcode is required';
   } else if (!validNumber.test(values.postcode)) {
     errors.postcode = 'Postcode is invalid';
-  } else if ((values.postcode).length<6) {
-    errors.postcode = 'Postcode is invalid';
   }
 
   if (!values.telephone) {
@@ -128,7 +126,10 @@ export default function validate(values) {
   
   if (!values.employer_name) {
     errors.employer_name = 'Employer Name is required';
+  } else if (!validAlpha.test(values.employer_name)) {
+    errors.employer_name = 'Employer Name is invalid';
   }
+
   
   if (!values.employer_address) {
     errors.employer_address = 'Address is required';
@@ -151,7 +152,9 @@ export default function validate(values) {
  
   if (!values.employer_tenure) {
     errors.employer_tenure = 'Tenure of Employer is required';
-  } 
+  }  else if (!validAlpha.test(values.employer_tenure)) {
+    errors.employer_tenure = 'Tenure of Employer is invalid';
+  }
 
   
   return errors;

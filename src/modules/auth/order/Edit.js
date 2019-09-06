@@ -112,7 +112,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData}) {
+export default function Edit({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData}) {
 
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
