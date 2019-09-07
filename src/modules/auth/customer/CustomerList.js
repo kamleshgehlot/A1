@@ -21,6 +21,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CreateIcon from '@material-ui/icons/Create';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
+import Badge from '@material-ui/core/Badge'; 
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -54,7 +55,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function CustomerList(userId) {
+export default function CustomerList({userId, roleName}) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -65,6 +66,9 @@ export default function CustomerList(userId) {
   const [customerData, setCustomerData] = useState([]);
   const [searchText, setSearchText]  = useState('');
   const [customer, setCustomer] = useState({});
+  const [active, setActive]=  useState();
+  const [hold, setHold]=  useState();
+  const [completed, setCompleted]=  useState();
   
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -82,6 +86,9 @@ export default function CustomerList(userId) {
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
+    },
+     padding: {
+      padding: theme.spacing(0, 2),
     },
     drawerPaper: {
       width: drawerWidth,
@@ -161,6 +168,7 @@ export default function CustomerList(userId) {
     setEditOpen(true);
   }
   function handleEditClose() {
+    handleBadge(customerListData);
     setEditOpen(false);
   }
  
@@ -180,13 +188,28 @@ export default function CustomerList(userId) {
   function handleCustomerList(response){
     // console.log("response---", response);
     setCustomerListData(response);
+    handleBadge(response);
   }
 
   function handleSearchText(event){
     setSearchText(event.target.value);
   }
   // console.log("search text", searchText);
-  
+  function handleBadge(customerList){
+    let active = 0;
+    let hold = 0;
+    let completed = 0;
+
+    (customerList).map(data =>{
+      data.state==1 ? active += 1 : '';
+      data.state==2 ? hold += 1: '';
+      data.state==3 ? completed += 1: '';
+    })   
+    setActive(active)
+    setHold(hold);
+    setCompleted(completed);
+  }
+
   const searchHandler = async () => {
     try {
     if(searchText!=''){
@@ -213,10 +236,8 @@ export default function CustomerList(userId) {
       try {
         const result = await Customer.list();
         setCustomerListData(result.customerList);
-
-        // const idType = await Customer.idtypelist();
-        // setIdTypeList(idType.idTypeList);
-
+        handleBadge(result.customerList);
+        
       } catch (error) {
         setIsError(true);
       }
@@ -304,9 +325,14 @@ export default function CustomerList(userId) {
             <Paper style={{ width: '100%' }}> 
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                  <Tab label="Active" />
-                  <Tab label="Hold" />
-                  <Tab label="Completed" />
+                 
+                 {/* {
+                   (customerListData.length>0 ? customerListData : []).map(data=>{
+                   data.state === 1 ? a++ : data.state === 2 ? b++ : data.state===3 ? c++ :'';
+                 })} */}
+                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={active}>Active</Badge>} />
+                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={hold}>Hold</Badge>} />
+                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={completed}>Completed</Badge>} />
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={value}>
@@ -318,7 +344,7 @@ export default function CustomerList(userId) {
                         <StyledTableCell>Contact</StyledTableCell>
                         <StyledTableCell>Address</StyledTableCell>
                         <StyledTableCell>Created By</StyledTableCell>
-                        <StyledTableCell>State</StyledTableCell>
+                        {/* <StyledTableCell>State</StyledTableCell> */}
                         <StyledTableCell>Options</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -334,7 +360,7 @@ export default function CustomerList(userId) {
                             <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
                             <StyledTableCell> {data.address}  </StyledTableCell>
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>
-                            <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell>
+                            {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
                             <StyledTableCell> 
                               <Tooltip title="Update">                              
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>

@@ -2,6 +2,8 @@ const Order = require('../../models/franchise/order.js');
 const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 
 const uploadDoc = async function (req, res, next) {
+  console.log('rows data',req.body.data);
+
   const OrderData = JSON.parse(req.body.data);
   let attachments = '';
   req.files.map((file) => {
@@ -17,10 +19,14 @@ const uploadDoc = async function (req, res, next) {
 	try{
       const newDoc = new UploadDocument(orderParams);
 
-	    await newDoc.uploadDoc();
+      const result = await newDoc.uploadDoc();
+      // console.log('rows model',result);
       const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-      
-      res.send({ order: order});
+      if(result){
+        res.send({ order: order, isUploaded: result.isUploaded}); 
+      }else{
+        res.send({ order: order, isUploaded: 0});
+      }      
 	}catch(err){
     next(error);
 	}
@@ -45,10 +51,13 @@ const uploadDeliveryDoc = async function (req, res, next) {
 	try{
       const newDoc = new UploadDocument(orderParams);
 
-	    await newDoc.uploadDeliveryDoc();
+	    const result = await newDoc.uploadDeliveryDoc();
       const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-      
-      res.send({ order: order});
+      if(result){
+        res.send({ order: order, isUploaded: result.isUploaded}); 
+      }else{
+        res.send({ order: order, isUploaded: 0});
+      }   
 	}catch(err){
     next(error);
 	}
@@ -77,6 +86,7 @@ const getAll = async function(req, res, next) {
 
 const getBudget = async function(req, res, next) {
   try {
+    // console.log('req--',req.body)
     const order = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId}).getBudget();
     const oldBudget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget();
     

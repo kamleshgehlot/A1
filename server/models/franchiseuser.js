@@ -71,7 +71,7 @@ FranchiseUser.prototype.staffList = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('select id, franchise_id, director_id, name, role_id from user where role_id="'+that.selectedRole+'"', function (error, rows, fields) {
+          connection.query('select id, franchise_id, director_id, name, role_id from user where role_id LIKE "%'+that.selectedRole+'%"', function (error, rows, fields) {
             if (!error) {
               resolve( rows );
             } else {

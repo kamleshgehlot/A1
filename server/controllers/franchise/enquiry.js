@@ -20,6 +20,16 @@ const getAll = async function(req, res, next) {
   }
 };
 
+const nonConvertList = async function(req, res, next) {
+  try {
+    const enquiryList = await new Enquiry({user_id: req.decoded.user_id}).nonConvertList();
+
+    res.send({ enquiryList });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const convertedList = async function(req, res, next) {
   try {
     const enquiryList = await new Enquiry({user_id: req.decoded.user_id}).convertedList();
@@ -70,4 +80,4 @@ const postenquiry = async function (req, res, next) {
 	}
 };
 
-module.exports = { getnewid, postenquiry, getAll, convert, convertedList};
+module.exports = { getnewid, postenquiry, getAll, nonConvertList, convert, convertedList};

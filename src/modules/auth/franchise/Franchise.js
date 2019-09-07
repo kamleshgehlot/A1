@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid'; 
 import Table from '@material-ui/core/Table';
+import Badge from '@material-ui/core/Badge';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -57,7 +58,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Franchise(props) {
+export default function Franchise({roleName}) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [staffOpen, setStaffOpen] = useState(false);
@@ -67,9 +68,15 @@ export default function Franchise(props) {
   const [franchiseData, setFranchiseData]= useState();
   const [franchiseList, setFranchiseList] = useState({});
   const [franchiseId, setFranchiseId] = useState([]);
+  const [openFranchise,setOpenFranchise] = useState();
+  const [activeFranchise,setActiveFranchise] = useState();
+  const [inactiveFranchise,setInactiveFranchise] = useState();
+  const [closeFranchise,setCloseFranchise] = useState();
+  
+
   //value is for tabs  
   const [value, setValue] = React.useState(0);
-  const roleName = APP_TOKEN.get().roleName;
+  
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
@@ -142,6 +149,9 @@ export default function Franchise(props) {
       fontSize: theme.typography.pxToRem(12),
       
     },
+    padding: {
+      padding: theme.spacing(0, 2),
+    },
     expandHeading: {
       fontSize: theme.typography.pxToRem(12),
       flexBasis: '33.33%',
@@ -170,13 +180,18 @@ export default function Franchise(props) {
       setIsLoading(true);
 
       try {
-        const result = await UserAPI.list();
-        console.log(result)
+        const result = await UserAPI.list();        
         setFranchiseList(result.userList);
+        
 
         let franchiseIdTemp = [];
+        let open = 0;
+        let active = 0;
+        let inactive = 0;
+        let close = 0;
 
-        result.userList.map(data => {
+        result.userList.map(data => {        
+
           let found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
           if(!found) {
             franchiseIdTemp.push({
@@ -191,6 +206,19 @@ export default function Franchise(props) {
             });
           }
         });
+        
+        franchiseIdTemp.map(data=>{
+          data.status === 1 ? open += 1 : '';
+          data.status === 2 ? active += 1 : '';
+          data.status === 3 ? inactive += 1 : '';
+          data.status === 4 ? close += 1 : '';
+        })
+
+
+        setOpenFranchise(open);
+        setActiveFranchise(active);
+        setInactiveFranchise(inactive);
+        setCloseFranchise(close);
 
         setFranchiseId(franchiseIdTemp);
       } catch (error) {
@@ -205,6 +233,10 @@ export default function Franchise(props) {
     // })
     
   }, []);
+
+
+  // console.log('franchiseList',franchiseId)
+
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -279,10 +311,10 @@ export default function Franchise(props) {
           </Grid>
           <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-              <Tab label="Open" />
-              <Tab label="Active" />
-              <Tab label="Inactive"  />
-              <Tab label="Close" />
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={openFranchise}>  Open  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={activeFranchise}>  Active  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={inactiveFranchise}>  Inactive  </Badge> }  />
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={closeFranchise}>  Close  </Badge> } />
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>

@@ -22,8 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Point static path to dist
-// app.use('/', express.static(path.join(__dirname, '..', 'dist')));
-// app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
+// app.use('/', express.static(path.join(__dirname, 'dist')));
+// app.use('/dist', express.static(path.join(__dirname, 'dist')));
 app.use('/', express.static(path.join(__dirname, '..', 'src')));
 app.use('/src', express.static(path.join(__dirname, '..', 'src')));
 
@@ -99,10 +99,10 @@ app.use(function(error, req, res, next) {
   const result = { 
     error: `Server Error, Please contact administrator`
   };
-
+  // if(error){res.status(error.statusCode).send(result.message);}else
   if (!error.statusCode) error.statusCode = 500;
-
-  res.status(error.statusCode).send(result.message);});
+  res.status(error.statusCode).send(result.message);
+  });
 
 
 /** Get port from environment and store in Express. */

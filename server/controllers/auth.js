@@ -50,6 +50,7 @@ const login = async function (req, res, next) {
         result.status = status;
         result.result = params.name;
         result.role_name = user[0].role_name;
+        result.role_id = user[0].role_id;
         result.user_name = user[0].user_name;
         result.franchise_id = user[0].franchise_id || '';
         result.user_id = user[0].id;

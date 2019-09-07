@@ -39,6 +39,8 @@ export default function validate(values) {
   
   if (!values.invoice) {
     errors.invoice = 'Invoice Number is required';
+  } else if (!validAlpha.test(values.invoice)) {
+    errors.invoice = 'Invoice Number is invalid';
   }
   
   // if (!values.meta_keywords) {

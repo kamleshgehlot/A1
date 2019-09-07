@@ -36,6 +36,8 @@ import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import { API_URL } from '../../../api/Constants';
+import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import Add from './Add';
 import Edit from './Edit';
@@ -45,6 +47,8 @@ import FixedTypeDD from './FixedOrderDoc';
 import Open from './OrderComponent/Open';
 
 import ConfirmationDialog from '../ConfirmationDialog.js';
+import ProcessDialog from '../ProcessDialog.js';
+import PageLoader from '../../../Routes.js';
 
 import axios from 'axios';
 import { saveAs } from 'file-saver';
@@ -75,14 +79,12 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Order() {
-  const roleName = APP_TOKEN.get().roleName;
-  // const userName = APP_TOKEN.get().userName;
+export default function Order({roleName}) {
+  
   
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [paymentStatusOpen, setPaymentStatusOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [orderRecData,setOrderRecData] = useState([]);
   const [editableData,setEditableData] = useState({});
   const [orderData, setOrderData] = useState([]);
@@ -98,10 +100,12 @@ export default function Order() {
   const [flexPaymentData, setFlexPaymentData] = useState(null);
   const [orderIdForUpload,setOrderIdForUpload] = useState(null);
   const [order,setOrder] = useState([]);
+  const [snackbarContent, setSnackbarContent] = useState([]);
   const [deliveryTabIndex, setDeliveryTabIndex] = useState();
   const [completedTabIndex, setCompletedTabIndex] = useState();
   const [deliveredTabIndex, setDeliveredTabIndex] = useState();
-  
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [processDialog,setProcessDialog] = useState(false);
 
   
 
@@ -221,6 +225,11 @@ export default function Order() {
     setOpen(false);
   }
 
+  
+  function handleSnackbarClose() {
+    setSnackbarOpen(false);
+  }
+
   function handlePaymentStatusClose(){
     // setOrder([]);
     const fetchData = async () => {
@@ -236,7 +245,7 @@ export default function Order() {
   }
   
   const uploadFileSelector = async (event) =>{
-    
+    setProcessDialog(true);
     try {      
         let formData = new FormData();
         formData.append('data', JSON.stringify(orderIdForUpload));
@@ -244,13 +253,23 @@ export default function Order() {
         if(uploadType === 'Documents'){
           for (var x = 0; x < document.getElementById('upload_document').files.length; x++) {
             formData.append('avatar', document.getElementById('upload_document').files[x])
-
             if(document.getElementById('upload_document').files.length !=0) {
-              const result = await OrderAPI.uploadDocument({formData: formData});
-              if(result.order.length>0){
-                alert('Upload Successfully...');
+              const result = await OrderAPI.uploadDocument({formData: formData});      
+              setProcessDialog(false);  
+              setOrderIdForUpload(null);
+              if(result.order.length>0){        
                 setOrder(result.order);
-                setOrderIdForUpload(null);
+              }
+              if(result.isUploaded === 1){
+                if(processDialog===false){
+                  setSnackbarContent({message:"Successfully Uploaded.", variant: "success"});
+                  setSnackbarOpen(true);
+                }
+              }else if(result.isUploaded === 0){
+                if(processDialog===false){
+                  setSnackbarContent({message:"Upload Failed", variant: "error"});
+                  setSnackbarOpen(true);
+                }
               }
             }
           }
@@ -261,11 +280,22 @@ export default function Order() {
 
           if(document.getElementById('upload_delivery_doc').files.length !=0) {
             const result = await OrderAPI.uploadDeliveryDoc({formData: formData});
-            if(result.order.length>0){
-              alert('Upload Successfully...');
+            setProcessDialog(false);  
+            setOrderIdForUpload(null);
+            if(result.order.length>0){        
               setOrder(result.order);
-              setOrderIdForUpload(null);
             }
+            if(result.isUploaded === 1){
+              if(processDialog===false){
+                setSnackbarContent({message:"Successfully Uploaded.", variant: "success"});
+                setSnackbarOpen(true);
+              }
+            }else if(result.isUploaded === 0){
+              if(processDialog===false){
+                setSnackbarContent({message:"Upload Failed", variant: "error"});
+                setSnackbarOpen(true);
+              }
+            }            
           }
         }
       } catch (error) {
@@ -273,12 +303,15 @@ export default function Order() {
       }
   };
   
+  function handleProcessDialogClose(){
+    setProcessDialog(false);
+  }
   
 
   function handleUploadFile(orderId){
     setUploadType('Documents');
     setOrderIdForUpload(orderId);
-    document.getElementById('upload_document').click();
+    // document.getElementById('upload_document').click();
   }
 
   function handleDeliveryDoc(orderId){
@@ -423,6 +456,10 @@ export default function Order() {
 
     (order.length > 0 ? order : []).map((data, index) => {
       if(data.assigned_to !== 4 && data.assigned_to !== 5 && roleName==='CSR'){
+        count += 1;
+      }else if(data.assigned_to===5 && roleName ==='Finance') {
+        count += 1;
+      }else if(data.order_status===5 && roleName ==='Delivery') {
         count += 1;
       }
 
@@ -750,10 +787,28 @@ export default function Order() {
               </Paper>
           </Grid>
         </Grid>
+
+        <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={handleSnackbarClose}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleSnackbarClose}
+          variant={snackbarContent.variant}
+          message={snackbarContent.message}
+        />
+      </Snackbar>
+
      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData} convertLead={0} /> : null }
      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData}  /> : null }
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
+     {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }
           
     </div>
   );

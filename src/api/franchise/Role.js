@@ -22,5 +22,17 @@ export default {
       throw error;
     }
   },
+
+  getAll: async () => {
+    
+    const URL = `${c.API_CONSUMER}/api/franchise/role/getall`;
+    try {      
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
   
 };

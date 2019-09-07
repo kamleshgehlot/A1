@@ -27,6 +27,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+import validate from '../../common/validation/OrderRuleValidation';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -112,7 +113,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData}) {
+export default function Edit({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData}) {
 
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
@@ -134,7 +135,7 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
   const [productList, setProductList] = useState([]);
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [recData, setRecData] = React.useState(editableData);
-  const [inputs, setInputs] = useState([]);
+  // const [inputs, setInputs] = useState([]);
   
   const [mainCategoryList, setMainCategoryList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
@@ -147,17 +148,16 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
-
   useEffect(() => {
 
     let assignRoleList = [];
-    (recData.product_id.split(',')).map((product,index) =>{
+    (editableData.product_id.split(',')).map((product,index) =>{
       assignRoleList.push(parseInt(product));
     });
     setAssignInterest(assignRoleList);
 
     let productCategory = [];
-    (recData.product_related_to.split(',')).map((product,index) =>{
+    (editableData.product_related_to.split(',')).map((product,index) =>{
       productCategory.push(parseInt(product));
     });
     setMainCategory(productCategory[0]);
@@ -181,6 +181,22 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
         const product = await Category.RelatedproductList({subcategory:productCategory[2]});
         // console.log('product',product);
         setProductList(product.productList);       
+
+        const budget = await Order.getCurrespondingBudget({budgetId: editableData.budget_id});
+        // console.log('budgetlist',budget.order[0]);
+        setBudgetList(budget.order[0]);
+
+
+        if(editableData.order_type==2){
+          const order = await Order.getCurrespondingFlexOrder({flexOrderId: editableData.order_type_id});
+          // console.log('flexlist',order[0]);
+          setFlexOrderList(order[0]);
+        }
+        if(editableData.order_type==1){
+          const order = await Order.getCurrespondingFixedOrder({fixedOrderId: editableData.order_type_id});
+          // console.log('fixedlist',order[0]);
+          setFixedOrderList(order[0]);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -188,26 +204,26 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
 
   fetchData();
 
-    setInputs({
-      work : 0,
-      benefits : 0,
-      accomodation : 0,
-      childcare : 0,
-      rent : 0,
-      power : 0,
-      telephone : 0,
-      mobile : 0,
-      vehicle : 0,
-      transport : 0,
-      food : 0,
-      credit_card : 0,
-      loan : 0,
-      other_expenditure : 0,
-      income : 0,
-      expenditure : 0,
-      surplus : 0,
-      afford_amt : 0,
-    });
+    // setInputs({
+    //   work : 0,
+    //   benefits : 0,
+    //   accomodation : 0,
+    //   childcare : 0,
+    //   rent : 0,
+    //   power : 0,
+    //   telephone : 0,
+    //   mobile : 0,
+    //   vehicle : 0,
+    //   transport : 0,
+    //   food : 0,
+    //   credit_card : 0,
+    //   loan : 0,
+    //   other_expenditure : 0,
+    //   income : 0,
+    //   expenditure : 0,
+    //   surplus : 0,
+    //   afford_amt : 0,
+    // });
   }, []);
 
 //  console.log('assign,,,',assignInterest);
@@ -227,7 +243,6 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
   function handleFixedOpen(fixedOrderId){
     setFixedOrderId(fixedOrderId);
     setFlexOrderList(null);
-
     setFixedOrderOpen(true);
   }
 
@@ -314,40 +329,36 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
 
 
 
-  const EditOrder = async (event) => {
-    if (event) {
-      event.preventDefault();
-    }
-
-    if(budgetList == null) {
-      const budget = await Order.getCurrespondingBudget({budgetId: recData.budget_id});
-      // console.log('budgetlist',budget.order[0]);
-      setBudgetList(budget.order[0]);
-    }
+  const editOrder = async (event) => {
+      // if(budgetList == null) {
+    //   const budget = await Order.getCurrespondingBudget({budgetId: inputs.budget_id});
+    //   // console.log('budgetlist',budget.order[0]);
+    //   setBudgetList(budget.order[0]);
+    // }
     
-    if(flexOrderList==null && fixedOrderList==null && recData.order_type==2){
-      const order = await Order.getCurrespondingFlexOrder({flexOrderId: recData.order_type_id});
-      console.log('flexlist',order[0]);
-      setFlexOrderList(order[0]);
-    }
-    if(flexOrderList==null && fixedOrderList==null && recData.order_type==1){
-      const order = await Order.getCurrespondingFixedOrder({fixedOrderId: recData.order_type_id});
-      // console.log('fixedlist',order[0]);
-      setFlexOrderList(order[0]);
-    }
+    // if(flexOrderList==null && fixedOrderList==null && inputs.order_type==2){
+    //   const order = await Order.getCurrespondingFlexOrder({flexOrderId: inputs.order_type_id});
+    //   console.log('flexlist',order[0]);
+    //   setFlexOrderList(order[0]);
+    // }
+    // if(flexOrderList==null && fixedOrderList==null && inputs.order_type==1){
+    //   const order = await Order.getCurrespondingFixedOrder({fixedOrderId: inputs.order_type_id});
+    //   // console.log('fixedlist',order[0]);
+    //   setFlexOrderList(order[0]);
+    // }
 
     setpLoading(true);
     setSavebtn(true);
     const response = await OrderAPI.editPost({ 
-      id : recData.id,
+      id : inputs.id,
       products_id :  assignInterest,
       budget_list : budgetList,
       flexOrderType : flexOrderList,
       fixedOrderType : fixedOrderList,
-      payment_mode: recData.payment_mode,
-      order_type : recData.order_type,
-      order_type_id : recData.order_type_id,
-      budget_id: recData.budget_id,
+      payment_mode: inputs.payment_mode,
+      order_type : inputs.order_type,
+      order_type_id : inputs.order_type_id,
+      budget_id: inputs.budget_id,
       is_active : 1,
       assigned_to : 0,
       related_to : related_to,
@@ -358,21 +369,29 @@ export default function Add({ open, handleEditClose, handleSnackbarClick, handle
       // assignInterest.length = 0;
       setAssignInterest('');
       }else{
-        alert("Invalid or Incomplete Credentials")
+        setpLoading(false);
+        setSavebtn(true);
+        alert("Invalid or Incomplete Credentials");
       }
-      setSavebtn(false);
   };
 
-  const handleInputChange = event => {
-    const { name, value } = event.target
-    setRecData({ ...recData, [name]: value })
-  }
-
+  // const handleInputChange = event => {
+  //   const { name, value } = event.target
+  //   setRecData({ ...inputs, [name]: value })
+  // }
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    editOrder,
+    validate
+  ); 
+  useEffect(() => {
+    setInputsAll(editableData);
+  }, []);
     
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form onSubmit={EditOrder}> 
+        <form> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
@@ -402,7 +421,7 @@ return (
                       id="orderid"
                       name="orderid"
                       // label="Order #"
-                      value={recData.order_id}
+                      value={inputs.order_id}
                       fullWidth
                       type="text"
                       margin="dense"
@@ -421,7 +440,7 @@ return (
                       id="order_date"
                       name="order_date"
                       type="date"
-                      defaultValue= {recData.order_date}
+                      defaultValue= {inputs.order_date}
                       required
                       disabled
                       fullWidth
@@ -430,16 +449,16 @@ return (
                   
                   <Grid item xs={12} sm={4}>
                    <InputLabel  className={classes.textsize} htmlFor="customer">Customer</InputLabel>
-                    <Typography variant="h6" className={classes.labelTitle}>{recData.customer_name} </Typography>
+                    <Typography variant="h6" className={classes.labelTitle}>{inputs.customer_name} </Typography>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(recData.customer_id); }}>View Profile </Button>
+                    <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(inputs.customer_id); }}>View Profile </Button>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
                       Update Budget
                     </Fab> */}
-                    <Button variant="outlined" size="small" color="primary" className={classes.textsize}  onClick={(event) => { handleBudgetOpen(recData.budget_id); }}>Update Budget </Button>
+                    <Button variant="outlined" size="small" color="primary" className={classes.textsize}  onClick={(event) => { handleBudgetOpen(inputs.budget_id); }}>Update Budget </Button>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
@@ -535,8 +554,8 @@ return (
 
                    <Grid item xs={12} sm={6}>
                      {editableData.order_type ===1 ? 
-                      <Button variant="outlined" size="small" color="primary"  onClick={(event) => { handleFixedOpen(recData.order_type_id); }}>Update Fixed Order Type Details </Button> :
-                      <Button variant="outlined" size="small" color="primary"    onClick={(event) => { handleFlexOpen(recData.order_type_id); }}>Update Flex Order Type Details </Button>
+                      <Button variant="outlined" size="small" color="primary"  onClick={(event) => { handleFixedOpen(inputs.order_type_id); }}>Update Fixed Order Type Details </Button> :
+                      <Button variant="outlined" size="small" color="primary"    onClick={(event) => { handleFlexOpen(inputs.order_type_id); }}>Update Flex Order Type Details </Button>
                      }
                     </Grid>
 
@@ -544,7 +563,7 @@ return (
                     <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="payment_mode">Payment Mode*</InputLabel>
                     <Select
-                      value={recData.payment_mode}
+                      value={inputs.payment_mode}
                       onChange={handleInputChange}
                       name= 'payment_mode'
                       id= 'payment_mode'
@@ -564,7 +583,7 @@ return (
                    {savebtn?     
                    <Grid item xs={12} sm={12}>
                     
-                    <Button  variant="contained"  color="primary" className={classes.button} onClick={EditOrder}>
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
                       save
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>

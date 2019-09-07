@@ -148,6 +148,40 @@ Enquiry.prototype.convertedList = function () {
 };
 
 
+
+Enquiry.prototype.nonConvertList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+    
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 0 order by id desc',function (error, rows, fields) {
+            if (!error) {
+              // console.log("rows...",rows);
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 Enquiry.prototype.convert = function () {
   const that = this;
   return new Promise(function (resolve, reject) {

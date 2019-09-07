@@ -15,6 +15,8 @@ export default function validate(values) {
   }
   if (!values.company_name) {
     errors.company_name = 'Company Name is required';
+  } else if (!validAlpha.test(values.company_name)) {
+    errors.company_name = 'Company Name is invalid';
   }
   if (!values.nbzn) {
     errors.nbzn = 'NBZN is required';

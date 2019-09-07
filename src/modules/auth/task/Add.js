@@ -123,10 +123,10 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-export default function Add({ open, handleClose, franchiseId, handleSnackbarClick, setTaskList}) {
+export default function Add({ open, handleClose, franchiseId, handleSnackbarClick, setTaskList, roleName}) {
   const classes = useStyles();
 
-  const roleName = APP_TOKEN.get().roleName;
+  
   const [taskLast, setTaskLast] = useState({});
   const [taskId, setTaskId] = useState();
   const [isError, setIsError] = useState(false);

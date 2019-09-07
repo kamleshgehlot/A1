@@ -18,15 +18,12 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 // API CALL
 import Profile from '../../../api/Profile';
-export default function FranchiseDetail() {
+export default function FranchiseDetail({roleName}) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [franchiseDetails, setFranchiseDetails] = useState({});
   const [directorDetails, setDirectorDetails] = useState({});
-
-  const roleName = APP_TOKEN.get().roleName;
-  const userName = APP_TOKEN.get().userName;
   const uid = APP_TOKEN.get().userId;
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({

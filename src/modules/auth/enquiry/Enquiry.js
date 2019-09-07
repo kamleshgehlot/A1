@@ -14,6 +14,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Badge from '@material-ui/core/Badge'; 
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
@@ -52,18 +53,19 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Enquiry() {
+export default function Enquiry({roleName}) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [enquiryList, setEnquiryList] = useState([]);
+  const [nonConvertList, setNonConvertList] = useState([]);
   const [enquiryData,setEnquiryData] = useState([]);
   const [customerOpen, setCustomerOpen] = useState(false);
   const [openOrder, setOpenOrder] = useState(false);
   const [productList, setProductList] = useState([]);
   const [convertedEnquiryOpen, SetConvertedEnquiryOpen] = useState(false);
   const [convertEnquiryId,setConvertEnquiryId]= useState();
-
+  const [convertList,setConvertList] = useState([]);
   const [customer, setCustomer] = useState({});
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -101,6 +103,9 @@ export default function Enquiry() {
       textAlign: 'left',
       color: theme.palette.text.secondary,
     },
+    padding: {
+      padding: theme.spacing(0, 2),
+    },
     button:{
       color:"white",
       fontSize: theme.typography.pxToRem(10),
@@ -122,7 +127,16 @@ export default function Enquiry() {
       try {
         const result = await EnquiryAPI.getAll();
         setEnquiryList(result.enquiryList);
-        console.log('enquiryList',result.enquiryList)
+        
+        const nonConvertList = await EnquiryAPI.nonConvertList();
+        setNonConvertList(nonConvertList.enquiryList);
+
+        const convertList = await EnquiryAPI.convertedList();
+        setConvertList(convertList.enquiryList);
+        // console.log('result..',convertList.enquiryList);
+
+        
+        // console.log('enquiryList',result.enquiryList)
         const result1 = await Category.productlist();
         setProductList(result1.productList);
       } catch (error) {
@@ -162,11 +176,11 @@ export default function Enquiry() {
   }
   
   function handleOrderRecData(response){
-    console.log(response);
+    // console.log(response);
   }
  
   function handleClickOrderOpen(data){
-    console.log('data....',data);
+    // console.log('data....',data);
     setConvertEnquiryId(data.id);
     setOpenOrder(true);
   }
@@ -177,6 +191,12 @@ export default function Enquiry() {
       try {
         const result = await EnquiryAPI.getAll();
         setEnquiryList(result.enquiryList);
+
+        const nonConvertList = await EnquiryAPI.nonConvertList();
+        setNonConvertList(nonConvertList.enquiryList);
+
+        const convertList = await EnquiryAPI.convertedList();
+        setConvertList(convertList.enquiryList);
       } catch (error) {
         console.log(error);
       }
@@ -186,12 +206,19 @@ export default function Enquiry() {
   }
 
   function setEnquiryListFn(response) {
-console.log('res=---',response);
+// console.log('res=---',response);
     const fetchData = async () => {
       try {
         const result = await EnquiryAPI.convert({enquiry_id: enquiryData.id});
-        console.log('result..',result.enquiryList);
+        // console.log('result..',result.enquiryList);
         setEnquiryList(result.enquiryList);
+
+        const nonConvertList = await EnquiryAPI.nonConvertList();
+        setNonConvertList(nonConvertList.enquiryList);
+
+        const convertList = await EnquiryAPI.convertedList();
+        setConvertList(convertList.enquiryList);
+
       } catch (error) {
         console.log(error);
       }
@@ -200,7 +227,7 @@ console.log('res=---',response);
     fetchData();
   }
   
-
+console.log(enquiryList);
 
   
   TabPanel.propTypes = {
@@ -290,8 +317,8 @@ console.log('res=---',response);
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                  <Tab label="On-going" />
-                  <Tab label="Converted" />
+                  <Tab label= {<Badge className={classes.padding} color="secondary" badgeContent={nonConvertList.length}>On-going</Badge>}/>
+                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={convertList.length}>Converted</Badge>} />
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={value}>

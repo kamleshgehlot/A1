@@ -20,7 +20,9 @@ const add = async function (req, res, next) {
     is_franchise_exist:leadData.is_franchise_exist,
     franchise_name:leadData.franchise_name,
     f_id:req.decoded.franchise_id,
-    uid:req.decoded.id
+    uid:req.decoded.id,
+    customer_name: leadData.customer_name,
+    customer_contact: leadData.customer_contact,
   };
   try {
     const newLead = new Lead(leadParam);

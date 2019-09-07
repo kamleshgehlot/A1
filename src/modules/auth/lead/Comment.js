@@ -275,6 +275,50 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
                           <SendIcon />
                         </IconButton>
                       </Tooltip> */}
+                  </Grid> 
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="customer_name">Customer Name </InputLabel>
+                      
+                    <TextField 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        id="customer_name"
+                        name="customer_name"
+                        // label="First Name"
+                        value={inputs.customer_name}
+                        fullWidth
+                        // required
+                        type="text"
+                        // placeholder="Franchise Name"
+                        margin="dense"
+                        disabled
+                      />
+                  </Grid> 
+                  <Grid item xs={12} sm={6}>
+                    
+                  <InputLabel  className={classes.textsize} htmlFor="customer_contact">Customer Contact </InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="customer_contact"
+                      name="customer_contact"
+                      value={inputs.customer_contact}
+                      fullWidth
+                      // required
+                      type="number"
+                      disabled
+                      // placeholder="Franchise Name"
+                      margin="dense"
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     <InputLabel  className={classes.textsize} htmlFor="email">Description </InputLabel>
