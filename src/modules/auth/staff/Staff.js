@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip'; 
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
@@ -38,15 +36,6 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-}))(TableRow);
-
-
 export default function Staff({roleName}) {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -67,11 +56,6 @@ export default function Staff({roleName}) {
   let accountant = 0;
   let sales = 0;
 
-  
-
-  const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
-  const [showStaff, setShowStaff] = useState(roleName === 'Admin');
-    
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -171,20 +155,11 @@ export default function Staff({roleName}) {
   function setFranchiseListFn(response) {
     setStaffList(response);
   }
-  function handleSnackbarClose() {
-    setSnackbarOpen(false);
-  }
-
+  
   function handleSnackbarClick() {
     setSnackbarOpen(true);
   }
 
-  
-  function handleFranchiseClick() {
-    setShowFranchise(true);
-    setShowStaff(false);
-  }
-  
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
