@@ -270,11 +270,18 @@ export default function ClippedDrawer(props) {
       const fetchData = async () => {
         try {
           const result = await RoleAPI.getAll();
+          // console.log('result',result);
           let roleArray = [];
 
+          // console.log('roleId.split',roleId.split(','));
+          
+
           (result.role).map((role)=>{
+            // console.log('role5454',role);
             (roleId.split(',')).map((assignedRole)=>{
-              if(role.id==assignedRole){
+              // console.log('ro',assignedRole);
+
+              if(role.id==assignedRole){                
                 roleArray.push(role.name);
               }
             }); 
@@ -287,7 +294,7 @@ export default function ClippedDrawer(props) {
       fetchData();      
   },[]);
   
-
+// console.log('asdfasfsafa',roles)
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const anchorRef = React.useRef(null);
@@ -316,9 +323,9 @@ export default function ClippedDrawer(props) {
   function handleSnackbarClick(flag, message) {
     setSnackbarOpen(true);
   }
-  console.log('role',roleAs);
+  console.log('roleAs',roleAs);
   function handleDashboardClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowFranchise(false);
     setShowStaff(false);
@@ -338,7 +345,7 @@ export default function ClippedDrawer(props) {
   }
 
   function handleFranchiseClick(role) {
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowFranchise(true);
     setShowStaff(false);
@@ -358,7 +365,7 @@ export default function ClippedDrawer(props) {
   }
 
   function handleCategoryClick(role) {
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowCategory(true);
     setShowFranchise(false);
@@ -378,7 +385,7 @@ export default function ClippedDrawer(props) {
   }
 
   function handleMasterStaffClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowMasterStaff(true);
     setShowFranchise(false);
@@ -397,7 +404,7 @@ export default function ClippedDrawer(props) {
   }
 
   function handleFranchiseStaffClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowFranchiseStaff(true);
     setShowMasterStaff(false);
@@ -417,7 +424,7 @@ export default function ClippedDrawer(props) {
   }
   
   function handleTaskClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowTask(true);
     setShowFranchiseStaff(false);
@@ -435,7 +442,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
   }
   function handleProfileClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowProfile(true);setAnchorEl(null);
     setShowTask(false);
@@ -454,7 +461,7 @@ export default function ClippedDrawer(props) {
 
   }
   function handleChangePasswordClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowPwd(true);
     setAnchorEl(null);
@@ -475,7 +482,7 @@ export default function ClippedDrawer(props) {
   }
 
   function handleFranchiseDetailClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowFranchiseDetail(true);
     setShowPwd(false);
@@ -496,7 +503,7 @@ export default function ClippedDrawer(props) {
   }
 
   function handleCustomerClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowCustomer(true);
     setShowTask(false);
@@ -515,7 +522,7 @@ export default function ClippedDrawer(props) {
 
   }
   function handleStaffTaskClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowStaffTask(true);
     setShowCustomer(false);
@@ -536,7 +543,7 @@ export default function ClippedDrawer(props) {
 
   
   function handleEnquiryClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
 
     setShowEnquiry(true);
@@ -556,7 +563,7 @@ export default function ClippedDrawer(props) {
 
   }
   function handleLeadsClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);    
     setShowLead(true);
     setShowEnquiry(false);
@@ -574,7 +581,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
   }
   function handleOrderClick(role){
-    console.log('role',role);
+    
     setRoleAs(role);
     setShowOrder(true);
     setShowLead(false);
@@ -638,7 +645,7 @@ export default function ClippedDrawer(props) {
         }}
       >
         {roles.find(role => role === 'Super Admin')
-        && ( <div>
+        ?
           <TreeView
             className={classes.treeRoot}
             // defaultExpanded={["3"]}
@@ -652,10 +659,10 @@ export default function ClippedDrawer(props) {
             <StyledTreeItem nodeId="4" labelText="Manage Staff" labelIcon={StaffIcon} onClick={(event) => { handleMasterStaffClick('Super Admin'); }} />
             <StyledTreeItem nodeId="5" labelText="Manage Leads" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Super Admin'); }}/>
           </TreeView>
-        </div> )}
+         :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
         {roles.find(role => role === 'Admin')
-        && ( <div>
+        ?
           <TreeView
             className={classes.treeRoot}
             // defaultExpanded={["3"]}
@@ -668,7 +675,7 @@ export default function ClippedDrawer(props) {
             <StyledTreeItem nodeId="3" labelText="Manage Task" labelIcon={TaskIcon} onClick={(event) => { handleTaskClick('Admin'); }} />
             <StyledTreeItem nodeId="4" labelText="Manage Leads" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Admin'); }}/>
           </TreeView>
-        </div> )}
+          :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
         {roles.find(role => role === 'CSR' || role === 'Finance' || role === 'Delivery' || role === 'HR')
         && ( 
@@ -799,9 +806,9 @@ export default function ClippedDrawer(props) {
             :<StyledTreeItem style={{"display": 'none'}} nodeId="4" labelText="" labelIcon={AccountCircleIcon} /> }
           </TreeView>
          )}  
-      </Drawer> 
+      </Drawer>  
 
-       {/* <Drawer
+      {/* <Drawer
         className={classes.drawer}
         variant="permanent"
         classes={{
@@ -936,8 +943,8 @@ export default function ClippedDrawer(props) {
                </List>
                )}
              </List>
-      </Drawer>  
-  */}
+      </Drawer>   */}
+  
 
 
       <main className={classes.content}>
