@@ -10,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import Badge from '@material-ui/core/Badge'; 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
@@ -66,6 +67,11 @@ export default function ProductList({roleName}) {
   
   const [openArchived, setArchivedOpen] = useState(false);
   const [productList, setProductList] = useState([]);
+  const [activeProduct,setActiveProduct] = useState();
+  const [onholdProduct,setOnholdProduct] = useState();
+  const [discontinuedProduct,setDiscontinuedProduct] = useState();
+  
+
   //value is for tabs  
   const [value, setValue] = React.useState(0);
   
@@ -104,6 +110,9 @@ export default function ProductList({roleName}) {
       textAlign: 'left',
       color: theme.palette.text.secondary,
     },
+    padding: {
+      padding: theme.spacing(0, 2),
+    },
     fonttransform:{
       textTransform:"initial",
       fontSize: theme.typography.pxToRem(13),
@@ -127,6 +136,20 @@ export default function ProductList({roleName}) {
       try {
         const result = await Category.productlist();
         setProductList(result.productList);
+
+        let active = 0 ;
+        let onhold = 0 ;
+        let discontinued = 0; 
+        (result.productList).map( data=> {
+          data.status === 1 ? active+=1 : '';
+          data.status === 2 ? onhold+=1 : '';
+          data.status === 3 ? discontinued+=1 : '';
+        })
+
+        setActiveProduct(active);
+        setOnholdProduct(onhold);
+        setDiscontinuedProduct(discontinued);
+
         const brand_result = await Brand.list();
         setBrandList(brand_result.brandList);
         const color_result = await Color.list();
@@ -223,6 +246,9 @@ export default function ProductList({roleName}) {
     setValue(newValue);
     // console.log('setValue...',value)
   }
+
+  console.log('setValue...',productList)
+
   return (
     <div>
       <Grid container spacing={3}>
@@ -256,14 +282,17 @@ export default function ProductList({roleName}) {
         <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
               
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={activeProduct}>  Active  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={onholdProduct}>  OnHold  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={discontinuedProduct}>  Discontinued  </Badge> }  />
            
-            { statusList.map((datastatus, index)=>{
+            {/* { statusList.map((datastatus, index)=>{
               return(
                 <Tab label={datastatus.status} />
                 )
                 
                 })
-            }
+            } */}
           </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>

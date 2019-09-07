@@ -435,6 +435,10 @@ export default function Order({roleName}) {
     (order.length > 0 ? order : []).map((data, index) => {
       if(data.assigned_to !== 4 && data.assigned_to !== 5 && roleName==='CSR'){
         count += 1;
+      }else if(data.assigned_to===5 && roleName ==='Finance') {
+        count += 1;
+      }else if(data.order_status===5 && roleName ==='Delivery') {
+        count += 1;
       }
     });
 

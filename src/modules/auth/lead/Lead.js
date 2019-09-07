@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import Badge from '@material-ui/core/Badge'; 
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
@@ -135,6 +136,9 @@ export default function Lead({roleName}) {
       // color: 'white',
       fontSize: theme.typography.pxToRem(13),
     },
+    padding: {
+      padding: theme.spacing(0, 2),
+    },
     icon: {
       fill: 'white',
     },
@@ -253,9 +257,12 @@ export default function Lead({roleName}) {
       try {
         const result = await LeadAPI.list();
         setLeadList(result.leadList);
+        // console.log('lead', result.leadList)
 
         const convertedLead = await LeadAPI.convertedList();
         setConvertedLeadList(convertedLead.convertedList);
+        // console.log('converted', convertedLead.convertedList)
+
       } catch (error) {
         setIsError(true);
       }
@@ -267,7 +274,7 @@ export default function Lead({roleName}) {
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
-
+console.log(leadList)
   function handleConvertedLeadsClickOpen(){
     setConvertedLeads(true);
   }
@@ -396,8 +403,8 @@ export default function Lead({roleName}) {
             <Paper style={{ width: '100%' }}>
           <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-              <Tab label="Open" />
-              <Tab label="Converted" />
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={leadList.length}>Open</Badge>} /> 
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={convertedLeadList.length}>Converted</Badge>} />
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>

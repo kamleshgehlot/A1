@@ -36,6 +36,17 @@ export default {
     }
   },
 
+  nonConvertList: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/enquiry/nonconvertlist`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
   convertedList: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/enquiry/convertedList`;
     try {

@@ -108,7 +108,7 @@ class LoginPage extends Component {
           isLoading={isLoading}
           onChange={this.onHandleChangeForm}
           onSubmit={this.onHandleSubmitForm}
-        />
+        />   
 
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

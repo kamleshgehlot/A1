@@ -8,6 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Paper from '@material-ui/core/Paper';
+import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -59,6 +60,13 @@ export default function Staff({roleName}) {
   //value is for tabs  
   const [value, setValue] = React.useState(0);
 
+  let territory = 0;
+  let marketing = 0;
+  let it = 0;
+  let bdm = 0;
+  let accountant = 0;
+  let sales = 0;
+
   
 
   const [showFranchise, setShowFranchise] = useState(roleName === 'Super Admin');
@@ -92,6 +100,9 @@ export default function Staff({roleName}) {
       fontSize: theme.typography.pxToRem(14),
       color:"white",
       marginTop:theme.spacing(-3),
+    },
+    padding: {
+      padding: theme.spacing(0, 2),
     },
     paper: {
       padding: theme.spacing(2),
@@ -220,15 +231,32 @@ export default function Staff({roleName}) {
           <Grid item xs={12} sm={12}>
           <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-              
-            <Tab label="All" />
-            {
+              {console.log(staffList)}
+              {
+                (staffList.length > 0 ? staffList : []).map((data, index)=>{
+                  data.position === 1 ? territory+=1 : '';
+                  data.position === 2 ? marketing+=1 : '';
+                  data.position === 3 ? it+=1 : '';
+                  data.position === 4 ? bdm+=1 : '';
+                  data.position === 5 ? accountant+=1 : '';
+                  data.position === 6 ? sales+=1 : '';
+                })
+              }
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={staffList.length}>  All  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={territory}>  Territory Manager  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={marketing}>  Marketing Manager  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={it}>  IT Specialist  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={bdm}>  BDM  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={accountant}>  Accountant  </Badge> }/>
+              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={sales}>  Sales Specialist  </Badge> }/>
+
+            {/* {
                 (position.length>0 ? position : []).map((ele, index) => {
                   return(
                     <Tab label={ele.position} />
                   )
                 })
-              }
+              } */}
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>

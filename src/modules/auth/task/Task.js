@@ -4,6 +4,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
+import Badge from '@material-ui/core/Badge'; 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -126,6 +127,9 @@ export default function Task({franchiseId, roleName}) {
       padding: theme.spacing(2),
       textAlign: 'left',
       color: theme.palette.text.secondary,
+    },
+    padding: {
+      padding: theme.spacing(0, 2),
     },
     fonttransform:{
       textTransform:"initial",
@@ -535,11 +539,11 @@ useEffect(() => {
             <Paper style={{ width: '100%' }}>
             <AppBar position="static"  className={classes.appBar}>
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                <Tab label="All" />
-                <Tab label={`My Task`} />
-                <Tab label={`Assigned by Me`} />
-                <Tab label={`Reschedule Request`} />
-                <Tab label={`Completed`}  />
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={tasksList.length}>All</Badge>} />
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={staffTaskList.length}>My Task</Badge>} />
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={assignToOther.length}>Assigned by Me </Badge>} />
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={rescheduledTaskList.length}>Reschedule Request</Badge>} />
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={completedTaskList.length}>Completed</Badge>}  />
                 {/* <Tab label="Close" /> */}
               </Tabs>
             </AppBar>
@@ -864,7 +868,7 @@ useEffect(() => {
                </Paper>
           </Grid>
         </Grid>
-      {open? <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} />:null}
+      {open? <Add open={open} handleClose={handleClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} roleName={roleName}/>:null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId.franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
       {staffEditOpen? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}

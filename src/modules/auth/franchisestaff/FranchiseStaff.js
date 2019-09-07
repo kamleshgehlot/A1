@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Tabs from '@material-ui/core/Tabs';
+import Badge from '@material-ui/core/Badge'; 
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 import Add from './Add';
@@ -53,6 +54,11 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   const [position, setPosition] = useState({});
   //value is for tabs  
   const [value, setValue] = React.useState(0);
+
+  let CSR = 0;
+  let Finance = 0;
+  let Delivery = 0;
+  let HR = 0;
   
   // Code for testing pls don't remove -- by SRK 
   // const [uploadOpen,setUploadOpen] = useState(false);
@@ -110,6 +116,9 @@ export default function FranchiseStaff({franchiseId, roleName}) {
       color: 'white',
       fontSize: theme.typography.pxToRem(13),
     },
+    padding: {
+      padding: theme.spacing(0, 2),
+    },
     icon: {
       fill: 'white',
     },
@@ -128,6 +137,23 @@ export default function FranchiseStaff({franchiseId, roleName}) {
       try {
         const result = await Staff.list({franchise_id: franchiseId.franchiseId});
         setStaffList(result.staffList);
+
+        (result.staffList.length > 0 ? result.staffList : []).map((data, index) =>{
+            // let a = (data.role.split(',')).find(ele => ele === '3');
+            // if(a==3){CSR += 1 };
+            // if(a==4){Finance += 1 };
+            // if(a==5){Delivery += 1 };
+            // if(a==6){HR += 1 };
+            //  == 3 ? CSR += 1 : '';
+            (data.role.split(',')).find(ele => ele === '3') == '3' ? CSR += 1 : '';
+            (data.role.split(',')).find(ele => ele === '4') == '4' ? Finance += 1 : '';
+            (data.role.split(',')).find(ele => ele === '5') == '5' ? Delivery += 1 : '';
+            (data.role.split(',')).find(ele => ele === '6') == '6' ? HR += 1 : '';
+        // console.log('a',a)
+        // (data.role.split(',')).find(ele => ele == 3 ) 
+        // console.log('ddd',(data.role.split(',')).find(ele =>  ele == 3 ))
+
+        })        
       } catch (error) {
         setIsError(true);
       }
@@ -146,6 +172,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     };
     roleData();
   }, []);
+  console.log('roles',CSR, Finance, Delivery, HR)
 
   // Code for testing pls don't remove -- by SRK 
   // function handleUploadClose() {
@@ -234,14 +261,29 @@ export default function FranchiseStaff({franchiseId, roleName}) {
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
                   
-                <Tab label="All" />
-                {
+                {/* <Tab label="All" /> */}
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={staffList.length}> All  </Badge> }/>
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={CSR}>   CSR </Badge> }/>
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={Finance}> Finance  </Badge> }/>
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={Delivery}> Delivery   </Badge> }/>
+                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={HR}>  HR  </Badge> }/>
+
+                  {/* {
                     (role.length>0 ? role : []).map((ele, index) => {
+                      // console.log(ele)
                       return(
-                        <Tab label={ele.name} />
+                        <Tab label={<Badge className={classes.padding} color="secondary" 
+                                    badgeContent={
+                                      ele.name == 'CSR' ? CSR :
+                                      ele.name =='Finance' ? Finance : 
+                                      ele.name =='Delivery' ? Delivery :
+                                      ele.name =='HR' ? HR : ''
+                        }> {ele.name} </Badge> }/>
+
+                        // <Tab label={ele.name} />
                       )
                     })
-                  }
+                  } */}
                 </Tabs>
               </AppBar>
               {
