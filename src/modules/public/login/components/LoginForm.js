@@ -32,6 +32,12 @@ const styles = theme => ({
 
 const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
   const isFormEnabled = Object.values(value).every(item => item !== '');
+
+  function handlePasswordBlur(){
+    document.getElementById('login').focus();
+  }
+
+
   return (
     <form className={classes.container} onSubmit={onSubmit}>
       <TextField
@@ -52,6 +58,7 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
         margin="normal"
         fullWidth
         type="password"
+        onBlur = {handlePasswordBlur}
       />
       <p className={classes.forgotContainer}>
         <Link to="/forgotPassword" >Forgot Password?</Link>
@@ -64,6 +71,7 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
         className={classes.button}
         disabled={!isFormEnabled}
         type="submit"
+        id="login"
       >
         {isLoading ? <CircularProgress size={20} /> : 'Login'}
       </Button>
