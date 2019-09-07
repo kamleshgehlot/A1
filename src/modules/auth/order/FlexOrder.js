@@ -180,7 +180,8 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
   function flex(e){
     // e.preventDefault();
-   
+    handleFlexClose(false)
+
         const data = {
         goods_rent_price : parseFloat(inputs.goods_rent_price),
         ppsr_fee : parseFloat(inputs.ppsr_fee),
@@ -197,7 +198,6 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         first_payment : inputs.first_payment,
         
       }
-      handleFlexClose(false)
       setFlexOrderList(data);
       handleOrderType(2);
   }

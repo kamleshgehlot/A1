@@ -37,6 +37,8 @@ import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '
 
 import { APP_TOKEN } from '../../../api/Constants';
 
+import validate from '../../common/validation/FlexOrderValidation';
+
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
@@ -127,7 +129,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId}) {
 
   const classes = useStyles();
-  const [inputs,setInputs] = useState([]);  
+  // const [inputs,setInputs] = useState([]);  
 
   
   const setDateFormat = (date) => {
@@ -172,27 +174,27 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     }
   }
   
-  function handleInputChange(e){
-    // console.log('valueee',e.target.value)
-    // if(e.target.value===""){
-      // setInputs({
-      //   ...inputs,
-      //   [e.target.name]: 0,
-      // });
-    // }
-    // else{
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
-  // }
+  // function handleInputChange(e){
+  //   // console.log('valueee',e.target.value)
+  //   // if(e.target.value===""){
+  //     // setInputs({
+  //     //   ...inputs,
+  //     //   [e.target.name]: 0,
+  //     // });
+  //   // }
+  //   // else{
+  //   setInputs({
+  //     ...inputs,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // // }
 
-  }
+  // }
   // console.log('inputs.',inputs);
 
-  function handleSubmit(e){
-    e.preventDefault();
-    handleFlexClose(false)
+  function flex(e){
+    // e.preventDefault();
+    handleFlexClose(false);
 
     const data = {
       goods_rent_price : parseFloat(inputs.goods_rent_price),
@@ -213,32 +215,35 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   }
 
   // console.log('inputs==',inputs);
-  
-
-
+  // useEffect(() => {
+  //   // console.log(flexOrderList);
+  //   const fetchData = async () => {
+  //     try {
+  //       const order = await Order.getCurrespondingFlexOrder({flexOrderId: flexOrderId});
+  //       // console.log('dd====',order);
+  //       if(flexOrderList!=null){
+  //         setInputsAll(flexOrderList);
+  //       }else{
+  //       setInputsAll(order[0]);        
+  //     }
+  //     } catch (error) {
+  //       console.log('Error..',error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    flex,
+    validate
+  ); 
   useEffect(() => {
-    // console.log(flexOrderList);
-    const fetchData = async () => {
-      try {
-        const order = await Order.getCurrespondingFlexOrder({flexOrderId: flexOrderId});
-        // console.log('dd====',order);
-        if(flexOrderList!=null){
-          setInputs(flexOrderList);
-        }else{
-        setInputs(order[0]);        
-      }
-      } catch (error) {
-        console.log('Error..',error);
-      }
-    };
-    fetchData();
+    setInputsAll(flexOrderList);
   }, []);
-
-
 return (
     <div>
       <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form> 
           <AppBar className={classes.appBar}>
             <Toolbar>
               {/* <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
@@ -271,6 +276,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.goods_rent_price}
+                      helperText={errors.goods_rent_price}
                       fullWidth
                       // required
                       type="number"
@@ -294,6 +301,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.ppsr_fee}
+                      helperText={errors.ppsr_fee}
                       fullWidth
                       // required
                       type="number"
@@ -317,6 +326,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.liability_fee}
+                      helperText={errors.liability_fee}
                       fullWidth
                       // required
                       type="number"
@@ -341,6 +352,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.weekly_total}
+                      helperText={errors.weekly_total}
                       fullWidth
                       // required
                       type="number"
@@ -376,6 +389,8 @@ return (
                       // label="Frequency"
                       value={inputs.frequency}
                       onChange={handleInputChange}
+                      error={errors.frequency}
+                      helperText={errors.frequency}
                       // error={errors.frequency}
                       // helperText={errors.frequency}
                       fullWidth
@@ -405,6 +420,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
+                        onError={errors.first_payment}
+                        helperText={errors.first_payment} 
                         // error={errors.first_payment}
                         // helperText={errors.first_payment}                               
                       />
@@ -422,6 +439,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.no_of_payment}
+                      helperText={errors.no_of_payment}
                       fullWidth
                       InputProps={{
                         classes: {
@@ -449,6 +468,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.each_payment_amt}
+                      helperText={errors.each_payment_amt}
                       fullWidth
                       // required
                       type="number"
@@ -474,6 +495,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.total_payment_amt}
+                      helperText={errors.total_payment_amt}
                       fullWidth
                       // required
                       type="number"
@@ -501,6 +524,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.before_delivery_amt}
+                      helperText={errors.before_delivery_amt}
                       fullWidth
                       // required
                       type="number"
@@ -535,6 +560,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
+                          error={errors.exp_delivery_date}
+                          helperText={errors.exp_delivery_date}   
                           // error={errors.exp_delivery_date}
                           // helperText={errors.exp_delivery_date}                               
                         />
@@ -554,6 +581,8 @@ return (
                             defaultValue = {""}
                             value={inputs.delivery_time}
                             onChange={handleDeliveryTime}
+                            error={errors.delivery_time}
+                            helperText={errors.delivery_time}
                             InputProps={{
                               classes: {
                                 input: classes.textsize,
@@ -581,6 +610,8 @@ return (
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      error={errors.bond_amt}
+                      helperText={errors.bond_amt}
                       fullWidth
                       // required
                       type="number"

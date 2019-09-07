@@ -212,32 +212,35 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   }
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const order = await Order.getCurrespondingFixedOrder({fixedOrderId: fixedOrderId});
-        console.log('dd',order);
-        if(fixedOrderList!=null){
-          setInputs(fixedOrderList);
-        }else{
-        setInputs(order[0]);
-      }
-      } catch (error) {
-        console.log('Error..',error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const order = await Order.getCurrespondingFixedOrder({fixedOrderId: fixedOrderId});
+  //       console.log('dd',order);
+  //       if(fixedOrderList!=null){
+  //         setInputs(fixedOrderList);
+  //       }else{
+  //       setInputs(order[0]);
+  //     }
+  //     } catch (error) {
+  //       console.log('Error..',error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
 
-  console.log('inputs,',inputs);
-  
-
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     fixed,
     validate
   );
+  useEffect(() => {
+    setInputsAll(fixedOrderList);
+  }, []);
+
+  console.log('inputs,',inputs);
+  
 
 return (
     <div>

@@ -86,6 +86,7 @@ const getAll = async function(req, res, next) {
 
 const getBudget = async function(req, res, next) {
   try {
+    // console.log('req--',req.body)
     const order = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId}).getBudget();
     const oldBudget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget();
     

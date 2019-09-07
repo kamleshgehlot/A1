@@ -115,7 +115,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, input, budgetId}) {
 
   const classes = useStyles();
-  const [inputs,setInputs] = useState(input);
+  const [inputs,setInputs] = useState(budgetList);
   const [oldBudget, setOldBudget] = useState(0);
   const [oldBudgetList,setOldBudgetList] = useState([]);
   const [surplusBool, setSurplusBool] = useState();
@@ -202,23 +202,23 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
     }
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const order = await Order.getCurrespondingBudget({budgetId: budgetId});
-        console.log('respo.,',order);
-        if(budgetList!=null){
-          setInputs(budgetList);          
-        }else{
-        setInputs(order.order[0]);
-        setOldBudgetList(order.oldBudget);   
-        }
-      } catch (error) {
-        console.log('Error..',error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const order = await Order.getCurrespondingBudget({budgetId: budgetId});
+  //       console.log('respo.,',order);
+  //       if(budgetList!=null){
+  //         setInputs(budgetList);          
+  //       }else{
+  //       setInputs(order.order[0]);
+  //       setOldBudgetList(order.oldBudget);   
+  //       }
+  //     } catch (error) {
+  //       console.log('Error..',error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
  
 
  

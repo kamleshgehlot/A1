@@ -5,6 +5,9 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
+
+// import NoSsr from '@material-ui/core/NoSsr';
+// import Select from 'react-select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
@@ -26,6 +29,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 
+import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -44,6 +48,45 @@ const RESET_VALUES = {
   is_active: ''
 };
 
+const suggestions = [
+  { label: 'Afghanistan' },
+  { label: 'Aland Islands' },
+  { label: 'Albania' },
+  { label: 'Algeria' },
+  { label: 'American Samoa' },
+  { label: 'Andorra' },
+  { label: 'Angola' },
+  { label: 'Anguilla' },
+  { label: 'Antarctica' },
+  { label: 'Antigua and Barbuda' },
+  { label: 'Argentina' },
+  { label: 'Armenia' },
+  { label: 'Aruba' },
+  { label: 'Australia' },
+  { label: 'Austria' },
+  { label: 'Azerbaijan' },
+  { label: 'Bahamas' },
+  { label: 'Bahrain' },
+  { label: 'Bangladesh' },
+  { label: 'Barbados' },
+  { label: 'Belarus' },
+  { label: 'Belgium' },
+  { label: 'Belize' },
+  { label: 'Benin' },
+  { label: 'Bermuda' },
+  { label: 'Bhutan' },
+  { label: 'Bolivia, Plurinational State of' },
+  { label: 'Bonaire, Sint Eustatius and Saba' },
+  { label: 'Bosnia and Herzegovina' },
+  { label: 'Botswana' },
+  { label: 'Bouvet Island' },
+  { label: 'Brazil' },
+  { label: 'British Indian Ocean Territory' },
+  { label: 'Brunei Darussalam' },
+].map(suggestion => ({
+  value: suggestion.label,
+  label: suggestion.label,
+}));
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
@@ -89,7 +132,31 @@ const useStyles = makeStyles(theme => ({
   drpdwn:{
     marginTop: theme.spacing(1),
     fontSize: theme.typography.pxToRem(12),
-  }
+  },
+  noOptionsMessage: {
+    padding: theme.spacing(1, 2)
+  },
+  singleValue: {
+    fontSize: 16
+  },
+  placeholder: {
+    position: "absolute",
+    left: 2,
+    bottom: 6,
+    fontSize: 16
+  },
+  valueContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    flex: 1,
+    alignItems: "center",
+    overflow: "hidden"
+  },
+  input: {
+    display: 'flex',
+    padding: 0,
+    height: 'auto',
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -188,6 +255,9 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       is_active: 1,
       franchise_name: otherFranchiseValue,
       is_franchise_exist: inputs.is_franchise_exist,
+      customer_name: inputs.customer_name,
+      customer_contact: inputs.customer_contact,
+      
     };
 
     let formData = new FormData();
@@ -229,6 +299,225 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       setOtherFranchiseValue(event.target.value)
     }
 
+   
+function NoOptionsMessage(props) {
+  return (
+    <Typography
+      color="textSecondary"
+      className={props.selectProps.classes.noOptionsMessage}
+      {...props.innerProps}
+    >
+      {props.children}
+    </Typography>
+  );
+}
+
+NoOptionsMessage.propTypes = {
+  /**
+   * The children to be rendered.
+   */
+  children: PropTypes.node,
+  /**
+   * Props to be passed on to the wrapper.
+   */
+  innerProps: PropTypes.object.isRequired,
+  selectProps: PropTypes.object.isRequired
+};
+
+function inputComponent({ inputRef, ...props }) {
+  return <div ref={inputRef} {...props} />;
+}
+
+inputComponent.propTypes = {
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired
+    })
+  ])
+};
+
+function Control(props) {
+  const {
+    children,
+    innerProps,
+    innerRef,
+    selectProps: { classes, TextFieldProps }
+  } = props;
+
+  return (
+    <TextField
+      fullWidth
+      InputProps={{
+        inputComponent,
+        inputProps: {
+          className: classes.input,
+          ref: innerRef,
+          children,
+          ...innerProps
+        }
+      }}
+      {...TextFieldProps}
+    />
+  );
+}
+
+Control.propTypes = {
+  /**
+   * Children to render.
+   */
+  children: PropTypes.node,
+  /**
+   * The mouse down event and the innerRef to pass down to the controller element.
+   */
+  innerProps: PropTypes.shape({
+    onMouseDown: PropTypes.func.isRequired
+  }).isRequired,
+  innerRef: PropTypes.oneOfType([
+    PropTypes.oneOf([null]),
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired
+    })
+  ]).isRequired,
+  selectProps: PropTypes.object.isRequired
+};
+
+function Option(props) {
+  return (
+    <MenuItem
+      ref={props.innerRef}
+      selected={props.isFocused}
+      component="div"
+      style={{
+        fontWeight: props.isSelected ? 500 : 400
+      }}
+      {...props.innerProps}
+    >
+      {props.children}
+    </MenuItem>
+  );
+}
+
+Option.propTypes = {
+  /**
+   * The children to be rendered.
+   */
+  children: PropTypes.node,
+  /**
+   * props passed to the wrapping element for the group.
+   */
+  innerProps: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    key: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+    onMouseMove: PropTypes.func.isRequired,
+    onMouseOver: PropTypes.func.isRequired,
+    tabIndex: PropTypes.number.isRequired
+  }).isRequired,
+  /**
+   * Inner ref to DOM Node
+   */
+  innerRef: PropTypes.oneOfType([
+    PropTypes.oneOf([null]),
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired
+    })
+  ]).isRequired,
+  /**
+   * Whether the option is focused.
+   */
+  isFocused: PropTypes.bool.isRequired,
+  /**
+   * Whether the option is selected.
+   */
+  isSelected: PropTypes.bool.isRequired
+};
+
+function Placeholder(props) {
+  const { selectProps, innerProps = {}, children } = props;
+  return (
+    <Typography
+      color="textSecondary"
+      className={selectProps.classes.placeholder}
+      {...innerProps}
+    >
+      {children}
+    </Typography>
+  );
+}
+
+Placeholder.propTypes = {
+  /**
+   * The children to be rendered.
+   */
+  children: PropTypes.node,
+  /**
+   * props passed to the wrapping element for the group.
+   */
+  innerProps: PropTypes.object,
+  selectProps: PropTypes.object.isRequired
+};
+
+function SingleValue(props) {
+  return (
+    <Typography
+      className={props.selectProps.classes.singleValue}
+      {...props.innerProps}
+    >
+      {props.children}
+    </Typography>
+  );
+}
+
+SingleValue.propTypes = {
+  /**
+   * The children to be rendered.
+   */
+  children: PropTypes.node,
+  /**
+   * Props passed to the wrapping element for the group.
+   */
+  innerProps: PropTypes.any.isRequired,
+  selectProps: PropTypes.object.isRequired
+};
+
+function ValueContainer(props) {
+  return (
+    <div className={props.selectProps.classes.valueContainer}>
+      {props.children}
+    </div>
+  );
+}
+
+ValueContainer.propTypes = {
+  /**
+   * The children to be rendered.
+   */
+  children: PropTypes.node,
+  selectProps: PropTypes.object.isRequired
+};
+
+const selectStyles = {
+  input: base => ({
+    ...base,
+    color: theme.palette.text.primary,
+    '& input': {
+      font: 'inherit',
+    },
+  }),
+};
+const components = {
+  Control,
+  NoOptionsMessage,
+  Option,
+  Placeholder,
+  SingleValue,
+  ValueContainer
+};
+
+  
     const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
       RESET_VALUES,
       addLead,
@@ -364,6 +653,72 @@ return (
                       multiline
                       type="text"
                       margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="customer_name">Customer Name </InputLabel>
+                      
+      {/* <NoSsr>
+                      <Select
+                        classes={classes}
+                        styles={selectStyles}
+                        inputId="customer_name"
+                        TextFieldProps={{
+                          label: 'Country',
+                          InputLabelProps: {
+                            htmlFor: 'customer_name',
+                            shrink: true,
+                          },
+                        }}
+                        fullWidth
+                        placeholder="Search a country (start with a)"
+                        options={suggestions}
+                        components={components}
+                        value={inputs.customer_name}
+                        onChange={handleInputChange}
+                      />      </NoSsr>                 */}
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="customer_name"
+                      name="customer_name"
+                      // label="First Name"
+                      value={inputs.customer_name}
+                      onChange={handleInputChange}
+                      error={errors.customer_name}
+                      helperText={errors.customer_name}
+                      fullWidth
+                      // required
+                      type="text"
+                      // placeholder="Franchise Name"
+                      margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="customer_contact">Customer Contact </InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="customer_contact"
+                      name="customer_contact"
+                      value={inputs.customer_contact}
+                      onChange={handleInputChange}
+                      error={errors.customer_contact}
+                      helperText={errors.customer_contact}
+                      fullWidth
+                      // required
+                      type="number"
+                      // placeholder="Franchise Name"
+                      margin="dense"
+                      onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={12}>
