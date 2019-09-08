@@ -537,7 +537,7 @@ export default function Order({roleName}) {
               handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
               handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
               handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-              createAndDownloadPdf ={createAndDownloadPdf }/> }
+              createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
 
               {/* finance */}
               { roleName ==='CSR' ? 

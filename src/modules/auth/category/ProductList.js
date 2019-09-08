@@ -136,19 +136,7 @@ export default function ProductList({roleName}) {
       try {
         const result = await Category.productlist();
         setProductList(result.productList);
-
-        let active = 0 ;
-        let onhold = 0 ;
-        let discontinued = 0; 
-        (result.productList).map( data=> {
-          data.status === 1 ? active+=1 : '';
-          data.status === 2 ? onhold+=1 : '';
-          data.status === 3 ? discontinued+=1 : '';
-        })
-
-        setActiveProduct(active);
-        setOnholdProduct(onhold);
-        setDiscontinuedProduct(discontinued);
+        handleCount(result.productList);
 
         const brand_result = await Brand.list();
         setBrandList(brand_result.brandList);
@@ -165,7 +153,21 @@ export default function ProductList({roleName}) {
 
     fetchData();
   }, []);
-  // /////////////////////////////////////
+
+  function handleCount(productList) {
+    let active = 0 ;
+    let onhold = 0 ;
+    let discontinued = 0; 
+    (productList).map( data=> {
+      data.status === 1 ? active+=1 : '';
+      data.status === 2 ? onhold+=1 : '';
+      data.status === 3 ? discontinued+=1 : '';
+    })
+
+    setActiveProduct(active);
+    setOnholdProduct(onhold);
+    setDiscontinuedProduct(discontinued);
+  }
 
   function handleClickOpen() {
     setOpen(true);
@@ -183,10 +185,13 @@ export default function ProductList({roleName}) {
   
   function handleEditClose() {
     setEditOpen(false);
+    
   }
 
   function setCategoryListFn(response) {
     setProductList(response);
+    handleCount(response);
+    
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
