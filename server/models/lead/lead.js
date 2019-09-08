@@ -68,7 +68,7 @@ Lead.prototype.add = function () {
       }
       else{
         const values = [
-          [that.lead_id, that.is_franchise_exist, that.franchise_id,that.franchise_name, that.message,that.f_id, that.uid, that.is_active, that.upload]
+          [that.lead_id, that.is_franchise_exist, that.franchise_id,that.franchise_name, that.message,that.customer_name,that.customer_contact,that.f_id, that.uid, that.is_active, that.upload]
         ];
         connection.changeUser({ database: dbName["prod"] });
         connection.query(`INSERT INTO leads(lead_id,is_franchise_exist, franchise_id,franchise_name,message,customer_name,customer_contact,f_id,created_by ,is_active, document) VALUES ?`, [values], (error, mrows, fields) => {
