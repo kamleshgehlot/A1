@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid'; 
 import Table from '@material-ui/core/Table';
-import Badge from '@material-ui/core/Badge';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -32,7 +31,7 @@ import Add from './Add';
 import Edit from './Edit';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
-
+import BadgeComp from '../../common/BadgeComp';
 // API CALL
 import UserAPI from '../../../api/User';
 // import { breakStatement } from '@babel/types';
@@ -311,10 +310,10 @@ export default function Franchise({roleName}) {
           </Grid>
           <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={openFranchise}>  Open  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={activeFranchise}>  Active  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={inactiveFranchise}>  Inactive  </Badge> }  />
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={closeFranchise}>  Close  </Badge> } />
+              <Tab label={<BadgeComp count={openFranchise} label="Open" />} /> 
+              <Tab label={<BadgeComp count={activeFranchise} label="Active" />} /> 
+              <Tab label={<BadgeComp count={inactiveFranchise} label="Inactive" />} /> 
+              <Tab label={<BadgeComp count={closeFranchise} label="Close" />} /> 
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>

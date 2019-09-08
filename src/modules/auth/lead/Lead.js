@@ -11,7 +11,6 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import Badge from '@material-ui/core/Badge'; 
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
@@ -39,6 +38,9 @@ import ConvertInOrder from '../order/Add';
 import LeadAPI from '../../../api/Lead';
 import UserAPI from '../../../api/User';
 import FranchiseUsers from '../../../api/FranchiseUsers';
+
+import BadgeComp from '../../common/BadgeComp';
+
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -403,8 +405,8 @@ console.log(leadList)
             <Paper style={{ width: '100%' }}>
           <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={leadList.length}>Open</Badge>} /> 
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={convertedLeadList.length}>Converted</Badge>} />
+              <Tab label={<BadgeComp count={leadList.length} label="Open" />} /> 
+              <Tab label={<BadgeComp count={convertedLeadList.length} label="Converted" />} />
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>

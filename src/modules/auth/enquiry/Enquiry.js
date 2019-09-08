@@ -14,7 +14,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Badge from '@material-ui/core/Badge'; 
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
@@ -32,6 +31,7 @@ import ConvertInOrder from '../order/Add';
 import EnquiryAPI from '../../../api/franchise/Enquiry';
 import Category from '../../../../src/api/Category';
 
+import BadgeComp from '../../common/BadgeComp';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -317,8 +317,8 @@ console.log(enquiryList);
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                  <Tab label= {<Badge className={classes.padding} color="secondary" badgeContent={nonConvertList.length}>On-going</Badge>}/>
-                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={convertList.length}>Converted</Badge>} />
+                  <Tab label={<BadgeComp count={nonConvertList.length} label="On-going" />} /> 
+                  <Tab label={<BadgeComp count={convertList.length} label="Converted" />} /> 
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={value}>

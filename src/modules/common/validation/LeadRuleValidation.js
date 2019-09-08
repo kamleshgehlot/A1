@@ -11,10 +11,6 @@ export default function validate(values) {
   if (!validString.test(values.customer_name)) {
     errors.customer_name = 'Customer Name is invalid';
   }
-  if (!validNumber.test(values.customer_contact)) {
-    errors.customer_contact = 'Contact number is invalid';
-  } else if ((values.customer_contact).length<10) {
-    errors.customer_contact = 'Contact number is invalid';
-  }
+  
   return errors;
 };

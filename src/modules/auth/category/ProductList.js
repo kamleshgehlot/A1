@@ -10,7 +10,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge'; 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
@@ -27,6 +26,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
+import BadgeComp from '../../common/BadgeComp';
 
 // API CALL
 import Category from '../../../../src/api/Category';
@@ -281,11 +281,9 @@ export default function ProductList({roleName}) {
           
         <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-              
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={activeProduct}>  Active  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={onholdProduct}>  OnHold  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={discontinuedProduct}>  Discontinued  </Badge> }  />
-           
+              <Tab label={<BadgeComp count={activeProduct} label="Active" />} /> 
+              <Tab label={<BadgeComp count={onholdProduct} label="OnHold" />} /> 
+              <Tab label={<BadgeComp count={discontinuedProduct} label="Discontinued" />} /> 
             {/* { statusList.map((datastatus, index)=>{
               return(
                 <Tab label={datastatus.status} />

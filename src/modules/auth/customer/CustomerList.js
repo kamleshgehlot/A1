@@ -21,7 +21,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CreateIcon from '@material-ui/icons/Create';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
-import Badge from '@material-ui/core/Badge'; 
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -33,7 +32,7 @@ import Edit from './Edit';
 import Customer from '../../../api/franchise/Customer';
 import { fontFamily } from '@material-ui/system';
 
-
+import BadgeComp from '../../common/BadgeComp';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -330,9 +329,9 @@ export default function CustomerList({userId, roleName}) {
                    (customerListData.length>0 ? customerListData : []).map(data=>{
                    data.state === 1 ? a++ : data.state === 2 ? b++ : data.state===3 ? c++ :'';
                  })} */}
-                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={active}>Active</Badge>} />
-                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={hold}>Hold</Badge>} />
-                  <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={completed}>Completed</Badge>} />
+                  <Tab label={<BadgeComp count={active} label="Active" />} /> 
+                  <Tab label={<BadgeComp count={hold} label="Hold" />} /> 
+                  <Tab label={<BadgeComp count={completed} label="Completed" />} /> 
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={value}>

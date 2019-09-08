@@ -10,7 +10,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Tabs from '@material-ui/core/Tabs';
-import Badge from '@material-ui/core/Badge'; 
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 import Add from './Add';
@@ -21,6 +20,8 @@ import FranchiseTabPannel from './TabPanel';
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 import Role from '../../../api/franchise/Role';
+
+import BadgeComp from '../../common/BadgeComp';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -262,11 +263,11 @@ export default function FranchiseStaff({franchiseId, roleName}) {
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
                   
                 {/* <Tab label="All" /> */}
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={staffList.length}> All  </Badge> }/>
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={CSR}>   CSR </Badge> }/>
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={Finance}> Finance  </Badge> }/>
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={Delivery}> Delivery   </Badge> }/>
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={HR}>  HR  </Badge> }/>
+                <Tab label={<BadgeComp count={staffList.length} label="All" />} /> 
+                <Tab label={<BadgeComp count={CSR} label="CSR" />} /> 
+                <Tab label={<BadgeComp count={Finance} label="Finance" />} /> 
+                <Tab label={<BadgeComp count={Delivery} label="Delivery" />} /> 
+                <Tab label={<BadgeComp count={HR} label="HR" />} /> 
 
                   {/* {
                     (role.length>0 ? role : []).map((ele, index) => {

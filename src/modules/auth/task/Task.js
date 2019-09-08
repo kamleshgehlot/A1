@@ -4,7 +4,6 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
-import Badge from '@material-ui/core/Badge'; 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -39,6 +38,8 @@ import FranchiseUsers from '../../../api/FranchiseUsers';
 import Role from '../../../api/franchise/Role';
 
 import { API_URL } from '../../../api/Constants';
+
+import BadgeComp from '../../common/BadgeComp';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -539,11 +540,11 @@ useEffect(() => {
             <Paper style={{ width: '100%' }}>
             <AppBar position="static"  className={classes.appBar}>
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={tasksList.length}>All</Badge>} />
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={staffTaskList.length}>My Task</Badge>} />
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={assignToOther.length}>Assigned by Me </Badge>} />
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={rescheduledTaskList.length}>Reschedule Request</Badge>} />
-                <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={completedTaskList.length}>Completed</Badge>}  />
+                <Tab label={<BadgeComp count={tasksList.length} label="All" />} /> 
+                <Tab label={<BadgeComp count={staffTaskList.length} label="My Task" />} /> 
+                <Tab label={<BadgeComp count={assignToOther.length} label="Assigned by Me" />} /> 
+                <Tab label={<BadgeComp count={rescheduledTaskList.length} label="Reschedule Request" />} /> 
+                <Tab label={<BadgeComp count={completedTaskList.length} label="Completed" />} /> 
                 {/* <Tab label="Close" /> */}
               </Tabs>
             </AppBar>

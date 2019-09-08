@@ -37,6 +37,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import { API_URL } from '../../../api/Constants';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
+import BadgeComp  from '../../common/BadgeComp';
 import Snackbar from '@material-ui/core/Snackbar';
 
 import Add from './Add';
@@ -203,18 +204,9 @@ export default function Order({roleName}) {
     textsize:{
       fontSize: theme.typography.pxToRem(12),
       color: 'white',
-    },
-    badge: {
-      padding: theme.spacing(0, 2),
-    },
-    customBadge: {
-      backgroundColor: "#124982",
-      color: "white"
     }
   }));
 
-
-  
   const classes = useStyles();
 
   function handleClickOpen(){
@@ -532,14 +524,7 @@ export default function Order({roleName}) {
               <AppBar position="static"  className={classes.appBar}>
                 
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
-                  <Tab
-                    label={
-                      <Badge className={classes.badge} color="secondary" badgeContent={getOpenCount(order, roleName)}
-                      classes={{ badge: classes.customBadge }}>
-                        Open
-                      </Badge>
-                    }
-                  />
+                  <Tab label={<BadgeComp count={getOpenCount(order, roleName)} label="Open" />} />
 
                   {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
                   {roleName !='Delivery' ? <Tab label="Under Delivery" /> : ''}

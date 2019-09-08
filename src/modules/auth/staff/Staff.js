@@ -6,7 +6,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Paper from '@material-ui/core/Paper';
-import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -24,6 +23,8 @@ import Edit from './Edit';
 
 // API CALL
 import StaffAPI from '../../../api/StaffMasterAdmin';
+
+import BadgeComp from '../../common/BadgeComp';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -217,13 +218,13 @@ export default function Staff({roleName}) {
                   data.position === 6 ? sales+=1 : '';
                 })
               }
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={staffList.length}>  All  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={territory}>  Territory Manager  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={marketing}>  Marketing Manager  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={it}>  IT Specialist  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={bdm}>  BDM  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={accountant}>  Accountant  </Badge> }/>
-              <Tab label={<Badge className={classes.padding} color="secondary" badgeContent={sales}>  Sales Specialist  </Badge> }/>
+              <Tab label={<BadgeComp count={staffList.length} label="All" />} /> 
+              <Tab label={<BadgeComp count={territory} label="Territory Manager" />} /> 
+              <Tab label={<BadgeComp count={marketing} label="Marketing Manager" />} /> 
+              <Tab label={<BadgeComp count={it} label="IT Specialist" />} /> 
+              <Tab label={<BadgeComp count={bdm} label="BDM" />} /> 
+              <Tab label={<BadgeComp count={accountant} label="Accountant" />} /> 
+              <Tab label={<BadgeComp count={sales} label="Sales Specialist" />} /> 
 
             {/* {
                 (position.length>0 ? position : []).map((ele, index) => {

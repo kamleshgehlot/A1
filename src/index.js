@@ -25,7 +25,7 @@ class YourApp extends Component {
           onIdle={this.onIdle}
           onAction={this.onAction}
           debounce={250}
-          timeout={1000 * 60 * 1} />
+          timeout={1000 * 60 * 15} />
 
           <App />
         {/* your app here */}
