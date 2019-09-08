@@ -16,6 +16,8 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 
+import { API_URL } from '../../../../api/Constants';
+
 import PropTypes from 'prop-types';
 
 const StyledTableCell = withStyles(theme => ({

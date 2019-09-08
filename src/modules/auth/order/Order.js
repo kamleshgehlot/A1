@@ -592,13 +592,14 @@ export default function Order({roleName}) {
                 
               {/* delivery */}
               
+              {/* under delivery for Finance tab */}
               {roleName === 'CSR' || 'Finance' ?               
               <TabPanel value={value} index={deliveryTabIndex}>
                   <Table >
                     <TableHead>
                       <TableRow>
                         <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Order No.</StyledTableCell>
+                        <StyledTableCell>Order No</StyledTableCell>
                         <StyledTableCell>Order By</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
                         <StyledTableCell>Order Date</StyledTableCell>
@@ -611,6 +612,7 @@ export default function Order({roleName}) {
                     </TableHead>
                     <TableBody>
                     {(order.length > 0 ? order : []).map((data, index) => {
+                      console.log("data..... finanace", data);
                       if(data.assigned_to === 5 && data.order_status ===5 ){
                        return(
                         <TableRow>
