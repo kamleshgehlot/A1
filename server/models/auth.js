@@ -150,16 +150,20 @@ Auth.prototype.forgotPassword = function () {
         throw error;
       }
 
+      let query = '';
       let values = [that.name, 1];
 
-      // if (that.name.split('_').length > 2) {
-      //   console.log("inside if condition for validation");
-      //   connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
-      // } else {
+      if (that.name.split('_').length > 2) {
+        console.log("inside if condition for validation");
+        query = "Select AES_DECRYPT(`password`, 'secret') AS password, u.user_id, u.status, u.is_active from user u where u.user_id=?";
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
+      } else {
         console.log("inside else condition for validation", values);
         connection.changeUser({ database: dbName["prod"] });
-      // }
-      connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.user_id, u.status, c.email from user u inner join company c on c.id = u.director_id where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
+        query = "Select AES_DECRYPT(`password`, 'secret') AS password, u.user_id, u.status, c.email from user u inner join company c on c.id = u.director_id where u.user_id=? and u.is_active = ?";
+      }
+
+      connection.query(query, values, function (error, rows, fields) {
         // connection.query('Select password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name from user u inner join role r on u.role_id = r.id where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
 
         if (!error) {
