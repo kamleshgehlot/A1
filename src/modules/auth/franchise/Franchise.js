@@ -185,7 +185,6 @@ export default function Franchise({roleName}) {
 
         let franchiseIdTemp = [];
         result.userList.map(data => {        
-
           let found = franchiseIdTemp.some(el => el.franchise_id === data.franchise_id);
           if(!found) {
             franchiseIdTemp.push({
@@ -201,7 +200,7 @@ export default function Franchise({roleName}) {
           }
         });
         
-        handleCount(result.userList);
+        handleCount(franchiseIdTemp);
 
         setFranchiseId(franchiseIdTemp);
       } catch (error) {
@@ -218,16 +217,17 @@ export default function Franchise({roleName}) {
   }, []);
 
   function handleCount(franchiseIdTemp) {
+    console.log('dfasf',franchiseIdTemp);
     let open = 0;
     let active = 0;
     let inactive = 0;
     let close = 0;
 
     franchiseIdTemp.map(data=>{
-      data.state === 1 ? open += 1 : '';
-      data.state === 2 ? active += 1 : '';
-      data.state === 3 ? inactive += 1 : '';
-      data.state === 4 ? close += 1 : '';
+      data.status === 1 ? open += 1 : '';
+      data.status === 2 ? active += 1 : '';
+      data.status === 3 ? inactive += 1 : '';
+      data.status === 4 ? close += 1 : '';
     })
 
     setOpenFranchise(open);
@@ -274,10 +274,11 @@ export default function Franchise({roleName}) {
   ////////////////////////////////////////
   function setFranchiseListFn(response) {
     setFranchiseList(response);
-    handleCount(response);
+    
   }
   function setFranchiseIdFn(response) {
     setFranchiseId(response);
+    handleCount(response);
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);

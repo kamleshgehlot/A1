@@ -327,6 +327,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     }
     checkEmail();
   }
+
+
   function handleDirectorList(){
     if(errors.demail==''||errors.demail==null){
     const directorListTemp = [...directorList];
@@ -338,24 +340,34 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
      
       alert('Please provide director information')    
     
-    } else {
-      directorListTemp.push({
-        'director': inputs.director,
-        'email' : inputs.email,
-        'contact': inputs.contact,
-        'alt_contact': inputs.alt_contact,
-        'uid' : inputs.uid,
-        'password': inputs.password
-      });
-       
-      inputs.director = '';
-      inputs.email = '';
-      inputs.contact = '';
-      inputs.alt_contact = '';
-      inputs.uid = '';
-      inputs.password = '';
-  
-      setDirectorList(directorListTemp);
+    } else{
+        let checkDuplicateMail = false;
+      
+        (directorList.length>0 ? directorList : []).map(data =>{
+          if(data.email===inputs.email){
+            checkDuplicateMail =true;
+          }
+        });
+      if(checkDuplicateMail===false){
+        directorListTemp.push({
+          'director': inputs.director,
+          'email' : inputs.email,
+          'contact': inputs.contact,
+          'alt_contact': inputs.alt_contact,
+          'uid' : inputs.uid,
+          'password': inputs.password,          
+        });
+            inputs.director = '';
+            inputs.email = '';
+            inputs.contact = '';
+            inputs.alt_contact = '';
+            inputs.uid = '';
+            inputs.password = '';
+        
+            setDirectorList(directorListTemp);
+      }else{
+        alert('Given email address already assign to another director.');
+      }
     }
   }
   }

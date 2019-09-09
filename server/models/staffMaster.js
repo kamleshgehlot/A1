@@ -33,7 +33,8 @@ StaffMaster.prototype.register = function () {
         connection.changeUser({ database: dbName["prod"] });
         connection.query('INSERT INTO master_staff(first_name,last_name,user_id,password,location,contact,email,position,created_by) VALUES ("' + that.first_name + '", "' + that.last_name + '","' + that.user_id + '", AES_ENCRYPT("' + that.password + '", \'secret\'), "'+ that.location + '", "' + that.contact + '" , "' + that.email + '", "' + that.position + '", "' + that.created_by + '")', function (error, rows, fields) {
           if (!error) {
-            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "1", "' + that.first_name + '' + that.last_name + '", "' +  that.user_id + '", AES_ENCRYPT("' + that.password + '", \'secret\'), "' + that.token + '", "' + that.accountId + '" , null , "0", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
+            let name = that.first_name + '\s' + that.last_name;
+            connection.query('INSERT INTO user(franchise_id,director_id, name,user_id,password,token,account_id,designation,role_id,is_active,created_by) VALUES ("' + that.franchise_id + '", "1", "' + name+'", "' +  that.user_id + '", AES_ENCRYPT("' + that.password + '", \'secret\'), "' + that.token + '", "' + that.accountId + '" , null , "0", "' + that.is_active + '", "' + that.created_by + '")', function (error, rows, fields) {
               if (!error) {
               resolve({ rows });
               }else {

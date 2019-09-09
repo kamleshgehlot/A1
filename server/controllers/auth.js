@@ -46,6 +46,8 @@ const login = async function (req, res, next) {
         const secret = process.env.JWT_SECRET || 'secret';
         const token = jwt.sign(payload, secret, options);
 
+        
+
         result.token = token;
         result.status = status;
         result.result = params.name;

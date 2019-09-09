@@ -6,6 +6,8 @@ const utils = require('../../utils');
 const Profile = function (params) {
   this.user_id = params.user_id;
   this.franchise_id = params.franchise_id;
+  this.id = params.id;
+  console.log('prams...',params);
 };
 
 
@@ -21,7 +23,7 @@ Profile.prototype.info = function () {
       }
 
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select director_id, franchise_id from user where user_id="' + that.user_id + '"', function (error, rows, fields) {
+      connection.query('select director_id, franchise_id from user where id="' + that.id + '"', function (error, rows, fields) {
 
         if (!error) {
           if(rows[0]){
