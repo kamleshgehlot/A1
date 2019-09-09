@@ -9,13 +9,13 @@ const KEY = `${ENV}-${PLATFORM}-${VERSION}`;
 // export const AUTH_URL = 'http://rentronicsdev.saimrc.com'; // Config[KEY].AUTH_URL;
 // export const API_CONSUMER = 'http://rentronicsdev.saimrc.com'; // Config[KEY].API_URL;
 
-// export const API_URL = 'http://rentronicsuat.saimrc.com'; // Config[KEY].API_URL;
-// export const AUTH_URL = 'http://rentronicsuat.saimrc.com'; // Config[KEY].AUTH_URL;
-// export const API_CONSUMER = 'http://rentronicsuat.saimrc.com'; // Config[KEY].API_URL;
+export const API_URL = 'http://rentronicsuat.saimrc.com'; // Config[KEY].API_URL;
+export const AUTH_URL = 'http://rentronicsuat.saimrc.com'; // Config[KEY].AUTH_URL;
+export const API_CONSUMER = 'http://rentronicsuat.saimrc.com'; // Config[KEY].API_URL;
 
-export const API_URL = 'http://localhost:3000'; // Config[KEY].API_URL;
-export const AUTH_URL = 'http://localhost:3000'; // Config[KEY].AUTH_URL;
-export const API_CONSUMER = 'http://localhost:3000'; // Config[KEY].API_URL;
+// export const API_URL = 'http://localhost:3000'; // Config[KEY].API_URL;
+// export const AUTH_URL = 'http://localhost:3000'; // Config[KEY].AUTH_URL;
+// export const API_CONSUMER = 'http://localhost:3000'; // Config[KEY].API_URL;
 
 
 // Helpers

@@ -7,7 +7,6 @@ const Color = function (params) {
   this.id = params.id;
   this.color = params.color;
   this.user_id = params.user_id;
-
 };
 
 

@@ -53,6 +53,11 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   const [staffList, setStaffList] = useState({});
   const [role, setRole] = useState([]);
   const [position, setPosition] = useState({});
+  const [totalCSR,setTotalCSR] = useState();
+  const [totalFinance,setTotalFinance] = useState();
+  const [totalDelivery,setTotalDelivery] = useState();
+  const [totalHR,setTotalHR] = useState();
+  
   //value is for tabs  
   const [value, setValue] = React.useState(0);
 
@@ -130,6 +135,35 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   }));
   const classes = useStyles();
 
+  function badgeCount(staff){
+    let CSR = 0;
+    let Finance = 0;
+    let Delivery = 0;
+    let HR = 0;
+
+    (staff.length > 0 ? staff : []).map((data, index) =>{
+      // let a = (data.role.split(',')).find(ele => ele === '3');
+      // if(a==3){CSR += 1 };
+      // if(a==4){Finance += 1 };
+      // if(a==5){Delivery += 1 };
+      // if(a==6){HR += 1 };
+      //  == 3 ? CSR += 1 : '';
+    
+      (data.role.split(',')).find(ele => ele === '3') == '3' ? CSR += 1 : '';
+      (data.role.split(',')).find(ele => ele === '4') == '4' ? Finance += 1 : '';
+      (data.role.split(',')).find(ele => ele === '5') == '5' ? Delivery += 1 : '';
+      (data.role.split(',')).find(ele => ele === '6') == '6' ? HR += 1 : '';
+
+      setTotalCSR(CSR);
+      setTotalFinance(Finance);
+      setTotalDelivery(Delivery);
+      setTotalHR(HR);
+  // console.log('a',a)
+  // (data.role.split(',')).find(ele => ele == 3 ) 
+  // console.log('ddd',(data.role.split(',')).find(ele =>  ele == 3 ))
+  })    
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -138,23 +172,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
       try {
         const result = await Staff.list({franchise_id: franchiseId.franchiseId});
         setStaffList(result.staffList);
-
-        (result.staffList.length > 0 ? result.staffList : []).map((data, index) =>{
-            // let a = (data.role.split(',')).find(ele => ele === '3');
-            // if(a==3){CSR += 1 };
-            // if(a==4){Finance += 1 };
-            // if(a==5){Delivery += 1 };
-            // if(a==6){HR += 1 };
-            //  == 3 ? CSR += 1 : '';
-            (data.role.split(',')).find(ele => ele === '3') == '3' ? CSR += 1 : '';
-            (data.role.split(',')).find(ele => ele === '4') == '4' ? Finance += 1 : '';
-            (data.role.split(',')).find(ele => ele === '5') == '5' ? Delivery += 1 : '';
-            (data.role.split(',')).find(ele => ele === '6') == '6' ? HR += 1 : '';
-        // console.log('a',a)
-        // (data.role.split(',')).find(ele => ele == 3 ) 
-        // console.log('ddd',(data.role.split(',')).find(ele =>  ele == 3 ))
-
-        })        
+        badgeCount(result.staffList);            
       } catch (error) {
         setIsError(true);
       }
@@ -173,7 +191,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     };
     roleData();
   }, []);
-  console.log('roles',CSR, Finance, Delivery, HR)
+  // console.log('roles',CSR, Finance, Delivery, HR)
 
   // Code for testing pls don't remove -- by SRK 
   // function handleUploadClose() {
@@ -200,6 +218,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   ////////////////////////////////////////
   function setFranchiseListFn(response) {
     setStaffList(response);
+    badgeCount(response);
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -264,10 +283,10 @@ export default function FranchiseStaff({franchiseId, roleName}) {
                   
                 {/* <Tab label="All" /> */}
                 <Tab label={<BadgeComp count={staffList.length} label="All" />} /> 
-                <Tab label={<BadgeComp count={CSR} label="CSR" />} /> 
-                <Tab label={<BadgeComp count={Finance} label="Finance" />} /> 
-                <Tab label={<BadgeComp count={Delivery} label="Delivery" />} /> 
-                <Tab label={<BadgeComp count={HR} label="HR" />} /> 
+                <Tab label={<BadgeComp count={totalCSR} label="CSR" />} /> 
+                <Tab label={<BadgeComp count={totalDelivery} label="Delivery" />} /> 
+                <Tab label={<BadgeComp count={totalFinance} label="Finance" />} />                 
+                <Tab label={<BadgeComp count={totalHR} label="HR" />} /> 
 
                   {/* {
                     (role.length>0 ? role : []).map((ele, index) => {
@@ -292,6 +311,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
               }
               {
               (role.length>0 ? role : []).map((ele, index) => {
+                // console.log(index, ele)
                 return(
                   <FranchiseTabPannel value={value} tabIndex={index + 1} staffList={staffList} currentRole={ele} roles={role} handleClickEditOpen={handleClickEditOpen}/>
                 )

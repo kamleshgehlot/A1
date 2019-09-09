@@ -2,7 +2,7 @@ const Profile = require('../../models/setting/profile.js');
 
 const info = async function(req, res, next) {
   try {
-    const profile = await new Profile({user_id : req.decoded.user_id}).info();
+    const profile = await new Profile({user_id : req.decoded.user_id, id: req.decoded.id}).info();
     
     res.send({ profile });
   } catch (err) {

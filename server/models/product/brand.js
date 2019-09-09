@@ -6,6 +6,7 @@ const utils = require('../../utils');
 const Brand = function (params) {
   this.id = params.id;
   this.brand_name = params.brand_name;
+  this.user_id = params.user_id;
 };
 
 
@@ -46,7 +47,7 @@ Brand.prototype.addBrand = function () {
 
       if (!error) {
         connection.changeUser({ database: dbName["prod"] });
-              connection.query(`INSERT INTO brand(brand_name) VALUES (?)`,[that.brand_name],(error, crows, fields) => {
+              connection.query(`INSERT INTO brand(brand_name, created_by) VALUES (?,?)`,[that.brand_name, that.user_id],(error, crows, fields) => {
                 if (!error) {
                    resolve(crows);
                 } else {

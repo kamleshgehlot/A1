@@ -80,8 +80,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Order({roleName}) {
-  
+export default function Order({roleName}) {  
   
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -393,30 +392,27 @@ export default function Order({roleName}) {
       }
   };
     fetchData();
-    // console.log('date', new Date().toString());
+    // console.log('date88888', new Date().toString());
+    handleTabSettings();       
+  },[]);
 
+
+  function handleTabSettings(){
     if(roleName === 'CSR') {
       setDeliveryTabIndex(2);
       setDeliveredTabIndex(3);
       setCompletedTabIndex(4);
     }
-
     if(roleName === 'Finance') {
       setDeliveryTabIndex(1);
       setDeliveredTabIndex(2);
       setCompletedTabIndex(3)
     }
-
     if(roleName === 'Delivery') {
       setDeliveredTabIndex(1)
-    }
+    }   
+  }
 
-    // roleName ==='CSR' ?  setDeliveryTabIndex(2): roleName ==='Finance' ?  setDeliveryTabIndex(1) :'';
-    // roleName ==='CSR' ?  setDeliveredTabIndex(3) : roleName ==='Finance' ? setDeliveredTabIndex(2) : roleName ==='Delivery' ? setDeliveredTabIndex(1) : '';
-    // roleName ==='CSR' ?  setCompletedTabIndex(4) : roleName ==='Finance' ? setCompletedTabIndex(3) : '';
-  }, []);
-
-  
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
@@ -532,7 +528,6 @@ export default function Order({roleName}) {
                   {roleName !=='Delivery' ? <Tab label="Completed" /> : ''}
                 </Tabs>
               </AppBar> 
-
               { order && <Open order={order} value={value} roleName={roleName} 
               handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
               handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
@@ -612,7 +607,7 @@ export default function Order({roleName}) {
                     </TableHead>
                     <TableBody>
                     {(order.length > 0 ? order : []).map((data, index) => {
-                      console.log("data..... finanace", data);
+                      // console.log("data..... finanace", data);
                       if(data.assigned_to === 5 && data.order_status ===5 ){
                        return(
                         <TableRow>

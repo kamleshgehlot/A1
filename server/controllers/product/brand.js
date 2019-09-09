@@ -13,7 +13,7 @@ const all = async function(req, res, next) {
 const add = async function(req, res, next) {
   const brandParam = {
     brand_name: req.body.brand_name,
-    user_id: req.decoded.id,
+    user_id: req.decoded.id,    
   };
 
   try {
