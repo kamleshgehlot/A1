@@ -311,7 +311,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel>
-                    {/* <TextField
+                    <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -328,8 +328,8 @@ return (
                       helperText={errors.customer_name}
                       required
                       fullWidth
-                    /> */}
-                     <AutoSelect
+                    />
+                     {/* <AutoSelect
                         inputId="customer_name"
                         TextFieldProps={{
                           InputLabelProps: {
@@ -342,7 +342,7 @@ return (
                         // components={components}
                         value={single}
                         onChange={handleChangeSingle}
-                      />      
+                      />       */}
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="contact">Contact *</InputLabel>
