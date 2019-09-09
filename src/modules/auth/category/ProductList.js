@@ -163,7 +163,6 @@ export default function ProductList({roleName}) {
       data.status === 2 ? onhold+=1 : '';
       data.status === 3 ? discontinued+=1 : '';
     })
-
     setActiveProduct(active);
     setOnholdProduct(onhold);
     setDiscontinuedProduct(discontinued);

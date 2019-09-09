@@ -107,7 +107,7 @@ export default function AddColor(props) {
   const coloradd = async () => {
       
     // if( inputs.color!=''){
-      let check=false;
+    let check=false;
     const validString = /^[a-zA-Z\s]+$/;
     if (!inputs.color) {
       setErrors('Color is required');
@@ -116,14 +116,13 @@ export default function AddColor(props) {
       setErrors('Color is invalid');
       check=true;
     }
-    else{
-      
+    else{      
       setErrors('');
     }
     if(check===false){
         setpLoading(true);
           const response = await Color.addcolor({
-            color: inputs.color,
+           color: inputs.color,
         });
         props.updatedData(response.colorList);
         props.handleClose(false);
