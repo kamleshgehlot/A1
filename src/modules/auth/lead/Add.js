@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {component} from 'react-dom';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles,  emphasize, useTheme  } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
+import BasicSelect from '@material-ui/core/Select';
 
-// import NoSsr from '@material-ui/core/NoSsr';
-// import Select from 'react-select';
+import NoSsr from '@material-ui/core/NoSsr';
+import Select from 'react-select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
@@ -35,6 +35,9 @@ import { APP_TOKEN } from '../../../api/Constants';
 
 import validate from '../../common/validation/LeadRuleValidation';
 // API CALL
+import Customer from '../../../api/franchise/Customer';
+import  Placeholder from './autofill';
+
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
 
@@ -48,45 +51,6 @@ const RESET_VALUES = {
   is_active: ''
 };
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
@@ -157,8 +121,66 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     height: 'auto',
   },
+  cn:{
+    width:'100%',
+    border:'0px'
+  }
 }));
 
+
+
+const useStylesCustomer = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    height: 250,
+    minWidth: 290
+  },
+  input: {
+    display: "flex",
+    padding: 0,
+    height: "auto"
+  },
+  valueContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    flex: 1,
+    alignItems: "center",
+    overflow: "hidden"
+  },
+  chip: {
+    margin: theme.spacing(0.5, 0.25)
+  },
+  chipFocused: {
+    backgroundColor: emphasize(
+      theme.palette.type === "light"
+        ? theme.palette.grey[300]
+        : theme.palette.grey[700],
+      0.08
+    )
+  },
+  noOptionsMessage: {
+    padding: theme.spacing(1, 2)
+  },
+  singleValue: {
+    fontSize: 16
+  },
+  placeholder: {
+    position: "absolute",
+    left: 2,
+    bottom: 6,
+    fontSize: 16
+  },
+  paper: {
+    position: "absolute",
+    zIndex: 1,
+    marginTop: theme.spacing(1),
+    left: 0,
+    right: 0
+  },
+  divider: {
+    height: theme.spacing(2)
+  }
+}));
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -167,6 +189,8 @@ const Transition = React.forwardRef((props, ref) => {
 export default function AddLead({ open, handleClose, handleSnackbarClick, setLeadList}) {
 
   const classes = useStyles();
+  const classesCustomer = useStylesCustomer();
+
   const [expanded, setExpanded] = React.useState('panel1');
   const [temp, setTemp] = React.useState([]);
   const [assignRole, setAssignRole] = React.useState([]);
@@ -182,6 +206,16 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
+  const [customerListData, setCustomerListData] = useState([]);
+  const [single, setSingle] = React.useState(null);
+  
+  const theme = useTheme();
+  function handleChangeSingle(value) {
+    setSingle(value);
+    setInput('customer_contact',value.value);
+    console.log('value===',value)
+  }
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -193,6 +227,11 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     }
   };
 
+  const customerName =
+  (customerListData.length > 0 ? customerListData : []).map(suggestion => ({
+  
+    value: suggestion.mobile,
+    label: suggestion.customer_name,}));
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -202,6 +241,9 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
         const result = await Lead.franchiseList();
         setFranchiseList(result.franchiseList);
         // console.log('usrlist---',result.franchiseList);
+        const resultCustomer = await Customer.list();
+        setCustomerListData(resultCustomer.customerList);
+        console.log('resultCustomer.customerList====',resultCustomer.customerList)
       } catch (error) {
         setIsError(true);
       }
@@ -211,6 +253,224 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     
   }, []);
 
+  // function NoOptionsMessage(props) {
+  //   return (
+  //     <Typography
+  //       color="textSecondary"
+  //       className={props.selectProps.classesCustomer.noOptionsMessage}
+  //       {...props.innerProps}
+  //     >
+  //       {props.children}
+  //     </Typography>
+  //   );
+  // }
+  
+  // NoOptionsMessage.propTypes = {
+  //   /**
+  //    * The children to be rendered.
+  //    */
+  //   children: PropTypes.node,
+  //   /**
+  //    * Props to be passed on to the wrapper.
+  //    */
+  //   innerProps: PropTypes.object.isRequired,
+  //   selectProps: PropTypes.object.isRequired
+  // };
+  
+  // function inputComponent({ inputRef, ...props }) {
+  //   return <div ref={inputRef} {...props} />;
+  // }
+  
+  // inputComponent.propTypes = {
+  //   inputRef: PropTypes.oneOfType([
+  //     PropTypes.func,
+  //     PropTypes.shape({
+  //       current: PropTypes.any.isRequired
+  //     })
+  //   ])
+  // };
+  
+  // function Control(props) {
+  //   const {
+  //     children,
+  //     innerProps,
+  //     innerRef,
+  //     selectProps: { classesCustomer, TextFieldProps }
+  //   } = props;
+  
+  //   return (
+  //     <TextField
+  //       fullWidth
+  //       InputProps={{
+  //         inputComponent,
+  //         inputProps: {
+  //           className: classesCustomer.input,
+  //           ref: innerRef,
+  //           children,
+  //           ...innerProps
+  //         }
+  //       }}
+  //       {...TextFieldProps}
+  //     />
+  //   );
+  // }
+  
+  // Control.propTypes = {
+  //   /**
+  //    * Children to render.
+  //    */
+  //   children: PropTypes.node,
+  //   /**
+  //    * The mouse down event and the innerRef to pass down to the controller element.
+  //    */
+  //   innerProps: PropTypes.shape({
+  //     onMouseDown: PropTypes.func.isRequired
+  //   }).isRequired,
+  //   innerRef: PropTypes.oneOfType([
+  //     PropTypes.oneOf([null]),
+  //     PropTypes.func,
+  //     PropTypes.shape({
+  //       current: PropTypes.any.isRequired
+  //     })
+  //   ]).isRequired,
+  //   selectProps: PropTypes.object.isRequired
+  // };
+  
+  // function Option(props) {
+  //   return (
+  //     <MenuItem
+  //       ref={props.innerRef}
+  //       selected={props.isFocused}
+  //       component="div"
+  //       style={{
+  //         fontWeight: props.isSelected ? 500 : 400
+  //       }}
+  //       {...props.innerProps}
+  //     >
+  //       {props.children}
+  //     </MenuItem>
+  //   );
+  // }
+  
+  // Option.propTypes = {
+  //   /**
+  //    * The children to be rendered.
+  //    */
+  //   children: PropTypes.node,
+  //   /**
+  //    * props passed to the wrapping element for the group.
+  //    */
+  //   innerProps: PropTypes.shape({
+  //     id: PropTypes.string.isRequired,
+  //     key: PropTypes.string.isRequired,
+  //     onClick: PropTypes.func.isRequired,
+  //     onMouseMove: PropTypes.func.isRequired,
+  //     onMouseOver: PropTypes.func.isRequired,
+  //     tabIndex: PropTypes.number.isRequired
+  //   }).isRequired,
+  //   /**
+  //    * Inner ref to DOM Node
+  //    */
+  //   innerRef: PropTypes.oneOfType([
+  //     PropTypes.oneOf([null]),
+  //     PropTypes.func,
+  //     PropTypes.shape({
+  //       current: PropTypes.any.isRequired
+  //     })
+  //   ]).isRequired,
+  //   /**
+  //    * Whether the option is focused.
+  //    */
+  //   isFocused: PropTypes.bool.isRequired,
+  //   /**
+  //    * Whether the option is selected.
+  //    */
+  //   isSelected: PropTypes.bool.isRequired
+  // };
+  
+  // function Placeholder(props) {
+  //   const { selectProps, innerProps = {}, children } = props;
+  //   return (
+  //     <Typography
+  //       color="textSecondary"
+  //       className={selectProps.classesCustomer.placeholder}
+  //       {...innerProps}
+  //     >
+  //       {children}
+  //     </Typography>
+  //   );
+  // }
+  
+  // Placeholder.propTypes = {
+  //   /**
+  //    * The children to be rendered.
+  //    */
+  //   children: PropTypes.node,
+  //   /**
+  //    * props passed to the wrapping element for the group.
+  //    */
+  //   innerProps: PropTypes.object,
+  //   selectProps: PropTypes.object.isRequired
+  // };
+  
+  // function SingleValue(props) {
+  //   return (
+  //     <Typography
+  //       className={props.selectProps.classesCustomer.singleValue}
+  //       {...props.innerProps}
+  //     >
+  //       {props.children}
+  //     </Typography>
+  //   );
+  // }
+  
+  // SingleValue.propTypes = {
+  //   /**
+  //    * The children to be rendered.
+  //    */
+  //   children: PropTypes.node,
+  //   /**
+  //    * Props passed to the wrapping element for the group.
+  //    */
+  //   innerProps: PropTypes.any.isRequired,
+  //   selectProps: PropTypes.object.isRequired
+  // };
+  
+  // function ValueContainer(props) {
+  //   return (
+  //     <div className={props.selectProps.classesCustomer.valueContainer}>
+  //       {props.children}
+  //     </div>
+  //   );
+  // }
+  
+  // ValueContainer.propTypes = {
+  //   /**
+  //    * The children to be rendered.
+  //    */
+  //   children: PropTypes.node,
+  //   selectProps: PropTypes.object.isRequired
+  // };
+  
+  // const components = {
+  //   Control,
+  //   NoOptionsMessage,
+  //   Option,
+  //   Placeholder,
+  //   SingleValue,
+  //   ValueContainer
+  // };
+  
+ 
+  const selectStyles = {
+    input: base => ({
+      ...base,
+      color: theme.palette.text.primary,
+      "& input": {
+        font: "inherit"
+      }
+    })
+  };
   
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -255,7 +515,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       is_active: 1,
       franchise_name: otherFranchiseValue,
       is_franchise_exist: inputs.is_franchise_exist,
-      customer_name: inputs.customer_name,
+      customer_name: single.label,
       customer_contact: inputs.customer_contact,
       
     };
@@ -299,225 +559,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       setOtherFranchiseValue(event.target.value)
     }
 
-   
-function NoOptionsMessage(props) {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.noOptionsMessage}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-NoOptionsMessage.propTypes = {
-  /**
-   * The children to be rendered.
-   */
-  children: PropTypes.node,
-  /**
-   * Props to be passed on to the wrapper.
-   */
-  innerProps: PropTypes.object.isRequired,
-  selectProps: PropTypes.object.isRequired
-};
-
-function inputComponent({ inputRef, ...props }) {
-  return <div ref={inputRef} {...props} />;
-}
-
-inputComponent.propTypes = {
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired
-    })
-  ])
-};
-
-function Control(props) {
-  const {
-    children,
-    innerProps,
-    innerRef,
-    selectProps: { classes, TextFieldProps }
-  } = props;
-
-  return (
-    <TextField
-      fullWidth
-      InputProps={{
-        inputComponent,
-        inputProps: {
-          className: classes.input,
-          ref: innerRef,
-          children,
-          ...innerProps
-        }
-      }}
-      {...TextFieldProps}
-    />
-  );
-}
-
-Control.propTypes = {
-  /**
-   * Children to render.
-   */
-  children: PropTypes.node,
-  /**
-   * The mouse down event and the innerRef to pass down to the controller element.
-   */
-  innerProps: PropTypes.shape({
-    onMouseDown: PropTypes.func.isRequired
-  }).isRequired,
-  innerRef: PropTypes.oneOfType([
-    PropTypes.oneOf([null]),
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired
-    })
-  ]).isRequired,
-  selectProps: PropTypes.object.isRequired
-};
-
-function Option(props) {
-  return (
-    <MenuItem
-      ref={props.innerRef}
-      selected={props.isFocused}
-      component="div"
-      style={{
-        fontWeight: props.isSelected ? 500 : 400
-      }}
-      {...props.innerProps}
-    >
-      {props.children}
-    </MenuItem>
-  );
-}
-
-Option.propTypes = {
-  /**
-   * The children to be rendered.
-   */
-  children: PropTypes.node,
-  /**
-   * props passed to the wrapping element for the group.
-   */
-  innerProps: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    key: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-    onMouseMove: PropTypes.func.isRequired,
-    onMouseOver: PropTypes.func.isRequired,
-    tabIndex: PropTypes.number.isRequired
-  }).isRequired,
-  /**
-   * Inner ref to DOM Node
-   */
-  innerRef: PropTypes.oneOfType([
-    PropTypes.oneOf([null]),
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired
-    })
-  ]).isRequired,
-  /**
-   * Whether the option is focused.
-   */
-  isFocused: PropTypes.bool.isRequired,
-  /**
-   * Whether the option is selected.
-   */
-  isSelected: PropTypes.bool.isRequired
-};
-
-function Placeholder(props) {
-  const { selectProps, innerProps = {}, children } = props;
-  return (
-    <Typography
-      color="textSecondary"
-      className={selectProps.classes.placeholder}
-      {...innerProps}
-    >
-      {children}
-    </Typography>
-  );
-}
-
-Placeholder.propTypes = {
-  /**
-   * The children to be rendered.
-   */
-  children: PropTypes.node,
-  /**
-   * props passed to the wrapping element for the group.
-   */
-  innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired
-};
-
-function SingleValue(props) {
-  return (
-    <Typography
-      className={props.selectProps.classes.singleValue}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-SingleValue.propTypes = {
-  /**
-   * The children to be rendered.
-   */
-  children: PropTypes.node,
-  /**
-   * Props passed to the wrapping element for the group.
-   */
-  innerProps: PropTypes.any.isRequired,
-  selectProps: PropTypes.object.isRequired
-};
-
-function ValueContainer(props) {
-  return (
-    <div className={props.selectProps.classes.valueContainer}>
-      {props.children}
-    </div>
-  );
-}
-
-ValueContainer.propTypes = {
-  /**
-   * The children to be rendered.
-   */
-  children: PropTypes.node,
-  selectProps: PropTypes.object.isRequired
-};
-
-const selectStyles = {
-  input: base => ({
-    ...base,
-    color: theme.palette.text.primary,
-    '& input': {
-      font: 'inherit',
-    },
-  }),
-};
-const components = {
-  Control,
-  NoOptionsMessage,
-  Option,
-  Placeholder,
-  SingleValue,
-  ValueContainer
-};
-
-  
+     
     const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
       RESET_VALUES,
       addLead,
@@ -546,8 +588,8 @@ return (
           </AppBar>
 
           <div className={classes.root}>
-         
-          <Grid item xs={12} sm={12}>  
+
+            <Grid item xs={12} sm={12}>  
            {ploading ?  <LinearProgress />: null}</Grid>
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
@@ -573,7 +615,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="last_name">Franchise</InputLabel>
-                      <Select
+                      <BasicSelect
                         value={inputs.franchise_id}
                         onChange = {handleFranchise}
                         inputProps={{
@@ -595,7 +637,7 @@ return (
                           );
                         })}
                         <MenuItem className={classes.textsize} value={'0'}>{'All'}</MenuItem> 
-                      </Select>
+                      </BasicSelect>
                   </Grid>
                     {/* <Grid item xs={12} sm={3}>
                       <TextField 
@@ -658,26 +700,46 @@ return (
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="customer_name">Customer Name </InputLabel>
                       
-      {/* <NoSsr>
-                      <Select
-                        classes={classes}
+                    <NoSsr>
+                       <Select
+                        className={classes.cn }
                         styles={selectStyles}
                         inputId="customer_name"
                         TextFieldProps={{
-                          label: 'Country',
                           InputLabelProps: {
                             htmlFor: 'customer_name',
                             shrink: true,
                           },
                         }}
                         fullWidth
-                        placeholder="Search a country (start with a)"
-                        options={suggestions}
-                        components={components}
-                        value={inputs.customer_name}
-                        onChange={handleInputChange}
-                      />      </NoSsr>                 */}
-                    <TextField 
+                        options={customerName}
+                        // components={components}
+                        value={single}
+                        onChange={handleChangeSingle}
+                      />                     
+                      {/* <Select 
+                      id="customer_name"
+                      name="customer_name"
+                      margin="dense"
+                      classes={classesCustomer}
+                      styles={selectStyles}
+                      value={single}
+                      
+                      autoComplete='off'
+                      TextFieldProps={{
+                        label: 'Country',
+                        InputLabelProps: {
+                          htmlFor: 'customer_name',
+                          shrink: true,
+                        },
+                        form: {
+                          autocomplete: "off",
+                        }
+                      }}
+                      fullWidth onChange={handleChangeSingle}
+                       options={ customerName } /> */}
+                       </NoSsr> 
+                    {/* <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -695,7 +757,7 @@ return (
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
-                    />
+                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="customer_contact">Customer Contact </InputLabel>

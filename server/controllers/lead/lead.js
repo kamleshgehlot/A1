@@ -125,4 +125,19 @@ const filter = async function (req, res, next) {
   }
 };
 
-module.exports = { add, all, last, addComment, allComment, franchiseList, convertedList, filter};
+const search = async function (req, res, next) {
+  let leadParams = {
+    user_id: req.decoded.user_id,
+    searchText: req.body.searchText,
+  };
+	try{
+    const newLead = new Lead(leadParams);
+    const result = await newLead.searchData({ user_id: req.decoded.user_id });
+
+    res.send({ leadList: result });
+	}catch(err){
+    next(error);
+	}
+};
+
+module.exports = { add, all, last, addComment, allComment, franchiseList, convertedList, filter, search};

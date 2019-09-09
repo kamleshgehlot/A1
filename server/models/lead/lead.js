@@ -29,6 +29,8 @@ const Lead = function (params) {
   }
   this.uid = params.uid;
   this.filter_id = params.filter_id;
+  
+  this.searchText = params.searchText;
   // console.log('params------',params);
 };
 
@@ -368,6 +370,58 @@ Lead.prototype.filter = function () {
   });
 
 }
+
+
+Lead.prototype.searchData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        if (that.user_id != "admin") {
+          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
+            if (!error) {
+              // resolve(rows);
+              const franchise_id = rows[0].franchise_id;
+              connection.changeUser({ database: dbName["prod"] });
+              connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (f_id="' + franchise_id + '" OR franchise_id="' + franchise_id + '" OR franchise_id="0") AND ( customer_name LIKE "%'+that.searchText+'%" OR customer_contact LIKE "%'+that.searchText+'%") order by id desc', function (error, rows, fields) {
+                if (!error) {
+                  resolve(rows);
+  
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+              });
+            }
+          });
+        }
+        else {
+  
+          connection.changeUser({ database: dbName["prod"] });
+          connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND ( f_id="0" OR franchise_id=0 ) AND ( customer_name LIKE "%'+that.searchText+'%" OR customer_contact LIKE "%'+that.searchText+'%") order by id desc', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+  
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }
+
+
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+      }
+  
+    });});
+  }
+
 
 
 module.exports = Lead;

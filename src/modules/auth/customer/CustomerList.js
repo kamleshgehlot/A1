@@ -290,7 +290,7 @@ export default function CustomerList({userId, roleName}) {
               <AddIcon className={classes.extendedIcon} />
               Customers
             </Fab>
-          </Grid>
+          </Grid>   
             <Grid item xs={12} sm={4}>
               <TextField
                 margin="dense"

@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
+import AutoSelect from 'react-select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
@@ -34,6 +35,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Category from '../../../../src/api/Category';
 import EnquiryAPI from '../../../api/franchise/Enquiry';
 
+import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
@@ -113,6 +115,9 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   const [subCategory, setSubCategory] = React.useState('');
   
 
+  const [customerListData, setCustomerListData] = useState([]);
+  const [single, setSingle] = React.useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -132,6 +137,8 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
 
         const category_list = await Category.mainCategoryList();
         setMainCategoryList(category_list.mainCategoryList);
+        const resultCustomer = await Customer.list();
+        setCustomerListData(resultCustomer.customerList);
        
       } catch (error) {
         console.log(error);
@@ -142,7 +149,17 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   }, []);
   
   
+  const customerName =
+  (customerListData.length > 0 ? customerListData : []).map(suggestion => ({
+  
+    value: suggestion.mobile,
+    label: suggestion.customer_name,}));
 
+    function handleChangeSingle(value) {
+      setSingle(value);
+      setInput('customer_contact',value.value);
+      console.log('value===',value)
+    }
   function handleMainCategory(event) {
     setInput('main_category',event.target.value)
     setMainCategory(event.target.value);
@@ -294,7 +311,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel>
-                    <TextField
+                    {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -311,7 +328,21 @@ return (
                       helperText={errors.customer_name}
                       required
                       fullWidth
-                    />
+                    /> */}
+                     <AutoSelect
+                        inputId="customer_name"
+                        TextFieldProps={{
+                          InputLabelProps: {
+                            htmlFor: 'customer_name',
+                            shrink: true,
+                          },
+                        }}
+                        fullWidth
+                        options={customerName}
+                        // components={components}
+                        value={single}
+                        onChange={handleChangeSingle}
+                      />      
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="contact">Contact *</InputLabel>

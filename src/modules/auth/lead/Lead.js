@@ -77,6 +77,8 @@ export default function Lead({roleName}) {
   const [openConvertedLeads,setConvertedLeads] = useState(false);
   const [openView, setViewOpen] = useState(false);
   const [leadList, setLeadList] = useState({});
+  const [searchText, setSearchText]  = useState('');
+
   
   const [franchiseId, setFranchiseId] = useState();
   const [openOrder, setOpenOrder] = useState(false);
@@ -297,6 +299,9 @@ console.log(leadList)
     setEnquiryList(response);
   }
 
+  function handleSearchText(event){
+    setSearchText(event.target.value);
+  }
  
   const handleFilter = async (event) => {
     setFilterId(event.target.value);
@@ -312,6 +317,7 @@ console.log(leadList)
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
   };
+
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -332,6 +338,22 @@ console.log(leadList)
     setValue(newValue);
     // console.log('setValue...',value)
   }
+  const searchHandler = async () => {
+    try {
+    if(searchText!=''){
+      
+      const result = await LeadAPI.search({searchText: searchText});
+      setLeadList(result.leadList);
+      setSearchText('');
+    }else{
+      const result = await LeadAPI.list();
+      setLeadList(result.leadList);
+      setSearchText('');
+    }} catch (error) {
+      console.log('error',error);
+    }
+  }
+
   return (
     <div>
       {/* {showFranchise ?  */}
@@ -356,33 +378,25 @@ console.log(leadList)
                 name="search"
                 label="Search"
                 type="text"
-                // value={searchText} 
-                // onKeyPress={(ev) => {
-                //   if (ev.key ===  'Enter') {
-                //     searchHandler()
-                //     ev.preventDefault();
-                //   }
-                // }}
-                // onChange={handleSearchText}
-                // inputProps={{
-                //   endAdorment:(
-                //     <InputAdornment position='start'>
-                //       <SearchIcon />  ll 
-                //     </InputAdornment>
-                //   )
-                // }}
+                value={searchText} 
+                onKeyPress={(ev) => {
+                  if (ev.key ===  'Enter') {
+                    searchHandler()
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={handleSearchText}
+                
                 fullWidth
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>
                                   <Tooltip title="Search">
-                                    <IconButton><SearchIcon /></IconButton>
+                                  <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
                                   </Tooltip>
                                 </InputAdornment>,
                 }}
               />
-              {/* <IconButton  aria-label="Search" >
-                <SearchIcon />   
-              </IconButton> */}
+          
           </Grid>
          
 
