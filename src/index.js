@@ -4,6 +4,8 @@ import IdleTimer from 'react-idle-timer'
 
 import './styles.scss';
 
+import {APP_TOKEN} from './api/Constants';
+
 import App from './App';
  
 class YourApp extends Component {
@@ -34,26 +36,26 @@ class YourApp extends Component {
   }
  
   _onAction(e) {
-    console.log('user did something', e)
-    console.log("current tie", new Date())
+    // console.log('user did something', e)
+    // console.log("current tie", new Date())
 
   }
  
   _onActive(e) {
-    console.log('user is active', e)
-    console.log('time remaining', this.idleTimer.getRemainingTime())
-    console.log("current tie", new Date())
+    // console.log('user is active', e)
+    // console.log('time remaining', this.idleTimer.getRemainingTime())
+    // console.log("current tie", new Date())
 
     if( this.idleTimer.getRemainingTime() === 0) {
-      localStorage.removeItem('token');
+      APP_TOKEN.remove();
       window.location.reload()
     }
   }
  
   _onIdle(e) {
-    console.log('user is idle', e)
-    console.log('last active', this.idleTimer.getLastActiveTime())
-    console.log("current tie", new Date())
+    // console.log('user is idle', e)
+    // console.log('last active', this.idleTimer.getLastActiveTime())
+    // console.log("current tie", new Date())
 
   }
 }
