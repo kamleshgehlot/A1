@@ -515,7 +515,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       is_active: 1,
       franchise_name: otherFranchiseValue,
       is_franchise_exist: inputs.is_franchise_exist,
-      customer_name: inputs.customer_name,
+      customer_name: single.label,
       customer_contact: inputs.customer_contact,
       
     };
@@ -700,7 +700,7 @@ return (
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="customer_name">Customer Name </InputLabel>
                       
-                    {/* <NoSsr>
+                    <NoSsr>
                        <Select
                         className={classes.cn }
                         styles={selectStyles}
@@ -737,9 +737,9 @@ return (
                         }
                       }}
                       fullWidth onChange={handleChangeSingle}
-                       options={ customerName } /> 
-                       </NoSsr>  */}
-                    <TextField 
+                       options={ customerName } /> */}
+                       </NoSsr> 
+                    {/* <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -757,7 +757,7 @@ return (
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
-                    />
+                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="customer_contact">Customer Contact </InputLabel>
