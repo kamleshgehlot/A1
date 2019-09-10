@@ -82,6 +82,10 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(10),
     marginRight: theme.spacing(1),
   },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+   },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -301,16 +305,13 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
       <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+            <Toolbar>             
               <Typography variant="h6" className={classes.title}>
                 Edit Task
               </Typography>
-              {/* <Button onClick={addTaskMaster} color="inherit">
-                Update
-              </Button> */}
+              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
+                  <CloseIcon />
+              </IconButton>   
             </Toolbar>
           </AppBar>
 

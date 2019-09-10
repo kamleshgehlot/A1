@@ -98,7 +98,11 @@ const useStyles = makeStyles(theme => ({
   dropdwn:{
       // marginTop:theme.spacing(2.5),
       fontSize: theme.typography.pxToRem(12),
-  }
+  },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+   },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -274,16 +278,13 @@ return (
       <Dialog maxWidth="lg" open={open}  TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+            <Toolbar>           
               <Typography variant="h6" className={classes.title}>
                 Assign Task
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+              </IconButton>   
             </Toolbar>
           </AppBar>
 

@@ -109,6 +109,7 @@ const useStyles = makeStyles(theme => ({
   input: {
     display: 'none',
   },
+  closeIcon: { marginTop:theme.spacing(-3) },   
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -246,14 +247,12 @@ export default function AddProduct(props) {
               <Typography variant="h4" className={classes.title}>
                 Add Product
               </Typography>
-              {/* {savebtn?   <Button variant="contained" color="primary" onClick={handleSubmit} >
-                      Save
-                    </Button>:<Button variant="contained" color="primary" onClick={handleSubmit} disabled>
-                      Save
-                    </Button>} */}
-              {/* <Button color="inherit" onClick={handleSubmit}>
-                save
-              </Button> */}
+              <IconButton size="small" edge="start" color="inherit" onClick={props.handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+              </IconButton>  
+
+
+
             </Toolbar>
           </AppBar>
 

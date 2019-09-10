@@ -106,6 +106,9 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(10),
     margin: theme.spacing(1),
   },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+  },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
   }
@@ -294,7 +297,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               <Typography variant="h6" className={classes.title}>
                 Edit Franchise
               </Typography>
-              
+              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
+                  <CloseIcon />
+              </IconButton>  
             </Toolbar>
           </AppBar>
 

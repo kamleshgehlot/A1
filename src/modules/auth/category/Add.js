@@ -70,6 +70,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
+  closeIcon: { marginTop:theme.spacing(-3) },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -331,6 +332,10 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
               <Typography variant="h6" className={classes.title}>
                 Add Product
               </Typography>
+              
+               <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+                </IconButton>
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
               </Button> */}
