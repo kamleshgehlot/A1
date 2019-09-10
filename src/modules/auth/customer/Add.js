@@ -31,7 +31,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import validate from '../../common/validation/CustomerRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
-
+import {useCommonStyles} from '../../common/StyleComman';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 import UserAPI from '../../../api/User';
@@ -132,6 +132,12 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
     color:'red',
   },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+    // fontSize: '10px',
+    marginRight:theme.spacing(-4),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -141,6 +147,8 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Add({ open, handleClose, handleSnackbarClick, setCustomerList, enquiryData, setCustomer}) {
 
+  
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [isLoading, setIsLoading] = useState(false);
@@ -317,17 +325,16 @@ return (
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Customer
               </Typography>
-              {/* {savebtn? <Button color="inherit" type="submit">
-                save
-              </Button>:<Button color="inherit" type="submit" disabled>
-                save
-              </Button>} */}
+              {/* 
+              import {useCommonStyles} from '../../common/StyleComman';
+              const styleClass = useCommonStyles();
+              */}
+              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={styleClass.closeIcon}> 'X'
+                  {/* <CloseIcon /> */} 
+                </IconButton>
             </Toolbar>
           </AppBar>
 

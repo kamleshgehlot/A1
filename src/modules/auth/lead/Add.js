@@ -124,7 +124,11 @@ const useStyles = makeStyles(theme => ({
   cn:{
     width:'100%',
     border:'0px'
-  }
+  },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+  },
 }));
 
 
@@ -573,17 +577,12 @@ return (
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Lead
               </Typography>
-              {/* {savebtn? <Button color="inherit" type="submit">
-                save
-              </Button> : <Button color="inherit" type="submit" disabled>
-                save
-              </Button>} */}
+              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+                </IconButton>
             </Toolbar>
           </AppBar>
 

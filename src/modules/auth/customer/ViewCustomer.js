@@ -123,12 +123,11 @@ const useStyles = makeStyles(theme => ({
   group: {
     // margin: theme.spacing(1, 0),
   },
-  closebtn:{
-    color:"white",
-    fontSize: theme.typography.pxToRem(10),
+  closeIcon: {
     marginTop:theme.spacing(-3),
-
-  }
+    color: 'white',
+    fontSize: 3,
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -270,12 +269,13 @@ return (
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" className={classes.closebtn} onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
+              
               <Typography variant="h6" className={classes.title}>
                 Customer Detail
               </Typography>
+              <IconButton edge="start" color="inherit" className={classes.closebtn} onClick={handleClose} aria-label="Close">
+                <CloseIcon />
+              </IconButton>
             </Toolbar>
           </AppBar>
 

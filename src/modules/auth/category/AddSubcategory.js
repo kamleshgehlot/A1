@@ -92,6 +92,7 @@ const useStyles = makeStyles(theme => ({
   input: {
     display: 'none',
   },
+   closeIcon: { marginTop:theme.spacing(-3) },   
 }));
 
 
@@ -153,16 +154,13 @@ export default function AddSubcategory(props) {
       <Dialog maxWidth="sm" open={props.open}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+            <Toolbar>              
               <Typography variant="h6" className={classes.title}>
                 Sub Category Creation Panel
               </Typography>
-              {/* <Button color="inherit" onClick={handleSubmit}>
-                save
-              </Button> */}
+              <IconButton size="small" edge="start" color="inherit" onClick={props.handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+                </IconButton>    
             </Toolbar>
           </AppBar>
 

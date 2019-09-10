@@ -85,7 +85,11 @@ const useStyles = makeStyles(theme => ({
   dropdwn:{
       // marginTop:theme.spacing(2.5),
       fontSize: theme.typography.pxToRem(12),
-  }
+  },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -203,15 +207,12 @@ console.log('task status',taskStatus);
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleStaffEditClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Update Task
               </Typography>
-              {/* <Button onClick={addTaskMaster} color="inherit">
-                Update
-              </Button> */}
+              <IconButton size="small" edge="start" color="inherit" onClick={handleStaffEditClose} className={classes.closeIcon}>
+                  <CloseIcon />
+              </IconButton>        
             </Toolbar>
           </AppBar>
 

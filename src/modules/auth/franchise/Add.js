@@ -29,7 +29,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-
+import {useCommonStyles} from '../../common/StyleComman';
 import validate from '../../common/validation/FranchiseRuleValidation';
 // import validateEdit from '../../common/validation/FranchiseEditValidation';
 
@@ -91,6 +91,9 @@ const useStyles = makeStyles(theme => ({
     color:"white",
     marginTop:theme.spacing(-3),
   },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+  },
   root: {
     flexGrow: 1,
   },
@@ -146,6 +149,8 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, setFranchiseId }) {
   const classes = useStyles();
+  const styleClass = useCommonStyles();
+
   const [cityList, setCityList] = useState([]);
   const [directorList, setDirectorList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -486,11 +491,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
               <Typography variant="h6" className={classes.title}>
                 Add Franchise
               </Typography>
-             {/* {savebtn? <Button color="inherit" type="submit">
-                save
-              </Button>:<Button color="inherit" type="submit" disabled>
-                save
-              </Button>} */}
+          
+              {/* <Fab variant="round" size="small" className={styleClass.closeIcon} onClick={handleClose}>
+                x
+              </Fab> */}
+                <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}>
+                  {/* <CloseIcon />  */}
+                  x
+                </IconButton>
+               
             </Toolbar>
           </AppBar>
 

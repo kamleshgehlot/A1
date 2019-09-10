@@ -65,7 +65,8 @@ const useStyles = makeStyles(theme => ({
   },
   dropdwn:{
       marginTop:theme.spacing(2.5),
-  }
+  },
+  closeIcon: { marginTop:theme.spacing(-3) },  
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -127,16 +128,13 @@ return (
   <div>
     <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleArchivedClose} aria-label="Close">
-              <CloseIcon />
-            </IconButton>
+          <Toolbar>           
             <Typography variant="h6" className={classes.title}>
               Archived Product List
             </Typography>
-            {/* <Button color="inherit" type="submit">
-              save
-            </Button> */}
+            <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+            </IconButton>  
           </Toolbar>
         </AppBar>
 

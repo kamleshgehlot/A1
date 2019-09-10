@@ -98,6 +98,7 @@ const useStyles = makeStyles(theme => ({
   input: {
     display: 'none',
   },
+  closeIcon: { marginTop:theme.spacing(-3) },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -180,6 +181,9 @@ export default function AddCategory(props) {
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
               </Button> */}
+               <IconButton size="small" edge="start" color="inherit" onClick={props.handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+                </IconButton>      
             </Toolbar>
           </AppBar>
 

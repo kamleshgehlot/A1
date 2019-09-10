@@ -128,6 +128,10 @@ const useStyles = makeStyles(theme => ({
   group: {
     fontSize: theme.typography.pxToRem(12),
   },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -285,17 +289,13 @@ function handleIdType(event){
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+         
               <Typography variant="h6" className={classes.title}>
                 Edit Customer
               </Typography>
-              {/* {savebtn? <Button color="inherit" type="submit" onClick={editCustomer}>
-                save
-              </Button> : <Button color="inherit" type="submit" onClick={editCustomer} disabled>
-                save
-              </Button>} */}
+              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
+                  <CloseIcon />
+                </IconButton>
             </Toolbar>
           </AppBar>
 
