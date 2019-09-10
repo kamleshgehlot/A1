@@ -17,6 +17,8 @@ var Enquiry = function (params) {
   this.convert_by_lead=params.convert_by_lead;
   this.userid = params.userid;
   this.franchise_id=params.franchise_id;
+  this.searchText=params.searchText;
+  
 };
 
 Enquiry.prototype.postenquiry = function () {
@@ -247,5 +249,40 @@ Enquiry.prototype.getnewid = function () {
     throw error;
   });
 };
+
+Enquiry.prototype.searchData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        // connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
+          connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry where customer_name LIKE "%'+that.searchText+'%" order by id desc',function (error, rows, fields) {
+     
+            if (!error) {
+              // console.log("rows...",rows);
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry searched for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+  }
+
 
 module.exports = Enquiry;

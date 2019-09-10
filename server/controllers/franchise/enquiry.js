@@ -80,4 +80,19 @@ const postenquiry = async function (req, res, next) {
 	}
 };
 
-module.exports = { getnewid, postenquiry, getAll, nonConvertList, convert, convertedList};
+
+const search = async function (req, res, next) {
+  let EnquiryParams = {
+    user_id: req.decoded.user_id,
+    searchText: req.body.searchText,
+  };
+	try{
+    const newEnquiry = new Enquiry(EnquiryParams);
+    const result = await newEnquiry.searchData({ user_id: req.decoded.user_id });
+
+    res.send({ enquiryList: result });
+	}catch(err){
+    next(error);
+	}
+};
+module.exports = { getnewid, postenquiry, getAll, nonConvertList, convert, convertedList,search};

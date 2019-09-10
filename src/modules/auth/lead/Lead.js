@@ -278,7 +278,6 @@ export default function Lead({roleName}) {
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
-console.log(leadList)
   function handleConvertedLeadsClickOpen(){
     setConvertedLeads(true);
   }
@@ -391,7 +390,7 @@ console.log(leadList)
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>
                                   <Tooltip title="Search">
-                                  <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
                                   </Tooltip>
                                 </InputAdornment>,
                 }}
@@ -562,7 +561,6 @@ console.log(leadList)
                                 }) : <StyledTableCell> Master Admin</StyledTableCell>
                               }
                             <StyledTableCell>{data.message}</StyledTableCell>
-                            {/* {console.log('datafrc.id---',data.converted_by_f_id)} */}
                             {data.converted_by_f_id!=0 ?(franchiseListd.length > 0 ? franchiseListd : []).map((datafrc, index1)=>{
                                   
                                   return(

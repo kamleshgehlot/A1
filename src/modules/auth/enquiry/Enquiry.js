@@ -67,6 +67,8 @@ export default function Enquiry({roleName}) {
   const [convertEnquiryId,setConvertEnquiryId]= useState();
   const [convertList,setConvertList] = useState([]);
   const [customer, setCustomer] = useState({});
+  
+  const [searchText, setSearchText]  = useState('');
   //value is for tabs  
   const [value, setValue] = React.useState(0);
   const drawerWidth = 240;
@@ -205,6 +207,10 @@ export default function Enquiry({roleName}) {
     setOpenOrder(false);
   }
 
+  function handleSearchText(event){
+    setSearchText(event.target.value);
+  }
+
   function setEnquiryListFn(response) {
 // console.log('res=---',response);
     const fetchData = async () => {
@@ -229,6 +235,21 @@ export default function Enquiry({roleName}) {
   
 console.log(enquiryList);
 
+  const searchHandler = async () => {
+    try {
+    if(searchText!=''){
+      
+      const result = await EnquiryAPI.search({searchText: searchText});
+      setEnquiryList(result.enquiryList);
+      setSearchText('');
+    }else{
+      const result = await EnquiryAPI.list();
+      setEnquiryList(result.enquiryList);
+      setSearchText('');
+    }} catch (error) {
+      console.log('error',error);
+    }
+  }
   
   TabPanel.propTypes = {
     children: PropTypes.node,
@@ -280,33 +301,23 @@ console.log(enquiryList);
                 name="search"
                 label="Search"
                 type="text"
-                // value={searchText} 
-                // onKeyPress={(ev) => {
-                //   if (ev.key ===  'Enter') {
-                //     searchHandler()
-                //     ev.preventDefault();
-                //   }
-                // }}
-                // onChange={handleSearchText}
-                // inputProps={{
-                //   endAdorment:(
-                //     <InputAdornment position='start'>
-                //       <SearchIcon />  ll 
-                //     </InputAdornment>
-                //   )
-                // }}
+                value={searchText} 
+                onKeyPress={(ev) => {
+                  if (ev.key ===  'Enter') {
+                    searchHandler()
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={handleSearchText}
                 fullWidth
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>
                                   <Tooltip title="Search">
-                                    <IconButton><SearchIcon /></IconButton>
+                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
                                   </Tooltip>
                                 </InputAdornment>,
                 }}
               />
-              {/* <IconButton  aria-label="Search" >
-                <SearchIcon />   
-              </IconButton> */}
           </Grid>
          
           {/* <Grid item xs={12} sm={4}>
