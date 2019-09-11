@@ -17,25 +17,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
-import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
 
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { APP_TOKEN } from '../../../api/Constants';
 
 import validate from '../../common/validation/LeadRuleValidation';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
+import AutoSuggestDropdown from './AutoSuggestDropdown';
 import  Placeholder from './autofill';
 
 import UserAPI from '../../../api/User';
@@ -124,7 +114,11 @@ const useStyles = makeStyles(theme => ({
   cn:{
     width:'100%',
     border:'0px'
-  }
+  },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+  },
 }));
 
 
@@ -515,7 +509,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       is_active: 1,
       franchise_name: otherFranchiseValue,
       is_franchise_exist: inputs.is_franchise_exist,
-      customer_name: single.label,
+      customer_name: inputs.customer_name,
       customer_contact: inputs.customer_contact,
       
     };
@@ -573,17 +567,12 @@ return (
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Lead
               </Typography>
-              {/* {savebtn? <Button color="inherit" type="submit">
-                save
-              </Button> : <Button color="inherit" type="submit" disabled>
-                save
-              </Button>} */}
+              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
+                  <CloseIcon />
+                </IconButton>
             </Toolbar>
           </AppBar>
 
@@ -698,9 +687,11 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="customer_name">Customer Name </InputLabel>
+                    <AutoSuggestDropdown customerListData={customerListData}/>
+
+                    {/* <InputLabel  className={classes.textsize} htmlFor="customer_name">Customer Name </InputLabel> */}
                       
-                    <NoSsr>
+                    {/* <NoSsr>
                        <Select
                         className={classes.cn }
                         styles={selectStyles}
@@ -737,8 +728,8 @@ return (
                         }
                       }}
                       fullWidth onChange={handleChangeSingle}
-                       options={ customerName } /> */}
-                       </NoSsr> 
+                       options={ customerName } /> 
+                       </NoSsr>  */}
                     {/* <TextField 
                       InputProps={{
                         classes: {
