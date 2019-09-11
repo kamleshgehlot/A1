@@ -28,7 +28,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 //files
-import AddLead from './Add';
+import AddLead from './Addbp';
 import Comment from './Comment';
 import Add from '../enquiry/Add';
 import ConvertedLeads from './ConvertedLeads';
