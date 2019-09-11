@@ -29,7 +29,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {useCommonStyles} from '../../common/StyleComman'; 
 
 
-import validate from '../../common/validation/OrderRuleValidation';
+// import validate from '../../common/validation/OrderRuleValidation';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -228,6 +228,10 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     // });
   }, []);
 
+  function validate(values) {
+    let errors = {};    
+    return errors;
+  }
 //  console.log('assign,,,',assignInterest);
   function handleBudgetClose(){
     setBudgetOpen(false);
@@ -331,7 +335,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
 
 
 
-  const editOrder = async (event) => {
+  const editOrder = async (event) => {    
       // if(budgetList == null) {
     //   const budget = await Order.getCurrespondingBudget({budgetId: inputs.budget_id});
     //   // console.log('budgetlist',budget.order[0]);
@@ -577,22 +581,12 @@ return (
                     </Select>
                    </Grid>
                    
-                   {savebtn?     
-                   <Grid item xs={12} sm={12}>
-                    
-                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                   
+                   <Grid item xs={12} sm={12}>                    
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {!savebtn}>
                       save
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
-                      Close
-                    </Button>
-                  </Grid>:
-                  <Grid item xs={12} sm={12}>
-                    
-                    <Button  variant="contained"  color="primary" className={classes.button} disabled>
-                      save
-                    </Button>
-                    <Button variant="contained" color="primary" disabled className={classes.button}>
                       Close
                     </Button>
                   </Grid>

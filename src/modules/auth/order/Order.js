@@ -54,6 +54,7 @@ import Completed from './OrderComponent/Completed';
 
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import ProcessDialog from '../ProcessDialog.js';
+import CommentDialog from '../CommentDialog.js';
 
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
@@ -136,7 +137,7 @@ export default function Order({roleName}) {
   const [orderIdForUpload,setOrderIdForUpload] = useState(null);
   const [order,setOrder] = useState([]);
   const [snackbarContent, setSnackbarContent] = useState([]);
-  
+  const [commentBoxOpen,setCommentBoxOpen] = useState(false);
   // const [deliveryTabIndex, setDeliveryTabIndex] = useState();
   // const [completedTabIndex, setCompletedTabIndex] = useState();
   // const [deliveredTabIndex, setDeliveredTabIndex] = useState();
@@ -290,6 +291,10 @@ export default function Order({roleName}) {
   function handleProcessDialogClose(){
     setProcessDialog(false);
   }
+
+  function handleCommentBoxClose(){
+    setCommentBoxOpen(false);
+  }
   
 
   function handleUploadFile(orderId){
@@ -339,15 +344,18 @@ export default function Order({roleName}) {
             {
               const result = await OrderAPI.assignToFinance({assigned_to: 4, id: orderId});
               setOrder(result.order);
-              handleTabsData(result.order);
+              // setCommentBoxOpen(true);
+              handleTabsData(result.order);              
             }
           else if(nextStep === 'Delivery'){
             const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});
             setOrder(result.order);
+            // setCommentBoxOpen(true);
             handleTabsData(result.order);
           }else if(nextStep === 'Delivered'){
             const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_at: new Date().toString()});
             setOrder(result.order);
+            // setCommentBoxOpen(true);
             handleTabsData(result.order);
           }
         } catch (error) {
@@ -390,23 +398,6 @@ export default function Order({roleName}) {
   };
     fetchData();
   },[roleName]);
-
-
-  // function handleTabSettings(){
-  //   if(roleName === 'CSR') {
-  //     setDeliveryTabIndex(2);
-  //     setDeliveredTabIndex(3);
-  //     setCompletedTabIndex(4);
-  //   }
-  //   if(roleName === 'Finance') {
-  //     setDeliveryTabIndex(1);
-  //     setDeliveredTabIndex(2);
-  //     setCompletedTabIndex(3)
-  //   }
-  //   if(roleName === 'Delivery') {
-  //     setDeliveredTabIndex(1)
-  //   }   
-  // }
 
   TabPanel.propTypes = {
     children: PropTypes.node,
@@ -632,6 +623,7 @@ export default function Order({roleName}) {
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
+     {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} /> : null }
     </div>
   );
 }

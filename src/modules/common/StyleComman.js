@@ -31,6 +31,10 @@ export const useCommonStyles = makeStyles(theme => ({
   // table: {
   //   minWidth: 700,
   // },
+  commentBoxButton:{    
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
   fab:{
     marginRight: theme.spacing(1),
     fontSize: 12
