@@ -36,7 +36,7 @@ export const useCommonStyles = makeStyles(theme => ({
     color: 'white', 
     // paddingLeft: theme.spacing(1),
     // paddingRight: theme.spacing(1),
-    marginRight:theme.spacing(-4),
+    marginRight:theme.spacing(-2),
   },
 }));
 

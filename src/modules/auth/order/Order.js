@@ -302,7 +302,6 @@ export default function Order({roleName}) {
   function handleUploadFile(orderId){
     setUploadType('Documents');
     setOrderIdForUpload(orderId);
-    // document.getElementById('upload_document').click();
   }
 
   function handleDeliveryDoc(orderId){
@@ -392,7 +391,6 @@ export default function Order({roleName}) {
       }
   };
     fetchData();
-    // console.log('date88888', new Date().toString());
     handleTabSettings();       
   },[]);
 
@@ -465,16 +463,8 @@ export default function Order({roleName}) {
      <Grid container spacing={2}>
           <Grid item xs={12} sm={8}>
             {roleName === 'CSR' ? 
-            <Fab
-              variant="extended"
-              size="small"
-              // color="primary"
-              aria-label="Add"
-              className={classes.fonttransform}
-              onClick={handleClickOpen}
-            >
-            <AddIcon className={classes.extendedIcon} />
-              Order
+            <Fab variant="extended" size="small" aria-label="Add" className={classes.fonttransform} onClick={handleClickOpen}>
+              <AddIcon className={classes.extendedIcon} />  Order
             </Fab>
             : '' }
           </Grid>
@@ -509,10 +499,7 @@ export default function Order({roleName}) {
                                   </Tooltip>
                                 </InputAdornment>,
                 }}
-              />
-              {/* <IconButton  aria-label="Search" >
-                <SearchIcon />   
-              </IconButton> */}
+              />            
           </Grid>
           
           <Grid item xs={12} sm={12}>
@@ -528,6 +515,7 @@ export default function Order({roleName}) {
                   {roleName !=='Delivery' ? <Tab label="Completed" /> : ''}
                 </Tabs>
               </AppBar> 
+              
               { order && <Open order={order} value={value} roleName={roleName} 
               handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
               handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
