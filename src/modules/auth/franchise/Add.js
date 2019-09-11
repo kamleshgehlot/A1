@@ -485,20 +485,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
         <form  onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Add Franchise
               </Typography>
-          
-              {/* <Fab variant="round" size="small" className={styleClass.closeIcon} onClick={handleClose}>
-                x
-              </Fab> */}
-                <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}>
-                  {/* <CloseIcon />  */}
-                  x
-                </IconButton>
+              
+              {/* 
+              
+              import {useCommonStyles} from '../../common/StyleComman'; 
+              const styleClass = useCommonStyles();
+              */}
+
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
                
             </Toolbar>
           </AppBar>

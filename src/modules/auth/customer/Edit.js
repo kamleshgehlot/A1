@@ -25,7 +25,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/CustomerRuleValidation';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -140,7 +140,8 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Edit({ open, handleEditClose, handleSnackbarClick, inputValues, setCustomerList}) {
-
+  
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [customerList, setDataCustomerList] = React.useState(inputValues);
@@ -293,9 +294,8 @@ function handleIdType(event){
               <Typography variant="h6" className={classes.title}>
                 Edit Customer
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>
+              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
+
             </Toolbar>
           </AppBar>
 

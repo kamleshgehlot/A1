@@ -27,7 +27,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/EnquiryRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -101,6 +101,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList, convert}) {
 
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [assignError, setAssignError] = React.useState();
@@ -271,17 +272,11 @@ return (
       <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+
               <Typography variant="h6" className={classes.title}>
                 Add Enquiry
               </Typography>
-              {/* {savebtn? <Button color="inherit" type="submit">
-                save
-              </Button>:<Button color="inherit" type="submit" disabled>
-                save
-              </Button>} */}
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

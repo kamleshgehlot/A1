@@ -39,6 +39,7 @@ import AddCategory from './AddCategory';
 import AddSubcategory from './AddSubcategory';
 import AddProduct from './AddProduct';
 import useSignUpForm from '../franchise/CustomHooks';
+import {useCommonStyles} from '../../common/StyleComman'; 
 
 import { store, useStore } from '../../../store/hookStore';
 
@@ -116,6 +117,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Add({ open, handleClose, handleSnackbarClick, updateProductList}) {
   const classes = useStyles();
+  const styleClass = useCommonStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -333,9 +335,8 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
                 Add Product
               </Typography>
               
-               <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
               </Button> */}

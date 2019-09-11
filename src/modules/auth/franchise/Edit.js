@@ -30,7 +30,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import useSignUpForm from '../franchise/CustomHooks';
 import validateEdit from '../../common/validation/FranchiseEditValidation';
-
+import {useCommonStyles} from '../../common/StyleComman';
 // API CALL
 
 import UserAPI from '../../../api/User';
@@ -120,6 +120,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Edit({open, handleEditClose, handleSnackbarClick,  inputValues, setFranchiseList, setFranchiseId}) {
   const classes = useStyles();
+  const styleClass = useCommonStyles();
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
   const [franchise, setFranchise] = React.useState(inputValues);
@@ -291,15 +292,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Edit Franchise
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
-                  <CloseIcon />
-              </IconButton>  
+              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

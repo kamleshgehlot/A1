@@ -23,7 +23,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/ProductRuleValidation';
 import AddColor from './AddColor';
 import AddBrand from './AddBrand';
@@ -117,6 +117,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function AddProduct(props) {
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   
@@ -247,9 +248,8 @@ export default function AddProduct(props) {
               <Typography variant="h4" className={classes.title}>
                 Add Product
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={props.handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-              </IconButton>  
+              <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
+
 
 
 

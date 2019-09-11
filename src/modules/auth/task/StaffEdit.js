@@ -24,7 +24,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
@@ -116,7 +116,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 export default function StaffEdit({open, handleStaffEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList,uid}) {
   const classes = useStyles();
-  
+  const styleClass = useCommonStyles();
   const [staffList, setStaffList] = useState({});
   const [taskList, setTasksList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
@@ -210,9 +210,8 @@ console.log('task status',taskStatus);
               <Typography variant="h6" className={classes.title}>
                 Update Task
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleStaffEditClose} className={classes.closeIcon}>
-                  <CloseIcon />
-              </IconButton>        
+              <IconButton size="small" onClick={handleStaffEditClose} className={styleClass.closeIcon}> x </IconButton>              
+
             </Toolbar>
           </AppBar>
 

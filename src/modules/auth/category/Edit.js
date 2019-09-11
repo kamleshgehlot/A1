@@ -34,7 +34,7 @@ import ConfirmationDialog from '../ConfirmationDialog.js';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import useSignUpForm from '../franchise/CustomHooks';
 import validate from '../../common/validation/ProductRuleValidation';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AddColor from './AddColor';
 import AddBrand from './AddBrand';
@@ -120,6 +120,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Edit({open, handleEditClose, handleSnackbarClick, inputValues, updateProductList}) {
   const classes = useStyles();
+  const styleClass = useCommonStyles();  
   const [expanded, setExpanded] = React.useState('panel1');
   const [product, setProduct] = useState(inputValues);
   const [brandList, setBrandList] = useState([]);
@@ -246,9 +247,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
               <Typography variant="h6" className={classes.title}>
                 Update Product Details
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>     
+              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
+     
             </Toolbar>
           </AppBar>
 

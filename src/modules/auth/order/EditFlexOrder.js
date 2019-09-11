@@ -34,6 +34,8 @@ import Divider from '@material-ui/core/Divider';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -129,6 +131,8 @@ const Transition = React.forwardRef((props, ref) => {
 export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId}) {
 
   const classes = useStyles();
+  const styleClass = useCommonStyles();
+
   // const [inputs,setInputs] = useState([]);  
 
   
@@ -245,16 +249,11 @@ return (
       <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
         <form> 
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleFlexClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+            <Toolbar>            
               <Typography variant="h6" className={classes.title}>
                 Update Flex Order
-              </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              </Typography>              
+              <IconButton size="small" onClick={handleFlexClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

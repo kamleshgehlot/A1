@@ -31,7 +31,7 @@ import validate from '../../common/validation/CommentRuleValidation';
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
 import useSignUpForm from '../franchise/CustomHooks';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import { API_URL } from '../../../api/Constants';
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
@@ -88,11 +88,7 @@ const useStyles = makeStyles(theme => ({
   drpdwn:{
     marginTop: theme.spacing(1),
     fontSize: theme.typography.pxToRem(12),
-  },
-  closeIcon: {
-    marginTop:theme.spacing(-3),
-    color: 'white',
-  },
+  },  
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -119,7 +115,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 export default function Comment({open, handleViewClose, handleSnackbarClick, inputValues}) {
   const classes = useStyles();
-  
+  const styleClass = useCommonStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [staffList, setStaffList] = useState({});
   const [leadList, setLeadList] = React.useState(inputValues);
@@ -204,9 +200,7 @@ export default function Comment({open, handleViewClose, handleSnackbarClick, inp
               <Typography variant="h6" className={classes.title}>
                 View Lead
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleViewClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton> 
+              <IconButton size="small" onClick={handleViewClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

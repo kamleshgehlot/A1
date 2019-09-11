@@ -30,7 +30,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
 import Color from '../../../api/product/Color';
@@ -101,6 +101,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function AddColor(props) {
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [ploading, setpLoading] = React.useState(false);
   
@@ -164,9 +165,8 @@ export default function AddColor(props) {
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
               </Button> */}
-               <IconButton size="small" edge="start" color="inherit" onClick={props.handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>      
+      <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
+    
             </Toolbar>
           </AppBar>
 

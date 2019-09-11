@@ -33,6 +33,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 
 import { APP_TOKEN } from '../../../api/Constants';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
 
 // API CALL
 import Order from '../../../api/franchise/Order';
@@ -113,7 +115,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, input, budgetId}) {
-
+  const styleClass = useCommonStyles();  
   const classes = useStyles();
   const [inputs,setInputs] = useState(budgetList);
   const [oldBudget, setOldBudget] = useState(0);
@@ -267,16 +269,12 @@ return (
       <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleBudgetClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+            <Toolbar>              
               <Typography variant="h6" className={classes.title}>
                 Budget
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              <IconButton size="small" onClick={handleBudgetClose} className={styleClass.closeIcon}> x </IconButton>
+              
             </Toolbar>
           </AppBar>
 

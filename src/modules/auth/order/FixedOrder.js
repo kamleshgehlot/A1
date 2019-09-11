@@ -41,6 +41,9 @@ import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
 
 import useSignUpForm from '../franchise/CustomHooks';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
+
 import { FormLabel } from '@material-ui/core';
 import validate from '../../common/validation/FixedOrderValidation';
 
@@ -138,6 +141,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
 
   console.log('inputs',inputs)
   const classes = useStyles();
+  const styleClass = useCommonStyles();
   
   function fixed(e){
     // e.preventDefault();   
@@ -217,15 +221,10 @@ return (
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleFixedClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Fixed Order
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              <IconButton size="small" onClick={handleFixedClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

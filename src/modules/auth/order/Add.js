@@ -17,6 +17,9 @@ import Paper from '@material-ui/core/Paper';
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import IconButton from '@material-ui/core/IconButton';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
@@ -132,6 +135,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertId, converted_name}) {
 
+  const styleClass = useCommonStyles(); 
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
   const [customerOpen, setCustomerOpen] = useState(false);
@@ -446,15 +450,13 @@ return (
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+              
               <Typography variant="h6" className={classes.title}>
                 New Order
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              
+            <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+
             </Toolbar>
           </AppBar>
 

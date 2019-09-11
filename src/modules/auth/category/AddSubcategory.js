@@ -30,7 +30,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 // API CALL
 import Category from '../../../api/Category';
 
@@ -103,6 +103,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function AddSubcategory(props) {
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [errorSubcat, setErrorSubcat] = useState();
@@ -158,9 +159,8 @@ export default function AddSubcategory(props) {
               <Typography variant="h6" className={classes.title}>
                 Sub Category Creation Panel
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={props.handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>    
+            <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
+          
             </Toolbar>
           </AppBar>
 

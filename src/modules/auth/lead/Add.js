@@ -40,7 +40,7 @@ import  Placeholder from './autofill';
 
 import UserAPI from '../../../api/User';
 import Lead from '../../../api/Lead';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
@@ -125,10 +125,7 @@ const useStyles = makeStyles(theme => ({
     width:'100%',
     border:'0px'
   },
-  closeIcon: {
-    marginTop:theme.spacing(-3),
-    color: 'white',
-  },
+
 }));
 
 
@@ -191,7 +188,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function AddLead({ open, handleClose, handleSnackbarClick, setLeadList}) {
-
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const classesCustomer = useStylesCustomer();
 
@@ -580,9 +577,8 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Lead
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+
             </Toolbar>
           </AppBar>
 

@@ -30,6 +30,7 @@ import Task from '../../../api/Task';
 import Role from '../../../api/franchise/Role';
 // import Staff from '../../../api/franchise/Staff';
 import FranchiseUsers from '../../../api/FranchiseUsers';
+import {useCommonStyles} from '../../common/StyleComman'; 
 
 const RESET_VALUES = {
   id: '',
@@ -111,7 +112,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 export default function Edit({open, handleEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList}) {
   const classes = useStyles();
-  
+  const styleClass = useCommonStyles();
   const [staffListn, setStaffList] = useState({});
   const [taskList, setTasksList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
@@ -309,9 +310,8 @@ export default function Edit({open, handleEditClose, franchiseId, handleSnackbar
               <Typography variant="h6" className={classes.title}>
                 Edit Task
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
-                  <CloseIcon />
-              </IconButton>   
+              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>              
+   
             </Toolbar>
           </AppBar>
 

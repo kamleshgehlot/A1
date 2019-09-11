@@ -37,6 +37,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import DateFnsUtils from '@date-io/date-fns';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
+
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import 'date-fns';
 
@@ -140,6 +143,8 @@ const StyledTableCell = withStyles(theme => ({
 export default function paymentStatus({ open, handleClose, handleSnackbarClick, orderData}) {
 
   const classes = useStyles();
+  const styleClass = useCommonStyles();
+
   const [order, setOrder] = useState([]);
   const [paymentStatus, setPaymentStatus] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
@@ -438,15 +443,12 @@ return (
         <form > 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleBudgetClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+              
               <Typography variant="h6" className={classes.title}>
                 Payment Status
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

@@ -332,9 +332,8 @@ return (
               import {useCommonStyles} from '../../common/StyleComman';
               const styleClass = useCommonStyles();
               */}
-              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={styleClass.closeIcon}> 'X'
-                  {/* <CloseIcon /> */} 
-                </IconButton>
+          <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+
             </Toolbar>
           </AppBar>
 

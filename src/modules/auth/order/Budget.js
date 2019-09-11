@@ -31,6 +31,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -112,6 +114,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList, customer_id}) {
 
   const classes = useStyles();
+  const styleClass = useCommonStyles();
   const [inputs,setInputs] = useState(budgetList);
   const [surplusBool, setSurplusBool] = useState();
   const [oldBudgetList,setOldBudgetList] = useState([]);
@@ -293,9 +296,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Budget
               </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              <IconButton size="small" onClick={handleBudgetClose} className={styleClass.closeIcon}> x </IconButton>              
             </Toolbar>
           </AppBar>
 

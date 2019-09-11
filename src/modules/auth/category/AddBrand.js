@@ -38,7 +38,7 @@ import Brand from '../../../api/product/Brand';
 import useSignUpForm from '../franchise/CustomHooks';
 
 import { store, useStore } from '../../../store/hookStore';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 const RESET_VALUES = {
   brand: '',
 };
@@ -101,6 +101,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function AddBrand(props) {
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [ploading, setpLoading] = React.useState(false);
   const [errors, setErrors] = useState();
@@ -157,9 +158,7 @@ export default function AddBrand(props) {
               {/* <Button color="inherit" onClick={handleSubmit}>
                 save
               </Button> */}
-              <IconButton size="small" edge="start" color="inherit" onClick={props.handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>     
+            <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

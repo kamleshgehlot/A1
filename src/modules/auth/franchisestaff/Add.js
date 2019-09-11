@@ -26,7 +26,8 @@ import Input from "@material-ui/core/Input";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
-
+import {useCommonStyles} from '../../common/StyleComman'; 
+             
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -121,7 +122,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Add({ open, handleClose, handleSnackbarClick, franchiseId, role, setFranchiseList}) {
-
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [temp, setTemp] = React.useState([]);
@@ -286,9 +287,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Staff
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-              </IconButton>
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

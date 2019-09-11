@@ -43,6 +43,8 @@ import PageViewIcon from '@material-ui/icons/Pageview';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 import ViewCustomer from '../customer/ViewCustomer';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
 
 
 const RESET_VALUES = {
@@ -125,6 +127,8 @@ const Transition = React.forwardRef((props, ref) => {
 export default function SearchCustomer({ open, handleClose, handleSnackbarClick, setCustomerList, setCustomer}) {
 
   const classes = useStyles();
+  const styleClass = useCommonStyles();
+
   const [searchText, setSearchText]  = useState('');
   const [customerListData, setCustomerListData] = useState([]);
   const [customerOpen, setCustomerOpen] = useState(false);
@@ -181,13 +185,11 @@ return (
       <Dialog maxWidth="md" open={open} onClose={handleClose} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton edge="start" color="inherit" className={classes.closebtn} onClick={handleClose} aria-label="Close">
-                <CloseIcon fontSize="small"/>
-              </IconButton>
+            <Toolbar>              
               <Typography variant="h6" className={classes.title}>
                 Search Customer
               </Typography>
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

@@ -30,6 +30,7 @@ import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 
 import validate from '../../common/validation/TaskRuleValidation';
+import {useCommonStyles} from '../../common/StyleComman'; 
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
@@ -128,8 +129,8 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 export default function Add({ open, handleClose, franchiseId, handleSnackbarClick, setTaskList, roleName}) {
-  const classes = useStyles();
-
+  const classes = useStyles();  
+  const styleClass = useCommonStyles();
   
   const [taskLast, setTaskLast] = useState({});
   const [taskId, setTaskId] = useState();
@@ -282,9 +283,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Assign Task
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-              </IconButton>   
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>              
             </Toolbar>
           </AppBar>
 

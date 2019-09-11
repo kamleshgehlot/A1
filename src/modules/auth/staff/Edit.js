@@ -19,7 +19,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import useSignUpForm from '../franchise/CustomHooks';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/StaffRuleValidtion';
 // API CALL
 import StaffMaster from '../../../api/StaffMasterAdmin';
@@ -76,8 +76,7 @@ const useStyles = makeStyles(theme => ({
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
-  },
-  closeIcon: { marginTop:theme.spacing(-3) },    
+  },    
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -86,6 +85,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Edit({open, handleEditClose, handleSnackbarClick,  inputValues, setFranchiseList, positions}) {
   const classes = useStyles();
+  const styleClass = useCommonStyles();
   // console.log(inputValues)
   
   const [staffList, setStaffList] = React.useState(inputValues);
@@ -139,10 +139,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
             <Toolbar>            
               <Typography variant="h6" className={classes.title}>
                 Edit Staff
-              </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>  
+              </Typography>          
+             <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

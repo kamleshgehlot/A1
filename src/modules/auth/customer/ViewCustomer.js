@@ -25,7 +25,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
@@ -123,11 +123,7 @@ const useStyles = makeStyles(theme => ({
   group: {
     // margin: theme.spacing(1, 0),
   },
-  closeIcon: {
-    marginTop:theme.spacing(-3),
-    color: 'white',
-    fontSize: 3,
-  },
+
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -136,7 +132,8 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function ViewCustomer({ open, handleClose, handleSnackbarClick, customerId}) {
-
+  
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [customerList, setDataCustomerList] = React.useState([]);
@@ -273,9 +270,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Customer Detail
               </Typography>
-              <IconButton edge="start" color="inherit" className={classes.closebtn} onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
+            <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

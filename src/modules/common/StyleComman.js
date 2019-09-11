@@ -41,9 +41,10 @@ export const useCommonStyles = makeStyles(theme => ({
   closeIcon: {
     marginTop:theme.spacing(-3),
     color: 'white', 
-    // paddingLeft: theme.spacing(1),
-    // paddingRight: theme.spacing(1),
-    marginRight:theme.spacing(-2),
+    fontSize: theme.typography.pxToRem(14),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    marginRight:theme.spacing(-1),
   },
 }));
 

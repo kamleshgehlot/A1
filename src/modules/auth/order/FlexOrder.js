@@ -38,6 +38,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 
 import validate from '../../common/validation/FlexOrderValidation';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
+
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
@@ -137,6 +140,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType}) {
 
   const classes = useStyles();
+  const styleClass = useCommonStyles();
   // const [errors, setErrors] = useState({});
 
 
@@ -233,6 +237,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Flex Order
               </Typography>
+              <IconButton size="small" onClick={handleFlexClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

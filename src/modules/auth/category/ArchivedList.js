@@ -18,7 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Slide from '@material-ui/core/Slide';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 // API CALL
 import Category from '../../../../src/api/Category';
 import Brand from '../../../api/product/Brand';
@@ -93,6 +93,7 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 export default function ArchivedList({open, handleArchivedClose}) {
+  const styleClass = useCommonStyles();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [brandList, setBrandList] = useState([]);
@@ -132,9 +133,8 @@ return (
             <Typography variant="h6" className={classes.title}>
               Archived Product List
             </Typography>
-            <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-            </IconButton>  
+            <IconButton size="small" onClick={handleArchivedClose} className={styleClass.closeIcon}> x </IconButton>
+
           </Toolbar>
         </AppBar>
 

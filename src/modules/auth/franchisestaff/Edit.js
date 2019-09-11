@@ -22,7 +22,7 @@ import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import * as c from '../../../api/Constants';
 
 // API CALL
@@ -117,7 +117,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Edit({open, handleEditClose, handleSnackbarClick, franchiseId, role, inputValues, setFranchiseList}) {
   const classes = useStyles();
-  
+  const styleClass = useCommonStyles();
   const [expanded, setExpanded] = React.useState('panel1');
   const [staffList, setStaffList] = React.useState(inputValues);
   const [assignRole, setAssignRole] = React.useState([]);
@@ -216,9 +216,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
               <Typography variant="h6" className={classes.title}>
                 Edit Staff
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleEditClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>  
+              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

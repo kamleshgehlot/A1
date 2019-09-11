@@ -22,7 +22,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 // API CALL
 import StaffMaster from '../../../api/StaffMasterAdmin';
 import UserAPI from '../../../api/User';
@@ -93,7 +93,7 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, positions}) {
   const [chkEmail, SetChkEmail] = useState();
   const classes = useStyles(); 
-
+  const styleClass = useCommonStyles();
   const [ploading, setpLoading] = React.useState(false);
 
     
@@ -193,9 +193,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Staff
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-              </IconButton>   
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton> 
             </Toolbar>
           </AppBar>
 

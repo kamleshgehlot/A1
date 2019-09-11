@@ -21,7 +21,7 @@ import Paper from '@material-ui/core/Paper';
 
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/LeadRuleValidation';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
@@ -181,7 +181,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function AddLead({ open, handleClose, handleSnackbarClick, setLeadList}) {
-
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const classesCustomer = useStylesCustomer();
 
@@ -570,9 +570,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 Add Lead
               </Typography>
-              <IconButton size="small" edge="start" color="inherit" onClick={handleClose} className={classes.closeIcon}>
-                  <CloseIcon />
-                </IconButton>
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 

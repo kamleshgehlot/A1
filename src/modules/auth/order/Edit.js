@@ -26,6 +26,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import AddIcon from '@material-ui/icons/Add';
 import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import {useCommonStyles} from '../../common/StyleComman'; 
+
 
 import validate from '../../common/validation/OrderRuleValidation';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -114,7 +116,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Edit({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData}) {
-
+  const styleClass = useCommonStyles();
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
   const [customerOpen, setCustomerOpen] = useState(false);
@@ -394,15 +396,10 @@ return (
         <form> 
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={handleEditClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Update Order
-              </Typography>
-              {/* <Button color="inherit" type="submit">
-                save
-              </Button> */}
+              </Typography>            
+              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
           
