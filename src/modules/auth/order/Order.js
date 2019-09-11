@@ -45,43 +45,79 @@ import Edit from './Edit';
 import PaymentStatus from './PaymentStatus';
 import FlexTypeDD from './FlexTypeDoc';
 import FixedTypeDD from './FixedOrderDoc';
+
 import Open from './OrderComponent/Open';
+import Finance from './OrderComponent/Finance';
+import UnderDelivery from './OrderComponent/UnderDelivery';
+import Delivered from './OrderComponent/Delivered';
+import Completed from './OrderComponent/Completed';
 
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import ProcessDialog from '../ProcessDialog.js';
-import PageLoader from '../../../Routes.js';
-
-import axios from 'axios';
-import { saveAs } from 'file-saver';
 
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
-import PdfAPI from '../../../api/PDF';
-import { fontSize } from '@material-ui/system';
-import { async } from 'q';
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    // width: 1000
+  },
+  drawer: {
+    width: 240,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: 240,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  toolbar: theme.mixins.toolbar,
+  title: {
+    flexGrow: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
+  },
+  button:{
+    marginRight: theme.spacing(2),
+    padding:theme.spacing(2),
+    borderRadius: theme.spacing(7),
+  },
+  input: {
+    display: 'none',
+  },
+  fab:{
+    marginRight: theme.spacing(1),
+    fontSize: 12,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+  },
+  fonttransform:{
+    textTransform:"initial",
     fontSize: theme.typography.pxToRem(13),
   },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-}))(TableRow);
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+    color: 'white',
+  }
+}));
 
 
 export default function Order({roleName}) {  
-  
+  const classes = useStyles();
+
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [paymentStatusOpen, setPaymentStatusOpen] = useState(false);
@@ -91,7 +127,6 @@ export default function Order({roleName}) {
   const [confirmation, setConfirmation] = React.useState(false);
   const [nextStep, setNextStep] = React.useState('');
   const [uploadType, setUploadType] = useState('');
-  // const [uploadType, setUploadType] = useState('');
   const [orderId, setOrderId] = useState();
   const [budgetData,setBudgetData] = useState([]);
   const [orderListData,setOrderListData] = useState([]);
@@ -101,16 +136,33 @@ export default function Order({roleName}) {
   const [orderIdForUpload,setOrderIdForUpload] = useState(null);
   const [order,setOrder] = useState([]);
   const [snackbarContent, setSnackbarContent] = useState([]);
-  const [deliveryTabIndex, setDeliveryTabIndex] = useState();
-  const [completedTabIndex, setCompletedTabIndex] = useState();
-  const [deliveredTabIndex, setDeliveredTabIndex] = useState();
+  
+  // const [deliveryTabIndex, setDeliveryTabIndex] = useState();
+  // const [completedTabIndex, setCompletedTabIndex] = useState();
+  // const [deliveredTabIndex, setDeliveredTabIndex] = useState();
+  
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [processDialog,setProcessDialog] = useState(false);
-
   
-
+  //Tab Data for corresponding role 
+  const [openTab,setOpenTab] = useState([]);
+  const [financeTab,setFinanceTab] = useState([]);
+  const [underDeliveryTab,setUnderDeliveryTab] = useState([]);
+  const [deliveredTab,setDeliveredTab] = useState([]);
+  const [completedTab,setCompletedTab] = useState([]);
+  
   //value is for tabs  
   const [value, setValue] = React.useState(0);
+  // const [sendRequest, setSendRequest] = useState(false);
+
+  // useEffect(() => {
+  //   if(sendRequest){
+  //      //send the request
+  //      setSendRequest(false);
+  //   }
+  // },
+  // [sendRequest]);
+
 
 
   function createAndDownloadPdf(data) {
@@ -132,81 +184,21 @@ export default function Order({roleName}) {
       const fetchData = async () => {
         try {
           const result = await OrderAPI.getFixedOrderDataForPDF({data: data});
-          
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           var dd = FixedTypeDD(result,data);
       //  pdfmake.createPdf(dd).download('document.pdf');
           pdfmake.createPdf(dd).open();
-
         } catch (error) {
           console.log(error);
         }
       };
       fetchData();
     }
-
     // pdfmake.createPdf(dd).download();
     // pdfmake.createPdf(dd).print({},window);
     // pdfmake.createPdf(dd).print();
     // const pdfDocGenerator = pdfMake.createPdf(dd);
   }
-
-  const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      // width: 1000
-    },
-    drawer: {
-      width: 240,
-      flexShrink: 0,
-    },
-    drawerPaper: {
-      width: 240,
-    },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-    },
-    toolbar: theme.mixins.toolbar,
-    title: {
-      flexGrow: 1,
-      fontSize: theme.typography.pxToRem(14),
-      color:"white",
-      marginTop:theme.spacing(-3),
-    },
-    button:{
-      marginRight: theme.spacing(2),
-      padding:theme.spacing(2),
-      borderRadius: theme.spacing(7),
-    },
-    input: {
-      display: 'none',
-    },
-    fab:{
-      marginRight: theme.spacing(1),
-      fontSize: 12,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'left',
-      color: theme.palette.text.secondary,
-    },
-    fonttransform:{
-      textTransform:"initial",
-      fontSize: theme.typography.pxToRem(13),
-    },
-    textsize:{
-      fontSize: theme.typography.pxToRem(12),
-      color: 'white',
-    }
-  }));
-
-  const classes = useStyles();
 
   function handleClickOpen(){
     setOpen(true);
@@ -216,17 +208,16 @@ export default function Order({roleName}) {
     setOpen(false);
   }
 
-  
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
 
   function handlePaymentStatusClose(){
-    // setOrder([]);
     const fetchData = async () => {
-      try {
+      try {        
         const result = await OrderAPI.getAll();
         setOrder(result.order);
+        handleTabsData(result.order);
       } catch (error) {
         console.log(error);
       }
@@ -250,6 +241,7 @@ export default function Order({roleName}) {
               setOrderIdForUpload(null);
               if(result.order.length>0){        
                 setOrder(result.order);
+                handleTabsData(result.order);
               }
               if(result.isUploaded === 1){
                 if(processDialog===false){
@@ -275,6 +267,7 @@ export default function Order({roleName}) {
             setOrderIdForUpload(null);
             if(result.order.length>0){        
               setOrder(result.order);
+              handleTabsData(result.order);
             }
             if(result.isUploaded === 1){
               if(processDialog===false){
@@ -346,13 +339,16 @@ export default function Order({roleName}) {
             {
               const result = await OrderAPI.assignToFinance({assigned_to: 4, id: orderId});
               setOrder(result.order);
+              handleTabsData(result.order);
             }
           else if(nextStep === 'Delivery'){
             const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});
             setOrder(result.order);
+            handleTabsData(result.order);
           }else if(nextStep === 'Delivered'){
             const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_at: new Date().toString()});
             setOrder(result.order);
+            handleTabsData(result.order);
           }
         } catch (error) {
           console.log(error);
@@ -362,6 +358,8 @@ export default function Order({roleName}) {
     }
     setConfirmation(false);
   }
+
+
   function handleEditClose(){
     setEditOpen(false);
   }
@@ -377,45 +375,45 @@ export default function Order({roleName}) {
     setFixedPaymentData(response.fixedPaymentList);
     setFlexPaymentData(response.flexPaymentList);
     setOrder(response.order);
+    handleTabsData(response.order);
   }
-
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await OrderAPI.getAll();
-        setOrder(result.order);
+        setOrder(result.order);      
+        handleTabsData(result.order);
       } catch (error) {
         console.log(error);
       }
   };
     fetchData();
-    handleTabSettings();       
-  },[]);
+  },[roleName]);
 
 
-  function handleTabSettings(){
-    if(roleName === 'CSR') {
-      setDeliveryTabIndex(2);
-      setDeliveredTabIndex(3);
-      setCompletedTabIndex(4);
-    }
-    if(roleName === 'Finance') {
-      setDeliveryTabIndex(1);
-      setDeliveredTabIndex(2);
-      setCompletedTabIndex(3)
-    }
-    if(roleName === 'Delivery') {
-      setDeliveredTabIndex(1)
-    }   
-  }
+  // function handleTabSettings(){
+  //   if(roleName === 'CSR') {
+  //     setDeliveryTabIndex(2);
+  //     setDeliveredTabIndex(3);
+  //     setCompletedTabIndex(4);
+  //   }
+  //   if(roleName === 'Finance') {
+  //     setDeliveryTabIndex(1);
+  //     setDeliveredTabIndex(2);
+  //     setCompletedTabIndex(3)
+  //   }
+  //   if(roleName === 'Delivery') {
+  //     setDeliveredTabIndex(1)
+  //   }   
+  // }
 
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
   };
+
   function TabPanel(props) {
     const { children, value, index, ...other } = props;  
     return (
@@ -433,33 +431,72 @@ export default function Order({roleName}) {
   }
 
   function handleTabChange(event, newValue) {
-    setValue(newValue);
+    setValue(newValue);      
+    handleTabsData(order);
+  }  
+
+  function handleTabsData(order){  
+    let open = [];
+    let finance = [];
+    let underDelivery = [];
+    let delivered = [];
+    let completed = [];
+
+    if(roleName === 'CSR'){
+      (order.length > 0 ? order : []).map((data, index) => {        
+        if(data.assigned_to !== 4 && data.assigned_to !== 5){
+          open.push(data);
+          }
+        if(data.assigned_to === 4){
+          finance.push(data);
+          }
+        if(data.assigned_to === 5 && data.order_status ===5){
+          underDelivery.push(data);
+          }
+        if(data.order_status === 6){
+          delivered.push(data);
+          }
+        if(data.order_status === 8){
+          completed.push(data);
+          }
+        });
+    }else if (roleName === 'Finance'){
+      (order.length > 0 ? order : []).map((data, index) => {        
+        if((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !==8 ){
+          open.push(data);
+          }
+        if(data.assigned_to === 5 && data.order_status ===5){
+          underDelivery.push(data);
+          }
+        if(data.order_status === 6){
+          delivered.push(data);
+          }
+        if(data.order_status === 8){
+          completed.push(data);
+          }
+        });
+    }else if (roleName === 'Delivery'){
+      (order.length > 0 ? order : []).map((data, index) => {        
+        if(data.assigned_to === 5 && data.order_status ===5){
+          open.push(data);
+          }
+        if(data.order_status >= 6){
+          delivered.push(data);
+          }
+        });
+    }
+    setOpenTab(open);
+    setFinanceTab(finance);
+    setUnderDeliveryTab(underDelivery);
+    setDeliveredTab(delivered);
+    setCompletedTab(completed);
   }
 
-  function getOpenCount(order, roleName) {
-    let count = 0;
-    let financeCount = 0;
-
-    (order.length > 0 ? order : []).map((data, index) => {
-      if(data.assigned_to !== 4 && data.assigned_to !== 5 && roleName==='CSR'){
-        count += 1;
-      }else if(data.assigned_to===5 && roleName ==='Finance') {
-        count += 1;
-      }else if(data.order_status===5 && roleName ==='Delivery') {
-        count += 1;
-      }
-
-      if((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !==8 && roleName==='Finance') {
-        financeCount += 1;
-      }
-    });
-
-    return count;
-  }
 
   return (
     // <div ref={ref}>
     <div>
+
      <Grid container spacing={2}>
           <Grid item xs={12} sm={8}>
             {roleName === 'CSR' ? 
@@ -505,255 +542,71 @@ export default function Order({roleName}) {
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
-                
-                <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
-                  <Tab label={<BadgeComp count={getOpenCount(order, roleName)} label="Open" />} />
 
-                  {roleName ==='CSR' ? <Tab label="Finance" /> : '' }
-                  {roleName !='Delivery' ? <Tab label="Under Delivery" /> : ''}
-                  <Tab label="Delivered" /> 
-                  {roleName !=='Delivery' ? <Tab label="Completed" /> : ''}
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
+                                              <Tab label={<BadgeComp count={openTab.length} label="Open" />} />
+                  {roleName ==='CSR'      ?   <Tab label={<BadgeComp count={financeTab.length} label="Finance" />} />         : '' }
+                  {roleName !='Delivery'  ?   <Tab label={<BadgeComp count={underDeliveryTab.length} label="Under Delivery" />} />  : ''}
+                                              <Tab label={<BadgeComp count={deliveredTab.length} label="Delivered" />}  /> 
+                  {roleName !=='Delivery' ?   <Tab label={<BadgeComp count={completedTab.length} label="Completed" />} />       : ''}
                 </Tabs>
+
               </AppBar> 
               
-              { order && <Open order={order} value={value} roleName={roleName} 
-              handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
-              handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
-              handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-              createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
-
-              {/* finance */}
-              { roleName ==='CSR' ? 
-              <TabPanel value={value} index={1}>
-                  <Table >
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Order No.</StyledTableCell>
-                        <StyledTableCell>Order By</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Order Date</StyledTableCell>
-                        <StyledTableCell>Order Status</StyledTableCell>
-                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
-                        <StyledTableCell>Rental Type</StyledTableCell>
-                        <StyledTableCell>Payment Mode</StyledTableCell>
-                        {/* <StyledTableCell>Action</StyledTableCell> */}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {(order.length > 0 ? order : []).map((data, index) => {
-                      if(data.assigned_to === 4){
-                       return(
-                        <TableRow>
-                          <StyledTableCell>{index + 1}</StyledTableCell>
-                          <StyledTableCell>{data.order_id}</StyledTableCell>
-                          <StyledTableCell>{data.customer_name}</StyledTableCell>
-                          <StyledTableCell>{data.mobile}</StyledTableCell>
-                          <StyledTableCell>{data.order_date}</StyledTableCell>
-                          <StyledTableCell>{data.order_status_name}</StyledTableCell>
-                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-                          <StyledTableCell>{
-                            data.payment_mode == 1 ? 'EasyPay' :  
-                            data.payment_mode == 2 ? 'Credit' : 
-                            data.payment_mode == 3 ? 'Debit' : 
-                            data.payment_mode == 4 ? 'PayPal' : 
-                            data.payment_mode == 5 ? 'Cash' : ''
-                            }
-                          </StyledTableCell>
-                         
-                      </TableRow>
-                       )
-                      }
-                     })
-                   }
-                              
-                    </TableBody>
-                  </Table>
+              {roleName === 'CSR' ? <div>
+                <TabPanel value={value} index={0}>
+                  { openTab && <Open order={openTab} value={value} roleName={roleName} 
+                  handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
+                  handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
+                  handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                  createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
                 </TabPanel>
-                : null }
-                
-              {/* delivery */}
-              
-              {/* under delivery for Finance tab */}
-              {roleName === 'CSR' || 'Finance' ?               
-              <TabPanel value={value} index={deliveryTabIndex}>
-                  <Table >
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Order No</StyledTableCell>
-                        <StyledTableCell>Order By</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Order Date</StyledTableCell>
-                        <StyledTableCell>Order Status</StyledTableCell>
-                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
-                        <StyledTableCell>Rental Type</StyledTableCell>
-                        <StyledTableCell>Payment Mode</StyledTableCell>
-                        {/* <StyledTableCell>Action</StyledTableCell> */}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {(order.length > 0 ? order : []).map((data, index) => {
-                      // console.log("data..... finanace", data);
-                      if(data.assigned_to === 5 && data.order_status ===5 ){
-                       return(
-                        <TableRow>
-                          <StyledTableCell>{index + 1}</StyledTableCell>
-                          <StyledTableCell>{data.order_id}</StyledTableCell>
-                          <StyledTableCell>{data.customer_name}</StyledTableCell>
-                          <StyledTableCell>{data.mobile}</StyledTableCell>
-                          <StyledTableCell>{data.order_date}</StyledTableCell>
-                          <StyledTableCell>{data.order_status_name}</StyledTableCell>
-                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-                          <StyledTableCell>{
-                            data.payment_mode == 1 ? 'EasyPay' :  
-                            data.payment_mode == 2 ? 'Credit' : 
-                            data.payment_mode == 3 ? 'Debit' : 
-                            data.payment_mode == 4 ? 'PayPal' : 
-                            data.payment_mode == 5 ? 'Cash' : ''
-                            }
-                          </StyledTableCell>
-                         
-                          {/* <StyledTableCell></StyledTableCell> */}
-                      </TableRow>
-                       )
-                      }
-                     })
-                   }                              
-                    </TableBody>
-                  </Table>
+                <TabPanel value={value} index={1}>
+                  {financeTab && <Finance order= {financeTab} roleName={roleName} />}
                 </TabPanel>
-                : null }
+                <TabPanel value={value} index={2}>
+                  {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
+                </TabPanel>
+                <TabPanel value={value} index={4}>
+                  {completedTab && <Completed order= {completedTab} roleName={roleName} />}
+                </TabPanel>
+              </div> : ''}
 
-                
-                {/* Delivered */}
-                {/* {roleName === 'Delivery' ?     */}
-              <TabPanel value={value} index={deliveredTabIndex}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Order No.</StyledTableCell>
-                        <StyledTableCell>Customer</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Order Date</StyledTableCell>
-                        {/* <StyledTableCell>Order Status</StyledTableCell> */}
-                        <StyledTableCell>Delivery Date</StyledTableCell>
-                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
-                        <StyledTableCell>Rental Type</StyledTableCell>
-                        <StyledTableCell>Payment Mode</StyledTableCell>
-                        {/* <StyledTableCell>Action</StyledTableCell> */}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {(order.length > 0 ? order : []).map((data, index) => {
-                      if(data.order_status >= 6 && roleName==='Delivery'){
-                       return(
-                        <TableRow>
-                          <StyledTableCell>{index + 1}</StyledTableCell>
-                          <StyledTableCell>{data.order_id}</StyledTableCell>
-                          <StyledTableCell>{data.customer_name}</StyledTableCell>
-                          <StyledTableCell>{data.mobile}</StyledTableCell>
-                          <StyledTableCell>{data.order_date}</StyledTableCell>
-                          <StyledTableCell>{data.delivered_at}</StyledTableCell>
-                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-                          <StyledTableCell>{
-                            data.payment_mode == 1 ? 'EasyPay' :  
-                            data.payment_mode == 2 ? 'Credit' : 
-                            data.payment_mode == 3 ? 'Debit' : 
-                            data.payment_mode == 4 ? 'PayPal' : 
-                            data.payment_mode == 5 ? 'Cash' : ''
-                            }
-                          </StyledTableCell>
-                          {/* <StyledTableCell></StyledTableCell> */}
-                      </TableRow>
-                       )
-                      }else if(data.order_status === 6){
-                        return(
-                          <TableRow>
-                            <StyledTableCell>{index + 1}</StyledTableCell>
-                            <StyledTableCell>{data.order_id}</StyledTableCell>
-                            <StyledTableCell>{data.customer_name}</StyledTableCell>
-                            <StyledTableCell>{data.mobile}</StyledTableCell>
-                            <StyledTableCell>{data.order_date}</StyledTableCell>
-                            <StyledTableCell>{data.delivered_at}</StyledTableCell>
-                            {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-                            <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-                            <StyledTableCell>{
-                              data.payment_mode == 1 ? 'EasyPay' :  
-                              data.payment_mode == 2 ? 'Credit' : 
-                              data.payment_mode == 3 ? 'Debit' : 
-                              data.payment_mode == 4 ? 'PayPal' : 
-                              data.payment_mode == 5 ? 'Cash' : ''
-                              }
-                            </StyledTableCell>
-                            {/* <StyledTableCell></StyledTableCell> */}
-                        </TableRow>
-                         )
-                      }
-                     })
-                   }                              
-                    </TableBody>
-                  </Table>
-                </TabPanel>                
-                {/* : null } */}
+              {roleName === 'Finance' ? <div>
+                <TabPanel value={value} index={0}>
+                    { openTab && <Open order={openTab} value={value} roleName={roleName} 
+                    handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
+                    handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
+                    handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                  {completedTab && <Completed order= {completedTab} roleName={roleName} />}
+                </TabPanel>
+              </div> : ''}
 
-                   {/* Completed */}
-              {roleName === 'CSR' || 'Finance' ?    
-              <TabPanel value={value} index={completedTabIndex}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Order No.</StyledTableCell>
-                        <StyledTableCell>Order By</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Order Date</StyledTableCell>
-                        <StyledTableCell>Delivery Date</StyledTableCell>
-                        {/* <StyledTableCell>Order Status</StyledTableCell> */}
-                        {/* <StyledTableCell>Assigned To</StyledTableCell> */}
-                        <StyledTableCell>Rental Type</StyledTableCell>
-                        <StyledTableCell>Payment Mode</StyledTableCell>
-                        {/* <StyledTableCell>Action</StyledTableCell> */}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {(order.length > 0 ? order : []).map((data, index) => {
-                      if(data.order_status === 8 ){
-                       return(
-                        <TableRow>
-                          <StyledTableCell>{index + 1}</StyledTableCell>
-                          <StyledTableCell>{data.order_id}</StyledTableCell>
-                          <StyledTableCell>{data.customer_name}</StyledTableCell>
-                          <StyledTableCell>{data.mobile}</StyledTableCell>
-                          <StyledTableCell>{data.order_date}</StyledTableCell>
-                          <StyledTableCell>{data.delivered_at}</StyledTableCell>
-                          {/* <StyledTableCell>{data.order_status_name}</StyledTableCell> */}
-                          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-                          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-                          <StyledTableCell>{
-                            data.payment_mode == 1 ? 'EasyPay' :  
-                            data.payment_mode == 2 ? 'Credit' : 
-                            data.payment_mode == 3 ? 'Debit' : 
-                            data.payment_mode == 4 ? 'PayPal' : 
-                            data.payment_mode == 5 ? 'Cash' : ''
-                            }
-                          </StyledTableCell>
-                          {/* <StyledTableCell></StyledTableCell> */}
-                      </TableRow>
-                       )
-                      }
-                     })
-                   }                              
-                    </TableBody>
-                  </Table>
+              {roleName === 'Delivery' ? <div>
+                <TabPanel value={value} index={0}>
+                    { openTab && <Open order={openTab} value={value} roleName={roleName} 
+                    handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
+                    handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
+                    handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
                 </TabPanel>                
-                : null }
-              
-             
+                <TabPanel value={value} index={1}>
+                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
+                </TabPanel>                
+              </div> : ''}
+
               </Paper>
           </Grid>
         </Grid>
@@ -778,8 +631,7 @@ export default function Order({roleName}) {
      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData}  /> : null }
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
-     {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }
-          
+     {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
     </div>
   );
 }

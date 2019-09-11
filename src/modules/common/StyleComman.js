@@ -31,6 +31,13 @@ export const useCommonStyles = makeStyles(theme => ({
   // table: {
   //   minWidth: 700,
   // },
+  fab:{
+    marginRight: theme.spacing(1),
+    fontSize: 12
+  },
+  input: {
+    display: 'none',
+  },
   closeIcon: {
     marginTop:theme.spacing(-3),
     color: 'white', 
