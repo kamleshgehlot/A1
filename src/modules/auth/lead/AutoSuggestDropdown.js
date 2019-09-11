@@ -85,7 +85,7 @@ function getSuggestions(value, { showEmpty = false } = {}) {
       });
 }
 
-Example.propTypes = {
+AutoSuggestDropdown.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
