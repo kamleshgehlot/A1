@@ -419,7 +419,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       converted_name : converted_name,
       
      });
-    console.log('response ', response);
     setAssignInterest('');
     // assignInterest = '';
     // handleSnackbarClick(true);
@@ -441,7 +440,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     addOrder,
     validate
   );
-  console.log('orders',inputs);
+  // console.log('orders',inputs);
 
     
 return (

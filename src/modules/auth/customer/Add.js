@@ -54,7 +54,7 @@ const RESET_VALUES = {
   expiry_date : '',
   is_adult :'',
   id_proof : '',
-  other_id_type_value:'',
+  other_id_type:'',
 
   alt_c1_name:'',
   alt_c1_address:'',
@@ -200,7 +200,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     
   }, []);
 
-
    function handleIdType(event){
     if(event.target.value===0){
       setOtherIdType(false)
@@ -208,14 +207,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     }else{
       setOtherIdType(true)
       setOtherIdTypeValue('');
-    }
-    setInput('id_type',event.target.value);
+    } 
+      // setOtherIdTypeValue(event.target.value);
+      setInput('id_type',event.target.value);      
     }
 
-    function handleOtherIdType(event){
-      setOtherIdTypeValue(event.target.value)
-      setInput('other_id_type_value',event.target.value)
-    }
+    // function handleOtherIdType(event){
+    //   // setOtherIdTypeValue(event.target.value)
+    //   setInput('other_id_type',event.target.value)
+    // }
   
     function handleDate(date){
       let date1 = new Date(date);
@@ -280,7 +280,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       is_active:1,
       state: 1,
       
-      other_id_type: otherIdTypeValue,
+      other_id_type: inputs.other_id_type,
     }
 
     let formData = new FormData();
@@ -625,16 +625,16 @@ return (
                         },
                       }}
                       margin="dense"
-                      id="otherIdTypeValue"
-                      name="otherIdTypeValue"
+                      id="other_id_type"
+                      name="other_id_type"
                       // label="Enter type of ID Proof"
                       type="text"
-                      value={inputs.other_id_type_value} 
-                      onChange={handleOtherIdType}
+                      value={inputs.other_id_type} 
+                      onChange={handleInputChange}
                       required
                       disabled = {otherIdType}
-                      error={errors.other_id_type_value}
-                      helperText={errors.other_id_type_value}
+                      error={errors.other_id_type}
+                      helperText={errors.other_id_type}
                       fullWidth
                     />
                     }

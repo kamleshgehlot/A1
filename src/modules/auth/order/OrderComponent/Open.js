@@ -15,6 +15,8 @@ import PrintIcon from '@material-ui/icons/Print';
 import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
+import ViewIcon from '@material-ui/icons/RemoveRedEye';
+import CommentIcon from '@material-ui/icons/Comment';
 
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
@@ -55,7 +57,7 @@ function TabPanel(props) {
 }
 
 export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
-  uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile }) {
+  uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, handleClickViewOpen }) {
   const styleClass = useCommonStyles();
 
 return (  
@@ -124,6 +126,11 @@ return (
           </StyledTableCell>
         : roleName === 'Finance' ? 
           <StyledTableCell>
+                  <Tooltip title="View">
+                    <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
+                      <CommentIcon />
+                    </IconButton>
+                  </Tooltip>
                   <Tooltip title="Payment Status">
                     <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handlePaymentStatus(data); }} >
                       <PaymentIcon />  
@@ -138,6 +145,11 @@ return (
           </StyledTableCell>
         : roleName === 'Delivery' ? 
           <StyledTableCell>
+                <Tooltip title="View">
+                      <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
+                        <CommentIcon />
+                      </IconButton>
+                </Tooltip>
                 <Tooltip title="Download Form">
                   <a href={API_URL + "/api/download?path=order/" + data.uploaded_doc }  download >
                   {/* <a href={"server\\files\\order\\" + data.uploaded_doc }  download > */}
@@ -164,91 +176,6 @@ return (
           </StyledTableCell>
           : ''}
       </TableRow>)
-      // )} else if((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !==8 && roleName==='Finance'){
-      //   return(
-      //     <TableRow>
-      //       <StyledTableCell>{index + 1}</StyledTableCell>
-      //       <StyledTableCell>{data.order_id}</StyledTableCell>
-      //       <StyledTableCell>{data.customer_name}</StyledTableCell>
-      //       <StyledTableCell>{data.mobile}</StyledTableCell>
-      //       <StyledTableCell>{data.order_date}</StyledTableCell>
-      //       <StyledTableCell>{data.order_status_name}</StyledTableCell>
-      //       {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-      //       <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-      //       <StyledTableCell>{
-      //         data.payment_mode == 1 ? 'EasyPay' :  
-      //         data.payment_mode == 2 ? 'Credit' : 
-      //         data.payment_mode == 3 ? 'Debit' : 
-      //         data.payment_mode == 4 ? 'PayPal' : 
-      //         data.payment_mode == 5 ? 'Cash' : ''
-      //         }
-      //       </StyledTableCell>
-      //       <StyledTableCell>
-      //           <Tooltip title="Payment Status">
-      //             <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handlePaymentStatus(data); }} >
-      //               <PaymentIcon />  
-      //             </IconButton>
-      //           </Tooltip>
-
-      //           <Tooltip title="Assign to Delivery">
-      //             <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToDelivery(data.id); }} disabled= {data.order_status !==4  || data.assigned_to===5}>
-      //               <SendIcon />
-      //             </IconButton>
-      //           </Tooltip>
-      //    </StyledTableCell>
-      //   </TableRow>
-      //   )
-      // }else if(data.assigned_to===5 && roleName ==='Delivery'){
-      //   if(data.assigned_to === 5 && data.order_status ===5 ){
-      //     return(
-      //      <TableRow>
-      //        <StyledTableCell>{index + 1}</StyledTableCell>
-      //        <StyledTableCell>{data.order_id}</StyledTableCell>
-      //        <StyledTableCell>{data.customer_name}</StyledTableCell>
-      //        <StyledTableCell>{data.mobile}</StyledTableCell>
-      //        <StyledTableCell>{data.order_date}</StyledTableCell>
-      //        <StyledTableCell>{data.order_status_name}</StyledTableCell>
-      //        {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-      //        <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-      //        <StyledTableCell>{
-      //          data.payment_mode == 1 ? 'EasyPay' :  
-      //          data.payment_mode == 2 ? 'Credit' : 
-      //          data.payment_mode == 3 ? 'Debit' : 
-      //          data.payment_mode == 4 ? 'PayPal' : 
-      //          data.payment_mode == 5 ? 'Cash' : ''
-      //          }
-      //        </StyledTableCell>
-      //        <StyledTableCell>
-                
-      //           <Tooltip title="Download Form">
-      //             <a href={API_URL + "/api/download?path=order/" + data.uploaded_doc }  download >
-      //             {/* <a href={"server\\files\\order\\" + data.uploaded_doc }  download > */}
-      //             {/* {inputs.id_proof} */}
-      //               <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} >
-      //                 <PrintIcon />
-      //               </IconButton>
-      //             </a>
-      //           </Tooltip>
-      //           <input multiple accept="image/*" className={styleClass.input} id="upload_delivery_doc" type="file" onChange={uploadFileSelector} disabled  = {data.order_status >=6 ? true : false} />
-      //           <label htmlFor="upload_delivery_doc">
-      //             <Tooltip title="Upload">                              
-      //               <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleDeliveryDoc(data.id); }} disabled = {data.order_status >=6 ? true : false}>
-      //                 <CloudUpload />
-      //               </IconButton>
-      //             </Tooltip>
-      //           </label>                                
-      //           <Tooltip title="Check if Delivered">
-      //             <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleDelivered(data.id); }} disabled={(data.delivery_doc_uploaded !==1 || data.order_status >=6) ? true : false}>
-      //               {/* {data.order_status ===6 ? <SelectedCheckBox /> : data.order_status !==6 ? <UnselectedCheckBox />  : ''}                                    */}
-      //               <SendIcon />
-      //             </IconButton>
-      //           </Tooltip>                                 
-      //    </StyledTableCell>
-      //        {/* <StyledTableCell></StyledTableCell> */}
-      //    </TableRow>
-      //     )
-      //    }
-      // }
      })
    }
               

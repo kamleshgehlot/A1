@@ -64,6 +64,49 @@ const uploadDeliveryDoc = async function (req, res, next) {
 };
 
 
+const postComment = async function (req, res, next) {
+
+  let commentParams = {
+    order_id: req.body.order_id,
+    userid: req.body.user_id,
+    user_role: req.body.user_role,
+    comment: req.body.comment,    
+    user_id : req.decoded.user_id,
+  };
+	try{
+      const newComment = new Order(commentParams);
+
+	    const result = await newComment.postComment();
+      // const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+      if(result){
+        res.send({ isUploaded: result.isUploaded}); 
+      }else{
+        res.send({ isUploaded: 0});
+      }   
+	}catch(err){
+    next(error);
+	}
+};
+
+
+
+const getComment = async function (req, res, next) {
+
+  let commentParams = {
+    order_id: req.body.order_id,
+    user_id : req.decoded.user_id,
+  };
+	try{
+      const newComment = new Order(commentParams);
+
+	    const result = await newComment.getComment();
+        res.send(result); 
+	}catch(err){
+    next(error);
+	}
+};
+
+
 const getnewid = async function(req, res, next) {
   try {
     const id = await new Order({user_id: req.decoded.user_id}).getnewid();
@@ -435,6 +478,8 @@ const editOrder = async function (req, res, next) {
 module.exports = { 
   getnewid, 
   uploadDoc, 
+  postComment,
+  getComment,
   uploadDeliveryDoc,
   getFlexOrderDataForPDF, 
   getFixedOrderDataForPDF, 

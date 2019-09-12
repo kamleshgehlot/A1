@@ -54,13 +54,13 @@ export default function validate(values) {
     errors.dob = 'Date Of Birth is required';
   }
   
-  if (values.id_type=='' ) {
+  if (values.id_type==='' ) {
     errors.id_type = 'ID Proof is required';
   }
   if(values.id_type===0){
-    errors.id_type =''
-    if (!values.other_id_type_value) {
-      errors.other_id_type_value = 'ID Type is required';
+    // errors.id_type =''
+    if (!values.other_id_type) {
+      errors.other_id_type = 'ID Type is required';
     }
   }
   if (!values.id_number) {

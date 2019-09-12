@@ -5,9 +5,29 @@ export const useCommonStyles = makeStyles(theme => ({
   //   display: 'flex',
   //   flexGrow: 1,
   // },
-  // appBar: {
-  //   zIndex: theme.zIndex.drawer + 1,
-  // },
+  appBar: {
+    position: 'relative',
+    height: theme.spacing(5),
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
+  },
+   paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
   // drawer: {
   //   width: drawerWidth,
   //   flexShrink: 0,
@@ -20,9 +40,7 @@ export const useCommonStyles = makeStyles(theme => ({
   //   padding: theme.spacing(3),
   // },
   // toolbar: theme.mixins.toolbar,
-  // title: {
-  //   flexGrow: 1,
-  // },
+
   // paper: {
   //   padding: theme.spacing(2),
   //   textAlign: 'left',

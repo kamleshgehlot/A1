@@ -41,6 +41,7 @@ const order_document = "CREATE TABLE IF NOT EXISTS `order_document`(`id` int(11)
 const payment_status = "CREATE TABLE IF NOT EXISTS `payment_status`(`id` bigint(20) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `payment_date` varchar(50) DEFAULT NULL, `payment_rec_date` VARCHAR(50) DEFAULT NULL, `payment_amt` double DEFAULT NULL, `total_paid` double DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const order_status = "CREATE TABLE IF NOT EXISTS `order_status`(`id` int(11) NOT NULL AUTO_INCREMENT, `order_status` varchar(50) NOT NULL, PRIMARY KEY(id))";
 const delivery_document = "CREATE TABLE IF NOT EXISTS `delivery_document` (`id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) NOT NULL, `document` VARCHAR(255) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `updated_by` INT(11) DEFAULT NULL, `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const order_comment = "CREATE TABLE IF NOT EXISTS `order_comment` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `user_role` VARCHAR(50) DEFAULT NULL, `comment` TEXT DEFAULT NULL, `status` INT(11) DEFAULT NULL, `is_active` TINYINT(4) DEFAULT NULL , `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (id))";
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register =  function (newUser) {
@@ -120,6 +121,9 @@ Franchise.prototype.register =  function (newUser) {
                   connection.query(payment_status, function(err){if(err){console.log('Payment Status Table Create Time Error: ', err)}});
                   connection.query(order_status, function(err){if(err){console.log('Order Status Table Create Time Error: ', err)}});
                   connection.query(delivery_document, function(err){if(err){console.log('Delivery Document Table Create Time Error: ', err)}});
+                  connection.query(order_comment, function(err){if(err){console.log('Order Comment Table Create Time Error: ', err)}});
+                  
+                  
 
                   connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {if(error){console.log('Role Insert Time Error: ', error)}});
                   connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) {if(error){console.log('IdType Insert Time Error: ', error)}});

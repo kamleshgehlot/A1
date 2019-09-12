@@ -170,9 +170,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   }
 
 
-console.log(paymentHistory);
-console.log(paymentRecDate);
-  
     const getPaymentHistory = async () => {
       try {
         const existingPayment = await Order.getPaymentHistory({id: orderData.id});

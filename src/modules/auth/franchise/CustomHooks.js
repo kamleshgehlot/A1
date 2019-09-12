@@ -6,6 +6,8 @@ const useSignUpForm = (state, callback, validate) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = event => {
+    console.log(errors)
+    console.log(inputs)
     if (event) {
       event.preventDefault();
     }

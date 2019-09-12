@@ -341,4 +341,40 @@ export default {
       throw error;
     }
   }, 
+
+  postComment:  async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/postComment`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  getComment:  async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getComment`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
 };

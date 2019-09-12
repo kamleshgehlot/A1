@@ -55,6 +55,7 @@ import Completed from './OrderComponent/Completed';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import ProcessDialog from '../ProcessDialog.js';
 import CommentDialog from '../CommentDialog.js';
+import CommentView from './CommentView.js';
 
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
@@ -118,6 +119,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Order({roleName}) {  
   const classes = useStyles();
+  const userId = APP_TOKEN.get().userId;
 
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -137,11 +139,9 @@ export default function Order({roleName}) {
   const [orderIdForUpload,setOrderIdForUpload] = useState(null);
   const [order,setOrder] = useState([]);
   const [snackbarContent, setSnackbarContent] = useState([]);
-  const [commentBoxOpen,setCommentBoxOpen] = useState(false);
-  // const [deliveryTabIndex, setDeliveryTabIndex] = useState();
-  // const [completedTabIndex, setCompletedTabIndex] = useState();
-  // const [deliveredTabIndex, setDeliveredTabIndex] = useState();
-  
+  const [commentBoxOpen,setCommentBoxOpen]  = useState(false);
+  const [openCommentView, setOpenCommentView]  = useState(false);
+  const [commentData,setCommentData] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [processDialog,setProcessDialog] = useState(false);
   
@@ -153,17 +153,10 @@ export default function Order({roleName}) {
   const [completedTab,setCompletedTab] = useState([]);
   
   //value is for tabs  
-  const [value, setValue] = React.useState(0);
-  // const [sendRequest, setSendRequest] = useState(false);
+  const [value, setValue] = React.useState(0);  
+  
 
-  // useEffect(() => {
-  //   if(sendRequest){
-  //      //send the request
-  //      setSendRequest(false);
-  //   }
-  // },
-  // [sendRequest]);
-
+  
 
 
   function createAndDownloadPdf(data) {
@@ -325,9 +318,15 @@ export default function Order({roleName}) {
   }
 
   function handleDelivered(data){
-    setOrderId(data);
-    setNextStep('Delivered');
-    setConfirmation(true);
+    
+    setCommentData({order_id: data, user_id: userId, roleName: roleName});
+    setCommentBoxOpen(true);
+
+    if(commentBoxOpen===false){
+      setOrderId(data);
+      setNextStep('Delivered');
+      setConfirmation(true);
+    }
   }
 
   function handlePaymentStatus(data){
@@ -344,17 +343,20 @@ export default function Order({roleName}) {
             {
               const result = await OrderAPI.assignToFinance({assigned_to: 4, id: orderId});
               setOrder(result.order);
-              // setCommentBoxOpen(true);
+              setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
+              setCommentBoxOpen(true);
               handleTabsData(result.order);              
             }
           else if(nextStep === 'Delivery'){
             const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});
             setOrder(result.order);
-            // setCommentBoxOpen(true);
+            setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
+            setCommentBoxOpen(true);
             handleTabsData(result.order);
           }else if(nextStep === 'Delivered'){
             const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_at: new Date().toString()});
             setOrder(result.order);
+            // setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
             // setCommentBoxOpen(true);
             handleTabsData(result.order);
           }
@@ -367,6 +369,14 @@ export default function Order({roleName}) {
     setConfirmation(false);
   }
 
+  function handleClickViewOpen(orderId) {
+    setOrderId(orderId)
+    setOpenCommentView(true);
+  }
+
+  function handleViewClose() {
+    setOpenCommentView(false);
+  }
 
   function handleEditClose(){
     setEditOpen(false);
@@ -550,7 +560,8 @@ export default function Order({roleName}) {
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                  createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
+                  createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
+                  handleClickViewOpen = {handleClickViewOpen}/> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {financeTab && <Finance order= {financeTab} roleName={roleName} />}
@@ -572,7 +583,8 @@ export default function Order({roleName}) {
                     handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
                     handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
+                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}
+                    handleClickViewOpen = {handleClickViewOpen} /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
@@ -591,7 +603,8 @@ export default function Order({roleName}) {
                     handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
                     handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}/> }
+                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
+                    handleClickViewOpen = {handleClickViewOpen} /> }
                 </TabPanel>                
                 <TabPanel value={value} index={1}>
                   {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
@@ -623,7 +636,8 @@ export default function Order({roleName}) {
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
-     {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} /> : null }
+     {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} /> : null }
+     {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId}  /> :null}
     </div>
   );
 }

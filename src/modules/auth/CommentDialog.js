@@ -7,18 +7,55 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import {useCommonStyles} from '../common/StyleComman'; 
+import ProcessDialog from './ProcessDialog.js';
+import OrderAPI from '../../api/franchise/Order';
+import MySnackbarContentWrapper from '../common/MySnackbarContentWrapper';
 
-
-export default function CommentDialog({open, handleCommentBoxClose}){
+export default function CommentDialog({open, handleCommentBoxClose, orderData}){
   const styleClass = useCommonStyles();   
   const [comment, setComment] = useState('');
+  const [processDialog,setProcessDialog] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarContent, setSnackbarContent] = useState([]);
 
   function handleCommentChange(e){
     setComment(e.target.value)
   }
 
+  function handleSnackbarClose() {
+    // setSnackbarOpen(false);
+  }
+    
+  function handleProcessDialogClose(){
+    setProcessDialog(false);
+  }
+
+  const postComment = async () => {
+    setProcessDialog(true);  
+    const result = await OrderAPI.postComment({
+      order_id: orderData.order_id,
+      user_id: orderData.user_id,
+      user_role: orderData.roleName,
+      comment: comment, 
+     });
+     setProcessDialog(false);  
+     if(result.isUploaded === 1){
+       if(processDialog===false){
+         setSnackbarContent({message:"Comment posted.", variant: "success"});
+         setSnackbarOpen(true);
+       }
+     }else if(result.isUploaded === 0){
+       if(processDialog===false){
+         setSnackbarContent({message:"Failed to post", variant: "error"});
+         setSnackbarOpen(true);
+       }
+     }  
+     handleCommentBoxClose(false);
+  };
+  
   return(
    <div>     
   <Dialog open={open}  >
@@ -39,11 +76,30 @@ export default function CommentDialog({open, handleCommentBoxClose}){
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={""} color="primary" > Post Comment </Button>
+          <Button onClick={postComment} color="primary" > Post Comment </Button>
           <Button onClick={handleCommentBoxClose} color="primary" > Close </Button>
         </DialogActions>
       </Dialog>
-      {/* className={styleClass.commentBoxButton} */}    
+{/* className={styleClass.commentBoxButton} */}    
+{console.log('snackbarOpen',snackbarOpen)}
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={handleSnackbarClose}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleSnackbarClose}
+          variant={snackbarContent.variant}
+          message={snackbarContent.message}
+        />
+      </Snackbar>
+      
+      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
   </div>
+  
  )
 }
