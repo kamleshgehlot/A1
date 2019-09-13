@@ -30,6 +30,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/EnquiryRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
+import AutoSuggestDropdown from '../lead/AutoSuggestDropdown';
 
 // API CALL
 import Category from '../../../../src/api/Category';
@@ -114,7 +115,6 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   const [mainCategory, setMainCategory] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
-  
 
   const [customerListData, setCustomerListData] = useState([]);
   const [single, setSingle] = React.useState(null);
@@ -138,6 +138,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
 
         const category_list = await Category.mainCategoryList();
         setMainCategoryList(category_list.mainCategoryList);
+
         const resultCustomer = await Customer.list();
         setCustomerListData(resultCustomer.customerList);
        
@@ -305,8 +306,8 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel>
-                    <TextField
+                    {/* <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel> */}
+                    {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -323,21 +324,10 @@ return (
                       helperText={errors.customer_name}
                       required
                       fullWidth
-                    />
-                     {/* <AutoSelect
-                        inputId="customer_name"
-                        TextFieldProps={{
-                          InputLabelProps: {
-                            htmlFor: 'customer_name',
-                            shrink: true,
-                          },
-                        }}
-                        fullWidth
-                        options={customerName}
-                        // components={components}
-                        value={single}
-                        onChange={handleChangeSingle}
-                      />       */}
+                    /> */}
+                   
+                   <AutoSuggestDropdown customerListData={customerListData}/>
+
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="contact">Contact *</InputLabel>

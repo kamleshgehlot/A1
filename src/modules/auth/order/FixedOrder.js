@@ -139,7 +139,6 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Budget({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType}) {
 
-  console.log('inputs',inputs)
   const classes = useStyles();
   const styleClass = useCommonStyles();
   

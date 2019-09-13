@@ -46,13 +46,11 @@ export default function CommentDialog({open, handleViewClose, orderId}){
   
   const [commentData, setCommentData] = useState([]);  
 
-      console.log('ress',orderId)
   
   useEffect(() =>{
     const viewComment = async () => {
       const result = await OrderAPI.getComment({ order_id: orderId });      
       setCommentData(result);
-      console.log('ress',result)
     };
     viewComment();   
   },[]);

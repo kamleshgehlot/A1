@@ -14,7 +14,7 @@ import ProcessDialog from './ProcessDialog.js';
 import OrderAPI from '../../api/franchise/Order';
 import MySnackbarContentWrapper from '../common/MySnackbarContentWrapper';
 
-export default function CommentDialog({open, handleCommentBoxClose, orderData}){
+export default function CommentDialog({open, handleCommentBoxClose, orderData, setResponse}){
   const styleClass = useCommonStyles();   
   const [comment, setComment] = useState('');
   const [processDialog,setProcessDialog] = useState(false);
@@ -26,7 +26,7 @@ export default function CommentDialog({open, handleCommentBoxClose, orderData}){
   }
 
   function handleSnackbarClose() {
-    // setSnackbarOpen(false);
+    setSnackbarOpen(false);
   }
     
   function handleProcessDialogClose(){
@@ -34,26 +34,31 @@ export default function CommentDialog({open, handleCommentBoxClose, orderData}){
   }
 
   const postComment = async () => {
-    setProcessDialog(true);  
-    const result = await OrderAPI.postComment({
-      order_id: orderData.order_id,
-      user_id: orderData.user_id,
-      user_role: orderData.roleName,
-      comment: comment, 
-     });
-     setProcessDialog(false);  
-     if(result.isUploaded === 1){
-       if(processDialog===false){
-         setSnackbarContent({message:"Comment posted.", variant: "success"});
-         setSnackbarOpen(true);
-       }
-     }else if(result.isUploaded === 0){
-       if(processDialog===false){
-         setSnackbarContent({message:"Failed to post", variant: "error"});
-         setSnackbarOpen(true);
-       }
-     }  
-     handleCommentBoxClose(false);
+    if(comment != "") {
+      setProcessDialog(true);  
+      const result = await OrderAPI.postComment({
+        order_id: orderData.order_id,
+        user_id: orderData.user_id,
+        user_role: orderData.roleName,
+        comment: comment, 
+        });
+        setProcessDialog(false);  
+        if(result.isUploaded === 1){
+          if(processDialog===false){
+            setSnackbarContent({message:"Comment posted.", variant: "success"});
+            setSnackbarOpen(true);
+          }
+        }else if(result.isUploaded === 0){
+          if(processDialog===false){
+            setSnackbarContent({message:"Failed to post", variant: "error"});
+            setSnackbarOpen(true);
+          }
+        }  
+        setResponse(result);
+        handleCommentBoxClose(false);
+      }else{
+        alert('Comment something..');
+      }
   };
   
   return(
@@ -81,7 +86,7 @@ export default function CommentDialog({open, handleCommentBoxClose, orderData}){
         </DialogActions>
       </Dialog>
 {/* className={styleClass.commentBoxButton} */}    
-{console.log('snackbarOpen',snackbarOpen)}
+
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',

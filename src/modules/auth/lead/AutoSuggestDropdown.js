@@ -48,7 +48,8 @@ function renderSuggestion(suggestionProps) {
       selected={isHighlighted}
       component="div"
       style={{
-        fontWeight: isSelected ? 500 : 400,
+        fontWeight: isSelected ? 500 : 400,        
+        fontSize: '12px',
       }}
     >
       {suggestion.label}
@@ -92,27 +93,36 @@ AutoSuggestDropdown.propTypes = {
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    fontSize: theme.typography.pxToRem(12),
   },
   container: {
     flexGrow: 1,
     position: 'relative',
+    fontSize: theme.typography.pxToRem(12),
   },
   paper: {
     position: 'absolute',
     zIndex: 1,
     marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
     left: 0,
     right: 0,
   },
   inputRoot: {
     flexWrap: 'wrap',
+    fontSize: theme.typography.pxToRem(12),
   },
   inputInput: {
     width: 'auto',
+    fontSize: theme.typography.pxToRem(12),
     flexGrow: 1,
   },
   divider: {
     height: theme.spacing(2),
+    fontSize: theme.typography.pxToRem(12),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
   },
 }));
 
@@ -127,7 +137,8 @@ export default function AutoSuggestDropdown({customerListData}) {
   return (
     <div className={classes.root}>
       {/* <div className={classes.divider} /> */}
-      <Downshift id="downshift-options">
+      <Downshift id="downshift-options" className={classes.root}>
+        
         {({
           clearSelection,
           getInputProps,

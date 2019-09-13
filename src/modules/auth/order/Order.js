@@ -144,7 +144,8 @@ export default function Order({roleName}) {
   const [commentData,setCommentData] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [processDialog,setProcessDialog] = useState(false);
-  
+  const [response,setResponse] = useState([]);
+
   //Tab Data for corresponding role 
   const [openTab,setOpenTab] = useState([]);
   const [financeTab,setFinanceTab] = useState([]);
@@ -317,17 +318,18 @@ export default function Order({roleName}) {
     setConfirmation(true);
   }
 
-  function handleDelivered(data){
-    
+  function handleDelivered(data){    
     setCommentData({order_id: data, user_id: userId, roleName: roleName});
-    setCommentBoxOpen(true);
+    setCommentBoxOpen(true); 
+    setOrderId(data);
+  }
 
-    if(commentBoxOpen===false){
-      setOrderId(data);
+  if(commentBoxOpen===false && response.isSucceeded===1){
       setNextStep('Delivered');
+      setResponse('');
       setConfirmation(true);
     }
-  }
+  
 
   function handlePaymentStatus(data){
     setOrderData(data);
@@ -636,7 +638,7 @@ export default function Order({roleName}) {
      {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
-     {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} /> : null }
+     {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null }
      {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId}  /> :null}
     </div>
   );

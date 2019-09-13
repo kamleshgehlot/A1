@@ -361,7 +361,7 @@ export default {
   },
 
   getComment:  async (req) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/order/getComment`;
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getcomment`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',

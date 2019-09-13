@@ -192,7 +192,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     const getFixedPaymentTable = async () => {
       try {
         const fixOrder = await Order.getCurrespondingFixedOrder({fixedOrderId: orderData.order_type_id});
-        console.log('fix' , fixOrder);
           let payment_table=[];
           var paymentDate = new Date(fixOrder[0].first_payment);          
           let totalPaid = fixOrder[0].each_payment_amt;

@@ -344,36 +344,37 @@ Order.prototype.getBudget = function () {
   });
 };
 
-Order.prototype.getOldBudget = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
+// Order.prototype.getOldBudget = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
 
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.id != "'+that.budget_id+'" && b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4 && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
-          // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4 && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
-          })
-      } else {
-        console.log("Error...", error);
-        reject(error);
-      }
-      connection.release();
-      console.log('Order Added for Franchise Staff %d', connection.threadId);
-    });
-  }).catch((error) => {
-    throw error;
-  });
-};
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//         connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.id != "'+that.budget_id+'" && b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4 && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
+//           // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4 && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
+//             console.log('rows old---',rows)
+//             if (!error) {
+//                 resolve(rows);
+//                 } else {
+//                   console.log("Error...", error);
+//                   reject(error);
+//                 }
+//           })
+//       } else {
+//         console.log("Error...", error);
+//         reject(error);
+//       }
+//       connection.release();
+//       console.log('Order Added for Franchise Staff %d', connection.threadId);
+//     });
+//   }).catch((error) => {
+//     throw error;
+//   });
+// };
 
 
 
@@ -387,8 +388,10 @@ Order.prototype.getExistingBudget = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4',function (error, rows, fields) {
+           connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
+        // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4',function (error, rows, fields) {
             if (!error) {
+              console.log('rows exist---',rows)
                 resolve(rows);
                 } else {
                   console.log("Error...", error);
@@ -1051,7 +1054,7 @@ Order.prototype.postComment = function () {
           ];
             connection.query('INSERT INTO order_comment(order_id, created_by, user_role, comment, is_active) VALUES ?',[queryData],function (error, rows, fields) {
               if (!error) {              
-                          resolve({rows, isUploaded: 1});
+                          resolve({isSucceeded: 1});
                     } else {
                       console.log("Error...", error);
                       // reject(error);

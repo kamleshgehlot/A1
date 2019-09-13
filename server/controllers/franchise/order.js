@@ -76,12 +76,13 @@ const postComment = async function (req, res, next) {
 	try{
       const newComment = new Order(commentParams);
 
-	    const result = await newComment.postComment();
+      const result = await newComment.postComment();
+      console.log('comment result',result);
       // const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
       if(result){
-        res.send({ isUploaded: result.isUploaded}); 
+        res.send(result); 
       }else{
-        res.send({ isUploaded: 0});
+        res.send({ isSucceeded: 0});
       }   
 	}catch(err){
     next(error);
@@ -100,7 +101,7 @@ const getComment = async function (req, res, next) {
       const newComment = new Order(commentParams);
 
 	    const result = await newComment.getComment();
-        res.send(result); 
+       res.send(result); 
 	}catch(err){
     next(error);
 	}
@@ -131,9 +132,9 @@ const getBudget = async function(req, res, next) {
   try {
     // console.log('req--',req.body)
     const order = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId}).getBudget();
-    const oldBudget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget();
+    // const oldBudget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget();
     
-    res.send({ order , oldBudget}); 
+    res.send({ order}); 
   } catch (error) {
     next(error);
   }

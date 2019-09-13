@@ -243,7 +243,6 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
     setInputsAll(fixedOrderList);
   }, []);
 
-  console.log('inputs,',inputs);
   
 
 return (

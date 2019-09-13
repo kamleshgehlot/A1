@@ -47,7 +47,7 @@ const orderRouter = express.Router();
 
 orderRouter.route("/getnewid").get(validateToken, Order.getnewid);
 orderRouter.route("/getall").get(validateToken, Order.getAll);
-orderRouter.route("/getComment").post(validateToken, Order.getComment);
+orderRouter.route("/getcomment").post(validateToken, Order.getComment);
 orderRouter.route("/postComment").post(validateToken, Order.postComment);
 orderRouter.route("/uploaddoc").post(validateToken, upload.array('avatar'), Order.uploadDoc);
 orderRouter.route("/uploadDeliveryDoc").post(validateToken, DeliveredDoc.array('avatar'), Order.uploadDeliveryDoc);

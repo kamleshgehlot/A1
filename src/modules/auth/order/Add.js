@@ -358,7 +358,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         setMainCategoryList(category_list.mainCategoryList);
 
         const order_id = await OrderAPI.getnewid();
-        // console.log('123',order_id)
         let zero = 0;
         if(order_id == ""){
             setInput('order_id','0000001');
@@ -440,7 +439,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     addOrder,
     validate
   );
-  // console.log('orders',inputs);
 
     
 return (

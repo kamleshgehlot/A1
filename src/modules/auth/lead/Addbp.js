@@ -221,11 +221,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     }
   };
 
-  const customerName =
-  (customerListData.length > 0 ? customerListData : []).map(suggestion => ({
-  
-    value: suggestion.mobile,
-    label: suggestion.customer_name,}));
+
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -235,7 +231,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
         const result = await Lead.franchiseList();
         setFranchiseList(result.franchiseList);
         // console.log('usrlist---',result.franchiseList);
-        const resultCustomer = await Customer.list();
+        const resultCustomer = await Customer.list();        
         setCustomerListData(resultCustomer.customerList);
         console.log('resultCustomer.customerList====',resultCustomer.customerList)
       } catch (error) {
@@ -247,229 +243,6 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     
   }, []);
 
-  // function NoOptionsMessage(props) {
-  //   return (
-  //     <Typography
-  //       color="textSecondary"
-  //       className={props.selectProps.classesCustomer.noOptionsMessage}
-  //       {...props.innerProps}
-  //     >
-  //       {props.children}
-  //     </Typography>
-  //   );
-  // }
-  
-  // NoOptionsMessage.propTypes = {
-  //   /**
-  //    * The children to be rendered.
-  //    */
-  //   children: PropTypes.node,
-  //   /**
-  //    * Props to be passed on to the wrapper.
-  //    */
-  //   innerProps: PropTypes.object.isRequired,
-  //   selectProps: PropTypes.object.isRequired
-  // };
-  
-  // function inputComponent({ inputRef, ...props }) {
-  //   return <div ref={inputRef} {...props} />;
-  // }
-  
-  // inputComponent.propTypes = {
-  //   inputRef: PropTypes.oneOfType([
-  //     PropTypes.func,
-  //     PropTypes.shape({
-  //       current: PropTypes.any.isRequired
-  //     })
-  //   ])
-  // };
-  
-  // function Control(props) {
-  //   const {
-  //     children,
-  //     innerProps,
-  //     innerRef,
-  //     selectProps: { classesCustomer, TextFieldProps }
-  //   } = props;
-  
-  //   return (
-  //     <TextField
-  //       fullWidth
-  //       InputProps={{
-  //         inputComponent,
-  //         inputProps: {
-  //           className: classesCustomer.input,
-  //           ref: innerRef,
-  //           children,
-  //           ...innerProps
-  //         }
-  //       }}
-  //       {...TextFieldProps}
-  //     />
-  //   );
-  // }
-  
-  // Control.propTypes = {
-  //   /**
-  //    * Children to render.
-  //    */
-  //   children: PropTypes.node,
-  //   /**
-  //    * The mouse down event and the innerRef to pass down to the controller element.
-  //    */
-  //   innerProps: PropTypes.shape({
-  //     onMouseDown: PropTypes.func.isRequired
-  //   }).isRequired,
-  //   innerRef: PropTypes.oneOfType([
-  //     PropTypes.oneOf([null]),
-  //     PropTypes.func,
-  //     PropTypes.shape({
-  //       current: PropTypes.any.isRequired
-  //     })
-  //   ]).isRequired,
-  //   selectProps: PropTypes.object.isRequired
-  // };
-  
-  // function Option(props) {
-  //   return (
-  //     <MenuItem
-  //       ref={props.innerRef}
-  //       selected={props.isFocused}
-  //       component="div"
-  //       style={{
-  //         fontWeight: props.isSelected ? 500 : 400
-  //       }}
-  //       {...props.innerProps}
-  //     >
-  //       {props.children}
-  //     </MenuItem>
-  //   );
-  // }
-  
-  // Option.propTypes = {
-  //   /**
-  //    * The children to be rendered.
-  //    */
-  //   children: PropTypes.node,
-  //   /**
-  //    * props passed to the wrapping element for the group.
-  //    */
-  //   innerProps: PropTypes.shape({
-  //     id: PropTypes.string.isRequired,
-  //     key: PropTypes.string.isRequired,
-  //     onClick: PropTypes.func.isRequired,
-  //     onMouseMove: PropTypes.func.isRequired,
-  //     onMouseOver: PropTypes.func.isRequired,
-  //     tabIndex: PropTypes.number.isRequired
-  //   }).isRequired,
-  //   /**
-  //    * Inner ref to DOM Node
-  //    */
-  //   innerRef: PropTypes.oneOfType([
-  //     PropTypes.oneOf([null]),
-  //     PropTypes.func,
-  //     PropTypes.shape({
-  //       current: PropTypes.any.isRequired
-  //     })
-  //   ]).isRequired,
-  //   /**
-  //    * Whether the option is focused.
-  //    */
-  //   isFocused: PropTypes.bool.isRequired,
-  //   /**
-  //    * Whether the option is selected.
-  //    */
-  //   isSelected: PropTypes.bool.isRequired
-  // };
-  
-  // function Placeholder(props) {
-  //   const { selectProps, innerProps = {}, children } = props;
-  //   return (
-  //     <Typography
-  //       color="textSecondary"
-  //       className={selectProps.classesCustomer.placeholder}
-  //       {...innerProps}
-  //     >
-  //       {children}
-  //     </Typography>
-  //   );
-  // }
-  
-  // Placeholder.propTypes = {
-  //   /**
-  //    * The children to be rendered.
-  //    */
-  //   children: PropTypes.node,
-  //   /**
-  //    * props passed to the wrapping element for the group.
-  //    */
-  //   innerProps: PropTypes.object,
-  //   selectProps: PropTypes.object.isRequired
-  // };
-  
-  // function SingleValue(props) {
-  //   return (
-  //     <Typography
-  //       className={props.selectProps.classesCustomer.singleValue}
-  //       {...props.innerProps}
-  //     >
-  //       {props.children}
-  //     </Typography>
-  //   );
-  // }
-  
-  // SingleValue.propTypes = {
-  //   /**
-  //    * The children to be rendered.
-  //    */
-  //   children: PropTypes.node,
-  //   /**
-  //    * Props passed to the wrapping element for the group.
-  //    */
-  //   innerProps: PropTypes.any.isRequired,
-  //   selectProps: PropTypes.object.isRequired
-  // };
-  
-  // function ValueContainer(props) {
-  //   return (
-  //     <div className={props.selectProps.classesCustomer.valueContainer}>
-  //       {props.children}
-  //     </div>
-  //   );
-  // }
-  
-  // ValueContainer.propTypes = {
-  //   /**
-  //    * The children to be rendered.
-  //    */
-  //   children: PropTypes.node,
-  //   selectProps: PropTypes.object.isRequired
-  // };
-  
-  // const components = {
-  //   Control,
-  //   NoOptionsMessage,
-  //   Option,
-  //   Placeholder,
-  //   SingleValue,
-  //   ValueContainer
-  // };
-  
- 
-  const selectStyles = {
-    input: base => ({
-      ...base,
-      color: theme.palette.text.primary,
-      "& input": {
-        font: "inherit"
-      }
-    })
-  };
-  
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -477,7 +250,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
 
       try {
         const result = await Lead.last();
-        console.log('en',result);
+        // console.log('en',result);
         let zero = 0;
         if(result[0]!=null){  
           zero = 6 - (result[0].id.toString().length); 
@@ -549,10 +322,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     setInput('franchise_id',event.target.value);
     }
 
-    function handleOtherFranchise(event){
-      setOtherFranchiseValue(event.target.value)
-    }
-
+ 
      
     const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
       RESET_VALUES,
@@ -626,25 +396,7 @@ return (
                         <MenuItem className={classes.textsize} value={'0'}>{'All'}</MenuItem> 
                       </BasicSelect>
                   </Grid>
-                    {/* <Grid item xs={12} sm={3}>
-                      <TextField 
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                        margin="dense"
-                        id="otherFranchiseValue"
-                        name="otherFranchiseValue"
-                        label="Enter Franchise Name"
-                        type="text"
-                        value={otherFranchiseValue} 
-                        onChange={handleOtherFranchise}
-                        required
-                        disabled = {otherDisable}
-                        fullWidth
-                      />
-                    </Grid> */}
+                    
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="contact">Upload Doc/Photo</InputLabel>
                     <TextField 
@@ -685,68 +437,9 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                    
                     <AutoSuggestDropdown customerListData={customerListData}/>
 
-                    {/* <InputLabel  className={classes.textsize} htmlFor="customer_name">Customer Name </InputLabel> */}
-                      
-                    {/* <NoSsr>
-                       <Select
-                        className={classes.cn }
-                        styles={selectStyles}
-                        inputId="customer_name"
-                        TextFieldProps={{
-                          InputLabelProps: {
-                            htmlFor: 'customer_name',
-                            shrink: true,
-                          },
-                        }}
-                        fullWidth
-                        options={customerName}
-                        // components={components}
-                        value={single}
-                        onChange={handleChangeSingle}
-                      />                     
-                      {/* <Select 
-                      id="customer_name"
-                      name="customer_name"
-                      margin="dense"
-                      classes={classesCustomer}
-                      styles={selectStyles}
-                      value={single}
-                      
-                      autoComplete='off'
-                      TextFieldProps={{
-                        label: 'Country',
-                        InputLabelProps: {
-                          htmlFor: 'customer_name',
-                          shrink: true,
-                        },
-                        form: {
-                          autocomplete: "off",
-                        }
-                      }}
-                      fullWidth onChange={handleChangeSingle}
-                       options={ customerName } /> 
-                       </NoSsr>  */}
-                    {/* <TextField 
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="customer_name"
-                      name="customer_name"
-                      // label="First Name"
-                      value={inputs.customer_name}
-                      onChange={handleInputChange}
-                      error={errors.customer_name}
-                      helperText={errors.customer_name}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="customer_contact">Customer Contact </InputLabel>

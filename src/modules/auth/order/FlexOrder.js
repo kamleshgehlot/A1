@@ -227,7 +227,6 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
   validate
 );
 
-{console.log('inputs',inputs)}
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>

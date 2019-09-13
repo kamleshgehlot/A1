@@ -47,13 +47,13 @@ export default function layout(data,order) {
   const budget = data.budget; 
   const user = data.user; 
 
-  console.log(franchise);
-  console.log("product", products);
-  console.log(orderType);
-  console.log(customer);
-  console.log(budget);
-  console.log(order);
-  console.log(user);
+  // console.log(franchise);
+  // console.log("product", products);
+  // console.log(orderType);
+  // console.log(customer);
+  // console.log(budget);
+  // console.log(order);
+  // console.log(user);
 
   // const productList = [];
 
