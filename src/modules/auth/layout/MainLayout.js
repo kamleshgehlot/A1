@@ -677,6 +677,22 @@ export default function ClippedDrawer(props) {
           </TreeView>
           :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
+
+        {/* {roleId == 0
+        ?
+          <TreeView
+            className={classes.treeRoot}
+            // defaultExpanded={["3"]}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            defaultEndIcon={<div style={{ width: 24 }} />}
+          >
+            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Master Staff'); }} />            
+            <StyledTreeItem nodeId="4" labelText="Manage Leads" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Master Staff'); }}/>
+          </TreeView>
+          :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> } */}
+
+
         {roles.find(role => role === 'CSR' || role === 'Finance' || role === 'Delivery' || role === 'HR')
         && ( 
           <TreeView

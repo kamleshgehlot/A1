@@ -642,6 +642,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       helperText={errors.nbzn}
                       fullWidth
                       margin="dense"
+                      type="number"
                       // required
                       onChange={handleInputChange}
                       onInput={(e)=>{ 

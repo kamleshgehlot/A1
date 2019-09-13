@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail, validAlpha } from './Regex';
+import { validString, validNumber, validDecimalNumber, validFullLengthDecimalNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -22,7 +22,7 @@ export default function validate(values) {
 
   if (!values.buying_price) {
     errors.buying_price = 'Product Buying Price is required';
-  } else if (!validNumber.test(values.buying_price)) {
+  } else if (!validFullLengthDecimalNumber.test(values.buying_price)) {
     errors.buying_price = 'Product Buying Price is invalid';
   }
   if (!values.description) {
@@ -52,7 +52,7 @@ export default function validate(values) {
   
   if (!values.rental) {
     errors.rental = 'Rental Price is required';
-  } else if (!validNumber.test(values.rental)) {
+  } else if (!validFullLengthDecimalNumber.test(values.rental)) {
     errors.rental = 'Rental Price is invalid';
   } else if(values.rental == 0) {
     errors.rental = 'Rental Price can not be zero';

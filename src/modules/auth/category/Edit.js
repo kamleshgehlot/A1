@@ -301,6 +301,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       type="number"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>
@@ -462,6 +465,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       type="number"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
                       }}
                     />
                   </Grid>

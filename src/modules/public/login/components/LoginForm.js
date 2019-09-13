@@ -65,7 +65,7 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
       </p>
       <Button
         onClick={onSubmit}
-        variant="outlined"
+        variant="contained"
         color="primary"
         fullWidth
         className={classes.button}

@@ -5,6 +5,8 @@ export default function validate(values) {
   
   if (!values.franchise_name) {
     errors.franchise_name = 'Franchise Name is required';
+  }else if(!validAlpha.test(values.franchise_name)){
+    errors.franchise_name = 'Franchise Name is invalid';
   }
 
   if (!values.city) {
