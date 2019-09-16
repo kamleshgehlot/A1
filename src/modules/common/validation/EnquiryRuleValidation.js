@@ -2,11 +2,11 @@ import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
-  if (!values.customer_name) {
-    errors.customer_name = 'Customer Name is required';
-  } else if (!validString.test(values.customer_name)) {
-    errors.customer_name = 'Customer Name is invalid';
-  }
+  // if (!values.customer_name) {
+  //   errors.customer_name = 'Customer Name is required';
+  // } else if (!validString.test(values.customer_name)) {
+  //   errors.customer_name = 'Customer Name is invalid';
+  // }
   
 
   if (!values.contact) {

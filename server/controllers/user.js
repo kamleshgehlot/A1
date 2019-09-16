@@ -142,14 +142,14 @@ const register = async function (req, res, next) {
 						html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong> <br />user Id: ' + director.uid + '<br />password: ' + director.password
 					}
 
-					// trans.sendMail(mail, (err, info) => {
-					// 	if (err) {
-					// 		return console.log(err);
-					// 	}
-					// 	console.log('Message sent: %s', info.messageId);
-					// 	// Preview only available when sending through an Ethereal account
-					// 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-					// });
+					trans.sendMail(mail, (err, info) => {
+						if (err) {
+							return console.log(err);
+						}
+						console.log('Message sent: %s', info.messageId);
+						// Preview only available when sending through an Ethereal account
+						console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+					});
 				});
 				// newUserRole.user_id = result.id;
 
@@ -164,64 +164,8 @@ const register = async function (req, res, next) {
 	} catch (err) {
 		next(err);
 	}
-
-	// 	const newFranchise = new Franchise();
-
-	// 	try {
-	// 		const newUser = new User(userParam);
-
-	// 		if(userParam.role_id === 2) {
-
-	// 			newFranchise.register().then(function (result) {
-	// 				newUser.franchise_id = result.franchise_id;
-
-	// 				newUser.register().then(function (result) {
-	// 					new Franchise({}).all().then(function (userList) {
-	// 						res.json({ credentials: result, userList: userList });
-	// 					});
-	// 				}).catch((err) => {
-	// 					res.status(500);
-	// 					res.render('error', { error: err });
-	// 				});
-	// 			});
-	// 		} else {
-	// 				newUser.franchise_id = req.decoded.franchise_id;
-
-	// 				newUser.register().then(function (result) {
-	// 					new Franchise({}).all().then(function (userList) {
-	// 						res.send({ credentials: result, userList: userList });
-	// 					});
-	// 				}).catch((err) => {
-	// 					res.status(500);
-	// 					res.render('error', { error: err });
-	// 				});
-	// 		}
-	// 	} catch (err) {
-	// 		next(err);
-
-	// 		res.status(500)
-	// 		res.send('error', { error: err })
-	// 	}
 };
 
-
-const edit = async function (req, res, next) {
-	// console.log('...............', req.decoded);
-	// console.log('...............', req.body);
-
-	try {
-
-		// console.log('controller update accountant', result);
-		// new Category({}).all().then(categoryList => {
-		// 	res.send({ categoryList });
-		// });
-
-		const newAccountant = new Accountant(accountantParam);
-		await newAccountant.update();
-	} catch (err) {
-		next(err);
-	}
-};
 
 const all = async function (req, res, next) {
 	try {
@@ -243,17 +187,5 @@ const verifyEmail = async function (req, res, next) {
 	}
 };
 
-// const getUniqueNames = async function (req, res, next) {
-// 	try {
-// 		if (req.decoded.role === 'admin') {
-// 			const userList = await new User({}).getUniqueNames();
-// 			res.send({ userList: userList });
-// 		} else {
-// 			res.send([]);
-// 		}
-// 	} catch (err) {
-// 		next(err);
-// 	} 
-// }
 
 module.exports = { all: all, register: register, verifyEmail: verifyEmail };

@@ -16,6 +16,8 @@ const StaffMaster = function (params) {
   this.accountId = params.accountId;
   this.franchise_id = params.franchise_id;
   this.is_active = params.is_active;
+
+  this.searchText = params.searchText;
   // console.log('params---',params)
   // console.log('params---',params)
 };
@@ -103,19 +105,15 @@ StaffMaster.prototype.getAll = function () {
       connection.changeUser({ database: dbName["prod"] });
       connection.query('select ms.id, ms.first_name, ms.last_name, ms.user_id,AES_DECRYPT(`password`, \'secret\') AS password, ms.location, ms.contact, ms.email, ms.position, sp.position as position_name, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id order by id desc', (error, rows, fields) => {
         if (!error) {
-          // console.log('rows staff', rows)
           let datas = [];
           (rows && rows.length > 0 ? rows : []).map(data =>{
             if(data.password != ""){
               let pass = data.password && data.password.toString('utf8');
-              console.log('passss',pass);
               data.password = pass;
-              // console.log('passss',data);
             }
             datas.push(data); 
           });
-          resolve(datas);
-          // resolve(rows);
+          resolve(datas);          
         } else {
           console.log('Error...', error);
           reject(error);
@@ -127,5 +125,48 @@ StaffMaster.prototype.getAll = function () {
     });
   });
 };
+
+
+StaffMaster.prototype.searchData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select ms.id, ms.first_name, ms.last_name, ms.user_id, AES_DECRYPT(`password`, \'secret\') AS password, ms.location, ms.contact, ms.email, ms.position, sp.position as position_name, ms.created_by from master_staff ms inner join staff_position sp on ms.position = sp.id WHERE ms.first_name LIKE "%'+that.searchText+'%" OR ms.last_name LIKE "%'+that.searchText+'%" OR ms.user_id LIKE "%'+that.searchText+'%" OR ms.location LIKE "%'+that.searchText+'%" OR ms.email LIKE "%'+that.searchText+'%" OR ms.contact LIKE "%'+that.searchText+'%" OR sp.position LIKE "%'+that.searchText+'%" order by id desc', (error, rows, fields) => {
+          if (!error) {
+            let datas = [];
+            (rows && rows.length > 0 ? rows : []).map(data =>{
+              if(data.password != ""){
+                let pass = data.password && data.password.toString('utf8');
+                data.password = pass;
+              }
+              datas.push(data); 
+            });
+            resolve(datas);          
+          } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
 
 module.exports = StaffMaster;

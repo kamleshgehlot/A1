@@ -89,7 +89,6 @@ const search = async function (req, res, next) {
 	try{
     const newEnquiry = new Enquiry(EnquiryParams);
     const result = await newEnquiry.searchData({ user_id: req.decoded.user_id });
-
     res.send({ enquiryList: result });
 	}catch(err){
     next(error);

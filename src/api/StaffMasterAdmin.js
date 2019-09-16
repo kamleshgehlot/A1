@@ -28,6 +28,22 @@ export default {
     }
   },
 
+  search: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/user/staff/search`;
+    try {
+      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      // console.log("user api data : ",data);
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/user/staff/list`;
     try {

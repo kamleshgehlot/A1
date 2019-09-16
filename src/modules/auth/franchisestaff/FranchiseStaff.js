@@ -11,6 +11,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import TextField from '@material-ui/core/TextField';
+import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import AppBar from '@material-ui/core/AppBar';
 import Add from './Add';
 import Edit from './Edit';
@@ -52,11 +55,13 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   const [staffData,setStaffData]= useState();
   const [staffList, setStaffList] = useState({});
   const [role, setRole] = useState([]);
+  const [searchText, setSearchText]  = useState('');
   const [position, setPosition] = useState({});
   const [totalCSR,setTotalCSR] = useState();
   const [totalFinance,setTotalFinance] = useState();
   const [totalDelivery,setTotalDelivery] = useState();
   const [totalHR,setTotalHR] = useState();
+
   
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -136,19 +141,17 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   const classes = useStyles();
 
   function badgeCount(staff){
+    setTotalCSR(0);
+    setTotalFinance(0);
+    setTotalDelivery(0);
+    setTotalHR(0);
+
     let CSR = 0;
     let Finance = 0;
     let Delivery = 0;
     let HR = 0;
 
     (staff.length > 0 ? staff : []).map((data, index) =>{
-      // let a = (data.role.split(',')).find(ele => ele === '3');
-      // if(a==3){CSR += 1 };
-      // if(a==4){Finance += 1 };
-      // if(a==5){Delivery += 1 };
-      // if(a==6){HR += 1 };
-      //  == 3 ? CSR += 1 : '';
-    
       (data.role.split(',')).find(ele => ele === '3') == '3' ? CSR += 1 : '';
       (data.role.split(',')).find(ele => ele === '4') == '4' ? Finance += 1 : '';
       (data.role.split(',')).find(ele => ele === '5') == '5' ? Delivery += 1 : '';
@@ -158,10 +161,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
       setTotalFinance(Finance);
       setTotalDelivery(Delivery);
       setTotalHR(HR);
-  // console.log('a',a)
-  // (data.role.split(',')).find(ele => ele == 3 ) 
-  // console.log('ddd',(data.role.split(',')).find(ele =>  ele == 3 ))
-  })    
+    });
   }
 
 
@@ -170,7 +170,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
       setIsError(false);
       setIsLoading(true);
       try {
-        const result = await Staff.list({franchise_id: franchiseId.franchiseId});
+        const result = await Staff.list({});
         setStaffList(result.staffList);
         badgeCount(result.staffList);            
       } catch (error) {
@@ -180,8 +180,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     };
     fetchData();
 
-    const roleData = async () => {
-      
+  const roleData = async () => {      
       try {
         const result = await Role.list();
         setRole(result.role);
@@ -191,16 +190,10 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     };
     roleData();
   }, []);
-  // console.log('roles',CSR, Finance, Delivery, HR)
-
-  // Code for testing pls don't remove -- by SRK 
-  // function handleUploadClose() {
-  //   setUploadOpen(false);
-  // }
-  // function handleUploadOpen(){
-  //   setUploadOpen(true);
-  // }
-
+  
+  function handleSearchText(event){
+    setSearchText(event.target.value);
+  }
 
   function handleClickOpen() {
     setOpen(true);
@@ -241,12 +234,34 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     setValue(newValue);
     // console.log('setValue...',value)
   }
+
+
+  
+  const searchHandler = async () => {
+    try {
+    if(searchText!=''){
+        const result = await Staff.search({searchText: searchText});
+        setStaffList(result.staffList);
+        setSearchText('');
+        badgeCount(result.staffList);     
+        
+     
+    }else{
+      const result = await Staff.list({});
+      setStaffList(result.staffList);
+      setSearchText('');
+      badgeCount(result.staffList);          
+    }} catch (error) {
+      console.log('error',error);
+    }
+  }
+
   return (
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-              <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={8}>
             <Fab
               variant="extended"
               size="small"
@@ -258,25 +273,36 @@ export default function FranchiseStaff({franchiseId, roleName}) {
               <AddIcon className={classes.extendedIcon} />
               Franchise Staff
             </Fab>
-            </Grid>
-            {/* 
-            Code for testing pls don't remove -- by SRK 
-            <Grid item xs={12} sm={6}>
-            <Fab
-              variant="extended"
-              size="small"
-              color="primary"
-              aria-label="Upload"
-              className={classes.fonttransform}
-              onClick={handleUploadOpen}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              Upload
-            </Fab>
-
-            </Grid> */}
+          </Grid>
+          <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                id="search"
+                name="search"
+                label="Search"
+                label="Search..."
+                type="text"
+                value={searchText} 
+                onKeyPress={(ev) => {
+                  if (ev.key ===  'Enter') {
+                    searchHandler()
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={handleSearchText}
+                InputProps={{
+                  endAdornment: <InputAdornment position='end'>
+                                  <Tooltip title="Search">
+                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                  </Tooltip>
+                                </InputAdornment>,
+                }}
+                fullWidth
+              />              
+          </Grid>
           
-          <Grid item xs={12} sm={9}>
+          
+          <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">

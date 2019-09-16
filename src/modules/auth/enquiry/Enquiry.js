@@ -147,7 +147,7 @@ export default function Enquiry({roleName}) {
     };
     fetchData();
     
-  }, []);
+  },enquiryList);
 
   function handleClickOpen() {
     setOpen(true);
@@ -233,7 +233,7 @@ export default function Enquiry({roleName}) {
     fetchData();
   }
   
-console.log(enquiryList);
+// console.log(enquiryList);
 
   const searchHandler = async () => {
     try {
@@ -241,7 +241,7 @@ console.log(enquiryList);
       
       const result = await EnquiryAPI.search({searchText: searchText});
       setEnquiryList(result.enquiryList);
-      setSearchText('');
+      setSearchText('');      
     }else{
       const result = await EnquiryAPI.list();
       setEnquiryList(result.enquiryList);

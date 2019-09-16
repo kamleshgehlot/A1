@@ -16,21 +16,24 @@ Password.prototype.update = function () {
         throw error;
       }
       if(!error){
+        if(that.user_id.split('_')[1]==='admin'){
+          connection.changeUser({ database: dbName["prod"] });
+          connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, rows, fields) {
+            if (!error) {
+                resolve( rows );                      
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }else{
           connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
           connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, mainRows, fields) {
-              if (!error) {
-                // console.log('main rows-----', mainRows);
-                // resolve( mainRows );
+              if (!error) {                
                 connection.changeUser({ database: dbName["prod"] });
                 connection.query('update user set password = AES_ENCRYPT("' + that.new_password + '", "secret") where user_id="' + that.user_id + '"', function (error, rows, fields) {
                   if (!error) {
-                    // if(rows.changedRows=== 1) {
-                    //   console.log('rows-----', rows);
                       resolve( mainRows );                      
-                    // }
-                    // else{
-                    //   resolve(mainRows);
-                    // }                    
                   } else {
                     console.log("Error...", error);
                     reject(error);
@@ -41,7 +44,7 @@ Password.prototype.update = function () {
                 reject(error);
               }
             });
-            
+          }
       connection.release();
       console.log('Process Complete %d', connection.threadId);
     }
@@ -61,7 +64,11 @@ Password.prototype.passwordSelection = function () {
         throw error;
       }
       if(!error){
+        if(that.user_id.split('_')[1]==='admin'){
+            connection.changeUser({ database: dbName["prod"] });
+        }else{
             connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+        }
             connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, user_id from user where user_id=?',[that.user_id], function (error, rows, fields) {
                 resolve(rows);
             });

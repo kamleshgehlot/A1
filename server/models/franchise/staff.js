@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Staff = function (params) {
-  console.log("params@@@@@@@@@@@", params);
+  // console.log("params@@@@@@@@@@@", params);
 
   this.franchise_id = params.franchise_id;
   this.id = params.id;
@@ -31,6 +31,8 @@ var Staff = function (params) {
   this.is_active = params.is_active;
   this.token = params.token;
   this.accountId = params.accountId;
+  this.searchText = params.searchText;
+
 };
 
 Staff.prototype.register = function () {
@@ -201,6 +203,47 @@ Staff.prototype.all = function () {
     });
   });
 };
+
+
+
+Staff.prototype.searchData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });        
+        connection.query('select id, first_name, last_name, location, contact,  email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, AES_DECRYPT(`password`, \'secret\') AS password, role, employment_docs, created_by from staff where first_name LIKE "%'+that.searchText+'%" OR last_name LIKE "%'+that.searchText+'%" OR location LIKE "%'+that.searchText+'%" OR email LIKE "%'+that.searchText+'%" OR contact LIKE "%'+that.searchText+'%" OR user_id LIKE "%'+that.searchText+'%" order by id desc', function (error, rows, fields) {
+            if (!error) {
+                  let datas = [];
+                  (rows && rows.length > 0 ? rows : []).map(data =>{
+                    let pass = data.password.toString('utf8');
+                    data.password = pass;
+                    datas.push(data);
+                  });     
+                  console.log(rows)
+              resolve(datas);
+            } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 
 
 module.exports = Staff;

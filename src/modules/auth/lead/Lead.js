@@ -28,7 +28,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 //files
-import AddLead from './Addbp';
+import AddLead from './Add';
 import Comment from './Comment';
 import Add from '../enquiry/Add';
 import ConvertedLeads from './ConvertedLeads';
@@ -161,7 +161,7 @@ export default function Lead({roleName}) {
         const result = await LeadAPI.list();
         setLeadList(result.leadList);
         
-        if(roleName != 'Super Admin'){    
+        if(roleName != 'Super Admin' ){    
           const fid = await FranchiseUsers.franchiseid();
           setFranchiseId(fid.currentfranchise[0].franchise_id);
         }
@@ -337,6 +337,7 @@ export default function Lead({roleName}) {
     setValue(newValue);
     // console.log('setValue...',value)
   }
+  
   const searchHandler = async () => {
     try {
     if(searchText!=''){

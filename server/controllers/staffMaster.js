@@ -81,4 +81,23 @@ const all = async function (req, res, next) {
 	}
 }
 
-module.exports = { register: register, all: all};
+
+
+const searchData = async function (req, res, next) {
+  let staffParams = {
+    user_id: req.decoded.user_id,
+    searchText: req.body.searchText,
+  };
+	try{
+    const newStaff = new StaffMaster(staffParams);    
+    const staffList = await newStaff.searchData();
+    res.send({ staffList: staffList });
+	}catch(err){
+    next(error);
+	}
+};
+
+
+
+
+module.exports = { register: register, all: all, searchData: searchData};

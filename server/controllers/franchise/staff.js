@@ -109,9 +109,8 @@ const register = async function (req, res, next) {
 
 
 const all = async function(req, res, next) {
-  
   try {
-    console.log(req.decoded);
+    // console.log(req.decoded);
     const staffList = await new Staff({user_id : req.decoded.user_id}).all();
     
     res.send({ staffList });
@@ -121,4 +120,21 @@ const all = async function(req, res, next) {
 };
 
 
-module.exports = { register: register, all: all};
+const searchData = async function (req, res, next) {
+  // console.log('req..,',req.body);
+  let staffParams = {
+    user_id: req.decoded.user_id,
+    searchText: req.body.searchText,
+  };
+	try{
+    const newStaff = new Staff(staffParams);    
+    const staffList = await newStaff.searchData();
+    res.send({ staffList });
+	}catch(err){
+    next(error);
+	}
+};
+
+
+
+module.exports = { register: register, all: all, searchData: searchData};

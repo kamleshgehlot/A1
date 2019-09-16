@@ -191,4 +191,21 @@ const archivedList = async function(req, res, next) {
   }
 };
 
-module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList,archivedList, mainCategoryList, categoryList, subCategoryList, relatedProductList  };
+
+const searchData = async function (req, res, next) {
+  let ProductParams = {
+    user_id: req.decoded.user_id,
+    searchText: req.body.searchText,
+  };
+	try{
+    const newProduct = new Product(ProductParams);    
+    const productList = await newProduct.searchData();
+    res.send({ productList });
+	}catch(err){
+    next(error);
+	}
+};
+
+
+
+module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList,archivedList, mainCategoryList, categoryList, subCategoryList, relatedProductList, searchData  };

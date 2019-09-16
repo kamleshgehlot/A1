@@ -21,6 +21,8 @@ const Product = function (params) {
 
   this.user_id = params.user_id;
   this.subcategory = params.subcategory;
+  this.searchText = params.searchText;
+
   console.log('params',params)
 };
 
@@ -164,6 +166,40 @@ Product.prototype.relatedProductList = function () {
     });
   });
 }
+
+
+Product.prototype.searchData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select p.id, p.maincat, p.category, p.subcat, p.name, p.color_id, p.brand_id, p.buying_price, p.description, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status from product as p WHERE p.name LIKE "%'+that.searchText+'%" OR p.brought LIKE "%'+that.searchText+'%" OR p.invoice LIKE "%'+that.searchText+'%" OR p.status LIKE "%'+that.searchText+'%" OR p.meta_keywords LIKE "%'+that.searchText+'%" order by p.id desc',
+        function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+            
+          })
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
 
 
 module.exports = Product;

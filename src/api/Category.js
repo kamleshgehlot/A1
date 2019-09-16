@@ -177,6 +177,24 @@ export default {
     }
   },
 
+
+  search: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/category/search`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
   archivedList: async () => {
     const URL = `${c.API_CONSUMER}/api/category/archivedList`;
     try {

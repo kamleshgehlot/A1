@@ -141,7 +141,7 @@ export default function Profile({roleName}) {
                 <CallIcon fontSize="small" /> {profileList.contact} <br/>
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
-                <CallIcon fontSize="small" /> {profileList.alt_contact===null? 'Not Available':profileList.alt_contact} <br/>
+                <CallIcon fontSize="small" /> {profileList.alt_contact===''? 'Not Available':profileList.alt_contact} <br/>
               </Typography>
             </Paper>:
             <Paper className={classes.paper} style={{ width: '40%' }}>
@@ -153,8 +153,9 @@ export default function Profile({roleName}) {
               </Typography>
               <Typography  variant="h6" className={classes.typography}>
                 <RecentActorsIcon fontSize="small" />
-                {
-                  ( (profileList.role && profileList.role.split(',')) || []).map((a, index) =>{
+                { profileList.user_id.split('_')[1] === 'admin' ?
+                    profileList.role
+                  : ((profileList.role && profileList.role.split(',')) || []).map((a, index) =>{
                     // console.log("index",index);
                     return(
                       role.map((ele)=>{

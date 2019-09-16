@@ -7,7 +7,7 @@ const Profile = function (params) {
   this.user_id = params.user_id;
   this.franchise_id = params.franchise_id;
   this.id = params.id;
-  console.log('prams...',params);
+  console.log('prams...',params );
 };
 
 
@@ -22,16 +22,27 @@ Profile.prototype.info = function () {
         throw error;
       }
 
+      if(that.user_id.split('_')[1]==='admin'){
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select s.id, s.first_name, s.last_name, s.location, s.contact, s.email, s.user_id, p.position as role from master_staff as s inner join staff_position as p on s.position = p.id where s.user_id= "'+that.user_id+'"', function (error, prows, fields) {
+          if (!error) {
+            resolve(prows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }else{
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select director_id, franchise_id from user where id="' + that.id + '"', function (error, rows, fields) {
-
+      connection.query('select director_id, franchise_id from user where user_id="' + that.user_id + '"', function (error, rows, fields) {
         if (!error) {
           if(rows[0]){
               const director_id = rows[0].director_id;
               const franchise_id = rows[0].franchise_id;
-            
+              connection.changeUser({ database: dbName["prod"] });
               connection.query('select c.name, c.nbzn, c.location, c.director, c.email, c.contact, c.alt_contact, c.website, f.name as fname from company c, franchise f where c.id="' + director_id + '" AND f.id="' + franchise_id + '" limit 1', function (error, mrows, fields) {
                 if (!error) {
+                  console.log('rows.',mrows);
                   resolve(mrows);
                 } else {
                   console.log('Error...', error);
@@ -64,9 +75,10 @@ Profile.prototype.info = function () {
           console.log('Error...', error);
           reject(error);
         }
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
       });
+      }
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);      
     });
   });
 }

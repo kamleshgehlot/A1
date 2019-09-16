@@ -15,6 +15,7 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
+import SearchIcon from '@material-ui/icons/Search';
 // import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 import Grid from '@material-ui/core/Grid';
 import { APP_TOKEN } from '../../../api/Constants';
@@ -27,9 +28,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 import BadgeComp from '../../common/BadgeComp';
-
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 // API CALL
-import Category from '../../../../src/api/Category';
+
+import Product from '../../../../src/api/Category';
 import Brand from '../../../api/product/Brand';
 import Color from '../../../api/product/Color';
 import Status from '../../../api/product/Status';
@@ -70,7 +73,7 @@ export default function ProductList({roleName}) {
   const [activeProduct,setActiveProduct] = useState();
   const [onholdProduct,setOnholdProduct] = useState();
   const [discontinuedProduct,setDiscontinuedProduct] = useState();
-  
+  const [searchText, setSearchText]  = useState('');
 
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -134,7 +137,7 @@ export default function ProductList({roleName}) {
       setIsLoading(true);
 
       try {
-        const result = await Category.productlist();
+        const result = await Product.productlist();
         setProductList(result.productList);
         handleCount(result.productList);
 
@@ -187,6 +190,10 @@ export default function ProductList({roleName}) {
     
   }
 
+  function handleSearchText(event){
+    setSearchText(event.target.value);
+  }
+
   function setCategoryListFn(response) {
     setProductList(response);
     handleCount(response);
@@ -209,6 +216,28 @@ export default function ProductList({roleName}) {
 
     fetchData();
   }
+
+  
+  const searchHandler = async () => {
+    try {
+    if(searchText!=''){
+        const result = await Product.search({searchText: searchText});        
+        console.log(result);
+        setProductList(result.productList);        
+        setSearchText('');
+        handleCount(result.productList);           
+    }else{
+      const result = await Product.productlist();
+      setProductList(result.productList);
+      setSearchText('');
+      handleCount(result.productList);      
+    }} catch (error) {
+      console.log('error',error);
+    }
+  }
+
+
+  
 
   function handleSnackbarClose() {
     setSnackbarOpen(false);
@@ -269,19 +298,34 @@ export default function ProductList({roleName}) {
             Product
           </Fab>
         </Grid>
-          {/* <Grid item xs={12} sm={2}>
-            <Fab
-              variant="extended"
-              size="small"
-              // color="primary"
-              aria-label="Complete"
-              className={classes.fonttransform}
-              onClick={handleArchivedClickOpen}
-            >
-              Archived Products
-            </Fab>
-          </Grid> */}
-        <Grid item xs={12} sm={12} md={10}>
+          <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                id="search"
+                name="search"
+                label="Search"
+                label="Search..."
+                type="text"
+                value={searchText} 
+                onKeyPress={(ev) => {
+                  if (ev.key ===  'Enter') {
+                    searchHandler()
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={handleSearchText}
+                InputProps={{
+                  endAdornment: <InputAdornment position='end'>
+                                  <Tooltip title="Search">
+                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                  </Tooltip>
+                                </InputAdornment>,
+                }}
+                fullWidth
+              />             
+          </Grid>
+         
+        <Grid item xs={12} sm={12} md={12}>
           
         <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">

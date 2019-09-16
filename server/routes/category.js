@@ -5,6 +5,8 @@ const validateToken = require('../utils').validateToken;
 
 const categoryRouter = express.Router();
 
+
+categoryRouter.route('/search').post(validateToken, Category.searchData);
 categoryRouter.route('/add').post(validateToken, Category.add);
 categoryRouter.route('/addCategory').post(validateToken, Category.addCategory);
 categoryRouter.route('/addSubCategory').post(validateToken, Category.addSubCategory);

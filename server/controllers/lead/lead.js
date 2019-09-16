@@ -27,7 +27,7 @@ const add = async function (req, res, next) {
   try {
     const newLead = new Lead(leadParam);
     await newLead.add();
-    const leadList = await new Lead({ user_id: req.decoded.user_id }).all();
+    const leadList = await new Lead({ user_id: req.decoded.user_id, franchise_id: req.decoded.franchise_id  }).all();
     
     res.send({ leadList });
   } catch (err) {
@@ -36,8 +36,9 @@ const add = async function (req, res, next) {
 };
 
 const all = async function (req, res, next) {
+  // console.log('req.decoded',req.decoded);
   try {
-    const leadList = await new Lead({ user_id: req.decoded.user_id }).all();
+    const leadList = await new Lead({ user_id: req.decoded.user_id, franchise_id: req.decoded.franchise_id }).all();
     res.send({ leadList });
   } catch (err) {
     next(err);
@@ -61,7 +62,7 @@ const addComment = async function (req, res, next) {
   try {
     const newLead = new Lead(leadParam);
     await newLead.addComment();
-    const leadList = await new Lead({ user_id: req.decoded.user_id }).all();
+    const leadList = await new Lead({ user_id: req.decoded.user_id, franchise_id: req.decoded.franchise_id  }).all();
     
     res.send({ leadList });
   } catch (err) {
@@ -116,7 +117,7 @@ const filter = async function (req, res, next) {
       res.send({ leadList });
     }
     else{
-      const leadList = await new Lead({ user_id: req.decoded.user_id }).all();
+      const leadList = await new Lead({ user_id: req.decoded.user_id,  franchise_id: req.decoded.franchise_id  }).all();
       
       res.send({ leadList });
     }
@@ -126,13 +127,14 @@ const filter = async function (req, res, next) {
 };
 
 const search = async function (req, res, next) {
+  console.log('lead rq..',req.body);
   let leadParams = {
     user_id: req.decoded.user_id,
     searchText: req.body.searchText,
   };
 	try{
     const newLead = new Lead(leadParams);
-    const result = await newLead.searchData({ user_id: req.decoded.user_id });
+    const result = await newLead.searchData();
 
     res.send({ leadList: result });
 	}catch(err){

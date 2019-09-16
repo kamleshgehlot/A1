@@ -12,7 +12,6 @@ const Lead = function (params) {
   this.user_id = params.user_id;
   this.userid = params.userid;
   if (this.franchise_id === '0') {
-
     this.is_franchise_exist = 0;
   }
   else {
@@ -31,7 +30,7 @@ const Lead = function (params) {
   this.filter_id = params.filter_id;
   
   this.searchText = params.searchText;
-  // console.log('params------',params);
+  console.log('params------',params);
 };
 
 Lead.prototype.add = function () {
@@ -43,7 +42,7 @@ Lead.prototype.add = function () {
         throw error;
       }
 
-      if (that.user_id != "admin") {
+      if (that.user_id != "admin" && that.user_id.split('_')[1] != 'admin') {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
           if (!error) {
@@ -98,6 +97,18 @@ Lead.prototype.all = function () {
       if (error) {
         throw error;
       }
+      if(that.user_id.split('_')[1]==='admin'){
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND ( f_id="0" OR franchise_id=0 ) order by id desc', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }else{
       if (that.user_id != "admin") {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
@@ -105,10 +116,9 @@ Lead.prototype.all = function () {
             // resolve(rows);
             const franchise_id = rows[0].franchise_id;
             connection.changeUser({ database: dbName["prod"] });
-            connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (f_id="' + franchise_id + '" OR franchise_id="' + franchise_id + '" OR franchise_id="0") order by id desc', function (error, rows, fields) {
+            connection.query('select id, lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (f_id="' + franchise_id + '" OR franchise_id="' + franchise_id + '" OR franchise_id="0") order by id desc', function (error, rows, fields) {
               if (!error) {
                 resolve(rows);
-
               } else {
                 console.log("Error...", error);
                 reject(error);
@@ -118,7 +128,6 @@ Lead.prototype.all = function () {
         });
       }
       else {
-
         connection.changeUser({ database: dbName["prod"] });
         connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND ( f_id="0" OR franchise_id=0 ) order by id desc', function (error, rows, fields) {
           if (!error) {
@@ -130,6 +139,7 @@ Lead.prototype.all = function () {
           }
         });
       }
+    }
       connection.release();
       console.log('Process Complete %d', connection.threadId);
     });
@@ -390,6 +400,7 @@ Lead.prototype.searchData = function () {
               connection.changeUser({ database: dbName["prod"] });
               connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (f_id="' + franchise_id + '" OR franchise_id="' + franchise_id + '" OR franchise_id="0") AND ( customer_name LIKE "%'+that.searchText+'%" OR customer_contact LIKE "%'+that.searchText+'%") order by id desc', function (error, rows, fields) {
                 if (!error) {
+                  console.log(rows)
                   resolve(rows);
   
                 } else {
@@ -400,8 +411,7 @@ Lead.prototype.searchData = function () {
             }
           });
         }
-        else {
-  
+        else {  
           connection.changeUser({ database: dbName["prod"] });
           connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message,customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND ( f_id="0" OR franchise_id=0 ) AND ( customer_name LIKE "%'+that.searchText+'%" OR customer_contact LIKE "%'+that.searchText+'%") order by id desc', function (error, rows, fields) {
             if (!error) {

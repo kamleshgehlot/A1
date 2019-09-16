@@ -118,7 +118,8 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
 
   const [customerListData, setCustomerListData] = useState([]);
   const [single, setSingle] = React.useState(null);
-
+  const [selectedOption,setSelectedOption] = useState('');
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -227,12 +228,13 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     // setInput('interested_product_id',assignInterest.join())
     // console.log('convert-----',convert);
     // if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.contact != '' && assignInterest != '' ){
+      
       if(assignInterest!=''){
       setpLoading(true);
       setSavebtn(false);
       const response = await EnquiryAPI.postEnquiry({
         enquiry_id : inputs.enquiry_id,
-        customer_name: inputs.customer_name,
+        customer_name: selectedOption,
         contact: inputs.contact,
         interested_product_id: assignInterest,
         is_active: 1,
@@ -326,7 +328,7 @@ return (
                       fullWidth
                     /> */}
                    
-                   <AutoSuggestDropdown customerListData={customerListData}/>
+                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} />
 
                   </Grid>
                   <Grid item xs={12} sm={4}>

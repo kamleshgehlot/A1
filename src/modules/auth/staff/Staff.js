@@ -20,6 +20,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Add from './Add';
 import Edit from './Edit';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
 
 // API CALL
 import StaffAPI from '../../../api/StaffMasterAdmin';
@@ -46,6 +49,7 @@ export default function Staff({roleName}) {
   const [staffData,setStaffData]= useState();
   const [staffList, setStaffList] = useState({});
   const [position, setPosition] = useState({});
+  const [searchText, setSearchText]  = useState('');
 
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -117,6 +121,9 @@ export default function Staff({roleName}) {
       try {
         const result = await StaffAPI.list();
         setStaffList(result.staffList);
+
+        const positionResult = await StaffAPI.positionList();
+        setPosition(positionResult.staffPosition);
       } catch (error) {
         setIsError(true);
       }
@@ -125,19 +132,12 @@ export default function Staff({roleName}) {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const positions = async () => {
-      try {
-        const positionResult = await StaffAPI.positionList();
-        setPosition(positionResult.staffPosition);
-      } catch (error) {
-        console.log('Error',error);
-      }
-    };
-    positions();
-  }, []);
+
 
   
+  function handleSearchText(event){
+    setSearchText(event.target.value);
+  }
 
   function handleClickOpen() {
     setOpen(true);
@@ -186,12 +186,31 @@ export default function Staff({roleName}) {
     setValue(newValue);
     // console.log('setValue...',value)
   }
+
+
+  const searchHandler = async () => {
+    try {
+    if(searchText!=''){
+        const result = await StaffAPI.search({searchText: searchText});
+        setStaffList(result.staffList);
+        // console.log(result.customerList);
+        setSearchText('');     
+    }else{
+      const result = await StaffAPI.list();
+      setStaffList(result.staffList);     
+      setSearchText('');
+    }} catch (error) {
+      console.log('error',error);
+    }
+  }
+
+
   return (
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
 
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={8}>
             <Fab
               variant="extended"
               size="small"
@@ -204,10 +223,35 @@ export default function Staff({roleName}) {
               Staff
             </Fab>
           </Grid>
+          <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                id="search"
+                name="search"
+                label="Search"
+                label="Search..."
+                type="text"
+                value={searchText} 
+                onKeyPress={(ev) => {
+                  if (ev.key ===  'Enter') {
+                    searchHandler()
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={handleSearchText}
+                InputProps={{
+                  endAdornment: <InputAdornment position='end'>
+                                  <Tooltip title="Search">
+                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                  </Tooltip>
+                                </InputAdornment>,
+                }}
+                fullWidth
+              />              
+          </Grid>
           <Grid item xs={12} sm={12}>
           <AppBar position="static"  className={classes.appBar}>
             <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-              {console.log(staffList)}
               {
                 (staffList.length > 0 ? staffList : []).map((data, index)=>{
                   data.position === 1 ? territory+=1 : '';

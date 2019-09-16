@@ -28,6 +28,7 @@ const validateToken = require('../../utils').validateToken;
 const staffRouter = express.Router();
 
 staffRouter.route("/register").post(validateToken, upload.array('avatar'), Staff.register);
+staffRouter.route("/search").post(validateToken, Staff.searchData);
 // userRouter.route("/update").post(validateToken, User.update);
 staffRouter.route("/list").get(validateToken, Staff.all);
 // userRouter.route("/getUniqueNames").get(validateToken, User.getUniqueNames);

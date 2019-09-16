@@ -609,7 +609,7 @@ export default function ClippedDrawer(props) {
       <AppBar position="fixed" className={classes.appBar}  elevation={0}>
         <Toolbar>
           <Typography variant="h6" className={classes.title} noWrap>
-          Welcome {userName}
+          Welcome {userName.split(' ')[0]}
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
           Welcome To Rentronics
@@ -678,7 +678,7 @@ export default function ClippedDrawer(props) {
           :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
 
-        {/* {roleId == 0
+        {roleId == 0
         ?
           <TreeView
             className={classes.treeRoot}
@@ -690,7 +690,7 @@ export default function ClippedDrawer(props) {
             <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Master Staff'); }} />            
             <StyledTreeItem nodeId="4" labelText="Manage Leads" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Master Staff'); }}/>
           </TreeView>
-          :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> } */}
+          :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
 
         {roles.find(role => role === 'CSR' || role === 'Finance' || role === 'Delivery' || role === 'HR')

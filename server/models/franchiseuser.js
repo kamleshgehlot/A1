@@ -93,14 +93,14 @@ FranchiseUser.prototype.staffList = function () {
 };
 
 FranchiseUser.prototype.franchiseid = function () {
-  
+  const that = this;
   return new Promise((resolve, reject) => {
     connection.getConnection((error, connection) => {
       if (error) {
         throw error;
       }
-
-      const that = this;
+      if(that.user_id.split('_')[1]=== 'admin'){}else{
+      
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
         connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
         if (!error) {
@@ -108,7 +108,7 @@ FranchiseUser.prototype.franchiseid = function () {
             connection.changeUser({ database: dbName["prod"] });
             connection.query('select id as franchise_id, name from franchise where id="'+fid+'" limit 1', function (error, rows, fields) {
               if (!error) {
-                    console.log('users----hbsd---',rows);
+                    // console.log('users----hbsd---',rows);
                     resolve(rows);
                   } else {
                     console.log('Error...', error);
@@ -120,7 +120,7 @@ FranchiseUser.prototype.franchiseid = function () {
               reject(error);
             }
           });
-        
+      }
         connection.release();
         console.log('Process Complete %d', connection.threadId);
     });

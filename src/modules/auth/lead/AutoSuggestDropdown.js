@@ -126,7 +126,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AutoSuggestDropdown({customerListData}) {
+export default function AutoSuggestDropdown({customerListData, setSelectedOption}) {
   const classes = useStyles();
   // const [customerListData, setCustomerListData] = useState([]);
 
@@ -155,7 +155,13 @@ export default function AutoSuggestDropdown({customerListData}) {
             onChange: event => {
               if (event.target.value === '') {
                 clearSelection();
+              }else{
+                console.log('event...',event.target.value)
               }
+            },
+            onBlur: event => {
+              // console.log('event...',event.target.value)
+              setSelectedOption(event.target.value);
             },
             onFocus: openMenu,
             placeholder: 'Select or Enter Customer Name',
@@ -181,7 +187,7 @@ export default function AutoSuggestDropdown({customerListData}) {
                         index,
                         itemProps: getItemProps({ item: suggestion.label }),
                         highlightedIndex,
-                        selectedItem
+                        selectedItem,                        
                       }),
                     )}
                   </Paper>

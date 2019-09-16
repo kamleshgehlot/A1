@@ -315,10 +315,7 @@ export default function CustomerList({userId, roleName}) {
                                 </InputAdornment>,
                 }}
                 fullWidth
-              />
-              {/* <IconButton  aria-label="Search" onClick={ searchHandler} >
-                <SearchIcon />   
-              </IconButton> */}
+              />              
           </Grid>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}> 
