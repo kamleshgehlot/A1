@@ -290,8 +290,8 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
-                    }}
+                        e.target.value =(e.target.value).toString().slice(0,10)
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

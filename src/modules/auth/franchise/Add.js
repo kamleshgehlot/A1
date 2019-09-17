@@ -738,7 +738,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       onChange={handleInputChange}
                       type="number"
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -759,7 +759,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       onChange={handleInputChange}
                       type="number"
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
+                        // e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -874,7 +875,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={(errors.accountant_name||errors.accountant_email||errors.accountant_contact) ? classes.errorHeading : classes.heading}>Accountant Details</Typography>
+            <Typography className={(errors.accountant_name||errors.accountant_email||errors.accountant_contact) ? classes.errorHeading : classes.heading}>Accountant Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>
@@ -944,8 +945,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       margin="dense"
                       // required
                       onChange={handleInputChange}
-                      onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                      onInput={(e)=>{                         
+                        e.target.value = (e.target.value).toString().slice(0,10)
                        }}
                     />
                   </Grid>

@@ -67,7 +67,7 @@ export default function CustomerList({userId, roleName}) {
   const [customer, setCustomer] = useState({});
   const [active, setActive]=  useState();
   const [hold, setHold]=  useState();
-  const [completed, setCompleted]=  useState();
+  const [financialHardship, setFinancialHardship]=  useState();
   
   //value is for tabs  
   const [value, setValue] = React.useState(0);
@@ -197,16 +197,16 @@ export default function CustomerList({userId, roleName}) {
   function handleBadge(customerList){
     let active = 0;
     let hold = 0;
-    let completed = 0;
+    let financialHardship = 0;
 
     (customerList).map(data =>{
       data.state==1 ? active += 1 : '';
       data.state==2 ? hold += 1: '';
-      data.state==3 ? completed += 1: '';
+      data.state==3 ? financialHardship += 1: '';
     })   
     setActive(active)
     setHold(hold);
-    setCompleted(completed);
+    setFinancialHardship(financialHardship);
   }
 
   const searchHandler = async () => {
@@ -328,7 +328,7 @@ export default function CustomerList({userId, roleName}) {
                  })} */}
                   <Tab label={<BadgeComp count={active} label="Active" />} /> 
                   <Tab label={<BadgeComp count={hold} label="Hold" />} /> 
-                  <Tab label={<BadgeComp count={completed} label="Completed" />} /> 
+                  <Tab label={<BadgeComp count={financialHardship} label="Financial Hardship" />} /> 
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={value}>

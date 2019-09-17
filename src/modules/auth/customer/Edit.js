@@ -400,7 +400,7 @@ function handleIdType(event){
                       helperText={errors.postcode}
                       required
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,6)
+                        e.target.value =(e.target.value).toString().slice(0,6)
                     }}
                       fullWidth
                     />
@@ -425,7 +425,7 @@ function handleIdType(event){
                       required= {inputs.mobile==='' ? true : false}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -449,7 +449,7 @@ function handleIdType(event){
                       helperText={errors.mobile}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -702,7 +702,7 @@ function handleIdType(event){
                      label="Hold" labelPlacement="start" />
                       <FormControlLabel value={3} 
             control={<Radio color="primary" />}
-                     label="Completed" labelPlacement="start" />
+                     label="Financial Hardship" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                 </Grid>
@@ -785,7 +785,7 @@ function handleIdType(event){
                       error={errors.alt_c1_contact}
                       helperText={errors.alt_c1_contact}
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                       required
                       fullWidth
@@ -876,7 +876,7 @@ function handleIdType(event){
                       error={errors.alt_c2_contact}
                       helperText={errors.alt_c2_contact}
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                       required
                       fullWidth
@@ -982,7 +982,7 @@ function handleIdType(event){
                       helperText={errors.employer_telephone}
                       required
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                       fullWidth
                     />

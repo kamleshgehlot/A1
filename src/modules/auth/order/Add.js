@@ -260,10 +260,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     inputs.customer_type = 1;
     setIsNewCustomer(1);
     setCustomer(response[0]);
+    setBudgetList([]);
   }
   function handleIsExistCustomer(response){
     inputs.customer_type = 2;
     setIsNewCustomer(0);    
+    setBudgetList([]);
   }
 
    function handleDateChange(date){
@@ -287,9 +289,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setInput('main_category',event.target.value);
     setMainCategory(event.target.value);
     setCategoryList('');
-    setSubCategoryList('');    
+    setSubCategoryList('');
     setProductList('');
-    
+
     const fetchData = async () => {
       try {
         const result = await Category.categoryList({maincategory: event.target.value});
@@ -336,7 +338,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     };
     fetchData();
   }
-
+  
   useEffect(() => {
     const dtToday = new Date();
     let month = dtToday.getMonth() + 1;
@@ -513,12 +515,12 @@ return (
                     <Button variant= {inputs.customer_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleCustomerOpen} className={classes.textField} > New </Button>
                     <Button variant= {inputs.customer_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleSearchCustomerOpen}  className={classes.textField}>Existing </Button>
                     
-                    {customer  != null && isNewCustomer === 1? 
-                      <Button variant="outlined" size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}>Calculate Budget </Button>
+                    {customer  != null && isNewCustomer === 1 ? 
+                      <Button variant={customer  != null && budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}>Calculate Budget </Button>
                       : ''
                     }
-                    {customer  != null && isNewCustomer === 0? 
-                      <Button variant="outlined" size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}> Update Budget </Button>                       
+                    {customer  != null && isNewCustomer === 0 ? 
+                      <Button variant={customer  != null && budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}> Update Budget </Button>                       
                       : ''
                     }                    
                     {customer  != null  ? 

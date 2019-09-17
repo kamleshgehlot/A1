@@ -27,6 +27,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import {useCommonStyles} from '../../common/StyleComman'; 
+import InputAdornment from '@material-ui/core/InputAdornment';
              
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
@@ -393,7 +394,7 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -500,7 +501,7 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -526,13 +527,18 @@ return (
                   />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience (in Years)*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
-                      }}
+                        startAdornment: <InputAdornment position='start'> 
+                         <Typography variant="h6" className={styleClass.adornmentText}>
+                            Years 
+                          </Typography>                          
+                        </InputAdornment>,
+                      }}                      
                       margin="dense"
                       id="duration"
                       name="duration"

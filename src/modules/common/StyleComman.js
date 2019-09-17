@@ -28,6 +28,10 @@ export const useCommonStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(10),
     marginRight: theme.spacing(1),
   },
+  adornmentText:{
+      fontSize: theme.typography.pxToRem(12),
+      backgroundColor: 'lightgray',
+  },
   // drawer: {
   //   width: drawerWidth,
   //   flexShrink: 0,

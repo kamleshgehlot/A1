@@ -42,7 +42,7 @@ export default function validate(values) {
     errors.accountant_contact = 'Contact number is required';
   } else if (!validNumber.test(values.accountant_contact)) {
     errors.accountant_contact = 'Contact number is invalid';
-  } else if ((values.accountant_contact).length<10) {
+  } else if ((values.accountant_contact).length<9) {
     errors.accountant_contact = 'Contact number is invalid';
   }
   

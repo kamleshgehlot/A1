@@ -451,7 +451,7 @@ return (
                       // placeholder="Franchise Name"
                       margin="dense"
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>

@@ -1,4 +1,4 @@
-import { validString, validNumber, validAlphaNumericwithDot, validEmail, validAlpha } from './Regex';
+import { validString, validNumber, validDecimalNumber, validAlphaNumericwithDot, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -25,7 +25,7 @@ export default function validate(values) {
     errors.contact = 'Contact number is required';
   } else if (!validNumber.test(values.contact)) {
     errors.contact = 'Contact number is invalid';
-  } else if ((values.contact).length<10) {
+  } else if ((values.contact).length<9) {
     errors.contact = 'Contact number is invalid';
   }
   
@@ -49,7 +49,7 @@ export default function validate(values) {
     errors.pre_company_contact = 'Contact of Previous Company is required';
   } else if (!validNumber.test(values.pre_company_contact)) {
     errors.pre_company_contact = 'Contact of Previous Company is invalid';
-  } else if ((values.pre_company_contact).length<10) {
+  } else if ((values.pre_company_contact).length<9) {
     errors.pre_company_contact = 'Contact of Previous Company is invalid';
   }
   if (!values.pre_position) {
@@ -59,7 +59,7 @@ export default function validate(values) {
   }
   if (!values.duration) {
     errors.duration = 'Work Experience is required';
-  }  else if (!validAlphaNumericwithDot.test(values.duration)) {
+  }  else if (!validDecimalNumber.test(values.duration)) {
     errors.duration = 'Work Experience is invalid';
   }
   if (!values.password) {

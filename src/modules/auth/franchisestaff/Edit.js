@@ -19,6 +19,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import * as Yup from 'yup';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
@@ -323,7 +324,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -430,7 +431,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -440,7 +441,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       InputProps={{
                         classes: {
                           input: classes.textsize,
-                        },
+                        },                      
                       }}
                       margin="dense"
                       id="pre_position"
@@ -456,24 +457,26 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                   />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience  (in Years)*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience*</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
+                        startAdornment: <InputAdornment position='start'> 
+                        <Typography variant="h6" className={styleClass.adornmentText}>
+                           Years 
+                         </Typography>                          
+                       </InputAdornment>,
                       }}
                       margin="dense"
                       id="duration"
                       name="duration"
-                      // label="Work Experience"
                       type="text"
                       value={inputs.duration} 
                       onChange={handleInputChange}
                       error={errors.duration}
-                      helperText={errors.duration}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
+                      helperText={errors.duration}                      
                       required
                       fullWidth
                     />

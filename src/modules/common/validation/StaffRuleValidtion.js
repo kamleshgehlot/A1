@@ -22,7 +22,7 @@ export default function validate(values) {
     errors.contact = 'Contact is required';
   } else if (!validNumber.test(values.contact)) {
     errors.contact = 'Contact is invalid';
-  } else if ((values.contact).length<10) {
+  } else if ((values.contact).length<9) {
     errors.contact = 'Contact is invalid';
   }
   

@@ -446,7 +446,7 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,6)
+                        e.target.value =(e.target.value).toString().slice(0,6)
                     }}
                     />
                   </Grid>
@@ -470,7 +470,7 @@ return (
                       helperText={errors.telephone}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -494,7 +494,7 @@ return (
                       helperText={errors.mobile}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -826,7 +826,7 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -916,7 +916,7 @@ return (
                       helperText={errors.alt_c2_contact}
                       // required
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                       fullWidth
                     />
@@ -1020,7 +1020,7 @@ return (
                       error={errors.employer_telephone}
                       helperText={errors.employer_telephone}
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                       required
                       fullWidth

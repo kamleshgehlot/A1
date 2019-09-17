@@ -28,7 +28,7 @@ export default function validate(values) {
     errors.telephone = 'Telephone number is required';
   } else if (!validNumber.test(values.telephone)) {
     errors.telephone = 'Telephone number is invalid';
-  } else if ((values.telephone).length<10) {
+  } else if ((values.telephone).length<9) {
     errors.telephone = 'Telephone number is invalid';
   }
   
@@ -36,7 +36,7 @@ export default function validate(values) {
     errors.mobile = 'Mobile number is required';
   } else if (!validNumber.test(values.mobile)) {
     errors.mobile = 'Mobile number is invalid';
-  } else if ((values.mobile).length<10) {
+  } else if ((values.mobile).length<9) {
     errors.mobile = 'Mobile number is invalid';
   }
   
@@ -90,7 +90,7 @@ export default function validate(values) {
     errors.alt_c1_contact = 'Contact number is required';
   } else if (!validNumber.test(values.alt_c1_contact)) {
     errors.alt_c1_contact = 'Contact number is invalid';
-  } else if ((values.alt_c1_contact).length<10) {
+  } else if ((values.alt_c1_contact).length<9) {
     errors.alt_c1_contact = 'Contact number is invalid';
   }
   
@@ -114,7 +114,7 @@ export default function validate(values) {
     errors.alt_c2_contact = 'Contact number is required';
   } else if (!validNumber.test(values.alt_c2_contact)) {
     errors.alt_c2_contact = 'Contact number is invalid';
-  } else if ((values.alt_c2_contact).length<10) {
+  } else if ((values.alt_c2_contact).length<9) {
     errors.alt_c2_contact = 'Contact number is invalid';
   }
   
@@ -139,7 +139,7 @@ export default function validate(values) {
     errors.employer_telephone = 'Telephone number is required';
   } else if (!validNumber.test(values.employer_telephone)) {
     errors.employer_telephone = 'Telephone number is invalid';
-  } else if ((values.employer_telephone).length<10) {
+  } else if ((values.employer_telephone).length<9) {
     errors.employer_telephone = 'Telephone number is invalid';
   }
 

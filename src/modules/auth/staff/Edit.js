@@ -230,7 +230,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                       error={errors.contact}
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                       helperText={errors.contact}
                       required

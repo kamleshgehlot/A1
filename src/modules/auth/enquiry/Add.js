@@ -161,7 +161,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     function handleChangeSingle(value) {
       setSingle(value);
       setInput('customer_contact',value.value);
-      console.log('value===',value)
+      // console.log('value===',value)
     }
   function handleMainCategory(event) {
     setInput('main_category',event.target.value)
@@ -351,7 +351,7 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -425,7 +425,7 @@ return (
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize}  htmlFor="assign_interest">Interested In*</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="assign_interest">Product *</InputLabel>
                     <Select
                       // multiple
                       value={assignInterest}

@@ -340,7 +340,7 @@ export default function Enquiry({roleName}) {
                         <StyledTableCell>Enq ID</StyledTableCell>
                         <StyledTableCell>Customer Name</StyledTableCell>
                         <StyledTableCell>Contact No.</StyledTableCell>
-                        <StyledTableCell>Interested In</StyledTableCell>
+                        <StyledTableCell>Product interested in</StyledTableCell>
                         {value===0? <StyledTableCell>Options</StyledTableCell>:''}
                       </TableRow>
                     </TableHead>
