@@ -79,7 +79,7 @@ Franchise.prototype.register =  function (newUser) {
                   let cust_state = [
                     [1, 'Active', 1],
                     [2, 'Hold', 1],
-                    [3, 'Completed', 1]
+                    [3, 'Financial Hardship', 1]
                   ]
 
                   

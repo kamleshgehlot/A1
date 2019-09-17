@@ -39,7 +39,7 @@ export default function validateEdit(values) {
     errors.contact = 'Contact number is required';
   } else if (!validNumber.test(values.contact)) {
     errors.contact = 'Contact number is invalid';
-  } else if ((values.contact).length<10) {
+  } else if ((values.contact).length<9) {
     errors.contact = 'Contact number is invalid';
   }
   if (!values.accountant_name) {
@@ -57,7 +57,7 @@ export default function validateEdit(values) {
     errors.accountant_contact = 'Contact number is required';
   } else if (!validNumber.test(values.accountant_contact)) {
     errors.accountant_contact = 'Contact number is invalid';
-  } else if ((values.accountant_contact).length<10) {
+  } else if ((values.accountant_contact).length<9) {
     errors.accountant_contact = 'Contact number is invalid';
   }
   

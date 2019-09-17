@@ -466,7 +466,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // required
                       onChange={handleInputChange}
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -555,7 +555,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onChange={handleInputChange}
                       type="number"
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>
@@ -575,7 +575,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                       onChange={handleInputChange}
                       type="number"
@@ -744,7 +744,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // required
                       onChange={handleInputChange}
                       onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,10)
                     }}
                     />
                   </Grid>

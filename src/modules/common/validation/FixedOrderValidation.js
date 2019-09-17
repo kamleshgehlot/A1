@@ -76,8 +76,8 @@ export default function validate(values) {
   if(values.last_payment === ""){
     errors.last_payment = 'Last Payment Date is Required';
   }
-  if(values.exp_delivery_at === ""){
-    errors.exp_delivery_at = 'Expected Date is Required';
+  if(values.exp_delivery_date === ""){
+    errors.exp_delivery_date = 'Delivery Date is Required';
   }
   if(values.delivery_time === ""){
     errors.delivery_time = ' Delivery Time is Required';

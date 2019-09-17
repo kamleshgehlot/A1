@@ -175,13 +175,13 @@ Category.prototype.mainCategoryList = function () {
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
       console.log('Process Started %d All', connection.threadId);
-      if (error) {
+      if (error) {  
         throw error;
       }
       if(!error){
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select * from category where type = 1', function (error, rows, fields) {
-
+      // connection.query('select * from category where type = 1', function (error, rows, fields) {
+        connection.query('select DISTINCT c.* from category as c INNER JOIN product as p ON c.id = p.maincat WHERE c.type = 1', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
         } else {

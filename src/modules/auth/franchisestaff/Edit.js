@@ -457,17 +457,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                   />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience (In Years)*</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
-                        startAdornment: <InputAdornment position='start'> 
-                        <Typography variant="h6" className={styleClass.adornmentText}>
-                           Years 
-                         </Typography>                          
-                       </InputAdornment>,
+                      //   startAdornment: <InputAdornment position='start'> 
+                      //   <Typography variant="h6" className={styleClass.adornmentText}>
+                      //      Years 
+                      //    </Typography>                          
+                      //  </InputAdornment>,
                       }}
                       margin="dense"
                       id="duration"
