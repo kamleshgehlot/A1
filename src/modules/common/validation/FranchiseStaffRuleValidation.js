@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail, validAlpha } from './Regex';
+import { validString, validNumber, validAlphaNumericwithDot, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -59,7 +59,7 @@ export default function validate(values) {
   }
   if (!values.duration) {
     errors.duration = 'Work Experience is required';
-  }  else if (!validAlpha.test(values.duration)) {
+  }  else if (!validAlphaNumericwithDot.test(values.duration)) {
     errors.duration = 'Work Experience is invalid';
   }
   if (!values.password) {

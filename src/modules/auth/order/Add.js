@@ -289,7 +289,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setCategoryList('');
     setSubCategoryList('');    
     setProductList('');
-
+    
     const fetchData = async () => {
       try {
         const result = await Category.categoryList({maincategory: event.target.value});
@@ -307,7 +307,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setSubCategoryList('');    
     setProductList('');
 
-
     const fetchData = async () => {
       try {
         const result = await Category.subCategoryList({category: event.target.value});
@@ -318,6 +317,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     };
     fetchData();
   }
+
   function handleSubCategory(event) {
     
     setInput('sub_category',event.target.value);

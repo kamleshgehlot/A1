@@ -193,7 +193,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       id_type :  inputs.id_type,
       id_number:  inputs.id_number,
       expiry_date :  inputs.expiry_date,
-      is_adult : inputs.is_adult,
+      is_adult : 1,
       id_proof :  inputs.id_proof,
 
       alt_c1_name: inputs.alt_c1_name,
@@ -643,7 +643,7 @@ function handleIdType(event){
                       fullWidth
                     /> */}
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <InputLabel className={errors.is_adult? classes.errorHeading : classes.textsize}  htmlFor="is_adult">Over 18 Years?</InputLabel>
                     <RadioGroup 
                       aria-label="is_adult" 
@@ -660,7 +660,7 @@ function handleIdType(event){
             control={<Radio color="primary" />}
                      label="No" labelPlacement="start" />                      
                     </RadioGroup>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField

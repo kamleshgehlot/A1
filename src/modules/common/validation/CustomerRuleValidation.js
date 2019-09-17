@@ -72,9 +72,9 @@ export default function validate(values) {
   if (!values.expiry_date) {
     errors.expiry_date = 'Expiry Date is required';
   } 
-  if (!values.is_adult) {
-    errors.is_adult = 'Required';
-  }
+  // if (!values.is_adult) {
+  //   errors.is_adult = 'Required';
+  // }
   
   if (!values.alt_c1_name) {
     errors.alt_c1_name = 'Name is required';

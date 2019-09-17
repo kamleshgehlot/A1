@@ -225,8 +225,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       if(mm< 10){ mm = '0' + mm.toString()}
       if(dd< 10){ dd = '0' + dd.toString()}
       let fullDate = yy+ '-'+mm+'-'+dd;
+
+      // const currentDate = new Date();
+      // let currentYear = currentDate.getFullYear();
+      // let currentYear = currentDate.getMonth() + 1;
+      // let currentYear = currentDate.getDate();
+      // console.log('year diff', (currentDate-date)/(1000*60*60*24));
+
       handleInputChange({target:{name: 'dob', value: fullDate}})
     }
+
     function handleExpiryDate(date){
       let date1 = new Date(date);
       let yy = date1.getFullYear();
@@ -259,7 +267,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       id_type :  inputs.id_type,
       id_number:  inputs.id_number,
       expiry_date :  inputs.expiry_date,
-      is_adult : inputs.is_adult,
+      is_adult : 1,
       id_proof :  inputs.id_proof,
 
       alt_c1_name: inputs.alt_c1_name,
@@ -546,7 +554,7 @@ return (
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
@@ -561,30 +569,19 @@ return (
                                     input: classes.textsize,
                                   },
                                 }}
+                                required
                                 onChange={handleDate}
                                 error={errors.dob}
                                 helperText={errors.dob}                               
                               />
                             </MuiPickersUtilsProvider>
-                    {/* <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="dob"
-                      name="dob"
-                      // label=""
-                      type="date"
-                      value={inputs.dob} 
-                      onChange={handleInputChange}
-                      error={errors.dob}
-                      helperText={errors.dob}
-                      required
-                      fullWidth
-                    /> */}
                   </Grid>
+                  {/* {/* <Grid item xs={12} sm={2}> */}
+                    {/* <Image source={{uri: 'app_icon'}} style={{width: 40, height: 40}} /> */}
+                    {/* <Typography variant="h6" className={classes.title}> */}
+                      {/* 18+ */}
+                    {/* </Typography> */}
+                  {/* </Grid> */} 
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
                     <Select
@@ -701,7 +698,7 @@ return (
                       helperText={errors.expiry_date}
                     /> */}
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <InputLabel  className={errors.is_adult? classes.errorHeading : classes.textsize} htmlFor="is_adult">Over 18 Years?</InputLabel>
                     <RadioGroup 
                       aria-label="is_adult" 
@@ -726,7 +723,7 @@ return (
                         className={classes.textsize}
                       />
                     </RadioGroup>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField

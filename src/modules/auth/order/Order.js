@@ -287,7 +287,7 @@ export default function Order({roleName}) {
   }
 
   function handleCommentBoxClose(){
-    setCommentBoxOpen(false);
+    setCommentBoxOpen(false); 
   }
   
 
@@ -321,15 +321,14 @@ export default function Order({roleName}) {
   function handleDelivered(data){    
     setCommentData({order_id: data, user_id: userId, roleName: roleName});
     setCommentBoxOpen(true); 
-    setOrderId(data);
+    setNextStep('Delivered');
+    setOrderId(data);        
   }
 
-  if(commentBoxOpen===false && response.isSucceeded===1){
-      setNextStep('Delivered');
-      setResponse('');
-      setConfirmation(true);
-    }
-  
+  if(commentBoxOpen===false && response.isSucceeded===1 && nextStep === 'Delivered'){
+    setResponse('');
+    setConfirmation(true);
+  } 
 
   function handlePaymentStatus(data){
     setOrderData(data);

@@ -362,33 +362,27 @@ return (
                     Timing of Payments
                   </Typography>
               </Grid>
-                  <Grid item xs={12} sm={4}>              
-                  <Typography  className={classes.subTitle}>
-                    Frequency
-                  </Typography>
-                  <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
+                  <Grid item xs={12} sm={4}>    
+                
+                  <InputLabel className={classes.textsize} htmlFor="frequency">Frequency *</InputLabel>
+                    <Select
                       id="frequency"
                       name="frequency"
-                      // label="Frequency"
                       value={inputs.frequency}
                       onChange={handleInputChange}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.frequency}
+                      margin='dense'                      
                       helperText={errors.frequency}
-                      fullWidth
-                      // required
-                      type="number"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      
-                    />
-                    </Grid>
+                      fullWidth                      
+                      className={classes.textsize}
+                      required                      
+                    > 
+                      <MenuItem className={classes.textsize} value="">Select Option</MenuItem>
+                      <MenuItem className={classes.textsize} value="4">Weekly</MenuItem>
+                      <MenuItem className={classes.textsize} value="2">Fortnightly</MenuItem>
+                      <MenuItem className={classes.textsize} value="1">Monthly</MenuItem>                      
+                    </Select>                          
+                  </Grid>
                     
                   <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>

@@ -526,7 +526,7 @@ return (
                   />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Work Experience (in Years)*</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
