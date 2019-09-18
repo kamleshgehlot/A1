@@ -159,7 +159,7 @@ export default function AddMainCategory(props) {
         const response = await Category.add({
           maincategory: inputs.maincategory,
           category: inputs.category,
-          subcategory: inputs.subcategory,
+          subcategory: inputs.subcategory,          
         });
       // props.handleSnackbarClick(true);
       // setCategoryList(response.categoryList);

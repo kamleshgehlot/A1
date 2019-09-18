@@ -275,7 +275,7 @@ function handleIdType(event){
   function handleOtherIdType(event){
     setOtherIdTypeValue(event.target.value)
   }
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleSubmit, handleNumberInput, handlePriceInput, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     editCustomer,
     validate
@@ -382,7 +382,7 @@ function handleIdType(event){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="location">Postcode *</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="postcode">Postcode *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -393,9 +393,9 @@ function handleIdType(event){
                       id="postcode"
                       name="postcode"
                       // label="Postcode"
-                      type="number"
+                      type="text"
                       value={inputs.postcode}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.postcode}
                       helperText={errors.postcode}
                       required
@@ -406,7 +406,7 @@ function handleIdType(event){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="contact">Telephone *</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="telephone">Telephone *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -417,9 +417,9 @@ function handleIdType(event){
                       id="telephone"
                       name="telephone"
                       // label="Telephone"
-                      type="number"
+                      type="text"
                       value={inputs.telephone} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.telephone}
                       helperText={errors.telephone}
                       required= {inputs.mobile==='' ? true : false}
@@ -430,7 +430,7 @@ function handleIdType(event){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="contact">Mobile *</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="mobile">Mobile *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -441,9 +441,9 @@ function handleIdType(event){
                       id="mobile"
                       name="mobile"
                       // label="Mobile"
-                      type="number"
+                      type="text"
                       value={inputs.mobile} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       required = {inputs.telephone===''?true : false}
                       error={errors.mobile}
                       helperText={errors.mobile}
@@ -779,9 +779,9 @@ function handleIdType(event){
                       id="alt_c1_contact"
                       name="alt_c1_contact"
                       // label="Contact#"
-                      type="number"
+                      type="text"
                       value={inputs.alt_c1_contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.alt_c1_contact}
                       helperText={errors.alt_c1_contact}
                       onInput={(e)=>{ 
@@ -870,9 +870,9 @@ function handleIdType(event){
                       id="alt_c2_contact"
                       name="alt_c2_contact"
                       // label="Contact#"
-                      type="number"
+                      type="text"
                       value={inputs.alt_c2_contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.alt_c2_contact}
                       helperText={errors.alt_c2_contact}
                       onInput={(e)=>{ 
@@ -975,9 +975,9 @@ function handleIdType(event){
                       id="employer_telephone"
                       name="employer_telephone"
                       // label="Employer Telephone#"
-                      type="number"
+                      type="text"
                       value={inputs.employer_telephone} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.employer_telephone}
                       helperText={errors.employer_telephone}
                       required

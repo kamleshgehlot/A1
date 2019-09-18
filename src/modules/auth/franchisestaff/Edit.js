@@ -200,7 +200,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
   //   setStaffList({ ...staffList, [name]: value })
   // }
   
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addFranchiseStaff,
     validate
@@ -316,9 +316,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       id="contact"
                       name="contact"
                       // label="Contact"
-                      type="number"
+                      type="text"
                       value={inputs.contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.contact}
                       helperText={errors.contact}
                       required
@@ -423,9 +423,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       id="pre_company_contact"
                       name="pre_company_contact"
                       // label="Contact# of Previous Company"
-                      type="number"
+                      type="text"
                       value={inputs.pre_company_contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.pre_company_contact}
                       helperText={errors.pre_company_contact}
                       required

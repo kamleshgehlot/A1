@@ -234,7 +234,7 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   // }, []);
 
 
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     fixed,
     validate
@@ -273,14 +273,14 @@ return (
                       name="int_unpaid_bal"
                       label="Intial Unpaid Balance"
                       value={inputs.int_unpaid_bal}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       error={errors.int_unpaid_bal}
                       helperText={errors.int_unpaid_bal}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -298,14 +298,14 @@ return (
                       name="cash_price"
                       label="Cash Price"
                       value={inputs.cash_price}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       error={errors.cash_price}
                       helperText={errors.cash_price}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -323,14 +323,14 @@ return (
                       name="delivery_fee"
                       label="Delivery Fee"
                       value={inputs.delivery_fee}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       error={errors.delivery_fee}
                       helperText={errors.delivery_fee}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -349,14 +349,14 @@ return (
                       name="ppsr_fee"
                       label="PPSR Fee"
                       value={inputs.ppsr_fee}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       error={errors.ppsr_fee}
                       helperText={errors.ppsr_fee}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -390,7 +390,7 @@ return (
                       className={classes.textsize}
                       required                      
                     > 
-                      <MenuItem className={classes.textsize} value="">Select Option</MenuItem>
+                      <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
                       <MenuItem className={classes.textsize} value="4">Weekly</MenuItem>
                       <MenuItem className={classes.textsize} value="2">Fortnightly</MenuItem>
                       <MenuItem className={classes.textsize} value="1">Monthly</MenuItem>                      
@@ -464,14 +464,14 @@ return (
                       name="no_of_payment"
                       // label="no_of_payment/Mortgage"
                       value={inputs.no_of_payment}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       onFocus={handleInputFocus}
                       error={errors.no_of_payment}
                       helperText={errors.no_of_payment}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -490,14 +490,14 @@ return (
                       name="each_payment_amt"
                       // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -517,14 +517,14 @@ return (
                       name="total_payment_amt"
                       // label="total_payment_amt/Mortgage"
                       value={inputs.total_payment_amt}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       error={errors.total_payment_amt}
                       helperText={errors.total_payment_amt}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -546,14 +546,14 @@ return (
                       name="before_delivery_amt"
                       // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -631,14 +631,14 @@ return (
                       name="minimum_payment_amt"
                       // label="minimum_payment_amt/Mortgage"
                       value={inputs.minimum_payment_amt}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       error={errors.minimum_payment_amt}
                       helperText={errors.minimum_payment_amt}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -664,12 +664,12 @@ return (
                       name="interest_rate"
                       // label="Weeks"
                       value={inputs.interest_rate}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -690,12 +690,12 @@ return (
                       name="interest_rate_per"
                       // label="Daily interest rates of (in %)"
                       value={inputs.interest_rate_per}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -719,12 +719,12 @@ return (
                       name="total_interest"
                       // label=""
                       value={inputs.total_interest}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{

@@ -279,6 +279,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     handleInputChange({target:{name: 'order_date', value: fullDate}})
   }
 
+  useEffect(()=>{
+      if(productList=="" || assignInterest == ""){
+        setInput('product','');
+      }
+      if(categoryList == "" || category == ""){
+        setInput('category','');
+      }
+      if(subCategoryList=="" || subCategory == ""){
+        setInput('sub_category','');
+      }
+  },[productList,categoryList,subCategoryList,mainCategory,category,subCategoryList,assignInterest]);
+
   function handleChangeMultiple(event) {
     setInput('product',event.target.value);
     setAssignInterest(event.target.value);
@@ -291,6 +303,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setCategoryList('');
     setSubCategoryList('');
     setProductList('');
+    setCategory('');
+    setSubCategory('');
+    setAssignInterest('');
 
     const fetchData = async () => {
       try {
@@ -307,7 +322,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setInput('category',event.target.value);
     setCategory(event.target.value);
     setSubCategoryList('');    
-    setProductList('');
+    setProductList('');    
+    setSubCategory('');
+    setAssignInterest('');
 
     const fetchData = async () => {
       try {
@@ -325,13 +342,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setInput('sub_category',event.target.value);
     setSubCategory(event.target.value);
     setProductList('');
+    setAssignInterest('');
 
     const fetchData = async () => {
       try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
-        setProductList(result.productList);
-        // const result = await Category.productList({subCategory: event.target.value});
-        // setSubCategoryList(result.subCategoryList);
+        setProductList(result.productList);        
       } catch (error) {
         console.log('error:',error);
       }
@@ -552,6 +568,7 @@ return (
                       helperText={errors.main_category}
                       
                     > 
+                    <MenuItem className={classes.textsize} disabled value={""}>Select Main Category</MenuItem>
                     {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
                       return(
                         data.type === 1 ? 
@@ -577,6 +594,7 @@ return (
                       error={errors.category}
                       helperText={errors.category}
                     >    
+                    <MenuItem className={classes.textsize} disabled value={""}>Select Category</MenuItem>
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
                         data.type === 2 ? 
@@ -601,6 +619,7 @@ return (
                       error={errors.sub_category}
                       helperText={errors.sub_category}
                     >    
+                    <MenuItem className={classes.textsize} disabled value={""}>Select Sub Category</MenuItem>
                     {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
                       return(
                         data.type === 3 ? 
@@ -613,6 +632,7 @@ return (
 
                   
                   <Grid item xs={12} sm={12}>
+
                     <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
                     <Select
                       // multiple
@@ -628,6 +648,7 @@ return (
                       error={errors.product}
                       helperText={errors.product}
                     >    
+                    <MenuItem className={classes.textsize} disabled value={""}>Select Product</MenuItem>
                      {(productList.length > 0 ? productList : []).map((data,index)=>{
                       return(
                          <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>

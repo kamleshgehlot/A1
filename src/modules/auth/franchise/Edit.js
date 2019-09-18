@@ -278,7 +278,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   }
 
   
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  const { inputs, handleNumberInput, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     editFranchise,
     validateEdit
@@ -464,7 +464,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       margin="dense"
                       // required
-                      onChange={handleInputChange}
+                      type="text"                      
+                      onChange={handleNumberInput}
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                     }}
@@ -552,8 +553,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       // required
                       fullWidth
-                      onChange={handleInputChange}
-                      type="number"
+                      type="text"                      
+                      onChange={handleNumberInput}
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                     }}
@@ -577,8 +578,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                     }}
-                      onChange={handleInputChange}
-                      type="number"
+                    type="text"                      
+                    onChange={handleNumberInput}
                     />
                   </Grid>
                    
@@ -736,13 +737,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       // label="Contact #"
                       value={inputs.accountant_contact}
                       error={errors.accountant_contact}
-                      helperText={errors.accountant_contact}
-                      // placeholder="Contact"
-                      type="number"
+                      helperText={errors.accountant_contact}                                            
                       fullWidth
-                      margin="dense"
-                      // required
-                      onChange={handleInputChange}
+                      margin="dense"                      
+                      type="text"                      
+                      onChange={handleNumberInput}
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                     }}

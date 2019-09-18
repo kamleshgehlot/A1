@@ -192,7 +192,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   const [isError, setIsError] = useState(false);
   
   const [otherDisable, setOtherDisable] = useState(true);
-  const [otherFranchiseValue, setOtherFranchiseValue] = useState();
+  const [otherFranchiseValue, setOtherFranchiseValue] = useState("");
   
   const [leadId, setLeadId] = useState();
   const [franchiseListd, setFranchiseList] = useState({});
@@ -301,20 +301,14 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   
 
   function handleFranchise(event){
-    // if(event.target.value===0){
-    //   setOtherDisable(false);
-    //   setInput('is_franchise_exist','0');
-    // }else{
-    //   setOtherDisable(true)
-    //   setOtherFranchiseValue('');
-    //   setInput('is_franchise_exist','1');
-    // }
-    setInput('franchise_id',event.target.value);
-    }
+    (franchiseListd.length>0 ? franchiseListd : []).map(data =>{
+      data.id === event.target.value ? setOtherFranchiseValue(data.name) : ''
+    })
+    if(event.target.value == 0 ){setOtherFranchiseValue("All")}
+      setInput('franchise_id',event.target.value);
+  }
 
- 
-     
-    const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+    const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
       RESET_VALUES,
       addLead,
       validate
@@ -442,17 +436,17 @@ return (
                       id="customer_contact"
                       name="customer_contact"
                       value={inputs.customer_contact}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.customer_contact}
                       helperText={errors.customer_contact}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
-                    }}
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={12}>

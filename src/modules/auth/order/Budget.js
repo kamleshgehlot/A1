@@ -143,12 +143,22 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
     }
   }
   
-  function handleInputChange(e){
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
+  const handlePriceInput = e => {
+    const validDecimalNumber = /^\d*\.?\d*$/;
+    if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
+      setInputs({
+        ...inputs,
+        [e.target.name]: e.target.value,
+      });
+    }
   }
+
+  // function handleInputChange(e){
+  //   setInputs({
+  //     ...inputs,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // }
 
   function handleSubmit(e){
     e.preventDefault();
@@ -325,12 +335,12 @@ return (
                       name="work"
                       label="Work"
                       value={inputs.work}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -348,12 +358,12 @@ return (
                       name="benefits"
                       label="Benefits"
                       value={inputs.benefits}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -371,12 +381,12 @@ return (
                       name="accomodation"
                       label="Accomodation Allowance"
                       value={inputs.accomodation}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -400,12 +410,12 @@ return (
                       name="childcare"
                       label="Childcare"
                       value={inputs.childcare}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -434,12 +444,12 @@ return (
                       name="rent"
                       label="Rent/Mortgage"
                       value={inputs.rent}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -462,12 +472,12 @@ return (
                       name="power"
                       label="Power"
                       value={inputs.power}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -490,12 +500,12 @@ return (
                       name="telephone"
                       label="Landline Phone"
                       value={inputs.telephone}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -518,12 +528,12 @@ return (
                       name="mobile"
                       label="Mobile Phone"
                       value={inputs.mobile}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -546,12 +556,12 @@ return (
                       name="vehicle"
                       label="Vehicle Finance"
                       value={inputs.vehicle}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -574,12 +584,12 @@ return (
                       name="transport"
                       label="Public Transport"
                       value={inputs.transport}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -602,12 +612,12 @@ return (
                       name="food"
                       label="Food"
                       value={inputs.food}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -630,12 +640,12 @@ return (
                       name="credit_card"
                       label="Credit/Store Cards"
                       value={inputs.credit_card}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -658,12 +668,12 @@ return (
                       name="loan"
                       label="Loans/Hire Purchase"
                       value={inputs.loan}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -686,12 +696,12 @@ return (
                       name="other_expenditure"
                       label="Other"
                       value={inputs.other_expenditure}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -745,7 +755,7 @@ return (
                       name="surplus"
                       // label="Other"
                       value={inputs.surplus}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
@@ -753,7 +763,7 @@ return (
                       helperText={errorSurplus}
                       disabled = {surplusBool}
                       required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -782,14 +792,14 @@ return (
                       name="afford_amt"
                       // label="Other"
                       value={inputs.afford_amt}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
                       // disabled
                       required
                       error
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       error={errorAfford}

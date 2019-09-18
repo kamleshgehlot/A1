@@ -16,8 +16,11 @@ categoryRouter.route('/edit').post(validateToken, Category.edit);
 
 categoryRouter.route('/list').get(validateToken, Category.all);
 categoryRouter.route('/maincategorylist').get(validateToken, Category.mainCategoryList);
+categoryRouter.route('/getallmaincategorylist').get(validateToken, Category.getAllMainCategoryList);
 categoryRouter.route('/categorylist').post(validateToken, Category.categoryList);
+categoryRouter.route('/getallfromcategorylist').post(validateToken, Category.getAllFromCategoryList);
 categoryRouter.route('/subcategorylist').post(validateToken, Category.subCategoryList);
+categoryRouter.route('/getallfromsubcategorylist').post(validateToken, Category.getAllFromSubCategoryList);
 categoryRouter.route('/relatedproductlist').post(validateToken, Category.relatedProductList);
 
 categoryRouter.route('/archivedList').get(validateToken, Category.archivedList);

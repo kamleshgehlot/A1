@@ -13,7 +13,7 @@ const add = async function(req, res, next) {
     const newCategory = new Category(categoryParam);
 
     await newCategory.add();
-    const categoryList = await new Category({}).mainCategoryList();
+    const categoryList = await new Category({getAll : 1}).mainCategoryList();
 
     res.send({ categoryList });
   } catch (err) {
@@ -145,7 +145,15 @@ const all = async function(req, res, next) {
 const mainCategoryList = async function(req, res, next) {
   try {
     const mainCategoryList = await new Category({}).mainCategoryList();
-    
+    res.send({ mainCategoryList });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAllMainCategoryList = async function(req, res, next) {
+  try {
+    const mainCategoryList = await new Category({getAll : 1}).mainCategoryList();
     res.send({ mainCategoryList });
   } catch (err) {
     next(err);
@@ -162,9 +170,29 @@ const categoryList = async function(req, res, next) {
   }
 };
 
+const getAllFromCategoryList = async function(req, res, next) {
+  try {
+    const categoryList = await new Category({maincategory: req.body.maincategory, getAll : 1}).categoryList();
+    
+    res.send({ categoryList });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const subCategoryList = async function(req, res, next) {
   try {
     const subCategoryList = await new Category({category: req.body.category}).subCategoryList();
+    
+    res.send({ subCategoryList });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAllFromSubCategoryList = async function(req, res, next) {
+  try {
+    const subCategoryList = await new Category({category: req.body.category, getAll : 1}).subCategoryList();
     
     res.send({ subCategoryList });
   } catch (err) {
@@ -208,4 +236,21 @@ const searchData = async function (req, res, next) {
 
 
 
-module.exports = { add, addCategory, addSubCategory, addProduct, all, edit, productList,archivedList, mainCategoryList, categoryList, subCategoryList, relatedProductList, searchData  };
+module.exports = { 
+  add, 
+  addCategory, 
+  addSubCategory, 
+  addProduct, 
+  all, 
+  edit, 
+  productList,
+  archivedList,
+  mainCategoryList, 
+  categoryList, 
+  subCategoryList, 
+  relatedProductList, 
+  searchData, 
+  getAllMainCategoryList,
+  getAllFromCategoryList,
+  getAllFromSubCategoryList,
+};

@@ -4,6 +4,8 @@ const useSignUpForm = (state, callback, validate) => {
   const [inputs, setInputs] = useState(state);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const validDecimalNumber = /^\d*\.?\d*$/;
+  const validNumber = /^[0-9]*$/;
 
   const handleSubmit = event => {
     console.log(errors)
@@ -38,6 +40,25 @@ const useSignUpForm = (state, callback, validate) => {
     [e.target.name]: e.target.value,
   });
   }
+
+  const handleNumberInput = e => {
+    if (e.target.value === '' || validNumber.test(e.target.value)) {
+      setInputs({
+        ...inputs,
+        [e.target.name]: e.target.value,
+      });
+    }
+  }
+
+  const handlePriceInput = e => {
+    if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
+      setInputs({
+        ...inputs,
+        [e.target.name]: e.target.value,
+      });
+    }
+  }
+
   const handleReset = RESET_VALUES => {
     setInputs(inputs => RESET_VALUES);
     
@@ -64,7 +85,8 @@ const useSignUpForm = (state, callback, validate) => {
     setInput,
     errors,
     isSubmitting,
-    cleanInputs
+    cleanInputs,
+    handleNumberInput, handlePriceInput,
   };
 };
 

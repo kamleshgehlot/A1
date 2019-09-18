@@ -653,11 +653,11 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
-            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin'); }} />
-            <StyledTreeItem nodeId="2" labelText="Manage Franchise" labelIcon={FranchiseIcon} onClick={(event) => { handleFranchiseClick('Super Admin'); }}/>
-            <StyledTreeItem nodeId="3" labelText="Manage Products Catalogue" labelIcon={ProductIcon} onClick={(event) => { handleCategoryClick('Super Admin'); }}/>
-            <StyledTreeItem nodeId="4" labelText="Manage Staff" labelIcon={StaffIcon} onClick={(event) => { handleMasterStaffClick('Super Admin'); }} />
-            <StyledTreeItem nodeId="5" labelText="Manage Leads" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Super Admin'); }}/>
+            <StyledTreeItem nodeId="1" labelText="Dashboard" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin'); }} />
+            <StyledTreeItem nodeId="2" labelText="Manage Franchise"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FranchiseIcon} onClick={(event) => { handleFranchiseClick('Super Admin'); }}/>
+            <StyledTreeItem nodeId="3" labelText="Manage Products Catalogue"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={ProductIcon} onClick={(event) => { handleCategoryClick('Super Admin'); }}/>
+            <StyledTreeItem nodeId="4" labelText="Manage Staff"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={StaffIcon} onClick={(event) => { handleMasterStaffClick('Super Admin'); }} />
+            <StyledTreeItem nodeId="5" labelText="Manage Leads"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Super Admin'); }}/>
           </TreeView>
          :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
@@ -670,10 +670,10 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
-            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin'); }} />
-            <StyledTreeItem nodeId="2" labelText="Manage Staff" labelIcon={StaffIcon} onClick={(event) => { handleFranchiseStaffClick('Admin'); }} />
-            <StyledTreeItem nodeId="3" labelText="Manage Task" labelIcon={TaskIcon} onClick={(event) => { handleTaskClick('Admin'); }} />
-            <StyledTreeItem nodeId="4" labelText="Manage Leads" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Admin'); }}/>
+            <StyledTreeItem nodeId="1" labelText="Dashboard"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin'); }} />
+            <StyledTreeItem nodeId="2" labelText="Manage Staff"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={StaffIcon} onClick={(event) => { handleFranchiseStaffClick('Admin'); }} />
+            <StyledTreeItem nodeId="3" labelText="Manage Task"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={TaskIcon} onClick={(event) => { handleTaskClick('Admin'); }} />
+            <StyledTreeItem nodeId="4" labelText="Manage Leads"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Admin'); }}/>
           </TreeView>
           :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
@@ -687,8 +687,8 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
-            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Master Staff'); }} />            
-            <StyledTreeItem nodeId="4" labelText="Manage Leads" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Master Staff'); }}/>
+            <StyledTreeItem nodeId="1" labelText="Dashboard"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Master Staff'); }} />            
+            <StyledTreeItem nodeId="4" labelText="Manage Leads"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Master Staff'); }}/>
           </TreeView>
           :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
@@ -702,10 +702,10 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
-            <StyledTreeItem nodeId="1" labelText="Dashboard" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick(roles); }} />
+            <StyledTreeItem nodeId="1" labelText="Dashboard"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick(roles); }} />
             {roles.find(role => role === 'CSR')
             ?  
-              <StyledTreeItem nodeId="2" labelText="CSR" labelIcon={PersonAddIcon}>  
+              <StyledTreeItem nodeId="2" labelText="CSR"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
                 <StyledTreeItem
                   nodeId="5"
                   labelText="Manage Customer"
@@ -756,7 +756,7 @@ export default function ClippedDrawer(props) {
 
             {roles.find(role => role === 'Finance')            
               ?
-              <StyledTreeItem nodeId="3" labelText="Finance" labelIcon={FinanceIcon}>  
+              <StyledTreeItem nodeId="3" labelText="Finance"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FinanceIcon}>  
                 <StyledTreeItem
                   nodeId="10"
                   labelText="Manage Task"
@@ -790,7 +790,7 @@ export default function ClippedDrawer(props) {
 
             {roles.find(role => role === 'Delivery')
             ?
-              <StyledTreeItem nodeId="4" labelText="Delivery" labelIcon={DeliveryIcon}>  
+              <StyledTreeItem nodeId="4" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
                 <StyledTreeItem
                   nodeId="13"
                   labelText="Manage Task"

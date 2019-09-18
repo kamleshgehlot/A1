@@ -145,7 +145,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     return Math.random().toString(36).slice(-8);
   }
 
- const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+ const { inputs, handleNumberInput, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addStaffMaster,
     validate
@@ -282,9 +282,9 @@ return (
                       id="contact"
                       name="contact"
                       // label="Contact"
-                      type="number"
+                      type="text"
                       value={inputs.contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.contact}
                       helperText={errors.contact}
                       required

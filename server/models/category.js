@@ -8,7 +8,7 @@ const Category = function (params) {
   this.maincategory = params.maincategory;
   this.category = params.category;
   this.subcategory = params.subcategory;
-
+  this.getAll = params.getAll;
   // params for updation
   this.name = params.name;
   this.color_id = params.color_id;
@@ -172,6 +172,7 @@ Category.prototype.all = function () {
 
 
 Category.prototype.mainCategoryList = function () {
+  const that =this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
       console.log('Process Started %d All', connection.threadId);
@@ -180,18 +181,28 @@ Category.prototype.mainCategoryList = function () {
       }
       if(!error){
       connection.changeUser({ database: dbName["prod"] });
-      // connection.query('select * from category where type = 1', function (error, rows, fields) {
-        connection.query('select DISTINCT c.* from category as c INNER JOIN product as p ON c.id = p.maincat WHERE c.type = 1', function (error, rows, fields) {
-        if (!error) {
-          resolve(rows);
-        } else {
-          console.log("Error...", error);
-          reject(error);
-        }
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
-      });
+      if(that.getAll === 1){
+        connection.query('select * from category where type = 1', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }else{
+        connection.query('select DISTINCT c.* from category as c INNER JOIN product as p ON c.id = p.maincat WHERE c.type = 1 AND p.status = 1', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
     }
+    connection.release();
+    console.log('Process Complete %d', connection.threadId);
     });
   });
 }  
@@ -209,17 +220,28 @@ Category.prototype.categoryList = function () {
       }
       if(!error){
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select * from category where type = 2 && related_to = "'+that.maincategory+'"', function (error, rows, fields) {
-        if (!error) {
-          resolve(rows);
-        } else {
-          console.log("Error...", error);
-          reject(error);
-        }
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
-      });
+      if(that.getAll === 1){
+        connection.query('select * from category where type = 2 AND related_to = "'+that.maincategory+'"', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }else{
+        connection.query('select c.* from category as c INNER JOIN product as p on c.id = p.category WHERE c.type = 2 AND p.status =1 AND c.related_to = "'+that.maincategory+'"', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
     }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   });
 }  
@@ -234,22 +256,31 @@ Category.prototype.subCategoryList = function () {
       }
       if(!error){
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select * from category where type = 3 && related_to = "'+that.category+'"', function (error, rows, fields) {
-        if (!error) {
-          resolve(rows);
-        } else {
-          console.log("Error...", error);
-          reject(error);
-        }
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
-      });
+      if(that.getAll === 1){
+        connection.query('select * from category where type = 3 && related_to = "'+that.category+'"', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }else{
+        connection.query('select c.* from category as c INNER JOIN product as p on c.id = p.subcat WHERE c.type = 3 AND p.status = 1 AND c.related_to = "'+that.category+'"', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }        
+        });
+      }
     }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
     });
   });
 }  
-
-
 
 Category.prototype.relatedProductList = function () {
   const that = this;

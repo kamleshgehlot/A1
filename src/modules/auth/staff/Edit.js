@@ -118,7 +118,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       // }
   
   };
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleNumberInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addStaffMaster,
     validate
@@ -225,9 +225,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       id="contact"
                       name="contact"
                       // label="Contact"
-                      type="number"
+                      type="text"
                       value={inputs.contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.contact}
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)

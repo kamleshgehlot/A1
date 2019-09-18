@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
+import MoreIcon from '@material-ui/icons/More';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -208,7 +209,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       setOtherIdType(true)
       setOtherIdTypeValue('');
     } 
-      // setOtherIdTypeValue(event.target.value);
       setInput('id_type',event.target.value);      
     }
 
@@ -226,15 +226,29 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       if(dd< 10){ dd = '0' + dd.toString()}
       let fullDate = yy+ '-'+mm+'-'+dd;
 
-      // const currentDate = new Date();
-      // let currentYear = currentDate.getFullYear();
-      // let currentYear = currentDate.getMonth() + 1;
-      // let currentYear = currentDate.getDate();
-      // console.log('year diff', (currentDate-date)/(1000*60*60*24));
-
+    
+      let today = new Date();
+      let nowyear = today.getFullYear();
+      let nowmonth = today.getMonth() + 1;
+      let nowday = today.getDate();
+     
+      let age = nowyear - yy;
+      let age_month = nowmonth - mm;
+      let age_day = nowday - dd;
+      
+    if(age_month < 0 || (age_month == 0 && age_day <0)) {
+            age = parseInt(age) -1;
+    }    
+    if ((age == 18 && age_month <= 0 && age_day <=0) || age < 18) {
+          inputs.is_adult = 0;
+    }
+    else {
+          // alert("You have crossed your 18th birthday !");
+          inputs.is_adult = 1;
+    }
       handleInputChange({target:{name: 'dob', value: fullDate}})
     }
-
+    
     function handleExpiryDate(date){
       let date1 = new Date(date);
       let yy = date1.getFullYear();
@@ -267,7 +281,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       id_type :  inputs.id_type,
       id_number:  inputs.id_number,
       expiry_date :  inputs.expiry_date,
-      is_adult : 1,
+      is_adult : inputs.is_adult,
       id_proof :  inputs.id_proof,
 
       alt_c1_name: inputs.alt_c1_name,
@@ -317,11 +331,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   //   return errors;
   // };
 
- const { inputs, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+ const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addCustomer,
     validate
   );
+  // console.log('input5s..',inputs);
   // {
   //   inputs.telephone ==='' ? setIsMobileMandatory(true) : setIsMobileMandatory(false)
   //   inputs.mobile ==='' ? setIsTelephoneMandatory(true) : setIsTelephoneMandatory(false)
@@ -438,9 +453,9 @@ return (
                       id="postcode"
                       name="postcode"
                       // label="Postcode"
-                      type="number"
+                      type="text"
                       value={inputs.postcode}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.postcode}
                       helperText={errors.postcode}
                       required
@@ -451,7 +466,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="contact">Telephone</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="telephone">Telephone</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -462,9 +477,9 @@ return (
                       id="telephone"
                       name="telephone"
                       // label="Telephone"
-                      type="number"
+                      type="text"
                       value={inputs.telephone} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       required = {inputs.mobile==='' ? true : false}
                       error={errors.telephone}
                       helperText={errors.telephone}
@@ -475,7 +490,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="contact">Mobile</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="mobile">Mobile</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -486,9 +501,9 @@ return (
                       id="mobile"
                       name="mobile"
                       // label="Mobile"
-                      type="number"
+                      type="text"
                       value={inputs.mobile} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       required = {inputs.mobile===''?true : false}
                       error={errors.mobile}
                       helperText={errors.mobile}
@@ -553,7 +568,8 @@ return (
                       <FormControlLabel className={classes.textsize} value={0}  control={<Radio color="primary" />} label="No" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={inputs.is_adult===1 ? 4 : 6}> */}
+                  <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
@@ -576,12 +592,13 @@ return (
                               />
                             </MuiPickersUtilsProvider>
                   </Grid>
-                  {/* {/* <Grid item xs={12} sm={2}> */}
-                    {/* <Image source={{uri: 'app_icon'}} style={{width: 40, height: 40}} /> */}
-                    {/* <Typography variant="h6" className={classes.title}> */}
-                      {/* 18+ */}
-                    {/* </Typography> */}
-                  {/* </Grid> */} 
+                  {/* { inputs.is_adult === 1 ? */}
+                     <Grid item xs={12} sm={2}>
+                      <Toolbar title={inputs.is_adult === 1 ? "He/She is over 18 year" : inputs.is_adult === 0 ? "He/She is not over 18 year" : "Select Date of Birth"}>
+                         <MoreIcon />
+                      </Toolbar>
+                    </Grid>  
+                  {/* : ''} */}
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
                     <Select
@@ -818,9 +835,9 @@ return (
                       id="alt_c1_contact"
                       name="alt_c1_contact"
                       // label="Contact#"
-                      type="number"
+                      type="text"
                       value={inputs.alt_c1_contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.alt_c1_contact}
                       helperText={errors.alt_c1_contact}
                       required
@@ -909,9 +926,9 @@ return (
                       id="alt_c2_contact"
                       name="alt_c2_contact"
                       // label="Contact#"
-                      type="number"
+                      type="text"
                       value={inputs.alt_c2_contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.alt_c2_contact}
                       helperText={errors.alt_c2_contact}
                       // required
@@ -1014,9 +1031,9 @@ return (
                       id="employer_telephone"
                       name="employer_telephone"
                       // label="Employer Telephone#"
-                      type="number"
+                      type="text"
                       value={inputs.employer_telephone} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.employer_telephone}
                       helperText={errors.employer_telephone}
                       onInput={(e)=>{ 

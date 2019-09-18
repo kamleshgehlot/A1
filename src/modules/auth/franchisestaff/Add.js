@@ -237,7 +237,7 @@ function close(){
   //   setInput('password', GeneratePassword())
   //   :''
   // }, []);
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+ const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addFranchiseStaff,
     validate
@@ -386,9 +386,9 @@ return (
                       id="contact"
                       name="contact"
                       // label="Contact"
-                      type="number"
+                      type="text"
                       value={inputs.contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.contact}
                       helperText={errors.contact}
                       required
@@ -493,9 +493,9 @@ return (
                       id="pre_company_contact"
                       name="pre_company_contact"
                       // label="Contact of Previous Company"
-                      type="number"
+                      type="text"
                       value={inputs.pre_company_contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.pre_company_contact}
                       helperText={errors.pre_company_contact}
                       required

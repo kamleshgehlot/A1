@@ -468,7 +468,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     return Math.random().toString(36).slice(-8);
   }
 
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleNumberInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addFranchise,
     validate
@@ -642,9 +642,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       helperText={errors.nbzn}
                       fullWidth
                       margin="dense"
-                      type="number"
-                      // required
-                      onChange={handleInputChange}
+                      type="text"                      
+                      onChange={handleNumberInput}
                       onInput={(e)=>{ 
                         e.target.value = (e.target.value).slice(0,10)
                       }}
@@ -735,8 +734,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       margin="dense"
                       // required
                       fullWidth
-                      onChange={handleInputChange}
-                      type="number"
+                      onChange={handleNumberInput}
+                      type="text"
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                     }}
@@ -756,8 +755,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       value={inputs.alt_contact}
                       margin="dense"
                       fullWidth
-                      onChange={handleInputChange}
-                      type="number"
+                      onChange={handleNumberInput}
+                      type="text"
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                         // e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
@@ -941,13 +940,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                       helperText={errors.accountant_contact}
                       // placeholder="Contact"
                       fullWidth
-                      type="number"
-                      margin="dense"
-                      // required
-                      onChange={handleInputChange}
+                      type="text"
+                      margin="dense"                                           
                       onInput={(e)=>{                         
                         e.target.value = (e.target.value).toString().slice(0,10)
-                       }}
+                       }}                    
+                      onChange={handleNumberInput}                   
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>

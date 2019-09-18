@@ -221,7 +221,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
   //   inputs.bond_amt = 0;
   //   }
   // }, []);
-const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
   RESET_VALUES,
   flex,
   validate
@@ -260,14 +260,14 @@ return (
                       name="goods_rent_price"
                       // label="Rent Price of Goods"
                       value={inputs.goods_rent_price}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.goods_rent_price}
                       helperText={errors.goods_rent_price}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -290,14 +290,14 @@ return (
                       name="ppsr_fee"
                       // label="PPSR Fee (if applicable)"
                       value={inputs.ppsr_fee}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.ppsr_fee}
                       helperText={errors.ppsr_fee}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -316,14 +316,14 @@ return (
                       name="liability_fee"
                       // label="Liability Waiver Fee "
                       value={inputs.liability_fee}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.liability_fee}
                       helperText={errors.liability_fee}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -343,14 +343,14 @@ return (
                       name="weekly_total"
                       // label="TOTAL PER WEEK/ FORTNIGHT"
                       value={inputs.weekly_total}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.weekly_total}
                       helperText={errors.weekly_total}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -384,7 +384,7 @@ return (
                       className={classes.textsize}
                       required                      
                     > 
-                      <MenuItem className={classes.textsize} value="">Select Option</MenuItem>
+                      <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
                       <MenuItem className={classes.textsize} value="4">Weekly</MenuItem>
                       <MenuItem className={classes.textsize} value="2">Fortnightly</MenuItem>
                       <MenuItem className={classes.textsize} value="1">Monthly</MenuItem>                      
@@ -431,14 +431,14 @@ return (
                       name="no_of_payment"
                       // label="no_of_payment/Mortgage"
                       value={inputs.no_of_payment}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.no_of_payment}
                       helperText={errors.no_of_payment}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       // InputProps={{
@@ -460,14 +460,14 @@ return (
                       name="each_payment_amt"
                       // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -492,14 +492,14 @@ return (
                       name="total_payment_amt"
                       // label="total_payment_amt/Mortgage"
                       value={inputs.total_payment_amt}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.total_payment_amt}
                       helperText={errors.total_payment_amt}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -526,14 +526,14 @@ return (
                       name="before_delivery_amt"
                       // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       
@@ -610,14 +610,14 @@ return (
                       name="bond_amt"
                       // label="bond_amt/Mortgage"
                       value={inputs.bond_amt}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.bond_amt}
                       helperText={errors.bond_amt}
                       fullWidth
                       // required
-                      type="number"
+                      type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{

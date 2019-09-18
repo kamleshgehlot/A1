@@ -206,7 +206,7 @@ export default function AddProduct(props) {
      
   }
 
-  const { inputs, handleInputChange, handleSubmit,  setInput ,cleanInputs,errors } = useSignUpForm(
+  const { inputs, handleInputChange,  handleNumberInput, handlePriceInput, handleSubmit,  setInput ,cleanInputs,errors } = useSignUpForm(
     RESET_VALUES,
     categoryadd,
     validate
@@ -263,7 +263,7 @@ export default function AddProduct(props) {
           <Paper className={classes.paper}> 
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="product_name">Enter Product Title/Name *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Product Title/Name *</InputLabel>
                     
                     <TextField
                       InputProps={{
@@ -346,16 +346,16 @@ export default function AddProduct(props) {
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="productprice">Enter Product Buying Price</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="productprice">Product Buying Price</InputLabel>
                     <TextField
                     
                       id="buying_price"
                       name="buying_price"
                       // label="Enter Product Buying Price"
                       value={inputs.buying_price}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       fullWidth
-                      type="number"
+                      type="text"
                       margin="dense"
                       error={errors.buying_price}
                       helperText={errors.buying_price}
@@ -369,7 +369,7 @@ export default function AddProduct(props) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="description">Enter Product Description</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="description">Product Description</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -390,7 +390,7 @@ export default function AddProduct(props) {
                       />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="specification">Enter Product Specification</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="specification">Product Specification</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -456,13 +456,13 @@ export default function AddProduct(props) {
                       id="rental"
                       name="rental"
                       value={inputs.rental}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       fullWidth
                       required
                       margin="dense"
                       error={errors.rental}
                       helperText={errors.rental}
-                      type="number"
+                      type="text"
                       // label="Rental Price"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,

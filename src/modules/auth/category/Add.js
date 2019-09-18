@@ -154,7 +154,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
       setIsError(false);
       setIsLoading(true);
       try {
-        const result = await Category.mainCategoryList();
+        const result = await Category.getAllFromMainCategoryList();
         setMainCategoryList(result.mainCategoryList);
       } catch (error) {
         setIsError(true);
@@ -217,7 +217,6 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
 
     setCategoryList([]);
     setSubCategoryList([]);    
-    // inputs.cat = "";
 
     if(e.target.value==='0'){
       setMainOpen(true);      
@@ -230,7 +229,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
 
     const fetchData = async () => {
       try {
-        const result = await Category.categoryList({maincategory: e.target.value});
+        const result = await Category.getAllFromCategoryList({maincategory: e.target.value});
         setCategoryList(result.categoryList);
       } catch (error) {
         console.log('error:',error);
@@ -254,7 +253,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
 
     const fetchData = async () => {
       try {
-        const result = await Category.subCategoryList({category: e.target.value});
+        const result = await Category.getAllFromSubCategoryList({category: e.target.value});
         setSubCategoryList(result.subCategoryList);
       } catch (error) {
         console.log('error:',error);

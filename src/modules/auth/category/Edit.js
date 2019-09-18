@@ -230,7 +230,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
     setColorList(response);
      
   }
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handlePriceInput, handleNumberInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     handleProductSubmit,
     validate
@@ -259,7 +259,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
           <Paper className={classes.paper}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="product_name">Enter Product Title/Name</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="product_name">Product Title/Name</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -280,7 +280,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="productprice">Enter Product Buying Price</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="productprice">Product Buying Price</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -290,7 +290,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       id="buyingprice"
                       name="buying_price"
                       value={inputs.buying_price}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       error={errors.buying_price}
                       helperText={errors.buying_price}
                       fullWidth
@@ -298,7 +298,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      type="number"
+                      type="text"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         classes: {
@@ -308,7 +308,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="city">Choose Color</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="color">Choose Color</InputLabel>
                     <Select
                       value={inputs.color_id}
                       onChange={handleColorInputChange}
@@ -361,7 +361,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                   </Grid>
                   
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="description">Enter Product Description</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="description">Product Description</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -383,7 +383,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel  className={classes.textsize} htmlFor="specification">Enter Product Specification</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="specification">Product Specification</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -456,13 +456,13 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       value={inputs.rental}
                       error={errors.rental}
                       helperText={errors.rental}
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       fullWidth
                       margin="normal"
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      type="number"
+                      type="text"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         classes: {

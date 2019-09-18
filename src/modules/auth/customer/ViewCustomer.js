@@ -364,7 +364,7 @@ return (
                       id="postcode"
                       name="postcode"
                       // label="Postcode"
-                      type="number"
+                      type="text"
                       value={customerList.postcode}
                       onChange={handleInputChange}
                       required
@@ -384,7 +384,7 @@ return (
                       id="telephone"
                       name="telephone"
                       // label="Telephone"
-                      type="number"
+                      type="text"
                       value={customerList.telephone} 
                       onChange={handleInputChange}
                       required= {customerList.mobile==='' ? true : false}
@@ -404,7 +404,7 @@ return (
                       id="mobile"
                       name="mobile"
                       // label="Mobile"
-                      type="number"
+                      type="text"
                       value={customerList.mobile} 
                       onChange={handleInputChange}
                       required = {customerList.telephone===''?true : false}
@@ -678,7 +678,7 @@ return (
                       id="alt_c1_contact"
                       name="alt_c1_contact"
                       // label="Contact#"
-                      type="number"
+                      type="text"
                       value={customerList.alt_c1_contact} 
                       onChange={handleInputChange}
                       required
@@ -762,7 +762,7 @@ return (
                       id="alt_c2_contact"
                       name="alt_c2_contact"
                       // label="Contact#"
-                      type="number"
+                      type="text"
                       value={customerList.alt_c2_contact} 
                       onChange={handleInputChange}
                       required
@@ -860,7 +860,7 @@ return (
                       id="employer_telephone"
                       name="employer_telephone"
                       // label="Employer Telephone#"
-                      type="number"
+                      type="text"
                       value={customerList.employer_telephone} 
                       onChange={handleInputChange}
                       required

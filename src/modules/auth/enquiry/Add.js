@@ -262,7 +262,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   //   return errors;
   // };
 
- const { inputs=null, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+ const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addEnquiry,
     validate
@@ -343,9 +343,9 @@ return (
                       id="contact"
                       name="contact"
                       // label="Contact"
-                      type="number"
+                      type="text"
                       value={inputs.contact} 
-                      onChange={handleInputChange}
+                      onChange={handleNumberInput}
                       error={errors.contact}
                       helperText={errors.contact}
                       required
