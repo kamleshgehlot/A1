@@ -59,6 +59,7 @@ const RESET_VALUES = {
   delivery_fee : '',
   ppsr_fee : '',
   frequency  : '',
+  duration : '',
   no_of_payment : '',
   each_payment_amt : '',
   total_payment_amt : '',
@@ -67,6 +68,7 @@ const RESET_VALUES = {
   intrest_rate : '',
   intrest_rate_per : '',
   total_intrest : '',
+  
 };
 
 
@@ -137,20 +139,27 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType}) {
+export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType, affordAmt, product}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  
+  const [frequency, setFrequency] = useState('');
+  const [duration, setDuration] = useState('');
+  const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState('');
+  const [firstPaymentDate,setFirstPaymentDate] = useState('');
+  useEffect(()=>{
+    console.log('afford amt..', affordAmt, product) 
+  },[]);
+
   function fixed(e){
     // e.preventDefault();   
-   
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal),
       cash_price : parseFloat(inputs.cash_price),
       delivery_fee : parseFloat(inputs.delivery_fee),
       ppsr_fee : parseFloat(inputs.ppsr_fee),
       frequency : inputs.frequency,
+      duration: inputs.duration,
       first_payment : inputs.first_payment,
       last_payment : inputs.last_payment,
       no_of_payment : parseFloat(inputs.no_of_payment),
@@ -193,6 +202,7 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
 
   function handleDateChange(date){
     handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    setFirstPaymentDate(date);
   }
 
   function handleLastDate(date){
@@ -207,12 +217,94 @@ export default function Budget({ open, handleFixedClose, setFixedOrderList, fixe
     let dTime = new Date(time);
     handleInputChange({target:{name: 'delivery_time', value: dTime}})
   }
+
+  const handleFrequency = (e) => {
+    setFrequency(e.target.value);
+    setInput('frequency', e.target.value);
+  }
   
-  const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+  const handleDuration = (e) => {
+    setDuration(e.target.value);
+    setInput('duration', e.target.value)
+  }
+
+  const handleNumberOfPaymentBefDelivery = (e) =>{
+    const validNumber = /^[0-9]*$/;
+    if (e.target.value === '' || validNumber.test(e.target.value)) {
+      setPaymentBeforeDelivery(e.target.value);
+      setInput( 'before_delivery_amt' , e.target.value);
+    }
+  }
+
+  const handleMinimumPayment = () => {
+    if(paymentBeforeDelivery > inputs.no_of_payment){
+      setPaymentBeforeDelivery('');
+      handleRandomInput([
+        {name: 'minimum_payment_amt', value: ''},
+        {name: 'before_delivery_amt', value: ''},        
+      ]);
+      // setInput( 'before_delivery_amt' ,'');
+      alert('Number of payment before delivery should be less then or equal to total number of payment.');
+    }
+  }
+
+  useEffect(() => {
+    if(firstPaymentDate != '' ){
+      let year = firstPaymentDate.getFullYear();
+      let lastPaymentYear = year + (parseInt(duration)/12);
+      let lastPaymentDate = (firstPaymentDate.getMonth() + '-' + firstPaymentDate.getDate() + '-' + lastPaymentYear);
+      setInput('last_payment',lastPaymentDate)
+    }
+  },[firstPaymentDate, duration]);
+  
+  
+  useEffect(() => {
+    if(paymentBeforeDelivery!= '' ){
+      handleRandomInput([
+        {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
+      ]);
+    }else{
+      handleRandomInput([
+        {name: 'minimum_payment_amt', value: ''},
+      ]);
+    }
+  },[paymentBeforeDelivery]);
+
+  useEffect(()=>{
+      if(frequency != '' && duration != ''){    
+        if(frequency == 1){
+          let installment = (parseFloat(product.rental) * 4);
+          handleRandomInput([
+            {name: 'each_payment_amt', value: installment},
+            {name: 'no_of_payment', value: duration},
+            {name: 'total_payment_amt', value: (installment * duration)},
+          ]);
+          // setInputsAll(val);
+        }else if(frequency == 2){ 
+          let installment = (parseFloat(product.rental) * 2);
+          handleRandomInput([
+            {name: 'each_payment_amt', value: installment},
+            {name: 'no_of_payment', value: (duration * 2)},
+            {name: 'total_payment_amt', value: (installment * duration)},
+          ]);
+        }else if(frequency == 4){ 
+          let installment = (parseFloat(product.rental));
+          handleRandomInput([
+            {name: 'each_payment_amt', value: installment},
+            {name: 'no_of_payment', value: (duration * 4)},
+            {name: 'total_payment_amt', value: (installment * duration)},
+          ]);        
+        }
+      }      
+  },[duration,frequency]);
+  
+  const { inputs, handleInputChange, handleRandomInput, setInputsAll, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+    (fixedOrderList === null ? RESET_VALUES : fixedOrderList),
     fixed,
     validate
   );
+  
+  console.log('ddd',inputs);
 
 return (
     <div>
@@ -369,7 +461,7 @@ return (
                       id="frequency"
                       name="frequency"
                       value={inputs.frequency}
-                      onChange={handleInputChange}
+                      onChange={handleFrequency}
                       error={errors.frequency}
                       margin='dense'                      
                       helperText={errors.frequency}
@@ -383,7 +475,29 @@ return (
                       <MenuItem className={classes.textsize} value="1">Monthly</MenuItem>                      
                     </Select>                          
                   </Grid>
-                    
+                  <Grid item xs={12} sm={4}>    
+                
+                <InputLabel className={classes.textsize} htmlFor="duration">Duration *</InputLabel>
+                  <Select
+                    id="duration"
+                    name="duration"
+                    value={inputs.duration}
+                    onChange={handleDuration}
+                    error={errors.duration}
+                    margin='dense'                      
+                    helperText={errors.duration}
+                    fullWidth                      
+                    className={classes.textsize}
+                    required                      
+                  > 
+                    <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
+                    <MenuItem className={classes.textsize} value="12">1 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="24">2 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="36">3 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="48">4 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="60">5 Year</MenuItem>                      
+                  </Select>                          
+                </Grid>
                   <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     First Payment Date
@@ -406,7 +520,8 @@ return (
                         }}
                         onChange={handleDateChange}
                         error={errors.first_payment}
-                        helperText={errors.first_payment}                               
+                        helperText={errors.first_payment}        
+                        disabled = {frequency == "" || duration == ""}                       
                       />
                     </MuiPickersUtilsProvider>
                    
@@ -435,6 +550,7 @@ return (
                         onChange={handleLastDate}
                         error={errors.last_payment}
                         helperText={errors.last_payment}                               
+                        disabled = {frequency == "" || duration == ""}                       
                       />
                     </MuiPickersUtilsProvider>
                     
@@ -548,9 +664,9 @@ return (
                       name="before_delivery_amt"
                       // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
-                      onChange={handleNumberInput}
+                      onChange={handleNumberOfPaymentBefDelivery}
                       // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
+                      onBlur={handleMinimumPayment}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       

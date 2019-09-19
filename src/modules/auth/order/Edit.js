@@ -171,34 +171,27 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     const fetchData = async () => {
       try {
         const category_list = await Category.mainCategoryList();
-        // console.log('category_list',category_list);
         setMainCategoryList(category_list.mainCategoryList);
 
         const category = await Category.categoryList({maincategory: productCategory[0] });
-        // console.log('category',category);
         setCategoryList(category.categoryList);
 
         const sub_category = await Category.subCategoryList({category:productCategory[1]});
-        // console.log('sub_category',sub_category);
         setSubCategoryList(sub_category.subCategoryList);
 
         const product = await Category.RelatedproductList({subcategory:productCategory[2]});
-        // console.log('product',product);
         setProductList(product.productList);       
 
         const budget = await Order.getCurrespondingBudget({budgetId: editableData.budget_id});
-        // console.log('budgetlist',budget.order[0]);
         setBudgetList(budget.order[0]);
 
 
         if(editableData.order_type==2){
           const order = await Order.getCurrespondingFlexOrder({flexOrderId: editableData.order_type_id});
-          // console.log('flexlist',order[0]);
           setFlexOrderList(order[0]);
         }
         if(editableData.order_type==1){
           const order = await Order.getCurrespondingFixedOrder({fixedOrderId: editableData.order_type_id});
-          // console.log('fixedlist',order[0]);
           setFixedOrderList(order[0]);
         }
       } catch (error) {
@@ -207,34 +200,15 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     };
 
   fetchData();
-
-    // setInputs({
-    //   work : 0,
-    //   benefits : 0,
-    //   accomodation : 0,
-    //   childcare : 0,
-    //   rent : 0,
-    //   power : 0,
-    //   telephone : 0,
-    //   mobile : 0,
-    //   vehicle : 0,
-    //   transport : 0,
-    //   food : 0,
-    //   credit_card : 0,
-    //   loan : 0,
-    //   other_expenditure : 0,
-    //   income : 0,
-    //   expenditure : 0,
-    //   surplus : 0,
-    //   afford_amt : 0,
-    // });
   }, []);
 
+  console.log('category', mainCategory, category, subCategory, assignInterest);
+  
   function validate(values) {
     let errors = {};    
     return errors;
   }
-//  console.log('assign,,,',assignInterest);
+
   function handleBudgetClose(){
     setBudgetOpen(false);
   }
@@ -280,9 +254,19 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   }
 
 
-  function handleChangeMultiple(event) {
-    setAssignInterest(event.target.value);
-  }
+
+//   useEffect(()=>{
+//     if(productList=="" || assignInterest == ""){
+//       setMainCategory('');
+//     }
+//     if(categoryList == "" || category == ""){
+//       setCategory('');
+//     }
+//     if(subCategoryList=="" || subCategory == ""){
+//       setSubCategory('');
+//     }
+// },[productList,categoryList,subCategoryList,mainCategory,category,subCategoryList,assignInterest]);
+
 
   function handleMainCategory(event) {
     setMainCategory(event.target.value);
@@ -290,6 +274,10 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     setCategoryList('');
     setSubCategoryList('');    
     setProductList('');
+    setCategory('');
+    setSubCategory('');
+    setAssignInterest('');
+
 
     const fetchData = async () => {
       try {
@@ -301,11 +289,14 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     };
     fetchData();
   }
+
   function handleCategory(event) {
     setCategory(event.target.value);
 
     setSubCategoryList('');    
-    setProductList('');
+    setProductList('');    
+    setSubCategory('');
+    setAssignInterest('');
 
 
     const fetchData = async () => {
@@ -318,16 +309,16 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     };
     fetchData();
   }
+
   function handleSubCategory(event) {
     setSubCategory(event.target.value);
     setProductList('');
+    setAssignInterest('');
 
     const fetchData = async () => {
       try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
-        setProductList(result.productList);
-        // const result = await Category.productList({subCategory: event.target.value});
-        // setSubCategoryList(result.subCategoryList);
+        setProductList(result.productList);       
       } catch (error) {
         console.log('error:',error);
       }
@@ -336,6 +327,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   }
 
 
+  function handleChangeMultiple(event) {
+    setAssignInterest(event.target.value);
+  }
 
   const editOrder = async (event) => {    
       // if(budgetList == null) {
@@ -477,6 +471,7 @@ return (
                       className={classes.textsize}
                       // disabled = {budgetList ==""}
                     > 
+                    <MenuItem className={classes.textsize} disabled value={""}>Select Main Category</MenuItem>
                      {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
                       return(
                          <MenuItem value={data.id}>{data.category}</MenuItem>

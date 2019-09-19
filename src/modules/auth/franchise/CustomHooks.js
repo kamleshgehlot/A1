@@ -60,8 +60,7 @@ const useSignUpForm = (state, callback, validate) => {
   }
 
   const handleReset = RESET_VALUES => {
-    setInputs(inputs => RESET_VALUES);
-    
+    setInputs(inputs => RESET_VALUES);    
   };
 
   const setInput = (name, value) => {
@@ -70,6 +69,14 @@ const useSignUpForm = (state, callback, validate) => {
       [name]: value,
     });    
   };
+
+  const handleRandomInput = (newInputArray) => {
+    let input = inputs;
+    (newInputArray.length > 0 ? newInputArray : []).map(data => {
+      input[data.name] = data.value;
+    })
+    setInputs({...inputs, input});
+  }
 
   const setInputsAll = e => {
     setInputs(inputs => e);
@@ -86,7 +93,9 @@ const useSignUpForm = (state, callback, validate) => {
     errors,
     isSubmitting,
     cleanInputs,
-    handleNumberInput, handlePriceInput,
+    handleNumberInput, 
+    handlePriceInput,
+    handleRandomInput,
   };
 };
 
