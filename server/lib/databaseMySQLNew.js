@@ -1,4 +1,20 @@
-module.exports = { 'prod': 'rentronicsNew', getFullName: function (dbName, userName) { return dbName + "_" + userName } };
-// module.exports = { 'prod': 'rentronics', getFullName: function (dbName, userName) { return dbName + "_" + userName } };
-// module.exports = { 'prod': 'rentrodev_test', getFullName: function (dbName, userName) { return dbName + "_" + userName } };
-// module.exports = { 'prod': 'rentronic_uat', getFullName: function (dbName, userName) { return dbName + "_" + userName } };
+const env = process.env.NODE_ENV;
+let DbName, domainName;
+
+function getFullName(dbName, userName) {
+  return dbName + "_" + userName
+}
+
+if (env === 'uat') {
+  DbName = 'rentronic_uat'
+  domainName = 'rentronicsuat.saimrc.com'
+
+} else if (env === 'dev') {
+  DbName = 'rentrodev_test';
+  domainName = 'rentronicsdev.saimrc.com'
+} else {
+  DbName = 'rentronicsNew'
+  domainName = 'localhost:3000'
+}
+
+module.exports = { 'prod': DbName, getFullName: getFullName, domainName: domainName };

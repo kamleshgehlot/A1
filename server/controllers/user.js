@@ -6,7 +6,7 @@ const Company = require("../models/company.js")
 const UserRole = require("../models/franchise/userRole")
 const Testing = require("../models/testing.js")
 const Miscellaneious = require('../lib/miscellaneous.js')
-
+const {domainName} = require("../lib/databaseMySQLNew");
 const { trans } = require("../lib/mailtransporter");
 
 const register = async function (req, res, next) {
@@ -131,10 +131,10 @@ const register = async function (req, res, next) {
 
 				(req.body.directorList || []).map(director => {
 					console.log("director list..............", director)
-					let url = 'http://rentronicsdev.saimrc.com/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
+					let url = 'http://' + domainName + '/api/auth/verifyEmail?accountId=' + accountId + '&name=' + director.uid + '&token=' + token;
 					
 					const mail = {
-						from: 'admin@rentronicsdev.saimrc.com',
+						from: 'admin@' + domainName,
 						//  to: 'mpurohit88@gmail.com',
 						to: director.email,
 						subject: 'Please verify your email address',

@@ -4,6 +4,7 @@ const Auth = require("../models/auth.js")
 const User = require("../models/user.js")
 const jwt = require('jsonwebtoken');
 const { trans } = require("../lib/mailtransporter");
+const {domainName} = require("../lib/databaseMySQLNew");
 
 var encryptionHelper = require("../lib/simple-nodejs-iv-encrypt-decrypt.js")
 var algorithm = encryptionHelper.CIPHERS.AES_256;
@@ -168,7 +169,7 @@ const forgotPassword = async function (req, res, next) {
       status = 200;
       // Create a token
       const mail = {
-        from: 'admin@rentronicsdev.saimrc.com',
+        from: 'admin@' + domainName,
         to: user[0].email,
         subject: 'Forgot Password',
         text: 'forgot password ',
