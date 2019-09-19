@@ -1,4 +1,4 @@
-// import Config from './Config';
+import Config from './Config';
 
 const ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 const PLATFORM = process.env.PLATFORM ? process.env.PLATFORM : 'local';
@@ -13,10 +13,15 @@ const KEY = `${ENV}-${PLATFORM}-${VERSION}`;
 // export const AUTH_URL = 'http://rentronicsuat.saimrc.com'; // Config[KEY].AUTH_URL;
 // export const API_CONSUMER = 'http://rentronicsuat.saimrc.com'; // Config[KEY].API_URL;
 
-export const API_URL = 'http://localhost:3000'; // Config[KEY].API_URL;
-export const AUTH_URL = 'http://localhost:3000'; // Config[KEY].AUTH_URL;
-export const API_CONSUMER = 'http://localhost:3000'; // Config[KEY].API_URL;
+// export const API_URL = 'http://localhost:3000'; // Config[KEY].API_URL;
+// export const AUTH_URL = 'http://localhost:3000'; // Config[KEY].AUTH_URL;
+// export const API_CONSUMER = 'http://localhost:3000'; // Config[KEY].API_URL;
 
+console.log("process.env.NODE_ENV", KEY);
+
+export const API_URL = Config[KEY].API_URL;
+export const AUTH_URL = Config[KEY].AUTH_URL;
+export const API_CONSUMER = Config[KEY].API_URL;
 
 // Helpers
 export const APP_TOKEN = {
