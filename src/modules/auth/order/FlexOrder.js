@@ -137,7 +137,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType}) {
+export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType, affordAmt, product}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -206,23 +206,8 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
       handleOrderType(2);
   }
 
-  // useEffect(() => {
-  //   if(inputs.length ===0){
-  //   inputs.goods_rent_price = 0;
-  //   inputs.ppsr_fee = 0;
-  //   inputs.liability_fee = 0;
-  //   inputs.weekly_total = 0;
-  //   inputs.frequency = 0;
-  //   inputs.no_of_payment = 0;
-  //   inputs.each_payment_amt = 0;
-  //   inputs.total_payment_amt     = 0;
-  //   inputs.before_delivery_amt = 0;
-  //   inputs.exp_delivery_at = 0 ;
-  //   inputs.bond_amt = 0;
-  //   }
-  // }, []);
 const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
-  RESET_VALUES,
+  (flexOrderList === null ? RESET_VALUES : flexOrderList),
   flex,
   validate
 );

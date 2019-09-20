@@ -148,9 +148,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [customer, setCustomer] = useState(null);
   const [junkData,setJunkData] = useState({});
   const [productList, setProductList] = useState([]);
+  const [product, setProduct] = useState([]);
   const [isNewCustomer,setIsNewCustomer] = useState(0);
   const [assignInterest, setAssignInterest] = React.useState([]);
-  
+    
   const [mainCategory, setMainCategory] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
@@ -162,13 +163,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
-
-  // fixedOrderList !== null ? inputs.order_type = 1 : '' ;
-  // flexOrderList  !== null ? inputs.order_date = 2 : '';
-  // function validate(values) {
-  //   let errors = {};
-  //   return errors;
-  // };
   
   function handleBudgetClose(){
     setBudgetOpen(false);
@@ -183,26 +177,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
   
   function handleFixedOpen(){
-    // if(fixedOrderList==null){
-    // setFixedOrderList({
-    //   int_unpaid_bal  : 0,
-    //   cash_price : 0,
-    //   delivery_fee : 0,
-    //   ppsr_fee : 0,
-    //   no_of_payment : 0,
-    //   each_payment_amt : 0,
-    //   total_payment_amt : 0,
-    //   before_delivery_amt : 0,
-    //   frequency  : 0,
-    //   exp_delivery_at : '',
-    //   first_payment : '',
-    //   last_payment : '',
-    //   minimum_payment_amt : 0,
-    //   intrest_rate : 0,
-    //   intrest_rate_per : 0,
-    //   total_intrest : 0,
-    //   });
-    // }
     setFlexOrderList(null);
     setFixedOrderOpen(true);
   }
@@ -212,22 +186,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
   
   function handleFlexOpen(){
-    // if(flexOrderList==null){
-    //   setFlexOrderList({
-    //     goods_rent_price : 0,
-    //     ppsr_fee : 0,
-    //     liability_fee : 0,
-    //     weekly_total : 0,
-    //     frequency : 0,
-    //     first_payment : '',
-    //     no_of_payment : 0,
-    //     each_payment_amt : 0,
-    //     total_payment_amt : 0,
-    //     before_delivery_amt : 0,
-    //     exp_delivery_at : '',
-    //     bond_amt : 0,
-    //     });
-    //   }
     setFixedOrderList(null);
     setFlexOrderOpen(true);
   }
@@ -291,11 +249,30 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       }
   },[productList,categoryList,subCategoryList,mainCategory,category,subCategoryList,assignInterest]);
 
+  useEffect(()=>{
+    if(product!= ""){
+      if(parseFloat(budgetList.afford_amt) < parseFloat(product.rental)){
+        alert("you can't afford payment for this product. kindly update your budget or choose other product")
+      }  
+    }
+  },[budgetList])
+
+  
   function handleChangeMultiple(event) {
-    setInput('product',event.target.value);
+    setInput('product',event.target.value);    
     setAssignInterest(event.target.value);
+    
+   (productList.length > 0 ? productList : []).map((data,index)=>{
+      if(event.target.value === data.id) {
+        setProduct(data);        
+        if(parseFloat(budgetList.afford_amt) < parseFloat(data.rental)){
+          alert("you can't afford payment for this product. kindly update your budget or choose other product")
+        }        
+      }
+    });  
   }
 
+  console.log(product)
   function handleMainCategory(event) {
     
     setInput('main_category',event.target.value);
@@ -306,6 +283,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setCategory('');
     setSubCategory('');
     setAssignInterest('');
+    setProduct('');
 
     const fetchData = async () => {
       try {
@@ -325,6 +303,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setProductList('');    
     setSubCategory('');
     setAssignInterest('');
+    setProduct('');
 
     const fetchData = async () => {
       try {
@@ -343,6 +322,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setSubCategory(event.target.value);
     setProductList('');
     setAssignInterest('');
+    setProduct('');
 
     const fetchData = async () => {
       try {
@@ -458,7 +438,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     validate
   );
 
-    
 return (
   <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -661,11 +640,9 @@ return (
                       Order Type*
                     </Typography>                    
                     {/* <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type*</InputLabel> */}
-                    <Button variant= {inputs.order_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleFixedOpen} className={classes.textField} > Fixed Order </Button>
-                    <Button variant= {inputs.order_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleFlexOpen}  className={classes.textField}>Flex Order </Button>
-{/*                     
-                    <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type</InputLabel>*/}
-                    <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography> 
+                    <Button variant= {inputs.order_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleFixedOpen} className={classes.textField} disabled={budgetList == "" || product =="" || (parseFloat(budgetList.afford_amt) < parseFloat(product.rental))}> Fixed Order </Button>
+                    <Button variant= {inputs.order_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleFlexOpen}  className={classes.textField} disabled={budgetList == "" || product =="" ||  (parseFloat(budgetList.afford_amt) < parseFloat(product.rental))}>Flex Order </Button>
+                    {/* <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>  */}
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
@@ -709,8 +686,8 @@ return (
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/> : null }
-    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} /> : null }
-    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType}/> : null }
+    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} affordAmt={budgetList.afford_amt} product={product}/> : null }
+    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} affordAmt={budgetList.afford_amt} product={product} /> : null }
     {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }
     </div>
   );

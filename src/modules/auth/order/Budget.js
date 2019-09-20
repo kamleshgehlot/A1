@@ -173,8 +173,10 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
     if(inputs.afford_amt<=0){
       setErrorAfford('This field is required');
       check=true;
-    }
-    else{
+    }else if(inputs.afford_amt > inputs.surplus){
+      setErrorAfford('Afford amt. should be less then to surplus');
+      check=true;
+    }else{
       setErrorAfford('');
     }
     if(check===false){
