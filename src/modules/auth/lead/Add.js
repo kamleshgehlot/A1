@@ -273,7 +273,6 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       is_franchise_exist: inputs.is_franchise_exist,
       customer_name: selectedOption,
       customer_contact: inputs.customer_contact,
-      
     };
 
     let formData = new FormData();

@@ -1,7 +1,7 @@
 export default {
   'config-development': {
-    API_URL: 'http://localhost:3000',
-    AUTH_URL: 'http://localhost:3000',
+    API_URL: 'http://rentronicsuat.saimrc.com',
+    AUTH_URL: 'http://rentronicsuat.saimrc.com',
   },
   'config-dev': {
     API_URL: 'http://rentronicsdev.saimrc.com',

@@ -129,10 +129,10 @@ const useStyles = makeStyles(theme => ({
 export default function AutoSuggestDropdown({customerListData, setSelectedOption}) {
   const classes = useStyles();
   // const [customerListData, setCustomerListData] = useState([]);
-
+  suggestions = [];
   customerListData.map(customer => {
     suggestions.push({label: customer.customer_name, key: customer.id});
-  })
+  });
 
   return (
     <div className={classes.root}>
@@ -156,12 +156,17 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
               if (event.target.value === '') {
                 clearSelection();
               }else{
-                console.log('event...',event.target.value)
+                console.log('event...',event.target.value);
               }
             },
             onBlur: event => {
               // console.log('event...',event.target.value)
               setSelectedOption(event.target.value);
+              customerListData.map(customer => {
+                if(customer.customer_name === event.target.value) {
+                  document.getElementById("customer_contact").value = customer.mobile;
+                }
+              })
             },
             onFocus: openMenu,
             placeholder: 'Select or Enter Customer Name',
