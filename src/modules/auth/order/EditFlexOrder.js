@@ -128,11 +128,15 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId}) {
+export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId,  affordAmt, product}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
-
+  const [frequency, setFrequency] = useState(flexOrderList.frequency);
+  const [duration, setDuration] = useState(flexOrderList.duration);
+  const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(flexOrderList.before_delivery_amt);
+  const [firstPaymentDate,setFirstPaymentDate] = useState(flexOrderList.first_payment);
+  const [dateArray,setDateArray] = useState([]);
   // const [inputs,setInputs] = useState([]);  
 
   
@@ -149,6 +153,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   
   function handleDateChange(date){    
     handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    setFirstPaymentDate(date);
   }
 
   function handleDeliveryDate(date){
@@ -160,23 +165,23 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     handleInputChange({target:{name: 'delivery_time', value: dTime}}) 
   }
   
-  function handleInputBlur(e){
-    if(e.target.value===''){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
-  }
+  // function handleInputBlur(e){
+  //   if(e.target.value===''){
+  //     setInputs({
+  //       ...inputs,
+  //       [e.target.name]: 0,
+  //     });
+  //   }
+  // }
 
-  function handleInputFocus(e){
-    if(e.target.value==='0'){
-      setInputs({
-        ...inputs,
-        [e.target.name]: '',
-      });
-    }
-  }
+  // function handleInputFocus(e){
+  //   if(e.target.value==='0'){
+  //     setInputs({
+  //       ...inputs,
+  //       [e.target.name]: '',
+  //     });
+  //   }
+  // }
   
   // function handleInputChange(e){
   //   // console.log('valueee',e.target.value)
@@ -207,6 +212,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       weekly_total : parseFloat(inputs.weekly_total),
       frequency : parseFloat(inputs.frequency),
       first_payment : inputs.first_payment,
+      duration: inputs.duration,
       no_of_payment : parseFloat(inputs.no_of_payment),
       each_payment_amt : parseFloat(inputs.each_payment_amt),
       total_payment_amt : parseFloat(inputs.total_payment_amt),
@@ -218,32 +224,170 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     setFlexOrderList(data);
   }
 
-  // console.log('inputs==',inputs);
-  // useEffect(() => {
-  //   // console.log(flexOrderList);
-  //   const fetchData = async () => {
-  //     try {
-  //       const order = await Order.getCurrespondingFlexOrder({flexOrderId: flexOrderId});
-  //       // console.log('dd====',order);
-  //       if(flexOrderList!=null){
-  //         setInputsAll(flexOrderList);
-  //       }else{
-  //       setInputsAll(order[0]);        
-  //     }
-  //     } catch (error) {
-  //       console.log('Error..',error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-  const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+
+  
+  const handleFrequency = (e) => {
+    setFrequency(e.target.value);
+    setInput('frequency', e.target.value);
+  }
+  
+  const handleDuration = (e) => {
+    setDuration(e.target.value);
+    setInput('duration', e.target.value)
+  }
+
+  const handleNumberOfPaymentBefDelivery = (e) =>{
+    const validNumber = /^[0-9]*$/;
+    if (e.target.value === '' || validNumber.test(e.target.value)) {
+      let temp = paymentBeforeDelivery;
+      setPaymentBeforeDelivery(e.target.value);
+      setInput( 'before_delivery_amt' , e.target.value);
+      if(e.target.value > inputs.no_of_payment){
+        alert('Number of payment before delivery should be less then or equal to total number of payment.');
+        setPaymentBeforeDelivery(temp);
+        setInput( 'before_delivery_amt' , temp);
+      }
+    }
+  }
+
+
+  
+  
+  useEffect(() => {
+    if(duration != '' && frequency != '' && firstPaymentDate != ''){
+      let paymentDates = [];
+
+      if(frequency == 1){
+        let firstPayDate = new Date(firstPaymentDate);
+        for(let i=0; i< duration; i++){
+          // console.log('date',firstPayDate)
+          paymentDates.push(firstPayDate.toString())
+          firstPayDate.setMonth(firstPayDate.getMonth() + 1);                   
+        }        
+      }else if(frequency == 2){
+        let date1 = new Date(firstPaymentDate);
+        let date2 = new Date(firstPaymentDate);
+            date2.setDate(date2.getDate() + 15);
+        for(let i=1; i <= (duration * 2); i++){
+          if(i%2 != 0){
+            // console.log('date 1',date1);
+            paymentDates.push(date1.toString())            
+          }else if(i%2 == 0){
+            // console.log('date 2',date2);
+            paymentDates.push(date2.toString())            
+
+            date1.setMonth(date1.getMonth() + 1);
+            date2.setMonth(date2.getMonth() + 1);            
+          }
+        }        
+      }else if(frequency == 4){
+        let date1 = new Date(firstPaymentDate);
+        let date2 = new Date(firstPaymentDate);
+        let date3 = new Date(firstPaymentDate);
+        let date4 = new Date(firstPaymentDate);
+            date2.setDate(date1.getDate() + 7);
+            date3.setDate(date3.getDate() + 14);
+            date4.setDate(date4.getDate() + 21);
+        for(let i=1, j=1; i <= (duration * 4); i++, j++){
+          if(j==1){
+            // console.log('date 1',date1);
+            paymentDates.push(date1.toString())
+          }else if (j==2){
+            // console.log('date 2',date2);
+            paymentDates.push(date2.toString())
+          }else if (j==3){
+            // console.log('date 3',date3);
+            paymentDates.push(date3.toString())
+          }else if (j==4){
+            // console.log('date 4',date4);
+            paymentDates.push(date4.toString())
+            j = 0;
+          }
+          
+          if(i%4 == 0){
+            date1.setMonth(date1.getMonth() + 1);
+            date2.setMonth(date2.getMonth() + 1);            
+            date3.setMonth(date3.getMonth() + 1);            
+            date4.setMonth(date4.getMonth() + 1);            
+          }
+        }
+      }
+      
+      // console.log('payment dates',paymentDates);
+
+      setDateArray(paymentDates);      
+      // handleRandomInput([
+      //   {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
+      // ]);
+    }
+  },[duration, frequency, firstPaymentDate]);
+
+
+  useEffect(() => {
+    if(paymentBeforeDelivery!= ''){
+      handleRandomInput([
+        // {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
+        {name: 'exp_delivery_date', value:  dateArray[paymentBeforeDelivery - 1]},
+      ]);
+    }else{
+      handleRandomInput([
+        // {name: 'minimum_payment_amt', value: ''},
+        {name: 'exp_delivery_date', value: ''},
+      ]);
+    }
+  },[paymentBeforeDelivery]);
+
+  
+  useEffect(()=>{
+      if(frequency != '' && duration != ''){    
+        if(frequency == 1){
+          let installment = (parseFloat(product.rental) * 4);
+          handleRandomInput([
+            {name: 'each_payment_amt', value: installment},
+            {name: 'no_of_payment', value: duration},
+            {name: 'total_payment_amt', value: (installment * duration)},
+          ]);
+          // setInputsAll(val);
+        }else if(frequency == 2){ 
+          let installment = (parseFloat(product.rental) * 2);
+          handleRandomInput([
+            {name: 'each_payment_amt', value: installment},
+            {name: 'no_of_payment', value: (duration * 2)},
+            {name: 'total_payment_amt', value: (installment * duration)},
+          ]);
+        }else if(frequency == 4){ 
+          let installment = (parseFloat(product.rental));
+          handleRandomInput([
+            {name: 'each_payment_amt', value: installment},
+            {name: 'no_of_payment', value: (duration * 4)},
+            {name: 'total_payment_amt', value: (installment * duration)},
+          ]);        
+        }
+      }      
+      if(paymentBeforeDelivery > inputs.no_of_payment){
+        setPaymentBeforeDelivery('');
+        handleRandomInput([
+          // {name: 'minimum_payment_amt', value: ''},
+          {name: 'before_delivery_amt', value: ''},   
+          {name: 'exp_delivery_date', value: ''},     
+        ]);
+        alert('Number of payment before delivery should be less then or equal to total number of payment.');
+      }
+  },[duration,frequency]);
+
+
+  const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     flex,
     validate
   ); 
+
+
   useEffect(() => {
     setInputsAll(flexOrderList);
   }, []);
+
+
 return (
     <div>
       <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
@@ -273,8 +417,8 @@ return (
                       label="Rent Price of Goods"
                       value={inputs.goods_rent_price}
                       onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.goods_rent_price}
                       helperText={errors.goods_rent_price}
                       fullWidth
@@ -298,8 +442,8 @@ return (
                       label="PPSR Fee (if applicable)"
                       value={inputs.ppsr_fee}
                       onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.ppsr_fee}
                       helperText={errors.ppsr_fee}
                       fullWidth
@@ -323,8 +467,8 @@ return (
                       label="Liability Waiver Fee "
                       value={inputs.liability_fee}
                       onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.liability_fee}
                       helperText={errors.liability_fee}
                       fullWidth
@@ -349,8 +493,8 @@ return (
                       label="TOTAL PER WEEK/ FORTNIGHT"
                       value={inputs.weekly_total}
                       onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.weekly_total}
                       helperText={errors.weekly_total}
                       fullWidth
@@ -381,7 +525,7 @@ return (
                       id="frequency"
                       name="frequency"
                       value={inputs.frequency}
-                      onChange={handleInputChange}
+                      onChange={handleFrequency}
                       error={errors.frequency}
                       margin='dense'                      
                       helperText={errors.frequency}
@@ -395,7 +539,31 @@ return (
                       <MenuItem className={classes.textsize} value="1">Monthly</MenuItem>                      
                     </Select>            
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+
+                <Grid item xs={12} sm={4}>    
+                <InputLabel className={classes.textsize} htmlFor="duration">Duration *</InputLabel>
+                  <Select
+                    id="duration"
+                    name="duration"
+                    value={inputs.duration}
+                    onChange={handleDuration}
+                    error={errors.duration}
+                    margin='dense'                      
+                    helperText={errors.duration}
+                    fullWidth                      
+                    className={classes.textsize}
+                    required                      
+                  > 
+                    <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
+                    <MenuItem className={classes.textsize} value="12">1 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="24">2 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="36">3 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="48">4 Year</MenuItem>
+                    <MenuItem className={classes.textsize} value="60">5 Year</MenuItem>                      
+                  </Select>                          
+                </Grid>
+                   
+                <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     First Payment Date
                   </Typography>
@@ -432,11 +600,12 @@ return (
                       // label="no_of_payment/Mortgage"
                       value={inputs.no_of_payment}
                       onChange={handleNumberInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.no_of_payment}
                       helperText={errors.no_of_payment}
                       fullWidth
+                      disabled
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -461,11 +630,12 @@ return (
                       // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
                       onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
+                      disabled
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -488,8 +658,9 @@ return (
                       // label="total_payment_amt/Mortgage"
                       value={inputs.total_payment_amt}
                       onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      disabled
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.total_payment_amt}
                       helperText={errors.total_payment_amt}
                       fullWidth
@@ -507,7 +678,7 @@ return (
                      
                 </Grid>
                 
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={8}>
                   <Typography  className={classes.subTitle}>
                       Minimun Number of Payments before delivery
                   </Typography>
@@ -516,9 +687,9 @@ return (
                       name="before_delivery_amt"
                       // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
-                      onChange={handleNumberInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onChange={handleNumberOfPaymentBefDelivery}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       fullWidth
@@ -603,8 +774,8 @@ return (
                       // label="bond_amt/Mortgage"
                       value={inputs.bond_amt}
                       onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       error={errors.bond_amt}
                       helperText={errors.bond_amt}
                       fullWidth

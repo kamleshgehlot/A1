@@ -147,9 +147,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
   const [duration, setDuration] = useState('');
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState('');
   const [firstPaymentDate,setFirstPaymentDate] = useState('');
-  useEffect(()=>{
-    console.log('afford amt..', affordAmt, product) 
-  },[]);
+  const [dateArray,setDateArray] = useState([]);
 
   function fixed(e){
     // e.preventDefault();   
@@ -231,45 +229,118 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
   const handleNumberOfPaymentBefDelivery = (e) =>{
     const validNumber = /^[0-9]*$/;
     if (e.target.value === '' || validNumber.test(e.target.value)) {
+      let temp = paymentBeforeDelivery;
       setPaymentBeforeDelivery(e.target.value);
       setInput( 'before_delivery_amt' , e.target.value);
+      if(e.target.value > inputs.no_of_payment){
+        alert('Number of payment before delivery should be less then or equal to total number of payment.');
+        setPaymentBeforeDelivery(temp);
+        setInput( 'before_delivery_amt' , temp);
+      }
     }
   }
 
-  const handleMinimumPayment = () => {
-    if(paymentBeforeDelivery > inputs.no_of_payment){
-      setPaymentBeforeDelivery('');
+
+  
+  
+  useEffect(() => {
+    if(duration != '' && frequency != '' && firstPaymentDate != ''){
+      let paymentDates = [];
+
+      if(frequency == 1){
+        let firstPayDate = new Date(firstPaymentDate);
+        for(let i=0; i< duration; i++){
+          // console.log('date',firstPayDate)
+          paymentDates.push(firstPayDate.toString())
+          firstPayDate.setMonth(firstPayDate.getMonth() + 1);                   
+        }        
+      }else if(frequency == 2){
+        let date1 = new Date(firstPaymentDate);
+        let date2 = new Date(firstPaymentDate);
+            date2.setDate(date2.getDate() + 15);
+        for(let i=1; i <= (duration * 2); i++){
+          if(i%2 != 0){
+            // console.log('date 1',date1);
+            paymentDates.push(date1.toString())            
+          }else if(i%2 == 0){
+            // console.log('date 2',date2);
+            paymentDates.push(date2.toString())            
+
+            date1.setMonth(date1.getMonth() + 1);
+            date2.setMonth(date2.getMonth() + 1);            
+          }
+        }        
+      }else if(frequency == 4){
+        let date1 = new Date(firstPaymentDate);
+        let date2 = new Date(firstPaymentDate);
+        let date3 = new Date(firstPaymentDate);
+        let date4 = new Date(firstPaymentDate);
+            date2.setDate(date1.getDate() + 7);
+            date3.setDate(date3.getDate() + 14);
+            date4.setDate(date4.getDate() + 21);
+        for(let i=1, j=1; i <= (duration * 4); i++, j++){
+          if(j==1){
+            // console.log('date 1',date1);
+            paymentDates.push(date1.toString())
+          }else if (j==2){
+            // console.log('date 2',date2);
+            paymentDates.push(date2.toString())
+          }else if (j==3){
+            // console.log('date 3',date3);
+            paymentDates.push(date3.toString())
+          }else if (j==4){
+            // console.log('date 4',date4);
+            paymentDates.push(date4.toString())
+            j = 0;
+          }
+          
+          if(i%4 == 0){
+            date1.setMonth(date1.getMonth() + 1);
+            date2.setMonth(date2.getMonth() + 1);            
+            date3.setMonth(date3.getMonth() + 1);            
+            date4.setMonth(date4.getMonth() + 1);            
+          }
+        }
+      }
+      
+      // console.log('payment dates',paymentDates);
+
+      setDateArray(paymentDates);      
       handleRandomInput([
-        {name: 'minimum_payment_amt', value: ''},
-        {name: 'before_delivery_amt', value: ''},        
+        {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
       ]);
-      // setInput( 'before_delivery_amt' ,'');
-      alert('Number of payment before delivery should be less then or equal to total number of payment.');
     }
-  }
+  },[duration, frequency, firstPaymentDate]);
+
+
+
+  // useEffect(() => {
+  //     if(firstPaymentDate != '' ){
+  //       let year = firstPaymentDate.getFullYear();
+  //       let lastPaymentYear = year + (parseInt(duration)/12);
+  //       let lastPaymentDate = ((firstPaymentDate.getMonth() + 1) + '-' + firstPaymentDate.getDate() + '-' + lastPaymentYear);
+  //       handleRandomInput([
+  //         {name: 'last_payment', value: lastPaymentDate},        
+  //       ]);       
+  //     }
+  //   },[firstPaymentDate, duration]);
+
 
   useEffect(() => {
-    if(firstPaymentDate != '' ){
-      let year = firstPaymentDate.getFullYear();
-      let lastPaymentYear = year + (parseInt(duration)/12);
-      let lastPaymentDate = (firstPaymentDate.getMonth() + '-' + firstPaymentDate.getDate() + '-' + lastPaymentYear);
-      setInput('last_payment',lastPaymentDate)
-    }
-  },[firstPaymentDate, duration]);
-  
-  
-  useEffect(() => {
-    if(paymentBeforeDelivery!= '' ){
+    if(paymentBeforeDelivery!= ''){
       handleRandomInput([
         {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
+        {name: 'exp_delivery_date', value:  dateArray[paymentBeforeDelivery - 1]},
       ]);
     }else{
       handleRandomInput([
         {name: 'minimum_payment_amt', value: ''},
+        {name: 'exp_delivery_date', value: ''},
       ]);
     }
   },[paymentBeforeDelivery]);
 
+  
   useEffect(()=>{
       if(frequency != '' && duration != ''){    
         if(frequency == 1){
@@ -296,6 +367,15 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
           ]);        
         }
       }      
+      if(paymentBeforeDelivery > inputs.no_of_payment){
+        setPaymentBeforeDelivery('');
+        handleRandomInput([
+          {name: 'minimum_payment_amt', value: ''},
+          {name: 'before_delivery_amt', value: ''},   
+          {name: 'exp_delivery_date', value: ''},     
+        ]);
+        alert('Number of payment before delivery should be less then or equal to total number of payment.');
+      }
   },[duration,frequency]);
   
   const { inputs, handleInputChange, handleRandomInput, setInputsAll, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
@@ -304,7 +384,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
     validate
   );
   
-  console.log('ddd',inputs);
+  // console.log('ddd',inputs);
 
 return (
     <div>
@@ -521,7 +601,7 @@ return (
                         onChange={handleDateChange}
                         error={errors.first_payment}
                         helperText={errors.first_payment}        
-                        disabled = {frequency == "" || duration == ""}                       
+                        disabled = {frequency == "" || duration == ""}
                       />
                     </MuiPickersUtilsProvider>
                    
@@ -537,6 +617,7 @@ return (
                         id="last_payment"
                         name="last_payment"
                         format="dd/MM/yyyy"
+                        disabled
                         disablePast = {true}
                         defaultValue = {""}
                         // defaultValue = {new Date()}
@@ -550,7 +631,7 @@ return (
                         onChange={handleLastDate}
                         error={errors.last_payment}
                         helperText={errors.last_payment}                               
-                        disabled = {frequency == "" || duration == ""}                       
+                        // disabled = {frequency == "" || duration == ""}                       
                       />
                     </MuiPickersUtilsProvider>
                     
@@ -566,22 +647,15 @@ return (
                         },
                       }}
                       id="no_of_payment"
-                      name="no_of_payment"
-                      // label="no_of_payment/Mortgage"
+                      name="no_of_payment"   
+                      disabled                   
                       value={inputs.no_of_payment}
-                      onChange={handleNumberInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
+                      onChange={handleNumberInput}                      
                       fullWidth
                       error={errors.no_of_payment}
                       helperText={errors.no_of_payment}
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
-                      // InputProps={{
-                      //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      // }}
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -604,6 +678,7 @@ return (
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
+                      disabled
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -636,6 +711,7 @@ return (
                       error={errors.total_payment_amt}
                       helperText={errors.total_payment_amt}
                       fullWidth
+                      disabled
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -665,8 +741,6 @@ return (
                       // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
                       onChange={handleNumberOfPaymentBefDelivery}
-                      // onFocus={handleInputFocus}
-                      onBlur={handleMinimumPayment}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       

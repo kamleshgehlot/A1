@@ -77,7 +77,7 @@ const postComment = async function (req, res, next) {
       const newComment = new Order(commentParams);
 
       const result = await newComment.postComment();
-      console.log('comment result',result);
+      // console.log('comment result',result);
       // const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
       if(result){
         res.send(result); 
@@ -237,6 +237,7 @@ const Delivered = async function(req, res, next) {
 };
 
 const postOrder = async function (req, res, next) {
+  console.log('req.oerder',req.body);
 	let orderParams = {
     user_id: req.decoded.user_id,
     userid: req.decoded.id,
@@ -255,6 +256,7 @@ const postOrder = async function (req, res, next) {
     assigned_to : req.body.assigned_to,
     is_active : req.body.is_active,
     created_by: req.decoded.id,
+    duration : req.body.duration,
     
     converted_to : req.body.converted_to,
   };
@@ -320,6 +322,7 @@ const editOrder = async function (req, res, next) {
       order_type : req.body.order_type,
       flexOrderType : req.body.flexOrderType,
       fixedOrderType : req.body.fixedOrderType,
+      duration :req.body.duration,
       payment_mode : req.body.payment_mode,
       order_date : req.body.order_date, 
       budget_list : req.body.budget_list,

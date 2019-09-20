@@ -146,6 +146,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   const [mainCategory, setMainCategory] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
+  const [product, setProduct] = useState([]);
 
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
@@ -159,7 +160,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
       assignRoleList.push(parseInt(product));
     });
     setAssignInterest(assignRoleList);
-
+    // console.log(assignInterest)
     let productCategory = [];
     (editableData.product_related_to.split(',')).map((product,index) =>{
       productCategory.push(parseInt(product));
@@ -180,8 +181,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
         setSubCategoryList(sub_category.subCategoryList);
 
         const product = await Category.RelatedproductList({subcategory:productCategory[2]});
-        setProductList(product.productList);       
-
+        setProductList(product.productList);              
+       
+      
         const budget = await Order.getCurrespondingBudget({budgetId: editableData.budget_id});
         setBudgetList(budget.order[0]);
 
@@ -202,7 +204,17 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   fetchData();
   }, []);
 
-  console.log('category', mainCategory, category, subCategory, assignInterest);
+  useEffect(() => {
+    (productList.length > 0 ? productList : []).map((data,index)=>{
+      if(assignInterest[0] == data.id) {
+        setProduct(data);
+        // if(parseFloat(budgetList.afford_amt) < parseFloat(data.rental)){
+        //   alert("you can't afford payment for this product. kindly update your budget or choose other product")
+        // }        
+      }
+      }); 
+  },[]);
+  console.log('category', mainCategory, category, subCategory, assignInterest, product);
   
   function validate(values) {
     let errors = {};    
@@ -222,9 +234,10 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     setFixedOrderOpen(false);
   }
   
-  function handleFixedOpen(fixedOrderId){
+  function handleFixedOpen(fixedOrderId){    
     setFixedOrderId(fixedOrderId);
     setFlexOrderList(null);
+    selectProduct();
     setFixedOrderOpen(true);
   }
 
@@ -235,6 +248,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   function handleFlexOpen(flexOrderId){
     setFlexOrderId(flexOrderId);
     setFixedOrderList(null);
+    selectProduct();
     setFlexOrderOpen(true);
   }
 
@@ -253,19 +267,14 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     setSearchCustomerOpen(true);
   }
 
+  const selectProduct = (e) => {
+    (productList.length > 0 ? productList : []).map((data,index)=>{
+      if(assignInterest[0] == data.id) {
+        setProduct(data);
+      }
+    });
+  }
 
-
-//   useEffect(()=>{
-//     if(productList=="" || assignInterest == ""){
-//       setMainCategory('');
-//     }
-//     if(categoryList == "" || category == ""){
-//       setCategory('');
-//     }
-//     if(subCategoryList=="" || subCategory == ""){
-//       setSubCategory('');
-//     }
-// },[productList,categoryList,subCategoryList,mainCategory,category,subCategoryList,assignInterest]);
 
 
   function handleMainCategory(event) {
@@ -329,25 +338,18 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
 
   function handleChangeMultiple(event) {
     setAssignInterest(event.target.value);
+    
+   (productList.length > 0 ? productList : []).map((data,index)=>{
+    if(event.target.value === data.id) {
+      setProduct(data);        
+      if(parseFloat(budgetList.afford_amt) < parseFloat(data.rental)){
+        alert("you can't afford payment for this product. kindly update your budget or choose other product")
+      }        
+    }
+    });  
   }
 
   const editOrder = async (event) => {    
-      // if(budgetList == null) {
-    //   const budget = await Order.getCurrespondingBudget({budgetId: inputs.budget_id});
-    //   // console.log('budgetlist',budget.order[0]);
-    //   setBudgetList(budget.order[0]);
-    // }
-    
-    // if(flexOrderList==null && fixedOrderList==null && inputs.order_type==2){
-    //   const order = await Order.getCurrespondingFlexOrder({flexOrderId: inputs.order_type_id});
-    //   console.log('flexlist',order[0]);
-    //   setFlexOrderList(order[0]);
-    // }
-    // if(flexOrderList==null && fixedOrderList==null && inputs.order_type==1){
-    //   const order = await Order.getCurrespondingFixedOrder({fixedOrderId: inputs.order_type_id});
-    //   // console.log('fixedlist',order[0]);
-    //   setFlexOrderList(order[0]);
-    // }
 
     setpLoading(true);
     setSavebtn(true);
@@ -377,10 +379,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
       }
   };
 
-  // const handleInputChange = event => {
-  //   const { name, value } = event.target
-  //   setRecData({ ...inputs, [name]: value })
-  // }
+  
   const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     editOrder,
@@ -595,8 +594,8 @@ return (
         </form>
       </Dialog>
     {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} input={inputs} budgetId={budgetId}/> : null }
-    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} /> : null }
-    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} /> : null }
+    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} product={product} /> : null }
+    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} product={product} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
     </div>
   );
