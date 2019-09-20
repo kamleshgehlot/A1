@@ -129,7 +129,7 @@ const useStyles = makeStyles(theme => ({
 export default function AutoSuggestDropdown({customerListData, setSelectedOption}) {
   const classes = useStyles();
   // const [customerListData, setCustomerListData] = useState([]);
-
+  suggestions = [];
   customerListData.map(customer => {
     suggestions.push({label: customer.customer_name, key: customer.id});
   })
