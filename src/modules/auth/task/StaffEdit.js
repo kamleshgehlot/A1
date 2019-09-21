@@ -203,7 +203,7 @@ console.log('task status',taskStatus);
 
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <from >
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -216,224 +216,179 @@ console.log('task status',taskStatus);
           </AppBar>
 
           <div className={classes.root}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>
-                <Grid container spacing={4}>
-                <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>Task ID</StyledTableCell>
-                        <StyledTableCell>Task Description</StyledTableCell>
-                        <StyledTableCell>Due Date</StyledTableCell>
-                        {/* <StyledTableCell>Updated On</StyledTableCell> */}
-                        <StyledTableCell>Upload Doc</StyledTableCell>
-                        <StyledTableCell>Message</StyledTableCell>
-                        <StyledTableCell>Action</StyledTableCell>
-                        <StyledTableCell>Option</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                          <StyledTableCell> 
-                            <TextField 
-                              InputProps={{
-                                classes: {
-                                  input: classes.textsize,
-                                },
-                              }} 
-                              id="task_id"
-                              name="task_id"
-                              // label="Task Id"
-                              value={taskList.task_id}
-                              fullWidth
-                              disabled
-                              type="text"
-                              // placeholder="Franchise Name"
-                              margin="dense"
-                            /> 
-                          </StyledTableCell>
-                          <StyledTableCell> 
-                            <TextField  
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                                id="task_description"
-                                name="task_description"
-                                // label="Task Description"
-                                value={taskList.task_description}
-                                onChange={handleInputChange}
-                                fullWidth
-                                multiline
-                                disabled
-                                type="text"
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              /> 
-                          </StyledTableCell>                            
-                            <StyledTableCell>
-                              
-                              {/* <TextField  
-                                InputProps={{
-                                  classes: {
-                                    input: classes.textsize,
-                                  },
-                                }}  
-                                id="due_date"
-                                name="due_date"
-                                // label="Task Id"
-                                value={taskList.due_date}
-                                onChange={handleInputChange}
-                                fullWidth
-                                required
-                                disabled
-                                type="date"
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              />  */}
-
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                              <KeyboardDatePicker
-                                margin="dense"
-                                id="due_date"
-                                name="due_date"
-                                format="dd/MM/yyyy"
-                                disablePast = {true}
-                                value={taskList.due_date}
-                                fullWidth 
-                                disabled
-                                onChange={handleDate}
-                                // error={errors.due_date}
-                                // helperText={errors.due_date}
-                               
-                              />
-                            </MuiPickersUtilsProvider>
-                            </StyledTableCell>                          
-                            {/* <StyledTableCell>
-                              
-                              <TextField  
-                                id="updated_date"
-                                name="updated_date"
-                                // label="Task Id"
-                                value={taskList.updated_date}
-                                onChange={handleInputChange}
-                                fullWidth
-                                required
-                                disabled
-                                type="date"
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              /> 
-                            </StyledTableCell>                      */}
-                                              
-                            <StyledTableCell>
-                              
-                              <TextField  
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                                id="document"
-                                name="document"
-                                // label="Task Id"
-                                value={taskList.document}
-                                onChange={handleInputChange}
-                                fullWidth
-                                type="file"
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              /> 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              
-                              <TextField  
-                                InputProps={{
-                                  classes: {
-                                    input: classes.textsize,
-                                  },
-                                }}
-                                id="message"
-                                name="message"
-                                // label="Task Id"
-                                value={taskList.message}
-                                onChange={handleInputChange}
-                                fullWidth
-                                required
-                                multiline
-                                type="text"
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              /> 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              <Select
-                                value={taskList.status}
-                                onChange={handleInputChange}
-                                inputProps={{
-                                  name: 'status',
-                                  id: 'status',
-                                  label:'status'
-                                }}
-                                fullWidth
-                                label="status"
-                                required
-                                className={classes.textsize}
-                              >
-                                {console.log(taskList)}
-                                { taskStatus === 1 ?
-                                      <MenuItem className={classes.textsize} disabled  value="1" selected>Scheduled</MenuItem>
-                                  : ''
-                                }
-                                {
-                                  taskStatus === 1 ?
-                                    <MenuItem className={classes.textsize} value="2">In-progress</MenuItem>
-                                  : ''
-                                }
-                                {
-                                  taskStatus === 2 ?
-                                  <MenuItem className={classes.textsize} value="2" disabled selected>In-progress</MenuItem>
-                                  : ''
-                                }
-                                {
-                                  taskStatus === 2 ?
-                                  <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
-                                  : ''
-                                }
-                                {
-                                  taskStatus === 2 ?
-                                  <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
-                                  : ''
-                                }
-                                    
-                               {
-                                 taskStatus !== 2 && taskStatus !== 1 ?
-                                  <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
-                                 : ''
-                               }
-                               {
-                                 taskStatus !== 2 && taskStatus !== 1 ?
-                                  <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
-                                 : ''
-                               }
-                              </Select>
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            {savebtn? <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">
-                                Update
-                              </Button> : <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit" disabled>
-                                Update
-                              </Button>}
-                              <Button variant="contained" color="primary" className={classes.button} onClick={handleStaffEditClose}  type="submit">
-                               Close
-                              </Button>
-                            </StyledTableCell>
-                        </TableRow>
-                    </TableBody>
-                  </Table>
-                </Grid>
-              </Paper>
+            <Grid container spacing={4}>
+            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
+              <Grid item xs={12} sm={6}>
+                <InputLabel  className={classes.textsize} htmlFor="task_id">Task ID</InputLabel>
+                <TextField 
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }} 
+                  id="task_id"
+                  name="task_id"
+                  // label="Task Id"
+                  value={taskList.task_id}
+                  fullWidth
+                  disabled
+                  type="text"
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                /> 
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <InputLabel  className={classes.textsize} htmlFor="due_date">Due Date</InputLabel>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                    }} 
+                    margin="dense"
+                    id="due_date"
+                    name="due_date"
+                    format="dd/MM/yyyy"
+                    disablePast = {true}
+                    value={taskList.due_date}
+                    fullWidth 
+                    disabled
+                    onChange={handleDate}
+                    // error={errors.due_date}
+                    // helperText={errors.due_date}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <InputLabel  className={classes.textsize} htmlFor="task_description">Task Description</InputLabel>
+                 <TextField  
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                    }}
+                    id="task_description"
+                    name="task_description"
+                    // label="Task Description"
+                    value={taskList.task_description}
+                    onChange={handleInputChange}
+                    fullWidth
+                    multiline
+                    disabled
+                    type="text"
+                    // placeholder="Franchise Name"
+                    margin="dense"
+                  /> 
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <InputLabel  className={classes.textsize} htmlFor="document">Browse Document</InputLabel>
+                  <TextField  
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                    }}
+                    id="document"
+                    name="document"
+                    // label="Task Id"
+                    value={taskList.document}
+                    onChange={handleInputChange}
+                    fullWidth
+                    type="file"
+                    // placeholder="Franchise Name"
+                    margin="dense"
+                  /> 
+              </Grid>              
+              <Grid item xs={12} sm={6}>
+                <InputLabel  className={classes.textsize} htmlFor="status">Action</InputLabel>
+                  <Select
+                    value={taskList.status}
+                    onChange={handleInputChange}
+                    inputProps={{
+                      name: 'status',
+                      id: 'status',
+                      label:'status'
+                    }}
+                    fullWidth
+                    label="status"
+                    required
+                    className={classes.textsize}
+                  >
+                    {console.log(taskList)}
+                    { taskStatus === 1 ?
+                          <MenuItem className={classes.textsize} disabled  value="1" selected>Scheduled</MenuItem>
+                      : ''
+                    }
+                    {
+                      taskStatus === 1 ?
+                        <MenuItem className={classes.textsize} value="2">In-progress</MenuItem>
+                      : ''
+                    }
+                    {
+                      taskStatus === 2 ?
+                      <MenuItem className={classes.textsize} value="2" disabled selected>In-progress</MenuItem>
+                      : ''
+                    }
+                    {
+                      taskStatus === 2 ?
+                      <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
+                      : ''
+                    }
+                    {
+                      taskStatus === 2 ?
+                      <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
+                      : ''
+                    }
+                        
+                    {
+                      taskStatus !== 2 && taskStatus !== 1 ?
+                      <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
+                      : ''
+                    }
+                    {
+                      taskStatus !== 2 && taskStatus !== 1 ?
+                      <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
+                      : ''
+                    }
+                  </Select>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <InputLabel  className={classes.textsize} htmlFor="message">Message</InputLabel>
+                <TextField  
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="message"
+                  name="message"
+                  // label="Task Id"
+                  value={taskList.message}
+                  onChange={handleInputChange}
+                  fullWidth
+                  required
+                  multiline
+                  type="text"
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                /> 
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                {savebtn? 
+                  <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">
+                    Update
+                  </Button> : <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit" disabled>
+                    Update
+                  </Button>
+                }
+                  <Button variant="contained" color="primary" className={classes.button} onClick={handleStaffEditClose}  type="submit">
+                    Close
+                  </Button>
+              </Grid>
+            </Grid>
+          </Paper>
           </div>
         </from>
       </Dialog>

@@ -60,7 +60,7 @@ import Franchise from '../franchise/Franchise';
 import Product from '../category/ProductList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
-import Task from '../task/Task';
+import Task from '../task/Task copy';
 import StaffTask from '../task/StaffTask';
 import Customer from '../customer/CustomerList';
 import Profile from '../setting/Profile';
@@ -979,7 +979,7 @@ export default function ClippedDrawer(props) {
           showFranchiseStaff ? <FranchiseStaff  franchiseId={franchiseId} roleName={roleAs}/> : null
         }
         {
-          showTask ? <Task franchiseId={franchiseId} roleName={roleAs}/> : null
+          showTask ? <Task roleName={roleAs}/> : null
         }
         {
           showCustomer ? <Customer userId={userId} roleName={roleAs}/> : null

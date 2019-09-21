@@ -54,7 +54,7 @@ function TabPanel(props) {
   );
 }
 
-export default function Open({order, roleName }) {
+export default function UnderDelivery({order, roleName }) {
   const styleClass = useCommonStyles();
 
 return (   

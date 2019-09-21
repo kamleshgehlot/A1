@@ -42,6 +42,9 @@ const payment_status = "CREATE TABLE IF NOT EXISTS `payment_status`(`id` bigint(
 const order_status = "CREATE TABLE IF NOT EXISTS `order_status`(`id` int(11) NOT NULL AUTO_INCREMENT, `order_status` varchar(50) NOT NULL, PRIMARY KEY(id))";
 const delivery_document = "CREATE TABLE IF NOT EXISTS `delivery_document` (`id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) NOT NULL, `document` VARCHAR(255) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `updated_by` INT(11) DEFAULT NULL, `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const order_comment = "CREATE TABLE IF NOT EXISTS `order_comment` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `user_role` VARCHAR(50) DEFAULT NULL, `comment` TEXT DEFAULT NULL, `status` INT(11) DEFAULT NULL, `is_active` TINYINT(4) DEFAULT NULL , `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (id))";
+const task_status = "CREATE TABLE IF NOT EXISTS `task_status`(`id` int(11) NOT NULL AUTO_INCREMENT, `status` varchar(50) NOT NULL, PRIMARY KEY(id))";
+
+
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register =  function (newUser) {
@@ -101,6 +104,14 @@ Franchise.prototype.register =  function (newUser) {
                     [7, 'Awaiting Remaining'],
                     [8, 'Completed'],
                   ]
+                  
+                  let task_status_data = [                    
+                    [1, 'Scheduled'],
+                    [2, 'In-Progress'],
+                    [3, 'Reschedule'],
+                    [4, 'Completed'],
+                    [5, 'Deleted'],
+                  ]
                   connection.query(role, function (err) {if(err){console.log('Role Table Create Time Error: ', err)}});                  
                   connection.query(user, function (err) {if(err){console.log('user Table Create Time Error: ', err)}});
                   connection.query(userRole, function (err) {if(err){console.log('UserRole Table Create Time Error: ', err)}});
@@ -122,7 +133,7 @@ Franchise.prototype.register =  function (newUser) {
                   connection.query(order_status, function(err){if(err){console.log('Order Status Table Create Time Error: ', err)}});
                   connection.query(delivery_document, function(err){if(err){console.log('Delivery Document Table Create Time Error: ', err)}});
                   connection.query(order_comment, function(err){if(err){console.log('Order Comment Table Create Time Error: ', err)}});
-                  
+                  connection.query(task_status, function(err){if(err){console.log('Task Status Table Create Time Error: ', err)}});
                   
 
                   connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) {if(error){console.log('Role Insert Time Error: ', error)}});
@@ -130,7 +141,8 @@ Franchise.prototype.register =  function (newUser) {
                   connection.query('INSERT INTO `customer_state`(`id`, `state_name`, `is_active`) VALUES ?', [cust_state], function (error, rows, fields) {if(error){console.log('Customer State Insert Time Error: ', error)}});
                   connection.query('INSERT INTO `payment_mode`(`id`, `payment_mode`, `is_active`) VALUES ?', [pay_mode], function (error, rows, fields) {if(error){console.log('Payment Mode Insert Time Error: ', error)}});
                   connection.query('INSERT INTO `order_status`(`id`, `order_status`) VALUES ?', [order_status_data], function (error, rows, fields) {if(error){console.log('Order Status Insert Time Error: ', error)}});
-
+                  connection.query('INSERT INTO `task_status`(`id`, `status`) VALUES ?', [task_status_data], function (error, rows, fields) {if(error){console.log('Task Status Insert Time Error: ', error)}});
+                  
                   connection.changeUser({ database: dbName["prod"] });
                   connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {
 

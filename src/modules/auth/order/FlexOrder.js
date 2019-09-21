@@ -189,17 +189,17 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
     handleFlexClose(false)
 
         const data = {
-        goods_rent_price : parseFloat(inputs.goods_rent_price),
-        ppsr_fee : parseFloat(inputs.ppsr_fee),
-        liability_fee : parseFloat(inputs.liability_fee),
-        weekly_total : parseFloat(inputs.weekly_total),
-        frequency : parseFloat(inputs.frequency),        
-        no_of_payment : parseFloat(inputs.no_of_payment),
+        goods_rent_price : parseFloat(inputs.goods_rent_price).toFixed(2),
+        ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
+        liability_fee : parseFloat(inputs.liability_fee).toFixed(2),
+        weekly_total : parseFloat(inputs.weekly_total).toFixed(2),
+        frequency : parseFloat(inputs.frequency).toFixed(2),        
+        no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
         duration: inputs.duration,
-        each_payment_amt : parseFloat(inputs.each_payment_amt),
-        total_payment_amt : parseFloat(inputs.total_payment_amt),
-        before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-        bond_amt : parseFloat(inputs.bond_amt),
+        each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
+        total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
+        before_delivery_amt : parseFloat(inputs.before_delivery_amt).toFixed(2),
+        bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
         exp_delivery_date : inputs.exp_delivery_date,
         exp_delivery_time : inputs.delivery_time,
         first_payment : inputs.first_payment,
@@ -341,24 +341,23 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         if(frequency == 1){
           let installment = (parseFloat(product.rental) * 4);
           handleRandomInput([
-            {name: 'each_payment_amt', value: installment},
+            {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: duration},
-            {name: 'total_payment_amt', value: (installment * duration)},
-          ]);
-          // setInputsAll(val);
+            {name: 'total_payment_amt', value: (installment * duration).toFixed(2)},
+          ]);          
         }else if(frequency == 2){ 
           let installment = (parseFloat(product.rental) * 2);
           handleRandomInput([
-            {name: 'each_payment_amt', value: installment},
+            {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: (duration * 2)},
-            {name: 'total_payment_amt', value: (installment * (duration * 2))},
+            {name: 'total_payment_amt', value: (installment * (duration * 2)).toFixed(2)},
           ]);
         }else if(frequency == 4){ 
           let installment = (parseFloat(product.rental));
           handleRandomInput([
-            {name: 'each_payment_amt', value: installment},
+            {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: (duration * 4)},
-            {name: 'total_payment_amt', value: (installment * (duration * 4))},
+            {name: 'total_payment_amt', value: (installment * (duration * 4)).toFixed(2)},
           ]);        
         }
       }      

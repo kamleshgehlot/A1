@@ -54,7 +54,7 @@ function TabPanel(props) {
   );
 }
 
-export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
+export default function Completed({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
   uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile }) {
   const styleClass = useCommonStyles();
 

@@ -68,8 +68,18 @@ return (
         <StyledTableCell>Order No.</StyledTableCell>
         <StyledTableCell>Order By</StyledTableCell>
         <StyledTableCell>Contact</StyledTableCell>
-        <StyledTableCell>Order Date</StyledTableCell>
+        {roleName != 'Delivery' ? 
+          <StyledTableCell>Order Date</StyledTableCell>
+        : ''}
+        {roleName != 'Delivery' ? 
         <StyledTableCell>Order Status</StyledTableCell>
+        : ''}
+        {roleName === 'Delivery' ? 
+          <StyledTableCell>Delivery Date</StyledTableCell>
+        : ''}
+        {roleName === 'Delivery' ? 
+          <StyledTableCell>Delivery Time</StyledTableCell>
+        : ''}
         {/* <StyledTableCell>Assigned To</StyledTableCell> */}
         <StyledTableCell>Rental Type</StyledTableCell>
         <StyledTableCell>Payment Mode</StyledTableCell>
@@ -78,15 +88,25 @@ return (
     </TableHead>
     <TableBody>
     {(order.length > 0 ? order : []).map((data, index) => {
-      // if(data.assigned_to !== 4 && data.assigned_to !== 5 && roleName==='CSR'){
+      // if(data.assigned_to !== 4 && data.assigned_to !== 5 && roleName==='CSR'){        
        return(
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
           <StyledTableCell>{data.order_id}</StyledTableCell>
           <StyledTableCell>{data.customer_name}</StyledTableCell>
           <StyledTableCell>{data.mobile}</StyledTableCell>
-          <StyledTableCell>{data.order_date}</StyledTableCell>
-          <StyledTableCell>{data.order_status_name}</StyledTableCell>
+          {roleName != 'Delivery' ? 
+            <StyledTableCell>{data.order_date}</StyledTableCell>
+          : ''}
+          {roleName != 'Delivery' ? 
+            <StyledTableCell>{data.order_status_name}</StyledTableCell>
+          : ''}
+          {roleName === 'Delivery' ? 
+            <StyledTableCell>{data.delivery_date}</StyledTableCell>
+          : ''}
+          {roleName === 'Delivery' ? 
+            <StyledTableCell>{data.delivery_time}</StyledTableCell>
+          : ''}
           {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
           <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
           <StyledTableCell>{

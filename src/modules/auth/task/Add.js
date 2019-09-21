@@ -276,7 +276,7 @@ function handleDate(date){
 
 return (
     <div>
-      <Dialog maxWidth="lg" open={open}  TransitionComponent={Transition}>
+      <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>           
@@ -288,176 +288,144 @@ return (
           </AppBar>
 
           <div className={classes.root}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-            {/* Franchise Details */}
-            <Paper className={classes.paper}>
-                <Grid container spacing={4}>                  
-                <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>Task ID</StyledTableCell>
-                        <StyledTableCell>Task Description</StyledTableCell>
-                        <StyledTableCell>Assigned Role</StyledTableCell>
-                        <StyledTableCell>Assigned To</StyledTableCell>
-                        <StyledTableCell>Due Date</StyledTableCell>
-                        <StyledTableCell>Options</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow  className={classes.tbrow}>
-                          <StyledTableCell> 
-                            <TextField 
-                                InputProps={{
-                                  classes: {
-                                    input: classes.textsize,
-                                  },
-                                }}
-                              id="task_id"
-                              name="task_id"
-                              // label="Task Id"
-                              value={inputs.task_id}
-                              fullWidth
-                              disabled className={classes.tbrow}
-                              type="text"
-                              // placeholder="Franchise Name"
-                              margin="dense"
-                            /> 
-                          </StyledTableCell>
-                          <StyledTableCell> 
-                            <TextField 
-                                InputProps={{
-                                  classes: {
-                                    input: classes.textsize,
-                                  },
-                                }}
-                                id="task_description"
-                                name="task_description"
-                                // label="Task Description"
-                                value={inputs.task_description}
-                                onChange={handleInputChange}
-                                error={errors.task_description}
-                                helperText={errors.task_description}
-                                fullWidth
-                                // required 
-                                className={classes.tbrow}
-                                type="text"
-                                multiline
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              /> 
-                          </StyledTableCell>
-                          <StyledTableCell>
-
-                            <Select
-                              value={inputs.assign_role}
-                              inputProps={{
-                                name: 'assign_role',
-                                id: 'assign_role',
-                              }}
-                              onChange={handleRoleChange}
-                              className={classes.textsize}
-                              fullWidth
-                              error={errors.assign_role}
-                              helperText={errors.assign_role}
-                              // required
-                            >
-                                
-                                {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
-                              {role.map((ele,index) =>{
-                                return(
-                                <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>
-                                )
-                              })}
-
-                            </Select>
-                            </StyledTableCell>
-                          <StyledTableCell>  
-                            <Select
-                              value={inputs.assigned_to}
-                              onChange={handleInputChange}
-                              inputProps={{
-                                name: 'assigned_to',
-                                id: 'assigned_to',
-                                label:'assigned_to'
-                              }}
-                              
-                              // required
-                              disabled = {otherDisable}
-                              fullWidth className={classes.dropdwn}
-                              error={errors.assigned_to}
-                              helperText={errors.assigned_to}
-                              label="assigned_to" required >
-                                { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
-                                  return(
-                                    <MenuItem 
-                                    className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
-                                )})
-                                }
-                            </Select>
-                          </StyledTableCell>
-                          {console.log('inputs..',inputs)}
-                            
-                            <StyledTableCell>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                              <KeyboardDatePicker
-                                margin="dense"
-                                id="due_date"
-                                name="due_date"
-                                // label="Date picker dialog"
-                                format="dd/MM/yyyy"
-                                // inputVariant= "standard"
-                                // variant="inline"
-                                // value={selectedDate}
-                                disablePast = {true}
-                                // defaultValue = {new Date()}
-                                value={inputs.due_date}
-                                fullWidth 
-                                onChange={handleDate}
-                                error={errors.due_date}
-                                helperText={errors.due_date}
-                                // KeyboardButtonProps={{
-                                //   'aria-label': 'change date',
-                                // }}
-                              />
-                            </MuiPickersUtilsProvider>
-                              {/* <TextField 
-                                InputProps={{
-                                  classes: {
-                                    input: classes.textsize,
-                                  },
-                                }}
-                                id="due_date"
-                                name="due_date"
-                                // label="Task Id"
-                                value={inputs.due_date}
-                                onChange={handleInputChange}
-                                fullWidth
-                                // required
-                                type="date" 
-                                className={classes.dropdwn}
-                                error={errors.due_date}
-                                helperText={errors.due_date}
-                                // placeholder="Franchise Name"
-                                margin="dense"
-                              />  */}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            {savebtn? <Button variant="contained" color="primary" className={classes.button}  type="submit">
-                                Assign
-                              </Button> : <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
-                                Assign
-                              </Button> }
-                              <Button variant="contained" color="primary" className={classes.button} onClick={handleClose} type="submit">
-                                Close
-                              </Button> 
-                            </StyledTableCell>
-                        </TableRow>
-                    </TableBody>
-                  </Table>
+          <Paper className={classes.paper}>             
+              <Grid container spacing={4}>  
+              <Grid item xs={12} sm={12}> {ploading ?  <LinearProgress />: null} </Grid>
+              <Grid item xs={12} sm={6}>             
+                <InputLabel  className={classes.textsize} htmlFor="task_id">Task ID</InputLabel>
+                      <TextField 
+                          InputProps={{
+                            classes: {
+                              input: classes.textsize,
+                            },
+                          }}
+                        id="task_id"
+                        name="task_id"
+                        // label="Task Id"
+                        value={inputs.task_id}
+                        fullWidth
+                        disabled className={classes.tbrow}
+                        type="text"
+                        // placeholder="Franchise Name"
+                        margin="dense"
+                      /> 
+              </Grid>
+              <Grid item xs={12} sm={6}>  
+              <InputLabel  className={classes.textsize} htmlFor="due_date">Due Date</InputLabel> 
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="due_date"
+                      name="due_date"
+                      // label="Date picker dialog"
+                      format="dd/MM/yyyy"
+                      // inputVariant= "standard"
+                      // variant="inline"
+                      // value={selectedDate}
+                      disablePast = {true}
+                      // defaultValue = {new Date()}
+                      value={inputs.due_date}
+                      fullWidth 
+                      onChange={handleDate}
+                      error={errors.due_date}
+                      helperText={errors.due_date}
+                      // KeyboardButtonProps={{
+                      //   'aria-label': 'change date',
+                      // }}
+                    />
+                </MuiPickersUtilsProvider>              
+                </Grid>
+                <Grid item xs={12} sm={6}>  
+                <InputLabel  className={classes.textsize} htmlFor="assign_role">Assigned Role</InputLabel> 
+                    <Select
+                      value={inputs.assign_role}
+                      inputProps={{
+                        name: 'assign_role',
+                        id: 'assign_role',
+                      }}
+                      onChange={handleRoleChange}
+                      className={classes.textsize}
+                      fullWidth
+                      error={errors.assign_role}
+                      helperText={errors.assign_role}
+                      // required
+                    >
+                        
+                      {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
+                      {role.map((ele,index) =>{
+                        return(
+                        <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>
+                        )
+                      })}
+                    </Select>
+                </Grid>
+                <Grid item xs={12} sm={6}>  
+                <InputLabel  className={classes.textsize} htmlFor="assigned_to">Assigned To</InputLabel> 
+                    <Select
+                      value={inputs.assigned_to}
+                      onChange={handleInputChange}
+                      inputProps={{
+                        name: 'assigned_to',
+                        id: 'assigned_to',
+                        label:'assigned_to'
+                      }}
+                      
+                      // required
+                      disabled = {otherDisable}
+                      fullWidth className={classes.dropdwn}
+                      error={errors.assigned_to}
+                      helperText={errors.assigned_to}
+                      label="assigned_to" required >
+                        { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
+                          return(
+                            <MenuItem 
+                            className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
+                        )})
+                        }
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={12}>  
+                  <InputLabel  className={classes.textsize} htmlFor="task_description">Task Description</InputLabel> 
+                    <TextField 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        id="task_description"
+                        name="task_description"
+                        // label="Task Description"
+                        value={inputs.task_description}
+                        onChange={handleInputChange}
+                        error={errors.task_description}
+                        helperText={errors.task_description}
+                        fullWidth
+                        // required 
+                        className={classes.tbrow}
+                        type="text"
+                        multiline
+                        // placeholder="Franchise Name"
+                        margin="dense"
+                      />                  
+                  </Grid>
+                  <Grid item xs={12} sm={12}> 
+                    {savebtn? 
+                      <Button variant="contained" color="primary" className={classes.button}  type="submit">
+                        Assign
+                      </Button> : <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
+                        Assign
+                      </Button> }
+                      <Button variant="contained" color="primary" className={classes.button} onClick={handleClose} type="submit">
+                        Close
+                      </Button>  
+                  </Grid>               
                 </Grid>
               </Paper>
-
-            
           </div>
         </form>
       </Dialog>

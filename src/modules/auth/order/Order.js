@@ -156,10 +156,6 @@ export default function Order({roleName}) {
   //value is for tabs  
   const [value, setValue] = React.useState(0);  
   
-
-  
-
-
   function createAndDownloadPdf(data) {
     if(data.order_type === 2){
       const fetchData = async () => {
@@ -210,7 +206,7 @@ export default function Order({roleName}) {
   function handlePaymentStatusClose(){
     const fetchData = async () => {
       try {        
-        const result = await OrderAPI.getAll();
+        const result = await OrderAPI.getAll();        
         setOrder(result.order);
         handleTabsData(result.order);
       } catch (error) {
@@ -552,7 +548,6 @@ export default function Order({roleName}) {
                                               <Tab label={<BadgeComp count={deliveredTab.length} label="Delivered" />}  /> 
                   {roleName !=='Delivery' ?   <Tab label={<BadgeComp count={completedTab.length} label="Completed" />} />       : ''}
                 </Tabs>
-
               </AppBar> 
               
               {roleName === 'CSR' ? <div>

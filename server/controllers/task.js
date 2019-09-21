@@ -20,12 +20,10 @@ const add = async function (req, res, next) {
     if (req.body.id) {
       await newTask.update();
       const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
-      
       res.send({ taskList });
     } else {
       await newTask.add();
       const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
-      
       res.send({ taskList });
     }
   } catch (err) {
@@ -35,9 +33,9 @@ const add = async function (req, res, next) {
 
 const all = async function (req, res, next) {
   try {
-    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
-
-    res.send({ taskList });
+  
+   const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
+   res.send({ taskList });
   } catch (err) {
     next(err);
   }
@@ -74,7 +72,6 @@ const last = async function (req, res, next) {
 const completedList = async function (req, res, next) {
   try {
     const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).completedList();
-    
     res.send({ taskList });
   } catch (err) {
     next(err);
@@ -91,8 +88,10 @@ const deleteTask = async function (req, res, next) {
   try {
     const newTask = new Task(taskParam);
     await newTask.deleteTask();
-    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).completedList(); 
-    res.send({ taskList });   
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
+    res.send({ taskList });
+    // const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).completedList(); 
+    // res.send({ taskList });   
   } catch (err) {
     next(err);
   }
@@ -127,8 +126,7 @@ const reschedule = async function (req, res, next) {
 // staff task list
 const staffTasks = async function (req, res, next) {
   try {
-    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks();
-    
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks();    
     res.send({ taskList });
   } catch (err) {
     next(err);
@@ -161,9 +159,11 @@ const staffUpdate = async function (req, res, next) {
   try {
     const newTask = new Task(taskParam);
     await newTask.staffUpdate();
-    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks();
-    
+    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
     res.send({ taskList });
+    
+    // const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks();
+    // res.send({ taskList });
   } catch (err) {
     next(err);
   }
