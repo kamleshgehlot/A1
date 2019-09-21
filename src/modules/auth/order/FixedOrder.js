@@ -228,11 +228,13 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
 
   const handleNumberOfPaymentBefDelivery = (e) =>{
     const validNumber = /^[0-9]*$/;
+    
     if (e.target.value === '' || validNumber.test(e.target.value)) {
       let temp = paymentBeforeDelivery;
       setPaymentBeforeDelivery(e.target.value);
       setInput( 'before_delivery_amt' , e.target.value);
       if(e.target.value > inputs.no_of_payment){
+        
         alert('Number of payment before delivery should be less then or equal to total number of payment.');
         setPaymentBeforeDelivery(temp);
         setInput( 'before_delivery_amt' , temp);
@@ -356,14 +358,14 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
           handleRandomInput([
             {name: 'each_payment_amt', value: installment},
             {name: 'no_of_payment', value: (duration * 2)},
-            {name: 'total_payment_amt', value: (installment * duration)},
+            {name: 'total_payment_amt', value: (installment * (duration * 2))},
           ]);
         }else if(frequency == 4){ 
           let installment = (parseFloat(product.rental));
           handleRandomInput([
             {name: 'each_payment_amt', value: installment},
             {name: 'no_of_payment', value: (duration * 4)},
-            {name: 'total_payment_amt', value: (installment * duration)},
+            {name: 'total_payment_amt', value: (installment * (duration * 4))},
           ]);        
         }
       }      

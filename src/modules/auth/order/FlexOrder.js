@@ -351,14 +351,14 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
           handleRandomInput([
             {name: 'each_payment_amt', value: installment},
             {name: 'no_of_payment', value: (duration * 2)},
-            {name: 'total_payment_amt', value: (installment * duration)},
+            {name: 'total_payment_amt', value: (installment * (duration * 2))},
           ]);
         }else if(frequency == 4){ 
           let installment = (parseFloat(product.rental));
           handleRandomInput([
             {name: 'each_payment_amt', value: installment},
             {name: 'no_of_payment', value: (duration * 4)},
-            {name: 'total_payment_amt', value: (installment * duration)},
+            {name: 'total_payment_amt', value: (installment * (duration * 4))},
           ]);        
         }
       }      
