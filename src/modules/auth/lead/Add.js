@@ -204,13 +204,6 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   const [single, setSingle] = React.useState(null);
   const [selectedOption,setSelectedOption] = useState('');
 
-
-
-
-
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -420,7 +413,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    
+                    <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
                     <AutoSuggestDropdown  customerListData={customerListData} setSelectedOption={setSelectedOption}/>
 
                   </Grid>
