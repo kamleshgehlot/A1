@@ -47,7 +47,7 @@ export default function validate(values) {
  
   if (values.before_delivery_amt==='0' || values.before_delivery_amt==="" || values.before_delivery_amt<0) {
     errors.before_delivery_amt = 'Amount is required';
-  } else if (!validFullLengthDecimalNumber.test(values.before_delivery_amt)) {
+  } else if (!validNumber.test(values.before_delivery_amt)) {
     errors.before_delivery_amt = 'Amount is invalid';
   }
   if (values.minimum_payment_amt==='0' || values.minimum_payment_amt==="" || values.minimum_payment_amt<0) {

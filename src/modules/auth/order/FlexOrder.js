@@ -198,7 +198,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         duration: inputs.duration,
         each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
         total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
-        before_delivery_amt : parseFloat(inputs.before_delivery_amt).toFixed(2),
+        before_delivery_amt : inputs.before_delivery_amt,
         bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
         exp_delivery_date : inputs.exp_delivery_date,
         exp_delivery_time : inputs.delivery_time,
@@ -221,21 +221,24 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
     setInput('duration', e.target.value)
   }
 
+  
   const handleNumberOfPaymentBefDelivery = (e) =>{
+    calculateNoOfPayment(e.target.value);
+  }
+
+  function calculateNoOfPayment(value) {
     const validNumber = /^[0-9]*$/;
-    if (e.target.value === '' || validNumber.test(e.target.value)) {
+    if (value === '' || validNumber.test(value)) {
       let temp = paymentBeforeDelivery;
-      setPaymentBeforeDelivery(e.target.value);
-      setInput( 'before_delivery_amt' , e.target.value);
-      if(e.target.value > inputs.no_of_payment){
+      setPaymentBeforeDelivery(value);
+      setInput( 'before_delivery_amt' , value);
+      if(value > inputs.no_of_payment){
         alert('Number of payment before delivery should be less then or equal to total number of payment.');
         setPaymentBeforeDelivery(temp);
         setInput( 'before_delivery_amt' , temp);
       }
     }
   }
-
-
   
   
   useEffect(() => {
@@ -304,6 +307,12 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
       // handleRandomInput([
       //   {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
       // ]);
+    }
+
+    if(flexOrderList) {
+      if(flexOrderList.before_delivery_amt && Number(flexOrderList.before_delivery_amt) > 0) {
+        calculateNoOfPayment(flexOrderList.before_delivery_amt);
+      }
     }
   },[duration, frequency, firstPaymentDate]);
 

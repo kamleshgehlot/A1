@@ -163,7 +163,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
       each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
       total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
-      before_delivery_amt : parseFloat(inputs.before_delivery_amt).toFixed(2),
+      before_delivery_amt : inputs.before_delivery_amt,
       exp_delivery_date : inputs.exp_delivery_date,
       exp_delivery_time : inputs.delivery_time,
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt).toFixed(2),
@@ -227,23 +227,24 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
   }
 
   const handleNumberOfPaymentBefDelivery = (e) =>{
-    const validNumber = /^[0-9]*$/;
-    
-    if (e.target.value === '' || validNumber.test(e.target.value)) {
-      let temp = paymentBeforeDelivery;
-      setPaymentBeforeDelivery(e.target.value);
-      setInput( 'before_delivery_amt' , e.target.value);
-      if(e.target.value > inputs.no_of_payment){
-        
-        alert('Number of payment before delivery should be less then or equal to total number of payment.');
-        setPaymentBeforeDelivery(temp);
-        setInput( 'before_delivery_amt' , temp);
-      }
-    }
+    calculateNoOfPayment(e.target.value);
   }
 
-
-  
+function calculateNoOfPayment(value) {
+  const validNumber = /^[0-9]*$/;
+    
+  if (value === '' || validNumber.test(value)) {
+    let temp = paymentBeforeDelivery;
+    setPaymentBeforeDelivery(value);
+    setInput( 'before_delivery_amt' , value);
+    if(value > inputs.no_of_payment){
+      
+      alert('Number of payment before delivery should be less then or equal to total number of payment.');
+      setPaymentBeforeDelivery(temp);
+      setInput( 'before_delivery_amt' , temp);
+    }
+  }
+}
   
   useEffect(() => {
     if(duration != '' && frequency != '' && firstPaymentDate != ''){
@@ -310,6 +311,12 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       handleRandomInput([
         {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
       ]);
+    }
+
+    if(fixedOrderList) {
+      if(fixedOrderList.before_delivery_amt && Number(fixedOrderList.before_delivery_amt) > 0) {
+        calculateNoOfPayment(fixedOrderList.before_delivery_amt);
+      }
     }
   },[duration, frequency, firstPaymentDate]);
 
@@ -600,6 +607,7 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
+                        // onBlur={handleDateChange}
                         error={errors.first_payment}
                         helperText={errors.first_payment}        
                         disabled = {frequency == "" || duration == ""}
