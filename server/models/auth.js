@@ -153,14 +153,14 @@ Auth.prototype.forgotPassword = function () {
       let query = '';
       let values = [that.name, 1];
 
-      if (that.name.split('_').length > 2) {
-        console.log("inside if condition for validation");
-        query = "Select AES_DECRYPT(`password`, 'secret') AS password, u.user_id, u.status, u.is_active from user u where u.user_id=?";
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
-      } else {
+      if (that.name.split('_').length === 3 || that.name.split('_').length === 2) {
         console.log("inside else condition for validation", values);
         connection.changeUser({ database: dbName["prod"] });
         query = "Select AES_DECRYPT(`password`, 'secret') AS password, u.user_id, u.status, c.email from user u inner join company c on c.id = u.director_id where u.user_id=? and u.is_active = ?";
+      } else {
+        console.log("inside if condition for validation");
+        query = "Select AES_DECRYPT(`password`, 'secret') AS password, u.user_id, u.status, u.is_active from user u where u.user_id=?";
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
       }
 
       connection.query(query, values, function (error, rows, fields) {
