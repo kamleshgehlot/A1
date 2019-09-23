@@ -155,7 +155,8 @@ export default function Order({roleName}) {
   
   //value is for tabs  
   const [value, setValue] = React.useState(0);  
-  console.log('orderr..',order);
+  // console.log('orderr..',order);
+
   function createAndDownloadPdf(data) {
     if(data.order_type === 2){
       const fetchData = async () => {
@@ -351,7 +352,7 @@ export default function Order({roleName}) {
             setCommentBoxOpen(true);
             handleTabsData(result.order);
           }else if(nextStep === 'Delivered'){
-            const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_date: new Date().toString(), delivered_time: new Date().toString()});
+            const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_date: new Date(), delivered_time: new Date()});
             setOrder(result.order);
             // setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
             // setCommentBoxOpen(true);

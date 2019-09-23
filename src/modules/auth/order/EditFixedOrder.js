@@ -127,7 +127,7 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(fixedOrderList.before_delivery_amt);
   const [firstPaymentDate,setFirstPaymentDate] = useState(fixedOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
-
+  const [fixedNull,setFixedNull] = useState(true);
 
   // function handleInputBlur(e){
   //   if(e.target.value===''){
@@ -159,30 +159,7 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   //   return fullDate;
   // }
 
-  function handleDateChange(date){
-    // handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
-    handleInputChange({target:{name: 'first_payment', value: date}})
-
-    setFirstPaymentDate(date);
-  }
-
-  function handleLastDate(date){
-    // handleInputChange({target:{name: 'last_payment', value: setDateFormat(date)}})
-    handleInputChange({target:{name: 'last_payment', value: date}})
-  }
-
-  function handleDeliveryDate(date){
-    // handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
-    handleInputChange({target:{name: 'exp_delivery_date', value: date}})
-  }
-
-  function handleDeliveryTime(time){      
-    // handleInputChange({target:{name: 'exp_delivery_time', value: time}})
-    handleInputChange({target:{name: 'exp_delivery_time', value: time}})
-  }
   
-
-
   function fixed(e){
     
     const data = {
@@ -209,6 +186,28 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
     handleFixedClose(false)
   }
 
+  function handleDateChange(date){
+    // handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'first_payment', value: date}})
+
+    setFirstPaymentDate(date);
+  }
+
+  function handleLastDate(date){
+    // handleInputChange({target:{name: 'last_payment', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'last_payment', value: date}})
+  }
+
+  function handleDeliveryDate(date){
+    // handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'exp_delivery_date', value: date}})
+  }
+
+  function handleDeliveryTime(time){      
+    // handleInputChange({target:{name: 'exp_delivery_time', value: time}})
+    handleInputChange({target:{name: 'exp_delivery_time', value: time}})
+  }
+  
 
   
   const handleFrequency = (e) => {
@@ -320,9 +319,11 @@ function calculateNoOfPayment(value) {
       // console.log('payment dates',paymentDates);
 
       setDateArray(paymentDates);      
+      
+      const lastPaymentDate = new Date(paymentDates[paymentDates.length - 1]);
       handleRandomInput([
-        {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
-      ]);
+        {name: 'last_payment', value: lastPaymentDate},        
+      ]);      
     }
 
     if(fixedOrderList) {
@@ -349,13 +350,14 @@ function calculateNoOfPayment(value) {
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
       let delivey_date = new Date(dateArray[paymentBeforeDelivery - 1]);
-      if(fixedOrderList !== null){
+      if(fixedOrderList !== null && fixedNull === true){
         delivey_date = fixedOrderList.exp_delivery_date;
       }
       handleRandomInput([
         {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
         {name: 'exp_delivery_date', value:  delivey_date},
       ]);
+      setFixedNull(false);
     }else{
       handleRandomInput([
         {name: 'minimum_payment_amt', value: ''},
@@ -601,7 +603,7 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="dd/MM/yyyy"
+                        format="MM/dd/yyyy"
                         disablePast = {true}
                         // defaultValue = {new Date()}
                         defaultValue = {""}
@@ -630,7 +632,7 @@ return (
                             margin="dense"
                             id="last_payment"
                             name="last_payment"
-                            format="dd/MM/yyyy"
+                            format="MM/dd/yyyy"
                             disablePast = {true}
                             defaultValue = {""}
                             // defaultValue = {new Date()}
@@ -773,7 +775,7 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="dd/MM/yyyy"
+                          format="MM/dd/yyyy"
                           disablePast = {true}
                           value={inputs.exp_delivery_date}
                           error={errors.exp_delivery_date}
@@ -800,9 +802,7 @@ return (
                           <KeyboardTimePicker
                             margin="dense"
                             id="exp_delivery_time"
-                            name="exp_delivery_time"
-                            // label="Time picker" 
-                            defaultValue = {""}
+                            name="exp_delivery_time"                                                        
                             value={inputs.exp_delivery_time}
                             onChange={handleDeliveryTime}
                             error={errors.exp_delivery_time}
@@ -837,6 +837,7 @@ return (
                       // onBlur={handleInputBlur}
                       fullWidth
                       // required
+                      disabled
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"

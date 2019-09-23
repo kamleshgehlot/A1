@@ -137,6 +137,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(flexOrderList.before_delivery_amt);
   const [firstPaymentDate,setFirstPaymentDate] = useState(flexOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
+  const [flexNull,setFlexNull] = useState(true);
   // const [inputs,setInputs] = useState([]);  
 
   
@@ -152,17 +153,19 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   }
   
   function handleDateChange(date){    
-    handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    // handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'first_payment', value: date}})
     setFirstPaymentDate(date);
   }
 
   function handleDeliveryDate(date){
-    handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
+    // handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'exp_delivery_date', value: date}})
   }
 
   function handleDeliveryTime(time){      
-    let dTime = new Date(time);
-    handleInputChange({target:{name: 'delivery_time', value: dTime}}) 
+    // let dTime = new Date(time);
+    handleInputChange({target:{name: 'exp_delivery_time', value: time}})     
   }
   
   // function handleInputBlur(e){
@@ -202,53 +205,72 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   // console.log('inputs.',inputs);
 
   function flex(e){
-    // e.preventDefault();
-    handleFlexClose(false);
+    // e.preventDefault();    
 
     const data = {
-      goods_rent_price : parseFloat(inputs.goods_rent_price),
-      ppsr_fee : parseFloat(inputs.ppsr_fee),
-      liability_fee : parseFloat(inputs.liability_fee),
-      weekly_total : parseFloat(inputs.weekly_total),
-      frequency : parseFloat(inputs.frequency),
+      goods_rent_price : parseFloat(inputs.goods_rent_price).toFixed(2),
+      ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
+      liability_fee : parseFloat(inputs.liability_fee).toFixed(2),
+      weekly_total : parseFloat(inputs.weekly_total).toFixed(2),
+      frequency : parseFloat(inputs.frequency).toFixed(2),
       first_payment : inputs.first_payment,
       duration: inputs.duration,
-      no_of_payment : parseFloat(inputs.no_of_payment),
-      each_payment_amt : parseFloat(inputs.each_payment_amt),
-      total_payment_amt : parseFloat(inputs.total_payment_amt),
+      no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
+      each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
+      total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
       exp_delivery_date : inputs.exp_delivery_date,
-      exp_delivery_time : inputs.delivery_time,
-      bond_amt : parseFloat(inputs.bond_amt),
+      exp_delivery_time : inputs.exp_delivery_time,
+      bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
     }
     setFlexOrderList(data);
+    handleFlexClose(false);
   }
 
 
   
   const handleFrequency = (e) => {
-    setFrequency(e.target.value);
-    setInput('frequency', e.target.value);
+    setFrequency(Number(e.target.value));
+    setInput('frequency', Number(e.target.value));
   }
   
   const handleDuration = (e) => {
-    setDuration(e.target.value);
-    setInput('duration', e.target.value)
+    setDuration(Number(e.target.value));
+    setInput('duration', Number(e.target.value))
   }
 
+  
   const handleNumberOfPaymentBefDelivery = (e) =>{
+    calculateNoOfPayment(e.target.value);
+  }
+
+  function calculateNoOfPayment(value) {
     const validNumber = /^[0-9]*$/;
-    if (e.target.value === '' || validNumber.test(e.target.value)) {
+    if (value === '' || validNumber.test(value)) {
       let temp = paymentBeforeDelivery;
-      setPaymentBeforeDelivery(e.target.value);
-      setInput( 'before_delivery_amt' , e.target.value);
-      if(e.target.value > inputs.no_of_payment){
+      setPaymentBeforeDelivery(value);
+      setInput( 'before_delivery_amt' , value);
+      if(Number(value) > Number(inputs.no_of_payment)){
         alert('Number of payment before delivery should be less then or equal to total number of payment.');
         setPaymentBeforeDelivery(temp);
         setInput( 'before_delivery_amt' , temp);
       }
     }
   }
+  
+  // const handleNumberOfPaymentBefDelivery = (e) =>{
+  //   const validNumber = /^[0-9]*$/;
+  //   if (e.target.value === '' || validNumber.test(e.target.value)) {
+  //     let temp = paymentBeforeDelivery;
+  //     setPaymentBeforeDelivery(e.target.value);
+  //     setInput( 'before_delivery_amt' , e.target.value);
+  //     if(e.target.value > inputs.no_of_payment){
+  //       alert('Number of payment before delivery should be less then or equal to total number of payment.');
+  //       setPaymentBeforeDelivery(temp);
+  //       setInput( 'before_delivery_amt' , temp);
+  //     }
+  //   }
+  // }
 
 
   
@@ -312,29 +334,34 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
           }
         }
       }
-      
-      // console.log('payment dates',paymentDates);
-
       setDateArray(paymentDates);      
-      // handleRandomInput([
-      //   {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
-      // ]);
+      if(flexOrderList) {
+        if(flexOrderList.before_delivery_amt && Number(flexOrderList.before_delivery_amt) > 0) {
+          calculateNoOfPayment(flexOrderList.before_delivery_amt);
+        }
+      }
     }
   },[duration, frequency, firstPaymentDate]);
 
 
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
+      let delivery_date = new Date(dateArray[paymentBeforeDelivery - 1]);      
+      if(flexOrderList !== null && flexNull === true){
+        delivery_date = flexOrderList.exp_delivery_date;
+      }
       handleRandomInput([
         // {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
-        {name: 'exp_delivery_date', value:  dateArray[paymentBeforeDelivery - 1]},
+        {name: 'exp_delivery_date', value: delivery_date },
       ]);
+      setFlexNull(false);
     }else{
       handleRandomInput([
         // {name: 'minimum_payment_amt', value: ''},
         {name: 'exp_delivery_date', value: ''},
       ]);
     }
+
   },[paymentBeforeDelivery]);
 
   
@@ -364,7 +391,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
           ]);        
         }
       }      
-      if(paymentBeforeDelivery > inputs.no_of_payment){
+      if(Number(paymentBeforeDelivery) > Number(inputs.no_of_payment)){
         setPaymentBeforeDelivery('');
         handleRandomInput([
           // {name: 'minimum_payment_amt', value: ''},
@@ -741,21 +768,21 @@ return (
                           <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardTimePicker
                             margin="dense"
-                            id="delivery_time"
-                            name="delivery_time"
+                            id="exp_delivery_time"
+                            name="exp_delivery_time"
                             // label="Time picker" 
                             defaultValue = {""}
-                            value={inputs.delivery_time}
+                            value={inputs.exp_delivery_time}
                             onChange={handleDeliveryTime}
-                            error={errors.delivery_time}
-                            helperText={errors.delivery_time}
+                            error={errors.exp_delivery_time}
+                            helperText={errors.exp_delivery_time}
                             InputProps={{
                               classes: {
                                 input: classes.textsize,
                               },
                             }}
-                            // error={errors.delivery_time}
-                            // helperText={errors.delivery_time}
+                            // error={errors.exp_delivery_time}
+                            // helperText={errors.exp_delivery_time}
                             // KeyboardButtonProps={{
                             //   'aria-label': 'change time',
                             // }}

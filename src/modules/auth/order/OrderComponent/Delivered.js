@@ -67,7 +67,8 @@ return (
           <StyledTableCell>Contact</StyledTableCell>
           <StyledTableCell>Order Date</StyledTableCell>
           {/* <StyledTableCell>Order Status</StyledTableCell> */}
-          <StyledTableCell>Delivery Date</StyledTableCell>
+          <StyledTableCell>Delivered Date</StyledTableCell>
+          <StyledTableCell>Delivered Time</StyledTableCell>
           {/* <StyledTableCell>Assigned To</StyledTableCell> */}
           <StyledTableCell>Rental Type</StyledTableCell>
           <StyledTableCell>Payment Mode</StyledTableCell>
@@ -83,7 +84,8 @@ return (
             <StyledTableCell>{data.customer_name}</StyledTableCell>
             <StyledTableCell>{data.mobile}</StyledTableCell>
             <StyledTableCell>{data.order_date}</StyledTableCell>
-            <StyledTableCell>{data.delivered_at}</StyledTableCell>
+            <StyledTableCell>{data.delivered_date}</StyledTableCell>
+            <StyledTableCell>{data.delivered_time}</StyledTableCell>
             {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
             <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
             <StyledTableCell>{

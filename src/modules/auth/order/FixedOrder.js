@@ -148,6 +148,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(fixedOrderList === null ? '' : fixedOrderList.before_delivery_amt);
   const [firstPaymentDate,setFirstPaymentDate] = useState(fixedOrderList === null ? '' : fixedOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
+  const [fixedNull,setFixedNull] = useState(true);
 
   function fixed(e){
     // e.preventDefault();   
@@ -344,13 +345,14 @@ function calculateNoOfPayment(value) {
     if(paymentBeforeDelivery!= ''){
       // const delivery_date = handleSetDateFormat(new Date(dateArray[paymentBeforeDelivery - 1]));
       let delivey_date = new Date(dateArray[paymentBeforeDelivery - 1]);
-      if(fixedOrderList !== null){
+      if(fixedOrderList !== null && fixedNull === true){
         delivey_date = fixedOrderList.exp_delivery_date;
       }
       handleRandomInput([
         {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
         {name: 'exp_delivery_date', value:   delivey_date},
       ]);
+      setFixedNull(false);
     }else{
       handleRandomInput([
         {name: 'minimum_payment_amt', value: ''},
@@ -789,7 +791,7 @@ return (
                       // onBlur={handleInputBlur}
                       error={errors.minimum_payment_amt}
                       helperText={errors.minimum_payment_amt}
-                      
+                      disabled
                       fullWidth
                       // required
                       type="text"

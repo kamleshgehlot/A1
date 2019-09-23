@@ -142,12 +142,12 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  const [frequency, setFrequency] = useState('');
-  const [duration, setDuration] = useState('');
-  const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState('');
-  const [firstPaymentDate,setFirstPaymentDate] = useState('');
+  const [frequency, setFrequency] = useState(flexOrderList === null ? '' : flexOrderList.frequency);
+  const [duration, setDuration] = useState(flexOrderList === null ? '' : flexOrderList.duration);
+  const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(flexOrderList === null ? '' : flexOrderList.before_delivery_amt);
+  const [firstPaymentDate,setFirstPaymentDate] = useState(flexOrderList === null ? '' : flexOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
-
+  const [flexNull,setFlexNull] = useState(true);
 
   // const setDateFormat = (date) => {
   //   let date1 = new Date(date);
@@ -329,20 +329,22 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
-      let delivery_date = new Date(dateArray[paymentBeforeDelivery - 1]);
-      if(flexOrderList !== null){
+      let delivery_date = new Date(dateArray[paymentBeforeDelivery - 1]);      
+      if(flexOrderList !== null && flexNull === true){
         delivery_date = flexOrderList.exp_delivery_date;
       }
       handleRandomInput([
         // {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
         {name: 'exp_delivery_date', value: delivery_date },
       ]);
+      setFlexNull(false);
     }else{
       handleRandomInput([
         // {name: 'minimum_payment_amt', value: ''},
         {name: 'exp_delivery_date', value: ''},
       ]);
     }
+
   },[paymentBeforeDelivery]);
 
   
@@ -371,7 +373,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
           ]);        
         }
       }      
-      if(paymentBeforeDelivery > inputs.no_of_payment){
+      if(Number(paymentBeforeDelivery) > Number(inputs.no_of_payment)){
         setPaymentBeforeDelivery('');
         handleRandomInput([
           // {name: 'minimum_payment_amt', value: ''},
