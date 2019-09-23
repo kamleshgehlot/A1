@@ -486,7 +486,7 @@ return (
                         margin="dense"
                         id="order_date"
                         name="order_date"
-                        format="dd/MM/yyyy"
+                        format="MM/dd/yyyy"
                         disablePast = {true}
                         // defaultValue = {new Date()}
                         value={inputs.order_date}

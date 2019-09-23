@@ -171,22 +171,22 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       intrest_rate_per : parseFloat(inputs.intrest_rate_per).toFixed(2),
       total_intrest : parseFloat(inputs.total_intrest).toFixed(2),
     }
-    console.log('fixed dta',data);
+    // console.log('fixed dta',data);
     setFixedOrderList(data);
     handleOrderType(1);
     handleFixedClose(false)
   }
  
-  const handleSetDateFormat = (date) => {
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    return fullDate;
-  }
+  // const handleSetDateFormat = (date) => {
+  //   let date1 = new Date(date);
+  //   let yy = date1.getFullYear();
+  //   let mm = date1.getMonth() + 1 ;
+  //   let dd = date1.getDate();
+  //   if(mm< 10){ mm = '0' + mm.toString()}
+  //   if(dd< 10){ dd = '0' + dd.toString()}
+  //   let fullDate = yy+ '-'+mm+'-'+dd;
+  //   return fullDate;
+  // }
 
   // const handleSetTimeFormat = (time) => {
   //   let date = new Date(time);
@@ -200,16 +200,19 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
 
 
   function handleDateChange(date){
-    handleInputChange({target:{name: 'first_payment', value: handleSetDateFormat(date)}})
+    // handleInputChange({target:{name: 'first_payment', value: handleSetDateFormat(date)}})
+    handleInputChange({target:{name: 'first_payment', value: date}})
     setFirstPaymentDate(date);
   }
 
   function handleLastDate(date){
-    handleInputChange({target:{name: 'last_payment', value: handleSetDateFormat(date)}})
+    // handleInputChange({target:{name: 'last_payment', value: handleSetDateFormat(date)}})
+    handleInputChange({target:{name: 'last_payment', value: date}})
   }
 
   function handleDeliveryDate(date){
-    handleInputChange({target:{name: 'exp_delivery_date', value: handleSetDateFormat(date)}})
+    // handleInputChange({target:{name: 'exp_delivery_date', value: handleSetDateFormat(date)}})
+    handleInputChange({target:{name: 'exp_delivery_date', value: date}})
   }
 
   function handleDeliveryTime(time){          
@@ -308,7 +311,9 @@ function calculateNoOfPayment(value) {
       // console.log('payment dates',paymentDates);
 
       setDateArray(paymentDates);  
-      const lastPaymentDate = handleSetDateFormat(paymentDates[paymentDates.length - 1]);
+
+      // const lastPaymentDate = handleSetDateFormat(paymentDates[paymentDates.length - 1]);
+      const lastPaymentDate = new Date(paymentDates[paymentDates.length - 1]);
       handleRandomInput([
         {name: 'last_payment', value: lastPaymentDate},        
       ]);
@@ -338,9 +343,13 @@ function calculateNoOfPayment(value) {
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
       // const delivery_date = handleSetDateFormat(new Date(dateArray[paymentBeforeDelivery - 1]));
+      let delivey_date = new Date(dateArray[paymentBeforeDelivery - 1]);
+      if(fixedOrderList !== null){
+        delivey_date = fixedOrderList.exp_delivery_date;
+      }
       handleRandomInput([
         {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-        {name: 'exp_delivery_date', value:   dateArray[paymentBeforeDelivery - 1]},
+        {name: 'exp_delivery_date', value:   delivey_date},
       ]);
     }else{
       handleRandomInput([
@@ -596,7 +605,7 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="dd/MM/yyyy"
+                        format="MM/dd/yyyy"
                         disablePast = {true}
                         // defaultValue = {new Date()}
                         defaultValue = {""}
@@ -626,7 +635,7 @@ return (
                         margin="dense"
                         id="last_payment"
                         name="last_payment"
-                        format="dd/MM/yyyy"
+                        format="MM/dd/yyyy"
                         disabled
                         disablePast = {true}
                         defaultValue = {""}
@@ -836,8 +845,8 @@ return (
                                 input: classes.textsize,
                               },
                             }}
-                            error={errors.delivery_time}
-                            helperText={errors.delivery_time}
+                            error={errors.exp_delivery_time}
+                            helperText={errors.exp_delivery_time}
                             // KeyboardButtonProps={{
                             //   'aria-label': 'change time',
                             // }}

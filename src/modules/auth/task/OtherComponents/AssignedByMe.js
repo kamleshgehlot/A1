@@ -143,17 +143,19 @@ return (
               <StyledTableCell> {data.task_description}  </StyledTableCell>
               <StyledTableCell> {data.assign_role_name}</StyledTableCell>
               <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
-              <StyledTableCell> {data.task_status_name}</StyledTableCell>
+              <StyledTableCell> {data.status === 3 ? <p className = {classes.bgtaskoverdue}> Requesting for Rescheduling </p> : data.status}</StyledTableCell>
               <StyledTableCell> {data.start_date}</StyledTableCell>
               {/* <StyledTableCell>
                 <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
               </StyledTableCell> */}
               <StyledTableCell>
-              <Tooltip title="Update Task">                              
-                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
-                    <CreateIcon/>
-                  </IconButton>
-              </Tooltip>                  
+                { data.status !==3 ? 
+                  <Tooltip title="Update Task"> 
+                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                        <CreateIcon/>
+                      </IconButton>
+                  </Tooltip>  : ''
+                }              
               </StyledTableCell>
             </TableRow>
           )

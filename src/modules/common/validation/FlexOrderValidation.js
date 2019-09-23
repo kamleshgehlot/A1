@@ -72,8 +72,8 @@ export default function validate(values) {
   if(values.exp_delivery_date === ""){
     errors.exp_delivery_date = 'Delivery Date is Required';
   }
-  if(values.delivery_time === ""){
-    errors.delivery_time = 'Delivery Time Date is Required';
+  if(values.exp_delivery_time === ""){
+    errors.exp_delivery_time = 'Delivery Time Date is Required';
   }
  
   return errors;

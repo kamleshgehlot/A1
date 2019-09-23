@@ -61,7 +61,7 @@ const RESET_VALUES = {
   total_payment_amt : '',
   before_delivery_amt : '',
   exp_delivery_date : '',
-  delivery_time : '',
+  exp_delivery_time : '',
   bond_amt : '',
 };
 
@@ -149,16 +149,16 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
   const [dateArray,setDateArray] = useState([]);
 
 
-  const setDateFormat = (date) => {
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    return fullDate;
-  }
+  // const setDateFormat = (date) => {
+  //   let date1 = new Date(date);
+  //   let yy = date1.getFullYear();
+  //   let mm = date1.getMonth() + 1 ;
+  //   let dd = date1.getDate();
+  //   if(mm< 10){ mm = '0' + mm.toString()}
+  //   if(dd< 10){ dd = '0' + dd.toString()}
+  //   let fullDate = yy+ '-'+mm+'-'+dd;
+  //   return fullDate;
+  // }
 
   // const setTimeFormat = (time) => {
   //   let date = new Date(time);
@@ -171,17 +171,20 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
   // }
 
   function handleDateChange(date){    
-    handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    // handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'first_payment', value: date}})
     setFirstPaymentDate(date);
   }
 
   function handleDeliveryDate(date){    
-    handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
+    // handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'exp_delivery_date', value: date}})
   }
 
   function handleDeliveryTime(time){      
-    let dTime = new Date(time);
-    handleInputChange({target:{name: 'delivery_time', value: dTime}})    
+    // let dTime = new Date(time);
+    // handleInputChange({target:{name: 'exp_delivery_time', value: dTime}})    
+    handleInputChange({target:{name: 'exp_delivery_time', value: time}})    
   }
 
   function flex(e){
@@ -201,7 +204,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         before_delivery_amt : inputs.before_delivery_amt,
         bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
         exp_delivery_date : inputs.exp_delivery_date,
-        exp_delivery_time : inputs.delivery_time,
+        exp_delivery_time : inputs.exp_delivery_time,
         first_payment : inputs.first_payment,        
       }
       console.log('flex data', data);
@@ -212,13 +215,13 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
   
   const handleFrequency = (e) => {
-    setFrequency(e.target.value);
-    setInput('frequency', e.target.value);
+    setFrequency(Number(e.target.value));
+    setInput('frequency', Number(e.target.value));
   }
   
   const handleDuration = (e) => {
-    setDuration(e.target.value);
-    setInput('duration', e.target.value)
+    setDuration(Number(e.target.value));
+    setInput('duration', Number(e.target.value))
   }
 
   
@@ -232,7 +235,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
       let temp = paymentBeforeDelivery;
       setPaymentBeforeDelivery(value);
       setInput( 'before_delivery_amt' , value);
-      if(value > inputs.no_of_payment){
+      if(Number(value) > Number(inputs.no_of_payment)){
         alert('Number of payment before delivery should be less then or equal to total number of payment.');
         setPaymentBeforeDelivery(temp);
         setInput( 'before_delivery_amt' , temp);
@@ -300,13 +303,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
           }
         }
       }
-      
-      // console.log('payment dates',paymentDates);
-
-      setDateArray(paymentDates);      
-      // handleRandomInput([
-      //   {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
-      // ]);
+      setDateArray(paymentDates);            
     }
 
     if(flexOrderList) {
@@ -332,9 +329,13 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
+      let delivery_date = new Date(dateArray[paymentBeforeDelivery - 1]);
+      if(flexOrderList !== null){
+        delivery_date = flexOrderList.exp_delivery_date;
+      }
       handleRandomInput([
         // {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
-        {name: 'exp_delivery_date', value:  dateArray[paymentBeforeDelivery - 1]},
+        {name: 'exp_delivery_date', value: delivery_date },
       ]);
     }else{
       handleRandomInput([
@@ -587,7 +588,7 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="dd/MM/yyyy"
+                        format="MM/dd/yyyy"
                         disablePast = {true}
                         // defaultValue = {new Date()}
                         defaultValue = {""}
@@ -739,7 +740,7 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="dd/MM/yyyy"
+                          format="MM/dd/yyyy"
                           disablePast = {true}
                           defaultValue = {""}
                           value={inputs.exp_delivery_date}
@@ -764,19 +765,19 @@ return (
                           <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardTimePicker
                             margin="dense"
-                            id="delivery_time"
-                            name="delivery_time"
+                            id="exp_delivery_time"
+                            name="exp_delivery_time"
                             // label="Time picker" 
                             defaultValue = {""}
-                            value={inputs.delivery_time}
+                            value={inputs.exp_delivery_time}
                             onChange={handleDeliveryTime}
                             InputProps={{
                               classes: {
                                 input: classes.textsize,
                               },
                             }}
-                            error={errors.delivery_time}
-                            helperText={errors.delivery_time}
+                            error={errors.exp_delivery_time}
+                            helperText={errors.exp_delivery_time}
                             // KeyboardButtonProps={{
                             //   'aria-label': 'change time',
                             // }}

@@ -155,7 +155,7 @@ export default function Order({roleName}) {
   
   //value is for tabs  
   const [value, setValue] = React.useState(0);  
-  
+  console.log('orderr..',order);
   function createAndDownloadPdf(data) {
     if(data.order_type === 2){
       const fetchData = async () => {

@@ -313,7 +313,7 @@ export default function Task({roleName}) {
           // console.log('assignedToMe',data);
           assignedToMe.push(data);
         }
-      if(data.is_active == 1 && (data.status == 1 || data.status == 2) && data.created_by== userId){
+      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 3) && data.created_by== userId){
           // console.log('assignedByMe',data);
           assignedByMe.push(data);
         }
