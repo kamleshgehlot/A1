@@ -228,7 +228,7 @@ const assignToDelivery = async function(req, res, next) {
 
 const Delivered = async function(req, res, next) {
   try {
-    await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id, delivered_at: req.body.delivered_at }).Delivered();
+    await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id, delivered_date: req.body.delivered_date, delivered_time: req.body.delivered_time }).Delivered();
     const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
     res.send({ order: order});
   } catch (error) {

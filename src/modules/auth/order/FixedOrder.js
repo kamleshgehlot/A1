@@ -52,7 +52,7 @@ const RESET_VALUES = {
   exp_delivery_date : '',
   first_payment : '',
   last_payment : '',
-  delivery_time : '',
+  exp_delivery_time : '',
 
   int_unpaid_bal : '',
   cash_price  : '',
@@ -143,10 +143,10 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  const [frequency, setFrequency] = useState('');
-  const [duration, setDuration] = useState('');
-  const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState('');
-  const [firstPaymentDate,setFirstPaymentDate] = useState('');
+  const [frequency, setFrequency] = useState(fixedOrderList === null ? '' : fixedOrderList.frequency);
+  const [duration, setDuration] = useState(fixedOrderList === null ? '' : fixedOrderList.duration);
+  const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(fixedOrderList === null ? '' : fixedOrderList.before_delivery_amt);
+  const [firstPaymentDate,setFirstPaymentDate] = useState(fixedOrderList === null ? '' : fixedOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
 
   function fixed(e){
@@ -165,18 +165,19 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
       before_delivery_amt : inputs.before_delivery_amt,
       exp_delivery_date : inputs.exp_delivery_date,
-      exp_delivery_time : inputs.delivery_time,
+      exp_delivery_time : inputs.exp_delivery_time,
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt).toFixed(2),
       intrest_rate : parseFloat(inputs.intrest_rate).toFixed(2),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per).toFixed(2),
       total_intrest : parseFloat(inputs.total_intrest).toFixed(2),
     }
+    console.log('fixed dta',data);
     setFixedOrderList(data);
     handleOrderType(1);
     handleFixedClose(false)
   }
  
-  const setDateFormat = (date) => {
+  const handleSetDateFormat = (date) => {
     let date1 = new Date(date);
     let yy = date1.getFullYear();
     let mm = date1.getMonth() + 1 ;
@@ -187,43 +188,43 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
     return fullDate;
   }
 
-  // const setTimeFormat = (time) => {
+  // const handleSetTimeFormat = (time) => {
   //   let date = new Date(time);
   //   let hh = date.getHours();
   //   let mm = date.getMinutes();
   //   if(hh<10) { hh = '0' + hh.toString()}
   //   if(mm<10) { mm = '0' + mm.toString()}
-  //   let fullTime = hh + ':' + mm ;
+  //   let fullTime = hh + ':' + mm;
   //   return fullTime;
   // }
 
 
   function handleDateChange(date){
-    handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'first_payment', value: handleSetDateFormat(date)}})
     setFirstPaymentDate(date);
   }
 
   function handleLastDate(date){
-    handleInputChange({target:{name: 'last_payment', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'last_payment', value: handleSetDateFormat(date)}})
   }
 
   function handleDeliveryDate(date){
-    handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
+    handleInputChange({target:{name: 'exp_delivery_date', value: handleSetDateFormat(date)}})
   }
 
-  function handleDeliveryTime(time){      
-    let dTime = new Date(time);
-    handleInputChange({target:{name: 'delivery_time', value: dTime}})
+  function handleDeliveryTime(time){          
+    // const deliveryTime =  handleSetTimeFormat(time);
+    handleInputChange({target:{name: 'exp_delivery_time', value: time}})
   }
 
   const handleFrequency = (e) => {
-    setFrequency(e.target.value);
-    setInput('frequency', e.target.value);
+    setFrequency(Number(e.target.value));
+    setInput('frequency', Number(e.target.value));
   }
   
   const handleDuration = (e) => {
-    setDuration(e.target.value);
-    setInput('duration', e.target.value)
+    setDuration(Number(e.target.value));
+    setInput('duration', Number(e.target.value));
   }
 
   const handleNumberOfPaymentBefDelivery = (e) =>{
@@ -231,14 +232,13 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
   }
 
 function calculateNoOfPayment(value) {
-  const validNumber = /^[0-9]*$/;
-    
+  const validNumber = /^[0-9]*$/;    
   if (value === '' || validNumber.test(value)) {
     let temp = paymentBeforeDelivery;
     setPaymentBeforeDelivery(value);
     setInput( 'before_delivery_amt' , value);
-    if(value > inputs.no_of_payment){
-      
+    // console.log('value > inputs.no_of_payment', value , inputs.no_of_payment);
+    if(Number(value) > Number(inputs.no_of_payment)){
       alert('Number of payment before delivery should be less then or equal to total number of payment.');
       setPaymentBeforeDelivery(temp);
       setInput( 'before_delivery_amt' , temp);
@@ -307,9 +307,10 @@ function calculateNoOfPayment(value) {
       
       // console.log('payment dates',paymentDates);
 
-      setDateArray(paymentDates);      
+      setDateArray(paymentDates);  
+      const lastPaymentDate = handleSetDateFormat(paymentDates[paymentDates.length - 1]);
       handleRandomInput([
-        {name: 'last_payment', value: paymentDates[paymentDates.length - 1]},        
+        {name: 'last_payment', value: lastPaymentDate},        
       ]);
     }
 
@@ -336,9 +337,10 @@ function calculateNoOfPayment(value) {
 
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
+      // const delivery_date = handleSetDateFormat(new Date(dateArray[paymentBeforeDelivery - 1]));
       handleRandomInput([
-        {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt).toFixed(2))},
-        {name: 'exp_delivery_date', value:  dateArray[paymentBeforeDelivery - 1]},
+        {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+        {name: 'exp_delivery_date', value:   dateArray[paymentBeforeDelivery - 1]},
       ]);
     }else{
       handleRandomInput([
@@ -350,12 +352,12 @@ function calculateNoOfPayment(value) {
 
   
   useEffect(()=>{
-      if(frequency != '' && duration != ''){    
+      if(frequency != '' && duration != ''){   
         if(frequency == 1){
           let installment = (parseFloat(product.rental) * 4);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
-            {name: 'no_of_payment', value: duration},
+            {name: 'no_of_payment', value: (duration * 1)},
             {name: 'total_payment_amt', value: (installment * duration).toFixed(2)},
           ]);
           // setInputsAll(val);
@@ -381,7 +383,7 @@ function calculateNoOfPayment(value) {
           {name: 'minimum_payment_amt', value: ''},
           {name: 'before_delivery_amt', value: ''},   
           {name: 'exp_delivery_date', value: ''},     
-        ]);
+        ]);        
         alert('Number of payment before delivery should be less then or equal to total number of payment.');
       }
   },[duration,frequency]);
@@ -391,8 +393,7 @@ function calculateNoOfPayment(value) {
     fixed,
     validate
   );
-  
-  // console.log('ddd',inputs);
+    
 
 return (
     <div>
@@ -804,11 +805,8 @@ return (
                           id="exp_delivery_date"
                           name="exp_delivery_date"
                           format="dd/MM/yyyy"
-                          disablePast = {true}
-                          defaultValue = {""}
-                          value={inputs.exp_delivery_date}
-                          // fullWidth 
-                          // type="datetime-local"
+                          disablePast = {true}                          
+                          value={inputs.exp_delivery_date}                          
                           InputProps={{
                             classes: {
                               input: classes.textsize,
@@ -829,11 +827,9 @@ return (
                           <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardTimePicker
                             margin="dense"
-                            id="delivery_time"
-                            name="delivery_time"
-                            // label="Time picker" 
-                            defaultValue = {""}
-                            value={inputs.delivery_time}
+                            id="exp_delivery_time"
+                            name="exp_delivery_time"                            
+                            value={inputs.exp_delivery_time}
                             onChange={handleDeliveryTime}
                             InputProps={{
                               classes: {

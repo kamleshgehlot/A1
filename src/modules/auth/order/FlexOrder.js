@@ -202,9 +202,9 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
         exp_delivery_date : inputs.exp_delivery_date,
         exp_delivery_time : inputs.delivery_time,
-        first_payment : inputs.first_payment,
-        
+        first_payment : inputs.first_payment,        
       }
+      console.log('flex data', data);
       setFlexOrderList(data);
       handleOrderType(2);
   }
