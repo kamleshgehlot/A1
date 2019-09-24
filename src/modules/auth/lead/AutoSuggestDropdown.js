@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 
 let suggestions = [];
@@ -98,9 +102,27 @@ const useStyles = makeStyles(theme => ({
 
 export default function AutoSuggestDropdown({customerListData, setSelectedOption}) {
   suggestions = [];
+
   customerListData.map(customer => {
     suggestions.push({label: customer.customer_name, key: customer.id});
   });
+  
+  // useEffect(() => {
+  //   if(document.getElementById("cust_name").name == "cust_name"){
+  //     customerListData.map(customer => {
+  //       suggestions.push({label: customer.customer_name, key: customer.id});
+  //     });
+  //   }else if(document.getElementById("cust_id").name == "cust_id"){
+  //     customerListData.map(customer => {
+  //       suggestions.push({label: customer.id, key: customer.id});
+  //     });
+  //   }else if(document.getElementById("cust_contact").name == "cust_contact"){
+  //     customerListData.map(customer => {
+  //       suggestions.push({label: customer.mobile, key: customer.id});
+  //     });
+  //   }
+    
+  // },[]);
 
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -139,6 +161,11 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
       <Autosuggest
         {...autosuggestProps}
         inputProps={{
+          // endAdornment: <InputAdornment position='end'>
+          //       <Tooltip title="Search">
+          //         <IconButton ><SearchIcon /></IconButton>
+          //       </Tooltip>
+          //     </InputAdornment>,
           classes,
           id: 'customerName',
           placeholder: 'Search customer name',
@@ -150,7 +177,16 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
             customerListData.map(customer => {
               if(customer.customer_name === event.target.value) {
                 document.getElementById("customer_contact").value = customer.mobile;
+                // document.getElementById("customer_id").value = customer.id;
               }
+              // else if(customer.id === event.target.value){
+              //   document.getElementById("customer_contact").value = customer.mobile;
+              //   document.getElementById("customer_name").value = customer.id;
+              // }
+              // else if(customer.mobile === event.target.value){
+              //   document.getElementById("customer_id").value = customer.mobile;
+              //   document.getElementById("customer_name").value = customer.id;
+              // }
             })
           }
         }}

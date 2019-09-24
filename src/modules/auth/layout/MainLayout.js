@@ -70,6 +70,9 @@ import Lead from '../lead/Lead';
 import Order from '../order/Order';
 import FranchiseDetail from '../setting/FranchiseDetail';
 import MainDashboard from './dashboard/MainDashboard';
+import FinanceReport from './report/FinanceReport';
+import DeliveryReport from './report/DeliveryReport';
+
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -261,6 +264,8 @@ export default function ClippedDrawer(props) {
   const [showFranchiseDetail, setShowFranchiseDetail] = useState(false);
   const [showStaff, setShowStaff] = useState(roleName === 'Admin');
   const [showOrder,setShowOrder] = useState(false);
+  const [showFinanceReport, setShowFinanceReport]= useState(false);
+  const [showDeliveryReport, setShowDeliveryReport]= useState(false);
   const [roles, setRoles] = useState([]);
   const [roleAs, setRoleAs]= useState('');
   console.log('role id',roleId)
@@ -341,7 +346,10 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(true);
+    
   }
 
   function handleFranchiseClick(role) {
@@ -361,6 +369,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
   }
 
@@ -381,6 +391,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
   }
 
@@ -400,6 +412,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
   }
 
@@ -419,6 +433,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
 
   }
@@ -439,6 +455,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
   }
   function handleProfileClick(role){
@@ -457,6 +475,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
 
   }
@@ -477,6 +497,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
 
   }
@@ -498,6 +520,8 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
 
   }
@@ -518,6 +542,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
 
   }
@@ -537,6 +563,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
 
   }
@@ -559,6 +587,8 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowdashboard(false);
 
   }
@@ -579,9 +609,11 @@ export default function ClippedDrawer(props) {
     setShowOrder(false);
     setShowdashboard(false);
     setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
   }
-  function handleOrderClick(role){
-    
+
+  function handleOrderClick(role){    
     setRoleAs(role);
     setShowOrder(true);
     setShowLead(false);
@@ -596,8 +628,58 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowFranchiseDetail(false);
     setShowdashboard(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
     setShowStaffTask(false);
   }
+
+
+  
+  function handleFinanceReportClick(role){    
+    setRoleAs(role);
+
+    setShowFinanceReport(true);
+    setShowOrder(false);
+    setShowLead(false);
+    setShowEnquiry(false);
+    setShowCustomer(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowFranchiseDetail(false);
+    setShowdashboard(false);
+    setShowDeliveryReport(false);
+    setShowStaffTask(false);
+  }
+
+
+  
+  function handleDeliveryReportClick(role){    
+    setRoleAs(role);
+
+    setShowDeliveryReport(true);
+    setShowOrder(false);
+    setShowLead(false);
+    setShowEnquiry(false);
+    setShowCustomer(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowFranchiseDetail(false);
+    setShowdashboard(false);
+    setShowFinanceReport(false);    
+    setShowStaffTask(false);
+  }
+
+  
   function handleLogout() {
     APP_TOKEN.remove();
     props.history.push('/login');
@@ -784,6 +866,15 @@ export default function ClippedDrawer(props) {
                   bgColor="#e8f0fe"
                   onClick={(event) => { handleOrderClick('Finance'); }}
                 />
+                <StyledTreeItem
+                  nodeId="13"
+                  labelText="Generate Report"
+                  labelIcon={TaskIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleFinanceReportClick('Finance'); }}
+                />
               </StyledTreeItem>
             :<StyledTreeItem style={{"display": 'none'}} nodeId="3" labelText="" labelIcon={AccountCircleIcon} /> }
             
@@ -792,7 +883,7 @@ export default function ClippedDrawer(props) {
             ?
               <StyledTreeItem nodeId="4" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
                 <StyledTreeItem
-                  nodeId="13"
+                  nodeId="14"
                   labelText="Manage Task"
                   labelIcon={TaskIcon}
                   // labelInfo="90"
@@ -801,7 +892,7 @@ export default function ClippedDrawer(props) {
                   onClick={(event) => { handleTaskClick('Delivery'); }}
                 />
                 <StyledTreeItem
-                  nodeId="14"
+                  nodeId="15"
                   labelText="Manage Leads"
                   labelIcon={LeadIcon}
                   // labelInfo="90"
@@ -810,13 +901,22 @@ export default function ClippedDrawer(props) {
                   onClick={(event) => { handleLeadsClick('Delivery'); }}
                 />
                 <StyledTreeItem
-                  nodeId="15"
+                  nodeId="16"
                   labelText="Manage Order"
                   labelIcon={OrderIcon}
                   // labelInfo="90"
                   color="#1a73e8"
                   bgColor="#e8f0fe"
                   onClick={(event) => { handleOrderClick('Delivery'); }}
+                />
+                <StyledTreeItem
+                  nodeId="17"
+                  labelText="Generate Report"
+                  labelIcon={TaskIcon}
+                  // labelInfo="90"
+                  color="#1a73e8"
+                  bgColor="#e8f0fe"
+                  onClick={(event) => { handleDeliveryReportClick('Delivery'); }}
                 />
               </StyledTreeItem>
             :<StyledTreeItem style={{"display": 'none'}} nodeId="4" labelText="" labelIcon={AccountCircleIcon} /> }
@@ -1007,6 +1107,12 @@ export default function ClippedDrawer(props) {
         }
         {
           showDashboard ? <MainDashboard roleName={roleAs}/>:null
+        }
+        {
+          showFinanceReport ? <FinanceReport roleName={roleAs} /> : null
+        }
+        {
+          showDeliveryReport ? <DeliveryReport roleName={roleAs} /> : null
         }
         {/* {props.children} */}
       </main>

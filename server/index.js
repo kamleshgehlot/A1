@@ -40,6 +40,7 @@ const taskRouter = require('./routes/task');
 const leadRouter = require('./routes/lead/lead');
 const profileRouter = require('./routes/setting/profile');
 const passwordRouter = require('./routes/setting/password');
+const ReportRouter = require('./routes/Report');
 // const PDFRouter = require('./routes/Pdf');
 
 // Franchise
@@ -80,6 +81,7 @@ app.use('/api/franchise/customer', customerRouter);
 app.use('/api/franchise/role', roleRouter);
 app.use('/api/franchise/enquiry',enquiryRouter);
 app.use('/api/franchise/order',orderRouter);
+app.use('/api/report', ReportRouter);
 
 app.use('/api/download', function(req, res, nex) {
   try {
