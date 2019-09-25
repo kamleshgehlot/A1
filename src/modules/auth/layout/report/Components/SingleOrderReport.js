@@ -38,11 +38,12 @@ export default function SingleOrderReport({data }) {
   const styleClass = useCommonStyles();
   let total = 0;
 return (  
-  <Table>
+  <Table >
     <TableHead>
       <TableRow>
         <StyledTableCell>#</StyledTableCell>
-        <StyledTableCell>Payment Date.</StyledTableCell>
+        <StyledTableCell>Actual Payment Date.</StyledTableCell>
+        <StyledTableCell>Payment Rec. Date.</StyledTableCell>
         <StyledTableCell>Payment Amt.</StyledTableCell>        
       </TableRow>
     </TableHead>
@@ -52,6 +53,7 @@ return (
       return(
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
+          <StyledTableCell>{data.payment_date}</StyledTableCell>
           <StyledTableCell>{data.payment_rec_date}</StyledTableCell>
           <StyledTableCell>{data.payment_amt}</StyledTableCell>
         </TableRow>
@@ -59,7 +61,7 @@ return (
       })
     }
       <TableRow >
-          <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}} colSpan="2" align="right">{"Total   "}</StyledTableCell>
+          <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}} colSpan="3" align="right">{"Total   "}</StyledTableCell>
           <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}}>{total}</StyledTableCell>
       </TableRow>                              
     </TableBody>

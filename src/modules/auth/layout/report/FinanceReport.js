@@ -85,15 +85,38 @@ const useStyles = makeStyles(theme => ({
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightMedium,
   },
   table: {
-    minWidth: 650,
+    width: '100%',
+    // display: 'flexGrow',
+    // alignItems: 'center',
+    // boxSizing: 'border-box',
+    tableLayout: "fixed"
+
   },
   labelTitle: {
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(22),
     marginTop: 15,
     marginBottom: 20,
+  },
+  textHeading:{
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(13),   
+    width: "100%",
+    // overflow: hidden,
+  },
+  selectType:{
+    // marginLeft: theme.spacing(1),
+    // marginRight: theme.spacing(1),
+    // fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(12),   
+  },
+  orderDetail: {
+    fontSize: theme.typography.pxToRem(12),
+    // marginTop: 15,
+    // marginBottom: 20,
   },
 }));
 
@@ -118,6 +141,7 @@ export default function MainDashboard({roleName}) {
   const [fromDate, setFromDate] = useState('');
   const [orderReport, setOrderReport] = useState(false);
   const [reportData,setReportData] = useState([]);
+  
   useEffect(() => {
   const fetchData = async () => {
     setIsError(false);
@@ -226,11 +250,17 @@ export default function MainDashboard({roleName}) {
             setOrderData(result.OrderData);
           }else{
             alert('Nothing ordered by this person');
+            setOrderData([]);
           }
         }else{
           alert('customer not found');
-        }
+          setOrderData([]);
+          setCustomerData([]);
+        }        
       }
+      setReportData([]);
+      setOrderReport(false);
+      setOrder("");
     }catch (error) {
       console.log('error',error);
     }
@@ -240,13 +270,13 @@ export default function MainDashboard({roleName}) {
   
   return (
     <div>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} style={{'width':'60%'}}>
         <Typography variant="h6" className={classes.labelTitle}>
-            Genterate Customer/Order Wise Report
+            Generate Transaction Report
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={3}>
-            <InputLabel  className={classes.textsize}  htmlFor="customer_id">Customer Id</InputLabel>
+            <InputLabel  className={classes.textHeading}  htmlFor="customer_id">Customer Id</InputLabel>
             <TextField 
              InputProps={{
               classes: {
@@ -270,7 +300,7 @@ export default function MainDashboard({roleName}) {
           </Grid>
           
           <Grid item xs={12} sm={3}>
-            <InputLabel  className={classes.textsize}   htmlFor="customer_contact">Customer Contact</InputLabel>
+            <InputLabel  className={classes.textHeading}   htmlFor="customer_contact">Customer Contact</InputLabel>
             <TextField 
               InputProps={{
                 classes: {
@@ -292,7 +322,7 @@ export default function MainDashboard({roleName}) {
             />
           </Grid>
             <Grid item xs={12} sm={3}>
-            <InputLabel  className={classes.textsize}  htmlFor="customer_name">Customer Name</InputLabel>
+            <InputLabel  className={classes.textHeading}  htmlFor="customer_name">Customer Name</InputLabel>
               <TextField 
                 InputProps={{
                   classes: {
@@ -301,8 +331,7 @@ export default function MainDashboard({roleName}) {
                 }}
                 id="customer_name"
                 name="customer_name"  
-                value = {customerData.customer_name} 
-                // value={customer_name}
+                value = {customerData.customer_name}
                 fullWidth
                 type="text"
                 margin="dense"
@@ -310,25 +339,25 @@ export default function MainDashboard({roleName}) {
               />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <InputLabel  className={classes.textsize}  htmlFor="order_id">Order Detail</InputLabel>
-            <Select
-              className = {classes.textsize }
+            <InputLabel  className={classes.textHeading}  htmlFor="order_id">Order List</InputLabel>
+            <Select              
               value={order.id}
               onChange={handleChangeOrder}
+              style= {{'marginTop':'4px'}}
               inputProps={{
                 name: 'order_id',
-                id: 'order_id',   
+                id: 'order_id',                                         
               }}
-              className={classes.textsize}
               fullWidth
               required
+              className={classes.textsize} 
             >
               {orderData.map((ele) =>{
                 return(
                   productList.map((product)=>{
                     if(ele.product_id == product.id){
                       return(
-                        <MenuItem value={ele.id}>{product.name}</MenuItem>
+                        <MenuItem  className={classes.textsize} value={ele.id}>{product.name}</MenuItem>
                       )
                     }
                   })                  
@@ -337,30 +366,41 @@ export default function MainDashboard({roleName}) {
             </Select>
           </Grid>   
           { order != "" ? 
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={12}>
             <Table className={classes.table}>
-                <TableRow>
-                  <TableCell>{"Order Id: "}{order.order_id} </TableCell>
-                  <TableCell>{"Order Date: "}{order.order_date}</TableCell>
-                  <TableCell>{"Status: "}{order.order_status_name}</TableCell> 
-                  <TableCell>{"Payment Mode: "}{
+                <TableRow >
+                  <TableCell  className={classes.textHeading} >{'Order Id:  '}
+                      <p className={classes.textsize}>{order.order_id }</p> 
+                  </TableCell>
+                  <TableCell className={classes.textHeading}>{"Order Date: "}
+                    <p className={classes.textsize}> {order.order_date} </p> 
+                  </TableCell>
+                  <TableCell className={classes.textHeading}>{"Status: "}
+                    <p className={classes.textsize}> {order.order_status_name} </p>
+                  </TableCell> 
+                  <TableCell className={classes.textHeading}>{"Payment Mode: "}
+                    <p className={classes.textsize}> {
                     order.payment_mode === 1 ? "EasyPay" : 
                     order.payment_mode === 2 ? "Credit" : 
                     order.payment_mode === 3 ? "Debit" : 
                     order.payment_mode === 4 ? "PayPal" : 
                     order.payment_mode === 5 ? "Cash" : ''
-                    }
+                    } </p>
                   </TableCell>                
                 </TableRow>
                 <TableRow>                  
-                  <TableCell>{"Rental Type: "}{order.order_type === 1 ? "Fixed" : order.order_type === 2 ? "Flex" : ''} </TableCell>
-                  <TableCell>{"Delivery Date: "}{order.delivery_date}</TableCell>
-                  <TableCell>{"Delivered Date: "}{order.delivered_date}</TableCell>
+                  <TableCell className={classes.textHeading} >{"Rental Type: "}
+                    <p className={classes.textsize}> {order.order_type === 1 ? "Fixed" : order.order_type === 2 ? "Flex" : ''} </p>
+                  </TableCell>
+                  <TableCell className={classes.textHeading}>{"Delivery Date: "}
+                    <p className={classes.textsize}> {order.delivery_date} </p>
+                  </TableCell>
+                  <TableCell className={classes.textHeading}>{"Delivered Date: "}
+                    <p className={classes.textsize}> {order.delivered_date} </p>
+                  </TableCell>
                 </TableRow>
-                <TableRow>
-                  {/* <TableCell>{"From: "} */}
-                  <TableCell>
-                  <Typography>From:</Typography>
+                <TableRow>                  
+                  <TableCell className={classes.textHeading}> From:
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
@@ -370,15 +410,14 @@ export default function MainDashboard({roleName}) {
                           value={fromDate}
                           InputProps={{
                             classes: {
-                              input: classes.textsize,
+                              input: classes.orderDetail,
                             },
                           }}
                           onChange={handleFromDate}
                         />
                       </MuiPickersUtilsProvider> 
                     </TableCell>
-                    <TableCell>
-                      <Typography>To:</Typography>
+                    <TableCell className={classes.textHeading}>To:
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
@@ -388,7 +427,7 @@ export default function MainDashboard({roleName}) {
                           value={toDate}
                           InputProps={{
                             classes: {
-                              input: classes.textsize,
+                              input: classes.orderDetail,
                             },
                           }}
                           onChange={handleToDate}

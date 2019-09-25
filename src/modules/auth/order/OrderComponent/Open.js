@@ -66,7 +66,7 @@ return (
       <TableRow>
         <StyledTableCell>#</StyledTableCell>
         <StyledTableCell>Order No.</StyledTableCell>
-        <StyledTableCell>Order By</StyledTableCell>
+        <StyledTableCell>Customer Name</StyledTableCell>
         <StyledTableCell>Contact</StyledTableCell>
         {roleName != 'Delivery' ? 
           <StyledTableCell>Order Date</StyledTableCell>

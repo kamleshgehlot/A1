@@ -8,10 +8,18 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import SearchIcon from '@material-ui/icons/Search';
+import Toolbar from '@material-ui/core/Toolbar';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -19,8 +27,21 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import * as Yup from 'yup';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
+import * as pdfmake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
+
 import Paper from '@material-ui/core/Paper';
+
+import OrderReportDoc from './OrderReportDoc';
+import AutoSuggestDropdown from '../../lead/AutoSuggestDropdown';
+import Customer from '../../../../api/franchise/Customer';
+import Report from '../../../../api/Report';
+import Product from '../../../../api/Category';
+import SingleOrderReport from './Components/SingleOrderReport';
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,7 +85,29 @@ const useStyles = makeStyles(theme => ({
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
-  }
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  table: {
+    minWidth: 650,    
+  },
+  labelTitle: {
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(22),
+    marginTop: 15,
+    marginBottom: 20,
+  },
+  textHeading:{
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(13),   
+    width: "100%",
+    // overflow: hidden,
+  },
+  selectType:{
+    fontSize: theme.typography.pxToRem(12),   
+  },
+  orderDetail: {
+    fontSize: theme.typography.pxToRem(12), 
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -72,17 +115,228 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function MainDashboard({roleName}) {
- 
+ const classes = useStyles();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [selectedOption,setSelectedOption] = useState('');
+  const [customerListData, setCustomerListData] = useState([]);
+  const [customerData,setCustomerData] = useState([]);
+  const [orderData,setOrderData] = useState([]);
+  const [searchText, setSearchText]  = useState('');
+  const [searchName,setSearchName] = useState('');
+  const [order, setOrder] = useState([]);
+  const [productList, setProductList] = useState([]);
+  const [toDate, setToDate] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [orderReport, setOrderReport] = useState(false);
+  const [reportData,setReportData] = useState([]);
+  
+  useEffect(() => {
+  const fetchData = async () => {
+    setIsError(false);
+    setIsLoading(true);
+    try {
+      // const resultCustomer = await Customer.list();        
+      // setCustomerListData(resultCustomer.customerList);
+
+      const result = await Product.productlist();
+      setProductList(result.productList);
+      
+    } catch (error) {
+      setIsError(true);
+    }
+      setIsLoading(false);
+  };
+  fetchData();
+}, []);
+
+
+  function handleChangeOrder(event) {
+    {(orderData.length > 0 ? orderData : []).map(data => {
+      if(data.id === event.target.value)  {
+        setOrder(data);
+      }
+    })}
+  }
+
+  function handleSearchText(event){    
+    setSearchText(event.target.value);
+    setSearchName(event.target.name);
+  }
+  
+  function handleFromDate(date){    
+    setFromDate(date);
+  }
+  
+  function handleToDate(date){    
+    setToDate(date);
+  }
+
+  const handleManualReportSubmit = async () => {
+    try{
+      // const result = await Report.getOrderReport({
+      //   order_id : order.id,
+      //   customer_id : order.customer_id,
+      //   from_date : fromDate,
+      //   to_date : toDate,
+      // });
+      // if(result != ""){
+      //   setReportData(result);
+      //   setOrderReport(true);
+      // }else{
+      //   setReportData([]);
+      //   setOrderReport(false);
+      // }
+    }catch (error) {
+      console.log('error',error);
+    }
+  }
+  
+  const handleSubmit = async () => {
+    try{
+      const result = await Report.getOrderReport({
+        order_id : order.id,
+        customer_id : order.customer_id,
+        from_date : fromDate,
+        to_date : toDate,
+      });
+      if(result != ""){
+        setReportData(result);
+        setOrderReport(true);
+      }else{
+        setReportData([]);
+        setOrderReport(false);
+      }
+    }catch (error) {
+      console.log('error',error);
+    }
+  }
+
+  const searchHandler = async () => {
+    try{
+      if(searchText != ''){
+        
+        let customer_name = "";
+        let customer_contact = "";
+        let customer_id = "";
+
+        if(searchName === "customer_name"){
+          customer_name = searchText;
+        }else if(searchName === "customer_contact"){
+          customer_contact = searchText;
+        }else if(searchName === "customer_id"){
+          customer_id = searchText;
+        }
+        
+        const result = await Report.FinanceOrderReport({
+          customer_name : customer_name,
+          customer_contact : customer_contact,
+          customer_id : customer_id,
+        });    
+        if(result.isAvailable === 1){
+          setCustomerData(result.customerData[0]);
+          if(result.OrderData != ""){
+            setOrderData(result.OrderData);
+          }else{
+            alert('Nothing ordered by this person');
+            setOrderData([]);
+          }
+        }else{
+          alert('customer not found');
+          setOrderData([]);
+          setCustomerData([]);
+        }        
+      }
+      setReportData([]);
+      setOrderReport(false);
+      setOrder("");
+    }catch (error) {
+      console.log('error',error);
+    }
+  }
+
+  // console.log('ocdd',orderData, customerData);
+  
   return (
     <div>
-       <Grid container spacing={3}>
-          <Grid item xs={12} sm={8}>
-          <Typography>
-              Welcome Delivery
-          </Typography>
-        </Grid>
-        </Grid>
-      
-    </div>
+      <Paper className={classes.paper} style={{'width':'60%'}}>
+        <Typography variant="h6" className={classes.labelTitle}>
+          Delivery Report
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={3}>
+              <InputLabel  className={classes.textHeading} htmlFor="order_id">Order Type</InputLabel>
+              <Select
+                className = {classes.textsize}
+                style= {{'marginTop':'4px'}}
+                // value={order.id}
+                onChange={handleChangeOrder}
+                inputProps={{
+                  name: 'order_id',
+                  id: 'order_id',  
+                }}
+                className={classes.textsize}
+                fullWidth
+                required
+              >
+                 <MenuItem className={classes.textsize} value={1}>{'Pending'}</MenuItem>
+                 <MenuItem className={classes.textsize} value={2}>{'Upcoming'}</MenuItem>
+                 <MenuItem className={classes.textsize} value={3}>{'Completed'}</MenuItem>
+              </Select>
+            </Grid>   
+          <Grid item xs={12} sm={3}>
+            <InputLabel  className={classes.textHeading} htmlFor="order_id">From:</InputLabel>            
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  margin="dense"
+                  id="from_date"
+                  name="from_date"
+                  format="MM/dd/yyyy"
+                  value={fromDate}
+                  InputProps={{
+                    classes: {
+                      input: classes.orderDetail,
+                    },
+                  }}
+                  onChange={handleFromDate}
+                />
+            </MuiPickersUtilsProvider> 
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <InputLabel  className={classes.textHeading} htmlFor="order_id">To:</InputLabel>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  margin="dense"
+                  id="to_date"
+                  name="to_date"
+                  format="MM/dd/yyyy"
+                  value={toDate}
+                  InputProps={{
+                    classes: {
+                      input: classes.orderDetail,
+                    },
+                  }}
+                  onChange={handleToDate}
+                />
+              </MuiPickersUtilsProvider>
+          </Grid>
+          
+          <Grid item xs={12} sm={3}>
+            <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+              Generate Report
+            </Button>
+          </Grid>
+           
+         
+        {/* 
+          <Grid item xs={12} sm={12}>
+              {orderReport ? <SingleOrderReport data={reportData}/> : '' }
+          </Grid> 
+        */}
+      </Grid>
+    </Paper>
+
+  </div>
   );
 }
