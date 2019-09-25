@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
+import { component } from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -19,7 +19,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 import Input from "@material-ui/core/Input";
@@ -27,7 +27,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {useCommonStyles} from '../../common/StyleComman'; 
+import { useCommonStyles } from '../../common/StyleComman';
 import validate from '../../common/validation/EnquiryRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 import AutoSuggestDropdown from '../lead/AutoSuggestDropdown';
@@ -40,11 +40,11 @@ import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 
 let RESET_VALUES = {
-    enquiry_id : '',
-    customer_name: '',
-    contact: '',
-    interested_product_id: '',
-    is_active: '',
+  enquiry_id: '',
+  customer_name: '',
+  contact: '',
+  interested_product_id: '',
+  is_active: '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -58,8 +58,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     flex: 1,
     fontSize: theme.typography.pxToRem(14),
-    color:"white",
-    marginTop:theme.spacing(-3),
+    color: "white",
+    marginTop: theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -81,15 +81,15 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
-  button:{
-    color:"white",
+  button: {
+    color: "white",
     fontSize: theme.typography.pxToRem(10),
     marginRight: theme.spacing(1),
   },
-  textsize:{
+  textsize: {
     fontSize: theme.typography.pxToRem(12),
   },
-  drpdwn:{
+  drpdwn: {
     marginTop: theme.spacing(1),
     fontSize: theme.typography.pxToRem(12),
   }
@@ -100,10 +100,9 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ leadData, open, handleClose, handleSnackbarClick,setEnquiryList, convert}) {
-
+export default function Add({ leadData, open, handleClose, handleSnackbarClick, setEnquiryList, convert }) {
   RESET_VALUES.contact = leadData.customer_contact;
-  
+
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [assignInterest, setAssignInterest] = React.useState([]);
@@ -120,23 +119,23 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick,s
 
   const [customerListData, setCustomerListData] = useState([]);
   const [single, setSingle] = React.useState(null);
-  const [selectedOption,setSelectedOption] = useState('');
- 
+  const [selectedOption, setSelectedOption] = useState('');
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
-        console.log('en',enquiry_id);
+        console.log('en', enquiry_id);
         let zero = 0;
-        if(enquiry_id[0]!=null){  
-          zero = 6 - (enquiry_id[0].id.toString().length); 
-          let enquiryId='';
-          for(let i=0; i< zero ; i++){
+        if (enquiry_id[0] != null) {
+          zero = 6 - (enquiry_id[0].id.toString().length);
+          let enquiryId = '';
+          for (let i = 0; i < zero; i++) {
             enquiryId += '0';
           }
-         setInput('enquiry_id',('E' + enquiryId + (enquiry_id[0].id + 1)));
-        }else{
-          setInput('enquiry_id','E000001');
+          setInput('enquiry_id', ('E' + enquiryId + (enquiry_id[0].id + 1)));
+        } else {
+          setInput('enquiry_id', 'E000001');
         }
 
         const category_list = await Category.mainCategoryList();
@@ -144,73 +143,73 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick,s
 
         const resultCustomer = await Customer.list();
         setCustomerListData(resultCustomer.customerList);
-       
+
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-    
+
   }, []);
-  
 
 
-    function handleChangeSingle(value) {
-      setSingle(value);
-      setInput('customer_contact',value.value);
-      // console.log('value===',value)
-    }
+
+  function handleChangeSingle(value) {
+    setSingle(value);
+    setInput('customer_contact', value.value);
+    // console.log('value===',value)
+  }
   function handleMainCategory(event) {
-    setInput('main_category',event.target.value)
+    setInput('main_category', event.target.value)
     setMainCategory(event.target.value);
     setCategoryList('');
-    setSubCategoryList('');    
+    setSubCategoryList('');
     setProductList('');
     setAssignInterest('');
 
     const fetchData = async () => {
       try {
-        const result = await Category.categoryList({maincategory: event.target.value});
+        const result = await Category.categoryList({ maincategory: event.target.value });
         setCategoryList(result.categoryList);
       } catch (error) {
-        console.log('error:',error);
+        console.log('error:', error);
       }
     };
     fetchData();
   }
 
   function handleCategory(event) {
-    setInput('category',event.target.value)
+    setInput('category', event.target.value)
     setCategory(event.target.value);
-    setSubCategoryList('');    
+    setSubCategoryList('');
     setProductList('');
     setAssignInterest('');
 
     const fetchData = async () => {
       try {
-        const result = await Category.subCategoryList({category: event.target.value});
+        const result = await Category.subCategoryList({ category: event.target.value });
         setSubCategoryList(result.subCategoryList);
       } catch (error) {
-        console.log('error:',error);
+        console.log('error:', error);
       }
     };
     fetchData();
   }
   function handleSubCategory(event) {
-    setInput('sub_category',event.target.value)
+    setInput('sub_category', event.target.value)
     setSubCategory(event.target.value);
     setProductList('');
     setAssignInterest('');
-    
+
     const fetchData = async () => {
       try {
-        const result = await Category.RelatedproductList({subcategory: event.target.value});
-        console.log('rrr',result)
+        const result = await Category.RelatedproductList({ subcategory: event.target.value });
+        console.log('rrr', result)
         setProductList(result.productList);
         // const result = await Category.productList({subCategory: event.target.value});
         // setSubCategoryList(result.subCategoryList);
       } catch (error) {
-        console.log('error:',error);
+        console.log('error:', error);
       }
     };
     fetchData();
@@ -220,25 +219,26 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick,s
   function handleChangeMultiple(event) {
     setAssignInterest(event.target.value);
   }
-  
+
   const addEnquiry = async () => {
     // setInput('interested_product_id',assignInterest.join())
     // console.log('convert-----',convert);
     // if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.contact != '' && assignInterest != '' ){
-      
-      if(assignInterest!=''){
+
+    if (assignInterest != '') {
       setpLoading(true);
       setSavebtn(false);
       const response = await EnquiryAPI.postEnquiry({
-        enquiry_id : inputs.enquiry_id,
+        lead_id: leadData.id,
+        enquiry_id: inputs.enquiry_id,
         customer_name: selectedOption,
         contact: inputs.contact,
         interested_product_id: assignInterest,
         is_active: 1,
-        converted_to:0,
-        convert_by_lead:convert
+        converted_to: 0,
+        convert_by_lead: convert
       });
-        // console.log('sahgdaud--',response);
+      // console.log('sahgdaud--',response);
 
       // assignInterest.length = 0;
       setAssignInterest('');
@@ -249,7 +249,7 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick,s
       setSavebtn(true);
       handleClose(false);
     }
-    else{
+    else {
       setAssignError('error')
     }
   };
@@ -259,17 +259,17 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick,s
   //   return errors;
   // };
 
- const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs = null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addEnquiry,
     validate
   );
-  
+
   // console.log("inputess",inputs);
-return (
+  return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-      <form onSubmit={handleSubmit}> 
+        <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
 
@@ -281,32 +281,32 @@ return (
           </AppBar>
 
           <div className={classes.root}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-          <Paper className={classes.paper}>
+            <Grid item xs={12} sm={12}>   {ploading ? <LinearProgress /> : null}</Grid>
+            <Paper className={classes.paper}>
               <Grid container spacing={4}>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize}  htmlFor="first_name">Enquiry Id</InputLabel>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="enquiry_id"
-                      name="enquiry_id"
-                      // label="Enquiry Id"
-                      value={inputs.enquiry_id}
-                      onChange={handleInputChange}
-                      fullWidth
-                      required
-                      disabled
-                      type="text"
-                      margin="dense"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel> */}
-                    {/* <TextField
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="first_name">Enquiry Id</InputLabel>
+                  <TextField
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                    }}
+                    id="enquiry_id"
+                    name="enquiry_id"
+                    // label="Enquiry Id"
+                    value={inputs.enquiry_id}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                    disabled
+                    type="text"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  {/* <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel> */}
+                  {/* <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
@@ -324,156 +324,156 @@ return (
                       required
                       fullWidth
                     /> */}
-                   
-                   <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
 
-                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} defaultValue={leadData.customer_name}/>
+                  <InputLabel className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
 
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize}  htmlFor="contact">Contact *</InputLabel>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="contact"
-                      name="contact"
-                      // label="Contact"
-                      type="text"
-                      value={inputs.contact} 
-                      onChange={handleNumberInput}
-                      error={errors.contact}
-                      helperText={errors.contact}
-                      required
-                      fullWidth
-                      onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                  <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} defaultValue={leadData.customer_name} />
+
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="contact">Contact *</InputLabel>
+                  <TextField
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
                     }}
-                    />
-                  </Grid>
+                    margin="dense"
+                    id="contact"
+                    name="contact"
+                    // label="Contact"
+                    type="text"
+                    value={inputs.contact}
+                    onChange={handleNumberInput}
+                    error={errors.contact}
+                    helperText={errors.contact}
+                    required
+                    fullWidth
+                    onInput={(e) => {
+                      e.target.value = (e.target.value).toString().slice(0, 10)
+                    }}
+                  />
+                </Grid>
 
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
-                    <Select
-                      // multiple
-                      value={inputs.main_category}
-                      onChange={handleMainCategory}
-                      name= 'main_category'
-                      id= 'main_category'
-                      className={classes.drpdwn}
-                      error={errors.main_category}
-                      helperText={errors.main_category}
-                      // label='customer'
-                      fullWidth
-                      required
-                    > 
-                    {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
-                      return(
-                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
-                      ) 
-                     })}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="category">Category*</InputLabel>
-                    <Select
-                      // multiple
-                      value={inputs.category}
-                      onChange={handleCategory}
-                      name= 'category'
-                      id= 'category'
-                      // label='customer'
-                      fullWidth
-                      className={classes.drpdwn}
-                      required
-                      disabled = {mainCategory ==""}
-                      error={errors.category}
-                      helperText={errors.category}
-                    >    
-                     {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
-                      return(
-                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
-                      ) 
-                     })}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
-                    <Select
-                      // multiple
-                      value={inputs.sub_category}
-                      onChange={handleSubCategory}
-                      name= 'sub_category'
-                      id= 'sub_category'
-                      className={classes.drpdwn}
-                      // label='customer'
-                      fullWidth
-                      required
-                      disabled = {category ==""}
-                      error={errors.sub_category}
-                      helperText={errors.sub_category}
-                    >    
-                    {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
-                      return(
-                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
-                      ) 
-                     })}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize}  htmlFor="assign_interest">Product *</InputLabel>
-                    <Select
-                      // multiple
-                      value={assignInterest}
-                      onChange={handleChangeMultiple}
-                      inputProps={{
-                        name: 'interested_product_id',
-                        id: 'interested_product_id',
-                        // label:'assign_interest'
-                      }}
-                      className={classes.textsize}
-                      disabled = {subCategory ==""}
-                      fullWidth
-                      required
-                      error={assignError}
-                    >
-                      {
-                        (productList.length != '' ? productList : []).map((data)=> {
-                          return(
-                            <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>      
-                          )
-                        })
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
+                  <Select
+                    // multiple
+                    value={inputs.main_category}
+                    onChange={handleMainCategory}
+                    name='main_category'
+                    id='main_category'
+                    className={classes.drpdwn}
+                    error={errors.main_category}
+                    helperText={errors.main_category}
+                    // label='customer'
+                    fullWidth
+                    required
+                  >
+                    {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data, index) => {
+                      return (
+                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                      )
+                    })}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="category">Category*</InputLabel>
+                  <Select
+                    // multiple
+                    value={inputs.category}
+                    onChange={handleCategory}
+                    name='category'
+                    id='category'
+                    // label='customer'
+                    fullWidth
+                    className={classes.drpdwn}
+                    required
+                    disabled={mainCategory == ""}
+                    error={errors.category}
+                    helperText={errors.category}
+                  >
+                    {(categoryList.length > 0 ? categoryList : []).map((data, index) => {
+                      return (
+                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                      )
+                    })}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
+                  <Select
+                    // multiple
+                    value={inputs.sub_category}
+                    onChange={handleSubCategory}
+                    name='sub_category'
+                    id='sub_category'
+                    className={classes.drpdwn}
+                    // label='customer'
+                    fullWidth
+                    required
+                    disabled={category == ""}
+                    error={errors.sub_category}
+                    helperText={errors.sub_category}
+                  >
+                    {(subCategoryList.length > 0 ? subCategoryList : []).map((data, index) => {
+                      return (
+                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                      )
+                    })}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="assign_interest">Product *</InputLabel>
+                  <Select
+                    // multiple
+                    value={assignInterest}
+                    onChange={handleChangeMultiple}
+                    inputProps={{
+                      name: 'interested_product_id',
+                      id: 'interested_product_id',
+                      // label:'assign_interest'
+                    }}
+                    className={classes.textsize}
+                    disabled={subCategory == ""}
+                    fullWidth
+                    required
+                    error={assignError}
+                  >
+                    {
+                      (productList.length != '' ? productList : []).map((data) => {
+                        return (
+                          <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>
+                        )
+                      })
 
-                      }
-                      {/* <MenuItem value={1}>{'Product 1'}</MenuItem>
+                    }
+                    {/* <MenuItem value={1}>{'Product 1'}</MenuItem>
                       <MenuItem value={2}>{'Product 2'}</MenuItem>
                       <MenuItem value={3}>{'Product 3'}</MenuItem> */}
-                      {/* {role.map((ele,index) =>{
+                    {/* {role.map((ele,index) =>{
                         return(
                         <MenuItem value={ele.id}>{ele.name}</MenuItem>
                         )
                       })} */}
 
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    
-                    {savebtn? <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
-                      save
-                    </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+
+                  {savebtn ? <Button variant="contained" color="primary" className={classes.button} onClick={handleSubmit}>
+                    save
+                    </Button> : <Button variant="contained" color="primary" className={classes.button} disabled>
                       save
                     </Button>}
-                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
-                      Close
-                    </Button> 
-                  </Grid>
+                  <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                    Close
+                    </Button>
                 </Grid>
-              </Paper>
-            
-            
+              </Grid>
+            </Paper>
+
+
           </div>
         </form>
       </Dialog>

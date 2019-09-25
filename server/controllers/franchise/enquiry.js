@@ -58,6 +58,7 @@ const postenquiry = async function (req, res, next) {
     franchise_id: req.decoded.franchise_id,
     
     enquiry_id : req.body.enquiry_id,
+    lead_id: req.body.lead_id,
     customer_name: req.body.customer_name,
     contact: req.body.contact,
     interested_product_id: req.body.interested_product_id,
