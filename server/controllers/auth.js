@@ -4,7 +4,7 @@ const Auth = require("../models/auth.js")
 const User = require("../models/user.js")
 const jwt = require('jsonwebtoken');
 const { trans } = require("../lib/mailtransporter");
-const {domainName} = require("../lib/databaseMySQLNew");
+const { domainName } = require("../lib/databaseMySQLNew");
 
 var encryptionHelper = require("../lib/simple-nodejs-iv-encrypt-decrypt.js")
 var algorithm = encryptionHelper.CIPHERS.AES_256;
@@ -34,11 +34,11 @@ const login = async function (req, res, next) {
         status = 401;
         result.errorCode = status;
         result.message = `Account is not verified`;
-      } else if (user[0].franchise_status !== 2){
+      } else if (user[0].franchise_status !== 2) {
         status = 401;
         result.errorCode = status;
         result.message = 'Franchise is not active, contact to your administrator.';
-      } else if (user[0].password.toString('utf8') === params.password ) {
+      } else if (user[0].password.toString('utf8') === params.password) {
         // console.log('password',user[0].password.toString('utf8'));
         status = 200;
         // Create a token
@@ -47,7 +47,7 @@ const login = async function (req, res, next) {
         const secret = process.env.JWT_SECRET || 'secret';
         const token = jwt.sign(payload, secret, options);
 
-        
+
 
         result.token = token;
         result.status = status;
@@ -72,22 +72,22 @@ const login = async function (req, res, next) {
       result.message = 'Given User Name is not valid.';
       res.status(status).send(result);
     }
-    
-  //   // });
-  // }).catch(err => {
-  //   console.log("Error", err)
-  //   status = 500;
-  //   result.errorCode = status;
-  //   result.message = 'Application Error, Please contact the administrator.';
-  //   res.status(status).send(result);
-  // });
+
+    //   // });
+    // }).catch(err => {
+    //   console.log("Error", err)
+    //   status = 500;
+    //   result.errorCode = status;
+    //   result.message = 'Application Error, Please contact the administrator.';
+    //   res.status(status).send(result);
+    // });
 
   } catch (err) {
-    status = 401;
-    result.errorCode = status;
-    result.message = 'Session is expired.';
-    next(new Error(result));
-   
+    // status = 401;
+    // result.errorCode = status;
+    // result.message = 'Session is expired.';
+    next(err);
+
     // res.status(status).send(result);
   }
 };
@@ -107,14 +107,14 @@ const verifyEmail = async function (req, res) {
   const auth = new Auth(params);
 
   try {
-  const user = await auth.verifyEmail(accountId);
+    const user = await auth.verifyEmail(accountId);
     console.log('............. user .........', user);
     let userToken = user[0].token
     if (token && token.length > 10 && token === userToken) {
       await new User({}).updateStatus(params.name);
       // if (userSaveError) {
       console.log("could not clear the token");
-      res.status(200).json({ message: "verified" });
+      res.status(200).json({ message: "You account successfully verified. Now you can login into application." });
       // } else {
       //   console.log("token cleared")
       //   res.status(200).json({ message: "verified" })
@@ -123,15 +123,15 @@ const verifyEmail = async function (req, res) {
       res.status(404).json({ message: "Invalid token" })
     }
 
-  // }).catch(err => {
-  //   console.log("Error", err)
-  //   status = 500;
-  //   result.errorCode = status;
-  //   result.message = 'Application Error, Please contact the administrator.';
-  //   res.status(status).send(result);
-  // });
-  } catch(error) {
-    next (error);
+    // }).catch(err => {
+    //   console.log("Error", err)
+    //   status = 500;
+    //   result.errorCode = status;
+    //   result.message = 'Application Error, Please contact the administrator.';
+    //   res.status(status).send(result);
+    // });
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -145,67 +145,67 @@ const forgotPassword = async function (req, res, next) {
   let status = 201;
 
   try {
-    if(params.name.toLowerCase() === "admin") {
+    if (params.name.toLowerCase() === "admin") {
       status = 500;
       result.errorCode = status;
       result.message = 'Please contact system administrator to reset password.';
       res.status(status).send(result);
     } else {
-      
-    const user = await auth.forgotPassword();
-    // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
 
-    console.log("user....************.", user)
-    // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
-    // console.log("decText....************.", decText)
+      const user = await auth.forgotPassword();
+      // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
 
-    if (user && user.length > 0) {
+      console.log("user....************.", user)
+      // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
+      // console.log("decText....************.", decText)
 
-      // if(user[0].status === 0) {
-      //   status = 401;
-      //   result.errorCode = status;
-      //   result.message = `Account is not verified`;
-      // } else {
-      status = 200;
-      // Create a token
-      const mail = {
-        from: 'admin@' + domainName,
-        to: user[0].email,
-        subject: 'Forgot Password',
-        text: 'forgot password ',
-        html: '<strong> password: </strong>' + user[0].password
-      }
+      if (user && user.length > 0) {
 
-      trans.sendMail(mail, (err, info) => {
-        if (err) {
-          return console.log(err);
+        // if(user[0].status === 0) {
+        //   status = 401;
+        //   result.errorCode = status;
+        //   result.message = `Account is not verified`;
+        // } else {
+        status = 200;
+        // Create a token
+        const mail = {
+          from: 'admin@' + domainName,
+          to: user[0].email,
+          subject: 'Forgot Password',
+          text: 'forgot password ',
+          html: '<strong> password: </strong>' + user[0].password
         }
 
-        console.log('Message sent: %s', info.messageId);
-        // Preview only available when sending through an Ethereal account
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-      });
+        trans.sendMail(mail, (err, info) => {
+          if (err) {
+            return console.log(err);
+          }
 
-      result.status = status;
-      result.message = `Email send successfully`;
+          console.log('Message sent: %s', info.messageId);
+          // Preview only available when sending through an Ethereal account
+          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        });
 
-      // }
+        result.status = status;
+        result.message = `Email send successfully`;
 
-      res.status(status).send(result);
-    } else {
-      status = 401;
-      result.errorCode = status;
-      result.message = 'Given User Name is not valid.';
-      res.status(status).send(result);
-    }
-    // });
-    // }).catch(err => {
-    //   console.log("Error", err)
-    //   status = 500;
-    //   result.errorCode = status;
-    //   result.message = 'Application Error, Please contact the administrator.';
-    //   res.status(status).send(result);
-    // });
+        // }
+
+        res.status(status).send(result);
+      } else {
+        status = 401;
+        result.errorCode = status;
+        result.message = 'Given User Name is not valid.';
+        res.status(status).send(result);
+      }
+      // });
+      // }).catch(err => {
+      //   console.log("Error", err)
+      //   status = 500;
+      //   result.errorCode = status;
+      //   result.message = 'Application Error, Please contact the administrator.';
+      //   res.status(status).send(result);
+      // });
     }
   } catch (err) {
     next(err);

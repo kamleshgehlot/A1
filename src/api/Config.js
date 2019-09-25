@@ -4,12 +4,16 @@ export default {
     AUTH_URL : 'http://localhost:3000',        
   },
   'config-dev': {
-    API_URL: 'http://rentronicsdev.saimrc.com',
-    AUTH_URL: 'http://rentronicsdev.saimrc.com',
+    API_URL: '',
+    AUTH_URL: '',
   },
   'config-uat': {
-    API_URL: 'http://rentronicsuat.saimrc.com',
-    AUTH_URL: 'http://rentronicsuat.saimrc.com',
+    API_URL: '',
+    AUTH_URL: '',
+  },
+  'config-prod': {
+    API_URL: '',
+    AUTH_URL: '',
   },
   get 'development-local-stag'() {
     return this['config-development'];
@@ -19,5 +23,8 @@ export default {
   },
   get 'production-production-uat'() {
     return this['config-uat'];
+  },
+  get 'production-production-prod'() {
+    return this['config-prod'];
   },
 };
