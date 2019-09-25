@@ -100,7 +100,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AutoSuggestDropdown({customerListData, setSelectedOption}) {
+export default function AutoSuggestDropdown({customerListData, setSelectedOption, defaultValue}) {
   suggestions = [];
 
   customerListData.map(customer => {
@@ -126,7 +126,7 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
 
   const classes = useStyles();
   const [state, setState] = React.useState({
-    single: '',
+    single: defaultValue || '',
   });
 
   const [stateSuggestions, setSuggestions] = React.useState([]);

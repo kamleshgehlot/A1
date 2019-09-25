@@ -39,12 +39,12 @@ import EnquiryAPI from '../../../api/franchise/Enquiry';
 import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 
-const RESET_VALUES = {
+let RESET_VALUES = {
     enquiry_id : '',
-      customer_name: '',
-      contact: '',
-      interested_product_id: '',
-      is_active: '',
+    customer_name: '',
+    contact: '',
+    interested_product_id: '',
+    is_active: '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -100,8 +100,10 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList, convert}) {
+export default function Add({ leadData, open, handleClose, handleSnackbarClick,setEnquiryList, convert}) {
 
+  RESET_VALUES.contact = leadData.customer_contact;
+  
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [assignInterest, setAssignInterest] = React.useState([]);
@@ -151,12 +153,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     
   }, []);
   
-  
-  const customerName =
-  (customerListData.length > 0 ? customerListData : []).map(suggestion => ({
-  
-    value: suggestion.mobile,
-    label: suggestion.customer_name,}));
+
 
     function handleChangeSingle(value) {
       setSingle(value);
@@ -328,7 +325,9 @@ return (
                       fullWidth
                     /> */}
                    
-                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} />
+                   <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
+
+                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} defaultValue={leadData.customer_name}/>
 
                   </Grid>
                   <Grid item xs={12} sm={4}>
