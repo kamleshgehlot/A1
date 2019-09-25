@@ -8,5 +8,6 @@ const ReportRouter = express.Router();
 // ReportRouter.route('/getAll').get(validateToken, Location.getAll);
 ReportRouter.route('/financeOrderReport').post(validateToken, Report.financeOrderReport);
 ReportRouter.route('/getOrderReport').post(validateToken, Report.getOrderReport);
+ReportRouter.route('/getDeliveryReport').post(validateToken, Report.getDeliveryReport);
 
 module.exports = ReportRouter;
