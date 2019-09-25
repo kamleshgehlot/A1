@@ -21,11 +21,17 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
 
+const { env } = require("./lib/databaseMySQLNew");
+
 // Point static path to dist
-// app.use('/', express.static(path.join(__dirname, 'dist')));
-// app.use('/dist', express.static(path.join(__dirname, 'dist')));
-app.use('/', express.static(path.join(__dirname, '..', 'src')));
-app.use('/src', express.static(path.join(__dirname, '..', 'src')));
+if (env === 'dev' || env === 'uat' || env === 'prod') {
+  app.use('/', express.static(path.join(__dirname, 'dist')));
+  app.use('/dist', express.static(path.join(__dirname, 'dist')));
+} else {
+  app.use('/', express.static(path.join(__dirname, '..', 'src')));
+  app.use('/src', express.static(path.join(__dirname, '..', 'src')));
+}
+
 
 const ExceptionLog = require('./controllers/exceptionLog');
 
@@ -120,9 +126,21 @@ app.use(function (error, req, res, next) {
 
 /** Get port from environment and store in Express. */
 // const port = process.env.PORT || '3006'; // DEV
-const port = process.env.PORT || '3000'; // Local
+// const port = process.env.PORT || '3000'; // Local
 // const port = process.env.PORT || '3005'; // UAT
 // const port = process.env.PORT || '3007'; // PROD
+
+let port;
+
+if (env === 'dev') {
+  port = 3006;
+} else if (env === 'uat') {
+  port = 3005;
+} else if (env === 'prod') {
+  port = 3007;
+} else {
+  port = 3000;
+}
 
 app.set('port', port);
 

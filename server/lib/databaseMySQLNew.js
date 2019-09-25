@@ -29,4 +29,4 @@ if (env === 'uat') {
   domainName = 'localhost:3000'
 }
 
-module.exports = { 'prod': DbName, getFullName: getFullName, domainName: domainName, mailPass: mailPass, mailService: mailService };
+module.exports = { 'prod': DbName, getFullName: getFullName, domainName: domainName, mailPass: mailPass, mailService: mailService, env: env };

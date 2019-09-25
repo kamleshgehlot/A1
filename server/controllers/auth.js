@@ -114,7 +114,7 @@ const verifyEmail = async function (req, res) {
       await new User({}).updateStatus(params.name);
       // if (userSaveError) {
       console.log("could not clear the token");
-      res.status(200).json({ message: "verified" });
+      res.status(200).json({ message: "You account successfully verified. Now you can login into application." });
       // } else {
       //   console.log("token cleared")
       //   res.status(200).json({ message: "verified" })

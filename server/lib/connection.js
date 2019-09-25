@@ -1,12 +1,15 @@
 // This will be in some JSON config we'll say
 let dbOptions = '';
-let dbName = 'rentronics';
+let dbName = 'rentronicnew';
+const { env } = require("../lib/databaseMySQLNew");
 
-if (process.env.NODE_ENV === 'development') {
+if (env === 'dev' || env === 'uat' || env === 'prod') {
    dbOptions = {
       host: 'localhost',
       user: 'root',
-      password: '',
+      password: '6mNMX9Ln0oykXKic',
+      port: 3306
+
       // database: 'rentronics'
    };
 } else {
@@ -24,11 +27,11 @@ const MySQL = require("mysql");
 let connectionPool = MySQL.createPool({ host: dbOptions.host, user: dbOptions.user, password: dbOptions.password, port: dbOptions.port, database: dbOptions.database });
 
 const getConnection = async function (done) {
-   try{
+   try {
       connectionPool.getConnection(done);
-   } catch(ex) {
-console.log("ex........", ex);
-throw ex;
+   } catch (ex) {
+      console.log("ex........", ex);
+      throw ex;
    }
 };
 
