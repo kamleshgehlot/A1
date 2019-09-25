@@ -1,1 +1,1 @@
-ALTER TABLE `enquiry` ADD `lead_id` INT(11) NULL AFTER `enquiry_id`;
+ALTER TABLE `enquiry` ADD `lead_id` INT(11) NOT NULL AFTER `enquiry_id`;
