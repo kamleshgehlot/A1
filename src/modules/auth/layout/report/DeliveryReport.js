@@ -41,7 +41,7 @@ import AutoSuggestDropdown from '../../lead/AutoSuggestDropdown';
 import Customer from '../../../../api/franchise/Customer';
 import Report from '../../../../api/Report';
 import Product from '../../../../api/Category';
-import SingleOrderReport from './Components/SingleOrderReport';
+import DeliveryOrderReport from './Components/DeliveryOrderReport';
 
 
 const useStyles = makeStyles(theme => ({
@@ -131,7 +131,8 @@ export default function MainDashboard({roleName}) {
   const [fromDate, setFromDate] = useState('');
   const [orderReport, setOrderReport] = useState(false);
   const [reportData,setReportData] = useState([]);
-  
+  const [requiredType, setRequiredType]  = useState('');
+
   useEffect(() => {
   const fetchData = async () => {
     setIsError(false);
@@ -153,11 +154,7 @@ export default function MainDashboard({roleName}) {
 
 
   function handleChangeOrder(event) {
-    {(orderData.length > 0 ? orderData : []).map(data => {
-      if(data.id === event.target.value)  {
-        setOrder(data);
-      }
-    })}
+   setRequiredType(event.target.value);
   }
 
   function handleSearchText(event){    
@@ -173,36 +170,35 @@ export default function MainDashboard({roleName}) {
     setToDate(date);
   }
 
-  const handleManualReportSubmit = async () => {
-    try{
-      // const result = await Report.getOrderReport({
-      //   order_id : order.id,
-      //   customer_id : order.customer_id,
-      //   from_date : fromDate,
-      //   to_date : toDate,
-      // });
-      // if(result != ""){
-      //   setReportData(result);
-      //   setOrderReport(true);
-      // }else{
-      //   setReportData([]);
-      //   setOrderReport(false);
-      // }
-    }catch (error) {
-      console.log('error',error);
-    }
-  }
+  // const handleManualReportSubmit = async () => {
+  //   try{
+  //     // const result = await Report.getOrderReport({
+  //     //   order_id : order.id,
+  //     //   customer_id : order.customer_id,
+  //     //   from_date : fromDate,
+  //     //   to_date : toDate,
+  //     // });
+  //     // if(result != ""){
+  //     //   setReportData(result);
+  //     //   setOrderReport(true);
+  //     // }else{
+  //     //   setReportData([]);
+  //     //   setOrderReport(false);
+  //     // }
+  //   }catch (error) {
+  //     console.log('error',error);
+  //   }
+  // }
   
   const handleSubmit = async () => {
     try{
-      const result = await Report.getOrderReport({
-        order_id : order.id,
-        customer_id : order.customer_id,
+      const result = await Report.getDeliveryReport({
+        required_type : requiredType,
         from_date : fromDate,
         to_date : toDate,
       });
-      if(result != ""){
-        setReportData(result);
+      if(result.isAvailable != 0){
+        setReportData(result.orderData);
         setOrderReport(true);
       }else{
         setReportData([]);
@@ -213,48 +209,48 @@ export default function MainDashboard({roleName}) {
     }
   }
 
-  const searchHandler = async () => {
-    try{
-      if(searchText != ''){
+  // const searchHandler = async () => {
+  //   try{
+  //     if(searchText != ''){
         
-        let customer_name = "";
-        let customer_contact = "";
-        let customer_id = "";
+  //       let customer_name = "";
+  //       let customer_contact = "";
+  //       let customer_id = "";
 
-        if(searchName === "customer_name"){
-          customer_name = searchText;
-        }else if(searchName === "customer_contact"){
-          customer_contact = searchText;
-        }else if(searchName === "customer_id"){
-          customer_id = searchText;
-        }
+  //       if(searchName === "customer_name"){
+  //         customer_name = searchText;
+  //       }else if(searchName === "customer_contact"){
+  //         customer_contact = searchText;
+  //       }else if(searchName === "customer_id"){
+  //         customer_id = searchText;
+  //       }
         
-        const result = await Report.FinanceOrderReport({
-          customer_name : customer_name,
-          customer_contact : customer_contact,
-          customer_id : customer_id,
-        });    
-        if(result.isAvailable === 1){
-          setCustomerData(result.customerData[0]);
-          if(result.OrderData != ""){
-            setOrderData(result.OrderData);
-          }else{
-            alert('Nothing ordered by this person');
-            setOrderData([]);
-          }
-        }else{
-          alert('customer not found');
-          setOrderData([]);
-          setCustomerData([]);
-        }        
-      }
-      setReportData([]);
-      setOrderReport(false);
-      setOrder("");
-    }catch (error) {
-      console.log('error',error);
-    }
-  }
+  //       const result = await Report.FinanceOrderReport({
+  //         customer_name : customer_name,
+  //         customer_contact : customer_contact,
+  //         customer_id : customer_id,
+  //       });    
+  //       if(result.isAvailable === 1){
+  //         setCustomerData(result.customerData[0]);
+  //         if(result.OrderData != ""){
+  //           setOrderData(result.OrderData);
+  //         }else{
+  //           alert('Nothing ordered by this person');
+  //           setOrderData([]);
+  //         }
+  //       }else{
+  //         alert('customer not found');
+  //         setOrderData([]);
+  //         setCustomerData([]);
+  //       }        
+  //     }
+  //     setReportData([]);
+  //     setOrderReport(false);
+  //     setOrder("");
+  //   }catch (error) {
+  //     console.log('error',error);
+  //   }
+  // }
 
   // console.log('ocdd',orderData, customerData);
   
@@ -266,11 +262,11 @@ export default function MainDashboard({roleName}) {
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={3}>
-              <InputLabel  className={classes.textHeading} htmlFor="order_id">Order Type</InputLabel>
+              <InputLabel  className={classes.textHeading} htmlFor="order_id">Report Type</InputLabel>
               <Select
                 className = {classes.textsize}
                 style= {{'marginTop':'4px'}}
-                // value={order.id}
+                value={requiredType}
                 onChange={handleChangeOrder}
                 inputProps={{
                   name: 'order_id',
@@ -280,9 +276,9 @@ export default function MainDashboard({roleName}) {
                 fullWidth
                 required
               >
-                 <MenuItem className={classes.textsize} value={1}>{'Pending'}</MenuItem>
-                 <MenuItem className={classes.textsize} value={2}>{'Upcoming'}</MenuItem>
-                 <MenuItem className={classes.textsize} value={3}>{'Completed'}</MenuItem>
+                 {/* <MenuItem className={classes.textsize} value={1}>{'Pending'}</MenuItem> */}
+                  <MenuItem className={classes.textsize} value={2}>{'Upcoming'}</MenuItem>
+                 {/* <MenuItem className={classes.textsize} value={3}>{'Completed'}</MenuItem> */}
               </Select>
             </Grid>   
           <Grid item xs={12} sm={3}>
@@ -323,17 +319,14 @@ export default function MainDashboard({roleName}) {
           </Grid>
           
           <Grid item xs={12} sm={3}>
-            <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+            <Button  variant="contained"  color="primary" className={classes.button} style={{'marginTop':'5px'}} onClick={handleSubmit}>
               Generate Report
             </Button>
           </Grid>
-           
-         
-        {/* 
+        {/* {console.log('rec. data',reportData)} */}
           <Grid item xs={12} sm={12}>
-              {orderReport ? <SingleOrderReport data={reportData}/> : '' }
+              {orderReport ? <DeliveryOrderReport data={reportData} /> : '' }
           </Grid> 
-        */}
       </Grid>
     </Paper>
 
