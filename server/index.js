@@ -122,6 +122,8 @@ app.use(function (error, req, res, next) {
 // const port = process.env.PORT || '3006'; // DEV
 const port = process.env.PORT || '3000'; // Local
 // const port = process.env.PORT || '3005'; // UAT
+// const port = process.env.PORT || '3007'; // PROD
+
 app.set('port', port);
 
 /** Create HTTP server. */
