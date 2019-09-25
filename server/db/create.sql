@@ -542,7 +542,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `franchise_id`, `director_id`, `name`, `user_id`, `password`, `token`, `account_id`, `key`, `iv`, `designation`, `role_id`, `is_active`, `created_by`, `created_at`, `modified_by`, `modified_at`, `status`) VALUES
-(1, NULL, 0, 'Master Admin', 'admin', 0x2271f2bbc9a0956b34271c56e694b598, '', '', '', '', '1', '1', 1, 0, '2019-08-24 06:22:30', '2019-06-22 21:49:24', NULL, 1);
+(1, NULL, 0, 'Master Admin', 'admin', AES_ENCRYPT('******','secret'), '', '', '', '', '1', '1', 1, 0, '2019-08-24 06:22:30', '2019-06-22 21:49:24', NULL, 1);
 -- --------------------------------------------------------
 
 --

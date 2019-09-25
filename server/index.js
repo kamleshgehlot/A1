@@ -27,6 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', express.static(path.join(__dirname, '..', 'src')));
 app.use('/src', express.static(path.join(__dirname, '..', 'src')));
 
+const ExceptionLog = require('./controllers/exceptionLog');
+
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
 const staffMaster = require('./routes/staffMaster');
@@ -51,7 +53,7 @@ const enquiryRouter = require('./routes/franchise/enquiry');
 const orderRouter = require('./routes/franchise/order');
 
 //Staff
-const franchiseUser= require('./routes/franchiseUser');
+const franchiseUser = require('./routes/franchiseUser');
 const customerRouter = require('./routes/franchise/customer');
 
 const routes = require('./routes');
@@ -67,8 +69,8 @@ app.use('/api/status', statusRouter);
 app.use('/api/location', locationRouter);
 app.use('/api/task', taskRouter);
 app.use('/api/lead', leadRouter);
-app.use('/api/user/staff',staffMaster);
-app.use('/api/user/position',staffPosition);
+app.use('/api/user/staff', staffMaster);
+app.use('/api/user/position', staffPosition);
 
 app.use('/api/franchiseuser', franchiseUser);
 
@@ -79,11 +81,11 @@ app.use('/api/franchise/user', franchiseUserRouter);
 app.use('/api/franchise/staff', franchiseStaff);
 app.use('/api/franchise/customer', customerRouter);
 app.use('/api/franchise/role', roleRouter);
-app.use('/api/franchise/enquiry',enquiryRouter);
-app.use('/api/franchise/order',orderRouter);
+app.use('/api/franchise/enquiry', enquiryRouter);
+app.use('/api/franchise/order', orderRouter);
 app.use('/api/report', ReportRouter);
 
-app.use('/api/download', function(req, res, nex) {
+app.use('/api/download', function (req, res, nex) {
   try {
     const file = `${__dirname}/files/${req.query.path}`;
     res.download(file); // Set disposition and send it.
@@ -94,17 +96,26 @@ app.use('/api/download', function(req, res, nex) {
 
 app.use('/', routes);
 
-app.use(function(error, req, res, next) {
+app.use(function (error, req, res, next) {
   // Any request to this server will get here, and will send an HTTP
   // response with the error message 'woops'
   console.log("Server Error....", error);
-  const result = { 
+  const result = {
     error: `Server Error, Please contact administrator`
   };
   // if(error){res.status(error.statusCode).send(result.message);}else
   if (!error.statusCode) error.statusCode = 500;
-  res.status(error.statusCode).send(result.message);
+
+  ExceptionLog.add({
+    code: error.code,
+    message: error.message,
+    franchise_id: req.decoded ? req.decoded.franchise_id : 0,
+    stack: error.stack,
+    created_by: req.decoded ? req.decoded.created_by : 'System'
   });
+
+  res.status(error.statusCode).send(result.message);
+});
 
 
 /** Get port from environment and store in Express. */
