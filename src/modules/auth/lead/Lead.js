@@ -223,6 +223,7 @@ export default function Lead({roleName}) {
   function handleClickEnquiryOpen(data) {
     setConvertLead(data.id);
     setEnquiryOpen(true);
+    setLeadData(data);
   }
   
   function handleClickOrderOpen(data){
@@ -587,7 +588,7 @@ export default function Lead({roleName}) {
       {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}
       
       {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertLead}  converted_name={'lead'}/> : null }
-      {openEnquiry ?<Add open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn} convert={convertLead}/> :null}
+      {openEnquiry ?<Add leadData={leadData} open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn} convert={convertLead}/> :null}
       {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputValues={leadData}  /> :null}
       {openConvertedLeads ?  <ConvertedLeads open={openConvertedLeads} handleConvertedLeadsClose={handleConvertedLeadsClose} franchiseListd={franchiseListd} />: null}
 

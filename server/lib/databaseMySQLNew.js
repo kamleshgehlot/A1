@@ -1,5 +1,5 @@
 // const env = process.env.NODE_ENV;
-const env = 'local';
+const env = 'prod';
 // let DbName, domainName;
 let DbName;
 let domainName;

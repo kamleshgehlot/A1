@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
+import { component } from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -25,7 +25,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {useCommonStyles} from '../../common/StyleComman'; 
+import { useCommonStyles } from '../../common/StyleComman';
 import validate from '../../common/validation/EnquiryRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 import AutoSuggestDropdown from '../lead/AutoSuggestDropdown';
@@ -56,8 +56,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     flex: 1,
     fontSize: theme.typography.pxToRem(14),
-    color:"white",
-    marginTop:theme.spacing(-3),
+    color: "white",
+    marginTop: theme.spacing(-3),
   },
   root: {
     flexGrow: 1,
@@ -79,15 +79,15 @@ const useStyles = makeStyles(theme => ({
   expansionTitle: {
     fontWeight: theme.typography.fontWeightBold,
   },
-  button:{
-    color:"white",
+  button: {
+    color: "white",
     fontSize: theme.typography.pxToRem(10),
     marginRight: theme.spacing(1),
   },
-  textsize:{
+  textsize: {
     fontSize: theme.typography.pxToRem(12),
   },
-  drpdwn:{
+  drpdwn: {
     marginTop: theme.spacing(1),
     fontSize: theme.typography.pxToRem(12),
   }
@@ -98,7 +98,8 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryList, convert}) {
+export default function Add({ leadData, open, handleClose, handleSnackbarClick, setEnquiryList, convert }) {
+  RESET_VALUES.contact = leadData.customer_contact;
 
   const styleClass = useCommonStyles();
   const classes = useStyles();
@@ -124,15 +125,15 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
         let zero = 0;
-        if(enquiry_id[0]!=null){  
-          zero = 6 - (enquiry_id[0].id.toString().length); 
-          let enquiryId='';
-          for(let i=0; i< zero ; i++){
+        if (enquiry_id[0] != null) {
+          zero = 6 - (enquiry_id[0].id.toString().length);
+          let enquiryId = '';
+          for (let i = 0; i < zero; i++) {
             enquiryId += '0';
           }
-         setInput('enquiry_id',('E' + enquiryId + (enquiry_id[0].id + 1)));
-        }else{
-          setInput('enquiry_id','E000001');
+          setInput('enquiry_id', ('E' + enquiryId + (enquiry_id[0].id + 1)));
+        } else {
+          setInput('enquiry_id', 'E000001');
         }
 
         const category_list = await Category.mainCategoryList();
@@ -140,65 +141,65 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
 
         const resultCustomer = await Customer.list();
         setCustomerListData(resultCustomer.customerList);
-       
+
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-    
+
   }, []);
   
   
   function handleMainCategory(event) {
-    setInput('main_category',event.target.value)
+    setInput('main_category', event.target.value)
     setMainCategory(event.target.value);
     setCategoryList('');
-    setSubCategoryList('');    
+    setSubCategoryList('');
     setProductList('');
     setAssignInterest('');
 
     const fetchData = async () => {
       try {
-        const result = await Category.categoryList({maincategory: event.target.value});
+        const result = await Category.categoryList({ maincategory: event.target.value });
         setCategoryList(result.categoryList);
       } catch (error) {
-        console.log('error:',error);
+        console.log('error:', error);
       }
     };
     fetchData();
   }
 
   function handleCategory(event) {
-    setInput('category',event.target.value)
+    setInput('category', event.target.value)
     setCategory(event.target.value);
-    setSubCategoryList('');    
+    setSubCategoryList('');
     setProductList('');
     setAssignInterest('');
 
     const fetchData = async () => {
       try {
-        const result = await Category.subCategoryList({category: event.target.value});
+        const result = await Category.subCategoryList({ category: event.target.value });
         setSubCategoryList(result.subCategoryList);
       } catch (error) {
-        console.log('error:',error);
+        console.log('error:', error);
       }
     };
     fetchData();
   }
 
   function handleSubCategory(event) {
-    setInput('sub_category',event.target.value)
+    setInput('sub_category', event.target.value)
     setSubCategory(event.target.value);
     setProductList('');
     setAssignInterest('');
-    
+
     const fetchData = async () => {
       try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
         setProductList(result.productList);
       } catch (error) {
-        console.log('error:',error);
+        console.log('error:', error);
       }
     };
     fetchData();
@@ -207,7 +208,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   function handleChangeMultiple(event) {
     setAssignInterest(event.target.value);
   }
-  
+
   const addEnquiry = async () => {
     // setInput('interested_product_id',assignInterest.join())
     // console.log('convert-----',convert);
@@ -223,8 +224,8 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
         contact: inputs.customer_contact,
         interested_product_id: assignInterest,
         is_active: 1,
-        converted_to:0,
-        convert_by_lead:convert
+        converted_to: 0,
+        convert_by_lead: convert
       });
 
       // assignInterest.length = 0;
@@ -237,14 +238,14 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
       setSavebtn(true);
       handleClose(false);
     }
-    else{
+    else {
       setAssignError('error')
     }
   };
 
 
 
- const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs = null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addEnquiry,
     validate
@@ -253,7 +254,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-      <form onSubmit={handleSubmit}> 
+        <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
 
@@ -265,8 +266,8 @@ return (
           </AppBar>
 
           <div className={classes.root}>
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-          <Paper className={classes.paper}>
+            <Grid item xs={12} sm={12}>   {ploading ? <LinearProgress /> : null}</Grid>
+            <Paper className={classes.paper}>
               <Grid container spacing={4}>
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize}  htmlFor="first_name">Enquiry Id</InputLabel>
@@ -315,128 +316,142 @@ return (
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                     }}
-                    />
-                  </Grid>
+                    margin="dense"
+                    id="contact"
+                    name="contact"
+                    // label="Contact"
+                    type="text"
+                    value={inputs.contact}
+                    onChange={handleNumberInput}
+                    error={errors.contact}
+                    helperText={errors.contact}
+                    required
+                    fullWidth
+                    onInput={(e) => {
+                      e.target.value = (e.target.value).toString().slice(0, 10)
+                    }}
+                  />
+                </Grid>
 
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
-                    <Select
-                      // multiple
-                      value={inputs.main_category}
-                      onChange={handleMainCategory}
-                      name= 'main_category'
-                      id= 'main_category'
-                      className={classes.drpdwn}
-                      error={errors.main_category}
-                      helperText={errors.main_category}
-                      // label='customer'
-                      fullWidth
-                      required
-                    > 
-                    {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
-                      return(
-                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
-                      ) 
-                     })}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="category">Category*</InputLabel>
-                    <Select
-                      // multiple
-                      value={inputs.category}
-                      onChange={handleCategory}
-                      name= 'category'
-                      id= 'category'
-                      // label='customer'
-                      fullWidth
-                      className={classes.drpdwn}
-                      required
-                      disabled = {mainCategory ==""}
-                      error={errors.category}
-                      helperText={errors.category}
-                    >    
-                     {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
-                      return(
-                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
-                      ) 
-                     })}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
-                    <Select
-                      // multiple
-                      value={inputs.sub_category}
-                      onChange={handleSubCategory}
-                      name= 'sub_category'
-                      id= 'sub_category'
-                      className={classes.drpdwn}
-                      // label='customer'
-                      fullWidth
-                      required
-                      disabled = {category ==""}
-                      error={errors.sub_category}
-                      helperText={errors.sub_category}
-                    >    
-                    {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
-                      return(
-                         <MenuItem className={classes.textsize}  value={data.id}>{data.category}</MenuItem>
-                      ) 
-                     })}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize}  htmlFor="assign_interest">Product *</InputLabel>
-                    <Select
-                      // multiple
-                      value={assignInterest}
-                      onChange={handleChangeMultiple}
-                      inputProps={{
-                        name: 'interested_product_id',
-                        id: 'interested_product_id',
-                        // label:'assign_interest'
-                      }}
-                      className={classes.textsize}
-                      disabled = {subCategory ==""}
-                      fullWidth
-                      required
-                      error={assignError}
-                    >
-                      {
-                        (productList.length != '' ? productList : []).map((data)=> {
-                          return(
-                            <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>      
-                          )
-                        })
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
+                  <Select
+                    // multiple
+                    value={inputs.main_category}
+                    onChange={handleMainCategory}
+                    name='main_category'
+                    id='main_category'
+                    className={classes.drpdwn}
+                    error={errors.main_category}
+                    helperText={errors.main_category}
+                    // label='customer'
+                    fullWidth
+                    required
+                  >
+                    {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data, index) => {
+                      return (
+                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                      )
+                    })}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="category">Category*</InputLabel>
+                  <Select
+                    // multiple
+                    value={inputs.category}
+                    onChange={handleCategory}
+                    name='category'
+                    id='category'
+                    // label='customer'
+                    fullWidth
+                    className={classes.drpdwn}
+                    required
+                    disabled={mainCategory == ""}
+                    error={errors.category}
+                    helperText={errors.category}
+                  >
+                    {(categoryList.length > 0 ? categoryList : []).map((data, index) => {
+                      return (
+                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                      )
+                    })}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
+                  <Select
+                    // multiple
+                    value={inputs.sub_category}
+                    onChange={handleSubCategory}
+                    name='sub_category'
+                    id='sub_category'
+                    className={classes.drpdwn}
+                    // label='customer'
+                    fullWidth
+                    required
+                    disabled={category == ""}
+                    error={errors.sub_category}
+                    helperText={errors.sub_category}
+                  >
+                    {(subCategoryList.length > 0 ? subCategoryList : []).map((data, index) => {
+                      return (
+                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                      )
+                    })}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel className={classes.textsize} htmlFor="assign_interest">Product *</InputLabel>
+                  <Select
+                    // multiple
+                    value={assignInterest}
+                    onChange={handleChangeMultiple}
+                    inputProps={{
+                      name: 'interested_product_id',
+                      id: 'interested_product_id',
+                      // label:'assign_interest'
+                    }}
+                    className={classes.textsize}
+                    disabled={subCategory == ""}
+                    fullWidth
+                    required
+                    error={assignError}
+                  >
+                    {
+                      (productList.length != '' ? productList : []).map((data) => {
+                        return (
+                          <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>
+                        )
+                      })
 
-                      }
-                      {/* <MenuItem value={1}>{'Product 1'}</MenuItem>
+                    }
+                    {/* <MenuItem value={1}>{'Product 1'}</MenuItem>
                       <MenuItem value={2}>{'Product 2'}</MenuItem>
                       <MenuItem value={3}>{'Product 3'}</MenuItem> */}
-                      {/* {role.map((ele,index) =>{
+                    {/* {role.map((ele,index) =>{
                         return(
                         <MenuItem value={ele.id}>{ele.name}</MenuItem>
                         )
                       })} */}
 
-                    </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    
-                    {savebtn? <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
-                      save
-                    </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+
+                  {savebtn ? <Button variant="contained" color="primary" className={classes.button} onClick={handleSubmit}>
+                    save
+                    </Button> : <Button variant="contained" color="primary" className={classes.button} disabled>
                       save
                     </Button>}
-                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
-                      Close
-                    </Button> 
-                  </Grid>
+                  <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                    Close
+                    </Button>
                 </Grid>
-              </Paper>
-            
-            
+              </Grid>
+            </Paper>
+
+
           </div>
         </form>
       </Dialog>

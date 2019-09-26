@@ -78,7 +78,7 @@ app.use('/api/lead', leadRouter);
 app.use('/api/user/staff', staffMaster);
 app.use('/api/user/position', staffPosition);
 
-app.use('/api/franchiseuser', franchiseUser);
+app.use('/api/franchiseuser', franchiseuser);
 
 app.use('/api/profile', profileRouter);
 app.use('/api/changepassword', passwordRouter);

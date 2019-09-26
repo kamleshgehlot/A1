@@ -1,3 +1,5 @@
+import { getDate, getCurrentDate } from '../../../utils/datetime';
+
 function buildTableBody(data, columns, valueKeys, orderType) {
   var body = [];
 
@@ -106,7 +108,7 @@ export default function layout(data,order) {
                         body: [
                           [
                             
-                            { text: 'Date: ' + new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + (new Date().getFullYear()), style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                            { text: 'Date: ' + getCurrentDate(), style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Team Leader: ' + '', style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Salesperson: ' + user[0].name , style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Sales Type: ', style: 'Header3Center', bold: true, alignment: screenLeft }, 
@@ -172,7 +174,7 @@ export default function layout(data,order) {
                       {style:'margins', text: [  
                         { text: customer[0].id_type_name + '\t\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
                         { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: 'Header1Center', alignment: screenLeft }, 
-                        { text: 'Expiry Date: ' + customer[0].expiry_date +  '\n', style: 'Header1Center', alignment: screenLeft },                         
+                        { text: 'Expiry Date: ' + getDate(customer[0].expiry_date) +  '\n', style: 'Header1Center', alignment: screenLeft },                         
                       ]}
                       ],
                     ]
@@ -305,7 +307,7 @@ export default function layout(data,order) {
                   {style:'margins', text: [  
                     { text: 'MINIMUM PAYMENTS:  ' + orderType[0].minimum_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tTOTAL AMOUNT: $' + orderType[0].total_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  orderType[0].exp_delivery_date, alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDate(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
                   ]}
                 ],
               ]
@@ -322,8 +324,8 @@ export default function layout(data,order) {
                 ],  
                 [
                   {style:'margins', text: [  
-                    { text: 'START DATE:  ' + orderType[0].first_payment , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tEND DATE:  ' + orderType[0].last_payment, alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: 'START DATE:  ' + getDate(orderType[0].first_payment) , alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: '\t\t\t\t\t\t\t\tEND DATE:  ' + getDate(orderType[0].last_payment), alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tTOTAL PAYMENTS:  ' +  orderType[0].no_of_payment, alignment: screenLeft,  bold: true, fontSize:8}, 
                   ]}
                 ],
@@ -344,7 +346,7 @@ export default function layout(data,order) {
                     { text: customer[0].customer_name , alignment: screenLeft,  bold: true, fontSize:9}, 
                     { text: ' agree to RENT-PURCHASE THE GOOD(s) above on the terms and conditions in this RENT-FIX CONTRACT and in the general terms and conditions and confirm to the best of my knowledge that all the above information is true and correct.', alignment: screenLeft,  bold: true, fontSize:8},                    
                     { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
-                    { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + (new Date().getFullYear()), alignment: screenLeft,  bold: true, fontSize:8},
+                    { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDate(), alignment: screenLeft,  bold: true, fontSize:8},
                   ]}
                 ],
               ]

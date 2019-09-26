@@ -128,7 +128,7 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
 
   const classes = useStyles();
   const [state, setState] = React.useState({
-    single: '',
+    single: defaultValue || '',
   });
 
   const [stateSuggestions, setSuggestions] = React.useState([]);
