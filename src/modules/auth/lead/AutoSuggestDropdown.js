@@ -101,7 +101,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AutoSuggestDropdown({customerListData, setSelectedOption, setCustomerId}) {
+export default function AutoSuggestDropdown({customerListData, setSelectedOption, setCustomerId, defaultValue}) {
   suggestions = [];
 
   customerListData.map(customer => {

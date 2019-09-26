@@ -7,6 +7,7 @@ var Enquiry = function (params) {
   // console.log("params", params);
   this.user_id = params.user_id;
   this.enquiry_id = params.enquiry_id;
+  this.lead_id = params.lead_id;
   this.customer_id = params.customer_id;
   this.customer_name= params.customer_name;
   this.contact= params.contact;
@@ -38,10 +39,10 @@ console.log('that enquiry',that);
       }
       if (!error) {
         let values = [
-          [that.enquiry_id,that.is_existing, that.customer_id, that.customer_name,that.contact,that.interested_product_id,that.is_active,that.converted_to,that.created_by]
+          [that.enquiry_id, that.lead_id, that.is_existing, that.customer_id, that.customer_name,that.contact,that.interested_product_id,that.is_active,that.converted_to,that.created_by]
         ]
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO enquiry(enquiry_id, is_existing_customer, customer_id, customer_name, contact, interested_product_id, is_active, converted_to, created_by) VALUES ?',[values],function (error, rows, fields) {
+        connection.query('INSERT INTO enquiry(enquiry_id, lead_id, is_existing_customer, customer_id, customer_name, contact, interested_product_id, is_active, converted_to, created_by) VALUES ?',[values],function (error, rows, fields) {
             if (!error) {
                 if(that.convert_by_lead!=0){
                   connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
@@ -268,7 +269,7 @@ Enquiry.prototype.searchData = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
-          connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry where customer_name LIKE "%'+that.searchText+'%" OR contact LIKE "%'+that.searchText+'%" order by id desc',function (error, rows, fields) {
+          connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry where customer_name LIKE "%'+that.searchText+'%" OR contact LIKE "%'+that.searchText+'%" order by id desc',function (error, rows, fields) {
      
             if (!error) {
               // console.log("rows...",rows);

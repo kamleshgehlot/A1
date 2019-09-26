@@ -38,7 +38,7 @@ import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 
 const RESET_VALUES = {
-    enquiry_id : '',
+      enquiry_id : '',
       customer_name: '',
       // customer_contact: '',
       interested_product_id: '',
@@ -99,7 +99,8 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Add({ leadData, open, handleClose, handleSnackbarClick, setEnquiryList, convert }) {
-  RESET_VALUES.contact = leadData.customer_contact;
+  // console.log('leadData',leadData)
+  // RESET_VALUES.contact = leadData.customer_contact;
 
   const styleClass = useCommonStyles();
   const classes = useStyles();
@@ -147,6 +148,13 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
       }
     };
     fetchData();
+
+    if(leadData != ""){
+      handleRandomInput([
+        {name: 'customer_name', value: leadData.customer_name },
+        {name: 'customer_contact', value: leadData.customer_contact},        
+      ]);
+    }
 
   }, []);
   
@@ -245,7 +253,7 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
 
 
 
-  const { inputs = null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs = null, handleInputChange, handleRandomInput, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addEnquiry,
     validate
@@ -291,7 +299,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={4}>
                    <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
-                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} setCustomerId={setCustomerId} />
+                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} setCustomerId={setCustomerId} defaultValue={leadData.customer_name} />
 
                   </Grid>
                   <Grid item xs={12} sm={4}>
