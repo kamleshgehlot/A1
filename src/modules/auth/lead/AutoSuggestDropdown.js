@@ -12,15 +12,15 @@ import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 
 let suggestions = [];
+let suggestionId;
 
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
-
   return (
     <TextField
       fullWidth
       InputProps={{
-        inputRef: node => {
+          inputRef: node => {
           ref(node);
           inputRef(node);
         },
@@ -69,7 +69,8 @@ function getSuggestions(value) {
       });
 }
 
-function getSuggestionValue(suggestion) {
+function getSuggestionValue(suggestion) {    
+  suggestionId = suggestion.key;
   return suggestion.label;
 }
 
@@ -100,13 +101,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AutoSuggestDropdown({customerListData, setSelectedOption}) {
+export default function AutoSuggestDropdown({customerListData, setSelectedOption, setCustomerId}) {
   suggestions = [];
 
   customerListData.map(customer => {
     suggestions.push({label: customer.customer_name, key: customer.id});
   });
   
+
   // useEffect(() => {
   //   if(document.getElementById("cust_name").name == "cust_name"){
   //     customerListData.map(customer => {
@@ -156,28 +158,28 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
     renderSuggestion,
   };
 
+
   return (
     <div className={classes.root}>
       <Autosuggest
         {...autosuggestProps}
-        inputProps={{
-          // endAdornment: <InputAdornment position='end'>
-          //       <Tooltip title="Search">
-          //         <IconButton ><SearchIcon /></IconButton>
-          //       </Tooltip>
-          //     </InputAdornment>,
-          classes,
+        
+        style={{'fontSize':'12px'}}
+        inputProps={{ 
+          classes,          
           id: 'customerName',
           placeholder: 'Search customer name',
-          value: state.single,
-          onChange: handleChange('single'),
+          value: state.single,          
+          onChange: handleChange('single'),         
           onBlur: () => {
             setSelectedOption(event.target.value);
-
             customerListData.map(customer => {
-              if(customer.customer_name === event.target.value) {
+              if(customer.id === suggestionId) {
                 document.getElementById("customer_contact").value = customer.mobile;
-                // document.getElementById("customer_id").value = customer.id;
+                setCustomerId(customer.id);
+              }
+              if(suggestionId === ''){
+                setCustomerId('');
               }
               // else if(customer.id === event.target.value){
               //   document.getElementById("customer_contact").value = customer.mobile;
@@ -188,6 +190,7 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
               //   document.getElementById("customer_name").value = customer.id;
               // }
             })
+            suggestionId = '';
           }
         }}
         theme={{

@@ -20,9 +20,13 @@ export default function validate(values) {
   } else if (!validAlpha.test(values.company_name)) {
     errors.company_name = 'Company Name is invalid';
   }
-  if (!values.nbzn) {
-    errors.nbzn = 'NBZN is required';
+  if (!values.nbzn ) {
+    errors.nbzn = 'NZBN is required';
+  } else if((values.nbzn).length <13){
+    
+    errors.nbzn = 'NZBN is invalid';
   }
+  console.log('errors',errors)
   if (!values.company_location) {
     errors.company_location = 'Company Location is required';
   }

@@ -217,6 +217,7 @@ export default function MainDashboard({roleName}) {
       }else{
         setReportData([]);
         setOrderReport(false);
+        alert('No single Transaction by this person');
       }
     }catch (error) {
       console.log('error',error);
@@ -276,30 +277,6 @@ export default function MainDashboard({roleName}) {
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={3}>
-            <InputLabel  className={classes.textHeading}  htmlFor="customer_id">Customer Id</InputLabel>
-            <TextField 
-             InputProps={{
-              classes: {
-                input: classes.textsize,
-              },
-              endAdornment: <InputAdornment position='end'>
-                              <Tooltip title="Search">
-                                <IconButton onClick = {searchHandler}><SearchIcon /></IconButton>
-                              </Tooltip>
-                            </InputAdornment>,
-              }}
-              onChange={handleSearchText}
-              id="customer_id"
-              name="customer_id" 
-              value = {searchName === "customer_id" ? searchText : customerData.id}
-              // value={customer_id}
-              fullWidth
-              type="text"
-              margin="dense"
-            />
-          </Grid>
-          
-          <Grid item xs={12} sm={3}>
             <InputLabel  className={classes.textHeading}   htmlFor="customer_contact">Customer Contact</InputLabel>
             <TextField 
               InputProps={{
@@ -316,6 +293,29 @@ export default function MainDashboard({roleName}) {
               value = {searchName === "customer_contact" ? searchText : customerData.mobile}
               id="customer_contact"
               name="customer_contact"              
+              fullWidth
+              type="text"
+              margin="dense"
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <InputLabel  className={classes.textHeading}  htmlFor="customer_id">Customer Id</InputLabel>
+            <TextField 
+             InputProps={{
+              classes: {
+                input: classes.textsize,
+              },
+              // endAdornment: <InputAdornment position='end'>
+              //                 <Tooltip title="Search">
+              //                   <IconButton onClick = {searchHandler}><SearchIcon /></IconButton>
+              //                 </Tooltip>
+              //               </InputAdornment>,
+              }}
+              onChange={handleSearchText}
+              id="customer_id"
+              name="customer_id" 
+              value = {searchName === "customer_id" ? searchText : customerData.id}
+              // value={customer_id}
               fullWidth
               type="text"
               margin="dense"

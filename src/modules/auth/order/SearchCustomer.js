@@ -174,6 +174,7 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
   }
 
   function handleAddCurrent(response){
+    console.log('rrrrr',response);
     setCustomer(response);
     setCustomerList(0);
     handleClose();

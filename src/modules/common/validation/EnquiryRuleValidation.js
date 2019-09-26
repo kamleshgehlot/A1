@@ -9,12 +9,12 @@ export default function validate(values) {
   // }
   
 
-  if (!values.contact) {
-    errors.contact = 'Contact number is required';
-  } else if (!validNumber.test(values.contact)) {
-    errors.contact = 'Contact number is invalid';
-  } else if ((values.contact).length<9) {
-    errors.contact = 'Contact number is invalid';
+  if (!values.customer_contact) {
+    errors.customer_contact = 'Contact number is required';
+  } else if (!validNumber.test(values.customer_contact)) {
+    errors.customer_contact = 'Contact number is invalid';
+  } else if ((values.customer_contact).length<9) {
+    errors.customer_contact = 'Contact number is invalid';
   }
   
   if (!values.main_category) {

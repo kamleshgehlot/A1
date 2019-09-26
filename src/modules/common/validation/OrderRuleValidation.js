@@ -33,5 +33,8 @@ export default function validate(values) {
   if (!values.order_type) {
     errors.order_type = 'Order Type is required';
   }
+  if (!values.customer_type) {
+    errors.order_type = 'Order Type is required';
+  }
   return errors;
 };

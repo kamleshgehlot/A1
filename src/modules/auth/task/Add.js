@@ -208,7 +208,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     
     setpLoading(true);
     setSavebtn(false);
-    console.log('assign_role---',staffRole);
+    // console.log('assign_role---',staffRole);
     const response = await Task.add({
       franchise_id: franchiseId,
       task_id: inputs.task_id,
@@ -216,6 +216,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
       assign_role:staffRole,
       assigned_to:inputs.assigned_to,
       due_date:inputs.due_date,
+      created_by_role : roleName,
     });
 
     handleSnackbarClick(true);

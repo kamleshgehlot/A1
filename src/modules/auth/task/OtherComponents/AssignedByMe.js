@@ -143,7 +143,7 @@ return (
               <StyledTableCell> {data.task_description}  </StyledTableCell>
               <StyledTableCell> {data.assign_role_name}</StyledTableCell>
               <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
-              <StyledTableCell> {data.status === 3 ? <p className = {classes.bgtaskoverdue}> Requesting for Rescheduling </p> : data.status}</StyledTableCell>
+              <StyledTableCell> {data.status === 3 ? <p className = {classes.bgtaskoverdue}> Requesting for Rescheduling </p> : data.task_status_name}</StyledTableCell>
               <StyledTableCell> {data.start_date}</StyledTableCell>
               {/* <StyledTableCell>
                 <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          

@@ -448,7 +448,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="nbzn">Company NBZN *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="nbzn">Company NZBN *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -467,7 +467,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       type="text"                      
                       onChange={handleNumberInput}
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,13)
                     }}
                     />
                   </Grid>

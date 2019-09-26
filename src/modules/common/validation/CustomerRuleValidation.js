@@ -1,4 +1,4 @@
-import { validString, validNumber, validEmail, validAlpha } from './Regex';
+import { validString, validNumber, validFullLengthDecimalNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -152,7 +152,7 @@ export default function validate(values) {
  
   if (!values.employer_tenure) {
     errors.employer_tenure = 'Tenure of Employer is required';
-  }  else if (!validAlpha.test(values.employer_tenure)) {
+  }  else if (!validFullLengthDecimalNumber.test(values.employer_tenure)) {
     errors.employer_tenure = 'Tenure of Employer is invalid';
   }
 

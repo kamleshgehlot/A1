@@ -13,6 +13,7 @@ const add = async function (req, res, next) {
     user_id: req.decoded.user_id,
     created_by: req.decoded.id,
     updated_by: req.decoded.id,
+    created_by_role : req.body.created_by_role,
   };
   try {
     const newTask = new Task(taskParam);

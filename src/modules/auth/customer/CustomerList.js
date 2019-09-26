@@ -375,7 +375,7 @@ export default function CustomerList({userId, roleName}) {
                </Paper>
           </Grid>
         </Grid>
-      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer}/>: null}
+      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}
       
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
           

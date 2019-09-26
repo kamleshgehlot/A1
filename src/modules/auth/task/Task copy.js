@@ -302,30 +302,45 @@ export default function Task({roleName}) {
     let rescheduleRequestByMe = [];
     let all = [];
     let completed = [];
+    let roleId='';
+
+    switch (roleName) {
+      case 'Admin': roleId = 2;
+        break;
+      case 'CSR' :  roleId = 3;
+        break;
+      case 'Finance' :  roleId = 4;
+        break;
+      case 'Delivery' :  roleId = 5;
+        break;
+      case 'HR' :  roleId = 6;
+    
+      default: break;
+    }
     
    (task.length > 0 ? task : []).map((data, index) => {
-
-      if(data.created_by == userId){
+      if((data.created_by == userId || data.assigned_to== userId) && data.created_by_role == roleName ){
           // console.log('all',data);
           all.push(data);
         }
-      if(data.assigned_to == userId && data.is_active == 1 && (data.status == 1 || data.status == 2) && data.created_by == userId){
+      if(data.assigned_to == userId && data.is_active == 1 && (data.status == 1 || data.status == 2) && data.assign_role == roleId){
+        // && data.created_by == (data.status == 3 ? userId : data.created_by)
           // console.log('assignedToMe',data);
           assignedToMe.push(data);
         }
-      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 3) && data.created_by== userId){
+      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 3) && data.created_by== userId && data.created_by_role == roleName){
           // console.log('assignedByMe',data);
           assignedByMe.push(data);
         }
-      if(data.is_active == 1 && data.status == 3 && data.created_by == userId){
+      if(data.is_active == 1 && data.status == 3 && data.created_by == userId && data.created_by_role == roleName ){
           // console.log('rescheduleRequestToMe',data);
           rescheduleRequestToMe.push(data);
         }
-      if(data.is_active == 1 && data.status == 3 && data.created_by == userId){
+      if(data.is_active == 1 && data.status == 3 && data.assigned_to == userId ){
           // console.log('rescheduleRequestByMe',data);
           rescheduleRequestByMe.push(data);
         }
-      if(data.status == 4 && data.is_active == 0 && data.created_by == userId){
+      if(data.status == 4 && data.is_active == 0 && (data.created_by == userId || data.assigned_to == userId) && data.created_by_role == roleName ){
           // console.log('completed',data);
           completed.push(data);
         }
@@ -376,11 +391,11 @@ export default function Task({roleName}) {
               </TabPanel>
               
               <TabPanel value={value} index={2}>
-                {rescheduleRequestByMeTab && <RescheduleRequestTo task= {rescheduleRequestByMeTab} handleClickEditOpen={handleClickEditOpen} />}
+                {rescheduleRequestToMeTab && <RescheduleRequestTo task= {rescheduleRequestToMeTab} handleClickEditOpen={handleClickEditOpen} />}
               </TabPanel>
               
               <TabPanel value={value} index={3}>
-                {rescheduleRequestByMeTab && <AssignedByMe task= {rescheduleRequestByMeTab} handleClickEditOpen={handleClickEditOpen} />}
+                {rescheduleRequestByMeTab && <RescheduleRequestBy task= {rescheduleRequestByMeTab} handleClickEditOpen={handleClickEditOpen} />}
               </TabPanel>
               
               <TabPanel value={value} index={4}>

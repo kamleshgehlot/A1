@@ -117,7 +117,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function AssignedToMe({task, handleClickStaffEditOpen, dateToday }) {
+export default function RescheduleRequestBy({task, handleClickEditOpen, dateToday }) {
   const classes = useStyles();
 return (  
   <Table className={classes.table}>
@@ -129,7 +129,7 @@ return (
         <StyledTableCell>Assigned To</StyledTableCell>
         <StyledTableCell>Status</StyledTableCell>
         <StyledTableCell>Due Date</StyledTableCell>
-        <StyledTableCell>Options</StyledTableCell>
+        {/* <StyledTableCell>Options</StyledTableCell> */}
       </TableRow>
     </TableHead>
     <TableBody>
@@ -142,13 +142,13 @@ return (
           <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
           <StyledTableCell> {data.task_status_name}</StyledTableCell>
           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
-          <StyledTableCell>
+          {/* <StyledTableCell>
             <Tooltip title="Update Task">                              
-              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickStaffEditOpen(data); }}>
+              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                 <CreateIcon/>
               </IconButton>
             </Tooltip>
-          </StyledTableCell>
+          </StyledTableCell> */}
         </TableRow>
       )
       })

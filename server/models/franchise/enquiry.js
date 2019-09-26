@@ -7,6 +7,7 @@ var Enquiry = function (params) {
   // console.log("params", params);
   this.user_id = params.user_id;
   this.enquiry_id = params.enquiry_id;
+  this.customer_id = params.customer_id;
   this.customer_name= params.customer_name;
   this.contact= params.contact;
   this.interested_product_id= params.interested_product_id;
@@ -18,23 +19,29 @@ var Enquiry = function (params) {
   this.userid = params.userid;
   this.franchise_id=params.franchise_id;
   this.searchText=params.searchText;
-  
+  this.is_existing = '';
+
+  if(params.customer_id !== "" && params.customer_id !== undefined){
+    this.is_existing = 1;
+  }else{
+    this.is_existing = 0;
+  }  
 };
 
 Enquiry.prototype.postenquiry = function () {
-  const that = this;
+  const that = this;  
   return new Promise(function (resolve, reject) {
-
+console.log('that enquiry',that);
     connection.getConnection(function (error, connection) {
       if (error) {
         throw error;
       }
       if (!error) {
         let values = [
-          [that.enquiry_id,that.customer_name,that.contact,that.interested_product_id,that.is_active,that.converted_to,that.created_by]
+          [that.enquiry_id,that.is_existing, that.customer_id, that.customer_name,that.contact,that.interested_product_id,that.is_active,that.converted_to,that.created_by]
         ]
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO enquiry(enquiry_id, customer_name, contact, interested_product_id, is_active, converted_to, created_by) VALUES ?',[values],function (error, rows, fields) {
+        connection.query('INSERT INTO enquiry(enquiry_id, is_existing_customer, customer_id, customer_name, contact, interested_product_id, is_active, converted_to, created_by) VALUES ?',[values],function (error, rows, fields) {
             if (!error) {
                 if(that.convert_by_lead!=0){
                   connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
@@ -92,7 +99,7 @@ Enquiry.prototype.getAll = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
-          connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry order by id desc',function (error, rows, fields) {
+          connection.query('select id, customer_id, is_existing_customer, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry order by id desc',function (error, rows, fields) {
 
           if (!error) {
               // console.log("rows...",rows);
@@ -127,7 +134,7 @@ Enquiry.prototype.convertedList = function () {
     
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 1 order by id desc',function (error, rows, fields) {
+        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 1 order by id desc',function (error, rows, fields) {
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);
@@ -162,7 +169,7 @@ Enquiry.prototype.nonConvertList = function () {
     
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 0 order by id desc',function (error, rows, fields) {
+        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 0 order by id desc',function (error, rows, fields) {
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);

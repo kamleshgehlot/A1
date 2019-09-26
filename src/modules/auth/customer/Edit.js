@@ -1023,11 +1023,14 @@ function handleIdType(event){
                       // label="Tenure of Employer"
                       type="text"
                       value={inputs.employer_tenure} 
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       error={errors.employer_tenure}
                       helperText={errors.employer_tenure}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value =(e.target.value).toString().slice(0,10)
+                      }}
                     />
                   </Grid>
                  

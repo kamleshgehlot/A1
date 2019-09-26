@@ -146,7 +146,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, setCustomerList, enquiryData, setCustomer}) {
+export default function Add({ open, handleClose, handleSnackbarClick, setCustomerList, enquiryData, setCustomer, conversionData}) {
 
   
   const styleClass = useCommonStyles();
@@ -196,8 +196,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     };
     fetchData();
 
-    enquiryData!= '' ? inputs['customer_name'] = enquiryData.customer_name : ''
-    enquiryData!= '' ? inputs['mobile'] = enquiryData.contact : ''
+    conversionData!= '' ? inputs['customer_name'] = conversionData.customer_name : ''
+    conversionData!= '' ? inputs['mobile'] = conversionData.customer_contact : ''
     
   }, []);
 
@@ -844,7 +844,7 @@ return (
                       fullWidth
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
-                    }}
+                      }}
                     />
                   </Grid>
               
@@ -978,7 +978,7 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Name</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -999,7 +999,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Address</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1020,7 +1020,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Telephone#</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Telephone# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1038,13 +1038,13 @@ return (
                       helperText={errors.employer_telephone}
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
-                    }}
+                      }}
                       required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Email</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Email Id *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1066,7 +1066,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Tenure of Employer</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Tenure of Employer(in Years) *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1079,11 +1079,14 @@ return (
                       // label="Tenure of Employer"
                       type="text"
                       value={inputs.employer_tenure} 
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       error={errors.employer_tenure}
                       helperText={errors.employer_tenure}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value =(e.target.value).toString().slice(0,10)
+                      }}
                     />
                   </Grid>
                  

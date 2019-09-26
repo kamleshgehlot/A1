@@ -19,8 +19,6 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 import Input from "@material-ui/core/Input";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -42,7 +40,7 @@ import useSignUpForm from '../franchise/CustomHooks';
 const RESET_VALUES = {
     enquiry_id : '',
       customer_name: '',
-      contact: '',
+      // customer_contact: '',
       interested_product_id: '',
       is_active: '',
 };
@@ -119,12 +117,12 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   const [customerListData, setCustomerListData] = useState([]);
   const [single, setSingle] = React.useState(null);
   const [selectedOption,setSelectedOption] = useState('');
+  const [customerId,setCustomerId] = useState('');
  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
-        console.log('en',enquiry_id);
         let zero = 0;
         if(enquiry_id[0]!=null){  
           zero = 6 - (enquiry_id[0].id.toString().length); 
@@ -152,17 +150,6 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   }, []);
   
   
-  const customerName =
-  (customerListData.length > 0 ? customerListData : []).map(suggestion => ({
-  
-    value: suggestion.mobile,
-    label: suggestion.customer_name,}));
-
-    function handleChangeSingle(value) {
-      setSingle(value);
-      setInput('customer_contact',value.value);
-      // console.log('value===',value)
-    }
   function handleMainCategory(event) {
     setInput('main_category',event.target.value)
     setMainCategory(event.target.value);
@@ -199,6 +186,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     };
     fetchData();
   }
+
   function handleSubCategory(event) {
     setInput('sub_category',event.target.value)
     setSubCategory(event.target.value);
@@ -208,17 +196,13 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     const fetchData = async () => {
       try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
-        console.log('rrr',result)
         setProductList(result.productList);
-        // const result = await Category.productList({subCategory: event.target.value});
-        // setSubCategoryList(result.subCategoryList);
       } catch (error) {
         console.log('error:',error);
       }
     };
     fetchData();
   }
-
 
   function handleChangeMultiple(event) {
     setAssignInterest(event.target.value);
@@ -227,24 +211,25 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
   const addEnquiry = async () => {
     // setInput('interested_product_id',assignInterest.join())
     // console.log('convert-----',convert);
-    // if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.contact != '' && assignInterest != '' ){
+    // if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.customer_contact != '' && assignInterest != '' ){
       
       if(assignInterest!=''){
       setpLoading(true);
       setSavebtn(false);
       const response = await EnquiryAPI.postEnquiry({
         enquiry_id : inputs.enquiry_id,
+        customer_id : customerId,
         customer_name: selectedOption,
-        contact: inputs.contact,
+        contact: inputs.customer_contact,
         interested_product_id: assignInterest,
         is_active: 1,
         converted_to:0,
         convert_by_lead:convert
       });
-        // console.log('sahgdaud--',response);
 
       // assignInterest.length = 0;
       setAssignInterest('');
+      setCustomerId('');
       handleSnackbarClick(true);
       setEnquiryList(response.enquiryList);
       handleReset(RESET_VALUES);
@@ -257,10 +242,7 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     }
   };
 
-  // function validate(values) {
-  //   let errors = {};
-  //   return errors;
-  // };
+
 
  const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
@@ -268,7 +250,6 @@ export default function Add({ open, handleClose, handleSnackbarClick,setEnquiryL
     validate
   );
   
-  // console.log("inputess",inputs);
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -308,31 +289,12 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    {/* <InputLabel className={classes.textsize}  htmlFor="last_name">Customer Name</InputLabel> */}
-                    {/* <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="customer_name"
-                      name="customer_name"
-                      // label="Customer Name"
-                      type="text"
-                      value={inputs.customer_name} 
-                      onChange={handleInputChange}
-                      error={errors.customer_name}
-                      helperText={errors.customer_name}
-                      required
-                      fullWidth
-                    /> */}
-                   
-                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} />
+                   <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
+                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} setCustomerId={setCustomerId} />
 
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize}  htmlFor="contact">Contact *</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="customer_contact">Contact *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -340,14 +302,14 @@ return (
                         },
                       }}
                       margin="dense"
-                      id="contact"
-                      name="contact"
-                      // label="Contact"
+                      id='customer_contact'
+                      name="customer_contact"
+                      // label="customer_contact"
                       type="text"
-                      value={inputs.contact} 
+                      value={inputs.customer_contact} 
                       onChange={handleNumberInput}
-                      error={errors.contact}
-                      helperText={errors.contact}
+                      error={errors.customer_contact}
+                      helperText={errors.customer_contact}
                       required
                       fullWidth
                       onInput={(e)=>{ 

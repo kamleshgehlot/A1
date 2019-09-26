@@ -65,6 +65,7 @@ export default function Enquiry({roleName}) {
   const [productList, setProductList] = useState([]);
   const [convertedEnquiryOpen, SetConvertedEnquiryOpen] = useState(false);
   const [convertEnquiryId,setConvertEnquiryId]= useState();
+  const [conversionData,setConversionData] = useState([]);
   const [convertList,setConvertList] = useState([]);
   const [customer, setCustomer] = useState({});
   
@@ -135,10 +136,7 @@ export default function Enquiry({roleName}) {
 
         const convertList = await EnquiryAPI.convertedList();
         setConvertList(convertList.enquiryList);
-        // console.log('result..',convertList.enquiryList);
 
-        
-        // console.log('enquiryList',result.enquiryList)
         const result1 = await Category.productlist();
         setProductList(result1.productList);
       } catch (error) {
@@ -149,6 +147,7 @@ export default function Enquiry({roleName}) {
     
   },enquiryList);
 
+  console.log('productList',productList);
   function handleClickOpen() {
     setOpen(true);
   }
@@ -180,10 +179,27 @@ export default function Enquiry({roleName}) {
   function handleOrderRecData(response){
     // console.log(response);
   }
- 
+  
+
   function handleClickOrderOpen(data){
-    // console.log('data....',data);
+    let mainCategory, category, subCategory;
+    (productList.length >0 ? productList : []).map(product => {
+      if(data.interested_product_id == product.id){
+          mainCategory = product.maincat;
+          category = product.category;
+          subCategory = product.subcat;
+      }
+    });
     setConvertEnquiryId(data.id);
+    setConversionData({
+      customer_id : data.customer_id,
+      product_id : data.interested_product_id,
+      customer_name : data.customer_name,
+      customer_contact : data.contact,
+      main_category :mainCategory,
+      category : category,
+      sub_category: subCategory,
+    });
     setOpenOrder(true);
   }
 
@@ -212,11 +228,9 @@ export default function Enquiry({roleName}) {
   }
 
   function setEnquiryListFn(response) {
-// console.log('res=---',response);
     const fetchData = async () => {
       try {
-        const result = await EnquiryAPI.convert({enquiry_id: enquiryData.id});
-        // console.log('result..',result.enquiryList);
+        const result = await EnquiryAPI.convert({enquiry_id: enquiryData.id});        
         setEnquiryList(result.enquiryList);
 
         const nonConvertList = await EnquiryAPI.nonConvertList();
@@ -233,7 +247,6 @@ export default function Enquiry({roleName}) {
     fetchData();
   }
   
-// console.log(enquiryList);
 
   const searchHandler = async () => {
     try {
@@ -256,9 +269,9 @@ export default function Enquiry({roleName}) {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
   };
+
   function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
+    const { children, value, index, ...other } = props;  
     return (
       <Typography
         component="div"
@@ -272,14 +285,13 @@ export default function Enquiry({roleName}) {
       </Typography>
     );
   }
+
   function handleTabChange(event, newValue) {
     setValue(newValue);
-    // console.log('setValue...',value)
   }
 
   return (
-    <div>
-      {/* {showFranchise ?  */}
+    <div>      
       <Grid container spacing={3}>
             <Grid item xs={12} sm={8}>
               <Fab
@@ -367,8 +379,7 @@ export default function Enquiry({roleName}) {
                                       }) 
                                     ) 
                                     })
-                                  }
-                                  {/* {data.interested_product_id} */}
+                                  }                                  
                               </StyledTableCell>
                               {data.converted_to===0? <StyledTableCell>
                                 <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { handleClickOrderOpen(data); }}>
@@ -387,7 +398,7 @@ export default function Enquiry({roleName}) {
         </Grid>
       { open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convertLead={0} /> : null }
       {/* {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} setCustomer={setCustomer} /> : null} */}
-      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertEnquiryId} converted_name={'enquiry'} /> : null }
+      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertEnquiryId} converted_name={'enquiry'} conversionData={conversionData} /> : null }
       {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null}
       
     </div>

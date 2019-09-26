@@ -37,6 +37,7 @@ import FixedOrder from './FixedOrder';
 import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
+import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 
 import validate from '../../common/validation/OrderRuleValidation';
@@ -133,7 +134,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertId, converted_name}) {
+export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertId, converted_name, conversionData}) {
 
   const styleClass = useCommonStyles(); 
   const classes = useStyles();
@@ -191,7 +192,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
 
   function handleCustomerClose(){
-
     setCustomerOpen(false);
   }
   function handleCustomerOpen(){
@@ -214,7 +214,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     inputs.order_type = 2;
   }
 
-  function handleCustomerList(response){
+  function handleCustomerList(response){    
     inputs.customer_type = 1;
     setIsNewCustomer(1);
     setCustomer(response[0]);
@@ -236,6 +236,29 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     let fullDate = yy+ '-'+mm+'-'+dd;
     handleInputChange({target:{name: 'order_date', value: fullDate}})
   }
+
+  useEffect(()=>{    
+    if(conversionData !== "" && conversionData !== undefined){
+      async function fetchData() {
+        if(conversionData.customer_id === 0){
+          inputs.customer_type = 1;
+          setIsNewCustomer(1);
+          setBudgetList([]);          
+        }else{          
+          const result = await Customer.getSingleCustomer({customer_id: conversionData.customer_id});
+          setCustomer(result.customer[0]);
+          inputs.customer_type = 2;
+          setIsNewCustomer(0);
+          setBudgetList([]);                   
+        }    
+          handleMainCategory({target:{value:conversionData.main_category}});
+          handleCategory({target:{value:conversionData.category}});
+          handleSubCategory({target:{value:conversionData.sub_category}});
+          handleChangeMultiple({target:{value:conversionData.product_id}});
+      }
+      fetchData();
+    }    
+  },[])
 
   useEffect(()=>{
       if(productList=="" || assignInterest == ""){
@@ -259,9 +282,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
 
   
   function handleChangeMultiple(event) {
-    setInput('product',event.target.value);    
+    console.log('product', event.target.value);
+    handleRandomInput([ {name: 'product', value:  event.target.value}]);
     setAssignInterest(event.target.value);
-    
+
    (productList.length > 0 ? productList : []).map((data,index)=>{
       if(event.target.value === data.id) {
         setProduct(data);        
@@ -269,13 +293,16 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
           alert("you can't afford payment for this product. kindly update your budget or choose other product")
         }        
       }
-    });  
+    });      
   }
 
-  console.log(product)
+  console.log('conversionData', product);
+  
   function handleMainCategory(event) {
+    console.log('handleMainCategory', event.target.value);
     
-    setInput('main_category',event.target.value);
+    handleRandomInput([ {name: 'main_category', value:  event.target.value}]);
+    // setInput('main_category',event.target.value);
     setMainCategory(event.target.value);
     setCategoryList('');
     setSubCategoryList('');
@@ -297,7 +324,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
 
   function handleCategory(event) {
-    setInput('category',event.target.value);
+    console.log('category', event.target.value);    
+    handleRandomInput([ {name: 'category', value:  event.target.value}]);
+    // setInput('category',event.target.value);
     setCategory(event.target.value);
     setSubCategoryList('');    
     setProductList('');    
@@ -317,8 +346,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
 
   function handleSubCategory(event) {
-    
-    setInput('sub_category',event.target.value);
+    console.log('sub_category', event.target.value);    
+    handleRandomInput([ {name: 'sub_category', value:  event.target.value}]);
+    // setInput('sub_category',event.target.value);
     setSubCategory(event.target.value);
     setProductList('');
     setAssignInterest('');
@@ -413,8 +443,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       related_to : related_to,
       is_active : 1,
       converted_to : convertId,
-      converted_name : converted_name,
-      
+      converted_name : converted_name,      
      });
     setAssignInterest('');
     // assignInterest = '';
@@ -432,12 +461,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   };
   
 
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleRandomInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addOrder,
     validate
   );
-
+  // console.log('iputs',inputs);
 return (
   <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -504,12 +533,17 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     
-                    <Typography variant="h6" className={classes.labelTitle}>
+                    <Typography variant="h6" className={errors.customer_type ? classes.errorHeading : classes.labelTitle}>
                       Select Customer*
                     </Typography>
                     <Button variant= {inputs.customer_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleCustomerOpen} className={classes.textField} > New </Button>
                     <Button variant= {inputs.customer_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleSearchCustomerOpen}  className={classes.textField}>Existing </Button>
                     
+                    {customer == null && inputs.customer_type === 1 ? 
+                      <Typography variant="h6" className={classes.errorHeading}>Add customer detail</Typography>
+                      : ''
+                    }
+
                     {customer  != null && isNewCustomer === 1 ? 
                       <Button variant={customer  != null && budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}>Calculate Budget </Button>
                       : ''
@@ -542,7 +576,7 @@ return (
                       fullWidth
                       className={classes.textsize}
                       required
-                      disabled = {budgetList ==""}
+                      disabled = {conversionData=="" && budgetList =="" ? true : false}
                       error={errors.main_category}
                       helperText={errors.main_category}
                       
@@ -569,7 +603,7 @@ return (
                       // label='customer'
                       fullWidth
                       required
-                      disabled = {mainCategory ==""}
+                      disabled = { mainCategory =="" ? true : false}
                       error={errors.category}
                       helperText={errors.category}
                     >    
@@ -594,7 +628,8 @@ return (
                       // label='customer'
                       fullWidth className={classes.textsize}
                       required
-                      disabled = {category ==""}
+                      // disabled = {category ==""}
+                      disabled = { category =="" ? true : false}
                       error={errors.sub_category}
                       helperText={errors.sub_category}
                     >    
@@ -623,7 +658,8 @@ return (
                       fullWidth
                       required
                       className={classes.textsize}
-                      disabled = {subCategory ==""}
+                      disabled = {subCategory == "" || budgetList == "" ? true : false}
+                      // disabled = {subCategory ==""}
                       error={errors.product}
                       helperText={errors.product}
                     >    
@@ -685,7 +721,7 @@ return (
         </form>
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id}/> : null }
-    {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData}/> : null }
+    {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData} conversionData={conversionData}/> : null }
     {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} affordAmt={budgetList.afford_amt} product={product}/> : null }
     {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} affordAmt={budgetList.afford_amt} product={product} /> : null }
     {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }

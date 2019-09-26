@@ -203,6 +203,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   const [customerListData, setCustomerListData] = useState([]);
   const [single, setSingle] = React.useState(null);
   const [selectedOption,setSelectedOption] = useState('');
+  const [customerId,setCustomerId] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -285,13 +286,6 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
     handleClose(false);
   };
 
-  // function validate(values) {
-  //   let errors = {};
-  //   return errors;
-  // };
-
-  
-
   function handleFranchise(event){
     (franchiseListd.length>0 ? franchiseListd : []).map(data =>{
       data.id === event.target.value ? setOtherFranchiseValue(data.name) : ''
@@ -305,7 +299,6 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       addLead,
       validate
     );
-    // console.log('inpus',customerSelection);
 
 return (
     <div>
@@ -414,7 +407,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
-                    <AutoSuggestDropdown  customerListData={customerListData} setSelectedOption={setSelectedOption}/>
+                    <AutoSuggestDropdown  customerListData={customerListData} setSelectedOption={setSelectedOption}  setCustomerId={setCustomerId} />
 
                   </Grid>
                   <Grid item xs={12} sm={6}>
