@@ -59,7 +59,7 @@ const enquiryRouter = require('./routes/franchise/enquiry');
 const orderRouter = require('./routes/franchise/order');
 
 //Staff
-const franchiseuser = require('./routes/franchiseUser');
+const franchiseuser = require('./routes/franchiseuser');
 const customerRouter = require('./routes/franchise/customer');
 
 const routes = require('./routes');

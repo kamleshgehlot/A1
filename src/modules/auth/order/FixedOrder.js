@@ -784,18 +784,13 @@ return (
                       }}
                       id="minimum_payment_amt"
                       name="minimum_payment_amt"
-                      // label="minimum_payment_amt/Mortgage"
                       value={inputs.minimum_payment_amt}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.minimum_payment_amt}
                       helperText={errors.minimum_payment_amt}
-                      disabled
+                      // disabled
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,

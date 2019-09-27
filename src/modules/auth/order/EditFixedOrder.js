@@ -837,7 +837,7 @@ return (
                       // onBlur={handleInputBlur}
                       fullWidth
                       // required
-                      disabled
+                      // disabled
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"

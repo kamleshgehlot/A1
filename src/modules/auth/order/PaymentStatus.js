@@ -49,6 +49,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
 import ConfirmationDialog from '../ConfirmationDialog.js';
+import { getDate, getCurrentDate } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
@@ -154,19 +155,19 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
 
 
-  const setDateFormat = (date) => {
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    return fullDate;
-  }
+  // const setDateFormat = (date) => {
+  //   let date1 = new Date(date);
+  //   let yy = date1.getFullYear();
+  //   let mm = date1.getMonth() + 1 ;
+  //   let dd = date1.getDate();
+  //   if(mm< 10){ mm = '0' + mm.toString()}
+  //   if(dd< 10){ dd = '0' + dd.toString()}
+  //   let fullDate = yy+ '-'+mm+'-'+dd;
+  //   return fullDate;
+  // }
 
   function handleDateChange(date){
-    setPaymentRecDate(setDateFormat(date));    
+    setPaymentRecDate(getDate(date));    
   }
 
 
@@ -488,8 +489,9 @@ return (
                                       InputProps={{
                                         classes: {
                                           input: classes.textsize,
-                                        },
-                                      }}
+                                        },                                        
+                                      }}                                      
+                                      disableFuture
                                       onChange={handleDateChange}
                                       // error={errors.first_payment}
                                       // helperText={errors.first_payment}                               
@@ -497,7 +499,7 @@ return (
                                     </MuiPickersUtilsProvider>
                                 :   (paymentHistory.length > 0 ? paymentHistory : []).map((hdata, index) => {
                                         return(
-                                          hdata.installment_no === data.installment_no ? hdata.payment_rec_date : ''
+                                          hdata.installment_no === data.installment_no ? getDate(hdata.payment_rec_date) : ''
                                         )
                                     })
                                 }   

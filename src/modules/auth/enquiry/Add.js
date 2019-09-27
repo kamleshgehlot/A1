@@ -323,22 +323,8 @@ return (
                       fullWidth
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
-                    }}
-                    margin="dense"
-                    id="contact"
-                    name="contact"
-                    // label="Contact"
-                    type="text"
-                    value={inputs.contact}
-                    onChange={handleNumberInput}
-                    error={errors.contact}
-                    helperText={errors.contact}
-                    required
-                    fullWidth
-                    onInput={(e) => {
-                      e.target.value = (e.target.value).toString().slice(0, 10)
-                    }}
-                  />
+                      }}
+                    />
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
