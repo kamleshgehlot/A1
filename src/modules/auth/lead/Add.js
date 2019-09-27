@@ -205,6 +205,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
   const [selectedOption,setSelectedOption] = useState('');
   const [customerId,setCustomerId] = useState('');
 
+  console.log('customerid', customerId);
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
@@ -262,6 +263,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       franchise_id: inputs.franchise_id,
       lead_id: inputs.lead_id,
       message: inputs.description,
+      customer_id : customerId,
       is_active: 1,
       franchise_name: otherFranchiseValue,
       is_franchise_exist: inputs.is_franchise_exist,
@@ -276,10 +278,9 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       formData.append('avatar', document.getElementById('upload').files[x])
     }
     
-    // console.log('inp----',inputs);
     const response = await Lead.add({formData: formData});
-    console.log(response);
     setLeadList(response.leadList);
+    setCustomerId('');
     handleSnackbarClick(true);
     handleReset(RESET_VALUES);
     setSavebtn(false);
@@ -294,7 +295,7 @@ export default function AddLead({ open, handleClose, handleSnackbarClick, setLea
       setInput('franchise_id',event.target.value);
   }
 
-    const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+    const { inputs=null, handleInputChange, handleRandomInput, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
       RESET_VALUES,
       addLead,
       validate
@@ -407,7 +408,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
-                    <AutoSuggestDropdown  customerListData={customerListData} setSelectedOption={setSelectedOption}  setCustomerId={setCustomerId} />
+                    <AutoSuggestDropdown  customerListData={customerListData} setSelectedOption={setSelectedOption}  setCustomerId={setCustomerId} handleRandomInput={handleRandomInput} />
 
                   </Grid>
                   <Grid item xs={12} sm={6}>

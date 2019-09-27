@@ -52,6 +52,8 @@ const convert = async function(req, res, next) {
 };
 
 const postenquiry = async function (req, res, next) {
+  console.log('eqnuiry req.body',req.body);
+  
 	let EnquiryParams = {
     user_id: req.decoded.user_id,
     userid: req.decoded.id,

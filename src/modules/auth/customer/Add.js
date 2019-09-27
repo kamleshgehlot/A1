@@ -139,6 +139,11 @@ const useStyles = makeStyles(theme => ({
     // fontSize: '10px',
     marginRight:theme.spacing(-4),
   },
+  dobMsg : {
+    marginTop : theme.spacing(-1),
+    fontSize: theme.typography.pxToRem(12),
+    // color: 'green',
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -196,8 +201,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     };
     fetchData();
 
-    conversionData!= '' ? inputs['customer_name'] = conversionData.customer_name : ''
-    conversionData!= '' ? inputs['mobile'] = conversionData.customer_contact : ''
+    if(conversionData != "" && conversionData != undefined){
+    handleRandomInput([ 
+      {name: 'customer_name', value:  conversionData.customer_name},
+      {name: 'mobile', value:  conversionData.customer_contact}
+    ]);
+    }
+    // conversionData!= '' ? inputs['customer_name'] = conversionData.customer_name : ''
+    // conversionData!= '' ? inputs['mobile'] = conversionData.customer_contact : ''
     
   }, []);
 
@@ -331,7 +342,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   //   return errors;
   // };
 
- const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+ const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addCustomer,
     validate
@@ -569,7 +580,7 @@ return (
                     </RadioGroup>
                   </Grid>
                   {/* <Grid item xs={12} sm={inputs.is_adult===1 ? 4 : 6}> */}
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
@@ -591,13 +602,18 @@ return (
                                 helperText={errors.dob}                               
                               />
                             </MuiPickersUtilsProvider>
+                            
+                            {inputs.is_adult === 1 && inputs.dob != "" ?  <p className={classes.dobMsg} style={{'color':'#75C019'}} A2B631>Person is over 18 year</p> 
+                            :inputs.is_adult === 0 && inputs.dob != ""  ?  <p className={classes.dobMsg} style={{'color':'#F5BB00'}}>Person is not over 18 year</p>
+                            : ''}
                   </Grid>
+                  {console.log('errors.',errors)}
                   {/* { inputs.is_adult === 1 ? */}
-                     <Grid item xs={12} sm={2}>
+                     {/* <Grid item xs={12} sm={2}>
                       <Toolbar title={inputs.is_adult === 1 ? "He/She is over 18 year" : inputs.is_adult === 0 ? "He/She is not over 18 year" : "Select Date of Birth"}>
                          <MoreIcon />
                       </Toolbar>
-                    </Grid>  
+                    </Grid>   */}
                   {/* : ''} */}
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>

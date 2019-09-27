@@ -40,7 +40,7 @@ import useSignUpForm from '../franchise/CustomHooks';
 const RESET_VALUES = {
       enquiry_id : '',
       customer_name: '',
-      // customer_contact: '',
+      customer_contact: '',
       interested_product_id: '',
       is_active: '',
 };
@@ -100,7 +100,6 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function Add({ leadData, open, handleClose, handleSnackbarClick, setEnquiryList, convert }) {
   // console.log('leadData',leadData)
-  // RESET_VALUES.contact = leadData.customer_contact;
 
   const styleClass = useCommonStyles();
   const classes = useStyles();
@@ -121,7 +120,11 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
   const [selectedOption,setSelectedOption] = useState('');
   const [customerId,setCustomerId] = useState('');
  
+
+  // console.log('custoemrName, id', selectedOption, customerId)
+
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
@@ -150,13 +153,20 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
     fetchData();
 
     if(leadData != ""){
+      handleRandomInput([        
+        {name: 'customer_contact', value: leadData.customer_contact}, 
+        {name: 'lead_id', value : leadData.id}
+      ]);
+      setCustomerId(leadData.customer_id);
+      setSelectedOption(leadData.customer_name);
+    }else{
       handleRandomInput([
-        {name: 'customer_name', value: leadData.customer_name },
-        {name: 'customer_contact', value: leadData.customer_contact},        
+        {name: 'lead_id', value : 0}
       ]);
     }
-
   }, []);
+
+  
   
   
   function handleMainCategory(event) {
@@ -219,8 +229,6 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
 
   const addEnquiry = async () => {
     // setInput('interested_product_id',assignInterest.join())
-    // console.log('convert-----',convert);
-    // if(inputs.enquiry_id != '' && inputs.customer_name != '' && inputs.customer_contact != '' && assignInterest != '' ){
       
       if(assignInterest!=''){
       setpLoading(true);
@@ -231,6 +239,7 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
         customer_name: selectedOption,
         contact: inputs.customer_contact,
         interested_product_id: assignInterest,
+        lead_id : inputs.lead_id,
         is_active: 1,
         converted_to: 0,
         convert_by_lead: convert
@@ -258,6 +267,7 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
     addEnquiry,
     validate
   );
+
   
 return (
     <div>
@@ -299,7 +309,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={4}>
                    <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
-                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} setCustomerId={setCustomerId} defaultValue={leadData.customer_name} />
+                   <AutoSuggestDropdown customerListData={customerListData} setSelectedOption={setSelectedOption} setCustomerId={setCustomerId} defaultValue={leadData.customer_name} handleRandomInput={handleRandomInput}/>
 
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -324,6 +334,7 @@ return (
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                       }}
+                      
                     />
                 </Grid>
 

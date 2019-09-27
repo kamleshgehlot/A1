@@ -147,7 +147,7 @@ export default function Enquiry({roleName}) {
     
   },enquiryList);
 
-  console.log('productList',productList);
+  // console.log('productList',productList);
   function handleClickOpen() {
     setOpen(true);
   }

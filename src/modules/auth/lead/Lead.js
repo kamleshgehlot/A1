@@ -78,7 +78,7 @@ export default function Lead({roleName}) {
   const [openView, setViewOpen] = useState(false);
   const [leadList, setLeadList] = useState({});
   const [searchText, setSearchText]  = useState('');
-
+  const [conversionData,setConversionData] = useState([]);
   
   const [franchiseId, setFranchiseId] = useState();
   const [openOrder, setOpenOrder] = useState(false);
@@ -227,6 +227,19 @@ export default function Lead({roleName}) {
   }
   
   function handleClickOrderOpen(data){
+    console.log('leadData',data);
+
+    setConversionData({
+      customer_id : data.customer_id,      
+      customer_name : data.customer_name,
+      customer_contact : data.customer_contact,
+
+      main_category : '',
+      category : '',
+      sub_category: '',
+      product_id : '',
+    });
+
     setConvertLead(data.id);
     setOpenOrder(true);
   }
@@ -587,7 +600,7 @@ export default function Lead({roleName}) {
         </Grid>
       {open? <AddLead open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setLeadList={setLeadListFn}/>:null}
       
-      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertLead}  converted_name={'lead'}/> : null }
+      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertLead}  converted_name={'lead'} conversionData={conversionData}  /> : null }
       {openEnquiry ?<Add leadData={leadData} open={openEnquiry} handleClose={handleEnquiryClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn} convert={convertLead}/> :null}
       {openView ?<Comment open={openView} handleViewClose={handleViewClose} handleSnackbarClick={handleSnackbarClick} inputValues={leadData}  /> :null}
       {openConvertedLeads ?  <ConvertedLeads open={openConvertedLeads} handleConvertedLeadsClose={handleConvertedLeadsClose} franchiseListd={franchiseListd} />: null}

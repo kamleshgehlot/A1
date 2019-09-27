@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Enquiry = function (params) {
-  // console.log("params", params);
+  console.log("params", params);
   this.user_id = params.user_id;
   this.enquiry_id = params.enquiry_id;
   this.lead_id = params.lead_id;
@@ -22,7 +22,7 @@ var Enquiry = function (params) {
   this.searchText=params.searchText;
   this.is_existing = '';
 
-  if(params.customer_id !== "" && params.customer_id !== undefined){
+  if(params.customer_id !== "" && params.customer_id !== undefined && params.customer_id > 0){
     this.is_existing = 1;
   }else{
     this.is_existing = 0;

@@ -39,7 +39,7 @@ import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
 import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
-
+import {getDate, getCurrentDate } from '../../../utils/datetime'
 import validate from '../../common/validation/OrderRuleValidation';
 
 function getOrderDate() {
@@ -58,7 +58,13 @@ function getOrderDate() {
 }
 
 const RESET_VALUES = {
-  order_date: getOrderDate()
+  order_date: getOrderDate(),
+  // main_category : '',
+  // sub_category : '',
+  // category : '',
+  // customer_type : '',
+  // order_type : '',
+  // payment_mode: '',  
 };
 
 const useStyles = makeStyles(theme => ({
@@ -163,6 +169,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
+  // const [related_to, setRelatedTo] = React.useState('');
+
+  // useEffect(() => {
+  // },[]);
+  
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
   
   function handleBudgetClose(){
@@ -296,7 +307,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     });      
   }
 
-  console.log('conversionData', product);
+  // console.log('conversionData', product);
   
   function handleMainCategory(event) {
     console.log('handleMainCategory', event.target.value);

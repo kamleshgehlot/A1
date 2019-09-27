@@ -1,6 +1,8 @@
 const Lead = require('../../models/lead/lead.js');
 
 const add = async function (req, res, next) {
+  // console.log('lead req.body',req.body);
+
   const leadData = JSON.parse(req.body.data);
 
   let attachments = '';
@@ -23,6 +25,7 @@ const add = async function (req, res, next) {
     uid:req.decoded.id,
     customer_name: leadData.customer_name,
     customer_contact: leadData.customer_contact,
+    customer_id : leadData.customer_id, 
   };
   try {
     const newLead = new Lead(leadParam);
@@ -127,7 +130,7 @@ const filter = async function (req, res, next) {
 };
 
 const search = async function (req, res, next) {
-  console.log('lead rq..',req.body);
+  // console.log('lead rq..',req.body);
   let leadParams = {
     user_id: req.decoded.user_id,
     searchText: req.body.searchText,

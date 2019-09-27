@@ -13,6 +13,7 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 
 export default {
   add: async ( newLead) => {
+    console.log('newLead',newLead);
     const URL = `${c.API_CONSUMER}/api/lead/add`;
     try {
       const { data } = await axios(URL, {
@@ -29,6 +30,7 @@ export default {
       throw error;
     }
   },
+
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/lead/list`;
     try {

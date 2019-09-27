@@ -101,30 +101,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AutoSuggestDropdown({customerListData, setSelectedOption, setCustomerId, defaultValue}) {
+export default function AutoSuggestDropdown({customerListData, setSelectedOption, setCustomerId, defaultValue, handleRandomInput}) {
   suggestions = [];
 
   customerListData.map(customer => {
     suggestions.push({label: customer.customer_name, key: customer.id});
   });
   
-
-  // useEffect(() => {
-  //   if(document.getElementById("cust_name").name == "cust_name"){
-  //     customerListData.map(customer => {
-  //       suggestions.push({label: customer.customer_name, key: customer.id});
-  //     });
-  //   }else if(document.getElementById("cust_id").name == "cust_id"){
-  //     customerListData.map(customer => {
-  //       suggestions.push({label: customer.id, key: customer.id});
-  //     });
-  //   }else if(document.getElementById("cust_contact").name == "cust_contact"){
-  //     customerListData.map(customer => {
-  //       suggestions.push({label: customer.mobile, key: customer.id});
-  //     });
-  //   }
-    
-  // },[]);
 
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -175,20 +158,15 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
             setSelectedOption(event.target.value);
             customerListData.map(customer => {
               if(customer.id === suggestionId) {
-                document.getElementById("customer_contact").value = customer.mobile;
+                handleRandomInput([
+                  {name: 'customer_contact', value: customer.mobile}, 
+                ]);
+                // document.getElementById("customer_contact").value = customer.mobile;
                 setCustomerId(customer.id);
               }
               if(suggestionId === ''){
                 setCustomerId('');
-              }
-              // else if(customer.id === event.target.value){
-              //   document.getElementById("customer_contact").value = customer.mobile;
-              //   document.getElementById("customer_name").value = customer.id;
-              // }
-              // else if(customer.mobile === event.target.value){
-              //   document.getElementById("customer_id").value = customer.mobile;
-              //   document.getElementById("customer_name").value = customer.id;
-              // }
+              }      
             })
             suggestionId = '';
           }
