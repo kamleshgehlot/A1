@@ -1,18 +1,23 @@
 const Task = require('../models/task.js');
 
 const add = async function (req, res, next) {
+  console.log('task add body params..',req.body)
+  console.log('task add decoded params..',req.decoded)
   const taskParam = {
-    franchise_id: req.body.franchise_id,
+    franchise_id: req.decoded.franchise_id,    
     id: req.body.id,
-    task_id: req.body.task_id,
+    assign_table_id : req.body.assign_table_id,
+    task_id: req.body.task_id,    
     task_description: req.body.task_description,
     assign_role: req.body.assign_role,
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
     status: req.body.status,
     user_id: req.decoded.user_id,
+    reassigned_time : req.body.reassigned_time,
     created_by: req.decoded.id,
     updated_by: req.decoded.id,
+    unUpdated_Task_Data : req.body.unUpdated_Task_Data,
     created_by_role : req.body.created_by_role,
   };
   try {
@@ -99,20 +104,24 @@ const deleteTask = async function (req, res, next) {
 };
 
 const reschedule = async function (req, res, next) {
+  console.log('reschedule Req',req.body);
   const taskParam = {
-    franchise_id: req.body.franchise_id,
-    assignid: req.body.assignid,
+    franchise_id: req.decoded.franchise_id,
+    id: req.body.id,
     task_id: req.body.task_id,
+    assign_table_id : req.body.assign_table_id,
     task_description: req.body.task_description,
-    assign_role: req.body.assigned_role,
+    assign_role: req.body.assign_role,
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
     new_due_date: req.body.new_due_date,
-    status: req.body.status,
+    status: 4,
     updated_by: req.decoded.id,
     created_by: req.decoded.id,
-    user_id: req.decoded.user_id
+    user_id: req.decoded.user_id,
+    created_by_role : req.body.created_by_role,
   };
+
   try {
     const newTask = new Task(taskParam);
     await newTask.reschedule();
@@ -150,10 +159,13 @@ const staffUpdate = async function (req, res, next) {
     assigned_role: staffData.assigned_role,
     assigned_to: staffData.assigned_to,
     message: staffData.message,
+    assign_table_id : staffData.assign_table_id,
     status: staffData.status,
     user_id: req.decoded.user_id,
     updated_by: req.decoded.id,
     updated_date: staffData.updated_date,
+    created_by: req.decoded.id,
+    start_date :  staffData.start_date,
     document: attachments,
   };
 
@@ -162,9 +174,6 @@ const staffUpdate = async function (req, res, next) {
     await newTask.staffUpdate();
     const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
     res.send({ taskList });
-    
-    // const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).staffTasks();
-    // res.send({ taskList });
   } catch (err) {
     next(err);
   }

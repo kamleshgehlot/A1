@@ -93,24 +93,8 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    color: theme.palette.common.black,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
 
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-}))(TableRow);
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setTaskList}) {
+export default function Rescheduled({open, handleRescheduledClose, handleSnackbarClick,  inputs, setTaskList, roleName}) {
   const classes = useStyles();
   const styleClass = useCommonStyles();
   const [staffListn, setStaffList] = useState({});
@@ -144,133 +128,66 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     
     return errors;
   };
-
-  const addTaskMaster = async () => {
-    let check=false;
-    setIsSubmitting(true);
-    setErrors(validate(taskList));
-    if (Object.keys(errors).length === 0 && isSubmitting) {
-      check=false;
-    }
-    else {
-      check=true;
-    }
-  
-    console.log(check,isSubmitting)    
-      if(check===false){
-        console.log(check)
-        setpLoading(true);
-        setSavebtn(false);
-        const response = await Task.add({
-          id: taskList.id,
-          task_id: taskList.task_id,
-          task_description:taskList.task_description,
-          assign_role:taskList.assign_role,
-          assigned_to:taskList.assigned_to,
-          status:taskList.status,
-          due_date:taskList.due_date,
-        });
-        handleSnackbarClick(true,'Task Updated Successfully');
-        // console.log('update======',response.taskList);
-        setTaskList(response.taskList);
-        setpLoading(false);
-        handleEditClose(false);
-      }
-  };
-
-  
     
   const rescheduleTask = async () => {
 
     const response = await Task.reschedule({
-      assignid: taskList.assignid,
-      task_id: taskList.task_id,
-      task_description:taskList.task_description,
-      assigned_role: taskList.assign_role,
-      assigned_to:taskList.assigned_to,
-      due_date:taskList.due_date,
-      new_due_date:taskList.new_due_date,
-      status:taskList.status,
-      // message: taskList.message,
+      id : taskList.id,
+      assign_table_id : taskList.assignid,
+      task_id : taskList.task_id,
+      task_description : taskList.task_description,
+      assign_role : taskList.assign_role,
+      assigned_to : taskList.assigned_to,
+      status : taskList.status,
+      due_date : taskList.due_date,
+      new_due_date : taskList.new_due_date,
+      created_by_role : roleName,
     });
     handleSnackbarClick(true,'Task Rescheduled Successfully');
-    // console.log('update======',response.taskList);
     setTaskList(response.taskList);
     setSavebtn(true);
-    handleEditClose(false);
+    handleRescheduledClose(false);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const result = await Staff.list();
-  //       setStaffList(result.staffList);
-  //     } catch (error) {
-  //       setIsError(true);
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   fetchData();
-  // }, []);
   function handleRoleChange(e){
-    // setStaffRole(e.target.value);
+
     let selectedRole = e.target.value;
     const { name, value } = e.target
     setTasksList({ ...taskList, [name]: value })
+
     try{
-   const stafflistForRole = async () => {
-    const response = await FranchiseUsers.staffRoleList({
-      selectedRole:selectedRole
-    });
-    // console.log('response.staffList====',response.staffList);
-    setStaffList(response.staffList);
-    // setOtherDisable(false);
-  };
-
-  
-    stafflistForRole();
-  }catch(error){
-    console.log('event',error)
+      const stafflistForRole = async () => {
+        const response = await FranchiseUsers.staffRoleList({
+          selectedRole:selectedRole
+        });
+        setStaffList(response.staffList);
+      };
+     stafflistForRole();
+    }catch(error){
+      console.log('event',error)
+    }
   }
-
-}
+  
+  
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
       try {
-        const result = await FranchiseUsers.list();
-        setFranchiseUsersList(result.franchiseUserList);
-        console.log('inputs----------hd----',inputs)
+        const response = await FranchiseUsers.staffRoleList({
+          selectedRole:taskList.assign_role
+        });
+        setStaffList(response.staffList);
+
+        const result = await Role.list();
+        setRole(result.role);
+
       } catch (error) {
         setIsError(true);
       }
       setIsLoading(false);
     };
     fetchData();
-    try{
-      const stafflistForRole = async () => {
-       const response = await FranchiseUsers.staffRoleList({
-         selectedRole:taskList.assign_role
-       });
-      //  console.log('response.staffList====',response.staffList);
-       setStaffList(response.staffList);
-      //  setOtherDisable(false);
-     };
-       stafflistForRole();
-     }catch(error){
-       console.log('event',error)
-     }
-    const roleData = async () => {
-      
-      try {
-        const result = await Role.list();
-        setRole(result.role);
-      } catch (error) {
-        console.log("Error",error);
-      }
-    };
-    roleData();
   }, []);
 
   const handleInputChange = event => {
@@ -288,6 +205,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     let fullDate = yy+ '-'+mm+'-'+dd;
     handleInputChange({target:{name: 'due_date', value: fullDate}})
   }
+
   function handleNewDueDate(date){
     let date1 = new Date(date);
     let yy = date1.getFullYear();
@@ -306,9 +224,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           <AppBar className={classes.appBar}>
             <Toolbar>             
               <Typography variant="h6" className={classes.title}>
-                Edit Task
+                Rescheduled Task
               </Typography>
-              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>              
+              <IconButton size="small" onClick={handleRescheduledClose} className={styleClass.closeIcon}> x </IconButton>              
             </Toolbar>
           </AppBar>
 
@@ -316,7 +234,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           <Paper className={classes.paper}>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>{ploading ?  <LinearProgress />: null}</Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <InputLabel  className={classes.textsize} htmlFor="task_id">Task ID</InputLabel>
               <TextField 
                 InputProps={{
@@ -326,16 +244,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 }}
               id="task_id"
               name="task_id"
-              // label="Task Id"
               value={taskList.task_id}
               fullWidth
               disabled
               type="text"
-              // placeholder="Franchise Name"
               margin="dense"
             /> 
             </Grid>
-            <Grid item xs={12} sm={6}>  
+            <Grid item xs={12} sm={4}>  
               <InputLabel  className={classes.textsize} htmlFor="due_date">Due Date</InputLabel>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
@@ -352,15 +268,15 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   value={taskList.due_date}
                   fullWidth                       
                   // disabled={(taskList.status !=1 && taskList.status !=3) ? true : false}          
-                  disabled = {(taskList.status===3 || taskList.status ===2) ? true : false}
+                  // disabled = {(taskList.status===3 || taskList.status ===2) ? true : false}
+                  disabled
                   onChange={handleDate}
                   error={errors.due_date}
                   helperText={errors.due_date}                               
                 />
               </MuiPickersUtilsProvider>
-            </Grid>
-            {taskList.status===3? 
-              <Grid item xs={12} sm={6}>  
+            </Grid>            
+              <Grid item xs={12} sm={4}>  
                 <InputLabel  className={classes.textsize} htmlFor="new_due_date">New Due Date</InputLabel>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
@@ -381,8 +297,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     helperText={errors.new_due_date}                               
                   />
                 </MuiPickersUtilsProvider>
-              </Grid>
-            :''}
+            </Grid>
+            
             <Grid item xs={12} sm={6}>  
               <InputLabel  className={classes.textsize} htmlFor="assign_role">Assigned Role</InputLabel>
               <Select
@@ -394,7 +310,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 onChange={handleRoleChange}
                 className={classes.textsize}
                 fullWidth
-                disabled={taskList.status ===2}
                 required
               >
                 <MenuItem className={classes.textsize} value={2}>Director</MenuItem>
@@ -414,14 +329,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   inputProps={{
                     name: 'assigned_to',
                     id: 'assigned_to',
-                    // label:'assigned_to'
                   }}
                   className={classes.textsize}
                   fullWidth
-                  // label="assigned_to"
                   required
                 >
-          
+                  <MenuItem className={classes.textsize} value={'0'}>{'All'} </MenuItem>
                     { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
                       return(
                         <MenuItem className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
@@ -429,8 +342,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     }
               </Select>
             </Grid>
-            {taskList.status !==1 ?
-              <Grid item xs={12} sm={taskList.status ===3 ? 6 : 12}> 
+            
+              {/* <Grid item xs={12} sm={taskList.status ===3 ? 6 : 12}> 
                 <InputLabel  className={classes.textsize} htmlFor="message">Message</InputLabel>
                 <TextField 
                   InputProps={{
@@ -449,7 +362,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   margin="dense"
                 /> 
               </Grid>
-            :''}
+             */}
+
             <Grid item xs={12} sm={12}>  
               <InputLabel  className={classes.textsize} htmlFor="task_description">Task Description</InputLabel>
               <TextField 
@@ -460,7 +374,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 }}
                 id="task_description"
                 name="task_description"
-                // label="Task Description"
                 value={taskList.task_description}
                 onChange={handleInputChange}
                 fullWidth
@@ -469,20 +382,21 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 helperText={errors.task_description}
                 type="text"
                 multiline
-                disabled={taskList.status ===2}
+                // disabled={taskList.status ===2}
                 margin="dense"
               /> 
             </Grid>
             <Grid item xs={12} sm={12}>  
               {savebtn? 
-                <Button variant="contained" color="primary" disabled={(taskList.status !=1 && taskList.status !=3) ? true : false} className={classes.button} onClick={taskList.status===3? rescheduleTask : addTaskMaster}  type="submit">
+                <Button variant="contained" color="primary" className={classes.button} onClick={ rescheduleTask }  type="submit">
+                  {/* disabled={(taskList.status !=1 && taskList.status !=3) ? true : false}  */}
                   Update
                 </Button>: 
                 <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
                   Update
                 </Button>
               }
-                <Button variant="contained" color="primary" className={classes.button} onClick={handleEditClose}  type="submit">
+                <Button variant="contained" color="primary" className={classes.button} onClick={handleRescheduledClose}  type="submit">
                   Close
                 </Button>
             </Grid>

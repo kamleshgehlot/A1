@@ -114,7 +114,7 @@ const StyledTableRow = withStyles(theme => ({
     },
   },
 }))(TableRow);
-export default function StaffEdit({open, handleStaffEditClose, franchiseId, handleSnackbarClick,  inputs, setTaskList,uid}) {
+export default function StaffEdit({open, handleStaffEditClose, handleSnackbarClick,  inputs, setTaskList }) {
   const classes = useStyles();
   const styleClass = useCommonStyles();
   const [staffList, setStaffList] = useState({});
@@ -125,19 +125,21 @@ export default function StaffEdit({open, handleStaffEditClose, franchiseId, hand
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   const taskStatus = inputs.status;
-console.log('task status',taskStatus);
+
+
   const addTaskMaster = async () => {
     setpLoading(true);
     setSavebtn(false);
-    console.log('taskList------------',taskList);
-    const data={
-      franchise_id: franchiseId,
+
+    const data={      
       id: taskList.id,
-      task_id: taskList.task_id,
-      message:taskList.message,
-      updated_date:taskList.updated_date,
-      status:taskList.status,
-      document:taskList.document
+      assign_table_id : taskList.assignid,
+      task_id : taskList.task_id,
+      message : taskList.message,
+      updated_date : taskList.updated_date,
+      status : taskList.status,
+      document : taskList.document,
+      start_date : taskList.updated_date,
     }
     let formData = new FormData();
     formData.append('data', JSON.stringify(data));
@@ -316,13 +318,21 @@ console.log('task status',taskStatus);
                     required
                     className={classes.textsize}
                   >
-                    {console.log(taskList)}
                     { taskStatus === 1 ?
                           <MenuItem className={classes.textsize} disabled  value="1" selected>Scheduled</MenuItem>
                       : ''
                     }
                     {
                       taskStatus === 1 ?
+                        <MenuItem className={classes.textsize} value="2">In-progress</MenuItem>
+                      : ''
+                    }
+                    { taskStatus === 4 ?
+                          <MenuItem className={classes.textsize} disabled  value="4" selected>Rescheduled</MenuItem>
+                      : ''
+                    }
+                    {
+                      taskStatus === 4 ?
                         <MenuItem className={classes.textsize} value="2">In-progress</MenuItem>
                       : ''
                     }
@@ -333,23 +343,22 @@ console.log('task status',taskStatus);
                     }
                     {
                       taskStatus === 2 ?
-                      <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
+                      <MenuItem className={classes.textsize} value="3">Request to Reschedule </MenuItem>
                       : ''
                     }
                     {
                       taskStatus === 2 ?
-                      <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
-                      : ''
-                    }
-                        
-                    {
-                      taskStatus !== 2 && taskStatus !== 1 ?
-                      <MenuItem className={classes.textsize} value="3">Reschedule </MenuItem>
+                      <MenuItem className={classes.textsize} value="9">Completed </MenuItem>
                       : ''
                     }
                     {
-                      taskStatus !== 2 && taskStatus !== 1 ?
-                      <MenuItem className={classes.textsize} value="4">Completed </MenuItem>
+                      taskStatus !== 2 && taskStatus !== 1 && taskStatus !== 4 ?
+                      <MenuItem className={classes.textsize} value="3">Request to Reschedule </MenuItem>
+                      : ''
+                    }
+                    {
+                      taskStatus !== 2 && taskStatus !== 1 && taskStatus !== 4 ?
+                      <MenuItem className={classes.textsize} value="9">Completed </MenuItem>
                       : ''
                     }
                   </Select>
@@ -379,7 +388,7 @@ console.log('task status',taskStatus);
                 {savebtn? 
                   <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">
                     Update
-                  </Button> : <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit" disabled>
+                  </Button> : <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
                     Update
                   </Button>
                 }

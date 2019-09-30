@@ -117,7 +117,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function RescheduleRequestTo({task, handleClickEditOpen }) {
+export default function RescheduleRequestTo({task, handleRescheduledOpen }) {
   const classes = useStyles();
 return (  
   <Table className={classes.table}>
@@ -148,7 +148,7 @@ return (
           </StyledTableCell>
           <StyledTableCell>
           <Tooltip title="Update Task">                              
-            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+            <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleRescheduledOpen(data); }}>
               <CreateIcon/>
             </IconButton>
           </Tooltip>                  

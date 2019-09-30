@@ -45,10 +45,11 @@ import { width } from '@material-ui/system';
 
 const RESET_VALUES = {
   task_id:'',
-      task_description:'',
-      assigned_to:'',
-      due_date:''
+  task_description:'',
+  assigned_to:'',
+  due_date:''
 };
+
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -128,7 +129,7 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-export default function Add({ open, handleClose, franchiseId, handleSnackbarClick, setTaskList, roleName}) {
+export default function Add({ open, handleClose, handleSnackbarClick, setTaskList, roleName}) {
   const classes = useStyles();  
   const styleClass = useCommonStyles();
   
@@ -205,18 +206,17 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     }, []);
 
   const addTaskMaster = async () => {
-    
     setpLoading(true);
     setSavebtn(false);
     // console.log('assign_role---',staffRole);
     const response = await Task.add({
-      franchise_id: franchiseId,
       task_id: inputs.task_id,
       task_description:inputs.task_description,
       assign_role:staffRole,
       assigned_to:inputs.assigned_to,
       due_date:inputs.due_date,
       created_by_role : roleName,
+      reassigned_time : 1,
     });
 
     handleSnackbarClick(true);
@@ -227,13 +227,7 @@ export default function Add({ open, handleClose, franchiseId, handleSnackbarClic
     handleClose(false);
   };
 
-  // function validate(values) {
-  //   let errors = {};
-
-  //   return errors;
-  // };
-
-  function handleRoleChange(e){
+ function handleRoleChange(e){
     setStaffRole(e.target.value);
     let selectedRole = e.target.value;
     setInput('assign_role',e.target.value)
@@ -273,7 +267,7 @@ function handleDate(date){
     validate
   );
 
- 
+  console.log('task add',inputs)
 
 return (
     <div>
@@ -323,21 +317,13 @@ return (
                       margin="dense"
                       id="due_date"
                       name="due_date"
-                      // label="Date picker dialog"
                       format="dd/MM/yyyy"
-                      // inputVariant= "standard"
-                      // variant="inline"
-                      // value={selectedDate}
                       disablePast = {true}
-                      // defaultValue = {new Date()}
                       value={inputs.due_date}
                       fullWidth 
                       onChange={handleDate}
                       error={errors.due_date}
                       helperText={errors.due_date}
-                      // KeyboardButtonProps={{
-                      //   'aria-label': 'change date',
-                      // }}
                     />
                 </MuiPickersUtilsProvider>              
                 </Grid>
@@ -356,7 +342,6 @@ return (
                       helperText={errors.assign_role}
                       // required
                     >
-                        
                       {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
                       {role.map((ele,index) =>{
                         return(
@@ -375,19 +360,18 @@ return (
                         id: 'assigned_to',
                         label:'assigned_to'
                       }}
-                      
-                      // required
                       disabled = {otherDisable}
                       fullWidth className={classes.dropdwn}
                       error={errors.assigned_to}
                       helperText={errors.assigned_to}
-                      label="assigned_to" required >
-                        { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
-                          return(
-                            <MenuItem 
-                            className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
+                      label="assigned_to" required 
+                    >
+                      <MenuItem className={classes.textsize} value={'0'}>{'All'} </MenuItem>
+                      { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
+                        return(
+                          <MenuItem className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
                         )})
-                        }
+                      }
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>  

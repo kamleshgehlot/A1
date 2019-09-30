@@ -22,8 +22,9 @@ import Box from '@material-ui/core/Box';
 
 //files
 import Add from './Add';
-import Edit from './Edit';
+import EditCopy from './EditCopy';
 import StaffEdit from './StaffEdit';
+import Rescheduled from './Rescheduled';
 
 import All from './OtherComponents/All';
 import AssignedToME from './OtherComponents/AssignedToMe';
@@ -144,10 +145,10 @@ export default function Task({roleName}) {
   const classes = useStyles();
   const uid = APP_TOKEN.get().uid;
   const userId = APP_TOKEN.get().userId;
-  const franchiseId = APP_TOKEN.get().franchiseId;
   
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [rescheduleEditOpen, setRescheduleEditOpen] = useState(false);  
   const [staffEditOpen, setStaffEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -165,6 +166,10 @@ export default function Task({roleName}) {
   const [assignedByMeTab,setAssignedByMeTab] = useState([]);
   const [rescheduleRequestToMeTab,setRescheduleRequestToMeTab] = useState([]);
   const [rescheduleRequestByMeTab,setRescheduleRequestByMeTab] = useState([]);
+  const [completionRequestToMeTab,setCompletionRequestToMeTab] = useState([]);
+  const [completionRequestByMeTab,setCompletionRequestByMeTab] = useState([]);
+  const [cancelledTab,setCancelledTab] = useState([]);
+  const [onHoldTab,setOnHoldTab] = useState([]);
   const [allTab,setAllTab] = useState([]);
   const [completedTab,setCompletedTab] = useState([]);
   
@@ -242,7 +247,16 @@ export default function Task({roleName}) {
   function handleEditClose() {
     setEditOpen(false);
   }
+
+  function handleRescheduledClose() {
+    setRescheduleEditOpen(false);
+  }
   
+  function handleRescheduledOpen(data) {
+    setTaskData(data);
+    setRescheduleEditOpen(true);
+  }
+
   function handleStaffEditClose() {
     setStaffEditOpen(false);
   }
@@ -302,6 +316,10 @@ export default function Task({roleName}) {
     let rescheduleRequestByMe = [];
     let all = [];
     let completed = [];
+    let completionRequestToMeTab = [];
+    let completionRequestByMeTab = [];
+    let cancelledTab = [];
+    let onHoldTab = [];
     let roleId='';
 
     switch (roleName) {
@@ -323,7 +341,7 @@ export default function Task({roleName}) {
           // console.log('all',data);
           all.push(data);
         }
-      if(data.assigned_to == userId && data.is_active == 1 && (data.status == 1 || data.status == 2) && data.assign_role == roleId){
+      if(data.assigned_to == userId && data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.assign_role == roleId){
         // && data.created_by == (data.status == 3 ? userId : data.created_by)
           // console.log('assignedToMe',data);
           assignedToMe.push(data);
@@ -351,6 +369,10 @@ export default function Task({roleName}) {
       setRescheduleRequestByMeTab(rescheduleRequestByMe);
       setAllTab(all);
       setCompletedTab(completed);    
+      setCompletionRequestToMeTab(completionRequestToMeTab);
+      setCompletionRequestByMeTab(completionRequestByMeTab);
+      setCancelledTab(cancelledTab);
+      setOnHoldTab(onHoldTab);       
   }
 
   // console.log('assignedToMe',assignedToMeTab);
@@ -372,13 +394,24 @@ export default function Task({roleName}) {
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
-                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                <Tabs 
+                  value={value} 
+                  onChange={handleTabChange} 
+                  className={classes.textsize} 
+                  aria-label="simple tabs example"
+                  variant="scrollable"
+                  scrollButtons="auto"
+                >
                   <Tab label={<BadgeComp count={assignedToMeTab.length} label="Assigned to Me" />} /> 
                   <Tab label={<BadgeComp count={assignedByMeTab.length} label="Assigned by Me" />} /> 
                   <Tab label={<BadgeComp count={rescheduleRequestToMeTab.length} label="Reschedule Request (to Me)" />} /> 
                   <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Reschedule Request (by Me)" />} /> 
-                  <Tab label={<BadgeComp count={allTab.length} label="All" />} /> 
+                  {/* <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Completion Request (To Me)" />} /> 
+                  <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Completion Request (By Me)" />} />  */}
+                  {/* <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Cancelled" />} /> 
+                  <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="On Hold" />} />  */}
                   <Tab label={<BadgeComp count={completedTab.length} label="Completed" />} />
+                  <Tab label={<BadgeComp count={allTab.length} label="All" />} />                   
                 </Tabs>
               </AppBar>
 
@@ -391,27 +424,45 @@ export default function Task({roleName}) {
               </TabPanel>
               
               <TabPanel value={value} index={2}>
-                {rescheduleRequestToMeTab && <RescheduleRequestTo task= {rescheduleRequestToMeTab} handleClickEditOpen={handleClickEditOpen} />}
+                {rescheduleRequestToMeTab && <RescheduleRequestTo task= {rescheduleRequestToMeTab} handleRescheduledOpen={handleRescheduledOpen} />}
               </TabPanel>
               
               <TabPanel value={value} index={3}>
                 {rescheduleRequestByMeTab && <RescheduleRequestBy task= {rescheduleRequestByMeTab} handleClickEditOpen={handleClickEditOpen} />}
               </TabPanel>
               
-              <TabPanel value={value} index={4}>
-                {allTab && <All task= {allTab} dateToday={dateToday} />}              
+              {/* <TabPanel value={value} index={4}>
+                {completionRequestToMeTab && <RescheduleRequestBy task= {completionRequestToMeTab} handleClickEditOpen={handleClickEditOpen} />}
               </TabPanel>
               
               <TabPanel value={value} index={5}>
+                {completionRequestByMeTab && <RescheduleRequestBy task= {completionRequestByMeTab} handleClickEditOpen={handleClickEditOpen} />}
+              </TabPanel> */}
+
+              {/* <TabPanel value={value} index={6}>
+                {cancelledTab && <RescheduleRequestBy task= {cancelledTab} handleClickEditOpen={handleClickEditOpen} />}
+              </TabPanel>
+
+              <TabPanel value={value} index={7}>
+                {onHoldTab && <RescheduleRequestBy task= {onHoldTab} handleClickEditOpen={handleClickEditOpen} />}
+              </TabPanel> */}
+              
+              <TabPanel value={value} index={4}>
                 {completedTab && <Completed task= {completedTab} handleClickDelete={handleClickDelete} />}     
               </TabPanel>
+
+              <TabPanel value={value} index={5}>
+                {allTab && <All task= {allTab} dateToday={dateToday} />}              
+              </TabPanel>
+              
             </Paper>
           </Grid>
         </Grid>
 
-        {open? <Add open={open} handleClose={handleClose} franchiseId={franchiseId}  handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} roleName={roleName}/>:null}
-        {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} franchiseId={franchiseId}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}
-        {staffEditOpen? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} uid={uid.uid}  handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  uid={uid}/> : null}        
+        {open? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} roleName={roleName}/>:null}
+        {editOpen ? <EditCopy open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}
+        {rescheduleEditOpen? <Rescheduled open={rescheduleEditOpen} handleRescheduledClose={handleRescheduledClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}        
+        {staffEditOpen? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}        
 
         <Snackbar
           anchorOrigin={{

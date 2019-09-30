@@ -4,6 +4,7 @@ const dbName = require('../lib/databaseMySQLNew.js');
 const Task = function (params) {
   this.franchise_id = params.franchise_id;
   this.id = params.id;
+  this.assign_table_id = params.assign_table_id;
   this.task_id = params.task_id;
   this.task_description = params.task_description;
   this.assign_role= params.assign_role;
@@ -19,17 +20,17 @@ const Task = function (params) {
   this.created_by = params.created_by;
   this.updated_by = params.updated_by;
   this.created_by_role = params.created_by_role;
+  this.is_assigned_to_all = 0;
+  this.reassigned_time = params.reassigned_time;
+  this.unUpdated_Task_Data = params.unUpdated_Task_Data;
+  this.start_date = params.start_date;
+  this.new_due_date = params.new_due_date;
+  this.close_date = new Date();
 
-  if(params.status==='2'){
-    this.start_date=params.updated_date;
+  if(params.assigned_to===0 || params.assigned_to==='0'){
+    this.is_assigned_to_all = 1;
   }
-  if(params.status===3){
-    this.new_due_date = params.new_due_date;
-    this.assignid=params.assignid;
-  }
-  if(params.status==='4'){
-    this.is_active=0;
-  }
+
   console.log('params userId-----',params);
 };
 
@@ -43,16 +44,37 @@ Task.prototype.add = function () {
       }
 
       const values = [
-        [that.task_id, that.task_description, that.is_active, that.created_by]
+        [that.task_id, that.task_description, 1, that.created_by]
       ];
-      const values_assign = [
-        [that.task_id,that.assign_role, that.assigned_to, that.due_date,1, that.is_active, that.created_by_role, that.created_by]
-      ];
-        if (!error) {
-          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+
+      let values_assign = [];
+
+      if(that.is_assigned_to_all === 1){
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select id from user where role_id LIKE "%'+that.assign_role+'%"', [values], (error, rows, fields) => {
+          if (!error && rows != "") {
+            let valuesArray = [];
+            (rows.length > 0 ? rows : []).map(data =>{
+              valuesArray.push(
+                [that.task_id,that.assign_role, data.id, that.is_assigned_to_all, that.due_date, that.reassigned_time, 1, 1, that.created_by_role, that.created_by]
+              );
+            })
+            values_assign = valuesArray;
+          } else{
+            console.log('Error...', error);
+            reject(error);
+          }         
+        });
+      }else{
+        values_assign = [
+          [that.task_id,that.assign_role, that.assigned_to, that.is_assigned_to_all, that.due_date, that.reassigned_time, 1, 1, that.created_by_role, that.created_by]
+        ];
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query(`INSERT INTO task(task_id, task_description, is_active, created_by) VALUES ?`, [values], (error, mrows, fields) => {
             if (!error) {
-              connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, due_date, status, is_active, created_by_role, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
+              connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
                 if (!error) {
                   resolve(arows);
                 } else {
@@ -214,20 +236,75 @@ Task.prototype.update = function () {
       if (error) {
         throw error;
       }
-      if (!error) {
+      if (!error) {        
             connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
             connection.query('update task set task_description = "' + that.task_description + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
-                connection.query('update task_assign set assign_role="'+that.assign_role+'", assigned_to = "' + that.assigned_to + '", due_date = "' + that.due_date + '", updated_by = "' + that.updated_by + '", status="'+that.status+'" WHERE task_id = "' + that.task_id + '"', function (error, arows, fields) {
-                  if (!error) {
-                    // console.log('rows9080 uhhj---',rows)
-                    resolve({ arows });
-                  } else {
-                    console.log("Error...", error);
-                    reject(error);
+                if(that.unUpdated_Task_Data.assign_role != that.assign_role || that.unUpdated_Task_Data.assigned_to != that.assigned_to){                  
+                  connection.query('update task_assign set close_date = "' + that.close_date + '", status = "11", is_active = 0, updated_by = "' + that.updated_by + '" WHERE id = "' + that.assign_table_id + '"', function (error, arows, fields) {
+                    if (!error) {
+                      connection.query('select reassigned_time, (reassigned_time + 1) as inc_reassigned_time from task_assign WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) { 
+                        if(!error){
+                          // reassigned_time = rows[0].reassigned_time 
+                        let reassigned_time = rows[0].reassigned_time;
+                        let inc_reassigned_time = rows[0].inc_reassigned_time ;
+                        let values_assign = [];
+
+                        if(that.is_assigned_to_all === 1){
+                          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+                          connection.query('select id from user where role_id LIKE "%'+that.assign_role+'%"', (error, rows, fields) => {
+                            if (!error && rows != "") {
+                              let valuesArray = [];
+                              (rows.length > 0 ? rows : []).map(data =>{
+                                valuesArray.push(
+                                  [that.task_id,that.assign_role, data.id, that.is_assigned_to_all, that.due_date, inc_reassigned_time, 1, 1, that.created_by_role, that.created_by]
+                                );
+                              })
+                              // values_assign = valuesArray;
+                              connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [valuesArray], (error, arows, fields) => {
+                                if (!error) {
+                                  resolve(arows);
+                                } else {
+                                  console.log('Error...', error);
+                                  reject(error);
+                                }
+                              });
+                            } else{
+                              console.log('Error...', error);
+                              reject(error);
+                            }         
+                          });
+                        }else{
+                          values_assign = [
+                            [that.task_id,that.assign_role, that.assigned_to, that.is_assigned_to_all, that.due_date, inc_reassigned_time, 1, 1, that.created_by_role, that.created_by]
+                          ];
+                          connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
+                            if (!error) {
+                              resolve(arows);
+                            } else {
+                              console.log('Error...', error);
+                              reject(error);
+                            }
+                          });
+                        }                                                
+                      } else {
+                        console.log("Error...", error);
+                        reject(error);
+                      }
+                    });
                   }
-    
-                });
+                });              
+                }else{
+                  connection.query('update task_assign set due_date = "' + that.due_date + '", updated_by = "' + that.updated_by + '" WHERE id = "' + that.assign_table_id + '"', function (error, arows, fields) {  
+                    if (!error) {
+                      resolve({ arows });
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
+                }
+              
               } else {
                 console.log("Error...", error);
                 reject(error);
@@ -242,6 +319,7 @@ Task.prototype.update = function () {
     throw error;
   });
 };
+
 
 Task.prototype.deleteTask = function () {
   const that = this;
@@ -291,28 +369,71 @@ Task.prototype.reschedule = function () {
       }
       if (!error) {
       
-      const values_assign = [
-        [that.task_id, that.assign_role, that.assigned_to, that.new_due_date,1, that.is_active, that.created_by]
-      ];
       connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('update task_assign set is_active =  0, updated_by = "'+that.updated_by+'" WHERE id = "' + that.assignid + '"', function (error, arows, fields) {
+      connection.query('update task set task_description = "' + that.task_description + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
+        if(!error) {
+      
+          connection.query('update task_assign set close_date = "' + that.close_date + '", status = "4", is_active = 0, updated_by = "' + that.updated_by + '" WHERE id = "' + that.assign_table_id + '"', function (error, arows, fields) {
             if (!error) {
-              connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, due_date, status, is_active, created_by) VALUES ?`, [values_assign], (error, atrows, fields) => {
-                if (!error) {
-                  resolve({atrows});
+              connection.query('select reassigned_time, (reassigned_time + 1) as inc_reassigned_time from task_assign WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) { 
+                if(!error){
+                let reassigned_time = rows[0].reassigned_time;
+                let inc_reassigned_time = rows[0].inc_reassigned_time ;
+                let values_assign = [];
+                  if(that.is_assigned_to_all === 1){
+                    connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+                    connection.query('select id from user where role_id LIKE "%'+that.assign_role+'%"', (error, rows, fields) => {
+                      if (!error && rows != "") {
+                        let valuesArray = [];
+                        (rows.length > 0 ? rows : []).map(data =>{
+                          valuesArray.push(
+                            [that.task_id,that.assign_role, data.id, that.is_assigned_to_all, that.new_due_date, inc_reassigned_time, 4, 1, that.created_by_role, that.created_by]
+                          );
+                        })
+                        connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [valuesArray], (error, arows, fields) => {
+                          if (!error) {
+                            resolve(arows);
+                          } else {
+                            console.log('Error...', error);
+                            reject(error);
+                          }
+                        });
+                      } else{
+                        console.log('Error...', error);
+                        reject(error);
+                      }         
+                    });
+                  }else{
+                    values_assign = [
+                      [that.task_id,that.assign_role, that.assigned_to, that.is_assigned_to_all, that.new_due_date, inc_reassigned_time, 4, 1, that.created_by_role, that.created_by]
+                    ];
+                    connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
+                      if (!error) {
+                        resolve(arows);
+                      } else {
+                        console.log('Error...', error);
+                        reject(error);
+                      }
+                    });
+                  }                                                
                 } else {
-                  console.log('Error...', error);
+                  console.log("Error...", error);
                   reject(error);
                 }
               });
-            } else {
-              console.log('Error...', error);
-              reject(error);
             }
-          });
+          });   
+        } else {
+          console.log("Error...", error);
+          reject(error);
         }
-    });
+      });       
+    } else {
+      console.log("Error...", error);
+      reject(error);
+    }
   });
+ });
 }
 
 
@@ -353,90 +474,78 @@ Task.prototype.staffUpdate = function () {
       }
       if (!error) {
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-          
-        if(that.document == '')
-        {
-          
+        if(that.document !== "" && that.document != undefined){
+          const docValues = [
+            [that.id, that.assign_table_id, that.task_id, that.document, that.status, 1, that.created_by]
+          ]
+
+          connection.query('insert into task_document(task_id, task_assign_id, task_uid, document, status, is_active, created_by) VALUES ?',[docValues], function (error, rows, fields) {
+            if (!error) { 
+              resolve({rows});
+            }else{            
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }
+        if(that.message !== "" && that.message != undefined){
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+            const msgValues = [
+              [that.id, that.assign_table_id, that.task_id, that.message, that.status, 1, that.created_by]
+            ]
+
+            connection.query('insert into task_message(task_id, task_assign_id, task_uid, message, status, is_active, created_by) VALUES ?',[msgValues], function (error, rows, fields) {
+              if (!error) { 
+                resolve({rows});
+              }else{           
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
+        }
+
         if(that.status==='2'){
-          // console.log('that.statius==-=',that.task_id)
-          connection.query('update task_assign set message="'+that.message+'", start_date="'+that.start_date+'",  updated_at="'+that.updated_date+'", updated_by = "' +that.updated_by + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '"  AND is_active <> 0', function (error, arows, fields) {
-            if (!error) {
-              resolve({ arows });
-            } else {
+          connection.query('update task_assign set start_date = "' + that.start_date + '",  updated_at="' + that.updated_date + '", updated_by = "' + that.updated_by + '", status = "' + that.status + '" WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) {
+            if (!error) { 
+              resolve({rows});
+            }else{
               console.log("Error...", error);
               reject(error);
             }
-
           });
         }
-        else if(that.status==='4'){
-          connection.query('update task_assign set message="'+that.message+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'",completion_date="'+that.updated_date+'" WHERE task_id = "' + that.task_id + '" AND is_active <> 0', function (error, arows, fields) {
-            if (!error) {
-              
-              resolve({ arows });
-            } else {
+        else if(that.status === '3'){
+          connection.query('update task_assign set updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'" WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) {
+            if (!error) { 
+              resolve({rows});
+            }else{
               console.log("Error...", error);
               reject(error);
             }
-
           });
         }
-        else{
-          connection.query('update task_assign set message="'+that.message+'", updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '" AND is_active<>0', function (error, arows, fields) {
+        else if(that.status==='9'){
+          connection.query('update task_assign set updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", completion_date="'+that.updated_date+'", is_active = 0 WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) {
             if (!error) {
               
-              resolve({ arows });
+              connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+              connection.query('update task set is_active = 0, updated_by = "' + that.updated_by  + '", updated_at="'+that.updated_date+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
+                if (!error) { 
+                  resolve({rows});
+                }else{
+                  console.log("Error...", error);
+                  reject(error);    
+                }
+              });
             } else {
               console.log("Error...", error);
               reject(error);
             }
-
           });
         }
- 
-      }
-        else{
-
-                if(that.status==='2'){
-                  // console.log('that.statius==-=',that.task_id)
-                  connection.query('update task_assign set message="'+that.message+'", start_date="'+that.start_date+'", document="'+that.document+'", updated_at="'+that.updated_date+'", updated_by = "' +that.updated_by + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '"  AND is_active <> 0', function (error, arows, fields) {
-                    if (!error) {
-                      resolve({ arows });
-                    } else {
-                      console.log("Error...", error);
-                      reject(error);
-                    }
-      
-                  });
-                }
-                else if(that.status==='4'){
-                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'",completion_date="'+that.updated_date+'" WHERE task_id = "' + that.task_id + '" AND is_active <> 0', function (error, arows, fields) {
-                    if (!error) {
-                      
-                      resolve({ arows });
-                    } else {
-                      console.log("Error...", error);
-                      reject(error);
-                    }
-      
-                  });
-                }
-                else{
-                  connection.query('update task_assign set message="'+that.message+'", document="'+that.document+'",updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", is_active="'+that.is_active+'" WHERE task_id = "' + that.task_id + '" AND is_active<>0', function (error, arows, fields) {
-                    if (!error) {
-                      
-                      resolve({ arows });
-                    } else {
-                      console.log("Error...", error);
-                      reject(error);
-                    }
-      
-                  });
-                }
-      }
       connection.release();
       console.log('Process Complete %d', connection.threadId);
-    }
+      }
     });
   }).catch((error) => {
     throw error;
