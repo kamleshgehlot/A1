@@ -9,6 +9,7 @@ const add = async function (req, res, next) {
     assign_table_id : req.body.assign_table_id,
     task_id: req.body.task_id,    
     task_description: req.body.task_description,
+    is_assigned_to_all :  req.body.is_assigned_to_all,
     assign_role: req.body.assign_role,
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
@@ -115,6 +116,7 @@ const reschedule = async function (req, res, next) {
     assigned_to: req.body.assigned_to,
     due_date: req.body.due_date,
     new_due_date: req.body.new_due_date,
+    // is_assigned_to_all : req.body.is_assigned_to_all,
     status: 4,
     updated_by: req.decoded.id,
     created_by: req.decoded.id,
@@ -160,6 +162,7 @@ const staffUpdate = async function (req, res, next) {
     assigned_to: staffData.assigned_to,
     message: staffData.message,
     assign_table_id : staffData.assign_table_id,
+    is_assigned_to_all : staffData.is_assigned_to_all,
     status: staffData.status,
     user_id: req.decoded.user_id,
     updated_by: req.decoded.id,
@@ -179,4 +182,43 @@ const staffUpdate = async function (req, res, next) {
   }
 };
 
-module.exports = { add, all, last, completedList, deleteTask, reschedule, staffTasks, staffUpdate, rescheduledTaskList, assignToOther };
+
+
+const getMsgList = async function (req, res, next) {
+
+  const taskParam = {
+    id : req.body.id,
+    user_id : req.decoded.user_id,
+  };
+
+  try {
+    const newTask = new Task(taskParam);
+    const msgList = await newTask.getMsgList();
+    res.send( msgList );
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getTaskHistory = async function (req, res, next) {
+
+  const taskParam = {
+    id : req.body.id,
+    task_id : req.body.task_id,
+    user_id : req.decoded.user_id,
+  };
+
+  try {
+    const newTask = new Task(taskParam);
+    const msgList = await newTask.getTaskHistory();
+    res.send( msgList );
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+
+
+module.exports = { add, all, last, completedList, deleteTask, reschedule, getTaskHistory, staffTasks, staffUpdate, getMsgList, rescheduledTaskList, assignToOther };

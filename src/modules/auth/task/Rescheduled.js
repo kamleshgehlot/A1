@@ -139,6 +139,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
       assign_role : taskList.assign_role,
       assigned_to : taskList.assigned_to,
       status : taskList.status,
+      is_assigned_to_all : taskList.is_assigned_to_all,
       due_date : taskList.due_date,
       new_due_date : taskList.new_due_date,
       created_by_role : roleName,

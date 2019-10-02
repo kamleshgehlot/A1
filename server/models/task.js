@@ -20,7 +20,7 @@ const Task = function (params) {
   this.created_by = params.created_by;
   this.updated_by = params.updated_by;
   this.created_by_role = params.created_by_role;
-  this.is_assigned_to_all = 0;
+  this.is_assigned_to_all = params.is_assigned_to_all;
   this.reassigned_time = params.reassigned_time;
   this.unUpdated_Task_Data = params.unUpdated_Task_Data;
   this.start_date = params.start_date;
@@ -106,7 +106,8 @@ Task.prototype.all = function () {
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});      
             // connection.query('select t.id,t.task_id, t.task_description, a.message, a.document, a.id as assignid,a.assign_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.status, a.is_active, a.document from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id where t.created_by="'+that.userid+'"', function (error, rows, fields) {
               // connection.query('select t.id,t.task_id, t.task_description, a.message, a.document, a.id as assignid, a.assign_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.status, a.is_active, a.document, u.name as assigned_to_name from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id INNER JOIN user u on a.assigned_to=u.id where t.created_by= "'+that.userid+'"', function (error, rows, fields) {
-                connection.query('select t.id,t.task_id, t.task_description, t.created_by, a.message, a.document, a.id as assignid, a.assign_role, a.created_by_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.start_date, a.completion_date, a.status, a.is_active, a.document, u.name as assigned_to_name, ts.status as task_status_name from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id INNER JOIN user u on a.assigned_to=u.id INNER JOIN task_status ts on a.status = ts.id ORDER BY t.id DESC', function (error, rows, fields) {
+                // connection.query('select t.id,t.task_id, t.task_description, t.created_by, a.message, a.document, a.id as assignid, a.assign_role, a.created_by_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.start_date, a.completion_date, a.status, a.is_active, a.document, u.name as assigned_to_name, ts.status as task_status_name from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id INNER JOIN user u on a.assigned_to=u.id INNER JOIN task_status ts on a.status = ts.id ORDER BY t.id DESC', function (error, rows, fields) {
+                  connection.query('select t.id,t.task_id, t.task_description, t.created_by, a.id as assignid, a.assign_role, a.created_by_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.start_date, a.close_date, a.reassigned_time, a.completion_date, a.status, a.is_active, DATE_FORMAT(a.created_at, \'%W %d %M %Y %H:%i:%s\') created_at, a.is_assigned_to_all, u.name as assigned_to_name, ts.status as task_status_name from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id INNER JOIN user u on a.assigned_to=u.id INNER JOIN task_status ts on a.status = ts.id ORDER BY t.id DESC', function (error, rows, fields) {
             if (!error) {              
               resolve(rows);
             } else {
@@ -241,7 +242,7 @@ Task.prototype.update = function () {
             connection.query('update task set task_description = "' + that.task_description + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
               if (!error) {
                 if(that.unUpdated_Task_Data.assign_role != that.assign_role || that.unUpdated_Task_Data.assigned_to != that.assigned_to){                  
-                  connection.query('update task_assign set close_date = "' + that.close_date + '", status = "11", is_active = 0, updated_by = "' + that.updated_by + '" WHERE id = "' + that.assign_table_id + '"', function (error, arows, fields) {
+                  connection.query('update task_assign set close_date = now(), status = "11", is_active = 0, updated_by = "' + that.updated_by + '" WHERE id = "' + that.assign_table_id + '"', function (error, arows, fields) {
                     if (!error) {
                       connection.query('select reassigned_time, (reassigned_time + 1) as inc_reassigned_time from task_assign WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) { 
                         if(!error){
@@ -373,12 +374,13 @@ Task.prototype.reschedule = function () {
       connection.query('update task set task_description = "' + that.task_description + '" WHERE id = "' + that.id + '"', function (error, rows, fields) {
         if(!error) {
       
-          connection.query('update task_assign set close_date = "' + that.close_date + '", status = "4", is_active = 0, updated_by = "' + that.updated_by + '" WHERE id = "' + that.assign_table_id + '"', function (error, arows, fields) {
+          connection.query('update task_assign set close_date = now(), status = "4", is_active = 0, updated_by = "' + that.updated_by + '" WHERE id = "' + that.assign_table_id + '"', function (error, arows, fields) {
             if (!error) {
-              connection.query('select reassigned_time, (reassigned_time + 1) as inc_reassigned_time from task_assign WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) { 
+              connection.query('select reassigned_time, (reassigned_time + 1) as inc_reassigned_time, is_assigned_to_all from task_assign WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) { 
                 if(!error){
                 let reassigned_time = rows[0].reassigned_time;
-                let inc_reassigned_time = rows[0].inc_reassigned_time ;
+                let inc_reassigned_time = rows[0].inc_reassigned_time;
+                let is_assigned_to_all = rows[0].is_assigned_to_all;
                 let values_assign = [];
                   if(that.is_assigned_to_all === 1){
                     connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
@@ -405,7 +407,7 @@ Task.prototype.reschedule = function () {
                     });
                   }else{
                     values_assign = [
-                      [that.task_id,that.assign_role, that.assigned_to, that.is_assigned_to_all, that.new_due_date, inc_reassigned_time, 4, 1, that.created_by_role, that.created_by]
+                      [that.task_id,that.assign_role, that.assigned_to, is_assigned_to_all, that.new_due_date, inc_reassigned_time, 4, 1, that.created_by_role, that.created_by]
                     ];
                     connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
                       if (!error) {
@@ -464,6 +466,59 @@ Task.prototype.staffTasks = function () {
   });
 }
 
+
+
+Task.prototype.getMsgList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          connection.query('select m.id, m.task_id, m.task_assign_id, m.task_uid, m.message, m.status,  s.status as status_name, u.name as user_name, r.name as user_role, DATE_FORMAT(m.created_at, \'%W %d %M %Y %H:%i:%s\') created_at from task_message as m INNER JOIN task_assign as a on m.task_assign_id = a.id INNER JOIN user as u on m.created_by = u.id INNER JOIN role as r on a.assign_role = r.id INNER JOIN task_status as s on a.status = s.id WHERE m.task_id = "'+that.id+'" ORDER BY m.id DESC', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+          connection.release();
+          console.log('Process Complete %d', connection.threadId);
+        }
+    });
+  });
+}
+
+
+
+Task.prototype.getTaskHistory = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          connection.query('select t.id,t.task_id, t.task_description, t.created_by, a.id as assignid, a.assign_role, a.created_by_role, case r.name when "Admin" then "Director" else r.name END as assign_role_name, a.assigned_to, a.due_date, a.start_date, a.close_date, a.reassigned_time, a.completion_date, a.status, a.is_active, DATE_FORMAT(a.created_at, \'%W %d %M %Y %H:%i:%s\') created_at, a.is_assigned_to_all, u.name as assigned_to_name, ts.status as task_status_name from task t inner join task_assign a on t.task_id = a.task_id inner join role r on a.assign_role = r.id INNER JOIN user u on a.assigned_to=u.id INNER JOIN task_status ts on a.status = ts.id WHERE a.task_id = "' + that.task_id + '" ORDER BY a.id', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+          connection.release();
+          console.log('Process Complete %d', connection.threadId);
+        }
+    });
+  });
+}
 
 Task.prototype.staffUpdate = function () {
   const that = this;
@@ -525,9 +580,12 @@ Task.prototype.staffUpdate = function () {
           });
         }
         else if(that.status==='9'){
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
           connection.query('update task_assign set updated_at="'+that.updated_date+'", updated_by = "' + that.updated_by  + '", status="'+that.status+'", completion_date="'+that.updated_date+'", is_active = 0 WHERE id = "' + that.assign_table_id + '"', function (error, rows, fields) {
-            if (!error) {
-              
+            if (!error) {  
+              connection.query('select * from task_assign where task_id = "'+that.task_id+'" AND is_active = 1', function (error, rows, fields) {
+                if (!error ) {  
+                  if(rows == ""){
               connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
               connection.query('update task set is_active = 0, updated_by = "' + that.updated_by  + '", updated_at="'+that.updated_date+'" WHERE id = "' + that.id + '"', function (error, rows, fields) {
                 if (!error) { 
@@ -535,8 +593,16 @@ Task.prototype.staffUpdate = function () {
                 }else{
                   console.log("Error...", error);
                   reject(error);    
+                  }
+                });
+              }else{
+                resolve({rows});
                 }
-              });
+              }else{
+                console.log("Error...", error);
+                reject(error);    
+                }
+            });
             } else {
               console.log("Error...", error);
               reject(error);

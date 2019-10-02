@@ -128,8 +128,8 @@ return (
         <StyledTableCell>Task Description</StyledTableCell>
         <StyledTableCell>Assigned To</StyledTableCell>        
         <StyledTableCell>Start Date</StyledTableCell>        
-        <StyledTableCell>Message</StyledTableCell>
-        <StyledTableCell>Document</StyledTableCell>
+        {/* <StyledTableCell>Message</StyledTableCell> */}
+        {/* <StyledTableCell>Document</StyledTableCell> */}
         <StyledTableCell>Options</StyledTableCell>
       </TableRow>
     </TableHead>
@@ -142,10 +142,10 @@ return (
           <StyledTableCell> {data.task_description}  </StyledTableCell>
           <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
           <StyledTableCell> {data.start_date}</StyledTableCell>          
-          <StyledTableCell> {data.message}</StyledTableCell>
+          {/* <StyledTableCell> {data.message}</StyledTableCell>
           <StyledTableCell>
             <a href={API_URL + "/api/download?path=taskFile/" + data.document }  download >{data.document}</a>                          
-          </StyledTableCell>
+          </StyledTableCell> */}
           <StyledTableCell>
           <Tooltip title="Update Task">                              
             <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleRescheduledOpen(data); }}>

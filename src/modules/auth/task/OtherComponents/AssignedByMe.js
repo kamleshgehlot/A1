@@ -117,7 +117,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function AssignedToBy({task, handleClickEditOpen }) {
+export default function AssignedByMe({task, handleClickEditOpen }) {
   const classes = useStyles();
 return (  
     <Table className={classes.table}>

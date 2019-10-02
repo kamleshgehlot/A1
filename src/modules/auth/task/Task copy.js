@@ -25,6 +25,7 @@ import Add from './Add';
 import EditCopy from './EditCopy';
 import StaffEdit from './StaffEdit';
 import Rescheduled from './Rescheduled';
+import TaskHistory from './OtherComponents/TaskHistory';
 
 import All from './OtherComponents/All';
 import AssignedToME from './OtherComponents/AssignedToMe';
@@ -153,9 +154,9 @@ export default function Task({roleName}) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [taskData,setTaskData]= useState();
-  
-  
+  const [taskData,setTaskData] = useState();
+  const [taskHistoryOpen,setTaskHistoryOpen] = useState(false);
+  const [historyData, setHistoryData] = useState([]);  
   const [tasksList, setTaskList] = useState({});  
   const [dateToday, setTodayDate]= useState();
   
@@ -275,6 +276,20 @@ export default function Task({roleName}) {
     setSnackbarOpen(true);
   }
 
+  function handleHistoryClose(){
+    setTaskHistoryOpen(false);
+  }
+  
+  const handleHistoryOpen = async (response) => {
+    setHistoryData(response);
+    setTaskHistoryOpen(true);
+    console.log('task history', response);
+    // const result = await TaskAPI.getTaskHistory({
+    //   id: response.id,
+    //   task_id: response.assignid,
+    // });   
+  }
+
   const handleClickDelete = async (response) => {    
     const result = await TaskAPI.delete({
       id: response.id,
@@ -346,7 +361,7 @@ export default function Task({roleName}) {
           // console.log('assignedToMe',data);
           assignedToMe.push(data);
         }
-      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 3) && data.created_by== userId && data.created_by_role == roleName){
+      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.created_by== userId && data.created_by_role == roleName){
           // console.log('assignedByMe',data);
           assignedByMe.push(data);
         }
@@ -358,7 +373,7 @@ export default function Task({roleName}) {
           // console.log('rescheduleRequestByMe',data);
           rescheduleRequestByMe.push(data);
         }
-      if(data.status == 4 && data.is_active == 0 && (data.created_by == userId || data.assigned_to == userId) && data.created_by_role == roleName ){
+      if(data.status == 9 && data.is_active == 0 && (data.created_by == userId || data.assigned_to == userId) ){
           // console.log('completed',data);
           completed.push(data);
         }
@@ -448,7 +463,7 @@ export default function Task({roleName}) {
               </TabPanel> */}
               
               <TabPanel value={value} index={4}>
-                {completedTab && <Completed task= {completedTab} handleClickDelete={handleClickDelete} />}     
+                {completedTab && <Completed task= {completedTab} handleClickDelete={handleClickDelete} handleHistoryOpen={handleHistoryOpen} />}     
               </TabPanel>
 
               <TabPanel value={value} index={5}>
@@ -461,9 +476,9 @@ export default function Task({roleName}) {
 
         {open? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} roleName={roleName}/>:null}
         {editOpen ? <EditCopy open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}
-        {rescheduleEditOpen? <Rescheduled open={rescheduleEditOpen} handleRescheduledClose={handleRescheduledClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}        
-        {staffEditOpen? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}        
-
+        {rescheduleEditOpen ? <Rescheduled open={rescheduleEditOpen} handleRescheduledClose={handleRescheduledClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}        
+        {staffEditOpen ? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}        
+        {taskHistoryOpen ? <TaskHistory open={taskHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} historyData={historyData} /> : null }
         <Snackbar
           anchorOrigin={{
             vertical: 'top',

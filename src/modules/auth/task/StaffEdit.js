@@ -20,16 +20,23 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
-import {useCommonStyles} from '../../common/StyleComman'; 
-
 import LinearProgress from '@material-ui/core/LinearProgress';
+
+import {useCommonStyles} from '../../common/StyleComman';
+import ViewMsgList from './OtherComponents/ViewMsgList';
+
 // API CALL
 import Task from '../../../api/Task';
 import Staff from '../../../api/franchise/Staff';
+
+
 const RESET_VALUES = {
   id: '',
   first_name: '',
@@ -96,6 +103,8 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
+
 const StyledTableCell = withStyles(theme => ({
   head: {
     color: theme.palette.common.black,
@@ -114,6 +123,7 @@ const StyledTableRow = withStyles(theme => ({
     },
   },
 }))(TableRow);
+
 export default function StaffEdit({open, handleStaffEditClose, handleSnackbarClick,  inputs, setTaskList }) {
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -124,8 +134,13 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   const [dateToday, setTodayDate]= useState();
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
+  const [expanded, setExpanded] = React.useState('');
+  const [msgList, setMsgList] =  React.useState([]);
   const taskStatus = inputs.status;
 
+  const handleChange = panel => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const addTaskMaster = async () => {
     setpLoading(true);
@@ -139,6 +154,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
       updated_date : taskList.updated_date,
       status : taskList.status,
       document : taskList.document,
+      is_assigned_to_all : taskList.is_assigned_to_all,
       start_date : taskList.updated_date,
     }
     let formData = new FormData();
@@ -162,6 +178,10 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
         todayDate();
         const result = await Staff.list();
         setStaffList(result.staffList);
+        
+        const msgResult = await Task.getMsgList({id: taskList.id});
+        // console.log('msg List', msgResult);
+        setMsgList(msgResult);
       } catch (error) {
         setIsError(true);
       }
@@ -383,6 +403,25 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                   // placeholder="Franchise Name"
                   margin="dense"
                 /> 
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel1'} onChange={handleChange('panel1')} >
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="" id="panel1a-header">
+                    <Typography className={classes.heading}>View Messages </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <ViewMsgList msgList={ msgList } />
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+                
+                <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel2'} onChange={handleChange('panel2')} >
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="" id="panel1a-header">
+                    <Typography className={classes.heading}>Document </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                  
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
               </Grid>
               <Grid item xs={12} sm={12}>
                 {savebtn? 

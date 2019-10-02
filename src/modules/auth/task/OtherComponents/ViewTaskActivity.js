@@ -9,6 +9,17 @@ import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import CreateIcon from '@material-ui/icons/Create';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import FolderIcon from '@material-ui/icons/Folder';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+
+
+import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import EditIcon from '@material-ui/icons/Edit';
@@ -28,9 +39,17 @@ import PropTypes from 'prop-types';
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    flexGrow: 1,
+    width: '100%',
+    // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
+  },
+  inline: {
+    display: 'inline',
+    fontSize: theme.typography.pxToRem(11),
+  },
+  msg: {
+    display: 'inline',
+    fontSize: theme.typography.pxToRem(13),
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -118,58 +137,81 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function AssignedToMe({task, handleClickDelete, handleHistoryOpen }) {
+export default function ViewTaskActivity({activityList}) {
   const classes = useStyles();
   return (  
     <Table className={classes.table}>
       <TableHead>
         <TableRow>
           <StyledTableCell>#</StyledTableCell>
-          <StyledTableCell>Task ID</StyledTableCell>
-          <StyledTableCell>Task Description</StyledTableCell>
-          <StyledTableCell>Assigned To</StyledTableCell>
-          <StyledTableCell>Status</StyledTableCell>
-          <StyledTableCell>Due Date</StyledTableCell>
-          <StyledTableCell>Start Date</StyledTableCell>
-          <StyledTableCell>Completion Date</StyledTableCell>
-          {/* <StyledTableCell>Message</StyledTableCell>
-          <StyledTableCell>Document</StyledTableCell> */}
-          <StyledTableCell>Options</StyledTableCell>
+          <StyledTableCell>Activity</StyledTableCell>
+          <StyledTableCell>Date</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>        
-      {(task.length > 0 ? task : []).map((data, index)=>{
+      {(activityList.length > 0 ? activityList : []).map((data, index)=>{
           return(          
             <TableRow>
               <StyledTableCell> {index+1}  </StyledTableCell>
-              <StyledTableCell> {data.task_id}  </StyledTableCell>
-              <StyledTableCell> {data.task_description}  </StyledTableCell>
-              <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
               <StyledTableCell> {data.task_status_name}</StyledTableCell>
-              <StyledTableCell> {data.due_date}</StyledTableCell>
-              <StyledTableCell> {data.start_date}</StyledTableCell>
-              <StyledTableCell> {data.completion_date}</StyledTableCell>
-              {/* <StyledTableCell> {data.message}</StyledTableCell>
-              <StyledTableCell>
-                <a href={API_URL + "/api/download?path=taskFile/" + data.document } download >{data.document}</a>                          
-              </StyledTableCell> */}
-              <StyledTableCell>
-              <Tooltip title="View History">                              
-                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
-                    <ArchiveIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Archive Task">                              
-                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickDelete(data); }}>
-                    <ArchiveIcon />
-                  </IconButton>
-                </Tooltip>
-              </StyledTableCell>                          
+              <StyledTableCell> {data.close_date}</StyledTableCell>  
             </TableRow>                   
           )
         })
       }
       </TableBody>
     </Table>
+    // <List className={classes.root}>
+    // {(msgList.length > 0 && msgList != "" ? msgList : []).map((data, index) => {
+    //   return(
+    //     <div>
+    //       <ListItem alignItems="flex-start">
+    //         {/* <ListItemAvatar>
+    //           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+    //         </ListItemAvatar> */}
+    //         <ListItemIcon>
+    //           <PlayArrowIcon />
+    //         </ListItemIcon>
+    //         <ListItemText
+    //           primary={
+    //             <React.Fragment>
+    //               <Typography
+    //                 className={classes.msg}
+    //                 color="textPrimary"
+    //               >
+    //                 {data.message}
+    //               </Typography>                 
+    //             </React.Fragment>
+    //           }
+    //           secondary={
+    //             <React.Fragment>
+    //               <Typography
+    //                 component="span"
+    //                 variant="body2"
+    //                 className={classes.inline}
+    //                 color="textPrimary"
+    //               >
+    //                 {data.user_name + " (" + data.user_role + ")" }
+    //                 {" — during convert into \"" + data.status_name + "\"" + " on " + data.created_at }
+    //               </Typography>
+    //               {/* <Typography
+    //                 component="span"
+    //                 variant="body2"
+    //                 className={classes.inline}
+    //                 color="textPrimary"
+    //               >
+    //                 { " —  " + data.created_at}
+    //               </Typography> */}
+                  
+    //             </React.Fragment>
+    //           }
+    //         />
+    //       </ListItem>     
+    //     <Divider variant="inset" component="li" />  
+    //   </div>           
+    //   )
+    // })}
+    // </List>
+
   )
 }

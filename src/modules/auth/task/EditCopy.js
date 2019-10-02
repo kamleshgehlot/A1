@@ -146,6 +146,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
         assign_role : taskList.assign_role,
         assigned_to : taskList.assigned_to,
         status : taskList.status,
+        is_assigned_to_all : taskList.is_assigned_to_all,
         due_date : taskList.due_date,
         created_by_role : roleName,
         unUpdated_Task_Data :  inputs,
@@ -338,7 +339,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
             </Grid>
             <Grid item xs={12} sm={12}>  
               {savebtn? 
-                <Button variant="contained" color="primary" disabled={(taskList.status !=1 ) ? true : false} className={classes.button} onClick={updateTask}  type="submit">
+                <Button variant="contained" color="primary" disabled={(taskList.status !=1 && taskList.status !=4) ? true : false} className={classes.button} onClick={updateTask}  type="submit">
                   Update
                 </Button>: 
                 <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>

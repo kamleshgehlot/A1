@@ -35,6 +35,8 @@ taskRouter.route('/deleteTask').post(validateToken, Task.deleteTask);
 taskRouter.route('/reschedule').post(validateToken, Task.reschedule);
 taskRouter.route('/rescheduledtasklist').get(validateToken, Task.rescheduledTaskList);
 taskRouter.route('/assigntoother').get(validateToken, Task.assignToOther);
+taskRouter.route('/getMsgList').post(validateToken, Task.getMsgList);
+taskRouter.route('/getTaskHistory').post(validateToken, Task.getTaskHistory);
 
 
 // staff task list
