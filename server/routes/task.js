@@ -28,11 +28,15 @@ const validateToken = require('../utils').validateToken;
 const taskRouter = express.Router();
 
 taskRouter.route('/add').post(validateToken, upload.array('avatar'), Task.add);
+taskRouter.route('/editTask').post(validateToken, upload.array('avatar'), Task.editTask);
+taskRouter.route('/staffUpdate').post(validateToken, upload.array('avatar'),  Task.staffUpdate);
+taskRouter.route('/reschedule').post(validateToken,  upload.array('avatar'), Task.reschedule);
+
 taskRouter.route('/list').get(validateToken, Task.all);
 taskRouter.route('/last').get(validateToken, Task.last);
 taskRouter.route('/completedList').get(validateToken, Task.completedList);
 taskRouter.route('/deleteTask').post(validateToken, Task.deleteTask);
-taskRouter.route('/reschedule').post(validateToken, Task.reschedule);
+
 taskRouter.route('/rescheduledtasklist').get(validateToken, Task.rescheduledTaskList);
 taskRouter.route('/assigntoother').get(validateToken, Task.assignToOther);
 taskRouter.route('/getMsgList').post(validateToken, Task.getMsgList);
@@ -41,7 +45,7 @@ taskRouter.route('/getTaskHistory').post(validateToken, Task.getTaskHistory);
 
 // staff task list
 taskRouter.route('/staffTasks').get(validateToken, Task.staffTasks);
-taskRouter.route('/staffUpdate').post(validateToken, upload.array('avatar'),  Task.staffUpdate);
+
 
 //task status list
 taskRouter.route('/taskStatus').get(validateToken, TaskStatus.all);

@@ -126,9 +126,9 @@ return (
         <StyledTableCell>#</StyledTableCell>
         <StyledTableCell>Task ID</StyledTableCell>
         <StyledTableCell>Task Description</StyledTableCell>
-        <StyledTableCell>Assigned To</StyledTableCell>
+        <StyledTableCell>Assigned By</StyledTableCell>
         <StyledTableCell>Status</StyledTableCell>
-        <StyledTableCell>Due Date</StyledTableCell>
+        <StyledTableCell>Request Date</StyledTableCell>
         {/* <StyledTableCell>Options</StyledTableCell> */}
       </TableRow>
     </TableHead>
@@ -139,9 +139,10 @@ return (
         <StyledTableCell> {index+1}  </StyledTableCell>
           <StyledTableCell> {data.task_id}  </StyledTableCell>
           <StyledTableCell> {data.task_description}  </StyledTableCell>
-          <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
+          <StyledTableCell> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
           <StyledTableCell> {data.task_status_name}</StyledTableCell>
-          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+          <StyledTableCell> {data.reschedule_req_date}</StyledTableCell>
+          {/* <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell> */}
           {/* <StyledTableCell>
             <Tooltip title="Update Task">                              
               <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>

@@ -27,44 +27,246 @@ const add = async function (req, res, next) {
     msgId : 0,
     docId : 0,
     taskInsertId : 0,
+    activity_description : '',
+  };
+  // console.log('taskparams..',taskParam);
+
+  try {
+    const newTask = new Task(taskParam);
+    const taskInsertId = await newTask.addTask();
+    // console.log('taskInsertId',taskInsertId);
+    newTask.taskInsertId = taskInsertId.taskInsertId;
+    
+    if(taskParam.document !== "" && taskParam.document != undefined){
+      const docInsertId = await newTask.addDocument();
+      newTask.docId = docInsertId.docInsertId;
+      // console.log('docInsertId',docInsertId);
+    }
+    if(taskParam.message !== "" && taskParam.message != undefined){
+      const msgInsertId = await newTask.addMessage();
+      newTask.msgId = msgInsertId.msgInsertId;
+      // console.log('msgInsertId',msgInsertId);
+    }
+
+    newTask.activity_description = "New task added";    
+    const taskActivityResult = await newTask.taskActivityCreate();
+    // console.log('taskActivityResult',taskActivityResult);
+
+    const taskList = await new Task({ user_id: req.decoded.user_id, userId: req.decoded.id }).all();
+    res.send({ taskList });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+const editTask = async function (req, res, next) {
+  console.log('task editTask body params..',req.body)
+  console.log('task editTask decoded params..',req.decoded)
+
+  const staffData = JSON.parse(req.body.data);
+
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
+  const taskParam = {
+    taskInsertId : staffData.id,    
+    task_id : staffData.task_id,
+    task_description : staffData.task_description,
+    assign_to_role: staffData.assign_to_role,
+    assigned_to : staffData.assigned_to,
+    due_date : staffData.due_date,    
+    status : staffData.status,
+    message : staffData.message,
+    document : attachments,
+    user_id : req.decoded.user_id,
+    created_by: req.decoded.id,
+    updated_by: req.decoded.id,
+    creator_role : staffData.creator_role,
+    msgId : 0,
+    docId : 0,
+    lastDataState : staffData.lastDataState,
+    activity_description : '',
+    reschedule_date : '',
   };
   console.log('taskparams..',taskParam);
 
   try {
     const newTask = new Task(taskParam);
-    const taskInsertId = await newTask.addTask();
-    console.log('taskInsertId',taskInsertId);
-    newTask.taskInsertId = taskInsertId.taskInsertId;
     
     if(taskParam.document !== "" && taskParam.document != undefined){
       const docInsertId = await newTask.addDocument();
       newTask.docId = docInsertId.docInsertId;
       console.log('docInsertId',docInsertId);
     }
-    if(taskParam.message !== "" && taskParam.messaage != undefined){
+    if(taskParam.message !== "" && taskParam.message != undefined){
       const msgInsertId = await newTask.addMessage();
       newTask.msgId = msgInsertId.msgInsertId;
       console.log('msgInsertId',msgInsertId);
     }
 
-    const taskActivityResult = await newTask.taskActivityCreate();
-    console.log('taskActivityResult',taskActivityResult);
+    if(taskParam.lastDataState.assign_to_role_id != taskParam.assign_to_role || taskParam.lastDataState.assign_to != taskParam.assigned_to){
+      newTask.activity_description = "assign to other";
+      newTask.reschedule_date = taskParam.due_date;      
+      const taskActivityAssignToOther = await newTask.taskActivityAssignToOther();    
+    } else {
+      newTask.activity_description = "change due date";
+      const taskActivityEdit = await newTask.taskActivityEdit();
+    }
 
-    res.send({});
+    if(taskParam.lastDataState.task_description !== taskParam.task_description){
+      newTask.activity_description = "Change task Description";       
+      const editTaskDescription = await newTask.editTaskDescription();
+    }
+
+    const taskList = await new Task({ user_id: req.decoded.user_id, userId: req.decoded.id }).all();
+    res.send({ taskList });
+
   } catch (err) {
     next(err);
   }
 };
 
+
 const all = async function (req, res, next) {
-  try {
-  
+  try {  
    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
    res.send({ taskList });
   } catch (err) {
     next(err);
   }
 };
+
+
+
+const staffUpdate = async function (req, res, next) {
+  const staffData = JSON.parse(req.body.data);
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+  const taskParam = {
+    taskInsertId : staffData.id,
+    task_id: staffData.task_id,
+    message: staffData.message,
+    status: staffData.status,
+    document: attachments,
+    assign_to_role : staffData.assign_to_role,
+    assigned_to : staffData.assigned_to,
+    due_date : staffData.due_date,
+    start_date : staffData.start_date,
+
+    user_id: req.decoded.user_id,
+    created_by: req.decoded.id,
+
+    msgId : 0,
+    docId : 0,
+    lastDataState : staffData.lastDataState,
+    activity_description : '',
+  };
+  try {
+    const newTask = new Task(taskParam);
+
+    if(taskParam.document !== "" && taskParam.document != undefined){
+      const docInsertId = await newTask.addDocument();
+      newTask.docId = docInsertId.docInsertId;
+      console.log('docInsertId',docInsertId);
+    }
+    if(taskParam.message !== "" && taskParam.message != undefined){
+      const msgInsertId = await newTask.addMessage();
+      newTask.msgId = msgInsertId.msgInsertId;
+      console.log('msgInsertId',msgInsertId);
+    }
+    
+    if(taskParam.status == 2 && taskParam.lastDataState.status != 2){
+      newTask.activity_description = "Task has been started by assignee";
+    } if(taskParam.status == 3 && taskParam.lastDataState.status != 3){
+      newTask.activity_description = "assignee request to reschedule task";
+    } else {
+      newTask.activity_description = "task edited";
+    }
+
+
+
+    const taskActivityUpdateByStaff = await newTask.taskActivityUpdateByStaff();
+
+    const taskList = await new Task({ user_id: req.decoded.user_id, userId: req.decoded.id }).all();
+    res.send({ taskList });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+const reschedule = async function (req, res, next) {
+  console.log('reschedule Req',req.body);
+
+  const staffData = JSON.parse(req.body.data);
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
+  const taskParam = {
+
+    taskInsertId : staffData.id,
+    task_id : staffData.task_id,
+    task_description : staffData.task_description,
+    assign_to_role : staffData.assign_to_role,
+    assigned_to : staffData.assigned_to,
+    due_date : staffData.due_date,
+    start_date : staffData.start_date,
+    reschedule_req_date : staffData.reschedule_req_date,
+    reschedule_date : staffData.reschedule_date,
+    message : staffData.message,
+    status : staffData.status,
+    document : attachments,
+    lastDataState : staffData.lastDataState, 
+    msgId : 0,
+    docId : 0,
+    activity_description : '',
+
+    user_id: req.decoded.user_id,
+    created_by: req.decoded.id,
+  };
+  try {
+    const newTask = new Task(taskParam);
+
+    if(taskParam.document !== "" && taskParam.document != undefined){
+      const docInsertId = await newTask.addDocument();
+      newTask.docId = docInsertId.docInsertId;
+      console.log('docInsertId',docInsertId);
+    }
+    if(taskParam.message !== "" && taskParam.message != undefined){
+      const msgInsertId = await newTask.addMessage();
+      newTask.msgId = msgInsertId.msgInsertId;
+      console.log('msgInsertId',msgInsertId);
+    }
+
+    if(taskParam.lastDataState.assign_to_role_id != taskParam.assign_to_role || taskParam.lastDataState.assign_to != taskParam.assigned_to){
+      newTask.activity_description = "assign to other";
+      const taskActivityAssignToOther = await newTask.taskActivityAssignToOther();    
+    } else{
+      newTask.activity_description = "task rescheduled";      
+      const reschedule = await newTask.reschedule();
+    }
+
+    const taskList = await new Task({ user_id: req.decoded.user_id, userId: req.decoded.id }).all();
+    res.send({ taskList });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 const rescheduledTaskList = async function (req, res, next) {
   try {
@@ -122,36 +324,6 @@ const deleteTask = async function (req, res, next) {
   }
 };
 
-const reschedule = async function (req, res, next) {
-  console.log('reschedule Req',req.body);
-  const taskParam = {
-    franchise_id: req.decoded.franchise_id,
-    id: req.body.id,
-    task_id: req.body.task_id,
-    assign_table_id : req.body.assign_table_id,
-    task_description: req.body.task_description,
-    assign_role: req.body.assign_role,
-    assigned_to: req.body.assigned_to,
-    due_date: req.body.due_date,
-    new_due_date: req.body.new_due_date,
-    // is_assigned_to_all : req.body.is_assigned_to_all,
-    status: 4,
-    updated_by: req.decoded.id,
-    created_by: req.decoded.id,
-    user_id: req.decoded.user_id,
-    created_by_role : req.body.created_by_role,
-  };
-
-  try {
-    const newTask = new Task(taskParam);
-    await newTask.reschedule();
-    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
-    
-    res.send({ taskList });
-  } catch (err) {
-    next(err);
-  }
-};
 
 // staff task list
 const staffTasks = async function (req, res, next) {
@@ -163,49 +335,13 @@ const staffTasks = async function (req, res, next) {
   }
 };
 
-const staffUpdate = async function (req, res, next) {
-
-  const staffData = JSON.parse(req.body.data);
-
-  let attachments = '';
-
-  req.files.map((file) => {
-    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
-  });
-
-  const taskParam = {
-    id: staffData.id,
-    task_id: staffData.task_id,
-    assigned_role: staffData.assigned_role,
-    assigned_to: staffData.assigned_to,
-    message: staffData.message,
-    assign_table_id : staffData.assign_table_id,
-    is_assigned_to_all : staffData.is_assigned_to_all,
-    status: staffData.status,
-    user_id: req.decoded.user_id,
-    updated_by: req.decoded.id,
-    updated_date: staffData.updated_date,
-    created_by: req.decoded.id,
-    start_date :  staffData.start_date,
-    document: attachments,
-  };
-
-  try {
-    const newTask = new Task(taskParam);
-    await newTask.staffUpdate();
-    const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
-    res.send({ taskList });
-  } catch (err) {
-    next(err);
-  }
-};
 
 
 
 const getMsgList = async function (req, res, next) {
 
   const taskParam = {
-    id : req.body.id,
+    taskInsertId : req.body.id,
     user_id : req.decoded.user_id,
   };
 
@@ -239,4 +375,4 @@ const getTaskHistory = async function (req, res, next) {
 
 
 
-module.exports = { add, all, last, completedList, deleteTask, reschedule, getTaskHistory, staffTasks, staffUpdate, getMsgList, rescheduledTaskList, assignToOther };
+module.exports = { add, editTask, all, last, completedList, deleteTask, reschedule, getTaskHistory, staffTasks, staffUpdate, getMsgList, rescheduledTaskList, assignToOther };

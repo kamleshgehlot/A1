@@ -149,7 +149,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
   
   const [otherDisable, setOtherDisable] = useState(true);
   const [role, setRole] = useState([]);
-  const [franchiseUsersList, setFranchiseUsersList] = useState({});
 
 
 
@@ -185,45 +184,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
   }, []);
 
  
-  // useEffect(() => {
-  //     const fetchData = async () => {
-  //       setIsError(false);
-  //       setIsLoading(true);
-  //       try {
-  //         const result = await FranchiseUsers.list();
-  //         setFranchiseUsersList(result.franchiseUserList);
-  //       } catch (error) {
-  //         setIsError(true);
-  //       }
-  //       setIsLoading(false);
-  //     };
-  //     fetchData();
-  //   }, []);
 
   const addTaskMaster = async () => {
     setpLoading(true);
     setSavebtn(false);
-    // console.log('assign_role---',staffRole);
-    // const data={      
-    //   id: taskList.id,
-    //   assign_table_id : taskList.assignid,
-    //   task_id : taskList.task_id,
-    //   message : taskList.message,
-    //   updated_date : taskList.updated_date,
-    //   status : taskList.status,
-    //   document : taskList.document,
-    //   is_assigned_to_all : taskList.is_assigned_to_all,
-    //   start_date : taskList.updated_date,
-    // }
-    // let formData = new FormData();
-    // formData.append('data', JSON.stringify(data));
-    
-    // for (var x = 0; x < document.getElementById('document').files.length; x++) {
-    //   formData.append('avatar', document.getElementById('document').files[x])
-    // }
-    
-    // const response = await Task.staffUpdate({ formData: formData });
-
     const data = {
       task_id : inputs.task_id,
       task_description : inputs.task_description,
@@ -261,7 +225,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
     const response = await FranchiseUsers.staffRoleList({
       selectedRole:selectedRole
     });
-    console.log('response.staffList====',response.staffList);
+    // console.log('response.staffList====',response.staffList);
     setStaffList(response.staffList);
     setOtherDisable(false);
   };
@@ -285,7 +249,7 @@ function handleDate(date){
     validate
   );
 
-  console.log('task add',inputs)
+  // console.log('task add',inputs)
 
 return (
     <div>
@@ -457,28 +421,7 @@ return (
                     type="file"
                     // placeholder="Franchise Name"
                     margin="dense"
-                  /> 
-                    {/* <TextField 
-                        InputProps={{
-                          classes: {
-                            input: classes.textsize,
-                          },
-                        }}
-                        id="document"
-                        name="document"
-                        // label="Task Description"
-                        value={inputs.document}
-                        onChange={handleInputChange}
-                        error={errors.document}
-                        helperText={errors.document}
-                        fullWidth
-                        // required 
-                        className={classes.tbrow}
-                        type="file"
-                        multiline
-                        // placeholder="Franchise Name"
-                        margin="dense"
-                      />                   */}
+                  />                 
                   </Grid>
                   <Grid item xs={12} sm={12}> 
                     {savebtn? 

@@ -23,6 +23,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
+import {getDate, getCurrentDate} from '../../../utils/datetime';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 // API CALL
@@ -108,20 +109,23 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [role, setRole] = useState([]);
- function validate(values) {
+ 
+  function validate(values) {
    
     let errors = {};
     if (!values.task_description) {
       errors.task_description = 'Task Description is required';
     } 
   
-    if (!values.assigned_to) {
-      errors.assigned_to = 'Assigned To is required';
+    if (!values.assign_to) {
+      errors.assign_to = 'Assigned To is required';
     } 
-    if (!values.assign_role) {
-      errors.assign_role = 'Assigned Role is required';
+    if (!values.assign_to_role_id) {
+      errors.assign_to_role_id = 'Assigned Role is required';
     } 
-    
+    if(!values.reschedule_date){
+      errors.reschedule_date = 'Date is required'; 
+    }
     if (!values.due_date) {
       errors.due_date = 'Due Date is required';
     } 
@@ -129,26 +133,40 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
     return errors;
   };
     
+    
   const rescheduleTask = async () => {
 
-    const response = await Task.reschedule({
+    const data={      
       id : taskList.id,
-      assign_table_id : taskList.assignid,
       task_id : taskList.task_id,
       task_description : taskList.task_description,
-      assign_role : taskList.assign_role,
-      assigned_to : taskList.assigned_to,
-      status : taskList.status,
-      is_assigned_to_all : taskList.is_assigned_to_all,
+      assign_to_role : taskList.assign_to_role_id,
+      assigned_to : taskList.assign_to,
       due_date : taskList.due_date,
-      new_due_date : taskList.new_due_date,
-      created_by_role : roleName,
-    });
+      start_date : taskList.start_date,
+      reschedule_req_date : taskList.reschedule_req_date,
+      reschedule_date : taskList.reschedule_date,
+      
+      message : taskList.message,
+      status : taskList.status,
+      document : taskList.document,
+      lastDataState : inputs, 
+    }
+
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+    
+    for (var x = 0; x < document.getElementById('document').files.length; x++) {
+      formData.append('avatar', document.getElementById('document').files[x])
+    }
+    const response = await Task.reschedule({ formData: formData });
+
     handleSnackbarClick(true,'Task Rescheduled Successfully');
     setTaskList(response.taskList);
     setSavebtn(true);
     handleRescheduledClose(false);
   };
+
 
   function handleRoleChange(e){
 
@@ -176,7 +194,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
       setIsLoading(true);
       try {
         const response = await FranchiseUsers.staffRoleList({
-          selectedRole:taskList.assign_role
+          selectedRole:taskList.assign_to_role_id
         });
         setStaffList(response.staffList);
 
@@ -196,28 +214,13 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
     setTasksList({ ...taskList, [name]: value })
   }
 
-  function handleDate(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'due_date', value: fullDate}})
+  function handleNewDueDate(date){    
+    let date1 = getDate(date);
+    handleInputChange({target:{name: 'reschedule_date', value: date1}})
   }
 
-  function handleNewDueDate(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'new_due_date', value: fullDate}})
-  }
 
+console.log('taskList rescheduled',taskList);
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -271,14 +274,14 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
                   // disabled={(taskList.status !=1 && taskList.status !=3) ? true : false}          
                   // disabled = {(taskList.status===3 || taskList.status ===2) ? true : false}
                   disabled
-                  onChange={handleDate}
+                  // onChange={handleDate}
                   error={errors.due_date}
                   helperText={errors.due_date}                               
                 />
               </MuiPickersUtilsProvider>
             </Grid>            
               <Grid item xs={12} sm={4}>  
-                <InputLabel  className={classes.textsize} htmlFor="new_due_date">New Due Date</InputLabel>
+                <InputLabel  className={classes.textsize} htmlFor="reschedule_date">Reissue Due Date</InputLabel>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                      InputProps={{
@@ -287,26 +290,26 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
                       },
                     }}
                     margin="dense"
-                    id="new_due_date"
-                    name="new_due_date"
+                    id="reschedule_date"
+                    name="reschedule_date"
                     format="dd/MM/yyyy"
                     disablePast = {true}
-                    value={taskList.new_due_date}
+                    value={taskList.reschedule_date}
                     fullWidth                                     
                     onChange={handleNewDueDate}
-                    error={errors.new_due_date}
-                    helperText={errors.new_due_date}                               
+                    error={errors.reschedule_date}
+                    helperText={errors.reschedule_date}                               
                   />
                 </MuiPickersUtilsProvider>
             </Grid>
             
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assign_role">Assigned Role</InputLabel>
+              <InputLabel  className={classes.textsize} htmlFor="assign_to_role_id">Assigned Role</InputLabel>
               <Select
-                value={taskList.assign_role}
+                value={taskList.assign_to_role_id}
                 inputProps={{
-                  name: 'assign_role',
-                  id: 'assign_role',
+                  name: 'assign_to_role_id',
+                  id: 'assign_to_role_id',
                 }}
                 onChange={handleRoleChange}
                 className={classes.textsize}
@@ -322,14 +325,14 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
               </Select>
             </Grid>
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assigned_to">Assigned To</InputLabel>
+              <InputLabel  className={classes.textsize} htmlFor="assign_to">Assigned To</InputLabel>
               <Select
                 disabled={taskList.status ===2}
-                  value={taskList.assigned_to}
+                  value={taskList.assign_to}
                   onChange={handleInputChange}
                   inputProps={{
-                    name: 'assigned_to',
-                    id: 'assigned_to',
+                    name: 'assign_to',
+                    id: 'assign_to',
                   }}
                   className={classes.textsize}
                   fullWidth
@@ -343,28 +346,6 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
                     }
               </Select>
             </Grid>
-            
-              {/* <Grid item xs={12} sm={taskList.status ===3 ? 6 : 12}> 
-                <InputLabel  className={classes.textsize} htmlFor="message">Message</InputLabel>
-                <TextField 
-                  InputProps={{
-                      classes: {
-                        input: classes.textsize,
-                      },
-                    }}
-                  id="message"
-                  name="message"
-                  // label="Task Id"
-                  value={taskList.message}
-                  onChange={handleInputChange}
-                  fullWidth
-                  disabled = {(taskList.status ===2 || taskList.status === 3) ? true : false}
-                  type="text"
-                  margin="dense"
-                /> 
-              </Grid>
-             */}
-
             <Grid item xs={12} sm={12}>  
               <InputLabel  className={classes.textsize} htmlFor="task_description">Task Description</InputLabel>
               <TextField 
@@ -383,10 +364,53 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
                 helperText={errors.task_description}
                 type="text"
                 multiline
-                // disabled={taskList.status ===2}
                 margin="dense"
+                disabled
               /> 
             </Grid>
+            <Grid item xs={12} sm={6}>  
+                  <InputLabel  className={classes.textsize} htmlFor="message">Message Box</InputLabel> 
+                    <TextField 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        id="message"
+                        name="message"
+                        // label="Task Description"
+                        value={taskList.message}
+                        onChange={handleInputChange}
+                        error={errors.message}
+                        helperText={errors.message}
+                        fullWidth
+                        // required 
+                        className={classes.tbrow}
+                        type="text"
+                        multiline
+                        // placeholder="Franchise Name"
+                        margin="dense"
+                      />                  
+                  </Grid>
+                  <Grid item xs={12} sm={6}>  
+                  <InputLabel  className={classes.textsize} htmlFor="document">Document</InputLabel> 
+                  <TextField  
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                    }}
+                    id="document"
+                    name="document"
+                    // label="Task Id"
+                    value={taskList.document}
+                    onChange={handleInputChange}
+                    fullWidth
+                    type="file"
+                    // placeholder="Franchise Name"
+                    margin="dense"
+                  />                 
+                  </Grid>
             <Grid item xs={12} sm={12}>  
               {savebtn? 
                 <Button variant="contained" color="primary" className={classes.button} onClick={ rescheduleTask }  type="submit">

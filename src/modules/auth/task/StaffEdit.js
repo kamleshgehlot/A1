@@ -28,7 +28,7 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import {getDate, getCurrentDate} from '../../../utils/datetime';
 import {useCommonStyles} from '../../common/StyleComman';
 import ViewMsgList from './OtherComponents/ViewMsgList';
 
@@ -141,6 +141,8 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  
+  console.log('taskList Staff', taskList);
 
   const addTaskMaster = async () => {
     setpLoading(true);
@@ -148,14 +150,16 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
 
     const data={      
       id: taskList.id,
-      assign_table_id : taskList.assignid,
       task_id : taskList.task_id,
+      assign_to_role : taskList.assign_to_role_id,
+      assigned_to : taskList.assign_to,
+      due_date : taskList.due_date,
+      start_date : taskList.start_date,
+      
       message : taskList.message,
-      updated_date : taskList.updated_date,
       status : taskList.status,
       document : taskList.document,
-      is_assigned_to_all : taskList.is_assigned_to_all,
-      start_date : taskList.updated_date,
+      lastDataState : inputs,      
     }
     let formData = new FormData();
     formData.append('data', JSON.stringify(data));
@@ -211,16 +215,9 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   }
 
 
-  function handleDate(date){
-    console.log('date',date);
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'due_date', value: fullDate}})
+  function handleDate(date){    
+    let date1 = getDate(date);
+    handleInputChange({target:{name: 'due_date', value: date1}});
   }
 
   return (
@@ -305,7 +302,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                   /> 
               </Grid>
               <Grid item xs={12} sm={6}>
-                <InputLabel  className={classes.textsize} htmlFor="document">Browse Document</InputLabel>
+                <InputLabel  className={classes.textsize} htmlFor="document">Upload Document</InputLabel>
                   <TextField  
                     InputProps={{
                       classes: {
@@ -314,12 +311,10 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                     }}
                     id="document"
                     name="document"
-                    // label="Task Id"
                     value={taskList.document}
                     onChange={handleInputChange}
                     fullWidth
                     type="file"
-                    // placeholder="Franchise Name"
                     margin="dense"
                   /> 
               </Grid>              

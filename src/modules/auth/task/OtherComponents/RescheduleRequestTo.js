@@ -127,8 +127,8 @@ return (
         <StyledTableCell>Task ID</StyledTableCell>
         <StyledTableCell>Task Description</StyledTableCell>
         <StyledTableCell>Assigned To</StyledTableCell>        
-        <StyledTableCell>Start Date</StyledTableCell>        
-        {/* <StyledTableCell>Message</StyledTableCell> */}
+        <StyledTableCell>Due Date</StyledTableCell>      
+        <StyledTableCell>Start Date</StyledTableCell>
         {/* <StyledTableCell>Document</StyledTableCell> */}
         <StyledTableCell>Options</StyledTableCell>
       </TableRow>
@@ -140,7 +140,8 @@ return (
           <StyledTableCell> {index+1}  </StyledTableCell>
           <StyledTableCell> {data.task_id}  </StyledTableCell>
           <StyledTableCell> {data.task_description}  </StyledTableCell>
-          <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
+          <StyledTableCell>  {data.assign_to_name + " (" + data.assign_to_role_name + ")"} </StyledTableCell>
+          <StyledTableCell> {data.due_date}</StyledTableCell>
           <StyledTableCell> {data.start_date}</StyledTableCell>          
           {/* <StyledTableCell> {data.message}</StyledTableCell>
           <StyledTableCell>

@@ -126,10 +126,12 @@ return (
           <StyledTableCell>#</StyledTableCell>
           <StyledTableCell>Task ID</StyledTableCell>
           <StyledTableCell>Task Description</StyledTableCell>
-          <StyledTableCell>Assign Role</StyledTableCell>
+          {/* <StyledTableCell>Assign Role</StyledTableCell> */}
           <StyledTableCell>Assigned To</StyledTableCell>
           <StyledTableCell>Status</StyledTableCell>
+          <StyledTableCell>Due Date</StyledTableCell>
           <StyledTableCell>Start Date</StyledTableCell>
+          {/* <StyledTableCell>Completed Date</StyledTableCell> */}
           {/* <StyledTableCell>Document</StyledTableCell> */}
           <StyledTableCell>Options</StyledTableCell>
         </TableRow>
@@ -141,10 +143,13 @@ return (
               <StyledTableCell> {index+1}  </StyledTableCell>
               <StyledTableCell> {data.task_id}  </StyledTableCell>
               <StyledTableCell> {data.task_description}  </StyledTableCell>
-              <StyledTableCell> {data.assign_role_name}</StyledTableCell>
-              <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
-              <StyledTableCell> {data.status === 3 ? <p className = {classes.bgtaskoverdue}> Requesting for Rescheduling </p> : data.task_status_name}</StyledTableCell>
+              {/* <StyledTableCell> {data.assign_role_name}</StyledTableCell> */}
+              <StyledTableCell> {data.assign_to_name + " (" + data.assign_to_role_name + ")"}</StyledTableCell>
+              {/* <StyledTableCell> {data.status === 3 ? <p className = {classes.bgtaskoverdue}> Requesting for Rescheduling </p> : data.task_status_name}</StyledTableCell> */}
+              <StyledTableCell> {data.task_status_name}</StyledTableCell>
+              <StyledTableCell> {data.due_date}</StyledTableCell>
               <StyledTableCell> {data.start_date}</StyledTableCell>
+              {/* <StyledTableCell> {data.completed_date}</StyledTableCell> */}
               {/* <StyledTableCell>
                 <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          
               </StyledTableCell> */}

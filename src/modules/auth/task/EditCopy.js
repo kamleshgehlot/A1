@@ -31,6 +31,7 @@ import Role from '../../../api/franchise/Role';
 // import Staff from '../../../api/franchise/Staff';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 import {useCommonStyles} from '../../common/StyleComman'; 
+import {getDate, getCurrentDate} from '../../../utils/datetime';
 
 // const RESET_VALUES = {
 //   id: '',
@@ -111,11 +112,11 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
     if (!values.task_description) {
       errors.task_description = 'Task Description is required';
     } 
-    if (!values.assigned_to) {
-      errors.assigned_to = 'Assigned To is required';
+    if (!values.assign_to) {
+      errors.assign_to = 'Assigned To is required';
     } 
-    if (!values.assign_role) {
-      errors.assign_role = 'Assigned Role is required';
+    if (!values.assign_to_role_id) {
+      errors.assign_to_role_id = 'Assigned Role is required';
     } 
     if (!values.due_date) {
       errors.due_date = 'Due Date is required';
@@ -123,7 +124,6 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
     return errors;
   };
 
-  console.log('task edit',taskList)
   const updateTask = async () => {
     let check=false;
     setIsSubmitting(true);
@@ -138,25 +138,38 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
     if(check===false){
       setpLoading(true);
       setSavebtn(false);
-      const response = await Task.add({
+        
+      const data = {
         id : taskList.id,
-        assign_table_id : taskList.assignid,
         task_id : taskList.task_id,
-        task_description : taskList.task_description,
-        assign_role : taskList.assign_role,
-        assigned_to : taskList.assigned_to,
-        status : taskList.status,
-        is_assigned_to_all : taskList.is_assigned_to_all,
         due_date : taskList.due_date,
-        created_by_role : roleName,
-        unUpdated_Task_Data :  inputs,
-      });
+        assign_to_role : taskList.assign_to_role_id, 
+        assigned_to : taskList.assign_to,
+        task_description : taskList.task_description,
+        status : taskList.status,
+        creator_role : roleName,
+        message : taskList.message,
+        document : taskList.document,
+        lastDataState : inputs,
+      }
+
+      let formData = new FormData();
+      formData.append('data', JSON.stringify(data));
+
+      for (var x = 0; x < document.getElementById('document').files.length; x++) {
+          formData.append('avatar', document.getElementById('document').files[x])
+      }
+      
+      const response = await Task.editTask({ formData : formData });
+      console.log(response);
       handleSnackbarClick(true,'Task Updated Successfully');
       setTaskList(response.taskList);
       setpLoading(false);
       handleEditClose(false);
       }
   };
+  
+  console.log('errors',errors);
 
   
   function handleRoleChange(e){
@@ -200,16 +213,11 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
     setTasksList({ ...taskList, [name]: value })
   }
 
-  function handleDate(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'due_date', value: fullDate}})
+  function handleDate(date){    
+    let date1 = getDate(date);
+    handleInputChange({target:{name: 'due_date', value: date1}});
   }
+  console.log('taskList',taskList);
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -268,12 +276,12 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
               </MuiPickersUtilsProvider>
             </Grid>
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assign_role">Assigned Role</InputLabel>
+              <InputLabel  className={classes.textsize} htmlFor="assign_role">Role List</InputLabel>
                 <Select
-                  value={taskList.assign_role}
+                  value={taskList.assign_to_role_id}
                   inputProps={{
-                    name: 'assign_role',
-                    id: 'assign_role',
+                    name: 'assign_to_role_id',
+                    id: 'assign_to_role_id',
                   }}
                   onChange={handleRoleChange}
                   className={classes.textsize}
@@ -291,19 +299,17 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
               </Select>
             </Grid>
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assigned_to">Assigned To</InputLabel>
+              <InputLabel  className={classes.textsize} htmlFor="assigned_to">Assign To</InputLabel>
               <Select
                   disabled={taskList.status ===2}
-                  value={taskList.assigned_to}
+                  value={taskList.assign_to}
                   onChange={handleInputChange}
                   inputProps={{
-                    name: 'assigned_to',
-                    id: 'assigned_to',
-                    // label:'assigned_to'
+                    name: 'assign_to',
+                    id: 'assign_to',
                   }}
                   className={classes.textsize}
                   fullWidth
-                  // label="assigned_to"
                   required
                 >
                   <MenuItem className={classes.textsize} value={'0'}>{'All'} </MenuItem>
@@ -337,6 +343,49 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
                 disabled={taskList.status ===2}
               /> 
             </Grid>
+            <Grid item xs={12} sm={6}>  
+              <InputLabel  className={classes.textsize} htmlFor="message">Message Box</InputLabel> 
+                <TextField 
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="message"
+                  name="message"
+                  // label="Task Description"
+                  value={taskList.message}
+                  onChange={handleInputChange}
+                  // error={errors.message}
+                  // helperText={errors.message}
+                  fullWidth
+                  // required 
+                  className={classes.tbrow}
+                  type="text"
+                  multiline
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                />                  
+              </Grid>
+              <Grid item xs={12} sm={6}>  
+                <InputLabel  className={classes.textsize} htmlFor="document">Document</InputLabel> 
+                <TextField  
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="document"
+                  name="document"
+                  // label="Task Id"
+                  value={taskList.document}
+                  onChange={handleInputChange}
+                  fullWidth
+                  type="file"
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                /> 
+              </Grid>
             <Grid item xs={12} sm={12}>  
               {savebtn? 
                 <Button variant="contained" color="primary" disabled={(taskList.status !=1 && taskList.status !=4) ? true : false} className={classes.button} onClick={updateTask}  type="submit">

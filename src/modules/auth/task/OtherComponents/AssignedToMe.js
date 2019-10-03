@@ -126,7 +126,7 @@ return (
         <StyledTableCell>#</StyledTableCell>
         <StyledTableCell>Task ID</StyledTableCell>
         <StyledTableCell>Task Description</StyledTableCell>
-        <StyledTableCell>Assigned To</StyledTableCell>
+        <StyledTableCell>Assigned By</StyledTableCell>
         <StyledTableCell>Status</StyledTableCell>
         <StyledTableCell>Due Date</StyledTableCell>
         <StyledTableCell>Options</StyledTableCell>
@@ -139,7 +139,7 @@ return (
         <StyledTableCell> {index+1}  </StyledTableCell>
           <StyledTableCell> {data.task_id}  </StyledTableCell>
           <StyledTableCell> {data.task_description}  </StyledTableCell>
-          <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
+          <StyledTableCell> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
           <StyledTableCell> {data.task_status_name}</StyledTableCell>
           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
           <StyledTableCell>

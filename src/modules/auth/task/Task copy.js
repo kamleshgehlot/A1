@@ -213,7 +213,7 @@ export default function Task({roleName}) {
     const date= year + '-' + month + '-' + day;
     setTodayDate(date);
   }
-console.log('task data',tasksList)
+// console.log('task data',tasksList)
   function todayDate(){
     const dtToday=new Date();
 
@@ -283,7 +283,7 @@ console.log('task data',tasksList)
   const handleHistoryOpen = async (response) => {
     setHistoryData(response);
     setTaskHistoryOpen(true);
-    console.log('task history', response);
+    // console.log('task history', response);
     // const result = await TaskAPI.getTaskHistory({
     //   id: response.id,
     //   task_id: response.assignid,
@@ -352,28 +352,28 @@ console.log('task data',tasksList)
     }
     
    (task.length > 0 ? task : []).map((data, index) => {
-      if((data.created_by == userId || data.assigned_to== userId) && data.created_by_role == roleName ){
+      if((data.task_created_by == userId || data.assign_to== userId) && (data.creator_role == roleName || data.assign_to_role_name == roleName) ){
           // console.log('all',data);
           all.push(data);
         }
-      if(data.assigned_to == userId && data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.assign_role == roleId){
+      if(data.assign_to == userId && data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.assign_to_role_name == roleName){
         // && data.created_by == (data.status == 3 ? userId : data.created_by)
           // console.log('assignedToMe',data);
           assignedToMe.push(data);
         }
-      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.created_by== userId && data.created_by_role == roleName){
+      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.task_created_by== userId && data.creator_role == roleName){
           // console.log('assignedByMe',data);
           assignedByMe.push(data);
         }
-      if(data.is_active == 1 && data.status == 3 && data.created_by == userId && data.created_by_role == roleName ){
+      if(data.is_active == 1 && data.status == 3 && data.task_created_by == userId && data.creator_role == roleName ){
           // console.log('rescheduleRequestToMe',data);
           rescheduleRequestToMe.push(data);
         }
-      if(data.is_active == 1 && data.status == 3 && data.assigned_to == userId ){
+      if(data.is_active == 1 && data.status == 3 && data.assign_to == userId ){
           // console.log('rescheduleRequestByMe',data);
           rescheduleRequestByMe.push(data);
         }
-      if(data.status == 9 && data.is_active == 0 && (data.created_by == userId || data.assigned_to == userId) ){
+      if(data.status == 6 && data.is_active == 0 && (data.task_created_by == userId || data.assign_to == userId) && (data.creator_role == roleName || data.assign_to_role_name == roleName) ){
           // console.log('completed',data);
           completed.push(data);
         }
@@ -391,11 +391,11 @@ console.log('task data',tasksList)
   }
 
   // console.log('assignedToMe',assignedToMeTab);
-  // console.log('assignedByMe',assignedByMe);
-  // console.log('rescheduleRequestToMe',rescheduleRequestToMe);
-  // console.log('rescheduleRequestByMe',rescheduleRequestByMe);
-  // console.log('all',all);
-  // console.log('completed',completed);
+  // console.log('assignedByMe',assignedByMeTab);
+  // console.log('rescheduleRequestToMe',rescheduleRequestToMeTab);
+  // console.log('rescheduleRequestByMe',rescheduleRequestByMeTab);
+  // console.log('all',allTab);
+  // console.log('completed',completedTab);
   
     return (
       <div>        

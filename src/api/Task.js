@@ -32,6 +32,26 @@ export default {
     }
   },
 
+  editTask: async (staffData) => {
+    const URL = `${c.API_CONSUMER}/api/task/editTask`;
+    try {
+      const { data } = await axios(
+        URL,
+        {
+          method: 'POST',
+          data: staffData.formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/task/list`;
     try {
@@ -142,15 +162,18 @@ export default {
     }
   },
 
-  reschedule: async ({ cancelToken, ...payload }) => {
+  reschedule: async (staffData) => {
     const URL = `${c.API_CONSUMER}/api/task/reschedule`;
     try {
       const { data } = await axios(
         URL,
-        Object.assign({}, PARAMS({ methodType: 'POST' }), {
-          cancelToken,
-          data: payload,
-        }),
+        {
+          method: 'POST',
+          data: staffData.formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          headers: authHeader()}
       );
       return data;
     } catch (error) {
@@ -158,6 +181,23 @@ export default {
       throw error;
     }
   },
+
+  // reschedule: async ({ cancelToken, ...payload }) => {
+  //   const URL = `${c.API_CONSUMER}/api/task/reschedule`;
+  //   try {
+  //     const { data } = await axios(
+  //       URL,
+  //       Object.assign({}, PARAMS({ methodType: 'POST' }), {
+  //         cancelToken,
+  //         data: payload,
+  //       }),
+  //     );
+  //     return data;
+  //   } catch (error) {
+  //     checkError(error);
+  //     throw error;
+  //   }
+  // },
 
   getMsgList: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/task/getMsgList`;
