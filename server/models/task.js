@@ -2,37 +2,210 @@ const connection = require('../lib/connection.js');
 const dbName = require('../lib/databaseMySQLNew.js');
 
 const Task = function (params) {
-  this.franchise_id = params.franchise_id;
-  this.id = params.id;
-  this.assign_table_id = params.assign_table_id;
+  
   this.task_id = params.task_id;
   this.task_description = params.task_description;
-  this.assign_role= params.assign_role;
+  this.assign_to_role = params.assign_to_role;
   this.assigned_to = params.assigned_to;
   this.due_date = params.due_date;
-  this.updated_date=params.updated_date;
-  this.is_active=1;
-  this.status = params.status;
+  this.is_active= 1;
   this.message = params.message;
   this.document = params.document;
   this.user_id = params.user_id;
-  this.userid = params.userid;
   this.created_by = params.created_by;
-  this.updated_by = params.updated_by;
-  this.created_by_role = params.created_by_role;
-  this.is_assigned_to_all = params.is_assigned_to_all;
-  this.reassigned_time = params.reassigned_time;
-  this.unUpdated_Task_Data = params.unUpdated_Task_Data;
-  this.start_date = params.start_date;
-  this.new_due_date = params.new_due_date;
-  this.close_date = new Date();
-
-  if(params.assigned_to===0 || params.assigned_to==='0'){
-    this.is_assigned_to_all = 1;
-  }
-
-  console.log('params userId-----',params);
+  this.creator_role = params.creator_role;
+  this.msgId = params.msgId;
+  this.docId = params.docId;
+  this.taskInsertId = params.taskInsertId;
+  
+  console.log('params userId body-----',params);
 };
+
+// Task.prototype.add = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+//     connection.getConnection(function (error, connection) {
+//       console.log('Process Started %d All', connection.threadId);
+//       if (error) {
+//         throw error;
+//       }
+
+//       const values = [
+//         [that.task_id, that.task_description, 1, that.created_by]
+//       ];
+
+//       let values_assign = [];
+
+//       if(that.is_assigned_to_all === 1){
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//         connection.query('select id from user where role_id LIKE "%'+that.assign_role+'%"', [values], (error, rows, fields) => {
+//           if (!error && rows != "") {
+//             let valuesArray = [];
+//             (rows.length > 0 ? rows : []).map(data =>{
+//               valuesArray.push(
+//                 [that.task_id,that.assign_role, data.id, that.is_assigned_to_all, that.due_date, that.reassigned_time, 1, 1, that.created_by_role, that.created_by]
+//               );
+//             })
+//             values_assign = valuesArray;
+//           } else{
+//             console.log('Error...', error);
+//             reject(error);
+//           }         
+//         });
+//       }else{
+//         values_assign = [
+//           [that.task_id,that.assign_role, that.assigned_to, that.is_assigned_to_all, that.due_date, that.reassigned_time, 1, 1, that.created_by_role, that.created_by]
+//         ];
+//       }
+//       if (!error) {
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//           connection.query(`INSERT INTO task(task_id, task_description, is_active, created_by) VALUES ?`, [values], (error, mrows, fields) => {
+//             if (!error) {
+//               connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
+//                 if (!error) {
+//                   resolve(arows);
+//                 } else {
+//                   console.log('Error...', error);
+//                   reject(error);
+//                 }
+//               });
+//             } else {
+//               console.log('Error...', error);
+//               reject(error);
+//             }
+//           });
+//         } else {
+//           console.log('Error...', error);
+//           reject(error);
+//         }
+//     });
+//   });
+// }
+
+
+
+Task.prototype.addTask = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }else {
+        
+        const taskValues = [
+          [that.task_id, that.task_description, 1, that.created_by, that.creator_role]
+        ];
+        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+        connection.query(`INSERT INTO task(task_id, task_description, is_active, created_by, creator_role) VALUES ?`, [taskValues], (error, rows, fields) => {
+          if (!error) {
+              resolve({taskInsertId: rows.insertId});
+            }else{            
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }
+
+  connection.release();
+  console.log('Process Complete %d', connection.threadId);
+  });
+});
+}
+
+
+
+Task.prototype.addDocument = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }else {
+        
+          const docValues = [
+            [that.taskInsertId, that.document, 1, that.created_by]
+          ]
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          connection.query('insert into task_document(task_id, document, status, created_by) VALUES ?',[docValues], function (error, rows, fields) {
+            if (!error) { 
+              resolve({docInsertId: rows.insertId});
+            }else{            
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
+  connection.release();
+  console.log('Process Complete %d', connection.threadId);
+  });
+});
+}
+
+
+
+Task.prototype.addMessage = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }else {
+  
+        
+          const docValues = [
+            [that.taskInsertId, that.message, 1, that.created_by]
+          ]
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          connection.query('insert into task_message(task_id, message, status, created_by) VALUES ?',[docValues], function (error, rows, fields) {
+            if (!error) { 
+              resolve({msgInsertId: rows.insertId});
+            }else{            
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
+  connection.release();
+  console.log('Process Complete %d', connection.threadId);
+  });
+});
+}
+
+
+
+
+Task.prototype.taskActivityCreate = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }else {
+        const tastActivityValues = [
+          [that.taskInsertId, that.assigned_to, that.assign_to_role, that.task_description, that.due_date, that.msgId, that.docId, 1, 1, that.created_by]
+        ];
+        connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+        connection.query(`INSERT INTO task_activity(task_id, assign_to, assign_to_role, description, due_date, message_id, document_id, status, is_active, created_by) VALUES ?`, [tastActivityValues], (error, rows, fields) => {
+          if (!error) {
+            resolve({rows});
+          }else{           
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
+  connection.release();
+  console.log('Process Complete %d', connection.threadId);
+  });
+});
+}
+
+
+
 
 Task.prototype.add = function () {
   const that = this;
@@ -41,59 +214,79 @@ Task.prototype.add = function () {
       console.log('Process Started %d All', connection.threadId);
       if (error) {
         throw error;
-      }
-
-      const values = [
-        [that.task_id, that.task_description, 1, that.created_by]
-      ];
-
-      let values_assign = [];
-
-      if(that.is_assigned_to_all === 1){
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id from user where role_id LIKE "%'+that.assign_role+'%"', [values], (error, rows, fields) => {
-          if (!error && rows != "") {
-            let valuesArray = [];
-            (rows.length > 0 ? rows : []).map(data =>{
-              valuesArray.push(
-                [that.task_id,that.assign_role, data.id, that.is_assigned_to_all, that.due_date, that.reassigned_time, 1, 1, that.created_by_role, that.created_by]
-              );
-            })
-            values_assign = valuesArray;
-          } else{
-            console.log('Error...', error);
-            reject(error);
-          }         
-        });
-      }else{
-        values_assign = [
-          [that.task_id,that.assign_role, that.assigned_to, that.is_assigned_to_all, that.due_date, that.reassigned_time, 1, 1, that.created_by_role, that.created_by]
+      }else {
+        
+        const taskValues = [
+          [that.task_id, that.task_description, 1, that.created_by, that.creator_role]
         ];
-      }
-      if (!error) {
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query(`INSERT INTO task(task_id, task_description, is_active, created_by) VALUES ?`, [values], (error, mrows, fields) => {
-            if (!error) {
-              connection.query(`INSERT INTO task_assign(task_id,assign_role, assigned_to, is_assigned_to_all, due_date, reassigned_time, status, is_active, created_by_role, created_by) VALUES ?`, [values_assign], (error, arows, fields) => {
-                if (!error) {
-                  resolve(arows);
-                } else {
-                  console.log('Error...', error);
+       
+        connection.query(`INSERT INTO task(task_id, task_description, is_active, created_by, creator_role) VALUES ?`, [taskValues], (error, rows, fields) => {
+          if (!error) {
+            let msgId = 0;
+            let docId = 0;
+            console.log('msgId,DocId',msgId, docId)
+
+            if(that.document !== "" && that.document != undefined){
+              connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+              const docValues = [
+                [rows.insertId, that.document, 1, that.created_by]
+              ]
+    
+              connection.query('insert into task_document(task_id, document, status, created_by) VALUES ?',[docValues], function (error, rows, fields) {
+                if (!error) { 
+                  msgId = rows.insertId;
+                  console.log('doc',rows)
+                  // resolve({rows});
+                }else{            
+                  console.log("Error...", error);
                   reject(error);
                 }
               });
-            } else {
-              console.log('Error...', error);
-              reject(error);
             }
-          });
-        } else {
-          console.log('Error...', error);
-          reject(error);
+
+            if(that.message !== "" && that.message != undefined){
+              connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+                const msgValues = [
+                  [rows.insertId, that.message, 1, that.created_by]
+                ]
+    
+                connection.query('insert into task_message(task_id, message, is_active, created_by) VALUES ?',[msgValues], function (error, rows, fields) {
+                  if (!error) { 
+                    docId = rows.insertId;
+                    console.log('msg', rows)
+                    // resolve({rows});
+                  }else{           
+                    console.log("Error...", error);
+                    reject(error);
+                  }
+                });
+            }
+            console.log('msgId,DocId 222',msgId, docId)
+            const tastActivityValues = [
+              [rows.insertId, that.assigned_to, that.assign_to_role, that.task_description, that.due_date, msgId, docId, 1, 1, that.created_by]
+            ];
+            console.log('tastActivityValues',tastActivityValues)
+            connection.query(`INSERT INTO task_activity(task_id, assign_to, assign_to_role, description, due_date, message_id, document_id, status, is_active, created_by) VALUES ?`, [tastActivityValues], (error, arows, fields) => {
+              if (!error) {
+                resolve({rows});
+              }else{           
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
         }
     });
+  }
+
+  connection.release();
+  console.log('Process Complete %d', connection.threadId);
   });
+});
 }
+
+
+
+
 
 Task.prototype.all = function () {
   const that = this;

@@ -213,7 +213,7 @@ export default function Task({roleName}) {
     const date= year + '-' + month + '-' + day;
     setTodayDate(date);
   }
-
+console.log('task data',tasksList)
   function todayDate(){
     const dtToday=new Date();
 

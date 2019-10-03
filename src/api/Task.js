@@ -12,15 +12,18 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 });
 
 export default {
-  add: async ({ cancelToken, ...payload }) => {
+  add: async (staffData) => {
     const URL = `${c.API_CONSUMER}/api/task/add`;
     try {
       const { data } = await axios(
         URL,
-        Object.assign({}, PARAMS({ methodType: 'POST' }), {
-          cancelToken,
-          data: payload,
-        }),
+        {
+          method: 'POST',
+          data: staffData.formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          headers: authHeader()}
       );
       return data;
     } catch (error) {
@@ -28,6 +31,7 @@ export default {
       throw error;
     }
   },
+
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/task/list`;
     try {

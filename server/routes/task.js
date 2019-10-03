@@ -27,7 +27,7 @@ const validateToken = require('../utils').validateToken;
 
 const taskRouter = express.Router();
 
-taskRouter.route('/add').post(validateToken, Task.add);
+taskRouter.route('/add').post(validateToken, upload.array('avatar'), Task.add);
 taskRouter.route('/list').get(validateToken, Task.all);
 taskRouter.route('/last').get(validateToken, Task.last);
 taskRouter.route('/completedList').get(validateToken, Task.completedList);

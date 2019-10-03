@@ -3,36 +3,54 @@ const Task = require('../models/task.js');
 const add = async function (req, res, next) {
   console.log('task add body params..',req.body)
   console.log('task add decoded params..',req.decoded)
+
+  const staffData = JSON.parse(req.body.data);
+
+  let attachments = '';
+
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
   const taskParam = {
-    franchise_id: req.decoded.franchise_id,    
-    id: req.body.id,
-    assign_table_id : req.body.assign_table_id,
-    task_id: req.body.task_id,    
-    task_description: req.body.task_description,
-    is_assigned_to_all :  req.body.is_assigned_to_all,
-    assign_role: req.body.assign_role,
-    assigned_to: req.body.assigned_to,
-    due_date: req.body.due_date,
-    status: req.body.status,
-    user_id: req.decoded.user_id,
-    reassigned_time : req.body.reassigned_time,
+    // id : staffData.id,
+    task_id : staffData.task_id,    
+    task_description : staffData.task_description,
+    assign_to_role: staffData.assign_to_role,
+    assigned_to : staffData.assigned_to,
+    due_date : staffData.due_date,
+    message : staffData.message,
+    document : attachments,
+    user_id : req.decoded.user_id,
     created_by: req.decoded.id,
-    updated_by: req.decoded.id,
-    unUpdated_Task_Data : req.body.unUpdated_Task_Data,
-    created_by_role : req.body.created_by_role,
+    creator_role : staffData.creator_role,
+    msgId : 0,
+    docId : 0,
+    taskInsertId : 0,
   };
+  console.log('taskparams..',taskParam);
+
   try {
     const newTask = new Task(taskParam);
-
-    if (req.body.id) {
-      await newTask.update();
-      const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
-      res.send({ taskList });
-    } else {
-      await newTask.add();
-      const taskList = await new Task({ user_id: req.decoded.user_id, userid: req.decoded.id }).all();
-      res.send({ taskList });
+    const taskInsertId = await newTask.addTask();
+    console.log('taskInsertId',taskInsertId);
+    newTask.taskInsertId = taskInsertId.taskInsertId;
+    
+    if(taskParam.document !== "" && taskParam.document != undefined){
+      const docInsertId = await newTask.addDocument();
+      newTask.docId = docInsertId.docInsertId;
+      console.log('docInsertId',docInsertId);
     }
+    if(taskParam.message !== "" && taskParam.messaage != undefined){
+      const msgInsertId = await newTask.addMessage();
+      newTask.msgId = msgInsertId.msgInsertId;
+      console.log('msgInsertId',msgInsertId);
+    }
+
+    const taskActivityResult = await newTask.taskActivityCreate();
+    console.log('taskActivityResult',taskActivityResult);
+
+    res.send({});
   } catch (err) {
     next(err);
   }

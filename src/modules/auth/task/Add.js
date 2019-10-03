@@ -31,6 +31,8 @@ import Paper from '@material-ui/core/Paper';
 
 import validate from '../../common/validation/TaskRuleValidation';
 import {useCommonStyles} from '../../common/StyleComman'; 
+import {getDate, getCurrentDate} from '../../../utils/datetime';
+
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
@@ -47,7 +49,9 @@ const RESET_VALUES = {
   task_id:'',
   task_description:'',
   assigned_to:'',
-  due_date:''
+  due_date:'',
+  document: '',
+  message : '',
 };
 
 
@@ -146,19 +150,20 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
   const [otherDisable, setOtherDisable] = useState(true);
   const [role, setRole] = useState([]);
   const [franchiseUsersList, setFranchiseUsersList] = useState({});
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
 
       try {
+        const roleResult = await Role.list();
+        setRole(roleResult.role);
+
         const result = await Task.last();
-        // setTaskLast(result.taskLast[0]);
-        // if(result.taskLast[0]!=null){
-        //   console.log('taskLast----',result.taskLast[0].id);
-        //   generate(result.taskLast[0].id);
-        // }
-        console.log('en',result);
+        // console.log('en',result);
         let zero = 0;
         if(result[0]!=null){ 
           zero = 6 - (result[0].id.toString().length); 
@@ -177,48 +182,67 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
       setIsLoading(false);
     };
     fetchData();
-    const roleData = async () => {
-      
-      try {
-        const result = await Role.list();
-        setRole(result.role);
-      } catch (error) {
-        console.log("Error",error);
-      }
-    };
-    roleData();
   }, []);
 
  
-  useEffect(() => {
-      const fetchData = async () => {
-        setIsError(false);
-        setIsLoading(true);
-        try {
-          const result = await FranchiseUsers.list();
-          setFranchiseUsersList(result.franchiseUserList);
-        } catch (error) {
-          setIsError(true);
-        }
-        setIsLoading(false);
-      };
-      fetchData();
-    }, []);
+  // useEffect(() => {
+  //     const fetchData = async () => {
+  //       setIsError(false);
+  //       setIsLoading(true);
+  //       try {
+  //         const result = await FranchiseUsers.list();
+  //         setFranchiseUsersList(result.franchiseUserList);
+  //       } catch (error) {
+  //         setIsError(true);
+  //       }
+  //       setIsLoading(false);
+  //     };
+  //     fetchData();
+  //   }, []);
 
   const addTaskMaster = async () => {
     setpLoading(true);
     setSavebtn(false);
     // console.log('assign_role---',staffRole);
-    const response = await Task.add({
-      task_id: inputs.task_id,
-      task_description:inputs.task_description,
-      assign_role:staffRole,
-      assigned_to:inputs.assigned_to,
-      due_date:inputs.due_date,
-      created_by_role : roleName,
-      reassigned_time : 1,
-    });
+    // const data={      
+    //   id: taskList.id,
+    //   assign_table_id : taskList.assignid,
+    //   task_id : taskList.task_id,
+    //   message : taskList.message,
+    //   updated_date : taskList.updated_date,
+    //   status : taskList.status,
+    //   document : taskList.document,
+    //   is_assigned_to_all : taskList.is_assigned_to_all,
+    //   start_date : taskList.updated_date,
+    // }
+    // let formData = new FormData();
+    // formData.append('data', JSON.stringify(data));
+    
+    // for (var x = 0; x < document.getElementById('document').files.length; x++) {
+    //   formData.append('avatar', document.getElementById('document').files[x])
+    // }
+    
+    // const response = await Task.staffUpdate({ formData: formData });
 
+    const data = {
+      task_id : inputs.task_id,
+      task_description : inputs.task_description,
+      assign_to_role : staffRole,
+      assigned_to : inputs.assigned_to,
+      due_date : inputs.due_date,
+      creator_role : roleName,
+      message : inputs.message,
+      document : inputs.document,
+    }
+
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+
+    for (var x = 0; x < document.getElementById('document').files.length; x++) {
+        formData.append('avatar', document.getElementById('document').files[x])
+    }
+    
+    const response = await Task.add({ formData : formData });
     handleSnackbarClick(true);
     setTaskList(response.taskList);
     handleReset(RESET_VALUES);
@@ -251,14 +275,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
 }
 
 function handleDate(date){
-  let date1 = new Date(date);
-  let yy = date1.getFullYear();
-  let mm = date1.getMonth() + 1;
-  let dd = date1.getDate();
-  if(mm< 10){ mm = '0' + mm.toString()}
-  if(dd< 10){ dd = '0' + dd.toString()}
-  let fullDate = yy+ '-'+mm+'-'+dd;
-  handleInputChange({target:{name: 'due_date', value: fullDate}})
+  let date1 = getDate(date);
+  handleInputChange({target:{name: 'due_date', value: date1}});
 }
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, errors, setInput } = useSignUpForm(
@@ -397,6 +415,70 @@ return (
                         // placeholder="Franchise Name"
                         margin="dense"
                       />                  
+                  </Grid>
+                  <Grid item xs={12} sm={6}>  
+                  <InputLabel  className={classes.textsize} htmlFor="message">Message Box</InputLabel> 
+                    <TextField 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        id="message"
+                        name="message"
+                        // label="Task Description"
+                        value={inputs.message}
+                        onChange={handleInputChange}
+                        error={errors.message}
+                        helperText={errors.message}
+                        fullWidth
+                        // required 
+                        className={classes.tbrow}
+                        type="text"
+                        multiline
+                        // placeholder="Franchise Name"
+                        margin="dense"
+                      />                  
+                  </Grid>
+                  <Grid item xs={12} sm={6}>  
+                  <InputLabel  className={classes.textsize} htmlFor="document">Document</InputLabel> 
+                  <TextField  
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                    }}
+                    id="document"
+                    name="document"
+                    // label="Task Id"
+                    value={inputs.document}
+                    onChange={handleInputChange}
+                    fullWidth
+                    type="file"
+                    // placeholder="Franchise Name"
+                    margin="dense"
+                  /> 
+                    {/* <TextField 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        id="document"
+                        name="document"
+                        // label="Task Description"
+                        value={inputs.document}
+                        onChange={handleInputChange}
+                        error={errors.document}
+                        helperText={errors.document}
+                        fullWidth
+                        // required 
+                        className={classes.tbrow}
+                        type="file"
+                        multiline
+                        // placeholder="Franchise Name"
+                        margin="dense"
+                      />                   */}
                   </Grid>
                   <Grid item xs={12} sm={12}> 
                     {savebtn? 
