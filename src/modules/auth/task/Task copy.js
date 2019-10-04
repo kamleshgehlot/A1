@@ -282,19 +282,18 @@ export default function Task({roleName}) {
   
   const handleHistoryOpen = async (response) => {
     setHistoryData(response);
-    setTaskHistoryOpen(true);
-    // console.log('task history', response);
-    // const result = await TaskAPI.getTaskHistory({
-    //   id: response.id,
-    //   task_id: response.assignid,
-    // });   
+    setTaskHistoryOpen(true);    
   }
 
   const handleClickDelete = async (response) => {    
     const result = await TaskAPI.delete({
       id: response.id,
-      task_id: response.assignid,
+      activity_id: response.activity_id,      
     });   
+    // console.log('result',result);
+    setTaskList(result.taskList);
+    handleTabsData(result.taskList);
+    currentDate();
   };
 
 
@@ -352,16 +351,18 @@ export default function Task({roleName}) {
     }
     
    (task.length > 0 ? task : []).map((data, index) => {
-      if((data.task_created_by == userId || data.assign_to== userId) && (data.creator_role == roleName || data.assign_to_role_name == roleName) ){
+
+      // if((data.task_created_by == userId || data.assign_to== userId) && (data.creator_role == roleName || data.assign_to_role_name == roleName) ){
+        if((data.task_created_by == userId && data.creator_role == roleName) || ( data.assign_to == userId && data.assign_to_role_name == roleName)){
           // console.log('all',data);
           all.push(data);
         }
-      if(data.assign_to == userId && data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.assign_to_role_name == roleName){
+      if(data.assign_to == userId  && data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.assign_to_role_name == roleName){
         // && data.created_by == (data.status == 3 ? userId : data.created_by)
           // console.log('assignedToMe',data);
           assignedToMe.push(data);
         }
-      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.task_created_by== userId && data.creator_role == roleName){
+      if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.task_created_by == userId && data.creator_role == roleName){
           // console.log('assignedByMe',data);
           assignedByMe.push(data);
         }
@@ -373,7 +374,7 @@ export default function Task({roleName}) {
           // console.log('rescheduleRequestByMe',data);
           rescheduleRequestByMe.push(data);
         }
-      if(data.status == 6 && data.is_active == 0 && (data.task_created_by == userId || data.assign_to == userId) && (data.creator_role == roleName || data.assign_to_role_name == roleName) ){
+      if(data.status == 6 && data.is_active == 0 && ((data.task_created_by == userId && data.creator_role == roleName) || ( data.assign_to == userId && data.assign_to_role_name == roleName)) ){
           // console.log('completed',data);
           completed.push(data);
         }
@@ -431,11 +432,11 @@ export default function Task({roleName}) {
               </AppBar>
 
               <TabPanel value={value} index={0}>
-                {assignedToMeTab && <AssignedToME task= {assignedToMeTab} handleClickStaffEditOpen={handleClickStaffEditOpen} dateToday={dateToday} />}
+                {assignedToMeTab && <AssignedToME task= {assignedToMeTab} handleClickStaffEditOpen={handleClickStaffEditOpen} dateToday={dateToday}  handleHistoryOpen={handleHistoryOpen}/>}
               </TabPanel>
 
               <TabPanel value={value} index={1}>
-                {assignedByMeTab && <AssignedByMe task= {assignedByMeTab} handleClickEditOpen={handleClickEditOpen} />}
+                {assignedByMeTab && <AssignedByMe task= {assignedByMeTab} handleClickEditOpen={handleClickEditOpen}  handleHistoryOpen={handleHistoryOpen} />}
               </TabPanel>
               
               <TabPanel value={value} index={2}>
@@ -467,7 +468,7 @@ export default function Task({roleName}) {
               </TabPanel>
 
               <TabPanel value={value} index={5}>
-                {allTab && <All task= {allTab} dateToday={dateToday} />}              
+                {allTab && <All task= {allTab} dateToday={dateToday}  handleHistoryOpen={handleHistoryOpen}/>}              
               </TabPanel>
               
             </Paper>
@@ -478,7 +479,7 @@ export default function Task({roleName}) {
         {editOpen ? <EditCopy open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}
         {rescheduleEditOpen ? <Rescheduled open={rescheduleEditOpen} handleRescheduledClose={handleRescheduledClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}        
         {staffEditOpen ? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}        
-        {taskHistoryOpen ? <TaskHistory open={taskHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} historyData={historyData} /> : null }
+        {taskHistoryOpen ? <TaskHistory open={taskHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} historyData={historyData} roleName={roleName} /> : null }
         <Snackbar
           anchorOrigin={{
             vertical: 'top',

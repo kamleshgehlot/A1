@@ -161,7 +161,6 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
       }
       
       const response = await Task.editTask({ formData : formData });
-      console.log(response);
       handleSnackbarClick(true,'Task Updated Successfully');
       setTaskList(response.taskList);
       setpLoading(false);
@@ -169,7 +168,6 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
       }
   };
   
-  console.log('errors',errors);
 
   
   function handleRoleChange(e){
@@ -194,7 +192,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
     try{
       const stafflistForRole = async () => {
         const response = await FranchiseUsers.staffRoleList({
-          selectedRole : taskList.assign_role,
+          selectedRole : taskList.assign_to_role_id,
         });
         setStaffList(response.staffList);
 
@@ -217,7 +215,6 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
     let date1 = getDate(date);
     handleInputChange({target:{name: 'due_date', value: date1}});
   }
-  console.log('taskList',taskList);
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -299,7 +296,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
               </Select>
             </Grid>
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assigned_to">Assign To</InputLabel>
+              <InputLabel  className={classes.textsize} htmlFor="assign_to">Assign To</InputLabel>
               <Select
                   disabled={taskList.status ===2}
                   value={taskList.assign_to}
@@ -388,9 +385,9 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
               </Grid>
             <Grid item xs={12} sm={12}>  
               {savebtn? 
-                <Button variant="contained" color="primary" disabled={(taskList.status !=1 && taskList.status !=4) ? true : false} className={classes.button} onClick={updateTask}  type="submit">
-                  Update
-                </Button>: 
+              // disabled={(taskList.status !=1 && taskList.status !=4) ? true : false}
+                <Button variant="contained" color="primary" className={classes.button} onClick={updateTask}  type="submit"> Update </Button>
+                : 
                 <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
                   Update
                 </Button>

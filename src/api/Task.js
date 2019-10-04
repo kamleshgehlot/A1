@@ -82,6 +82,9 @@ export default {
       throw error;
     }
   },
+
+
+
   completedlist: async () => {
     const URL = `${c.API_CONSUMER}/api/task/completedList`;
     try {
@@ -132,6 +135,8 @@ export default {
       throw error;
     }
   },
+
+
   stafftasks: async () => {
     const URL = `${c.API_CONSUMER}/api/task/staffTasks`;
     try {
@@ -142,6 +147,8 @@ export default {
       throw error;
     }
   },
+
+  
   staffUpdate: async (staffData) => {
     const URL = `${c.API_CONSUMER}/api/task/staffUpdate`;
     try {
@@ -216,7 +223,7 @@ export default {
     }
   },
 
-  getTaskActivity: async ({ cancelToken, ...payload }) => {
+  getTaskHistory: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/task/getTaskHistory`;
     try {
       const { data } = await axios(

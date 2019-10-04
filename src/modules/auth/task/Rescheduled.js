@@ -142,10 +142,10 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
       task_description : taskList.task_description,
       assign_to_role : taskList.assign_to_role_id,
       assigned_to : taskList.assign_to,
-      due_date : taskList.due_date,
+      due_date : taskList.reschedule_date,
       start_date : taskList.start_date,
       reschedule_req_date : taskList.reschedule_req_date,
-      reschedule_date : taskList.reschedule_date,
+      last_due_date : taskList.due_date,
       
       message : taskList.message,
       status : taskList.status,
@@ -194,7 +194,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
       setIsLoading(true);
       try {
         const response = await FranchiseUsers.staffRoleList({
-          selectedRole:taskList.assign_to_role_id
+          selectedRole : taskList.assign_to_role_id
         });
         setStaffList(response.staffList);
 
@@ -304,7 +304,7 @@ console.log('taskList rescheduled',taskList);
             </Grid>
             
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assign_to_role_id">Assigned Role</InputLabel>
+              <InputLabel  className={classes.textsize} htmlFor="assign_to_role_id">Role List</InputLabel>
               <Select
                 value={taskList.assign_to_role_id}
                 inputProps={{

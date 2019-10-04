@@ -31,7 +31,7 @@ import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CommentIcon from '@material-ui/icons/Comment';
 import ArchiveIcon from '@material-ui/icons/Archive';
 
-import { API_URL } from '../../../../api/Constants';
+import { API_URL, APP_TOKEN } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
 
@@ -137,17 +137,17 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function ViewMsgList({msgList}) {
+export default function ViewHistoryList({historyList, roleName}) {
   const classes = useStyles();
+  const userId = APP_TOKEN.get().userId;
+
   return (  
     <List className={classes.root}>
-    {(msgList.length > 0 && msgList != "" ? msgList : []).map((data, index) => {
+    {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {
       return(
         <div>
+          {/* { ((data.activity_created_by == userId && data.creator_role == roleName)  || (data.assign_to == userId && data.assign_to_role_name == roleName)) && */}
           <ListItem alignItems="flex-start">
-            {/* <ListItemAvatar>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-            </ListItemAvatar> */}
             <ListItemIcon>
               <PlayArrowIcon />
             </ListItemIcon>
@@ -158,34 +158,87 @@ export default function ViewMsgList({msgList}) {
                     className={classes.msg}
                     color="textPrimary"
                   >
-                    {data.message}
+                    {data.activity_status == 1 ? 
+                      'Task created by ' + data.task_created_by_name + " (" + data.creator_role + ")" +
+                      ' for ' + data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
+                      ' on ' + data.activity_created_at + ' with due date ' + data.due_date
+                    :''}
+                    {data.activity_status == 2 ?
+                      'Task Description Changed by ' +  data.task_created_by_name + " (" + data.creator_role + ")" +
+                      ' on ' + data.activity_created_at 
+                    :''}
+                    {data.activity_status == 3 ?
+                    'Task has been started by ' + data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
+                    ' on ' + data.activity_created_at
+                    :''}
+                    {data.activity_status == 4  && data.status == 1 ?
+                    'Task assigned to ' + data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
+                    ' on ' + data.activity_created_at +
+                    ' with due date ' + data.due_date
+                    :''}
+                    {data.activity_status == 4  && data.status == 5 ?
+                    'Task assigned to other person' +
+                    ' on ' + data.activity_created_at 
+                    :''}
+                    {data.activity_status == 5 ?
+                    'Due date changed by ' +  data.task_created_by_name + " (" + data.creator_role + ")" +
+                    ' on ' + data.activity_created_at
+                    :''}
+                    {data.activity_status == 6 ?
+                    'New message or document added by ' 
+                    :''}
+                    {data.activity_status == 6 ?
+                      data.task_created_by == data.activity_created_by ?
+                      data.task_created_by_name + " (" + data.creator_role + ")" +
+                      ' on ' + data.activity_created_at
+                      : 
+                      data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
+                      ' on ' + data.activity_created_at
+                    :''}
+                     
+                    {data.activity_status == 7 ?
+                    'Request to Reschedule by ' + data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
+                    ' on ' + data.activity_created_at
+                    :''}
+                    {data.activity_status == 8 ?
+                    'Task rescheduled by ' +  data.task_created_by_name + " (" + data.creator_role + ")" +
+                    ' on ' + data.activity_created_at
+                    :''}
+                    {data.activity_status == 9 ?
+                    'Task completed successfully by ' + data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
+                    ' on ' + data.activity_created_at
+                    :''}
                   </Typography>                 
                 </React.Fragment>
               }
               secondary={
                 <React.Fragment>
                   <Typography
-                    component="span"
+                    component="header"
                     variant="body2"
                     className={classes.inline}
                     color="textPrimary"
                   >
-                    {data.user_name + " (" + data.user_role + ")" }
-                    {" — during convert into \"" + data.status_name + "\"" + " on " + data.created_at }
+                   {data.message_id != 0 ? 
+                      'Message:  ' + data.message + '   \n'
+                    :''}
                   </Typography>
-                  {/* <Typography
-                    component="span"
+                  <Typography
+                    component="footer"
                     variant="body2"
                     className={classes.inline}
                     color="textPrimary"
                   >
-                    { " —  " + data.created_at}
-                  </Typography> */}
-                  
+                    {data.document_id != 0 ? 
+                    <a href={API_URL + "/api/download?path=taskFile/" + data.document } download >{data.document}</a>                          
+                      // 'Document :' + data.document 
+                    :''}
+                  </Typography>
                 </React.Fragment>
               }
             />
           </ListItem>     
+          {/* } */}
         <Divider variant="inset" component="li" />  
       </div>           
       )

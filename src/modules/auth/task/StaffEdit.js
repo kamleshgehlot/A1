@@ -142,7 +142,6 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
     setExpanded(isExpanded ? panel : false);
   };
   
-  console.log('taskList Staff', taskList);
 
   const addTaskMaster = async () => {
     setpLoading(true);
@@ -155,7 +154,9 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
       assigned_to : taskList.assign_to,
       due_date : taskList.due_date,
       start_date : taskList.start_date,
-      
+      reschedule_req_date : taskList.reschedule_req_date,
+      last_due_date : taskList.last_due_date,
+
       message : taskList.message,
       status : taskList.status,
       document : taskList.document,
@@ -183,9 +184,8 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
         const result = await Staff.list();
         setStaffList(result.staffList);
         
-        const msgResult = await Task.getMsgList({id: taskList.id});
-        // console.log('msg List', msgResult);
-        setMsgList(msgResult);
+        // const msgResult = await Task.getMsgList({id: taskList.id});
+        // setMsgList(msgResult);
       } catch (error) {
         setIsError(true);
       }
@@ -363,7 +363,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                     }
                     {
                       taskStatus === 2 ?
-                      <MenuItem className={classes.textsize} value="9">Completed </MenuItem>
+                      <MenuItem className={classes.textsize} value="6">Completed </MenuItem>
                       : ''
                     }
                     {
@@ -373,7 +373,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                     }
                     {
                       taskStatus !== 2 && taskStatus !== 1 && taskStatus !== 4 ?
-                      <MenuItem className={classes.textsize} value="9">Completed </MenuItem>
+                      <MenuItem className={classes.textsize} value="6">Completed </MenuItem>
                       : ''
                     }
                   </Select>
@@ -399,7 +399,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                   margin="dense"
                 /> 
               </Grid>
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel1'} onChange={handleChange('panel1')} >
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="" id="panel1a-header">
                     <Typography className={classes.heading}>View Messages </Typography>
@@ -417,7 +417,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                   
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={12}>
                 {savebtn? 
                   <Button variant="contained" color="primary" className={classes.button} onClick={addTaskMaster}  type="submit">

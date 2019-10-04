@@ -18,7 +18,8 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CommentIcon from '@material-ui/icons/Comment';
-
+import ArchiveIcon from '@material-ui/icons/Archive';
+import HistoryIcon from '@material-ui/icons/History';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
@@ -117,7 +118,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function AssignedToMe({task, handleClickStaffEditOpen, dateToday }) {
+export default function AssignedToMe({task, handleClickStaffEditOpen, dateToday, handleHistoryOpen }) {
   const classes = useStyles();
 return (  
   <Table className={classes.table}>
@@ -143,6 +144,11 @@ return (
           <StyledTableCell> {data.task_status_name}</StyledTableCell>
           <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
           <StyledTableCell>
+            <Tooltip title="View History">                              
+                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
+                    <HistoryIcon />
+                  </IconButton>
+            </Tooltip>
             <Tooltip title="Update Task">                              
               <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickStaffEditOpen(data); }}>
                 <CreateIcon/>

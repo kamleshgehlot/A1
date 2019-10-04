@@ -32,6 +32,8 @@ import {useCommonStyles} from '../../../common/StyleComman';
 import Task from '../../../../api/Task';
 
 import ViewMsgList from '../OtherComponents/ViewMsgList';
+import ViewHistoryList from '../OtherComponents/ViewHistoryList';
+
 import ViewTaskActivity from '../OtherComponents/ViewTaskActivity';
 
 const useStyles = makeStyles(theme => ({
@@ -117,7 +119,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function TaskHistory({ open, handleClose, handleSnackbarClick, historyData}) {
+export default function TaskHistory({ open, handleClose, handleSnackbarClick, historyData, roleName}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -129,14 +131,21 @@ export default function TaskHistory({ open, handleClose, handleSnackbarClick, hi
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+console.log('historyDate,',historyData)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const msgResult = await Task.getMsgList({id: historyData.id});
-        setMsgList(msgResult);
+        // const msgResult = await Task.getMsgList({id: historyData.id});
+        // setMsgList(msgResult);
 
-        const historyResult = await Task.getTaskActivity({id: historyData.id, task_id : historyData.task_id});
+        const historyResult = await Task.getTaskHistory({
+          id: historyData.id, 
+          task_id : historyData.task_id,
+          assigned_to : historyData.assign_to,
+          assign_to_role : historyData.assign_to_role_id,
+          task_created_by : historyData.task_created_by,
+          creator_role : historyData.creator_role,
+        });
         console.log('historyResult',historyResult);
         setHistoryList(historyResult);
 
@@ -164,7 +173,7 @@ return (
         <Paper className={classes.paper}>            
           <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>
-                <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel1'} onChange={handleChange('panel1')} >
+                {/* <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel1'} onChange={handleChange('panel1')} >
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="" id="panel1a-header">
                     <Typography className={classes.heading}> Task Activities </Typography>
                   </ExpansionPanelSummary>
@@ -188,26 +197,58 @@ return (
                   <ExpansionPanelDetails>
                   
                   </ExpansionPanelDetails>
-                </ExpansionPanel>
+                </ExpansionPanel> */}
+              {/* <List className={classes.root}>
+                {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {
+                  return(
+                    <div>
+                    <ListItem alignItems="flex-start">              
+                        <ListItemIcon>
+                          <PlayArrowIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <React.Fragment>
+                              <Typography
+                                className={classes.msg}
+                                color="textPrimary"
+                              >
+                                {data.message}
+                              </Typography>                 
+                            </React.Fragment>
+                          }
+                          secondary={
+                            <React.Fragment>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color="textPrimary"
+                              >
+                                {data.user_name + " (" + data.user_role + ")" }
+                                {" — during convert into \"" + data.status_name + "\"" + " on " + data.created_at }
+                              </Typography>
+                              {/* <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color="textPrimary"
+                              >
+                                { " —  " + data.created_at}
+                              </Typography> 
+                              
+                            </React.Fragment>
+                            }
+                          />
+                        </ListItem>     
+                      <Divider variant="inset" component="li" />  
+                    </div>           
+                    )
+                  })}
+                  </List> */}
+                  <ViewHistoryList historyList={historyList} roleName={roleName} />
               </Grid>
-            {/* <Grid item xs={12} sm={12}>        
-              <Table >
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>#</StyledTableCell>
-                    <StyledTableCell>Payment Date</StyledTableCell>
-                    <StyledTableCell>Payment Rec. Date</StyledTableCell>
-                    <StyledTableCell>Installment Amt. </StyledTableCell>
-                    <StyledTableCell>Paid Amt.</StyledTableCell>
-                    <StyledTableCell>Status</StyledTableCell>
-                    <StyledTableCell>Option</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                      
-                </TableBody>
-              </Table>
-            </Grid> */}
+          
             <Grid item xs={12} sm={12}>                      
               <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                 Close

@@ -25,8 +25,6 @@ const user = "CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREME
 const role = "CREATE TABLE IF NOT EXISTS `role` (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(50) NOT NULL, `state` TINYINT NULL, `created_by` INT NOT NULL,`created_at` timestamp null default current_timestamp,PRIMARY KEY (id));";
 const userRole = "CREATE TABLE IF NOT EXISTS `user_role` (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,role_id INT NOT NULL, is_active TINYINT NULL,created_by INT NOT NULL,created_at timestamp null default current_timestamp,PRIMARY KEY (id));";
 const staff = "CREATE TABLE IF NOT EXISTS `staff` ( `id` int(11) NOT NULL AUTO_INCREMENT, `franchise_user_id` INT NOT NULL, `first_name` varchar(20) NOT NULL,`last_name` varchar(20) DEFAULT NULL, `location` varchar(200) NOT NULL, `contact` varchar(10) NOT NULL, `email` varchar(50) NOT NULL, `pre_company_name` varchar(30) DEFAULT NULL, `pre_company_address` varchar(200) DEFAULT NULL, `pre_company_contact` varchar(10) DEFAULT NULL, `pre_position` varchar(100) DEFAULT NULL, `duration` varchar(80) DEFAULT NULL, `user_id` varchar(20) NOT NULL, `password` blob NOT NULL, `role` varchar(20) NULL, `employment_docs` varchar(500) DEFAULT NULL, `created_by` tinyint(4) NOT NULL, `updated_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
-const task = "CREATE TABLE IF NOT EXISTS `task` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL,  `task_description` varchar(255) DEFAULT NULL,  `is_active` TINYINT(5) NOT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
-const taskAssign = "CREATE TABLE IF NOT EXISTS `task_assign` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL, `assign_role` int(11) DEFAULT NULL, `assigned_to` int(11) DEFAULT NULL,  `start_date` varchar(25) DEFAULT NULL, `due_date` varchar(25) DEFAULT NULL,  `completion_date` VARCHAR(25) DEFAULT NULL, `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `status` int(11)  NOT NULL,  `is_active` TINYINT(5) NOT NULL, `created_by_role` VARCHAR(20) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
 const customer = "CREATE TABLE IF NOT EXISTS `customer` (`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_name` varchar(50) NOT NULL, `address` varchar(200) NOT NULL, `city` varchar(70) NOT NULL, `postcode` varchar(10) DEFAULT NULL, `telephone` varchar(10) DEFAULT NULL, `mobile` varchar(10) DEFAULT NULL, `email` varchar(100) DEFAULT NULL, `gender` varchar(15) NOT NULL, `is_working` tinyint(4) NOT NULL, `dob` varchar(30) DEFAULT NULL, `id_type` int(11) DEFAULT NULL, `other_id_type` VARCHAR(255) DEFAULT NULL, `id_number` varchar(30) DEFAULT NULL, `expiry_date` varchar(30) NOT NULL, `is_adult` tinyint(4) NOT NULL, `id_proof` varchar(500) DEFAULT NULL, `other_id_proof` varchar(500) DEFAULT NULL, `alt_c1_name` varchar(50) DEFAULT NULL, `alt_c1_address` varchar(200) DEFAULT NULL, `alt_c1_contact` varchar(10) DEFAULT NULL, `alt_c1_relation` varchar(20) DEFAULT NULL, `alt_c2_name` varchar(50) DEFAULT NULL, `alt_c2_address` varchar(200) DEFAULT NULL, `alt_c2_contact` varchar(10) DEFAULT NULL, `alt_c2_relation` varchar(20) DEFAULT NULL, `state` tinyint(4) NOT NULL, `is_active` tinyint(4) NOT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const customer_income = "CREATE TABLE IF NOT EXISTS `customer_income` (`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `cust_id` int(11) DEFAULT NULL, `employer_name` varchar(100) DEFAULT NULL, `employer_address` varchar(200) DEFAULT NULL, `employer_telephone` varchar(10) DEFAULT NULL, `employer_email` varchar(50) DEFAULT NULL, `employer_tenure` varchar(50) DEFAULT NULL, `state` tinyint(4) NOT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `updated_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const customer_state = "CREATE TABLE IF NOT EXISTS `customer_state`(id tinyint(4) NOT NULL AUTO_INCREMENT, state_name VARCHAR(20) NOT NULL, is_active tinyint(4) NOT NULL, PRIMARY KEY(id));";
@@ -42,9 +40,17 @@ const payment_status = "CREATE TABLE IF NOT EXISTS `payment_status`(`id` bigint(
 const order_status = "CREATE TABLE IF NOT EXISTS `order_status`(`id` int(11) NOT NULL AUTO_INCREMENT, `order_status` varchar(50) NOT NULL, PRIMARY KEY(id))";
 const delivery_document = "CREATE TABLE IF NOT EXISTS `delivery_document` (`id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) NOT NULL, `document` VARCHAR(255) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `updated_by` INT(11) DEFAULT NULL, `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const order_comment = "CREATE TABLE IF NOT EXISTS `order_comment` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `user_role` VARCHAR(50) DEFAULT NULL, `comment` TEXT DEFAULT NULL, `status` INT(11) DEFAULT NULL, `is_active` TINYINT(4) DEFAULT NULL , `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (id))";
-const task_status = "CREATE TABLE IF NOT EXISTS `task_status`(`id` int(11) NOT NULL AUTO_INCREMENT, `status` varchar(50) NOT NULL, PRIMARY KEY(id))";
+
+const task = "CREATE TABLE IF NOT EXISTS `task` ( `id` int(10) NOT NULL AUTO_INCREMENT, `task_id` varchar(10) NOT NULL, `task_description` varchar(255) DEFAULT NULL, `is_active` tinyint(5) NOT NULL, `created_by` int(11) DEFAULT NULL, `creator_role` varchar(20) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));"
+const taskActivity = "CREATE TABLE IF NOT EXISTS `task_activity` ( `id` int(11) NOT NULL AUTO_INCREMENT, `task_id` int(11) DEFAULT NULL, `assign_to` int(11) DEFAULT NULL, `assign_to_role` int(11) DEFAULT NULL, `description` varchar(500) DEFAULT NULL, `activity_status` int(11) DEFAULT NULL, `due_date` datetime DEFAULT NULL, `start_date` datetime DEFAULT NULL, `completed_date` datetime DEFAULT NULL, `reschedule_req_date` datetime DEFAULT NULL, `last_due_date` datetime DEFAULT NULL, `message_id` int(11) DEFAULT NULL, `document_id` int(11) DEFAULT NULL, `status` int(11) DEFAULT NULL, `is_active` int(11) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const taskStatus = "CREATE TABLE IF NOT EXISTS `task_status` ( `id` int(11) NOT NULL AUTO_INCREMENT, `status` varchar(50) NOT NULL, PRIMARY KEY(id))";
+const taskActivityStatus = "CREATE TABLE IF NOT EXISTS `task_activity_status` ( `id` int(11) NOT NULL AUTO_INCREMENT, `activity` varchar(255) DEFAULT NULL, PRIMARY KEY(id))";
+const taskDocument = "CREATE TABLE IF NOT EXISTS `task_document` ( `id` int(11) NOT NULL AUTO_INCREMENT,`task_id` int(11) DEFAULT NULL,`document` varchar(255) DEFAULT NULL,`status` int(11) DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL,`created_by` int(11) DEFAULT NULL,`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const taskMessage = "CREATE TABLE  IF NOT EXISTS `task_message` ( `id` int(11) NOT NULL AUTO_INCREMENT, `task_id` int(11) DEFAULT NULL, `message` varchar(500) DEFAULT NULL, `status` int(11) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 
 
+// const task = "CREATE TABLE IF NOT EXISTS `task` ( `id` int(10) NOT NULL AUTO_INCREMENT, `task_id` varchar(10) NOT NULL,  `task_description` varchar(255) DEFAULT NULL,  `is_active` TINYINT(5) NOT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
+// const taskAssign = "CREATE TABLE IF NOT EXISTS `task_assign` ( `id` int(10) NOT NULL AUTO_INCREMENT,  `task_id` varchar(10) NOT NULL, `assign_role` int(11) DEFAULT NULL, `assigned_to` int(11) DEFAULT NULL,  `start_date` varchar(25) DEFAULT NULL, `due_date` varchar(25) DEFAULT NULL,  `completion_date` VARCHAR(25) DEFAULT NULL, `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `status` int(11)  NOT NULL,  `is_active` TINYINT(5) NOT NULL, `created_by_role` VARCHAR(20) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(),`created_by` INT NULL,  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(), `updated_by` INT NULL, PRIMARY KEY (id));";
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
@@ -108,16 +114,31 @@ Franchise.prototype.register = function (newUser) {
                 let task_status_data = [
                   [1, 'Scheduled'],
                   [2, 'In-Progress'],
-                  [3, 'Reschedule'],
-                  [4, 'Completed'],
-                  [5, 'Deleted'],
+                  [3, 'Request to Reschedule'],
+                  [4, 'Rescheduled'],
+                  [5, 'Assign to Other'],
+                  [6, 'Completed'],
+                  [7, 'Deleted'],                  
                 ]
+
+                let task_activity_status_data = [                  
+                  [1, 'New Task Created'],
+                  [2, 'Task Description Changed'],
+                  [3, 'Task has been started by Assignee'],
+                  [4, 'Task assigned to other person'],
+                  [5, 'Due date changed by Task Creator'],
+                  [6, 'New message or document added'],
+                  [7, 'Request to Reschedule'],
+                  [8, 'Task rescheduled'],
+                  [9, 'Task completed'],
+                ]
+                
+                
+                
                 connection.query(role, function (err) { if (err) { console.log('Role Table Create Time Error: ', err) } });
                 connection.query(user, function (err) { if (err) { console.log('user Table Create Time Error: ', err) } });
                 connection.query(userRole, function (err) { if (err) { console.log('UserRole Table Create Time Error: ', err) } });
-                connection.query(staff, function (err) { if (err) { console.log('Staff Table Create Time Error: ', err) } });
-                connection.query(task, function (err) { if (err) { console.log('Task Table Create Time Error: ', err) } });
-                connection.query(taskAssign, function (err) { if (err) { console.log('TaskAssign Table Create Time Error: ', err) } });
+                connection.query(staff, function (err) { if (err) { console.log('Staff Table Create Time Error: ', err) } });                
                 connection.query(customer, function (err) { if (err) { console.log('Customer Table Create Time Error: ', err) } });
                 connection.query(customer_income, function (err) { if (err) { console.log('Customer Income Table Create Time Error: ', err) } });
                 connection.query(customer_state, function (err) { if (err) { console.log('Customer State Table Create Time Error: ', err) } });
@@ -133,8 +154,12 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(order_status, function (err) { if (err) { console.log('Order Status Table Create Time Error: ', err) } });
                 connection.query(delivery_document, function (err) { if (err) { console.log('Delivery Document Table Create Time Error: ', err) } });
                 connection.query(order_comment, function (err) { if (err) { console.log('Order Comment Table Create Time Error: ', err) } });
-                connection.query(task_status, function (err) { if (err) { console.log('Task Status Table Create Time Error: ', err) } });
-
+                connection.query(taskStatus, function (err) { if (err) { console.log('Task Status Table Create Time Error: ', err) } });
+                connection.query(task, function (err) { if (err) { console.log('Task Table Create Time Error: ', err) } });
+                connection.query(taskActivity, function (err) { if (err) { console.log('Task Activity Table Create Time Error: ', err) } });
+                connection.query(taskActivityStatus, function (err) { if (err) { console.log('Task Activity Status Table Create Time Error: ', err) } });
+                connection.query(taskDocument, function (err) { if (err) { console.log('Task Document Table Create Time Error: ', err) } });
+                connection.query(taskMessage, function (err) { if (err) { console.log('Task Message Table Create Time Error: ', err) } });
 
                 connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) { if (error) { console.log('Role Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) { if (error) { console.log('IdType Insert Time Error: ', error) } });
@@ -142,6 +167,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query('INSERT INTO `payment_mode`(`id`, `payment_mode`, `is_active`) VALUES ?', [pay_mode], function (error, rows, fields) { if (error) { console.log('Payment Mode Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `order_status`(`id`, `order_status`) VALUES ?', [order_status_data], function (error, rows, fields) { if (error) { console.log('Order Status Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `task_status`(`id`, `status`) VALUES ?', [task_status_data], function (error, rows, fields) { if (error) { console.log('Task Status Insert Time Error: ', error) } });
+                connection.query('INSERT INTO `task_activity_status`(`id`, `activity`) VALUES ?', [task_activity_status_data], function (error, rows, fields) { if (error) { console.log('Task Activity Status Insert Time Error: ', error) } });
 
                 connection.changeUser({ database: dbName["prod"] });
                 connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {

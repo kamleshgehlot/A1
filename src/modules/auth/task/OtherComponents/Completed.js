@@ -19,6 +19,7 @@ import SendIcon from '@material-ui/icons/send';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CommentIcon from '@material-ui/icons/Comment';
 import ArchiveIcon from '@material-ui/icons/Archive';
+import HistoryIcon from '@material-ui/icons/History';
 
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
@@ -144,11 +145,11 @@ export default function AssignedToMe({task, handleClickDelete, handleHistoryOpen
               <StyledTableCell> {index+1}  </StyledTableCell>
               <StyledTableCell> {data.task_id}  </StyledTableCell>
               <StyledTableCell> {data.task_description}  </StyledTableCell>
-              <StyledTableCell> {data.assigned_to_name}</StyledTableCell>
+              <StyledTableCell> {data.assign_to_name + " (" + data.assign_to_role_name + ")"}</StyledTableCell>
               <StyledTableCell> {data.task_status_name}</StyledTableCell>
               <StyledTableCell> {data.due_date}</StyledTableCell>
               <StyledTableCell> {data.start_date}</StyledTableCell>
-              <StyledTableCell> {data.completion_date}</StyledTableCell>
+              <StyledTableCell> {data.completed_date}</StyledTableCell>
               {/* <StyledTableCell> {data.message}</StyledTableCell>
               <StyledTableCell>
                 <a href={API_URL + "/api/download?path=taskFile/" + data.document } download >{data.document}</a>                          
@@ -156,7 +157,7 @@ export default function AssignedToMe({task, handleClickDelete, handleHistoryOpen
               <StyledTableCell>
               <Tooltip title="View History">                              
                   <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
-                    <ArchiveIcon />
+                    <HistoryIcon />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Archive Task">                              
