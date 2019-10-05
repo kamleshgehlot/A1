@@ -189,14 +189,14 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
   }
   
   useEffect(() => {
+    taskList.message = '';
     try{
       const stafflistForRole = async () => {
         const response = await FranchiseUsers.staffRoleList({
           selectedRole : taskList.assign_to_role_id,
         });
         setStaffList(response.staffList);
-
-        taskList.message = '';
+       
         const result = await Role.list();
         setRole(result.role);
         };

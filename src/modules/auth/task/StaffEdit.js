@@ -178,12 +178,12 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   };
 
   useEffect(() => {
+    taskList.message = '';
     const fetchData = async () => {
       try {
         todayDate();
         const result = await Staff.list();
-        setStaffList(result.staffList);
-        taskList.message = '';
+        setStaffList(result.staffList);        
         // const msgResult = await Task.getMsgList({id: taskList.id});
         // setMsgList(msgResult);
       } catch (error) {

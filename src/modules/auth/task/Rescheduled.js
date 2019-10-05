@@ -189,6 +189,9 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
   
   
   useEffect(() => {
+
+    taskList.message = '';
+    
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
@@ -196,9 +199,8 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
         const response = await FranchiseUsers.staffRoleList({
           selectedRole : taskList.assign_to_role_id
         });
-        setStaffList(response.staffList);
+        setStaffList(response.staffList);        
         
-        taskList.message = '';
         const result = await Role.list();
         setRole(result.role);
 
