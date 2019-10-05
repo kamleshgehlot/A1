@@ -106,6 +106,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [role, setRole] = useState([]);
+  const [message,setMessage] =useState('');
 
   function validate(values) {
     let errors = {};
@@ -148,7 +149,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
         task_description : taskList.task_description,
         status : taskList.status,
         creator_role : roleName,
-        message : taskList.message,
+        message : message,
         document : taskList.document,
         lastDataState : inputs,
       }
@@ -189,7 +190,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
   }
   
   useEffect(() => {
-    taskList.message = '';
+    // taskList.message = '';
     try{
       const stafflistForRole = async () => {
         const response = await FranchiseUsers.staffRoleList({
@@ -206,6 +207,10 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
       }
   }, []);
 
+
+  const handleMessageChange = event => {
+    setMessage(event.target.value)
+  }
 
   const handleInputChange = event => {
     const { name, value } = event.target
@@ -352,8 +357,8 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
                   id="message"
                   name="message"
                   // label="Task Description"
-                  value={taskList.message}
-                  onChange={handleInputChange}
+                  value={message}
+                  onChange={handleMessageChange}
                   // error={errors.message}
                   // helperText={errors.message}
                   fullWidth

@@ -107,6 +107,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
   const [savebtn, setSavebtn] = React.useState(true);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message,setMessage] =useState('');
 
   const [role, setRole] = useState([]);
  
@@ -147,7 +148,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
       reschedule_req_date : taskList.reschedule_req_date,
       last_due_date : taskList.due_date,
       
-      message : taskList.message,
+      message : message,
       status : taskList.status,
       document : taskList.document,
       lastDataState : inputs, 
@@ -190,7 +191,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
   
   useEffect(() => {
 
-    taskList.message = '';
+    // taskList.message = '';
     
     const fetchData = async () => {
       setIsError(false);
@@ -215,6 +216,10 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
   const handleInputChange = event => {
     const { name, value } = event.target
     setTasksList({ ...taskList, [name]: value })
+  }
+
+  const handleMessageChange = event => {
+    setMessage(event.target.value)
   }
 
   function handleNewDueDate(date){    
@@ -382,10 +387,10 @@ console.log('taskList rescheduled',taskList);
                         id="message"
                         name="message"
                         // label="Task Description"
-                        value={taskList.message}
-                        onChange={handleInputChange}
-                        error={errors.message}
-                        helperText={errors.message}
+                        value={message}
+                        onChange={handleMessageChange}
+                        // error={errors.message}
+                        // helperText={errors.message}
                         fullWidth
                         // required 
                         className={classes.tbrow}

@@ -136,6 +136,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   const [savebtn, setSavebtn] = React.useState(true);
   const [expanded, setExpanded] = React.useState('');
   const [msgList, setMsgList] =  React.useState([]);
+  const [message,setMessage] =useState('');
   const taskStatus = inputs.status;
 
   const handleChange = panel => (event, isExpanded) => {
@@ -157,7 +158,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
       reschedule_req_date : taskList.reschedule_req_date,
       last_due_date : taskList.last_due_date,
 
-      message : taskList.message,
+      message : message,
       status : taskList.status,
       document : taskList.document,
       lastDataState : inputs,      
@@ -178,7 +179,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   };
 
   useEffect(() => {
-    taskList.message = '';
+    // taskList.message = '';
     const fetchData = async () => {
       try {
         todayDate();
@@ -198,7 +199,11 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
     const { name, value } = event.target
     setTasksList({ ...taskList, [name]: value })
   }
-  
+  console.log('mesasge',message);
+  const handleMessageChange = event => {
+    setMessage(event.target.value)
+  }
+
   function todayDate(){
     var dtToday = new Date();
     
@@ -389,8 +394,8 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                   id="message"
                   name="message"
                   // label="Task Id"
-                  value={taskList.message}
-                  onChange={handleInputChange}
+                  value={message}
+                  onChange={handleMessageChange}
                   fullWidth
                   required
                   multiline
