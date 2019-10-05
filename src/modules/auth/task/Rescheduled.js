@@ -197,7 +197,8 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
           selectedRole : taskList.assign_to_role_id
         });
         setStaffList(response.staffList);
-
+        
+        taskList.message = '';
         const result = await Role.list();
         setRole(result.role);
 

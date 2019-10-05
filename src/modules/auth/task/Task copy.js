@@ -440,11 +440,11 @@ export default function Task({roleName}) {
               </TabPanel>
               
               <TabPanel value={value} index={2}>
-                {rescheduleRequestToMeTab && <RescheduleRequestTo task= {rescheduleRequestToMeTab} handleRescheduledOpen={handleRescheduledOpen} />}
+                {rescheduleRequestToMeTab && <RescheduleRequestTo task= {rescheduleRequestToMeTab} handleRescheduledOpen={handleRescheduledOpen} handleHistoryOpen={handleHistoryOpen} />}
               </TabPanel>
               
               <TabPanel value={value} index={3}>
-                {rescheduleRequestByMeTab && <RescheduleRequestBy task= {rescheduleRequestByMeTab} handleClickEditOpen={handleClickEditOpen} />}
+                {rescheduleRequestByMeTab && <RescheduleRequestBy task= {rescheduleRequestByMeTab} handleClickEditOpen={handleClickEditOpen} handleHistoryOpen={handleHistoryOpen} />}
               </TabPanel>
               
               {/* <TabPanel value={value} index={4}>

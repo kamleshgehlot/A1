@@ -196,6 +196,7 @@ export default function EditCopy({open, handleEditClose, handleSnackbarClick,  i
         });
         setStaffList(response.staffList);
 
+        taskList.message = '';
         const result = await Role.list();
         setRole(result.role);
         };

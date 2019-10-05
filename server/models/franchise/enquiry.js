@@ -5,6 +5,7 @@ const utils = require("../../utils");
 
 var Enquiry = function (params) {
   console.log("params", params);
+  this.enquiry_id = params.enquiry_id;
   this.user_id = params.user_id;
   this.enquiry_id = params.enquiry_id;
   this.lead_id = params.lead_id;
@@ -100,7 +101,7 @@ Enquiry.prototype.getAll = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
-          connection.query('select id, customer_id, is_existing_customer, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry order by id desc',function (error, rows, fields) {
+          connection.query('select id, customer_id, is_existing_customer, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry where is_active = 1 order by id desc',function (error, rows, fields) {
 
           if (!error) {
               // console.log("rows...",rows);
@@ -116,7 +117,7 @@ Enquiry.prototype.getAll = function () {
         reject(error);
       }
       connection.release();
-      console.log('Enquiry Added for Franchise Staff %d', connection.threadId);
+      console.log('Enquiry List Fetched Franchise Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
@@ -135,7 +136,7 @@ Enquiry.prototype.convertedList = function () {
     
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 1 order by id desc',function (error, rows, fields) {
+        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 1  AND is_active = 1  order by id desc',function (error, rows, fields) {
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);
@@ -170,7 +171,7 @@ Enquiry.prototype.nonConvertList = function () {
     
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 0 order by id desc',function (error, rows, fields) {
+        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 0 AND is_active = 1 order by id desc',function (error, rows, fields) {
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);
@@ -291,6 +292,43 @@ Enquiry.prototype.searchData = function () {
     throw error;
   });
   }
+
+
+
+
+
+  
+Enquiry.prototype.deleteEnquiry = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('update enquiry set is_active = 0 where id = "'+that.enquiry_id+'"',function (error, rows, fields) {
+          if (!error) {
+              resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Enquiry Deleted %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+  }
+
+  
 
 
 module.exports = Enquiry;

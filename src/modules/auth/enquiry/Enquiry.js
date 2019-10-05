@@ -21,6 +21,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
+import CachedIcon from '@material-ui/icons/Cached';
+import DeleteIcon from '@material-ui/icons/Delete';
 import TextField from '@material-ui/core/TextField';
 
 import Add from './Add';
@@ -32,6 +34,7 @@ import EnquiryAPI from '../../../api/franchise/Enquiry';
 import Category from '../../../../src/api/Category';
 
 import BadgeComp from '../../common/BadgeComp';
+import { async } from 'q';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -180,6 +183,10 @@ export default function Enquiry({roleName}) {
     // console.log(response);
   }
   
+  const handleDeleteEnquiry = async (data) => {
+    const result = await EnquiryAPI.deleteEnquiry({id : data.id});
+    setEnquiryList(result.enquiryList);
+  }
 
   function handleClickOrderOpen(data){
     let mainCategory, category, subCategory;
@@ -382,9 +389,19 @@ export default function Enquiry({roleName}) {
                                   }                                  
                               </StyledTableCell>
                               {data.converted_to===0? <StyledTableCell>
-                                <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { handleClickOrderOpen(data); }}>
+                                <Tooltip title="Delete Enquiry">                              
+                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleDeleteEnquiry(data); }}>
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Convert into Order">                              
+                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickOrderOpen(data); }}>
+                                    <CachedIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { handleClickOrderOpen(data); }}>
                                     Convert
-                                </Button>
+                                </Button> */}
                               </StyledTableCell>:''}
                             </TableRow>:''
                           )

@@ -12,5 +12,6 @@ enquiryRouter.route("/convertedList").get(validateToken, Enquiry.convertedList);
 enquiryRouter.route("/convert").post(validateToken, Enquiry.convert);
 enquiryRouter.route("/postenquiry").post(validateToken, Enquiry.postenquiry);
 enquiryRouter.route('/search').post(validateToken, Enquiry.search);
+enquiryRouter.route('/deleteEnquiry').post(validateToken, Enquiry.deleteEnquiry);
 
 module.exports = enquiryRouter;

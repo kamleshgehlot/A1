@@ -98,4 +98,24 @@ const search = async function (req, res, next) {
     next(error);
 	}
 };
-module.exports = { getnewid, postenquiry, getAll, nonConvertList, convert, convertedList,search};
+
+
+
+const deleteEnquiry = async function (req, res, next) {
+  console.log('enquiry req.body', req.body);
+  let EnquiryParams = {
+    user_id: req.decoded.user_id,
+    enquiry_id : req.body.id,
+  };
+	try{
+    const newEnquiry = new Enquiry(EnquiryParams);
+    await newEnquiry.deleteEnquiry();
+    const enquiryList = await new Enquiry({user_id : req.decoded.user_id}).getAll();
+    res.send({ enquiryList: enquiryList });
+	}catch(err){
+    next(error);
+	}
+};
+
+
+module.exports = { getnewid, postenquiry, getAll, nonConvertList, convert, convertedList, search, deleteEnquiry};

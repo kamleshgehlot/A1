@@ -25,6 +25,7 @@ export default {
     }
   },
   
+  
   getAll: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/enquiry/getall`;
     try {
@@ -78,6 +79,24 @@ export default {
 
   postEnquiry: async (data1) => {
     const URL = `${c.API_CONSUMER}/api/franchise/enquiry/postenquiry`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: data1,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  deleteEnquiry: async (data1) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/enquiry/deleteEnquiry`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',

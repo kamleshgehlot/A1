@@ -183,7 +183,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
         todayDate();
         const result = await Staff.list();
         setStaffList(result.staffList);
-        
+        taskList.message = '';
         // const msgResult = await Task.getMsgList({id: taskList.id});
         // setMsgList(msgResult);
       } catch (error) {

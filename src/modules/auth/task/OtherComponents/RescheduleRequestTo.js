@@ -22,7 +22,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
-
+import HistoryIcon from '@material-ui/icons/History';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -117,7 +117,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function RescheduleRequestTo({task, handleRescheduledOpen }) {
+export default function RescheduleRequestTo({task, handleRescheduledOpen, handleHistoryOpen}) {
   const classes = useStyles();
 return (  
   <Table className={classes.table}>
@@ -127,6 +127,7 @@ return (
         <StyledTableCell>Task ID</StyledTableCell>
         <StyledTableCell>Task Description</StyledTableCell>
         <StyledTableCell>Assigned To</StyledTableCell>        
+        <StyledTableCell>Message</StyledTableCell>     
         <StyledTableCell>Due Date</StyledTableCell>      
         <StyledTableCell>Start Date</StyledTableCell>
         {/* <StyledTableCell>Document</StyledTableCell> */}
@@ -141,6 +142,7 @@ return (
           <StyledTableCell> {data.task_id}  </StyledTableCell>
           <StyledTableCell> {data.task_description}  </StyledTableCell>
           <StyledTableCell>  {data.assign_to_name + " (" + data.assign_to_role_name + ")"} </StyledTableCell>
+          <StyledTableCell> {data.message}</StyledTableCell>
           <StyledTableCell> {data.due_date}</StyledTableCell>
           <StyledTableCell> {data.start_date}</StyledTableCell>          
           {/* <StyledTableCell> {data.message}</StyledTableCell>
@@ -148,6 +150,11 @@ return (
             <a href={API_URL + "/api/download?path=taskFile/" + data.document }  download >{data.document}</a>                          
           </StyledTableCell> */}
           <StyledTableCell>
+          <Tooltip title="View History">                              
+              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
+                 <HistoryIcon />
+               </IconButton>
+            </Tooltip>
           <Tooltip title="Update Task">                              
             <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleRescheduledOpen(data); }}>
               <CreateIcon/>
