@@ -372,16 +372,19 @@ const deleteTask = async function (req, res, next) {
 
 
 const getTaskHistory = async function (req, res, next) {
-
+  console.log('history req.body',req.body)
+  console.log('history req.decoded',req.decoded)
   const taskParam = {    
 
     taskInsertId : req.body.id,
     task_id : req.body.task_id,
     user_id : req.decoded.user_id,
-    assigned_to : req.body.assign_to,
-    assign_to_role : req.body.assign_to_role_id,
+    userId : req.decoded.id,
+    assigned_to : req.body.assigned_to,
+    assign_to_role : req.body.assign_to_role,
     task_created_by : req.body.task_created_by,
-    creator_role : req.body.creator_role,
+    creator_role : req.body.creator_role,    
+    user_role : req.body.user_role,
   };
 
   try {

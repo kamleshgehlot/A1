@@ -370,7 +370,7 @@ export default function Task({roleName}) {
           // console.log('rescheduleRequestToMe',data);
           rescheduleRequestToMe.push(data);
         }
-      if(data.is_active == 1 && data.status == 3 && data.assign_to == userId ){
+      if(data.is_active == 1 && data.status == 3 &&  ( data.assign_to == userId && data.assign_to_role_name == roleName)){
           // console.log('rescheduleRequestByMe',data);
           rescheduleRequestByMe.push(data);
         }

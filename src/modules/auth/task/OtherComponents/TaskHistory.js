@@ -142,9 +142,10 @@ console.log('historyDate,',historyData)
           id: historyData.id, 
           task_id : historyData.task_id,
           assigned_to : historyData.assign_to,
-          assign_to_role : historyData.assign_to_role_id,
+          assign_to_role : historyData.assign_to_role_id,          
           task_created_by : historyData.task_created_by,
           creator_role : historyData.creator_role,
+          user_role : roleName,
         });
         console.log('historyResult',historyResult);
         setHistoryList(historyResult);
