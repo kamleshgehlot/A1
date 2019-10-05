@@ -390,7 +390,7 @@ Task.prototype.taskActivityUpdateByStaff = function () {
           connection.query(`INSERT INTO task_activity(task_id, assign_to, assign_to_role, description, activity_status, due_date, start_date, reschedule_req_date, last_due_date, completed_date, message_id, document_id, status, is_active, created_by) VALUES ?`, [tastActivityValues], (error, rows, fields) => {
             if (!error) {
               connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-              connection.query('UPDATE Task set is_active = 0 where id = "'+that.taskInsertId+'"', (error, rows, fields) => {
+              connection.query('UPDATE task set is_active = 0 where id = "'+that.taskInsertId+'"', (error, rows, fields) => {
                 if (!error) {
                   console.log('status == 6 no error', rows);
                   resolve(rows);
