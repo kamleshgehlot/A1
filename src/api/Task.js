@@ -62,6 +62,7 @@ export default {
       throw error;
     }
   },
+
   last: async () => {
     const URL = `${c.API_CONSUMER}/api/task/last`;
     try {
@@ -72,6 +73,10 @@ export default {
       throw error;
     }
   },
+
+
+  
+  
   taskStatus: async () => {
     const URL = `${c.API_CONSUMER}/api/task/taskStatus`;
     try {
@@ -225,6 +230,24 @@ export default {
 
   getTaskHistory: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/task/getTaskHistory`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
+
+  fetchAssignedTask: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/task/fetchAssignedTask`;
     try {
       const { data } = await axios(
         URL,

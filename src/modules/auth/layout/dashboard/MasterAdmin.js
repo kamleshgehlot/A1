@@ -26,13 +26,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 
-
-// Components
-import MasterAdmin from './MasterAdmin';
-import Admin from './Admin';
-import CSR from './CSR';
-import Finance from './Finance';
-import Delivery from './Delivery';
+import Panel1 from './Components/Panel1';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -82,39 +76,41 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+// function TabPanel(props) {
+//   const { children, value, index, ...other } = props;
 
-export default function MainDashboard({roleName, roleId}) {
+//   return (
+//     <Typography
+//       component="div"
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`vertical-tabpanel-${index}`}
+//       aria-labelledby={`vertical-tab-${index}`}
+//       {...other}
+//     >
+//       <Box p={3}>{children}</Box>
+//     </Typography>
+//   );
+// }
+
+// TabPanel.propTypes = {
+//   children: PropTypes.node,
+//   index: PropTypes.any.isRequired,
+//   value: PropTypes.any.isRequired,
+// };
+
+export default function MasterAdmin({roleName, roleId}) {
   const classes = useStyles();
-  // const [roleId, setRoleId] = useState();
-// console.log('dash rolenam',roleName, roleId)
-  // useEffect(() => {
-  //   let roleId='';
+  const [value, setValue] = React.useState(0);
 
-  //   switch (roleName[0]) {
-  //     case 'Super Admin': roleId = 1;
-  //       break;
-  //     case 'Admin': roleId = 2;
-  //       break;
-  //     case 'CSR' :  roleId = 3;
-  //       break;
-  //     case 'Finance' :  roleId = 4;
-  //       break;
-  //     case 'Delivery' :  roleId = 5;
-  //       break;
-  //     case 'HR' :  roleId = 6;
-    
-  //     default: break;
-  //   }
-  //   setRoleId(roleId);
-  // });
 
-  return (    
-    <div className={classes.root}>      
-       {roleName === "Super Admin" && <MasterAdmin roleName={roleName} roleId={roleId} />}
-       {roleName === "Admin" && <Admin roleName={roleName} roleId={roleId} />}
-       {roleName === "CSR" && <CSR roleName={roleName} roleId={roleId} />}
-       {roleName === "Finance" && <Finance roleName={roleName} roleId={roleId} />}
-       {roleName === "Delivery" && <Delivery roleName={roleName} roleId={roleId} />}
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
+
+  return (
+    <div className={classes.root}>
+      <Panel1 roleName={roleName} roleId={roleId} />
     </div>
   );
 }

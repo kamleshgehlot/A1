@@ -34,4 +34,6 @@ leadRouter.route('/franchiseList').get(validateToken, Lead.franchiseList);
 leadRouter.route('/convertedList').get(validateToken, Lead.convertedList);
 leadRouter.route('/filter').post(validateToken, Lead.filter);
 leadRouter.route('/search').post(validateToken, Lead.search);
+leadRouter.route('/fetchLeads').post(validateToken, Lead.fetchLeads);
+
 module.exports = leadRouter;

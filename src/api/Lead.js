@@ -31,6 +31,24 @@ export default {
     }
   },
 
+  fetchLeads:  async ( newLead) => {
+    const URL = `${c.API_CONSUMER}/api/lead/fetchLeads`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: newLead,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+        );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
   list: async () => {
     const URL = `${c.API_CONSUMER}/api/lead/list`;
     try {

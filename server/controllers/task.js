@@ -417,6 +417,26 @@ const getMsgList = async function (req, res, next) {
 
 
 
+const fetchAssignedTask = async function (req, res, next) {
+  console.log('history req.body',req.body)
+  console.log('history req.decoded',req.decoded)
+  const taskParam = {    
+    user_id : req.decoded.user_id,
+    assigned_to : req.decoded.id,
+    assign_to_role : req.body.assign_to_role,    
+  };
+
+  try {
+    const newTask = new Task(taskParam);
+    const fetchingList = await newTask.fetchAssignedTask();
+    res.send( fetchingList );
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
 
 
 // const rescheduledTaskList = async function (req, res, next) {
@@ -474,5 +494,6 @@ module.exports = {
   getTaskHistory,
   staffUpdate,
   getMsgList,
+  fetchAssignedTask,
   // completedList, staffTasks,  rescheduledTaskList, assignToOther 
 };

@@ -141,8 +141,9 @@ return (
                         return(
                           <TableRow >
                           <StyledTableCell> {index+1}  </StyledTableCell>
-                            <StyledTableCell> {data.lead_id}  </StyledTableCell>
-                            {data.franchise_id!=0 ?   (franchiseListd.length > 0 ? franchiseListd : []).map((dataf, index1)=>{
+                          <StyledTableCell> {data.lead_id}  </StyledTableCell>
+                            {data.franchise_id!=0 ?   
+                              (franchiseListd.length > 0 ? franchiseListd : []).map((dataf, index1)=>{
                                   
                                   return(
                                     data.franchise_id===dataf.id ?

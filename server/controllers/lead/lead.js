@@ -145,4 +145,23 @@ const search = async function (req, res, next) {
 	}
 };
 
-module.exports = { add, all, last, addComment, allComment, franchiseList, convertedList, filter, search};
+
+
+const fetchLeads = async function (req, res, next) {
+  console.log('lead rq..',req.body);
+  let leadParams = {
+    user_id: req.decoded.user_id,
+    franchise_id: req.decoded.franchise_id,
+  };
+	try{
+    const newLead = new Lead(leadParams);
+    const result = await newLead.fetchLeads();
+
+    res.send({ leadList: result });
+	}catch(err){
+    next(error);
+	}
+};
+
+
+module.exports = { add, all, last, addComment, allComment, franchiseList, convertedList, filter, search, fetchLeads};

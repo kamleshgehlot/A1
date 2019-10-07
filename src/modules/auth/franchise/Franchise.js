@@ -255,6 +255,8 @@ export default function Franchise({roleName}) {
       </Typography>
     );
   }
+
+  
   function handleClickOpen() {
     setOpen(true);
   }
@@ -322,9 +324,6 @@ export default function Franchise({roleName}) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>
-            {/* <Grid item xs={12} sm={8}> */}
-                
-            {/* {console.log('valuefg cf----==',value)} */}
                     { (franchiseId.length > 0 ? franchiseId : []).map((data, index)=>{
                       // data.franchise_id !== totalFranchise ? console.log("hello ") : console.log("bye")
 

@@ -36,7 +36,7 @@ taskRouter.route('/last').get(validateToken, Task.last);
 taskRouter.route('/deleteTask').post(validateToken, Task.deleteTask);
 taskRouter.route('/getMsgList').post(validateToken, Task.getMsgList);
 taskRouter.route('/getTaskHistory').post(validateToken, Task.getTaskHistory);
-
+taskRouter.route('/fetchAssignedTask').post(validateToken, Task.fetchAssignedTask);
 
 // staff task list
 // taskRouter.route('/staffTasks').get(validateToken, Task.staffTasks);

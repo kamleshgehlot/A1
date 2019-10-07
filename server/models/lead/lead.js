@@ -259,6 +259,7 @@ Lead.prototype.franchiseList = function () {
     });
   });
 }
+
 Lead.prototype.convertedList = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -442,5 +443,66 @@ Lead.prototype.searchData = function () {
   }
 
 
+
+Lead.prototype.fetchLeads = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      console.log('Process Started %d All', connection.threadId);
+      if (error) {
+        throw error;
+      }
+      if(that.user_id.split('_')[1]==='admin'){
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message, is_existing_customer, customer_id,  customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (  f_id="0" OR franchise_id=0 ) order by id desc', function (error, rows, fields) {
+          if (!error) {
+            console.log('rowss.1',rows)
+            resolve(rows);
+
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }else{
+      if (that.user_id != "admin") {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select franchise_id from user where id=1 limit 1', function (error, rows, fields) {
+          if (!error) {
+            // resolve(rows);
+            const franchise_id = rows[0].franchise_id;
+            connection.changeUser({ database: dbName["prod"] });
+            connection.query('select id, lead_id, document, is_franchise_exist, franchise_id, franchise_name, message, is_existing_customer, customer_id,  customer_name, customer_contact, is_active, f_id, created_by from leads where is_active="1" AND converted_to="0" AND (franchise_id= "' + franchise_id + '" OR franchise_id= "0") order by id desc', function (error, rows, fields) {
+              if (!error) {
+                console.log('rowss.2',rows)
+                resolve(rows);
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
+          }
+        });
+      }
+      else {
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select id,lead_id, document, is_franchise_exist,franchise_id,franchise_name,message, is_existing_customer, customer_id, customer_name,customer_contact, is_active,f_id,created_by from leads where is_active="1" AND converted_to="0" AND (  f_id="0" OR franchise_id=0 ) order by id desc', function (error, rows, fields) {
+          if (!error) {
+            console.log('rowss.3',rows)
+            resolve(rows);
+
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
+    }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+
+}
 
 module.exports = Lead;
