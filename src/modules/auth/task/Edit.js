@@ -31,15 +31,16 @@ import Role from '../../../api/franchise/Role';
 // import Staff from '../../../api/franchise/Staff';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 import {useCommonStyles} from '../../common/StyleComman'; 
+import {getDate, getCurrentDate} from '../../../utils/datetime';
 
-const RESET_VALUES = {
-  id: '',
-  first_name: '',
-  last_name:'',
-  location:'',
-  contact:'',
-  email:'',
-};
+// const RESET_VALUES = {
+//   id: '',
+//   first_name: '',
+//   last_name:'',
+//   location:'',
+//   contact:'',
+//   email:'',
+// };
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -93,59 +94,38 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    color: theme.palette.common.black,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-}))(TableRow);
-export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setTaskList}) {
+export default function Edit({open, handleEditClose, handleSnackbarClick,  inputs, setTaskList, roleName}) {
   const classes = useStyles();
   const styleClass = useCommonStyles();
   const [staffListn, setStaffList] = useState({});
   const [taskList, setTasksList] = React.useState(inputs);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [franchiseUsersList, setFranchiseUsersList] = useState({});
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [role, setRole] = useState([]);
- function validate(values) {
-   
+  const [message,setMessage] =useState('');
+
+  function validate(values) {
     let errors = {};
     if (!values.task_description) {
       errors.task_description = 'Task Description is required';
     } 
-  
-    if (!values.assigned_to) {
-      errors.assigned_to = 'Assigned To is required';
+    if (!values.assign_to) {
+      errors.assign_to = 'Assigned To is required';
     } 
-    if (!values.assign_role) {
-      errors.assign_role = 'Assigned Role is required';
+    if (!values.assign_to_role_id) {
+      errors.assign_to_role_id = 'Assigned Role is required';
     } 
-    
     if (!values.due_date) {
       errors.due_date = 'Due Date is required';
     } 
-    
     return errors;
   };
 
-  const addTaskMaster = async () => {
+  const updateTask = async () => {
     let check=false;
     setIsSubmitting(true);
     setErrors(validate(taskList));
@@ -156,149 +136,91 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       check=true;
     }
   
-    console.log(check,isSubmitting)    
-      if(check===false){
-        console.log(check)
-        setpLoading(true);
-        setSavebtn(false);
-        const response = await Task.add({
-          id: taskList.id,
-          task_id: taskList.task_id,
-          task_description:taskList.task_description,
-          assign_role:taskList.assign_role,
-          assigned_to:taskList.assigned_to,
-          status:taskList.status,
-          due_date:taskList.due_date,
-        });
-        handleSnackbarClick(true,'Task Updated Successfully');
-        // console.log('update======',response.taskList);
-        setTaskList(response.taskList);
-        setpLoading(false);
-        handleEditClose(false);
+    if(check===false){
+      setpLoading(true);
+      setSavebtn(false);
+        
+      const data = {
+        id : taskList.id,
+        task_id : taskList.task_id,
+        due_date : taskList.due_date,
+        assign_to_role : taskList.assign_to_role_id, 
+        assigned_to : taskList.assign_to,
+        task_description : taskList.task_description,
+        status : taskList.status,
+        creator_role : roleName,
+        message : message,
+        document : taskList.document,
+        lastDataState : inputs,
+      }
+
+      let formData = new FormData();
+      formData.append('data', JSON.stringify(data));
+
+      for (var x = 0; x < document.getElementById('document').files.length; x++) {
+          formData.append('avatar', document.getElementById('document').files[x])
+      }
+      
+      const response = await Task.editTask({ formData : formData });
+      handleSnackbarClick(true,'Task Updated Successfully');
+      setTaskList(response.taskList);
+      setpLoading(false);
+      handleEditClose(false);
       }
   };
+  
 
   
-    
-  const rescheduleTask = async () => {
-
-    const response = await Task.reschedule({
-      assignid: taskList.assignid,
-      task_id: taskList.task_id,
-      task_description:taskList.task_description,
-      assigned_role: taskList.assign_role,
-      assigned_to:taskList.assigned_to,
-      due_date:taskList.due_date,
-      new_due_date:taskList.new_due_date,
-      status:taskList.status,
-      // message: taskList.message,
-    });
-    handleSnackbarClick(true,'Task Rescheduled Successfully');
-    // console.log('update======',response.taskList);
-    setTaskList(response.taskList);
-    setSavebtn(true);
-    handleEditClose(false);
-  };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const result = await Staff.list();
-  //       setStaffList(result.staffList);
-  //     } catch (error) {
-  //       setIsError(true);
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   fetchData();
-  // }, []);
   function handleRoleChange(e){
-    // setStaffRole(e.target.value);
     let selectedRole = e.target.value;
-    const { name, value } = e.target
-    setTasksList({ ...taskList, [name]: value })
-    try{
-   const stafflistForRole = async () => {
-    const response = await FranchiseUsers.staffRoleList({
-      selectedRole:selectedRole
-    });
-    // console.log('response.staffList====',response.staffList);
-    setStaffList(response.staffList);
-    // setOtherDisable(false);
-  };
+    const { name, value } = e.target;
 
-  
-    stafflistForRole();
-  }catch(error){
-    console.log('event',error)
-  }
-
-}
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await FranchiseUsers.list();
-        setFranchiseUsersList(result.franchiseUserList);
-        console.log('inputs----------hd----',inputs)
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
+    setTasksList({ ...taskList, [name]: value });
     try{
       const stafflistForRole = async () => {
-       const response = await FranchiseUsers.staffRoleList({
-         selectedRole:taskList.assign_role
-       });
-      //  console.log('response.staffList====',response.staffList);
-       setStaffList(response.staffList);
-      //  setOtherDisable(false);
-     };
-       stafflistForRole();
-     }catch(error){
-       console.log('event',error)
-     }
-    const roleData = async () => {
-      
-      try {
+        const response = await FranchiseUsers.staffRoleList({
+          selectedRole:selectedRole
+        });
+        setStaffList(response.staffList);
+      };
+    stafflistForRole();
+    }catch(error){
+      console.log('event',error)
+    }
+  }
+  
+  useEffect(() => {
+    // taskList.message = '';
+    try{
+      const stafflistForRole = async () => {
+        const response = await FranchiseUsers.staffRoleList({
+          selectedRole : taskList.assign_to_role_id,
+        });
+        setStaffList(response.staffList);
+       
         const result = await Role.list();
         setRole(result.role);
-      } catch (error) {
-        console.log("Error",error);
+        };
+          stafflistForRole();
+      }catch(error){
+        console.log('event',error)
       }
-    };
-    roleData();
   }, []);
+
+
+  const handleMessageChange = event => {
+    setMessage(event.target.value)
+  }
 
   const handleInputChange = event => {
     const { name, value } = event.target
     setTasksList({ ...taskList, [name]: value })
   }
 
-  function handleDate(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'due_date', value: fullDate}})
+  function handleDate(date){    
+    let date1 = getDate(date);
+    handleInputChange({target:{name: 'due_date', value: date1}});
   }
-  function handleNewDueDate(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'new_due_date', value: fullDate}})
-  }
-
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -313,9 +235,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           </AppBar>
 
           <div className={classes.root}>
+        <Grid item xs={12} sm={12}>{ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={12}>{ploading ?  <LinearProgress />: null}</Grid>
+          <Grid container spacing={4}>            
             <Grid item xs={12} sm={6}>
               <InputLabel  className={classes.textsize} htmlFor="task_id">Task ID</InputLabel>
               <TextField 
@@ -324,16 +246,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                     input: classes.textsize,
                   },
                 }}
-              id="task_id"
-              name="task_id"
-              // label="Task Id"
-              value={taskList.task_id}
-              fullWidth
-              disabled
-              type="text"
-              // placeholder="Franchise Name"
-              margin="dense"
-            /> 
+                id="task_id"
+                name="task_id"
+                value={taskList.task_id}
+                fullWidth
+                disabled
+                type="text"
+                margin="dense"
+              /> 
             </Grid>
             <Grid item xs={12} sm={6}>  
               <InputLabel  className={classes.textsize} htmlFor="due_date">Due Date</InputLabel>
@@ -351,53 +271,29 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   disablePast = {true}
                   value={taskList.due_date}
                   fullWidth                       
-                  // disabled={(taskList.status !=1 && taskList.status !=3) ? true : false}          
-                  disabled = {(taskList.status===3 || taskList.status ===2) ? true : false}
                   onChange={handleDate}
                   error={errors.due_date}
-                  helperText={errors.due_date}                               
+                  helperText={errors.due_date}     
+                  disabled={taskList.status ===2}                          
                 />
               </MuiPickersUtilsProvider>
             </Grid>
-            {taskList.status===3? 
-              <Grid item xs={12} sm={6}>  
-                <InputLabel  className={classes.textsize} htmlFor="new_due_date">New Due Date</InputLabel>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                     InputProps={{
-                      classes: {
-                        input: classes.textsize,
-                      },
-                    }}
-                    margin="dense"
-                    id="new_due_date"
-                    name="new_due_date"
-                    format="dd/MM/yyyy"
-                    disablePast = {true}
-                    value={taskList.new_due_date}
-                    fullWidth                                     
-                    onChange={handleNewDueDate}
-                    error={errors.new_due_date}
-                    helperText={errors.new_due_date}                               
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-            :''}
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assign_role">Assigned Role</InputLabel>
-              <Select
-                value={taskList.assign_role}
-                inputProps={{
-                  name: 'assign_role',
-                  id: 'assign_role',
-                }}
-                onChange={handleRoleChange}
-                className={classes.textsize}
-                fullWidth
-                disabled={taskList.status ===2}
-                required
-              >
-                <MenuItem className={classes.textsize} value={2}>Director</MenuItem>
+              <InputLabel  className={classes.textsize} htmlFor="assign_role">Role List</InputLabel>
+                <Select
+                  value={taskList.assign_to_role_id}
+                  inputProps={{
+                    name: 'assign_to_role_id',
+                    id: 'assign_to_role_id',
+                  }}
+                  onChange={handleRoleChange}
+                  className={classes.textsize}
+                  fullWidth
+                  required
+                  disabled={taskList.status ===2}
+                >
+                {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
+                {/* <MenuItem className={classes.textsize} value={2}>Director</MenuItem> */}
                 {role.map((ele,index) =>{
                   return(
                   <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>
@@ -406,50 +302,27 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
               </Select>
             </Grid>
             <Grid item xs={12} sm={6}>  
-              <InputLabel  className={classes.textsize} htmlFor="assigned_to">Assigned To</InputLabel>
+              <InputLabel  className={classes.textsize} htmlFor="assign_to">Assign To</InputLabel>
               <Select
-                disabled={taskList.status ===2}
-                  value={taskList.assigned_to}
+                  disabled={taskList.status ===2}
+                  value={taskList.assign_to}
                   onChange={handleInputChange}
                   inputProps={{
-                    name: 'assigned_to',
-                    id: 'assigned_to',
-                    // label:'assigned_to'
+                    name: 'assign_to',
+                    id: 'assign_to',
                   }}
                   className={classes.textsize}
                   fullWidth
-                  // label="assigned_to"
                   required
                 >
-          
-                    { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
-                      return(
-                        <MenuItem className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
-                    )})
-                    }
+                  <MenuItem className={classes.textsize} value={'0'}>{'All'} </MenuItem>
+                  { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
+                    return(
+                      <MenuItem className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>
+                  )})
+                  }
               </Select>
             </Grid>
-            {taskList.status !==1 ?
-              <Grid item xs={12} sm={taskList.status ===3 ? 6 : 12}> 
-                <InputLabel  className={classes.textsize} htmlFor="message">Message</InputLabel>
-                <TextField 
-                  InputProps={{
-                      classes: {
-                        input: classes.textsize,
-                      },
-                    }}
-                  id="message"
-                  name="message"
-                  // label="Task Id"
-                  value={taskList.message}
-                  onChange={handleInputChange}
-                  fullWidth
-                  disabled = {(taskList.status ===2 || taskList.status === 3) ? true : false}
-                  type="text"
-                  margin="dense"
-                /> 
-              </Grid>
-            :''}
             <Grid item xs={12} sm={12}>  
               <InputLabel  className={classes.textsize} htmlFor="task_description">Task Description</InputLabel>
               <TextField 
@@ -469,15 +342,58 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 helperText={errors.task_description}
                 type="text"
                 multiline
-                disabled={taskList.status ===2}
                 margin="dense"
+                disabled={taskList.status ===2}
               /> 
             </Grid>
+            <Grid item xs={12} sm={6}>  
+              <InputLabel  className={classes.textsize} htmlFor="message">Message Box</InputLabel> 
+                <TextField 
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="message"
+                  name="message"
+                  // label="Task Description"
+                  value={message}
+                  onChange={handleMessageChange}
+                  // error={errors.message}
+                  // helperText={errors.message}
+                  fullWidth
+                  // required 
+                  className={classes.tbrow}
+                  type="text"
+                  multiline
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                />                  
+              </Grid>
+              <Grid item xs={12} sm={6}>  
+                <InputLabel  className={classes.textsize} htmlFor="document">Document</InputLabel> 
+                <TextField  
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="document"
+                  name="document"
+                  // label="Task Id"
+                  value={taskList.document}
+                  onChange={handleInputChange}
+                  fullWidth
+                  type="file"
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                /> 
+              </Grid>
             <Grid item xs={12} sm={12}>  
               {savebtn? 
-                <Button variant="contained" color="primary" disabled={(taskList.status !=1 && taskList.status !=3) ? true : false} className={classes.button} onClick={taskList.status===3? rescheduleTask : addTaskMaster}  type="submit">
-                  Update
-                </Button>: 
+              // disabled={(taskList.status !=1 && taskList.status !=4) ? true : false}
+                <Button variant="contained" color="primary" className={classes.button} onClick={updateTask}  type="submit"> Update </Button>
+                : 
                 <Button variant="contained" color="primary" className={classes.button}  type="submit" disabled>
                   Update
                 </Button>

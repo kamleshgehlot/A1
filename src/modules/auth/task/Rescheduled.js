@@ -136,7 +136,8 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
     
     
   const rescheduleTask = async () => {
-
+    setSavebtn(false);
+    setpLoading(true);
     const data={      
       id : taskList.id,
       task_id : taskList.task_id,
@@ -164,7 +165,6 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
 
     handleSnackbarClick(true,'Task Rescheduled Successfully');
     setTaskList(response.taskList);
-    setSavebtn(true);
     handleRescheduledClose(false);
   };
 
@@ -192,7 +192,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
   useEffect(() => {
 
     // taskList.message = '';
-    
+    handleInputChange({target:{name: 'reschedule_date', value: taskList.due_date}});    
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
@@ -243,9 +243,10 @@ console.log('taskList rescheduled',taskList);
           </AppBar>
 
           <div className={classes.root}>
+          
+          <Grid item xs={12} sm={12}>{ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>
           <Grid container spacing={4}>
-            <Grid item xs={12} sm={12}>{ploading ?  <LinearProgress />: null}</Grid>
             <Grid item xs={12} sm={4}>
               <InputLabel  className={classes.textsize} htmlFor="task_id">Task ID</InputLabel>
               <TextField 
@@ -432,7 +433,7 @@ console.log('taskList rescheduled',taskList);
                 <Button variant="contained" color="primary" className={classes.button} onClick={handleRescheduledClose}  type="submit">
                   Close
                 </Button>
-            </Grid>
+            </Grid>            
           </Grid>
           </Paper>
           </div>

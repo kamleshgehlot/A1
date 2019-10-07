@@ -60,8 +60,8 @@ import Franchise from '../franchise/Franchise';
 import Product from '../category/ProductList';
 import Staff from '../staff/Staff';
 import FranchiseStaff from '../franchisestaff/FranchiseStaff';
-import Task from '../task/Task copy';
-import StaffTask from '../task/StaffTask';
+import Task from '../task/TaskList';
+
 import Customer from '../customer/CustomerList';
 import Profile from '../setting/Profile';
 import ChangePassword from '../setting/ChangePassword';
@@ -81,6 +81,7 @@ import UserAPI from '../../../api/User';
 import RoleAPI from '../../../api/franchise/Role';
 
 import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
+import TaskList from '../task/TaskList';
 
 const drawerWidth = 200;
 
@@ -254,7 +255,6 @@ export default function ClippedDrawer(props) {
   const [showDashboard, setShowdashboard] = useState(roleName === 'Super Admin');
   const [showMasterStaff, setShowMasterStaff] = useState(false);
   const [showFranchiseStaff, setShowFranchiseStaff] = useState(false);
-  const [showStaffTask, setShowStaffTask] = useState(false);
   const [showTask, setShowTask] = useState(false);
   const [showCustomer, setShowCustomer] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
@@ -341,8 +341,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowPwd(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -364,8 +363,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowPwd(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -386,8 +384,7 @@ export default function ClippedDrawer(props) {
     setShowPwd(false);
     setShowProfile(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -407,8 +404,7 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowPwd(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -428,8 +424,7 @@ export default function ClippedDrawer(props) {
     setShowProfile(false);
     setShowPwd(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -449,8 +444,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowPwd(false);
+        setShowPwd(false);
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
@@ -470,8 +464,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowCustomer(false);
     setShowPwd(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -492,8 +485,7 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowCategory(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -516,8 +508,7 @@ export default function ClippedDrawer(props) {
     setShowFranchise(false);
     setShowCategory(false);
     setShowCustomer(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFinanceReport(false);
@@ -537,8 +528,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowPwd(false);
-    setShowStaffTask(false);
-    setShowEnquiry(false);
+        setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -547,27 +537,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
 
   }
-  function handleStaffTaskClick(role){
-    
-    setRoleAs(role);
-    setShowStaffTask(true);
-    setShowCustomer(false);
-    setShowTask(false);
-    setShowFranchiseStaff(false);
-    setShowMasterStaff(false);
-    setShowFranchise(false);
-    setShowCategory(false);
-    setShowProfile(false);
-    setShowPwd(false);
-    setShowEnquiry(false);
-    setShowLead(false);
-    setShowOrder(false);
-    setShowFranchiseDetail(false);
-    setShowFinanceReport(false);
-    setShowDeliveryReport(false);
-    setShowdashboard(false);
 
-  }
 
   
   function handleEnquiryClick(role){
@@ -583,8 +553,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowPwd(false);
-    setShowStaffTask(false);
-    setShowLead(false);
+        setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
     setShowFinanceReport(false);
@@ -605,8 +574,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowPwd(false);
-    setShowStaffTask(false);
-    setShowOrder(false);
+        setShowOrder(false);
     setShowdashboard(false);
     setShowFranchiseDetail(false);
     setShowFinanceReport(false);
@@ -630,8 +598,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowFinanceReport(false);
     setShowDeliveryReport(false);
-    setShowStaffTask(false);
-  }
+      }
 
 
   
@@ -653,8 +620,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
     setShowdashboard(false);
     setShowDeliveryReport(false);
-    setShowStaffTask(false);
-  }
+      }
 
 
   
@@ -676,8 +642,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
     setShowdashboard(false);
     setShowFinanceReport(false);    
-    setShowStaffTask(false);
-  }
+      }
 
   
   function handleLogout() {
@@ -1079,7 +1044,7 @@ export default function ClippedDrawer(props) {
           showFranchiseStaff ? <FranchiseStaff  franchiseId={franchiseId} roleName={roleAs}/> : null
         }
         {
-          showTask ? <Task roleName={roleAs}/> : null
+          showTask ? <TaskList roleName={roleAs}/> : null
         }
         {
           showCustomer ? <Customer userId={userId} roleName={roleAs}/> : null
@@ -1089,10 +1054,7 @@ export default function ClippedDrawer(props) {
         }
         {
           showPwd ? <ChangePassword  franchiseId={franchiseId} roleName={roleAs}/> : null
-        }
-        {
-          showStaffTask ? <StaffTask  uid={uid} roleName={roleAs}/> : null
-        }
+        }        
         {
           showEnquiry ? <Enquiry roleName={roleAs}/>:null
         }

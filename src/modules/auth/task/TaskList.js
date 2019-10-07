@@ -22,7 +22,7 @@ import Box from '@material-ui/core/Box';
 
 //files
 import Add from './Add';
-import EditCopy from './EditCopy';
+import Edit from './Edit';
 import StaffEdit from './StaffEdit';
 import Rescheduled from './Rescheduled';
 import TaskHistory from './OtherComponents/TaskHistory';
@@ -141,7 +141,7 @@ const StyledTableRow = withStyles(theme => ({
   }));
 
 
-export default function Task({roleName}) {
+export default function TaskList({roleName}) {
 
   const classes = useStyles();
   const uid = APP_TOKEN.get().uid;
@@ -476,7 +476,7 @@ export default function Task({roleName}) {
         </Grid>
 
         {open? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} setTaskList={setTaskListFn} roleName={roleName}/>:null}
-        {editOpen ? <EditCopy open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}
+        {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}
         {rescheduleEditOpen ? <Rescheduled open={rescheduleEditOpen} handleRescheduledClose={handleRescheduledClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn} roleName={roleName} /> : null}        
         {staffEditOpen ? <StaffEdit open={staffEditOpen} handleStaffEditClose={handleStaffEditClose} handleSnackbarClick={handleSnackbarClick} inputs={taskData} setTaskList={setTaskListFn}  /> : null}        
         {taskHistoryOpen ? <TaskHistory open={taskHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} historyData={historyData} roleName={roleName} /> : null }

@@ -265,9 +265,9 @@ return (
           </AppBar>
 
           <div className={classes.root}>
+          <Grid item xs={12} sm={12}> {ploading ?  <LinearProgress />: null} </Grid>
           <Paper className={classes.paper}>             
               <Grid container spacing={4}>  
-              <Grid item xs={12} sm={12}> {ploading ?  <LinearProgress />: null} </Grid>
               <Grid item xs={12} sm={6}>             
                 <InputLabel  className={classes.textsize} htmlFor="task_id">Task ID</InputLabel>
                       <TextField 
