@@ -75,48 +75,58 @@ export default function LeadList({leadList, roleName}) {
     }
     fetch();
   },[])
-  // const handleTaskOpen = () =>{
-  //   setShowTask(true);
-  // }
-console.log('lead list, ..ds.fa',leadList)
+
+  
+const columns = [
+  { id: 'sno', label: '#', minWidth: 10, align: 'right'},
+  { id: 'task_id', label: 'Lead\u00a0Id', minWidth: 50, align: 'left' },
+  { id: 'for_franchise', label: ' For Franchise', minWidth: 200, align: 'left'},
+  { id: 'created_by', label: 'Created\u00a0By', minWidth: 300, align: 'left'},
+  { id: 'message', label: 'Message', minWidth: 200, align: 'left',},
+  { id: 'action', label: 'Action', minWidth: 100, align: 'left' },
+];
 
 return (  
   // <Paper className={classes.root}>
   <div>
   <div className={classes.tableWrapper}>
-    <Table stickyHeader>
+  <Table stickyHeader>
       <TableHead>
         <TableRow>
-          <TableCell> # </TableCell>
-          <TableCell> Lead ID </TableCell>
-          <TableCell> For Franchise </TableCell>
-          <TableCell> Created by </TableCell>
-          <TableCell> Message </TableCell>
-          <TableCell> Action </TableCell>
+          {columns.map(column => (
+            <TableCell
+              key={column.id}
+              align={column.align}
+              style={{ minWidth: column.minWidth, fontWeight:'bolder', color:'black'}}
+            >
+              {column.label}
+            </TableCell>
+          ))}
         </TableRow>
       </TableHead>
       <TableBody>
       {(leadList.length > 0 ? leadList : []).map((data, index) => {      
       return(
       <TableRow hover role="checkbox" tabIndex={-1} >        
-          <StyledTableCell> {index+1}       </StyledTableCell>
-          <StyledTableCell> {data.lead_id}  </StyledTableCell>
+          <StyledTableCell style={{minWidth: 10, align: 'right'}}> {index+1}       </StyledTableCell>
+          <StyledTableCell style={{minWidth: 50, align: 'left'}}> {data.lead_id}  </StyledTableCell>
           {data.franchise_id!=0 ? 
             (franchiseListd.length > 0 ? franchiseListd : []).map((dataf, index1)=>{
               return( data.franchise_id===dataf.id ?
-                <StyledTableCell> {dataf.name} </StyledTableCell> :''
+                <StyledTableCell style={{minWidth: 200, align: 'left'}}> {dataf.name} </StyledTableCell> :''
                 )
-            }) : <StyledTableCell> All</StyledTableCell>
+            }) : <StyledTableCell style={{minWidth: 200, align: 'left'}}> All</StyledTableCell>
           }
           {data.f_id!=0 ?    
             (franchiseListd.length > 0 ? franchiseListd : []).map((datafr, index1)=>{
               return(
                 data.f_id===datafr.id ?
-                <StyledTableCell> {datafr.name +'  ('+ datafr.city + ' ,' + datafr.suburb + ' )'} </StyledTableCell> :''
+                <StyledTableCell style={{minWidth: 300, align: 'left'}}> {datafr.name +'  ('+ datafr.city + ' ,' + datafr.suburb + ' )'} </StyledTableCell> :''
                 )
-            }) : <StyledTableCell> Master Admin</StyledTableCell>
+            }) : <StyledTableCell style={{minWidth: 300, align: 'left'}}> Master Admin</StyledTableCell>
           }
-        <StyledTableCell>{data.message}</StyledTableCell>
+        <StyledTableCell style={{minWidth: 200, align: 'left'}}>{data.message}</StyledTableCell>
+        <StyledTableCell style={{minWidth: 100, align: 'left'}}></StyledTableCell>
       </TableRow>
          );
      })}       

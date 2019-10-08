@@ -737,7 +737,7 @@ export default function ClippedDrawer(props) {
         && ( 
           <TreeView
             className={classes.treeRoot}
-            defaultExpanded={["2","3","4"]}
+            defaultExpanded={["1","2","3"]}
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}

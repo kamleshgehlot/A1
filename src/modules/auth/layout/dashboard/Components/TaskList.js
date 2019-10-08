@@ -19,6 +19,7 @@ import SendIcon from '@material-ui/icons/send';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import Task from '../../../task/TaskList';
+import MainLayout from '../../../layout/MainLayout';
 // import useCommonStyles from '../../../../common/StyleComman';
 
 const StyledTableCell = withStyles(theme => ({
@@ -42,7 +43,7 @@ const useStyles = makeStyles({
     maxHeight: 200,
     overflow: 'auto',
   },
-  tableCellFontSize: {
+  tableBodyCell: {
     fontSize: '12px',
   },
 });
@@ -57,6 +58,16 @@ export default function TaskList({taskList, roleName}) {
     setShowTask(true);
   }
 
+
+  
+const columns = [
+  { id: 'sno', label: '#', minWidth: 10, align: 'right'},
+  { id: 'task_id', label: 'Task\u00a0Id', minWidth: 50, align: 'left' },
+  { id: 'description', label: 'Description', minWidth: 250, align: 'left'},
+  { id: 'assigned_by', label: 'Assigned\u00a0By', minWidth: 200, align: 'left'},
+  { id: 'due_date', label: 'Due Date', minWidth: 150, align: 'left',},
+  { id: 'action', label: 'Action', minWidth: 100, align: 'left' },
+];
   
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
@@ -74,28 +85,31 @@ export default function TaskList({taskList, roleName}) {
 return (  
   <div>
     <div className={classes.tableWrapper}>
-  <Table stickyHeader>
-    <TableHead>
-      <TableRow>
-        <TableCell>#</TableCell>
-        <TableCell>Task Id</TableCell>
-        <TableCell>Description</TableCell>
-        <TableCell>Assigned By</TableCell>
-        <TableCell>Due Date</TableCell>
-        <TableCell>Action</TableCell>        
-      </TableRow>
-    </TableHead>
+    <Table stickyHeader>
+      <TableHead>
+        <TableRow>
+          {columns.map(column => (
+            <TableCell
+              key={column.id}
+              align={column.align}
+              style={{ minWidth: column.minWidth, fontWeight:'bolder', color:'black'}}
+            >
+              {column.label}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
     <TableBody>
     {(taskList.length > 0 ? taskList : []).map((data, index) => {      
       return(
         <TableRow hover role="checkbox" tabIndex={-1} >        
-          <StyledTableCell>{index + 1}</StyledTableCell>
-          <StyledTableCell>{data.task_id}</StyledTableCell>
-          <StyledTableCell>{data.task_description}</StyledTableCell>
-          <StyledTableCell> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
-          <StyledTableCell>{data.due_date}</StyledTableCell>
-          <StyledTableCell> 
-            {/* <Button variant="outlined" size="small" color="primary" onClick={handleTaskOpen}>View Task</Button> */}
+          <StyledTableCell style={{minWidth: 10, align: 'right'}}>{index + 1}</StyledTableCell>
+          <StyledTableCell style={{minWidth: 50, align: 'left'}}>{data.task_id}</StyledTableCell>
+          <StyledTableCell style={{minWidth: 250, align: 'left'}}>{data.task_description}</StyledTableCell>
+          <StyledTableCell style={{minWidth: 200, align: 'left'}}> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
+          <StyledTableCell style={{minWidth: 150, align: 'left'}}>{data.due_date}</StyledTableCell>
+          <StyledTableCell style={{minWidth: 100, align: 'left'}}> 
+            {/* <Button variant="text" size="small" color="primary" onClick={handleTaskOpen} style={{fontSize:'10px'}}>View Task</Button> */}
         </StyledTableCell>
       </TableRow>
       )      
@@ -111,10 +125,10 @@ return (
     rowsPerPage={rowsPerPage}
     page={page}
     backIconButtonProps={{
-      'aria-label': 'previous page',
+      'aria-label': 'previous page',      
     }}
     nextIconButtonProps={{
-      'aria-label': 'next page',
+      'aria-label': 'next page',      
     }}
     onChangePage={handleChangePage}
     onChangeRowsPerPage={handleChangeRowsPerPage}

@@ -127,7 +127,7 @@ export default function Panel1({roleName, roleId}) {
   useEffect(() => {
 
     const fetchData = async () =>{
-      if(roleName!='Super Admin'){
+      if(roleName!='Super Admin' && roleId !=0){
         const result = await TaskAPI.fetchAssignedTask({
           assign_to_role : roleId,
         });   
@@ -174,10 +174,10 @@ export default function Panel1({roleName, roleId}) {
         </TabPanel>
       }
     </Paper> */}         
-    <Paper style={{ width: '45%', height: '250', 'marginRight':'5px'  }}>             
+    <Paper style={{ width: '45%', height: '250', 'marginRight':'5px', }}>             
       <Grid container spacing={4}  style={{ 'padding': '10px'}}>  
-        <Grid item xs={12} sm={12}>   
-          <Typography variant="h6" className={classes.labelTitle}>
+        <Grid item xs={12} sm={12} >   
+          <Typography variant="h6" className={classes.labelTitle} color="primary">
               Latest Lead
           </Typography>
           <Divider />
@@ -187,11 +187,12 @@ export default function Panel1({roleName, roleId}) {
         </Grid>
       </Grid>
     </Paper>
-  {roleName != 'Super Admin' && 
-    <Paper style={{ width: '45%', height: '250', 'marginLeft':'5px' }}>             
+  {roleName != 'Super Admin' && roleId != 0 && 
+    <Paper style={{ width: '45%', height: '250', 'marginLeft':'5px' }}>  
+    {console.log('taskkkkk')}           
       <Grid container spacing={4} style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12}>   
-          <Typography variant="h6" className={classes.labelTitle}>
+          <Typography variant="h6" className={classes.labelTitle} color="primary">
               Latest Task
           </Typography>
           <Divider />
