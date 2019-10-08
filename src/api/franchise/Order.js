@@ -142,7 +142,27 @@ export default {
   },
 
   getExistingBudget: async (req) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/order/getoldbudget`;
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getExistingBudget`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+
+  
+  updateBudget: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/updateBudget`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',

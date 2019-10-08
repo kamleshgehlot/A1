@@ -130,6 +130,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   const [flexOrderId, setFlexOrderId] = useState();
 
   const [budgetList,setBudgetList] = useState(null);
+  const [totalBudgetList,setTotalBudgetList] = useState(null);
   const [fixedOrderList,setFixedOrderList] = useState(null);
   const [flexOrderList,setFlexOrderList] = useState(null);
   
@@ -184,8 +185,10 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
         setProductList(product.productList);              
        
       
-        const budget = await Order.getCurrespondingBudget({budgetId: editableData.budget_id});
-        setBudgetList(budget.order[0]);
+        const budget = await Order.getExistingBudget({customer_id: editableData.customer_id});
+        console.log('budget',budget)
+        setBudgetList(budget[0]);
+        setTotalBudgetList(budget);
 
 
         if(editableData.order_type==2){
@@ -593,7 +596,7 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} input={inputs} budgetId={budgetId}/> : null }
+    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} isEditable={0} /> : null }
     {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} product={product} /> : null }
     {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} product={product} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }

@@ -114,12 +114,12 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, input, budgetId}) {
+export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, isEditable}) {
   const styleClass = useCommonStyles();  
   const classes = useStyles();
-  const [inputs,setInputs] = useState(budgetList);
+  const [inputs, setInputs] = useState(budgetList);
   const [oldBudget, setOldBudget] = useState(0);
-  const [oldBudgetList,setOldBudgetList] = useState([]);
+  const [oldBudgetList, setOldBudgetList] = useState(totalBudgetList);
   const [surplusBool, setSurplusBool] = useState();
   const [errorSurplus, setErrorSurplus] = useState();
   const [errorAfford, setErrorAfford] = useState();
@@ -216,26 +216,6 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
       handleBudgetClose(false)
     }
   }
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const order = await Order.getCurrespondingBudget({budgetId: budgetId});
-  //       console.log('respo.,',order);
-  //       if(budgetList!=null){
-  //         setInputs(budgetList);          
-  //       }else{
-  //       setInputs(order.order[0]);
-  //       setOldBudgetList(order.oldBudget);   
-  //       }
-  //     } catch (error) {
-  //       console.log('Error..',error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
- 
-
  
   useEffect(() => {
     if(inputs.work == 0 &&
@@ -257,14 +237,13 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
       setSurplusBool(false);
     }else{
       setSurplusBool(true);      
-  }
-    if(oldBudgetList!= ''){
-      let sum = oldBudgetList.reduce((acc, val) =>{
-      return (val.is_active == 1 ? acc + val.surplus : acc )
-      }, 0
-      );
+    }    
+      if(oldBudgetList!= ''){
+        let sum = oldBudgetList.reduce((acc, val) =>{
+          return (val.is_active == 1 ? acc + val.afford_amt : acc )
+      }, 0 );
       setOldBudget(sum);
-      inputs.expenditure = sum;
+      // inputs.expenditure = sum;
     }
   });
 
@@ -292,7 +271,7 @@ return (
           </AppBar>
 
           <div className={classes.root}>
-          <Paper className={classes.paper}>            
+          <Paper className={classes.paper} >            
             <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>
               <Typography variant="h6" className={classes.labelTitle}>
@@ -310,6 +289,7 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      disabled={isEditable === 0}
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -340,6 +320,7 @@ return (
                       fullWidth
                       // required
                       type="text"
+                      disabled={isEditable === 0}
                       // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
@@ -376,6 +357,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled={isEditable === 0}
                       
                     />
                   </Grid>
@@ -405,6 +387,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled={isEditable === 0}
                     />
                   </Grid>
 
@@ -429,6 +412,7 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      disabled={isEditable === 0}
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -456,6 +440,7 @@ return (
                       onChange={handlePriceInput}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      disabled={isEditable === 0}
                       fullWidth
                       // required
                       type="text"
@@ -485,6 +470,7 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      disabled={isEditable === 0}
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -513,6 +499,7 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      disabled={isEditable === 0}
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -551,6 +538,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled={isEditable === 0}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -570,6 +558,7 @@ return (
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
+                      disabled={isEditable === 0}
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
@@ -597,6 +586,7 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      disabled={isEditable === 0}
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -617,6 +607,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled={isEditable === 0}
                       id="credit_card"
                       name="credit_card"
                       label="Credit/Store Cards"
@@ -653,6 +644,7 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
+                      disabled={isEditable === 0}
                       // required
                       type="text"
                       // placeholder="Franchise Name"
@@ -682,6 +674,7 @@ return (
                       onBlur={handleInputBlur}
                       fullWidth
                       // required
+                      disabled={isEditable === 0}
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
@@ -743,7 +736,7 @@ return (
                       error={errorSurplus}
                       helperText={errorSurplus}
                       fullWidth
-                      disabled = {surplusBool}
+                      disabled = {surplusBool || isEditable === 0}
                       required
                       type="text"
                       // placeholder="Franchise Name"
@@ -780,6 +773,7 @@ return (
                       error={errorAfford}
                       helperText={errorAfford}
                       fullWidth
+                      disabled={isEditable === 0}
                       // disabled
                       required
                       type="text"
@@ -796,7 +790,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     
-                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled={isEditable === 0}>
                       save
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleBudgetClose} className={classes.button}>

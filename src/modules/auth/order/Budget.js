@@ -230,38 +230,42 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
   },[]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const order = await Order.getExistingBudget({customer_id: customer_id});
-        setOldBudgetList(order.oldBudget);
-        if(order.oldBudget.length > 0 && budgetList.length === 0 ){
-            let budget = order.oldBudget[0];
-            inputs.work = budget.work;
-            inputs.benefits = budget.benefits;
-            inputs.accomodation = budget.accomodation;
-            inputs.childcare = budget.childcare;
-            inputs.rent = budget.rent;
-            inputs.power = budget.power;
-            inputs.telephone = budget.telephone;
-            inputs.mobile = budget.mobile;
-            inputs.vehicle = budget.vehicle;
-            inputs.transport = budget.transport;
-            inputs.food = budget.food;
-            inputs.credit_card = budget.credit_card;
-            inputs.loan = budget.loan;
-            inputs.other_expenditure =budget.other_expenditure;
-            inputs.surplus = budget.surplus;
-            inputs.income = budget.income;
-            inputs.expenditure = budget.expenditure;
-          // inputs.afford_amt = budget.afford_amt;
+    if(customer_id != ''){
+      const fetchData = async () => {
+        try {
+          const order = await Order.getExistingBudget({customer_id: customer_id});
+          console.log('budgt',order);
+          setOldBudgetList(order);
+          if(order.length > 0 && budgetList.length === 0 ){
+              let budget = order[0];
+              inputs.work = budget.work;
+              inputs.benefits = budget.benefits;
+              inputs.accomodation = budget.accomodation;
+              inputs.childcare = budget.childcare;
+              inputs.rent = budget.rent;
+              inputs.power = budget.power;
+              inputs.telephone = budget.telephone;
+              inputs.mobile = budget.mobile;
+              inputs.vehicle = budget.vehicle;
+              inputs.transport = budget.transport;
+              inputs.food = budget.food;
+              inputs.credit_card = budget.credit_card;
+              inputs.loan = budget.loan;
+              inputs.other_expenditure =budget.other_expenditure;
+              inputs.surplus = budget.surplus;
+              inputs.income = budget.income;
+              inputs.expenditure = budget.expenditure;
+              if(budget.is_active == 1){
+                inputs.afford_amt = budget.afford_amt;  
+              }              
+          }
+          // setInputs(order.oldBudget[0]);
+        } catch (error) {
+          console.log('Error..',error);
         }
-        // setInputs(order.oldBudget[0]);
-      } catch (error) {
-        console.log('Error..',error);
-      }
-    };
-    fetchData();
-   
+      };
+      fetchData();
+    }
   }, []);
 
   
@@ -291,8 +295,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
     if(oldBudgetList!= ''){
       let sum = oldBudgetList.reduce((acc, val) =>{
         return (val.is_active == 1 ? acc + val.afford_amt : acc )
-      }, 0
-      );
+      }, 0 );
       setOldBudget(sum * 4);
       inputs.expenditure = (sum * 4);
     }

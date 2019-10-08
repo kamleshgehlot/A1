@@ -37,6 +37,8 @@ import {useCommonStyles} from '../../common/StyleComman';
 import Customer from '../../../api/franchise/Customer';
 import UserAPI from '../../../api/User';
 import useSignUpForm from '../franchise/CustomHooks';
+import Budget from '../../auth/order/Budget'
+
 
 const RESET_VALUES = {
   id: '',
@@ -165,11 +167,23 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   const [otherIdTypeValue, setOtherIdTypeValue] = useState();
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
-  
+  const [budgetList,setBudgetList] = useState([]);
+  const [budgetOpen, setBudgetOpen] = useState(false);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+
+  
+  function handleBudgetClose(){
+    setBudgetOpen(false);
+  }
+  
+  function handleBudgetOpen(){
+    setBudgetOpen(true);
+  }
+
 
   function handleEmailVerification(event){
     // console.log(event.target.value);
@@ -314,6 +328,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       state: 1,
       
       other_id_type: inputs.other_id_type,
+      budgetData : budgetList,
     }
 
     let formData = new FormData();
@@ -1105,7 +1120,10 @@ return (
                       }}
                     />
                   </Grid>
-                 
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Calculate Budget</InputLabel>
+                    <Button variant={budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}>Add Budget </Button>
+                  </Grid>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -1125,6 +1143,7 @@ return (
           </div>
         </form>
       </Dialog>
+      {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {''}/> : null }
     </div>
   );
 }

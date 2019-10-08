@@ -131,7 +131,9 @@ const getAll = async function(req, res, next) {
 const getBudget = async function(req, res, next) {
   try {
     // console.log('req--',req.body)
-    const order = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId}).getBudget();
+    const order = await new Order({
+      user_id : req.decoded.user_id,       
+      customer_id : req.body.customer_id}).getBudget();
     // const oldBudget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget();
     
     res.send({ order}); 
@@ -143,12 +145,27 @@ const getBudget = async function(req, res, next) {
 const getExistingBudget = async function(req, res, next) {
   try {
     const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getExistingBudget();
-
-    res.send({oldBudget}); 
+    res.send(oldBudget); 
   } catch (error) {
     next(error);
   }
 };
+
+
+
+const updateBudget = async function(req, res, next) {  
+  try {
+    const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id, budget_list: req.body.budgetList}).updateBudget();
+    if(oldBudget != ""){
+      res.send({isUpdated:1}); 
+    }else{
+      res.send({isUpdated:0}); 
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 const getFixedOrder = async function(req, res, next) {
   try {
@@ -491,6 +508,7 @@ module.exports = {
   getAll, 
   getBudget, 
   getExistingBudget,
+  updateBudget,
   getFixedOrder, 
   getFlexOrder, 
   editOrder, 

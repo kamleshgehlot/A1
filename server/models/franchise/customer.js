@@ -48,6 +48,7 @@ var Customer = function (params) {
 
   this.searchText = params.searchText;
   this.customer_id = params.customer_id;
+  this.budgetData = params.budgetData;
 };
 
 Customer.prototype.register = function () {
@@ -78,9 +79,9 @@ Customer.prototype.register = function () {
                     [ rows.insertId,that.employer_name,that.employer_address,that.employer_telephone,that.employer_email,that.employer_tenure,that.is_active,that.state,that.created_by]
                   ];
                       const savedCustomerId = rows.insertId;
-                      connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, state, created_by) values ?', [customerIncomeValues], function (error, rows, fields) {
+                      connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, state, created_by) values ?', [customerIncomeValues], function (error, rows2, fields) {
                         if (!error) {
-                          resolve(rows);
+                          resolve(rows.insertId);
                         } else {
                           console.log("Error...", error);
                           reject(error);
@@ -110,9 +111,9 @@ Customer.prototype.register = function () {
               [ rows.insertId,that.employer_name,that.employer_address,that.employer_telephone,that.employer_email,that.employer_tenure,that.is_active,that.state,that.created_by]
             ];
                 const savedCustomerId = rows.insertId;
-                connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, state, created_by) values ?', [customerIncomeValues], function (error, rows, fields) {
+                connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, state, created_by) values ?', [customerIncomeValues], function (error, rows2, fields) {
                   if (!error) {
-                    resolve(rows);
+                    resolve(rows.insertId);                    
                   } else {
                     console.log("Error...", error);
                     reject(error);
@@ -394,6 +395,45 @@ Customer.prototype.searchData = function () {
     throw error;
   });
 };
+
+
+
+
+
+Customer.prototype.addBudget = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+
+          const budget_list = that.budgetData;
+          let budgetValues = [
+            [that.customer_id, budget_list.work, budget_list.benefits, budget_list.accomodation, budget_list.childcare, budget_list.rent, budget_list.power, budget_list.telephone, budget_list.mobile, budget_list.vehicle, budget_list.transport, budget_list.food, budget_list.credit_card, budget_list.loan, budget_list.other_expenditure, budget_list.pre_order_exp, budget_list.income, budget_list.expenditure, budget_list.surplus, budget_list.afford_amt, 0, that.created_by]
+          ];
+          console.log('budgetList',budgetValues);
+          connection.query('INSERT INTO budget(customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone, mobile_phone, vehicle_finance, public_transport, food, credit_store_cards, loans_hire_purchase, other_expenditure, pre_order_exp, total_income, total_expenditure, total_surplus, afford_amt, is_active, created_by) VALUES ?',[budgetValues],function (error, rows, fields) {
+            if (!error) {
+                // const budget_id = rows.insertId;                
+            resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }
+            connection.release();
+            console.log('Budget Added for Franchise Staff %d', connection.threadId);
+          });
+        }).catch((error) => {
+          throw error;
+  });
+};
+
 
 
 

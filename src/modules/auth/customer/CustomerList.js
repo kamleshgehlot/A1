@@ -19,6 +19,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
 import CreateIcon from '@material-ui/icons/Create';
+import UpdateIcon from '@material-ui/icons/Update';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -27,9 +28,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Add from './Add';
 import Edit from './Edit';
+import EditBudget from '../order/EditBudget';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
+import Order from '../../../api/franchise/Order';
 import { fontFamily } from '@material-ui/system';
 
 import BadgeComp from '../../common/BadgeComp';
@@ -44,6 +47,91 @@ const StyledTableCell = withStyles(theme => ({
     fontSize: 11,
   },
 }))(TableCell);
+
+
+const drawerWidth = 240;
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    // width: 1000
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+   padding: {
+    padding: theme.spacing(0, 2),
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  toolbar: theme.mixins.toolbar,
+  title: {
+    flexGrow: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+  },
+  fonttransform:{
+    textTransform:"initial",
+    fontSize: theme.typography.pxToRem(13),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+    color: 'white',
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(3),
+      width: 'auto',
+    },
+  },
+    
+  searchIcon: {
+    width: theme.spacing(7),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    backgroundColor:'gray',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 7),
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 200,
+    },
+  },
+}));
 
 const StyledTableRow = withStyles(theme => ({
   root: {
@@ -67,93 +155,16 @@ export default function CustomerList({userId, roleName}) {
   const [customer, setCustomer] = useState({});
   const [active, setActive]=  useState();
   const [hold, setHold]=  useState();
+  const [budgetOpen, setBudgetOpen] = useState(false);
   const [financialHardship, setFinancialHardship]=  useState();
-  
+  const [budgetId, setBudgetId] = useState();
+  const [budgetList,setBudgetList] = useState(null);
+  const [totalBudgetList,setTotalBudgetList] = useState(null);  
+  const [customerId, setCustomerId] = useState();
   //value is for tabs  
   const [value, setValue] = React.useState(0);
-  const drawerWidth = 240;
-  const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      // width: 1000
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-     padding: {
-      padding: theme.spacing(0, 2),
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-    },
-    toolbar: theme.mixins.toolbar,
-    title: {
-      flexGrow: 1,
-      fontSize: theme.typography.pxToRem(14),
-      color:"white",
-      marginTop:theme.spacing(-3),
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'left',
-      color: theme.palette.text.secondary,
-    },
-    fonttransform:{
-      textTransform:"initial",
-      fontSize: theme.typography.pxToRem(13),
-    },
-    textsize:{
-      fontSize: theme.typography.pxToRem(12),
-      color: 'white',
-    },
-    search: {
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      marginRight: theme.spacing(2),
-      marginLeft: 0,
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-      },
-    },
-      
-    searchIcon: {
-      width: theme.spacing(7),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    inputRoot: {
-      color: 'inherit',
-      backgroundColor:'gray',
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 7),
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: 200,
-      },
-    },
-  }));
+  
+  
   const classes = useStyles();
 
   function handleClickOpen() {
@@ -166,6 +177,24 @@ export default function CustomerList({userId, roleName}) {
     setCustomerData(data),
     setEditOpen(true);
   }
+
+  
+  const handleOpenEditBudget = async (data) =>{      
+    const budget = await Order.getExistingBudget({customer_id: data.id});
+    console.log('budget..',budget);
+    setBudgetList(budget[0]);    
+    setTotalBudgetList(budget);
+    setCustomerId(data.id);
+    setBudgetOpen(true);
+  }
+
+  const handleBudgetClose = async () => {
+    // if(budgetList != "" || budgetList != null || budgetList != undefined){
+    //    await Order.updateBudget({budgetList: budgetList, customer_id: customerId});
+    // }
+    setBudgetOpen(false);
+  }
+  
   function handleEditClose() {
     handleBadge(customerListData);
     setEditOpen(false);
@@ -363,6 +392,12 @@ export default function CustomerList({userId, roleName}) {
                                 <CreateIcon/>
                                 </IconButton>
                               </Tooltip>
+                              <Tooltip title="Update Budget">                              
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
+                                <UpdateIcon/>
+                                </IconButton>
+                              </Tooltip>
+
                               {/* <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button> */}
                             </StyledTableCell>
                             </TableRow>:''
@@ -375,9 +410,9 @@ export default function CustomerList({userId, roleName}) {
                </Paper>
           </Grid>
         </Grid>
-      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}
-      
+      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
+      {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} isEditable={1} /> : null }
           
     </div>
   );
