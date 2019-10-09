@@ -159,9 +159,6 @@ export default function AddProduct(props) {
   }, []);
 
   const categoryadd = async () => {
-    console.log('entere--gasdu----')
-    
-    // if(inputs.status != ''){
     setpLoading(true);
     setSavebtn(false);
 
@@ -186,16 +183,8 @@ export default function AddProduct(props) {
     setpLoading(false);
     setSavebtn(true);
     props.handleClose(false);
-  // }else{
-  //   alert('choose status..');
-  // }
   };
 
-  // function validate(values) {
-  //   let errors = {};
-
-  //   return errors;
-  // };
   function handleReset() {
     cleanInputs()
     console.log(inputs);
@@ -242,17 +231,10 @@ export default function AddProduct(props) {
         <form>
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h4" className={classes.title}>
                 Add Product
               </Typography>
               <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
-
-
-
-
             </Toolbar>
           </AppBar>
 
@@ -273,23 +255,13 @@ export default function AddProduct(props) {
                       }}
                       id="name"
                       name="name"
-                      // label="Enter Product Title/Name"
                       value={inputs.name}
                       error={errors.name}
                       helperText={errors.name}
                       fullWidth
                       type="text"
                       margin="dense"
-                      required
-                      // onKeyPress={(e) => {
-                      //   var inputValue = e.which;
-                      //   // allow letters and whitespaces only.
-                      //   if((inputValue >= 45 && inputValue <= 90) || (inputValue >= 97 && inputValue <= 122) || (inputValue= 32 && inputValue != 0)) {
-                         
-                      //     console.log('key---',inputValue);
-                      //   }
-                        
-                      // }}
+                      required                      
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -333,7 +305,6 @@ export default function AddProduct(props) {
                         fullWidth
                         error={errors.brand_id}
                         helperText={errors.brand_id}
-                        // label="Choose Brand"
                         required
                       >
                         { (brandList || []).map((data, index)=>{
@@ -351,7 +322,6 @@ export default function AddProduct(props) {
                     
                       id="buying_price"
                       name="buying_price"
-                      // label="Enter Product Buying Price"
                       value={inputs.buying_price}
                       onChange={handlePriceInput}
                       fullWidth
@@ -384,7 +354,6 @@ export default function AddProduct(props) {
                         helperText={errors.description}
                         margin="dense"
                         type="text"
-                        // label="Enter Product Description"
                         value={inputs.description}
                         onChange={handleInputChange}
                       />
@@ -403,7 +372,6 @@ export default function AddProduct(props) {
                         name="specification"
                         margin="dense"
                         type="text"
-                        // label="Enter Product Specification"
                         value={inputs.specification}
                         onChange={handleInputChange}
                         error={errors.specification}
@@ -427,7 +395,6 @@ export default function AddProduct(props) {
                       fullWidth
                       margin="dense"
                       type="text"
-                      // label="Brought From"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -447,7 +414,6 @@ export default function AddProduct(props) {
                       fullWidth
                       margin="dense"
                       type="text"
-                      // label="Invoice Number"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -463,7 +429,6 @@ export default function AddProduct(props) {
                       error={errors.rental}
                       helperText={errors.rental}
                       type="text"
-                      // label="Rental Price"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         classes: {
@@ -484,12 +449,9 @@ export default function AddProduct(props) {
                       name="meta_keywords"
                       value={inputs.meta_keywords}
                       onChange={handleInputChange}
-                      // error={errors.meta_keywords}
-                      // helperText={errors.meta_keywords}
                       fullWidth
                       margin="dense"
                       type="text"
-                      // label="Meta Keywords"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -506,12 +468,8 @@ export default function AddProduct(props) {
                         margin="normal"
                         fullWidth
                         value={inputs.meta_description}
-                        onChange={handleInputChange}
-                        // error={errors.meta_description}
-                        // helperText={errors.meta_description}
-                        // margin="dense"
+                        onChange={handleInputChange}                        
                         type="text"
-                        // label="Meta Description"
                       />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -528,7 +486,6 @@ export default function AddProduct(props) {
                         error={errors.status}
                         helperText={errors.status}
                         fullWidth
-                        // label="Choose Status"
                         required
                       >
                         { (statusList || []).map((datastatus, index)=>{

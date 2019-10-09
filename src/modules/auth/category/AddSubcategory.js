@@ -199,10 +199,7 @@ export default function AddSubcategory(props) {
                     
                     <Button variant="contained" color="primary" onClick={props.handleClose} className={classes.button}>
                       Close
-                    </Button> 
-                    {/* <Button variant="contained" color="primary" className={classes.button}>
-                      Clear
-                    </Button> */}
+                    </Button>                     
                   </Grid>
                 
               </Grid>

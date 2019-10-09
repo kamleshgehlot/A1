@@ -99,7 +99,6 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Add({ leadData, open, handleClose, handleSnackbarClick, setEnquiryList, convert }) {
-  // console.log('leadData',leadData)
 
   const styleClass = useCommonStyles();
   const classes = useStyles();
@@ -121,7 +120,6 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
   const [customerId,setCustomerId] = useState('');
  
 
-  // console.log('custoemrName, id', selectedOption, customerId)
 
   useEffect(() => {
     
@@ -228,7 +226,6 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
   }
 
   const addEnquiry = async () => {
-    // setInput('interested_product_id',assignInterest.join())
       
       if(assignInterest!=''){
       setpLoading(true);

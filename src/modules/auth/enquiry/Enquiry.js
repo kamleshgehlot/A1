@@ -25,14 +25,16 @@ import CachedIcon from '@material-ui/icons/Cached';
 import DeleteIcon from '@material-ui/icons/Delete';
 import TextField from '@material-ui/core/TextField';
 
+// Form Component
 import Add from './Add';
-import ConvertedEnquiry from './ConvertedEnquiry';
-import CustomerAdd from '../customer/Add';
 import ConvertInOrder from '../order/Add';
+import OnGoing from './OtherComponent/OnGoing';
+import Converted from './OtherComponent/Converted';
+import Archived from './OtherComponent/Archived';
+
 // API CALL
 import EnquiryAPI from '../../../api/franchise/Enquiry';
 import Category from '../../../../src/api/Category';
-
 import BadgeComp from '../../common/BadgeComp';
 import { async } from 'q';
 
@@ -47,110 +49,96 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles(theme => ({
+const drawerWidth = 240;
+const useStyles = makeStyles(theme => ({
   root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
+    display: 'flex',
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
   },
-}))(TableRow);
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    // width: 1000
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  toolbar: theme.mixins.toolbar,
+  title: {
+    flexGrow: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+  },
+  padding: {
+    padding: theme.spacing(0, 2),
+  },
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    marginRight: theme.spacing(1),
+  },
+  fonttransform:{
+    textTransform:"initial",
+    fontSize: theme.typography.pxToRem(13),
+  },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+    color: 'white',
+  }
+}));
 
 
 export default function Enquiry({roleName}) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [enquiryList, setEnquiryList] = useState([]);
-  const [nonConvertList, setNonConvertList] = useState([]);
-  const [enquiryData,setEnquiryData] = useState([]);
-  const [customerOpen, setCustomerOpen] = useState(false);
   const [openOrder, setOpenOrder] = useState(false);
   const [productList, setProductList] = useState([]);
-  const [convertedEnquiryOpen, SetConvertedEnquiryOpen] = useState(false);
   const [convertEnquiryId,setConvertEnquiryId]= useState();
   const [conversionData,setConversionData] = useState([]);
-  const [convertList,setConvertList] = useState([]);
-  const [customer, setCustomer] = useState({});
-  
   const [searchText, setSearchText]  = useState('');
-  //value is for tabs  
   const [value, setValue] = React.useState(0);
-  const drawerWidth = 240;
-  const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      // width: 1000
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-    },
-    toolbar: theme.mixins.toolbar,
-    title: {
-      flexGrow: 1,
-      fontSize: theme.typography.pxToRem(14),
-      color:"white",
-      marginTop:theme.spacing(-3),
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'left',
-      color: theme.palette.text.secondary,
-    },
-    padding: {
-      padding: theme.spacing(0, 2),
-    },
-    button:{
-      color:"white",
-      fontSize: theme.typography.pxToRem(10),
-      marginRight: theme.spacing(1),
-    },
-    fonttransform:{
-      textTransform:"initial",
-      fontSize: theme.typography.pxToRem(13),
-    },
-    textsize:{
-      fontSize: theme.typography.pxToRem(12),
-      color: 'white',
-    }
-  }));
+
+  const [onGoingList, setOnGoingList] = useState([]);
+  const [convertedList, setConvertedList] = useState([]);
+  const [archivedList, setArchivedList] = useState([]);
+
   const classes = useStyles();
+
+  const loadEnquiryList = async () =>{
+    const result = await EnquiryAPI.getAll();
+    handleTabsData(result.enquiryList);
+    setEnquiryList(result.enquiryList);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const result = await EnquiryAPI.getAll();
-        setEnquiryList(result.enquiryList);
-        
-        const nonConvertList = await EnquiryAPI.nonConvertList();
-        setNonConvertList(nonConvertList.enquiryList);
-
-        const convertList = await EnquiryAPI.convertedList();
-        setConvertList(convertList.enquiryList);
-
+      try {      
         const result1 = await Category.productlist();
         setProductList(result1.productList);
+        loadEnquiryList();
       } catch (error) {
         console.log(error);
       }
     };
-    fetchData();
-    
+    fetchData();    
   },enquiryList);
 
-  // console.log('productList',productList);
+  
   function handleClickOpen() {
     setOpen(true);
   }
@@ -159,25 +147,11 @@ export default function Enquiry({roleName}) {
     setOpen(false);
   }
  
-  function openCustomerPage(data) {
-    setEnquiryData(data)
-    setCustomerOpen(true)
-  }
-  
-  function closeCustomerPage(data) {
-    setCustomerOpen(false)
-  }
 
   function handleSnackbarClick() {
     setSnackbarOpen(true);
   }
-  function handleCompleteEnquiryClickOpen(){
-    SetConvertedEnquiryOpen(true);
-    
-  }
-  function handleCompleteEnquiryClickClose() {
-    SetConvertedEnquiryOpen(false)
-  }
+
   
   function handleOrderRecData(response){
     // console.log(response);
@@ -186,6 +160,7 @@ export default function Enquiry({roleName}) {
   const handleDeleteEnquiry = async (data) => {
     const result = await EnquiryAPI.deleteEnquiry({id : data.id});
     setEnquiryList(result.enquiryList);
+    handleTabsData(result.enquiryList);
   }
 
   function handleClickOrderOpen(data){
@@ -211,22 +186,7 @@ export default function Enquiry({roleName}) {
   }
 
   function handleOrderClose(){
-    setEnquiryList('');
-    const fetchData = async () => {
-      try {
-        const result = await EnquiryAPI.getAll();
-        setEnquiryList(result.enquiryList);
-
-        const nonConvertList = await EnquiryAPI.nonConvertList();
-        setNonConvertList(nonConvertList.enquiryList);
-
-        const convertList = await EnquiryAPI.convertedList();
-        setConvertList(convertList.enquiryList);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    loadEnquiryList();    
     setOpenOrder(false);
   }
 
@@ -235,36 +195,20 @@ export default function Enquiry({roleName}) {
   }
 
   function setEnquiryListFn(response) {
-    const fetchData = async () => {
-      try {
-        const result = await EnquiryAPI.convert({enquiry_id: enquiryData.id});        
-        setEnquiryList(result.enquiryList);
-
-        const nonConvertList = await EnquiryAPI.nonConvertList();
-        setNonConvertList(nonConvertList.enquiryList);
-
-        const convertList = await EnquiryAPI.convertedList();
-        setConvertList(convertList.enquiryList);
-
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    
-    fetchData();
+    setEnquiryList(response);
+    handleTabsData(response);    
   }
   
 
   const searchHandler = async () => {
     try {
     if(searchText!=''){
-      
       const result = await EnquiryAPI.search({searchText: searchText});
       setEnquiryList(result.enquiryList);
       setSearchText('');      
+      handleTabsData(result.enquiryList);
     }else{
-      const result = await EnquiryAPI.list();
-      setEnquiryList(result.enquiryList);
+      loadEnquiryList();
       setSearchText('');
     }} catch (error) {
       console.log('error',error);
@@ -276,6 +220,29 @@ export default function Enquiry({roleName}) {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
   };
+
+
+  function handleTabsData(enquiryList){  
+    let onGoingList = [];
+    let convertedList = [];
+    let archivedList = [];
+
+    (enquiryList.length > 0 ? enquiryList : []).map((data, index) => {        
+      if(data.is_active == 1 && data.converted_to ==0){
+        onGoingList.push(data);
+      }
+      if(data.is_active == 1 && data.converted_to !=0){
+        convertedList.push(data);
+      }
+      if(data.is_active == 0 ){
+        archivedList.push(data);
+      }
+    });
+    
+    setOnGoingList(onGoingList);
+    setConvertedList(convertedList);
+    setArchivedList(archivedList);
+  }
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;  
@@ -338,85 +305,32 @@ export default function Enquiry({roleName}) {
                 }}
               />
           </Grid>
-         
-          {/* <Grid item xs={12} sm={4}>
-            <Button variant="contained" color="primary" size="small"  onClick={handleCompleteEnquiryClickOpen} >Converted Enquiries</Button>
-          </Grid> */}
-          
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                  <Tab label={<BadgeComp count={nonConvertList.length} label="On-going" />} /> 
-                  <Tab label={<BadgeComp count={convertList.length} label="Converted" />} /> 
+                  <Tab label={<BadgeComp count={onGoingList.length} label="On-going" />} /> 
+                  <Tab label={<BadgeComp count={convertedList.length} label="Converted" />} /> 
+                  <Tab label={<BadgeComp count={archivedList.length} label="Archived" />} /> 
                 </Tabs>
               </AppBar>
-              <TabPanel value={value} index={value}>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Enq ID</StyledTableCell>
-                        <StyledTableCell>Customer Name</StyledTableCell>
-                        <StyledTableCell>Contact No.</StyledTableCell>
-                        <StyledTableCell>Product interested in</StyledTableCell>
-                        {value===0? <StyledTableCell>Options</StyledTableCell>:''}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {
-                        (enquiryList.length > 0 ? enquiryList : []).map((data, index) => {
-                          return(
-                            value===data.converted_to ?<TableRow>
-                              <StyledTableCell>{index+1}</StyledTableCell>
-                              <StyledTableCell>{data.enquiry_id}</StyledTableCell>
-                              <StyledTableCell>{data.customer_name}</StyledTableCell>
-                              <StyledTableCell>{data.contact}</StyledTableCell>
-                              <StyledTableCell>
-                                  {
-                                   ((data.interested_product_id && data.interested_product_id.split(',')) || []).map((a, index) =>{
-                                    return(
-                                      productList.map((ele)=>{
-                                        return(
-                                          (data.interested_product_id.split(',').length-1)===index ?
-                                          data.interested_product_id.split(',')[index] == ele.id ? ele.name :''
-                                          :
-                                          data.interested_product_id.split(',')[index] == ele.id ? ele.name + ", " :''
-                                        )
-                                      }) 
-                                    ) 
-                                    })
-                                  }                                  
-                              </StyledTableCell>
-                              {data.converted_to===0? <StyledTableCell>
-                                <Tooltip title="Delete Enquiry">                              
-                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleDeleteEnquiry(data); }}>
-                                    <DeleteIcon />
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Convert into Order">                              
-                                  <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickOrderOpen(data); }}>
-                                    <CachedIcon />
-                                  </IconButton>
-                                </Tooltip>
-                                {/* <Button variant="contained" color="primary" className={classes.button} onClick={(event) => { handleClickOrderOpen(data); }}>
-                                    Convert
-                                </Button> */}
-                              </StyledTableCell>:''}
-                            </TableRow>:''
-                          )
-                        })
-                      }
-                    </TableBody>
-                  </Table>
-                </TabPanel>
-              </Paper>
+              <TabPanel value={value} index={0}>
+                {onGoingList && <OnGoing enquiryList={onGoingList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry} handleClickOrderOpen={handleClickOrderOpen} /> }
+              </TabPanel>              
+
+              <TabPanel value={value} index={1}>
+                {convertedList && <Converted enquiryList={convertedList} productList={productList} /> }
+              </TabPanel>
+              <TabPanel value={value} index={2}>
+                {archivedList && <Archived enquiryList={archivedList} productList={productList} /> } 
+              </TabPanel>
+            </Paper>
           </Grid>
         </Grid>
       { open ? <Add leadData={""} open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convertLead={0} /> : null }
       {/* {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} setCustomer={setCustomer} /> : null} */}
       {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertEnquiryId} converted_name={'enquiry'} conversionData={conversionData} /> : null }
-      {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null}
+      {/* {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null} */}
       
     </div>
   );

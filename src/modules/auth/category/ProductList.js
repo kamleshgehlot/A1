@@ -16,7 +16,6 @@ import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import SearchIcon from '@material-ui/icons/Search';
-// import MuiVirtualizedTable from '../../common/MuiVirtualizedTable';
 import Grid from '@material-ui/core/Grid';
 import { APP_TOKEN } from '../../../api/Constants';
 import Edit from './Edit';
@@ -177,7 +176,6 @@ export default function ProductList({roleName}) {
 
   function handleClose() {
     setOpen(false);
-    // handleReset(RESET_VALUES);
   }
 
   function handleClickEditOpen(response) {
@@ -222,7 +220,6 @@ export default function ProductList({roleName}) {
     try {
     if(searchText!=''){
         const result = await Product.search({searchText: searchText});        
-        console.log(result);
         setProductList(result.productList);        
         setSearchText('');
         handleCount(result.productList);           
@@ -277,10 +274,8 @@ export default function ProductList({roleName}) {
   }
   function handleTabChange(event, newValue) {
     setValue(newValue);
-    // console.log('setValue...',value)
   }
 
-  console.log('setValue...',productList)
 
   return (
     <div>
@@ -332,13 +327,6 @@ export default function ProductList({roleName}) {
               <Tab label={<BadgeComp count={activeProduct} label="Active" />} /> 
               <Tab label={<BadgeComp count={onholdProduct} label="OnHold" />} /> 
               <Tab label={<BadgeComp count={discontinuedProduct} label="Discontinued" />} /> 
-            {/* { statusList.map((datastatus, index)=>{
-              return(
-                <Tab label={datastatus.status} />
-                )
-                
-                })
-            } */}
           </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>
@@ -350,14 +338,8 @@ export default function ProductList({roleName}) {
                   <StyledTableCell>Product Name</StyledTableCell>
                   <StyledTableCell>Color</StyledTableCell>
                   <StyledTableCell>Brand</StyledTableCell>
-                  {/* <StyledTableCell>Buying Price</StyledTableCell> */}
-                  {/* <StyledTableCell>Description</StyledTableCell> */}
-                  {/* <StyledTableCell>Specification</StyledTableCell> */}
-                  {/* <StyledTableCell>Brought from</StyledTableCell> */}
                   <StyledTableCell>Invoice Number</StyledTableCell>
                   <StyledTableCell>Rental Price</StyledTableCell>
-                  {/* <StyledTableCell>Meta Keywords</StyledTableCell> */}
-                  {/* <StyledTableCell>Meta Description</StyledTableCell> */}
                   <StyledTableCell>Status</StyledTableCell>
                   <StyledTableCell>Options</StyledTableCell>
                 </TableRow>
@@ -390,14 +372,8 @@ export default function ProductList({roleName}) {
                             
                            })
                          }
-                      {/* <StyledTableCell>{data.buying_price}</StyledTableCell> */}
-                      {/* <StyledTableCell>{data.description}</StyledTableCell>
-                      <StyledTableCell>{data.specification}</StyledTableCell>
-                      <StyledTableCell>{data.brought}</StyledTableCell> */}
                       <StyledTableCell>{data.invoice}</StyledTableCell>
                       <StyledTableCell>{data.rental}</StyledTableCell>
-                      {/* <StyledTableCell>{data.meta_keywords}</StyledTableCell> */}
-                      {/* <StyledTableCell>{data.meta_description}</StyledTableCell> */}
                       { statusList.map((datastatus, index)=>{
                         return(
                           data.status===datastatus.id ?

@@ -37,7 +37,6 @@ import Color from '../../../api/product/Color';
 
 import useSignUpForm from '../franchise/CustomHooks';
 
-import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
   color: '',
@@ -108,7 +107,6 @@ export default function AddColor(props) {
   const [errors, setErrors] = useState();
   const coloradd = async () => {
       
-    // if( inputs.color!=''){
     let check=false;
     const validString = /^[a-zA-Z\s]+$/;
     if (!inputs.color) {
@@ -129,7 +127,6 @@ export default function AddColor(props) {
         props.updatedData(response.colorList);
         props.handleClose(false);
       }
-    // }
   };
   
   function validate(values) {
@@ -147,7 +144,6 @@ export default function AddColor(props) {
   const { inputs, handleInputChange, handleSubmit, handleReset, setInput } = useSignUpForm(
     RESET_VALUES,
     coloradd,
-    // validate
   );
 
   return (
@@ -155,16 +151,10 @@ export default function AddColor(props) {
       <Dialog maxWidth="sm" open={props.open}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+            <Toolbar>             
               <Typography variant="h6" className={classes.title}>
                 Add Color
-              </Typography>
-              {/* <Button color="inherit" onClick={handleSubmit}>
-                save
-              </Button> */}
+              </Typography>              
       <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
     
             </Toolbar>
@@ -209,10 +199,7 @@ export default function AddColor(props) {
                     
                     <Button variant="contained" color="primary" onClick={props.handleClose} className={classes.button}>
                       Close
-                    </Button> 
-                    {/* <Button variant="contained" color="primary" className={classes.button}>
-                      Clear
-                    </Button> */}
+                    </Button>                     
                   </Grid>
                 
               </Grid>

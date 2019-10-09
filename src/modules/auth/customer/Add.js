@@ -186,7 +186,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
 
 
   function handleEmailVerification(event){
-    // console.log(event.target.value);
     const email = event.target.value;
 
     const checkEmail = async () => {
@@ -338,7 +337,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
       formData.append('avatar', document.getElementById('id_proof').files[x])
     }
-    console.log("formadata", formData);
     const response = await Customer.register({ formData: formData });
     
     
@@ -352,21 +350,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     }
   };
 
-  // function validate(values) {
-  //   let errors = {};
-  //   return errors;
-  // };
-
  const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addCustomer,
     validate
   );
-  // console.log('input5s..',inputs);
-  // {
-  //   inputs.telephone ==='' ? setIsMobileMandatory(true) : setIsMobileMandatory(false)
-  //   inputs.mobile ==='' ? setIsTelephoneMandatory(true) : setIsTelephoneMandatory(false)
-  // }
+  
 
 return (
     <div>
@@ -622,14 +611,7 @@ return (
                             :inputs.is_adult === 0 && inputs.dob != ""  ?  <p className={classes.dobMsg} style={{'color':'#F5BB00'}}>Person is not over 18 year</p>
                             : ''}
                   </Grid>
-                  {console.log('errors.',errors)}
-                  {/* { inputs.is_adult === 1 ? */}
-                     {/* <Grid item xs={12} sm={2}>
-                      <Toolbar title={inputs.is_adult === 1 ? "He/She is over 18 year" : inputs.is_adult === 0 ? "He/She is not over 18 year" : "Select Date of Birth"}>
-                         <MoreIcon />
-                      </Toolbar>
-                    </Grid>   */}
-                  {/* : ''} */}
+
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
                     <Select
@@ -1122,7 +1104,8 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="user_id">Calculate Budget</InputLabel>
-                    <Button variant={budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}>Add Budget </Button>
+                    {/* <Typography  className={classes.textsize} htmlFor="user_id">Calculate Budget</Typography> */}
+                    <Button variant={budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField} style={{marginTop : "10px"}}>Add Budget </Button>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>

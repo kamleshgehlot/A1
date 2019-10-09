@@ -2,34 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
 import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import useSignUpForm from '../franchise/CustomHooks';
@@ -44,7 +27,6 @@ import Brand from '../../../api/product/Brand';
 import Color from '../../../api/product/Color';
 import Status from '../../../api/product/Status';
 
-import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
   productname:'',
@@ -82,10 +64,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     textAlign: 'left',
     color: theme.palette.text.secondary,
-  },
-  // root: {
-  //   padding: theme.spacing(3, 2),
-  // },
+  },  
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -167,12 +146,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
   }, []);
 
   const handleProductSubmit = async () => {
-    
-  console.log('inputValues',inputValues);
     setpLoading(true);
     setSavebtn(false);
     const response = await Category.edit({
-      // cancelToken: this.isTokenSource.token,
       id: inputs.id,
       maincat: inputs.maincat,
       category: inputs.category,
@@ -191,9 +167,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
       status: inputs.status,
     });
 
-    // handleSnackbarClick(true, 'Category Updated Successfully.');
     updateProductList(response);
-    // props.handleReset(RESET_VALUES);
     setpLoading(false);
     setSavebtn(true);
     handleEditClose(false);
@@ -322,7 +296,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       className={classes.drpdwn}
                       error={errors.color_id}
                       helperText={errors.color_id}
-                      // className={classes.textsize}
                     >
                     { colorList.map((data, index)=>{
                           return(

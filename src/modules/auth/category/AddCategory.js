@@ -2,41 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
 import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {useCommonStyles} from '../../common/StyleComman'; 
 // API CALL
 import Category from '../../../api/Category';
 
 import useSignUpForm from '../franchise/CustomHooks';
-
-import { store, useStore } from '../../../store/hookStore';
 
 const RESET_VALUES = {
   category: '',
@@ -148,9 +127,6 @@ export default function AddCategory(props) {
 
         props.newCatData(inputs);
         props.updatedCatData(response.categoryList);
-        // handleSnackbarClick(true);
-        // setCategoryList(response.categoryList);
-        // handleReset(RESET_VALUES);
         props.handleClose(false);
       }
   };
@@ -173,15 +149,9 @@ export default function AddCategory(props) {
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
               <Typography variant="h6" className={classes.title}>
                 Category Creation Panel
               </Typography>
-              {/* <Button color="inherit" onClick={handleSubmit}>
-                save
-              </Button> */}
             <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
     
             </Toolbar>
@@ -241,10 +211,7 @@ export default function AddCategory(props) {
                     
                     <Button variant="contained" color="primary" onClick={props.handleClose} className={classes.button}>
                       Close
-                    </Button> 
-                    {/* <Button variant="contained" color="primary" className={classes.button}>
-                      Clear
-                    </Button> */}
+                    </Button>                   
                   </Grid>
                 
               </Grid>

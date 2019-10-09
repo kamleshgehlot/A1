@@ -107,8 +107,7 @@ export default function AddBrand(props) {
   const [errors, setErrors] = useState();
     const brandadd = async () => {
       
-    // if( inputs.brand_name!=''){
-        let check=false;
+      let check=false;
       const validString = /^[a-zA-Z\s]+$/;
       if (!inputs.brand_name) {
         setErrors('Brand name is required');
@@ -127,7 +126,6 @@ export default function AddBrand(props) {
           });
           props.updatedBrandData(response.brandList);
           props.handleClose(false);
-        // }
         }
   };
   
@@ -148,16 +146,10 @@ export default function AddBrand(props) {
       <Dialog maxWidth="sm" open={props.open}>
         <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              {/* <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton> */}
+            <Toolbar>             
               <Typography variant="h6" className={classes.title}>
                 Add Brand
-              </Typography>
-              {/* <Button color="inherit" onClick={handleSubmit}>
-                save
-              </Button> */}
+              </Typography>              
             <IconButton size="small" onClick={props.handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
@@ -201,10 +193,7 @@ export default function AddBrand(props) {
                     
                     <Button variant="contained" color="primary" onClick={props.handleClose} className={classes.button}>
                       Close
-                    </Button> 
-                    {/* <Button variant="contained" color="primary" className={classes.button}>
-                      Clear
-                    </Button> */}
+                    </Button>                   
                   </Grid>
                 
               </Grid>

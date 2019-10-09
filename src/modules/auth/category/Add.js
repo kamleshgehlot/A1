@@ -140,11 +140,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, updateProd
   const [subcatOpen, setSubCatOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
   
-// console.log(categoryList);
 
 const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
   RESET_VALUES,
-  // validate
 );
 
 
@@ -273,7 +271,7 @@ const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors }
       });
     }
   };
-// console.log(inputs)
+
   function openProductDialog(){
     if(inputs.maincat!='' && inputs.cat!='' && inputs.subcat!='' && inputs.maincat!='0' && inputs.cat!='0' && inputs.subcat!='0' && inputs.maincat!=null && inputs.cat!=null && inputs.subcat!=null){
     setProductOpen(true);
