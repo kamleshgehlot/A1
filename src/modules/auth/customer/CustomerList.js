@@ -20,6 +20,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
 import CreateIcon from '@material-ui/icons/Create';
 import UpdateIcon from '@material-ui/icons/Update';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -412,7 +413,7 @@ export default function CustomerList({userId, roleName}) {
                               </Tooltip>
                               <Tooltip title="Update Budget">                              
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
-                                <UpdateIcon/>
+                                <AccountBalanceIcon/>
                                 </IconButton>
                               </Tooltip>
 
