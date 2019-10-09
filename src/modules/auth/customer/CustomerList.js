@@ -37,6 +37,8 @@ import { fontFamily } from '@material-ui/system';
 
 import BadgeComp from '../../common/BadgeComp';
 
+import BudgetHistory from '../order/BudgetHistory';
+
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -161,6 +163,7 @@ export default function CustomerList({userId, roleName}) {
   const [budgetList,setBudgetList] = useState(null);
   const [totalBudgetList,setTotalBudgetList] = useState(null);  
   const [customerId, setCustomerId] = useState();
+  const [budgetHistoryOpen,setBudgetHistoryOpen] = useState(false);
   //value is for tabs  
   const [value, setValue] = React.useState(0);
   
@@ -178,6 +181,16 @@ export default function CustomerList({userId, roleName}) {
     setEditOpen(true);
   }
 
+  
+  const handleHistoryOpen = async (data) => {
+    setCustomerId(data.id);
+    setBudgetHistoryOpen(true);    
+  }
+
+  function handleHistoryClose(){
+    setBudgetHistoryOpen(false);
+  }
+  
   
   const handleOpenEditBudget = async (data) =>{      
     const budget = await Order.getExistingBudget({customer_id: data.id});
@@ -387,6 +400,11 @@ export default function CustomerList({userId, roleName}) {
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                             {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
                             <StyledTableCell> 
+                              <Tooltip title="View Budget History">                              
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
+                                  <UpdateIcon />
+                                </IconButton>
+                              </Tooltip>
                               <Tooltip title="Update">                              
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                                 <CreateIcon/>
@@ -413,7 +431,7 @@ export default function CustomerList({userId, roleName}) {
       {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} /> : null }
-          
+      {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} customer_id={customerId} roleName={roleName} /> : null }
     </div>
   );
 }

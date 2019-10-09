@@ -143,6 +143,7 @@ const getBudget = async function(req, res, next) {
   }
 };
 
+
 const getExistingBudget = async function(req, res, next) {
   try {
     const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getExistingBudget();
@@ -156,6 +157,23 @@ const getExistingBudget = async function(req, res, next) {
     next(error);
   }
 };
+
+
+
+const getBudgetHistory = async function(req, res, next) {
+  try {
+    const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getBudgetHistory();
+    // console.log('budget List',oldBudget);
+    // if(oldBudget == ""){
+    //   res.send([{accomodation: '', afford_amt: '', benefits: '', childcare: '', credit_card: '', customer_id: '', expenditure: '', food: '', income: '', is_active: '', loan: '', mobile: '', other_expenditure: '', power: '', rent: '', surplus: '', telephone: '', transport: '', vehicle: '', work: '',}]);
+    // }else{
+      res.send(oldBudget); 
+    // }
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 
@@ -515,6 +533,7 @@ module.exports = {
   getAll, 
   getBudget, 
   getExistingBudget,
+  getBudgetHistory,
   updateBudget,
   getFixedOrder, 
   getFlexOrder, 

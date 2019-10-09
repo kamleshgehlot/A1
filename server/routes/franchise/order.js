@@ -53,6 +53,7 @@ orderRouter.route("/uploaddoc").post(validateToken, upload.array('avatar'), Orde
 orderRouter.route("/uploadDeliveryDoc").post(validateToken, DeliveredDoc.array('avatar'), Order.uploadDeliveryDoc);
 orderRouter.route("/getbudget").post(validateToken, Order.getBudget);
 orderRouter.route("/getExistingBudget").post(validateToken, Order.getExistingBudget);
+orderRouter.route("/getBudgetHistory").post(validateToken, Order.getBudgetHistory);
 orderRouter.route("/updateBudget").post(validateToken, Order.updateBudget);
 orderRouter.route("/getfixedorder").post(validateToken, Order.getFixedOrder);
 orderRouter.route("/getflexorder").post(validateToken, Order.getFlexOrder);

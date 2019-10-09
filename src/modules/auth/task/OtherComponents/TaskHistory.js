@@ -131,7 +131,7 @@ export default function TaskHistory({ open, handleClose, handleSnackbarClick, hi
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-console.log('historyDate,',historyData)
+// console.log('historyDate,',historyData)
   useEffect(() => {
     const fetchData = async () => {
       try {
