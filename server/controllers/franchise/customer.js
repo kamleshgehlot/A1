@@ -46,6 +46,7 @@ const register = async function (req, res, next) {
     other_id_type: customerData.other_id_type,
     user_id: req.decoded.user_id,
     budgetData: customerData.budgetData,
+    
     // customer_id: '',
   };
 
@@ -67,6 +68,7 @@ const register = async function (req, res, next) {
       newCustomer.customer_id = customerResult; 
       
       if(CustomerParams.budgetData != "" && CustomerParams.customer_id !=''  && CustomerParams.customer_id !=0){
+        CustomerParams.created_by = req.decoded.id;
         await newCustomer.addBudget();
       }
       const customerList = await new Customer({user_id : req.decoded.user_id}).all();

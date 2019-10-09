@@ -162,7 +162,7 @@ const getExistingBudget = async function(req, res, next) {
 const updateBudget = async function(req, res, next) {  
   // console.log('budget list', req.body);
   try {
-    const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id, budget_list: req.body.budgetList}).updateBudget();
+    const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id, budget_list: req.body.budgetList, created_by: req.decoded.id}).updateBudget();
     if(oldBudget != ""){
       res.send({isUpdated:1}); 
     }else{

@@ -163,7 +163,10 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
 
   const updateBudget = async (data) => {
     const result = await Order.updateBudget({customer_id: customer_id, budgetList : data});
-    console.log('result..',result);
+    // console.log('result..',result);
+    if(result.isUpdated === 1){
+      alert('Budget Updated Successfully');
+    }
   }
 
   function handleSubmit(e){
