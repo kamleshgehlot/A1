@@ -400,12 +400,7 @@ export default function CustomerList({userId, roleName}) {
                             <StyledTableCell> {data.address}  </StyledTableCell>
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                             {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
-                            <StyledTableCell> 
-                              <Tooltip title="View Budget History">                              
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
-                                  <UpdateIcon />
-                                </IconButton>
-                              </Tooltip>
+                            <StyledTableCell>                              
                               <Tooltip title="Update">                              
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                                 <CreateIcon/>
@@ -416,7 +411,11 @@ export default function CustomerList({userId, roleName}) {
                                 <AccountBalanceIcon/>
                                 </IconButton>
                               </Tooltip>
-
+                              <Tooltip title="View Budget History">                              
+                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
+                                  <UpdateIcon />
+                                </IconButton>
+                              </Tooltip>
                               {/* <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button> */}
                             </StyledTableCell>
                             </TableRow>:''
