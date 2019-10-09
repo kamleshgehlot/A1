@@ -2,7 +2,7 @@ const Order = require('../../models/franchise/order.js');
 const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 
 const uploadDoc = async function (req, res, next) {
-  console.log('rows data',req.body.data);
+  // console.log('rows data',req.body.data);
 
   const OrderData = JSON.parse(req.body.data);
   let attachments = '';
@@ -131,12 +131,13 @@ const getAll = async function(req, res, next) {
 const getBudget = async function(req, res, next) {
   try {
     // console.log('req--',req.body)
-    const order = await new Order({
+    const budget = await new Order({
       user_id : req.decoded.user_id,       
-      customer_id : req.body.customer_id}).getBudget();
+      customer_id : req.body.customer_id,
+      budgetId : req.body.budgetId}).getBudget();
     // const oldBudget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget();
     
-    res.send({ order}); 
+    res.send(budget); 
   } catch (error) {
     next(error);
   }
@@ -145,7 +146,12 @@ const getBudget = async function(req, res, next) {
 const getExistingBudget = async function(req, res, next) {
   try {
     const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id}).getExistingBudget();
-    res.send(oldBudget); 
+    // console.log('budget List',oldBudget);
+    if(oldBudget == ""){
+      res.send([{accomodation: '', afford_amt: '', benefits: '', childcare: '', credit_card: '', customer_id: '', expenditure: '', food: '', income: '', is_active: '', loan: '', mobile: '', other_expenditure: '', power: '', rent: '', surplus: '', telephone: '', transport: '', vehicle: '', work: '',}]);
+    }else{
+      res.send(oldBudget); 
+    }
   } catch (error) {
     next(error);
   }
@@ -154,6 +160,7 @@ const getExistingBudget = async function(req, res, next) {
 
 
 const updateBudget = async function(req, res, next) {  
+  // console.log('budget list', req.body);
   try {
     const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id, budget_list: req.body.budgetList}).updateBudget();
     if(oldBudget != ""){
@@ -179,7 +186,7 @@ const getFixedOrder = async function(req, res, next) {
 const getFlexOrder = async function(req, res, next) {
   try {
     const order = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.flexOrderId}).getFlexOrder();
-    console.log('order',order);
+    // console.log('order',order);
     res.send(order);
   } catch (error) {
     next(error);
@@ -190,7 +197,7 @@ const getFlexOrder = async function(req, res, next) {
 const getPaymentHistory = async function(req, res, next) {
   try {
     const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getPaymentHistory();
-    console.log('payment history',order);
+    // console.log('payment history',order);
     res.send(order);
   } catch (error) {
     next(error);
@@ -199,7 +206,7 @@ const getPaymentHistory = async function(req, res, next) {
 
 
 const paymentSubmit = async function(req, res, next) {
-  console.log('req.body  order',req.body)
+  // console.log('req.body  order',req.body)
   try {
     const payment = await new Order({
       user_id : req.decoded.user_id, 
@@ -254,7 +261,7 @@ const Delivered = async function(req, res, next) {
 };
 
 const postOrder = async function (req, res, next) {
-  console.log('req.oerder',req.body);
+  // console.log('req.oerder',req.body);
 	let orderParams = {
     user_id: req.decoded.user_id,
     userid: req.decoded.id,

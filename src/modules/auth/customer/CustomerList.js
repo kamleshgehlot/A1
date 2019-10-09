@@ -181,7 +181,7 @@ export default function CustomerList({userId, roleName}) {
   
   const handleOpenEditBudget = async (data) =>{      
     const budget = await Order.getExistingBudget({customer_id: data.id});
-    console.log('budget..',budget);
+    // console.log('budget..',budget);    
     setBudgetList(budget[0]);    
     setTotalBudgetList(budget);
     setCustomerId(data.id);
@@ -412,7 +412,7 @@ export default function CustomerList({userId, roleName}) {
         </Grid>
       {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
-      {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} isEditable={1} /> : null }
+      {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} /> : null }
           
     </div>
   );

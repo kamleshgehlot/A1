@@ -185,7 +185,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
         setProductList(product.productList);              
        
       
-        const budget = await Order.getExistingBudget({customer_id: editableData.customer_id});
+        const budget = await Order.getCurrespondingBudget({customer_id: editableData.customer_id, budgetId: editableData.budget_id});
         console.log('budget',budget)
         setBudgetList(budget[0]);
         setTotalBudgetList(budget);
@@ -228,8 +228,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     setBudgetOpen(false);
   }
   
-  function handleBudgetOpen(budgetId){
+  function handleBudgetOpen(budgetId, customerId){
     setBudgetId(budgetId);
+    setCustomerId(customerId);
     setBudgetOpen(true);
   }
   
@@ -457,7 +458,7 @@ return (
                     {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
                       Update Budget
                     </Fab> */}
-                    <Button variant="outlined" size="small" color="primary" className={classes.textsize}  onClick={(event) => { handleBudgetOpen(inputs.budget_id); }}>Update Budget </Button>
+                    <Button variant="outlined" size="small" color="primary" className={classes.textsize}  onClick={(event) => { handleBudgetOpen(inputs.budget_id, inputs.customer_id); }}>Update Budget </Button>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
@@ -596,7 +597,7 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} isEditable={0} /> : null }
+    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={0} /> : null }
     {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} product={product} /> : null }
     {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} product={product} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }

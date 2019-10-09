@@ -228,12 +228,6 @@ Order.prototype.editOrder = function () {
                     reject(error);
                   }
             });
-
-
-          
-          
-          // console.log('budget...',budget);
-
           
       } else {
         console.log("Error...", error);
@@ -323,9 +317,10 @@ Order.prototype.getBudget = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });        
         // connection.query('SELECT customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_active, created_by from budget where id = "'+that.budget_id+'"',function (error, rows, fields) {
-        connection.query('SELECT id, customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_ordered, is_active, created_by from budget where customer_id = "'+that.customer_id+'" order by id DESC LIMIT 1',function (error, rows, fields) {
+        // connection.query('SELECT id, customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone as telephone, mobile_phone as mobile, vehicle_finance as vehicle, public_transport as transport, food, credit_store_cards as credit_card, loans_hire_purchase as loan, other_expenditure, total_income as income, total_expenditure as expenditure, total_surplus as surplus, afford_amt, is_ordered, is_active, created_by from budget where customer_id = "'+that.customer_id+'" order by id DESC LIMIT 1',function (error, rows, fields) {
+          connection.query('SELECT b.id, b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.pre_order_exp, b.is_active from budget as b where b.customer_id= "'+that.customer_id+'" AND b.id = "'+that.budget_id+'" order by b.id desc',function (error, rows, fields) {
             if (!error) {
-              console.log('rows order---',rows)
+              // console.log('rows order---',rows)
                 resolve(rows);
                 } else {
                   console.log("Error...", error);
@@ -388,11 +383,11 @@ Order.prototype.getExistingBudget = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active from budget as b where b.customer_id= "'+that.customer_id+'" order by b.id desc',function (error, rows, fields) {
+        connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt,  b.pre_order_exp, b.is_active from budget as b where b.customer_id= "'+that.customer_id+'" order by b.id desc',function (error, rows, fields) {
           // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
           // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4',function (error, rows, fields) {
             if (!error) {
-              console.log('rows exist---',rows)
+              // console.log('rows exist---',rows)
                 resolve(rows);
                 } else {
                   console.log("Error...", error);
@@ -968,7 +963,7 @@ Order.prototype.getProductDetail = function () {
 Order.prototype.getCSRDetail = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
-console.log(that.id);
+// console.log(that.id);
     connection.getConnection(function (error, connection) {
       if (error) {
         throw error;

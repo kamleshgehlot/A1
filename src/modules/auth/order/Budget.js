@@ -234,7 +234,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       const fetchData = async () => {
         try {
           const order = await Order.getExistingBudget({customer_id: customer_id});
-          console.log('budgt',order);
+          // console.log('budgt',order);
           setOldBudgetList(order);
           if(order.length > 0 && budgetList.length === 0 ){
               let budget = order[0];

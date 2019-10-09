@@ -42,6 +42,7 @@ import Order from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 import { parse } from 'path';
+import { async } from 'q';
 
 const RESET_VALUES = {
   
@@ -114,7 +115,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, isEditable}) {
+export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, customer_id, isEditable}) {
   const styleClass = useCommonStyles();  
   const classes = useStyles();
   const [inputs, setInputs] = useState(budgetList);
@@ -153,21 +154,16 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
     }
   }
 
-  function handleinputChange(e){
-    // console.log('valueee',e.target.value)
-    // if(e.target.value===""){
-    //   // setInputs({
-    //   //   ...inputs,
-    //   //   [e.target.name]: 0,
-    //   // });
-    // }
-    // else{
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
+  // function handleinputChange(e){
+  //   setInputs({
+  //     ...inputs,
+  //     [e.target.name]: e.target.value,
+  //   });
   // }
 
+  const updateBudget = async (data) => {
+    const result = await Order.updateBudget({customer_id: customer_id, budgetList : data});
+    console.log('result..',result);
   }
 
   function handleSubmit(e){
@@ -212,7 +208,11 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
         afford_amt : parseFloat(inputs.afford_amt),
         pre_order_exp : parseFloat(oldBudget),
       }
-      setBudgetList(data);
+      setBudgetList(data);      
+
+      if(isEditable === 1){        
+        updateBudget(data);
+      }
       handleBudgetClose(false)
     }
   }
@@ -238,20 +238,21 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
     }else{
       setSurplusBool(true);      
     }    
-      if(oldBudgetList!= ''){
+      if(oldBudgetList!= '' && isEditable === 1){
         let sum = oldBudgetList.reduce((acc, val) =>{
           return (val.is_active == 1 ? acc + val.afford_amt : acc )
       }, 0 );
-      setOldBudget(sum);
+      setOldBudget(sum * 4);
       // inputs.expenditure = sum;
+    }else{
+      setOldBudget(inputs.pre_order_exp);
     }
   });
 
-  if(surplusBool===true){
+    if(surplusBool===true && isEditable===1){
       inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
       inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) + parseFloat(oldBudget);
-      inputs.surplus = inputs.income - inputs.expenditure;
-      
+      inputs.surplus = inputs.income - inputs.expenditure;      
     }
 
     
