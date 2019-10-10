@@ -61,15 +61,15 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 
-export default function Lead({roleName}) {
+export default function Lead({roleName, showLeadData}) {
   const userName = APP_TOKEN.get().userName;
   const [open, setOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(showLeadData ? true : false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [franchiseListd, setFranchiseList] = useState({});
-  const [leadData,setLeadData]= useState();
+  const [leadData,setLeadData]= useState(leadData);
   const [convertLead,setConvertLead]= useState();
   const [filterId,setFilterId]= useState(4);
   const [enquiryList, setEnquiryList] = useState({});
@@ -205,6 +205,13 @@ export default function Lead({roleName}) {
     };
     fetchData();
   }, []);
+
+  useEffect(() =>{
+    if(isOpen) {
+      handleClickViewOpen(showLeadData);
+      setIsOpen(false);
+    }
+  });
 
   function handleClickOpen() {
     setOpen(true);

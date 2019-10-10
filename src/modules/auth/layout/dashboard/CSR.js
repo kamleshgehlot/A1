@@ -76,13 +76,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CSR({roleName, roleId}) {
+export default function CSR({roleName, roleId, handleLeadClick }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   return (
     <div className={classes.root}>
-      <Panel1 roleName={roleName} roleId={roleId} />
+      <Panel1 roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}/>
     </div>
   );
 }

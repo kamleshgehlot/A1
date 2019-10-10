@@ -131,6 +131,7 @@ export default function ClippedDrawer(props) {
   const [showCustomer, setShowCustomer] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [showLead, setShowLead] = useState(false);
+  const [leadData, setLeadData] = useState({})
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showFranchiseDetail, setShowFranchiseDetail] = useState(false);
@@ -403,9 +404,10 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
 
   }
-  function handleLeadsClick(role){
+  function handleLeadsClick(role, data){
     setRoleAs(role);    
     setShowLead(true);
+    setLeadData(data);
     setShowEnquiry(false);
     setShowCustomer(false);
     setShowTask(false);
@@ -670,7 +672,7 @@ export default function ClippedDrawer(props) {
           showEnquiry ? <Enquiry roleName={roleAs}/>:null
         }
         {
-          showLead ? <Lead roleName={roleAs}/>:null
+          showLead ? <Lead roleName={roleAs} showLeadData={leadData}/>:null
         }
         {
           showOrder ? <Order roleName={roleAs}/>:null
@@ -679,7 +681,7 @@ export default function ClippedDrawer(props) {
           showFranchiseDetail ? <FranchiseDetail roleName={roleAs}/>:null
         }
         {
-          showDashboard ? <MainDashboard roleName={roleAs} roleId={role_Id} />:null
+          showDashboard ? <MainDashboard roleName={roleAs} roleId={role_Id}  handleLeadClick={handleLeadsClick}/>:null
         }
         {
           showFinanceReport ? <FinanceReport roleName={roleAs} /> : null

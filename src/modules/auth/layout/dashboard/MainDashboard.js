@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function MainDashboard({roleName, roleId}) {
+export default function MainDashboard({roleName, roleId, handleLeadClick }) {
   const classes = useStyles();
   // const [roleId, setRoleId] = useState();
 // console.log('dash rolenam',roleName, roleId)
@@ -46,7 +46,7 @@ export default function MainDashboard({roleName, roleId}) {
     <div className={classes.root}>      
        {roleName === "Super Admin" && <MasterAdmin roleName={roleName} roleId={roleId} />}
        {roleName === "Admin" && <Admin roleName={roleName} roleId={roleId} />}
-       {roleName === "CSR" && <CSR roleName={roleName} roleId={roleId} />}
+       {roleName === "CSR" && <CSR roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}/>}
        {roleName === "Finance" && <Finance roleName={roleName} roleId={roleId} />}
        {roleName === "Delivery" && <Delivery roleName={roleName} roleId={roleId} />}
        {roleId === 0 && <MasterStaff roleName={roleName} roleId={roleId} />}
