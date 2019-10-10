@@ -19,7 +19,7 @@ import LeadAPI from '../../../../../api/Lead';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
+    // flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     // height: 224,
@@ -131,31 +131,8 @@ export default function Panel1({roleName, roleId, handleLeadClick}) {
   };
 
   return (
-    <div className={classes.root}>
-    {/* <Paper style={{ width: '100%' }}>
-      <AppBar position="static"  className={classes.appBar}>
-      <Tabs
-        // orientation="vertical"
-        // variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        className={classes.textsize}
-      >
-        <Tab label="Leads" />
-        {roleName != 'Super Admin' &&  <Tab label="Task" />   }
-      </Tabs>
-      </AppBar> 
-       
-      <TabPanel value={value} index={0}>
-        <LeadList leadList={leadList} roleName={ roleName} />
-      </TabPanel>
-      {roleName != 'Super Admin'  &&
-        <TabPanel value={value} index={1}>
-          <TaskList taskList={taskList} roleName={ roleName} />
-        </TabPanel>
-      }
-    </Paper> */}         
-    <Paper style={{ width: '45%', height: '250', 'marginRight':'5px', }}>             
+    <div className={classes.root}  style={{ width: '80%' }}>             
+    <Paper style={{ width: '42%', height: '250', 'marginRight':'5px', }}>             
       <Grid container spacing={4}  style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12} >   
           <Typography variant="h6" className={classes.labelTitle} color="primary">
@@ -169,7 +146,7 @@ export default function Panel1({roleName, roleId, handleLeadClick}) {
       </Grid>
     </Paper>
   {roleName != 'Super Admin' && roleId != 0 && 
-    <Paper style={{ width: '45%', height: '250', 'marginLeft':'5px' }}>  
+    <Paper style={{ width: '42%', height: '250', 'marginLeft':'5px' }}>  
     {console.log('taskkkkk')}           
       <Grid container spacing={4} style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12}>   

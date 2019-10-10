@@ -31,7 +31,7 @@ import Panel1 from './Components/Panel1';
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    flexGrow: 1,
+    // flexGrow: 1,
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -81,7 +81,7 @@ export default function CSR({roleName, roleId, handleLeadClick }) {
   const [value, setValue] = React.useState(0);
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} >
       <Panel1 roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}/>
     </div>
   );

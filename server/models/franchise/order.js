@@ -46,6 +46,10 @@ var Order = function (params) {
   // this.status = params.status;
   this.user_role = params.user_role;
   this.comment = params.comment;
+
+  this.refund = params.refund;
+  this.cancel_by = params.cancel_by;
+  this.cancel_reason = params.cancel_reason;
       
 };
 
@@ -409,6 +413,60 @@ Order.prototype.getExistingBudget = function () {
 
 
 
+Order.prototype.submitCancel = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('UPDATE orders SET order_status = "'+that.cancel_by+'", is_active = 0, refund_amt = "'+that.refund+'", cancel_reason = "'+that.cancel_reason+'" where id = "'+that.id+'"',function (error, rows, fields) {
+            if (!error) {
+              connection.query('UPDATE budget SET is_active = 0 where id = "'+that.budget_id+'"',function (error, rows, fields) {
+                if (!error) {
+                  if(that.order_type == 1){
+                  connection.query('UPDATE fixed_order SET is_active = 0 where id = "'+that.order_type_id+'"',function (error, rows, fields) {
+                    if (!error) {
+                        resolve(rows);
+                        } else {
+                          console.log("Error...", error);
+                          reject(error);
+                        }
+                    })
+                  }else if (that.order_type == 2){
+                    connection.query('UPDATE flex_order SET is_active = 0 where id = "'+that.order_type_id+'"',function (error, rows, fields) {
+                      if (!error) {
+                        resolve(rows);
+                          } else {
+                            console.log("Error...", error);
+                            reject(error);
+                          }
+                      })
+                  }
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+              })   
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
 
 Order.prototype.getBudgetHistory = function () {
   const that = this;
@@ -576,6 +634,36 @@ Order.prototype.getPaymentHistory = function () {
 };
 
 
+Order.prototype.getRequiredDataToCancel = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT SUM(p.payment_amt) as total_rec_amt, COUNT(p.installment_no) as total_paid_installment, DATE_FORMAT(MAX(p.payment_rec_date), \'%Y-%m-%d\')  as last_payment_date from payment_status as p WHERE p.order_id = "'+that.id+'"',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 Order.prototype.paymentSubmit = function () {
   const that = this;
   // console.log('that', that);
@@ -713,7 +801,7 @@ Order.prototype.getOrderList = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
-          connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, os.order_status as order_status_name, d.document as uploaded_doc from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id LEFT JOIN order_document as d on o.id = d.order_id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
+          connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id LEFT JOIN order_document as d on o.id = d.order_id ORDER BY o.id DESC',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

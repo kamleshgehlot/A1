@@ -150,21 +150,9 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [paymentStatus, setPaymentStatus] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
   const [payResopnse, setPayResopnse] = React.useState([]);
-  // const [flexPaymentStatus, setFlexPaymentStatus] = useState([]);
   const [paymentHistory,setPaymentHistory] = useState([]);
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
 
-
-  // const setDateFormat = (date) => {
-  //   let date1 = new Date(date);
-  //   let yy = date1.getFullYear();
-  //   let mm = date1.getMonth() + 1 ;
-  //   let dd = date1.getDate();
-  //   if(mm< 10){ mm = '0' + mm.toString()}
-  //   if(dd< 10){ dd = '0' + dd.toString()}
-  //   let fullDate = yy+ '-'+mm+'-'+dd;
-  //   return fullDate;
-  // }
 
   function handleDateChange(date){
     setPaymentRecDate(getDate(date));    
@@ -451,12 +439,7 @@ return (
 
           <div className={classes.root}>
           <Paper className={classes.paper}>            
-            <Grid container spacing={4}>
-                {/* <Grid item xs={12} sm={12}>
-                  <Typography variant="h6" className={classes.labelTitle}>
-                      
-                  </Typography>
-                </Grid> */}
+            <Grid container spacing={4}>               
                 <Grid item xs={12} sm={12}>        
                 <Table >
                     <TableHead>

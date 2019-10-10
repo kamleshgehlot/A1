@@ -57,7 +57,8 @@ function TabPanel(props) {
 }
 
 export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
-  uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, handleClickViewOpen }) {
+  uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, 
+  handleClickViewOpen, handleOrderCancellationOpen }) {
   const styleClass = useCommonStyles();
 
 return (  
@@ -160,6 +161,11 @@ return (
                   <Tooltip title="Assign to Delivery">
                     <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToDelivery(data.id); }} disabled= {data.order_status !==4  || data.assigned_to===5}>
                       <SendIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Cancel Order">
+                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderCancellationOpen(data); }} >
+                      <PaymentIcon />  
                     </IconButton>
                   </Tooltip>
           </StyledTableCell>

@@ -179,6 +179,23 @@ export default {
     }
   },
 
+  submitCancel: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/submitCancel`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
 
   
   updateBudget: async (req) => {
@@ -219,6 +236,24 @@ export default {
 
   getCurrespondingFlexOrder: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getflexorder`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  getRequiredDataToCancel: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getRequiredDataToCancel`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',

@@ -66,5 +66,8 @@ orderRouter.route("/delivered").post(validateToken, Order.Delivered);
 orderRouter.route("/postorder").post(validateToken, Order.postOrder);
 orderRouter.route("/get-flex-order-data-for-PDF").post(validateToken, Order.getFlexOrderDataForPDF);
 orderRouter.route("/get-fixed-order-data-for-PDF").post(validateToken, Order.getFixedOrderDataForPDF);
+orderRouter.route("/getRequiredDataToCancel").post(validateToken, Order.getRequiredDataToCancel);
+orderRouter.route("/submitCancel").post(validateToken, Order.submitCancel);
+
 
 module.exports = orderRouter;

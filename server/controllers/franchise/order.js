@@ -223,6 +223,16 @@ const getPaymentHistory = async function(req, res, next) {
 };
 
 
+const getRequiredDataToCancel = async function(req, res, next) {
+  try {
+    const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getRequiredDataToCancel();
+    // console.log('cancellation data',order);
+    res.send(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const paymentSubmit = async function(req, res, next) {
   // console.log('req.body  order',req.body)
   try {
@@ -277,6 +287,29 @@ const Delivered = async function(req, res, next) {
     next(error);
   }
 };
+
+
+
+
+const submitCancel = async function(req, res, next) {
+  try {
+    const result = await new Order({
+      user_id : req.decoded.user_id,
+      id: req.body.id,
+      budgetId : req.body.budget_id,
+      order_type: req.body.order_type,
+      order_type_id : req.body.order_type_id,
+      refund : req.body.refund,
+      cancel_by : req.body.cancel_by,
+      cancel_reason : req.body.cancel_reason,
+    }).submitCancel();
+    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+    res.send({ order: order});
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 const postOrder = async function (req, res, next) {
   // console.log('req.oerder',req.body);
@@ -529,7 +562,9 @@ module.exports = {
   uploadDeliveryDoc,
   getFlexOrderDataForPDF, 
   getFixedOrderDataForPDF, 
+  getRequiredDataToCancel,
   postOrder, 
+  submitCancel,
   getAll, 
   getBudget, 
   getExistingBudget,

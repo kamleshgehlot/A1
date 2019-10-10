@@ -51,7 +51,9 @@ import Finance from './OrderComponent/Finance';
 import UnderDelivery from './OrderComponent/UnderDelivery';
 import Delivered from './OrderComponent/Delivered';
 import Completed from './OrderComponent/Completed';
+import Cancelled from './OrderComponent/Cancelled';
 
+import OrderCancellationForm from './OrderCancellationForm';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import ProcessDialog from '../ProcessDialog.js';
 import CommentDialog from '../CommentDialog.js';
@@ -145,17 +147,17 @@ export default function Order({roleName}) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [processDialog,setProcessDialog] = useState(false);
   const [response,setResponse] = useState([]);
-
+  const [openCancelForm, setOpenCancelForm] = useState(false);
   //Tab Data for corresponding role 
   const [openTab,setOpenTab] = useState([]);
   const [financeTab,setFinanceTab] = useState([]);
   const [underDeliveryTab,setUnderDeliveryTab] = useState([]);
   const [deliveredTab,setDeliveredTab] = useState([]);
   const [completedTab,setCompletedTab] = useState([]);
+  const [cancelledTab,setCancelledTab] = useState([]);
   
   //value is for tabs  
   const [value, setValue] = React.useState(0);  
-  // console.log('orderr..',order);
 
   function createAndDownloadPdf(data) {
     if(data.order_type === 2){
@@ -332,6 +334,17 @@ export default function Order({roleName}) {
     setPaymentStatusOpen(true);
   }
   
+  function handleOrderCancellationOpen(data){
+    setOrderData(data);
+    setOpenCancelForm(true);
+  }
+
+  function handleOrderCancellationClose(response){
+    // console.log('retrun', response);
+    setOrder(response.order);
+    handleTabsData(response.order);
+    setOpenCancelForm(false);
+  }
 
   function handleConfirmationDialog (response){
     if(response === 1){
@@ -440,16 +453,17 @@ export default function Order({roleName}) {
     let underDelivery = [];
     let delivered = [];
     let completed = [];
+    let cancelled = [];
 
     if(roleName === 'CSR'){
       (order.length > 0 ? order : []).map((data, index) => {        
-        if(data.assigned_to !== 4 && data.assigned_to !== 5){
+        if(data.assigned_to !== 4 && data.assigned_to !== 5  && data.is_active ==1){
           open.push(data);
           }
-        if(data.assigned_to === 4){
+        if(data.assigned_to === 4  && data.is_active ==1){
           finance.push(data);
           }
-        if(data.assigned_to === 5 && data.order_status ===5){
+        if(data.assigned_to === 5 && data.order_status ===5  && data.is_active ==1){
           underDelivery.push(data);
           }
         if(data.order_status === 6){
@@ -458,25 +472,32 @@ export default function Order({roleName}) {
         if(data.order_status === 8){
           completed.push(data);
           }
+        if((data.order_status === 9 || data.order_status === 10) && data.is_active == 0){
+          cancelled.push(data);
+          }  
         });
+
     }else if (roleName === 'Finance'){
       (order.length > 0 ? order : []).map((data, index) => {        
-        if((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !==8 ){
+        if((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !==8 && data.is_active ==1){
           open.push(data);
           }
-        if(data.assigned_to === 5 && data.order_status ===5){
+        if(data.assigned_to === 5 && data.order_status ===5  && data.is_active ==1){
           underDelivery.push(data);
           }
-        if(data.order_status === 6){
+        if(data.order_status === 6 ){
           delivered.push(data);
           }
         if(data.order_status === 8){
           completed.push(data);
           }
+        if((data.order_status === 9 || data.order_status === 10) && data.is_active == 0){
+          cancelled.push(data);
+          }  
         });
     }else if (roleName === 'Delivery'){
       (order.length > 0 ? order : []).map((data, index) => {        
-        if(data.assigned_to === 5 && data.order_status ===5){
+        if(data.assigned_to === 5 && data.order_status ===5  && data.is_active ==1){
           open.push(data);
           }
         if(data.order_status >= 6){
@@ -489,8 +510,8 @@ export default function Order({roleName}) {
     setUnderDeliveryTab(underDelivery);
     setDeliveredTab(delivered);
     setCompletedTab(completed);
+    setCancelledTab(cancelled);
   }
-
 
   return (
     // <div ref={ref}>
@@ -511,22 +532,7 @@ export default function Order({roleName}) {
                 id="search"
                 name="search"
                 label="Search"
-                type="text"
-                // value={searchText} 
-                // onKeyPress={(ev) => {
-                //   if (ev.key ===  'Enter') {
-                //     searchHandler()
-                //     ev.preventDefault();
-                //   }
-                // }}
-                // onChange={handleSearchText}
-                // inputProps={{
-                //   endAdorment:(
-                //     <InputAdornment position='start'>
-                //       <SearchIcon />  ll 
-                //     </InputAdornment>
-                //   )
-                // }}
+                type="text"               
                 fullWidth
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>
@@ -548,6 +554,7 @@ export default function Order({roleName}) {
                   {roleName !='Delivery'  ?   <Tab label={<BadgeComp count={underDeliveryTab.length} label="Under Delivery" />} />  : ''}
                                               <Tab label={<BadgeComp count={deliveredTab.length} label="Delivered" />}  /> 
                   {roleName !=='Delivery' ?   <Tab label={<BadgeComp count={completedTab.length} label="Completed" />} />       : ''}
+                  {roleName !=='Delivery' ?   <Tab label={<BadgeComp count={cancelledTab.length} label="Cancelled" />} />       : ''}
                 </Tabs>
               </AppBar> 
               
@@ -572,6 +579,9 @@ export default function Order({roleName}) {
                 <TabPanel value={value} index={4}>
                   {completedTab && <Completed order= {completedTab} roleName={roleName} />}
                 </TabPanel>
+                <TabPanel value={value} index={5}>
+                  {cancelledTab && <Cancelled order= {cancelledTab} roleName={roleName} />}
+                </TabPanel>
               </div> : ''}
 
               {roleName === 'Finance' ? <div>
@@ -581,7 +591,7 @@ export default function Order({roleName}) {
                     handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                     createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}
-                    handleClickViewOpen = {handleClickViewOpen} /> }
+                    handleClickViewOpen = {handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen} /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
@@ -591,6 +601,9 @@ export default function Order({roleName}) {
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                   {completedTab && <Completed order= {completedTab} roleName={roleName} />}
+                </TabPanel>
+                <TabPanel value={value} index={4}>
+                  {cancelledTab && <Cancelled order= {cancelledTab} roleName={roleName} />}
                 </TabPanel>
               </div> : ''}
 
@@ -635,6 +648,7 @@ export default function Order({roleName}) {
      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
      {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null }
      {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId}  /> :null}
+     {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} /> : null}
     </div>
   );
 }
