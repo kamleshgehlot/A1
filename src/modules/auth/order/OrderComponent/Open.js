@@ -16,6 +16,7 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
+import CancelIcon from '@material-ui/icons/Cancel';
 import CommentIcon from '@material-ui/icons/Comment';
 
 import { API_URL } from '../../../../api/Constants';
@@ -165,7 +166,7 @@ return (
                   </Tooltip>
                   <Tooltip title="Cancel Order">
                     <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderCancellationOpen(data); }} >
-                      <PaymentIcon />  
+                      <CancelIcon />  
                     </IconButton>
                   </Tooltip>
           </StyledTableCell>
