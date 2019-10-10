@@ -25,7 +25,7 @@ if (env === 'uat') {
   DbName = 'rentrodev_test';
   domainName = 'rentronicsdev.saimrc.com'
 } else {
-  DbName = 'rentronicsNew'
+  DbName = 'rentronicnew'
   domainName = 'localhost:3000'
 }
 
