@@ -58,6 +58,8 @@ import TaskList from '../task/TaskList';
 
 import StyledTreeItem from './StyledTreeItem';
 
+const drawerWidth = 220;
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
