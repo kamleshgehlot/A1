@@ -220,6 +220,7 @@ export default function Order({roleName}) {
     setPaymentStatusOpen(false);
   }
   
+
   const uploadFileSelector = async (event) =>{
     setProcessDialog(true);
     try {      
@@ -339,12 +340,16 @@ export default function Order({roleName}) {
     setOpenCancelForm(true);
   }
 
-  function handleOrderCancellationClose(response){
-    // console.log('retrun', response);
-    setOrder(response.order);
-    handleTabsData(response.order);
+  function handleOrderCancellationClose(){        
     setOpenCancelForm(false);
   }
+
+  function handleOrderList(response){
+      // console.log('retrun', response);
+      setOrder(response.order);
+      handleTabsData(response.order);
+  }
+
 
   function handleConfirmationDialog (response){
     if(response === 1){
@@ -648,7 +653,7 @@ export default function Order({roleName}) {
      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
      {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null }
      {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId}  /> :null}
-     {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} /> : null}
+     {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} /> : null}
     </div>
   );
 }

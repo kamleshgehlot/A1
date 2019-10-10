@@ -119,7 +119,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function OrderCancellationForm({ open, handleClose, handleSnackbarClick, orderData}) {
+export default function OrderCancellationForm({ open, handleClose, handleSnackbarClick, orderData, handleOrderList}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -131,8 +131,7 @@ export default function OrderCancellationForm({ open, handleClose, handleSnackba
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
 
-  // const [refund,setRefund] = React.useState('');
-  console.log('orderdata',orderData);
+  
   const getRequiredDataToCancel = async () => {
       try {
         const result = await Order.getRequiredDataToCancel({id: orderData.id});
@@ -201,7 +200,8 @@ export default function OrderCancellationForm({ open, handleClose, handleSnackba
           cancel_by : inputs.cancel_by,
           cancel_reason : inputs.cancel_reason
         });
-        handleClose(result);
+        handleOrderList(result);
+        handleClose();
       }
       submit();      
     }
@@ -308,11 +308,7 @@ return (
                     />
                   </Grid>
                 <Grid item xs={12} sm={12}>                                     
-                <Button variant="contained" color='primary' className={classes.button} onClick={ handleConfirmationOpen } disabled = {savebtn} >Submit</Button>
-
-                  {/* <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
-                    Submit
-                  </Button>  */}
+                  <Button variant="contained" color='primary' className={classes.button} onClick={ handleConfirmationOpen } disabled = {savebtn} >Submit</Button>
                   <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                     Cancel
                   </Button> 
