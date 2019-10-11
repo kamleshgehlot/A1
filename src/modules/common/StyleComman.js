@@ -32,6 +32,9 @@ export const useCommonStyles = makeStyles(theme => ({
       fontSize: theme.typography.pxToRem(12),
       backgroundColor: 'lightgray',
   },
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
   // drawer: {
   //   width: drawerWidth,
   //   flexShrink: 0,

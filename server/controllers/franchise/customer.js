@@ -130,4 +130,38 @@ const getSingleCustomer = async function (req, res, next) {
 	}
 };
 
-module.exports = { register: register, all: all, getidtypelist: getidtypelist, searchData: searchData, getSingleCustomer: getSingleCustomer};
+const postComment = async function (req, res, next) {
+  let CustomerParams = {
+    user_id: req.decoded.user_id,
+    created_by : req.decoded.id,
+    customer_id :req.body.customer_id,
+    comment : req.body.comment,    
+  };
+	try{
+    const newCustomer = new Customer(CustomerParams);
+    const result = await newCustomer.postComment();
+
+    const commentList = await newCustomer.commentList();
+    res.send( commentList );
+	}catch(err){
+    next(error);
+	}
+};
+
+
+const getCommentList = async function (req, res, next) {
+  let CustomerParams = {
+    user_id: req.decoded.user_id,
+    customer_id :req.body.customer_id,
+  };
+  const newCustomer = new Customer(CustomerParams);
+	try{
+    const commentList = await newCustomer.commentList();
+    res.send(commentList);
+	}catch(err){
+    next(error);
+	}
+};
+
+
+module.exports = { register: register, all: all, getidtypelist: getidtypelist, searchData: searchData, getSingleCustomer: getSingleCustomer, postComment: postComment, getCommentList: getCommentList};

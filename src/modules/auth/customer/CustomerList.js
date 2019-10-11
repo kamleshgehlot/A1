@@ -30,12 +30,14 @@ import Box from '@material-ui/core/Box';
 import Add from './Add';
 import Edit from './Edit';
 import EditBudget from '../order/EditBudget';
+import CommentIcon from '@material-ui/icons/Comment';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 import Order from '../../../api/franchise/Order';
 import { fontFamily } from '@material-ui/system';
 
+import CommentView from './CommentView';
 import BadgeComp from '../../common/BadgeComp';
 
 import BudgetHistory from '../order/BudgetHistory';
@@ -165,6 +167,8 @@ export default function CustomerList({userId, roleName}) {
   const [totalBudgetList,setTotalBudgetList] = useState(null);  
   const [customerId, setCustomerId] = useState();
   const [budgetHistoryOpen,setBudgetHistoryOpen] = useState(false);
+  const [openCommentView, setOpenCommentView]  = useState(false);
+
   //value is for tabs  
   const [value, setValue] = React.useState(0);
   
@@ -201,6 +205,16 @@ export default function CustomerList({userId, roleName}) {
     setCustomerId(data.id);
     setBudgetOpen(true);
   }
+
+  const handleClickCommentOpen = (data) => {
+    setCustomerId(data.id);
+    setOpenCommentView(true);
+  }
+
+  const handleViewClose = () => {
+    setOpenCommentView(false);
+  }
+
 
   const handleBudgetClose = async () => {
     // if(budgetList != "" || budgetList != null || budgetList != undefined){
@@ -411,6 +425,11 @@ export default function CustomerList({userId, roleName}) {
                                 <AccountBalanceIcon/>
                                 </IconButton>
                               </Tooltip>
+                              <Tooltip title="View">
+                                <IconButton  size="small" className={classes.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickCommentOpen(data); }} >
+                                  <CommentIcon />
+                                </IconButton>
+                              </Tooltip>
                               <Tooltip title="View Budget History">                              
                                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
                                   <UpdateIcon />
@@ -432,6 +451,7 @@ export default function CustomerList({userId, roleName}) {
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} /> : null }
       {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} customer_id={customerId} roleName={roleName} /> : null }
+      {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} customer_id = {customerId}  /> :null}
     </div>
   );
 }

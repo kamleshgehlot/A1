@@ -31,6 +31,44 @@ export default {
     }
   },
 
+  postComment: async (newComment) => {
+    // console.log('customer -- ',newComment);
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/postComment`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: newComment,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  
+  getCommentList: async (newComment) => {
+    // console.log('customer -- ',newComment);
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/getCommentList`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: newComment,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
 
  list: async (franchisedata) => {
     const URL = `${c.API_CONSUMER}/api/franchise/customer/list`;

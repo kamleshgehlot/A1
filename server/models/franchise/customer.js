@@ -50,6 +50,7 @@ var Customer = function (params) {
   this.searchText = params.searchText;
   this.customer_id = params.customer_id;
   this.budgetData = params.budgetData;
+  this.comment = params.comment;
 };
 
 Customer.prototype.register = function () {
@@ -470,5 +471,77 @@ Customer.prototype.getSingleCustomer = function () {
     throw error;
   });
 };
+
+
+
+
+Customer.prototype.postComment = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        const Values = [
+          [that.customer_id, that.created_by, that.comment, 1]
+        ]
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('INSERT INTO comment_on_customer(customer_id, created_by, comment, is_active) VALUES ?',[Values], function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }            
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+
+Customer.prototype.commentList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select c.customer_id, c.created_by, u.name as created_by_name, c.comment, c.is_active,  DATE_FORMAT(c.created_at, \'%W %d %M %Y %H:%i:%s\') created_at from comment_on_customer as c inner join user as u on u.id = c.created_by where customer_id = "'+that.customer_id+'" order by c.id desc', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+            
+          })          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 
 module.exports = Customer;
