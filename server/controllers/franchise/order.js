@@ -302,6 +302,7 @@ const submitCancel = async function(req, res, next) {
       refund : req.body.refund,
       cancel_by : req.body.cancel_by,
       cancel_reason : req.body.cancel_reason,
+      cancellation_charge : req.body.cancellation_charge,
     }).submitCancel();
     const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
     res.send({ order: order});

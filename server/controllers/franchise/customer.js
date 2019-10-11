@@ -25,8 +25,9 @@ const register = async function (req, res, next) {
     id_number:  customerData.id_number,
     expiry_date :  customerData.expiry_date,
     is_adult : customerData.is_adult,
+    dl_version_number : customerData.dl_version_number,
     id_proof :  attachments,
-
+    
     alt_c1_name: customerData.alt_c1_name,
     alt_c1_address: customerData.alt_c1_address,
     alt_c1_contact: customerData.alt_c1_contact,

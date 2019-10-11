@@ -36,6 +36,8 @@ import ConfirmationDialog from '../ConfirmationDialog.js';
 import { getDate, getCurrentDate } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
+import validate from '../../common/validation/CancelOrderRuleValidation';
+
 import { FormLabel } from '@material-ui/core';
 
 
@@ -117,7 +119,12 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-
+const RESET_VALUES  = {
+  cancellation_charge : '',
+  cancel_by : '',
+  refund : '',
+  cancel_reason : '',
+}
 
 export default function OrderCancellationForm({ open, handleClose, handleSnackbarClick, orderData, handleOrderList}) {
 
@@ -125,9 +132,6 @@ export default function OrderCancellationForm({ open, handleClose, handleSnackba
   const styleClass = useCommonStyles();
   const [paymentStatus, setPaymentStatus] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
-  const [inputs, setInputs] = useState([]);
-  const [cancelBy,setCancelBy] = React.useState('');
-  const [cancelReason,setCancelReason] = React.useState('');
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
 
@@ -145,68 +149,41 @@ export default function OrderCancellationForm({ open, handleClose, handleSnackba
      getRequiredDataToCancel();
   },[]);
 
+  const submit = async () => {
+    setpLoading(true);
+    setSavebtn(true);
 
-  const handleInputChange = e => {    
-    setInputs({
-    ...inputs,
-    [e.target.name]: e.target.value,
-  });
-  } 
-
-  
-  const handlePriceInput = e => {
-    const validDecimalNumber = /^\d*\.?\d*$/;
-    if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
-      setInputs({
-        ...inputs,
-        [e.target.name]: e.target.value,
-      });
-    }
+    const result = await Order.submitCancel({
+      id: orderData.id,
+      budget_id : orderData.budget_id,
+      order_type: orderData.order_type,
+      order_type_id : orderData.order_type_id,
+      refund : inputs.refund,
+      cancel_by : inputs.cancel_by,
+      cancel_reason : inputs.cancel_reason,
+      cancellation_charge : inputs.cancellation_charge,
+    });
+    handleOrderList(result);
+    handleClose();
   }
 
-  function handleConfirmationOpen(){
-    let check = false;
-    if(inputs.cancel_by == ""){      
-      setCancelBy("Choose one option");
-      check = true;
-      console.log('check', check);
-    }else{
-      setCancelBy("");
-    }
-    if(inputs.cancel_reason == ""){
-      setCancelReason("fill the value");
-      check = true;
-      console.log('check', check);
-    }else{
-      setCancelReason("");
-    }
-    if(check == false){
-      setConfirmation(true);
-    }    
-  }
+  // function handleConfirmationOpen(){      
+  //     setConfirmation(true);
+  // }
 
-  function handleConfirmationDialog (response){
-    if(response === 1){
-      setpLoading(true);
-      setSavebtn(true);
-  
-      const submit = async () => {
-        const result = await Order.submitCancel({
-          id: orderData.id,
-          budget_id : orderData.budget_id,
-          order_type: orderData.order_type,
-          order_type_id : orderData.order_type_id,
-          refund : inputs.refund,
-          cancel_by : inputs.cancel_by,
-          cancel_reason : inputs.cancel_reason
-        });
-        handleOrderList(result);
-        handleClose();
-      }
-      submit();      
-    }
-    setConfirmation(false);
-  }
+  // function handleConfirmationDialog (response){
+  //   if(response === 1){     
+  //     // submit();      
+  //   }
+  //   setConfirmation(false);
+  // }
+
+
+  const { inputs, handleInputChange,  handleNumberInput, handlePriceInput, handleRandomInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    RESET_VALUES,
+    submit,
+    validate
+  ); 
 
 
 return (
@@ -236,13 +213,8 @@ return (
                   <Typography variant="h6" className={classes.labelTitle}>
                      {"Total Received Amt.:  " + paymentStatus.total_rec_amt }
                   </Typography>                  
-                </Grid>
-               
-                
-                {/* 
-                <Grid item xs={12} sm={6}>                                
-                
-                </Grid>  */}
+                </Grid>               
+           
                 <Grid item xs={12} sm={6}>     
                   <Typography variant="h6" className={classes.labelTitle}>
                      {"Total Installment Paid.:  " + paymentStatus.total_paid_installment }
@@ -263,15 +235,32 @@ return (
                       id = 'cancel_by'
                       fullWidth
                       className={classes.textsize} 
-                      helperText={cancelBy}
-                      error={cancelBy}
-                      // error={errors.cancel_by}
-                      // helperText={errors.cancel_by ? errors.cancel_by : ' '}
+                      error={errors.cancel_by}
+                      helperText={errors.cancel_by}
                     >
                       <MenuItem className={classes.textsize}  value="9" >Rentronics</MenuItem>
                       <MenuItem className={classes.textsize}  value="10" >Customer</MenuItem>
                     </Select>
                 </Grid>
+                <Grid item xs={12} sm={6}>     
+                  <InputLabel className={classes.textsize}  htmlFor="cancel_reason">Cancel Reason </InputLabel>
+                  <TextField                       
+                      id="cancel_reason"
+                      name="cancel_reason"
+                      value={inputs.cancel_reason}
+                      onChange={handleInputChange}                      
+                      fullWidth   
+                      multiline                   
+                      InputProps={{                        
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      error={errors.cancel_reason}
+                      helperText={errors.cancel_reason}
+                    />
+                  </Grid>
+                
                 <Grid item xs={12} sm={6}>     
                   <InputLabel className={classes.textsize}  htmlFor="refund">Refund </InputLabel>
                   <TextField 
@@ -284,31 +273,30 @@ return (
                       id="refund"
                       name="refund"
                       value={inputs.refund}
-                      onChange={handlePriceInput}
-                      // error={refund}
-                      // helperText={refund}
+                      onChange={handlePriceInput}                      
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>     
-                  <InputLabel className={classes.textsize}  htmlFor="cancel_reason">Cancel Reason </InputLabel>
-                  <TextField                       
-                      id="cancel_reason"
-                      name="cancel_reason"
-                      value={inputs.cancel_reason}
-                      onChange={handleInputChange}                      
-                      fullWidth
-                      helperText={cancelReason}
-                      error={cancelReason}
-                      InputProps={{                        
+                  <Grid item xs={12} sm={6}>     
+                  <InputLabel className={classes.textsize}  htmlFor="cancellation_charge">Cancellation Charge </InputLabel>
+                  <TextField 
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         classes: {
                           input: classes.textsize,
                         },
                       }}
+                      id="cancellation_charge"
+                      name="cancellation_charge"
+                      value={inputs.cancellation_charge}
+                      onChange={handlePriceInput}                      
+                      fullWidth
+                      error={errors.cancellation_charge}
+                      helperText={errors.cancellation_charge}
                     />
                   </Grid>
                 <Grid item xs={12} sm={12}>                                     
-                  <Button variant="contained" color='primary' className={classes.button} onClick={ handleConfirmationOpen } disabled = {savebtn} >Submit</Button>
+                  <Button variant="contained" color='primary' className={classes.button} onClick={ handleSubmit } disabled = {savebtn} >Submit</Button>
                   <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                     Cancel
                   </Button> 
@@ -318,7 +306,7 @@ return (
           </div>
         </form>
       </Dialog>
-      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Sure to cancel this order ?"} />: null }
+      {/* {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Sure to cancel this order ?"} />: null } */}
     </div>
   );
 }

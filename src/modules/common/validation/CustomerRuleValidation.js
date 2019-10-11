@@ -24,12 +24,12 @@ export default function validate(values) {
     errors.postcode = 'Postcode is invalid';
   }
 
-  if (!values.telephone) {
-    errors.telephone = 'Telephone number is required';
-  } else if (!validNumber.test(values.telephone)) {
-    errors.telephone = 'Telephone number is invalid';
-  } else if ((values.telephone).length<9) {
-    errors.telephone = 'Telephone number is invalid';
+  if (values.telephone) {
+    if (!validNumber.test(values.telephone)) {
+      errors.telephone = 'Telephone number is invalid';
+    } else if ((values.telephone).length<9) {
+      errors.telephone = 'Telephone number is invalid';
+    } 
   }
   
   if (!values.mobile) {
@@ -61,6 +61,12 @@ export default function validate(values) {
     // errors.id_type =''
     if (!values.other_id_type) {
       errors.other_id_type = 'ID Type is required';
+    }
+  }
+  if(values.id_type==2){
+    // errors.id_type =''
+    if (!values.dl_version_number) {
+      errors.dl_version_number = 'Version number is required';
     }
   }
   if (!values.id_number) {

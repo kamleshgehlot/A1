@@ -144,7 +144,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [customerList, setDataCustomerList] = React.useState(inputValues);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
@@ -195,6 +194,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       expiry_date :  inputs.expiry_date,
       is_adult : 1,
       id_proof :  inputs.id_proof,
+      dl_version_number : inputs.dl_version_number,
 
       alt_c1_name: inputs.alt_c1_name,
       alt_c1_address: inputs.alt_c1_address,
@@ -213,7 +213,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
 
       is_active: inputs.is_active,
       state : inputs.state,
-      // updated_by : userId.userId,
 
       other_id_type: otherIdTypeValue,
       
@@ -226,10 +225,8 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
     for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
       formData.append('avatar', document.getElementById('id_proof').files[x])
     }
-    // console.log("formadata", formData);
     const response = await Customer.register({ formData: formData });
     
-    // handleSnackbarClick(true);
     setCustomerList(response.customerList);
     setpLoading(false);
     setSavebtn(true);
@@ -237,10 +234,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   };
 
 
-// const handleInputChange = event => {
-//   const { name, value } = event.target
-//   setDataCustomerList({ ...customerList, [name]: value })
-// }
 
 function handleIdType(event){
   if(event.target.value===0){
@@ -249,8 +242,8 @@ function handleIdType(event){
     setOtherIdType(true)
     setOtherIdTypeValue('');
   }
-  setDataCustomerList({...customerList,  id_type: event.target.value});
-  }
+  setInput('id_type',event.target.value);      
+}
   
   function handleDate(date){
     let date1 = new Date(date);
@@ -280,6 +273,7 @@ function handleIdType(event){
     editCustomer,
     validate
   ); 
+
   useEffect(() => {
     setInputsAll(inputValues);
   }, []);
@@ -552,7 +546,7 @@ function handleIdType(event){
                               />
                             </MuiPickersUtilsProvider>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={inputs.id_type == 2 ? 3 : 6}>
                     <InputLabel className={classes.textsize}  htmlFor="id_type">ID Proof</InputLabel>
                     <Select
                         margin="dense"
@@ -581,6 +575,31 @@ function handleIdType(event){
                           >    
                     </Select>
                     </Grid>
+
+                    {inputs.id_type == 2 &&
+                    <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">Version#</InputLabel>                    
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="dl_version_number"
+                      name="dl_version_number"
+                      // label="Enter type of ID Proof"
+                      type="text"
+                      value={inputs.dl_version_number} 
+                      onChange={handleNumberInput}
+                      required
+                      disabled = {inputs.id_type != 2}
+                      error={errors.dl_version_number}
+                      helperText={errors.dl_version_number}
+                      fullWidth
+                    />
+                    </Grid>
+                    }
                    
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="last_name">ID#</InputLabel>
@@ -624,43 +643,9 @@ function handleIdType(event){
                                 helperText={errors.expiry_date}                               
                               />
                             </MuiPickersUtilsProvider>
-                    {/* <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="expiry_date"
-                      name="expiry_date"
-                      label=""
-                      type="date"
-                      value={inputs.expiry_date} 
-                      onChange={handleInputChange}
-                      error={errors.expiry_date}
-                      helperText={errors.expiry_date}
-                      required
-                      fullWidth
-                    /> */}
+                    
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}>
-                    <InputLabel className={errors.is_adult? classes.errorHeading : classes.textsize}  htmlFor="is_adult">Over 18 Years?</InputLabel>
-                    <RadioGroup 
-                      aria-label="is_adult" 
-                      name="is_adult" 
-                      value={parseInt(inputs.is_adult)} 
-                      onChange={handleInputChange} 
-                      className={classes.group} 
-                      row
-                    >
-                      <FormControlLabel value={1} 
-            control={<Radio color="primary" />}
-                     label="Yes" labelPlacement="start" />
-                      <FormControlLabel value={0} 
-            control={<Radio color="primary" />}
-                     label="No" labelPlacement="start" />                      
-                    </RadioGroup>
-                  </Grid> */}
+                 
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField
@@ -674,13 +659,10 @@ function handleIdType(event){
                       name="id_proof"
                       label=""
                       type="file"
-                      // value={inputs.id_proof} 
                       onChange={handleInputChange}
-                      // required
                       fullWidth
                     />
                   </Grid>
-                  {console.log(customerList)}
                   <Grid item xs={12} sm={6}>
                   <InputLabel className={classes.textsize} htmlFor="id_proof">Last Uploaded Document :   </InputLabel>
                     <a href={API_URL + "/api/download?path=customer/" + inputs.id_proof }  download >{inputs.id_proof}</a>
@@ -922,7 +904,7 @@ function handleIdType(event){
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="user_id">Employer Name</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Employer Name *" : "Beneficiary Name *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -943,7 +925,7 @@ function handleIdType(event){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="user_id">Employer Address</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Employer Address *" : "Beneficiary Address *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -964,7 +946,7 @@ function handleIdType(event){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="user_id">Employer Telephone#</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Employer Telephone# *" : "Beneficiary Telephone# *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1010,7 +992,7 @@ function handleIdType(event){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="user_id">Tenure of Employer</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Tenure of Employer(in Years) *" : "Tenure with Beneficiary(in Years) *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {

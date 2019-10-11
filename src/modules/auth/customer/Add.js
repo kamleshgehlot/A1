@@ -307,6 +307,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       expiry_date :  inputs.expiry_date,
       is_adult : inputs.is_adult,
       id_proof :  inputs.id_proof,
+      dl_version_number : inputs.dl_version_number,
 
       alt_c1_name: inputs.alt_c1_name,
       alt_c1_address: inputs.alt_c1_address,
@@ -629,21 +630,45 @@ return (
                          label="Select Id Proof"
                          required
                       >
-                        {
-                          
+                        {                          
                           ( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
                             return(
                                 <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>    
                             )
                           })
                         }
-
                           <MenuItem className={classes.textsize} value={0}>{'Other'}</MenuItem>    
                     </Select>
                     </Grid>
                     <Grid item xs={12} sm={3}>
+                    
+                    {inputs.id_type == 2 &&
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">Version#</InputLabel>}
+                    {inputs.id_type == 2 &&
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="dl_version_number"
+                      name="dl_version_number"
+                      // label="Enter type of ID Proof"
+                      type="text"
+                      value={inputs.dl_version_number} 
+                      onChange={handleNumberInput}
+                      required
+                      disabled = {inputs.id_type != 2}
+                      error={errors.dl_version_number}
+                      helperText={errors.dl_version_number}
+                      fullWidth
+                    />
+                    }
+
+
                     {!otherIdType &&
-                    <InputLabel  className={classes.textsize} htmlFor="id_type">Type of ID</InputLabel>}
+                    <InputLabel  className={classes.textsize} htmlFor="other_id_type">Type of ID</InputLabel>}
                     {!otherIdType &&
                     <TextField
                       InputProps={{
@@ -708,52 +733,8 @@ return (
                         error={errors.expiry_date}
                         helperText={errors.expiry_date}                               
                       />
-                    </MuiPickersUtilsProvider>
-                    {/* <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="expiry_date"
-                      name="expiry_date"
-                      label=""
-                      type="date"
-                      value={inputs.expiry_date} 
-                      onChange={handleInputChange}
-                      // required
-                      fullWidth
-                      error={errors.expiry_date}
-                      helperText={errors.expiry_date}
-                    /> */}
+                    </MuiPickersUtilsProvider>                    
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}>
-                    <InputLabel  className={errors.is_adult? classes.errorHeading : classes.textsize} htmlFor="is_adult">Over 18 Years?</InputLabel>
-                    <RadioGroup 
-                      aria-label="is_adult" 
-                      name="is_adult" 
-                      className={classes.group}
-                      value={parseInt(inputs.is_adult)} 
-                      onChange={handleInputChange}
-                      row
-                    >
-                      <FormControlLabel
-                        value={1}
-                         control={<Radio color="primary" />}
-                        label="Yes"
-                        labelPlacement="start"
-                        className={classes.textsize}
-                      />
-                      <FormControlLabel
-                        value={0}
-                         control={<Radio color="primary" />}
-                        label="No"
-                        labelPlacement="start"
-                        className={classes.textsize}
-                      />
-                    </RadioGroup>
-                  </Grid> */}
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
                     <TextField
@@ -991,7 +972,7 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Name *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Employer Name *" : "Beneficiary Name *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1012,7 +993,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Address *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Employer Address *" : "Beneficiary Address *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1033,7 +1014,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Employer Telephone# *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Employer Telephone# *" : "Beneficiary Telephone# *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1079,7 +1060,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Tenure of Employer(in Years) *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Tenure of Employer(in Years) *" : "Tenure with Beneficiary(in Years) *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {

@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var Order = function (params) {
-  console.log("params", params);
+  // console.log("params", params);
   this.id = params.id;
   this.user_id = params.user_id;
   this.userid = params.userid;
@@ -50,6 +50,7 @@ var Order = function (params) {
   this.refund = params.refund;
   this.cancel_by = params.cancel_by;
   this.cancel_reason = params.cancel_reason;
+  this.cancellation_charge = params.cancellation_charge;
       
 };
 
@@ -423,7 +424,7 @@ Order.prototype.submitCancel = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('UPDATE orders SET order_status = "'+that.cancel_by+'", is_active = 0, refund_amt = "'+that.refund+'", cancel_reason = "'+that.cancel_reason+'" where id = "'+that.id+'"',function (error, rows, fields) {
+        connection.query('UPDATE orders SET order_status = "'+that.cancel_by+'", is_active = 0, refund_amt = "'+that.refund+'", cancel_reason = "'+that.cancel_reason+'", cancellation_charge = "'+that.cancellation_charge+'" where id = "'+that.id+'"',function (error, rows, fields) {
             if (!error) {
               connection.query('UPDATE budget SET is_active = 0 where id = "'+that.budget_id+'"',function (error, rows, fields) {
                 if (!error) {
