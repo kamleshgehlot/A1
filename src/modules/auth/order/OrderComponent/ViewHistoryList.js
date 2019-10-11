@@ -34,6 +34,7 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import { API_URL, APP_TOKEN } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
+import { compareAsc } from 'date-fns';
 
 
 const drawerWidth = 240;
@@ -139,14 +140,14 @@ const StyledTableCell = withStyles(theme => ({
 
 export default function ViewHistoryList({historyList, roleName}) {
   const classes = useStyles();
-  // const userId = APP_TOKEN.get().userId;
   console.log('hislist',historyList)
 
   return (  
     <List className={classes.root}>
-    {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {
+    {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {      
       return(
         <div>          
+          {console.log('rows1',data)}
           <ListItem alignItems="flex-start">
             <ListItemIcon>
               <PlayArrowIcon />
@@ -172,34 +173,52 @@ export default function ViewHistoryList({historyList, roleName}) {
                   </Typography>                 
                 </React.Fragment>
               }
-              // secondary={
-              //   <React.Fragment>
-              //     <Typography
-              //       component="header"
-              //       variant="body2"
-              //       className={classes.inline}
-              //       color="textPrimary"
-              //     >
-              //      {data.message_id != 0 ? 
-              //         'Message:  ' + data.message + '   \n'
-              //       :''}
-              //     </Typography>
-              //     <Typography
-              //       component="footer"
-              //       variant="body2"
-              //       className={classes.inline}
-              //       color="textPrimary"
-              //     >
-              //       {data.document_id != 0 ? 
-              //       <a href={API_URL + "/api/download?path=taskFile/" + data.document } download >{data.document}</a>                          
-              //         // 'Document :' + data.document 
-              //       :''}
-              //     </Typography>
-              //   </React.Fragment>
-              // }
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    component="header"
+                    variant="body2"
+                    className={classes.inline}
+                    color="textPrimary"
+                  >
+                    { historyList.length !== (index + 1) &&                        
+                      (historyList.length > 0 && historyList != "" ? [historyList[index+1]] : []).map((innerData, innerIndex) => {
+                        return(
+                          <p>{
+                            "Modification in Income: " +
+                            (data.benefits !== innerData.benefits ? "benefits: $" + innerData.benefits + " => $" + data.benefits +", ": '') +
+                            (data.work !== innerData.work ? " work: $" + innerData.work + " => $" + data.work +", ": '') +
+                            (data.accomodation !== innerData.accomodation ? "accomodation: $" + innerData.accomodation + " => $" + data.accomodation +", ": '') +
+                            (data.childcare !== innerData.childcare ? "childcare: $" + innerData.childcare + " => $" + data.childcare +", ": '') +
+                            (data.afford_amt !== innerData.afford_amt ? "afford_amt: $" + innerData.afford_amt + " => $" + data.afford_amt +", ": '')
+                          }</p>
+                        )                          
+                        })                                                
+                    }
+                    { historyList.length !== (index + 1) &&                        
+                      (historyList.length > 0 && historyList != "" ? [historyList[index+1]] : []).map((innerData, innerIndex) => {
+                        return(
+                          <p>{
+                            "Modification in Expenditure: " +
+                            (data.rent !== innerData.rent ? "rent: $" + innerData.rent + " => $" + data.rent +", ": '') +
+                            (data.power !== innerData.power ? " power: $" + innerData.power + " => $" + data.power +", ": '') +
+                            (data.telephone !== innerData.telephone ? "telephone: $" + innerData.telephone + " => $" + data.telephone +", ": '') +
+                            (data.mobile !== innerData.mobile ? "mobile: $" + innerData.mobile + " => $" + data.mobile +", ": '') +
+                            (data.vehicle !== innerData.vehicle ? "vehicle: $" + innerData.vehicle + " => $" + data.vehicle +", ": '') +
+                            (data.transport !== innerData.transport ? "transport: $" + innerData.transport + " => $" + data.transport +", ": '') +
+                            (data.food !== innerData.food ? "food: $" + innerData.food + " => $" + data.food +", ": '') +
+                            (data.credit_card !== innerData.credit_card ? "credit_card: $" + innerData.credit_card + " => $" + data.credit_card +", ": '') +
+                            (data.loan !== innerData.loan ? "loan: $" + innerData.loan + " => $" + data.loan +", ": '') +
+                            (data.other_expenditure !== innerData.other_expenditure ? "other_expenditure: $" + innerData.other_expenditure + " => $" + data.other_expenditure +", ": '')                            
+                          }</p>
+                        )                          
+                        })                                                
+                    }
+                    </Typography>
+                </React.Fragment>
+              }
             />
           </ListItem>     
-          {/* } */}
         <Divider variant="inset" component="li" />  
       </div>           
       )
