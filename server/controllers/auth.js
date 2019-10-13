@@ -2,6 +2,8 @@ const nodemailer = require('nodemailer');
 
 const Auth = require("../models/auth.js")
 const User = require("../models/user.js")
+const Customer = require("../models/franchise/customer.js")
+
 const jwt = require('jsonwebtoken');
 const { trans } = require("../lib/mailtransporter");
 const { domainName } = require("../lib/databaseMySQLNew");
@@ -92,35 +94,57 @@ const login = async function (req, res, next) {
   }
 };
 
-const verifyEmail = async function (req, res) {
-  let accountId = req.query.accountId;
-  let token = req.query.token;
-  let name = req.query.name;
-  let result = {};
-  let status = 201;
-  let params = {
-    accountId: req.query.accountId,
-    token: 1,
-    name: name
-  };
+const verifyEmail = async function (req, res, next) {
+  let params = {};
+  let isCustomer = req.query.customer
 
-  const auth = new Auth(params);
-
+  console.log(".....Customer query...", req.query);
   try {
-    const user = await auth.verifyEmail(accountId);
-    console.log('............. user .........', user);
-    let userToken = user[0].token
-    if (token && token.length > 10 && token === userToken) {
-      await new User({}).updateStatus(params.name);
-      // if (userSaveError) {
-      console.log("could not clear the token");
-      res.status(200).json({ message: "You account successfully verified. Now you can login into application." });
-      // } else {
-      //   console.log("token cleared")
-      //   res.status(200).json({ message: "verified" })
-      // }
+
+    if (isCustomer == "true") {
+      const customer = new Customer({});
+      const email = req.query.email;
+      const id = req.query.id;
+      const createdBy = req.query.createdBy;
+
+      const customerData = await customer.verifyEmail(email, id, createdBy);
+      console.log('............. customer .........', customerData);
+
+      if (customerData && customerData.length > 0 && customerData[0].email === email) {
+        await customer.updateStatus(id, createdBy);
+        res.status(200).json({ message: "You account successfully verified." });
+      } else {
+        res.status(404).json({ message: "Invalid token" })
+      }
     } else {
-      res.status(404).json({ message: "Invalid token" })
+      let accountId = req.query.accountId;
+      let token = req.query.token;
+      let name = req.query.name;
+
+      params = {
+        accountId: accountId,
+        token: 1,
+        name: name
+      };
+
+      const auth = new Auth(params);
+
+      const user = await auth.verifyEmail(accountId);
+      console.log('............. user .........', user);
+      let userToken = user[0].token
+      if (token && token.length > 10 && token === userToken) {
+        await new User({}).updateStatus(params.name);
+        // if (userSaveError) {
+        console.log("could not clear the token");
+        res.status(200).json({ message: "You account successfully verified. Now you can login into application." });
+        // } else {
+        //   console.log("token cleared")
+        //   res.status(200).json({ message: "verified" })
+        // }
+      } else {
+        res.status(404).json({ message: "Invalid token" })
+      }
+
     }
 
     // }).catch(err => {
