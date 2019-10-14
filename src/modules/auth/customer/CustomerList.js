@@ -21,6 +21,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CreateIcon from '@material-ui/icons/Create';
 import UpdateIcon from '@material-ui/icons/Update';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -395,6 +397,7 @@ export default function CustomerList({userId, roleName}) {
                         <StyledTableCell>#</StyledTableCell>
                         <StyledTableCell>Name</StyledTableCell>
                         <StyledTableCell>Contact</StyledTableCell>
+                        <StyledTableCell>Email ID</StyledTableCell>
                         <StyledTableCell>Address</StyledTableCell>
                         <StyledTableCell>Created By</StyledTableCell>
                         {/* <StyledTableCell>State</StyledTableCell> */}
@@ -411,6 +414,7 @@ export default function CustomerList({userId, roleName}) {
                             <StyledTableCell> {data.customer_name}  </StyledTableCell>
                             {/* <StyledTableCell> {data.mobile + ', ' + data.telephone}  </StyledTableCell> */}
                             <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
+                          <StyledTableCell>{data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
                             <StyledTableCell> {data.address}  </StyledTableCell>
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                             {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
