@@ -315,7 +315,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   fullWidth
                   required
                 >
-                  <MenuItem className={classes.textsize} value={'0'}>{'All'} </MenuItem>
+                  {/* <MenuItem className={classes.textsize} value={'0'}>{'All'} </MenuItem> */}
                   { (staffListn.length > 0 ? staffListn : []).map((staff, index)=>{
                     return(
                       <MenuItem className={classes.textsize} value={staff.id}>{staff.name} </MenuItem>

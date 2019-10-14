@@ -33,11 +33,16 @@ import Add from './Add';
 import Edit from './Edit';
 import EditBudget from '../order/EditBudget';
 import CommentIcon from '@material-ui/icons/Comment';
+import TablePagination from '@material-ui/core/TablePagination';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 import Order from '../../../api/franchise/Order';
 import { fontFamily } from '@material-ui/system';
+
+import Active from './components/Active';
+import Hold from './components/Hold';
+import FinancialHardship from './components/FinancialHardship';
 
 import CommentView from './CommentView';
 import BadgeComp from '../../common/BadgeComp';
@@ -58,10 +63,17 @@ const StyledTableCell = withStyles(theme => ({
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
+  // root: {
+  //   display: 'flex',
+  //   flexGrow: 1,
+  //   backgroundColor: theme.palette.background.paper,
+  // },
   root: {
-    display: 'flex',
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    width: '100%',
+  },
+  tableWrapper: {
+    maxHeight: 440,
+    overflow: 'auto',
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -150,45 +162,67 @@ const StyledTableRow = withStyles(theme => ({
 
 
 export default function CustomerList({userId, roleName}) {
+
+  const classes = useStyles();
+
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [idTypeList, setIdTypeList] = useState([]);
   const [customerListData, setCustomerListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [searchText, setSearchText]  = useState('');
   const [customer, setCustomer] = useState({});
-  const [active, setActive]=  useState();
-  const [hold, setHold]=  useState();
+
+
+
   const [budgetOpen, setBudgetOpen] = useState(false);
-  const [financialHardship, setFinancialHardship]=  useState();
-  const [budgetId, setBudgetId] = useState();
   const [budgetList,setBudgetList] = useState(null);
   const [totalBudgetList,setTotalBudgetList] = useState(null);  
   const [customerId, setCustomerId] = useState();
   const [budgetHistoryOpen,setBudgetHistoryOpen] = useState(false);
   const [openCommentView, setOpenCommentView]  = useState(false);
+  const [value, setValue] = React.useState(0); 
 
-  //value is for tabs  
-  const [value, setValue] = React.useState(0);
-  
-  
-  const classes = useStyles();
+
+  const [activeTab, setActiveTab] = useState([]);
+  const [holdTab, setHoldTab] = useState([]);
+  const [financialHardshipTab, setFinancialHardshipTab] = useState([]);
+
+
+
+  useEffect(() => {   
+    fetchCustomerList();    
+  }, []);
+
+
+  const fetchCustomerList = async () => {
+    setIsError(false);
+    setIsLoading(true);
+    try {
+      const result = await Customer.list();
+      setCustomerListData(result.customerList);
+      handleTabsData(result.customerList);
+    } catch (error) {
+      setIsError(true);
+    }
+    setIsLoading(false);
+  };
 
   function handleClickOpen() {
     setOpen(true);
   }
+
   function handleClose() {
     setOpen(false);
   }
+
   function handleClickEditOpen(data) {
     setCustomerData(data),
     setEditOpen(true);
   }
 
-  
   const handleHistoryOpen = async (data) => {
     setCustomerId(data.id);
     setBudgetHistoryOpen(true);    
@@ -201,11 +235,14 @@ export default function CustomerList({userId, roleName}) {
   
   const handleOpenEditBudget = async (data) =>{      
     const budget = await Order.getExistingBudget({customer_id: data.id});
-    // console.log('budget..',budget);    
     setBudgetList(budget[0]);    
     setTotalBudgetList(budget);
     setCustomerId(data.id);
     setBudgetOpen(true);
+  }
+
+  const handleBudgetClose = async () => {
+    setBudgetOpen(false);
   }
 
   const handleClickCommentOpen = (data) => {
@@ -217,16 +254,8 @@ export default function CustomerList({userId, roleName}) {
     setOpenCommentView(false);
   }
 
-
-  const handleBudgetClose = async () => {
-    // if(budgetList != "" || budgetList != null || budgetList != undefined){
-    //    await Order.updateBudget({budgetList: budgetList, customer_id: customerId});
-    // }
-    setBudgetOpen(false);
-  }
-  
   function handleEditClose() {
-    handleBadge(customerListData);
+    handleTabsData(customerListData);
     setEditOpen(false);
   }
  
@@ -244,41 +273,27 @@ export default function CustomerList({userId, roleName}) {
   }
 
   function handleCustomerList(response){
-    // console.log("response---", response);
     setCustomerListData(response);
-    handleBadge(response);
+    handleTabsData(response);    
   }
 
   function handleSearchText(event){
     setSearchText(event.target.value);
   }
-  // console.log("search text", searchText);
-  function handleBadge(customerList){
-    let active = 0;
-    let hold = 0;
-    let financialHardship = 0;
 
-    (customerList).map(data =>{
-      data.state==1 ? active += 1 : '';
-      data.state==2 ? hold += 1: '';
-      data.state==3 ? financialHardship += 1: '';
-    })   
-    setActive(active)
-    setHold(hold);
-    setFinancialHardship(financialHardship);
-  }
 
   const searchHandler = async () => {
     try {
     if(searchText!=''){
         const result = await Customer.search({searchText: searchText});
-        // console.log(result.customerList);
         setCustomerListData(result.customerList);
+        handleTabsData(result.customerList);    
         setSearchText('');
      
     }else{
       const result = await Customer.list();
       setCustomerListData(result.customerList);
+      handleTabsData(result.customerList);    
       setSearchText('');
     }} catch (error) {
       console.log('error',error);
@@ -286,32 +301,40 @@ export default function CustomerList({userId, roleName}) {
   }
 
   
+
+
   
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await Customer.list();
-        setCustomerListData(result.customerList);
-        handleBadge(result.customerList);
-        
-      } catch (error) {
-        setIsError(true);
+  function handleTabsData(customerList){  
+    let activeList = [];
+    let holdList = [];
+    let financialHardshipList = [];
+
+    (customerList.length > 0 ? customerList : []).map((data, index) => {        
+      if(data.state == 1 ){
+        activeList.push(data);
       }
-      setIsLoading(false);
-    };
-    fetchData();
+      if(data.state == 2 ){
+        holdList.push(data);
+      }
+      if(data.state == 3 ){
+        financialHardshipList.push(data);
+      }
+    });
     
-  }, []);
-
-
+    setActiveTab(activeList);
+    setHoldTab(holdList);
+    setFinancialHardshipTab(financialHardshipList);
+  }
   
+
+
+
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
   };
+
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -329,13 +352,13 @@ export default function CustomerList({userId, roleName}) {
     );
   }
   function handleTabChange(event, newValue) {
-    setValue(newValue);
-    // console.log('setValue...',value)
+    setValue(newValue);    
   }
+
+
+
   return (
-    <div>
-      
-      {/* {showFranchise ?  */}
+    <div>     
       <Grid container spacing={3}>
           <Grid item xs={12} sm={8}>
             <Fab
@@ -377,80 +400,31 @@ export default function CustomerList({userId, roleName}) {
               />              
           </Grid>
           <Grid item xs={12} sm={12}>
-            <Paper style={{ width: '100%' }}> 
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                 
-                 {/* {
-                   (customerListData.length>0 ? customerListData : []).map(data=>{
-                   data.state === 1 ? a++ : data.state === 2 ? b++ : data.state===3 ? c++ :'';
-                 })} */}
-                  <Tab label={<BadgeComp count={active} label="Active" />} /> 
-                  <Tab label={<BadgeComp count={hold} label="Hold" />} /> 
-                  <Tab label={<BadgeComp count={financialHardship} label="Financial Hardship" />} /> 
+                  <Tab label={<BadgeComp count={activeTab.length} label="Active" />} /> 
+                  <Tab label={<BadgeComp count={holdTab.length} label="Hold" />} /> 
+                  <Tab label={<BadgeComp count={financialHardshipTab.length} label="Financial Hardship" />} /> 
                 </Tabs>
               </AppBar>
-              <TabPanel value={value} index={value}>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Name</StyledTableCell>
-                        <StyledTableCell>Contact</StyledTableCell>
-                        <StyledTableCell>Email ID</StyledTableCell>
-                        <StyledTableCell>Address</StyledTableCell>
-                        <StyledTableCell>Created By</StyledTableCell>
-                        {/* <StyledTableCell>State</StyledTableCell> */}
-                        <StyledTableCell>Options</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      
-                        {(customerListData.length > 0 ? customerListData : []).map((data,index) =>{
-                          
-                          return(
-                           data.state===value+1? <TableRow key={data.id} >
-                            <StyledTableCell> {index + 1}  </StyledTableCell>
-                            <StyledTableCell> {data.customer_name}  </StyledTableCell>
-                            {/* <StyledTableCell> {data.mobile + ', ' + data.telephone}  </StyledTableCell> */}
-                            <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
-                          <StyledTableCell>{data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
-                            <StyledTableCell> {data.address}  </StyledTableCell>
-                            <StyledTableCell> {data.created_by_name}  </StyledTableCell>
-                            {/* <StyledTableCell> {data.state===1 ? 'Active' : data.state===2 ? 'Hold' : data.state===3 ? 'Completed':''  }  </StyledTableCell> */}
-                            <StyledTableCell>                              
-                              <Tooltip title="Update">                              
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
-                                <CreateIcon/>
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Update Budget">                              
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
-                                <AccountBalanceIcon/>
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="View">
-                                <IconButton  size="small" className={classes.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickCommentOpen(data); }} >
-                                  <CommentIcon />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="View Budget History">                              
-                                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
-                                  <UpdateIcon />
-                                </IconButton>
-                              </Tooltip>
-                              {/* <Button variant="contained" color="primary" value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}> Edit </Button> */}
-                            </StyledTableCell>
-                            </TableRow>:''
-                          )
-                        })
-                        }
-                      </TableBody>
-                    </Table>
-                  </TabPanel>
-               </Paper>
+              
+            <Paper className={classes.root}>
+              <div className={classes.tableWrapper}>
+                <TabPanel value={value} index={0}>
+                  {activeTab && <Active customerList={activeTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} /> }
+                </TabPanel>              
+
+                <TabPanel value={value} index={1}>
+                  {holdTab && <Hold customerList={holdTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} /> }
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  {financialHardshipTab && <FinancialHardship customerList={financialHardshipTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen}  /> } 
+                </TabPanel>
+              </div>
+            </Paper>                            
           </Grid>
-        </Grid>
+        </Grid>  
+
       {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} /> : null }
