@@ -8,9 +8,9 @@ const Report = function (params) {
   this.order_id = params.order_id;
   this.from_date = params.from_date;
   this.to_date = params.to_date;
+  this.today_date = params.today_date;
   this.user_id = params.user_id;
   this.required_type = params.required_type;
-
 };
 
 Report.prototype.getFinanceReport = function () {
@@ -106,4 +106,55 @@ Report.prototype.getDeliveryReport = function () {
 
 
 
+Report.prototype.getTaskReport = function () {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+        
+          connection.query('select t.id, t.task_id, ta.id as activity_id, t.task_description, t.is_active, t.created_by as task_created_by, t.creator_role, DATE_FORMAT(t.created_at, \'%W %d %M %Y %H:%i:%s\')  task_created_at, ta.assign_to, ta.assign_to_role as assign_to_role_id, ta.description as activity_description, ta.activity_status,  DATE_FORMAT(ta.due_date,\'%Y-%m-%d\') due_date, DATE_FORMAT(ta.start_date,\'%Y-%m-%d\') start_date, DATE_FORMAT(ta.completed_date,\'%Y-%m-%d\') completed_date, DATE_FORMAT(ta.reschedule_req_date,\'%Y-%m-%d\') reschedule_req_date, DATE_FORMAT(ta.last_due_date,\'%Y-%m-%d\') last_due_date, ta.message_id, ta.document_id, ta.status, ta.created_by as activity_created_by, DATE_FORMAT(ta.created_at, \'%W %d %M %Y %H:%i:%s\') activity_created_at, u.name as task_created_by_name, ua.name as assign_to_name, case r.name when "Admin" then "Director" else r.name END as assign_to_role_name, ts.status as task_status_name,  m.message from task as t INNER JOIN task_activity ta on t.id = ta.task_id INNER JOIN user as u on t.created_by = u.id INNER JOIN role as r on ta.assign_to_role = r.id INNER JOIN user as ua on ta.assign_to = ua.id INNER JOIN task_status as ts on ta.status = ts.id LEFT JOIN task_message as m on ta.message_id = m.id WHERE ta.is_active = 1  AND  DATE_FORMAT(ta.due_date, \'%Y-%m-%d\') BETWEEN  DATE_FORMAT("'+that.from_date+'",\'%Y-%m-%d\') AND DATE_FORMAT("'+that.to_date+'" ,\'%Y-%m-%d\')  AND ta.status NOT IN (6,7) ORDER BY t.id desc', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
+
+
+Report.prototype.getDueTaskReport = function () {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+        
+          connection.query('select t.id, t.task_id, ta.id as activity_id, t.task_description, t.is_active, t.created_by as task_created_by, t.creator_role, DATE_FORMAT(t.created_at, \'%W %d %M %Y %H:%i:%s\')  task_created_at, ta.assign_to, ta.assign_to_role as assign_to_role_id, ta.description as activity_description, ta.activity_status,  DATE_FORMAT(ta.due_date,\'%Y-%m-%d\') due_date, DATE_FORMAT(ta.start_date,\'%Y-%m-%d\') start_date, DATE_FORMAT(ta.completed_date,\'%Y-%m-%d\') completed_date, DATE_FORMAT(ta.reschedule_req_date,\'%Y-%m-%d\') reschedule_req_date, DATE_FORMAT(ta.last_due_date,\'%Y-%m-%d\') last_due_date, ta.message_id, ta.document_id, ta.status, ta.created_by as activity_created_by, DATE_FORMAT(ta.created_at, \'%W %d %M %Y %H:%i:%s\') activity_created_at, u.name as task_created_by_name, ua.name as assign_to_name, case r.name when "Admin" then "Director" else r.name END as assign_to_role_name, ts.status as task_status_name,  m.message from task as t INNER JOIN task_activity ta on t.id = ta.task_id INNER JOIN user as u on t.created_by = u.id INNER JOIN role as r on ta.assign_to_role = r.id INNER JOIN user as ua on ta.assign_to = ua.id INNER JOIN task_status as ts on ta.status = ts.id LEFT JOIN task_message as m on ta.message_id = m.id WHERE ta.is_active = 1  AND  (DATE_FORMAT(ta.due_date, \'%Y-%m-%d\') <  DATE_FORMAT("'+that.today_date+'",\'%Y-%m-%d\'))  AND ta.status NOT IN (6,7) ORDER BY t.id desc', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
 module.exports = Report;

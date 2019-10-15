@@ -124,7 +124,7 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function MainDashboard({roleName}) {
+export default function FinanceReport({roleName}) {
  const classes = useStyles();
 
   const [isLoading, setIsLoading] = useState(false);

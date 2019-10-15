@@ -67,10 +67,51 @@ const getDeliveryReport = async function(req, res, next) {
 };
 
 
+const getTaskReport = async function(req, res, next) {
+  const ReportParams = {
+    to_date : req.body.to_date,
+    from_date : req.body.from_date,
+    user_id: req.decoded.user_id,
+  };
+  // console.log('repost', req.body);
+  
+  try {
+    const newReport = new Report(ReportParams);
+    
+    const result = await newReport.getTaskReport();      
+    res.send(result);
+    // console.log('custom',result);
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const getDueTaskReport = async function(req, res, next) {
+  const ReportParams = {
+    today_date : req.body.today_date,
+    user_id: req.decoded.user_id,
+  };
+  // console.log('repost', req.body);
+  
+  try {
+    const newReport = new Report(ReportParams);
+    
+    const result = await newReport.getDueTaskReport();      
+    res.send(result);
+    // console.log('custom',result);
+
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   financeOrderReport,
   getOrderReport,
   getDeliveryReport,
+  getTaskReport,
+  getDueTaskReport,
   // getUpcomingDelivery,
   // getCompletedDelivery,
 };
