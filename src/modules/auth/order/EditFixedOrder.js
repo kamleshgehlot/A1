@@ -47,8 +47,7 @@ import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 import validate from '../../common/validation/FixedOrderValidation';
 
-const RESET_VALUES = {
-  
+const RESET_VALUES = {  
 };
 
 const useStyles = makeStyles(theme => ({
@@ -128,37 +127,6 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   const [firstPaymentDate,setFirstPaymentDate] = useState(fixedOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
   const [fixedNull,setFixedNull] = useState(true);
-
-  // function handleInputBlur(e){
-  //   if(e.target.value===''){
-  //     setInputs({
-  //       ...inputs,
-  //       [e.target.name]: 0,
-  //     });
-  //   }
-  // }
-
-  // function handleInputFocus(e){
-  //   if(e.target.value==='0'){
-  //     setInputs({
-  //       ...inputs,
-  //       [e.target.name]: '',
-  //     });
-  //   }
-  // }
-
-
-  // const setDateFormat = (date) => {
-  //   let date1 = new Date(date);
-  //   let yy = date1.getFullYear();
-  //   let mm = date1.getMonth() + 1 ;
-  //   let dd = date1.getDate();
-  //   if(mm< 10){ mm = '0' + mm.toString()}
-  //   if(dd< 10){ dd = '0' + dd.toString()}
-  //   let fullDate = yy+ '-'+mm+'-'+dd;
-  //   return fullDate;
-  // }
-
   
   function fixed(e){
     
@@ -167,6 +135,7 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
       cash_price : parseFloat(inputs.cash_price).toFixed(2),
       delivery_fee : parseFloat(inputs.delivery_fee).toFixed(2),
       ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
+      discount : parseFloat(inputs.discount).toFixed(2),
       frequency : inputs.frequency,
       first_payment : inputs.first_payment,
       last_payment : inputs.last_payment,
@@ -417,6 +386,16 @@ function calculateNoOfPayment(value) {
   }, []);
 
   
+  // useEffect(() => {
+  //   let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.discount) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );    
+  //   handleRandomInput([
+  //     {name: 'int_unpaid_bal', value:  unpaidBal.toFixed(2)},
+  //   ]);
+  // },[inputs.ppsr_fee, inputs.discount,inputs.delivery_fee, inputs.cash_price]);
+  
+  console.log('fixd ordr',fixedOrderList);
+  console.log('inputs',inputs);
+  
 
 return (
     <div>
@@ -439,18 +418,18 @@ return (
                 Credit Details
               </Typography>
               </Grid>
-                  <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6}>
                     {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
-                      id="int_unpaid_bal"
-                      name="int_unpaid_bal"
-                      label="Intial Unpaid Balance"
-                      value={inputs.int_unpaid_bal}
+                      id="ppsr_fee"
+                      name="ppsr_fee"
+                      label="PPSR Fee"
+                      value={inputs.ppsr_fee}
                       onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
-                      error={errors.int_unpaid_bal}
-                      helperText={errors.int_unpaid_bal}
+                      error={errors.ppsr_fee}
+                      helperText={errors.ppsr_fee}
                       fullWidth
                       // required
                       type="text"
@@ -463,7 +442,32 @@ return (
                         },
                       }}
                     />
-                  </Grid>
+                  </Grid>   
+                  <Grid item xs={12} sm={6}>
+                    {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <TextField
+                      id="delivery_fee"
+                      name="delivery_fee"
+                      label="Delivery Fee"
+                      value={inputs.delivery_fee}
+                      onChange={handlePriceInput}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
+                      error={errors.delivery_fee}
+                      helperText={errors.delivery_fee}
+                      fullWidth
+                      // required
+                      type="text"
+                      // placeholder="Franchise Name"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}                      
+                    />
+                  </Grid>               
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
@@ -490,21 +494,21 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
-                      id="delivery_fee"
-                      name="delivery_fee"
-                      label="Delivery Fee"
-                      value={inputs.delivery_fee}
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="discount"
+                      name="discount"
+                      label="Discount"
+                      value={inputs.discount}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.delivery_fee}
-                      helperText={errors.delivery_fee}
+                      error={errors.discount}
+                      helperText={errors.discount}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -512,21 +516,20 @@ return (
                           input: classes.textsize,
                         },
                       }}
-                      
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
+                  </Grid>                  
+                  <Grid item xs={12} sm={12}>
                     {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
-                      id="ppsr_fee"
-                      name="ppsr_fee"
-                      label="PPSR Fee"
-                      value={inputs.ppsr_fee}
+                      id="int_unpaid_bal"
+                      name="int_unpaid_bal"
+                      label="Intial Unpaid Balance"
+                      value={inputs.int_unpaid_bal}
                       onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
-                      error={errors.ppsr_fee}
-                      helperText={errors.ppsr_fee}
+                      error={errors.int_unpaid_bal}
+                      helperText={errors.int_unpaid_bal}
                       fullWidth
                       // required
                       type="text"

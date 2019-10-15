@@ -54,10 +54,11 @@ const RESET_VALUES = {
   last_payment : '',
   exp_delivery_time : '',
 
-  int_unpaid_bal : '',
-  cash_price  : '',
-  delivery_fee : '',
-  ppsr_fee : '',
+  int_unpaid_bal : 0,
+  discount : 0,
+  cash_price  : 0,
+  delivery_fee : 0,
+  ppsr_fee : 0,
   frequency  : '',
   duration : '',
   no_of_payment : '',
@@ -157,6 +158,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       cash_price : parseFloat(inputs.cash_price).toFixed(2),
       delivery_fee : parseFloat(inputs.delivery_fee).toFixed(2),
       ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
+      discount : parseFloat(inputs.discount).toFixed(2),
       frequency : inputs.frequency,
       duration: inputs.duration,
       first_payment : inputs.first_payment,
@@ -404,6 +406,16 @@ function calculateNoOfPayment(value) {
     fixed,
     validate
   );
+
+  
+  useEffect(() => {
+    let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.discount) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );
+    
+    handleRandomInput([      
+      {name: 'int_unpaid_bal', value:  unpaidBal.toFixed(2)},
+    ]);
+  },[inputs.ppsr_fee, inputs.discount,inputs.delivery_fee, inputs.cash_price]);
+  
     
 
 return (
@@ -427,8 +439,110 @@ return (
                 Credit Details
               </Typography>
               </Grid>
+              <Grid item xs={12} sm={6}>
+                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="ppsr_fee"
+                      name="ppsr_fee"
+                      label="PPSR Fee"
+                      value={inputs.ppsr_fee}
+                      onChange={handlePriceInput}
+                      error={errors.ppsr_fee}
+                      helperText={errors.ppsr_fee}
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="delivery_fee"
+                      name="delivery_fee"
+                      label="Delivery Fee"
+                      value={inputs.delivery_fee}
+                      onChange={handlePriceInput}                      
+                      error={errors.delivery_fee}
+                      helperText={errors.delivery_fee}
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      
+                    />
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="cash_price"
+                      name="cash_price"
+                      label="Cash Price"
+                      value={inputs.cash_price}
+                      onChange={handlePriceInput}
+                      error={errors.cash_price}
+                      helperText={errors.cash_price}
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="discount"
+                      name="discount"
+                      label="Discount"
+                      value={inputs.discount}
+                      onChange={handlePriceInput}
+                      error={errors.discount}
+                      helperText={errors.discount}
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
                     <TextField
                      
                       id="int_unpaid_bal"
@@ -453,98 +567,7 @@ return (
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="cash_price"
-                      name="cash_price"
-                      label="Cash Price"
-                      value={inputs.cash_price}
-                      onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.cash_price}
-                      helperText={errors.cash_price}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="delivery_fee"
-                      name="delivery_fee"
-                      label="Delivery Fee"
-                      value={inputs.delivery_fee}
-                      onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.delivery_fee}
-                      helperText={errors.delivery_fee}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      
-                    />
-                  </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="ppsr_fee"
-                      name="ppsr_fee"
-                      label="PPSR Fee"
-                      value={inputs.ppsr_fee}
-                      onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.ppsr_fee}
-                      helperText={errors.ppsr_fee}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                  </Grid>
+                 
 
                   <Grid item xs={12} sm={12}>
               <Typography variant="h6" className={classes.labelTitle}>

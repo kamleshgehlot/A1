@@ -64,9 +64,10 @@ export default function validate(values) {
     }
   }
   if(values.id_type==2){
-    // errors.id_type =''
     if (!values.dl_version_number) {
       errors.dl_version_number = 'Version number is required';
+    }else if( (values.dl_version_number).length <3 ){
+      errors.dl_version_number = 'Version number is invalid';
     }
   }
   if (!values.id_number) {
@@ -137,24 +138,23 @@ export default function validate(values) {
   }
 
   
-  if (!values.employer_address) {
-    errors.employer_address = 'Address is required';
+  // if (!values.employer_address) {
+  //   errors.employer_address = 'Address is required';
+  // } 
+  
+  if (values.employer_telephone) {
+    if (!validNumber.test(values.employer_telephone)) {
+      errors.employer_telephone = 'Telephone number is invalid';
+    } else if ((values.employer_telephone).length<9) {
+      errors.employer_telephone = 'Telephone number is invalid';
+    }  
   } 
   
-  if (!values.employer_telephone) {
-    errors.employer_telephone = 'Telephone number is required';
-  } else if (!validNumber.test(values.employer_telephone)) {
-    errors.employer_telephone = 'Telephone number is invalid';
-  } else if ((values.employer_telephone).length<9) {
-    errors.employer_telephone = 'Telephone number is invalid';
-  }
-
-  
-  if (!values.employer_email) {
-    errors.employer_email = 'Email is required';
-  } else if (!validEmail.test(values.employer_email)) {
-    errors.employer_email = 'Email is invalid';
-  }
+  if (values.employer_email) {
+    if (!validEmail.test(values.employer_email)) {
+      errors.employer_email = 'Email is invalid';
+    }
+  } 
  
   if (!values.employer_tenure) {
     errors.employer_tenure = 'Tenure of Employer is required';

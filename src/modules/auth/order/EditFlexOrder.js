@@ -215,9 +215,9 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       frequency : parseFloat(inputs.frequency).toFixed(2),
       first_payment : inputs.first_payment,
       duration: inputs.duration,
-      no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
+      // no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
       each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
-      total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
+      // total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
       exp_delivery_date : inputs.exp_delivery_date,
       exp_delivery_time : inputs.exp_delivery_time,
@@ -247,14 +247,14 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   function calculateNoOfPayment(value) {
     const validNumber = /^[0-9]*$/;
     if (value === '' || validNumber.test(value)) {
-      let temp = paymentBeforeDelivery;
+      // let temp = paymentBeforeDelivery;
       setPaymentBeforeDelivery(value);
       setInput( 'before_delivery_amt' , value);
-      if(Number(value) > Number(inputs.no_of_payment)){
-        alert('Number of payment before delivery should be less then or equal to total number of payment.');
-        setPaymentBeforeDelivery(temp);
-        setInput( 'before_delivery_amt' , temp);
-      }
+      // if(Number(value) > Number(inputs.no_of_payment)){
+      //   alert('Number of payment before delivery should be less then or equal to total number of payment.');
+      //   setPaymentBeforeDelivery(temp);
+      //   setInput( 'before_delivery_amt' , temp);
+      // }
     }
   }
   
@@ -353,11 +353,13 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       handleRandomInput([
         // {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
         {name: 'exp_delivery_date', value: delivery_date },
+        {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
       ]);
       setFlexNull(false);
     }else{
       handleRandomInput([
         // {name: 'minimum_payment_amt', value: ''},
+        {name: 'bond_amt', value: ''},
         {name: 'exp_delivery_date', value: ''},
       ]);
     }
@@ -371,35 +373,35 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
           let installment = (parseFloat(product.rental) * 4);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment},
-            {name: 'no_of_payment', value: duration},
-            {name: 'total_payment_amt', value: (installment * duration)},
+            // {name: 'no_of_payment', value: duration},
+            // {name: 'total_payment_amt', value: (installment * duration)},
           ]);
           // setInputsAll(val);
         }else if(frequency == 2){ 
           let installment = (parseFloat(product.rental) * 2);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment},
-            {name: 'no_of_payment', value: (duration * 2)},
-            {name: 'total_payment_amt', value: (installment * (duration * 2))},
+            // {name: 'no_of_payment', value: (duration * 2)},
+            // {name: 'total_payment_amt', value: (installment * (duration * 2))},
           ]);
         }else if(frequency == 4){ 
           let installment = (parseFloat(product.rental));
           handleRandomInput([
             {name: 'each_payment_amt', value: installment},
-            {name: 'no_of_payment', value: (duration * 4)},
-            {name: 'total_payment_amt', value: (installment * (duration * 4))},
+            // {name: 'no_of_payment', value: (duration * 4)},
+            // {name: 'total_payment_amt', value: (installment * (duration * 4))},
           ]);        
         }
       }      
-      if(Number(paymentBeforeDelivery) > Number(inputs.no_of_payment)){
-        setPaymentBeforeDelivery('');
-        handleRandomInput([
-          // {name: 'minimum_payment_amt', value: ''},
-          {name: 'before_delivery_amt', value: ''},   
-          {name: 'exp_delivery_date', value: ''},     
-        ]);
-        alert('Number of payment before delivery should be less then or equal to total number of payment.');
-      }
+      // if(Number(paymentBeforeDelivery) > Number(inputs.no_of_payment)){
+      //   setPaymentBeforeDelivery('');
+      //   handleRandomInput([
+      //     // {name: 'minimum_payment_amt', value: ''},
+      //     {name: 'before_delivery_amt', value: ''},   
+      //     {name: 'exp_delivery_date', value: ''},     
+      //   ]);
+      //   alert('Number of payment before delivery should be less then or equal to total number of payment.');
+      // }
   },[duration,frequency]);
 
 
@@ -617,7 +619,7 @@ return (
                       />
                     </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                       Number of Payments 
                   </Typography>
@@ -646,7 +648,7 @@ return (
                       //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                       // }}
                     />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Amount of Each Payments
@@ -675,7 +677,7 @@ return (
                       }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                       Total Amount of Payments
                   </Typography>
@@ -704,7 +706,7 @@ return (
                     />
                      
                 </Grid>
-                
+                 */}
                 <Grid item xs={12} sm={8}>
                   <Typography  className={classes.subTitle}>
                       Minimun Number of Payments before delivery

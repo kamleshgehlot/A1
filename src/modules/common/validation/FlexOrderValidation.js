@@ -37,21 +37,21 @@ export default function validate(values) {
   if (values.first_payment==='0' || values.first_payment==="" || values.first_payment<0) {
     errors.first_payment = 'First Payment date is required';
   } 
-  if (values.no_of_payment==='0' || values.no_of_payment==="" || values.no_of_payment<0) {
-    errors.no_of_payment = 'Number of Payments  is required';
-  } else if (!validFullLengthDecimalNumber.test(values.no_of_payment)) {
-    errors.no_of_payment = 'Number of Payments  is invalid';
-  }
+  // if (values.no_of_payment==='0' || values.no_of_payment==="" || values.no_of_payment<0) {
+  //   errors.no_of_payment = 'Number of Payments  is required';
+  // } else if (!validFullLengthDecimalNumber.test(values.no_of_payment)) {
+  //   errors.no_of_payment = 'Number of Payments  is invalid';
+  // }
   if (values.each_payment_amt==='0' || values.each_payment_amt==="" || values.each_payment_amt<0) {
     errors.each_payment_amt = 'Amount  is required';
   } else if (!validFullLengthDecimalNumber.test(values.each_payment_amt)) {
     errors.each_payment_amt = 'Amount  is invalid';
   }
-  if (values.total_payment_amt==='0' || values.total_payment_amt==="" || values.total_payment_amt<0) {
-    errors.total_payment_amt = 'Amount  is required';
-  } else if (!validFullLengthDecimalNumber.test(values.total_payment_amt)) {
-    errors.total_payment_amt = 'Amount  is invalid';
-  }
+  // if (values.total_payment_amt==='0' || values.total_payment_amt==="" || values.total_payment_amt<0) {
+  //   errors.total_payment_amt = 'Amount  is required';
+  // } else if (!validFullLengthDecimalNumber.test(values.total_payment_amt)) {
+  //   errors.total_payment_amt = 'Amount  is invalid';
+  // }
   if (values.bond_amt==='0' || values.bond_amt==="" || values.bond_amt<0) {
     errors.bond_amt = 'Bond Amt is required';
   } else if (!validFullLengthDecimalNumber.test(values.bond_amt)) {

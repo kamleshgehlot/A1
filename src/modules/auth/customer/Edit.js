@@ -597,6 +597,9 @@ function handleIdType(event){
                       error={errors.dl_version_number}
                       helperText={errors.dl_version_number}
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value =(e.target.value).toString().slice(0,3)
+                      }}
                     />
                     </Grid>
                     }
@@ -941,7 +944,7 @@ function handleIdType(event){
                       onChange={handleInputChange}
                       error={errors.employer_address}
                       helperText={errors.employer_address}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -962,7 +965,7 @@ function handleIdType(event){
                       onChange={handleNumberInput}
                       error={errors.employer_telephone}
                       helperText={errors.employer_telephone}
-                      required
+                      // required
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                     }}
@@ -982,12 +985,12 @@ function handleIdType(event){
                       name="employer_email"
                       // label="Email"
                       type="email"
-                      disabled
+                      // disabled
                       value={inputs.employer_email} 
                       onChange={handleInputChange}
                       error={errors.employer_email}
                       helperText={errors.employer_email}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>

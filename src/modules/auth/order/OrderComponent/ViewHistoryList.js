@@ -140,7 +140,7 @@ const StyledTableCell = withStyles(theme => ({
 
 export default function ViewHistoryList({historyList, roleName}) {
   const classes = useStyles();
-  console.log('hislist',historyList)
+  // console.log('hislist',historyList)
 
   return (  
     <List className={classes.root}>
@@ -205,6 +205,7 @@ export default function ViewHistoryList({historyList, roleName}) {
                             (data.telephone !== innerData.telephone ? "telephone: $" + innerData.telephone + " => $" + data.telephone +", ": '') +
                             (data.mobile !== innerData.mobile ? "mobile: $" + innerData.mobile + " => $" + data.mobile +", ": '') +
                             (data.vehicle !== innerData.vehicle ? "vehicle: $" + innerData.vehicle + " => $" + data.vehicle +", ": '') +
+                            (data.vehicle_fuel !== innerData.vehicle_fuel ? "vehicle fuel: $" + innerData.vehicle_fuel + " => $" + data.vehicle_fuel +", ": '') +
                             (data.transport !== innerData.transport ? "transport: $" + innerData.transport + " => $" + data.transport +", ": '') +
                             (data.food !== innerData.food ? "food: $" + innerData.food + " => $" + data.food +", ": '') +
                             (data.credit_card !== innerData.credit_card ? "credit_card: $" + innerData.credit_card + " => $" + data.credit_card +", ": '') +
