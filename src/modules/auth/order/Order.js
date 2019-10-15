@@ -62,6 +62,7 @@ import CommentView from './CommentView.js';
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
 import RentFlexContract from './Documentation/RentFlexContract';
+import BudgetAssistant from './Documentation/BudgetAssistant';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -165,7 +166,7 @@ export default function Order({roleName}) {
         try {
           const result = await OrderAPI.getFlexOrderDataForPDF({data: data});
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
-          var dd = RentFlexContract(result,data);
+          var dd = BudgetAssistant(result,data);
           pdfmake.createPdf(dd).open();
           // pdfmake.createPdf(dd).download('document.pdf');
         } catch (error) {

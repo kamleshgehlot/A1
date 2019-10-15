@@ -200,6 +200,7 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
         telephone : parseFloat(inputs.telephone),
         mobile : parseFloat(inputs.mobile),
         vehicle : parseFloat(inputs.vehicle),
+        vehicle_fuel : parseFloat(inputs.vehicle_fuel),
         transport : parseFloat(inputs.transport),
         food : parseFloat(inputs.food),
         credit_card : parseFloat(inputs.credit_card),
@@ -230,6 +231,7 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
       inputs.telephone == 0 &&
       inputs.mobile == 0 &&
       inputs.vehicle == 0 &&
+      inputs.vehicle_fuel == 0 &&
       inputs.transport == 0 &&
       inputs.food == 0 &&
       inputs.credit_card == 0 &&
@@ -254,7 +256,7 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
 
     if(surplusBool===true && isEditable===1){
       inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
-      inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) + parseFloat(oldBudget);
+      inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.vehicle_fuel) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) + parseFloat(oldBudget);
       inputs.surplus = inputs.income - inputs.expenditure;      
     }
 
@@ -553,6 +555,35 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      id="vehicle_fuel"
+                      name="vehicle_fuel"
+                      label="Vehicle Fuel"
+                      value={inputs.vehicle_fuel}
+                      onChange={handlePriceInput}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
+                      fullWidth
+                      // required
+                      type="text"
+                      // placeholder="Franchise Name"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      disabled={isEditable === 0}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
                       id="transport"
                       name="transport"
                       label="Public Transport"
@@ -661,7 +692,7 @@ return (
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={12}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField 
                       InputProps={{

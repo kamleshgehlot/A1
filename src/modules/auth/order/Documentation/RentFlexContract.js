@@ -246,7 +246,7 @@ export default function layout(data,order) {
                                 + 'the contract, or both.', fontSize:8, alignment: screenLeft},
                           ],
                         },
-                        {},
+                        { text: '', border: [true, false, true, false],},                        
                         {style:'margins', text: [  
                           { text: 'Expected Delivery Date',   style: 'paymentHeading'},
                           { text: '\n\n____________________', style: 'paymentHeading',},
@@ -254,7 +254,7 @@ export default function layout(data,order) {
                           { text: '\n\n_______________AM/PM', style: 'paymentHeading'},
                           ],
                         },                        
-                        {},
+                        { text: '', border: [true, false, true, false],},
                         {style:'margins', text: [  
                           { text: 'Bond Amt.',  style: 'paymentHeading'},
                           { text: '\n\n\n$_____________________', style: 'paymentHeading',},
@@ -407,7 +407,7 @@ export default function layout(data,order) {
                           { text: '\nIn the event of a breach of the contract or on the enforcement of the contract, the default fees specified below are payable. Your credit contract may allow the creditor to vary these fees and charges.',   fontSize:8, alignment: screenLeft,},
                           { text: '\nLate Fee: $10.00 is charged when a payment is not made when it becomes due.',   fontSize:8, alignment: screenLeft,},
                           { text: 'Repossession Fee: will be the reasonable fees incurred by us when a repossession attempt is made.',   fontSize:8, alignment: screenLeft,},
-                          ],
+                          ],lineHeight: 1.2,
                         },                         
                       ],                                                           
                     ], 
@@ -433,7 +433,7 @@ export default function layout(data,order) {
                           
                           { text: '\n\nTERMINATION',   fontSize:8, alignment: screenLeft, bold: true},                          
                           { text: '\nIf you seek to terminate the contract after the Minimum Term, you must provide the creditor with one payment period notice. At this stage, we will arrange a time to Collect the Goods from you, or you can return them to our store.',   fontSize:8, alignment: screenLeft,},
-                          ],
+                          ],lineHeight: 1.2,
                         },                         
                       ],                                                           
                     ], 
@@ -451,7 +451,7 @@ export default function layout(data,order) {
                   table: {                    
                     widths: ['100%'],
                     body: [
-                      [
+                      [[
                         {style:'margins', text: [  
                           { text: 'You are entitled to cancel the consumer credit contract by giving notice to the creditor.',   fontSize:8, alignment: screenLeft,},                          
                           { text: '\nTime limits for cancellation',   fontSize:8, alignment: screenLeft, bold: true},                                                    
@@ -459,7 +459,7 @@ export default function layout(data,order) {
                           { text: '\nIf the disclosure documents are sent to you by electronic means (email) you must give notice within 7 working days after the electronic communication is sent.', fontSize:8, alignment: screenLeft},
                           { text: '\nIf the documents are mailed to you in the post you must give notice within 9 working days after they were posted. Saturdays, Sundays, and national public holidays are not counted as working days.', fontSize:8, alignment: screenLeft},
                           
-                          { text: '\n\nHow to cancel',   fontSize:8, alignment: screenLeft, bold: true},
+                          { text: '\nHow to cancel',   fontSize:8, alignment: screenLeft, bold: true},
                           { text: '\nTo cancel, you must give the creditor written notice that you intend to cancel the contract by:',   fontSize:8, alignment: screenLeft,},
                           {style:'margins', text: [  
                             { text: '\n*  giving notice to the creditor or an employee or agent of the creditor; or',   fontSize:8, alignment: screenLeft,},
@@ -474,17 +474,158 @@ export default function layout(data,order) {
                           ]},
                           { text: '\n\nWhat you may have to pay if you cancel',   fontSize:8, alignment: screenLeft, bold: true},
                           { text: '\nIf you cancel the contract, the creditor can charge you:',   fontSize:8, alignment: screenLeft,},
-                          {style:'margins', text: [  
-                            { text: '\na)   the amount of any reasonable expenses the creditor had to pay in connection with the contract and its cancellation (including legal fees and fees for credit reports, etc);',   fontSize:8, alignment: screenLeft,},
-                            { text: '\nb)   the costs of repairing any property you return if the property was damaged while it was in your possession.',   fontSize:8, alignment: screenLeft,},
-                          ]},
-                          ], lineHeight: 1.2,
-                        },                         
+                          ], lineHeight: 1.2,  
+                        }, 
+                        {
+                          type: 'lower-alpha', fontSize: 8,
+                          ol: [
+                            { text: 'the amount of any reasonable expenses the creditor had to pay in connection with the contract and its cancellation (including legal fees and fees for credit reports, etc);', fontSize:8, alignment: screenLeft},
+                            { text: 'the costs of repairing any property you return if the property was damaged while it was in your possession.', fontSize:8, alignment: screenLeft},
+                          ]
+                        },                        
+                      ],                         
                       ],                                                           
                     ], 
                   },
                 }],
-
+                [
+                  { text : '',
+                    pageBreak: "after",
+                  },            
+                ],
+                [
+                  {style:'margins', text: [  
+                    { text: 'WHAT TO DO IF YOU SUFFER UNFORESEEN HARDSHIP', style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                  ], border: [true, false, true, false]},
+                ],
+                [{
+                  border: [true, false, true, false],
+                  table: {                    
+                    widths: ['100%'],
+                    body: [
+                      [[
+                        {style:'margins', text: [  
+                          { text: 'If you are unable reasonably to keep up your payments or other obligations because of illness, injury, loss of employment, the end of a relationship, or other reasonable cause, you may be able to apply to the creditor for a hardship variation. ',   fontSize:8, alignment: screenLeft,},                          
+                          { text: '\nTo apply for a hardship variation, you need to:',   fontSize:8, alignment: screenLeft,},                           
+                          
+                          
+                          ], lineHeight: 1.2,                            
+                        }, 
+                        {
+                          type: 'lower-alpha', fontSize: 8,
+                          ol: [
+                            { text: 'make an application in writing; and', fontSize:8, alignment: screenLeft},
+                            { text: 'explain your reason(s) for the application; and', fontSize:8, alignment: screenLeft},
+                            { text: 'request one of the following:', fontSize:8, alignment: screenLeft},
+                            {
+                              ul:[
+                                { text: 'an extension of the term of the contract (which will reduce the amount of each payment due under the contract}; or', fontSize:8, alignment: screenLeft},
+                                { text: 'a postponement of the Oates on which payments are due under the contract (specify the period for which you want this to apply); or', fontSize:8, alignment: screenLeft},
+                                { text: 'both of the above; and', fontSize:8, alignment: screenLeft},                                
+                              ],
+                            },
+                            { text: 'give the application to the creditor,', fontSize:8, alignment: screenLeft},
+                          ]
+                        },   
+                        { text: 'Do this as soon as possible. if you leave it for too long, the creditor r►ay not have to consider your application.', fontSize:8, alignment: screenLeft},
+                      ],                        
+                      ],                                                           
+                    ], 
+                  },
+                }],
+                [
+                  {style:'margins', text: [  
+                    { text: 'DISPUTE RESOLUTION', style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                  ], border: [true, false, true, false]},
+                ],
+                [
+                  {
+                    border: [true, false, true, false],
+                    table: {                    
+                      widths: ['100%'],
+                      body: [
+                        [
+                          {style:'margins', text: [  
+                            { text: 'Name of dispute resolution scheme: ', style: 'Header3Center', alignment: screenLeft },
+                            { text: 'Financial Dispute Resolution Service', style: 'Header3Center', alignment: screenLeft, decoration: 'underline',decorationStyle: 'solid', decorationColor: 'black',  },
+                            { text: '\n\nIt is free to make a complaint to this independent dispute resolution scheme.   This scheme can help you to resolve any disagreements you have with the creditor.', style: 'Header3Center', alignment: screenLeft },
+                            { text: '\n\nContact details of dispute resolution scheme:', style: 'Header3Center', alignment: screenLeft },
+                            { text: '\n\nPhone:', style: 'Header3Center', alignment: screenLeft },
+                            { text: '0508337337', style: 'Header3Center', alignment: screenLeft, decoration: 'underline',decorationStyle: 'solid', decorationColor: 'black',  },
+                            { text: '\nWebsite:', style: 'Header3Center', alignment: screenLeft },
+                            { text: 'www.fdrs.orgn.nz', style: 'Header3Center', alignment: screenLeft, decoration: 'underline',decorationStyle: 'solid', decorationColor: 'black',  },
+                            { text: '\nBusiness address:', style: 'Header3Center', alignment: screenLeft },
+                            { text: 'Wellington', style: 'Header3Center', alignment: screenLeft, decoration: 'underline',decorationStyle: 'solid', decorationColor: 'black',  },                    
+                          ],
+                          },
+                        ],
+                      ],
+                    },
+                  },
+                ],
+                [
+                  {style:'margins', text: [  
+                    { text: 'REGISTRATION ON FINANCIAL SERVICE PROVIDER REGISTER', style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                  ], border: [true, false, true, false]},
+                ],  
+                [
+                  {
+                    border: [true, false, true, false],
+                    table: {                    
+                      widths: ['100%'],
+                      body: [
+                        [
+                          {style:'margins', text: [  
+                            { text: 'Creditor registration name: \t', style: 'Header3Center', alignment: screenLeft, },                    
+                            { text: 'KIWI APPLIANCE RENTAL LTD \t', style: 'Header3Center', alignment: screenLeft, bold: true}, 
+                            { text: 'Registration number: ', style: 'Header3Center', alignment: screenLeft,}, 
+                            { text: 'FSP553806', style: 'Header3Center', alignment: screenLeft, bold: true}, 
+                          ],
+                          },
+                        ],
+                      ],
+                    },
+                  },
+                ],  
+                [                                  
+                  [
+                  {
+                    border: [true, false, true, false],
+                    table: {                    
+                      widths: ['48%','4%','48%'],
+                      body: [
+                        [
+                          {text: [  
+                            { text: 'DEBTORS SIGNATURE', style: 'Header3Center', alignment: screenLeft,  bold: true},                    
+                            { text: '\nSigned as Customer:\n\n\n\n\n\n', style: 'Header3Center', alignment: screenLeft,},                           
+                          ],
+                          },
+                          { text: '', style: 'Header3Center', alignment: screenLeft, border: [true, false, true, false],},                           
+                          {text: [  
+                            { text: 'CREDITORS SIGNATURE\n', style: 'Header3Center', alignment: screenLeft,  bold: true},                    
+                            { text: 'Signed on behalf of Creditor:\n\n\n\n\n\n', style: 'Header3Center', alignment: screenLeft,},                           
+                          ],
+                          },
+                        ],
+                        [
+                          { text: 'Signature\n\n\n\n\n', style: 'Header3Center', alignment: screenLeft,  },                    
+                          { text: '', style: 'Header3Center', alignment: screenLeft,  border: [true, false, true, false],},                    
+                          { text: 'Signature\n\n\n\n\n', style: 'Header3Center', alignment: screenLeft,},                                             
+                        ],  
+                        [
+                          { text: 'Please print name in full', style: 'Header3Center', alignment: screenLeft,},                    
+                          { text: '', style: 'Header3Center', alignment: screenLeft, border: [true, false, true, false],},                    
+                          { text: 'Please print name in full', style: 'Header3Center', alignment: screenLeft,},                                   
+                        ],                   
+                      ],
+                      },                    
+                    }, 
+                    {text: '\n\n\n', style: 'Header3Center', alignment: screenLeft,},
+                  ],                    
+                ],                
+                [
+                  { text: 'For our General Terms and Conditions please see attached Rent-Flex Terms and Conditions.', style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                ],          
         ],              
       },
     },  
@@ -541,6 +682,7 @@ export default function layout(data,order) {
       margins:{
         margin: [10,0,0,0]
       },
+      
       // Customer: {
       //   fontSize: 10,
       //   alignment: 'left',

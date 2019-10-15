@@ -663,6 +663,9 @@ return (
                       error={errors.dl_version_number}
                       helperText={errors.dl_version_number}
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value =(e.target.value).toString().slice(0,3)
+                      }}
                     />
                     }
 
@@ -1009,7 +1012,7 @@ return (
                       onChange={handleInputChange}
                       error={errors.employer_address}
                       helperText={errors.employer_address}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -1033,7 +1036,7 @@ return (
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
                       }}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>
@@ -1055,7 +1058,7 @@ return (
                       onBlur={handleEmailVerification}
                       error={errors.employer_email}
                       helperText={errors.employer_email}
-                      required
+                      // required
                       fullWidth
                     />
                   </Grid>

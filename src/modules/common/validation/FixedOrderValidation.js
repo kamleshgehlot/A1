@@ -2,26 +2,30 @@ import { validString, validNumber, validDecimalNumber, validFullLengthDecimalNum
 
 export default function validate(values) {
   let errors = {};
-  if (values.int_unpaid_bal==='0' || values.int_unpaid_bal==="" || values.int_unpaid_bal<0) {
-    errors.int_unpaid_bal = 'Intial Unpaid Balance is required';
-  } else if (!validFullLengthDecimalNumber.test(values.int_unpaid_bal)) {
-    errors.int_unpaid_bal = 'Intial Unpaid Balance is invalid';
-  }
-  if (values.cash_price==='0' || values.cash_price==="" || values.cash_price<0) {
-    errors.cash_price = 'Cash Price is required';
-  } else if (!validFullLengthDecimalNumber.test(values.cash_price)) {
-    errors.cash_price = 'Cash Price is invalid';
-  }
-  if (values.delivery_fee==='0' || values.delivery_fee==="" || values.delivery_fee<0) {
-    errors.delivery_fee = 'Delivery Fee is required';
-  } else if (!validFullLengthDecimalNumber.test(values.delivery_fee)) {
-    errors.delivery_fee = 'Delivery Fee is invalid';
-  }
-  if (values.ppsr_fee==='0' || values.ppsr_fee==="" || values.ppsr_fee<0) {
-    errors.ppsr_fee = 'PPSR Fee is required';
-  } else if (!validFullLengthDecimalNumber.test(values.ppsr_fee)) {
-    errors.ppsr_fee = 'PPSR Fee is invalid';
-  }
+  // if (values.int_unpaid_bal<0) {
+  //   errors.int_unpaid_bal = 'Intial Unpaid Balance is required';
+  // } else 
+  // if (!validFullLengthDecimalNumber.test(values.int_unpaid_bal)) {
+  //   errors.int_unpaid_bal = 'Intial Unpaid Balance is invalid';
+  // }
+  // // if (values.cash_price<0) {
+  // //   errors.cash_price = 'Cash Price is required';
+  // // } else
+  // if (!validFullLengthDecimalNumber.test(values.cash_price)) {
+  //   errors.cash_price = 'Cash Price is invalid';
+  // }
+  // // if (values.delivery_fee<0) {
+  // //   errors.delivery_fee = 'Delivery Fee is required';
+  // // } else 
+  // if (!validFullLengthDecimalNumber.test(values.delivery_fee)) {
+  //   errors.delivery_fee = 'Delivery Fee is invalid';
+  // }
+  // // if (values.ppsr_fee<0) {
+  // //   errors.ppsr_fee = 'PPSR Fee is required';
+  // // } else 
+  // if (!validFullLengthDecimalNumber.test(values.ppsr_fee)) {
+  //   errors.ppsr_fee = 'PPSR Fee is invalid';
+  // }
  
   if (values.frequency==='0' || values.frequency==="" || values.frequency<0) {
     errors.frequency = 'Frequency is required';
