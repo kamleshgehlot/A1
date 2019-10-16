@@ -1,4 +1,5 @@
 import { logo } from '../../common/Logo.js';
+import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../utils/datetime';
 
 function buildTableBody(data, columns, valueKeys, orderType) {
   var body = [];
@@ -107,7 +108,7 @@ export default function layout(data,order) {
                         body: [
                           [
                             
-                            { text: 'Date: ' + new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + (new Date().getFullYear()), style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                            { text: 'Date: ' + getCurrentDateDDMMYYYY(), style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Team Leader: ' + '', style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Salesperson: ' + user[0].name , style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Sales Type: ', style: 'Header3Center', bold: true, alignment: screenLeft }, 
@@ -150,7 +151,7 @@ export default function layout(data,order) {
                           { text: customer[0].mobile + '\n', style: 'Header1Center', alignment: screenLeft }, 
                           { text: 'Email: ', style: 'Header1Center', alignment: screenLeft, bold: true }, 
                           { text: customer[0].email + '\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'Date of Birth: ' + customer[0].dob, style: 'Header1Center', alignment: screenLeft }, 
+                          { text: 'Date of Birth: ' + getDateInDDMMYYYY(customer[0].dob), style: 'Header1Center', alignment: screenLeft }, 
                           { text: '\nWorking Status :' + (customer[0].is_working == 1 ? 'Yes' : 'No'), style: 'Header1Center', alignment: screenLeft }, 
                         ]}
                         ],
@@ -173,7 +174,7 @@ export default function layout(data,order) {
                       {style:'margins', text: [  
                         { text: customer[0].id_type_name + '\t\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
                         { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: 'Header1Center', alignment: screenLeft }, 
-                        { text: 'Expiry Date: ' + customer[0].expiry_date +  '\n', style: 'Header1Center', alignment: screenLeft },                         
+                        { text: 'Expiry Date: ' + getDateInDDMMYYYY(customer[0].expiry_date) +  '\n', style: 'Header1Center', alignment: screenLeft },                         
                       ]}
                       ],
                     ]
@@ -306,7 +307,7 @@ export default function layout(data,order) {
                   {style:'margins', text: [  
                     { text: 'NUMBER OF PAYMENTS:  ' + orderType[0].no_of_payment , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tBOND AMOUNT: $' + orderType[0].bond_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  orderType[0].exp_delivery_date, alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDateInDDMMYYYY(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
                   ]}
                 ],
               ]
@@ -326,7 +327,7 @@ export default function layout(data,order) {
                     { text: customer[0].customer_name , alignment: screenLeft,  bold: true, fontSize:9}, 
                     { text: ' AGREE TO RENT THE GOOD(S) ABOVE ON THE TERMS AND CONDITIONS IN THIS RENT-FLEX CONTRACT AND IN THE GENERAL TERMS AND CONDITIONS AND CONFIRM TO THE BEST OF MY KNOWLEDGE THAT ALL THE ABOVE INFORMATION IS TRUE AND CORRECT.', alignment: screenLeft,  bold: true, fontSize:8},                    
                     { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
-                    { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + (new Date().getFullYear()), alignment: screenLeft,  bold: true, fontSize:8},
+                    { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDateDDMMYYYY(), alignment: screenLeft,  bold: true, fontSize:8},
                   ]}
                 ],
               ]

@@ -1,4 +1,4 @@
-import { getDate, getCurrentDate } from '../../../utils/datetime';
+import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../utils/datetime';
 import { logo } from '../../common/Logo.js';
 
 function buildTableBody(data, columns, valueKeys, orderType) {
@@ -90,7 +90,7 @@ export default function layout(data,order) {
                         body: [
                           [
                             
-                            { text: 'Date: ' + getCurrentDate(), style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                            { text: 'Date: ' + getCurrentDateDDMMYYYY(), style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Team Leader: ' + '', style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Salesperson: ' + user[0].name , style: 'Header3Center', bold: true, alignment: screenLeft }, 
                             { text: 'Sales Type: ', style: 'Header3Center', bold: true, alignment: screenLeft }, 
@@ -137,7 +137,7 @@ export default function layout(data,order) {
                       {style:'margins', text: [  
                         { text: customer[0].id_type_name + '\t\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
                         { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: 'Header1Center', alignment: screenLeft }, 
-                        { text: 'Expiry Date: ' + getDate(customer[0].expiry_date) +  '\n', style: 'Header1Center', alignment: screenLeft },                         
+                        { text: 'Expiry Date: ' + getDateInDDMMYYYY(customer[0].expiry_date) +  '\n', style: 'Header1Center', alignment: screenLeft },                         
                       ]}
                       ],
                     ]
@@ -239,7 +239,7 @@ export default function layout(data,order) {
                   {style:'margins', text: [  
                     { text: 'MINIMUM PAYMENTS:  ' + orderType[0].minimum_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tTOTAL AMOUNT: $' + orderType[0].total_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDate(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDateInDDMMYYYY(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
                   ]}
                 ],
               ]
@@ -256,8 +256,8 @@ export default function layout(data,order) {
                 ],  
                 [
                   {style:'margins', text: [  
-                    { text: 'START DATE:  ' + getDate(orderType[0].first_payment) , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tEND DATE:  ' + getDate(orderType[0].last_payment), alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: 'START DATE:  ' + getDateInDDMMYYYY(orderType[0].first_payment) , alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: '\t\t\t\t\t\t\t\tEND DATE:  ' + getDateInDDMMYYYY(orderType[0].last_payment), alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tTOTAL PAYMENTS:  ' +  orderType[0].no_of_payment, alignment: screenLeft,  bold: true, fontSize:8}, 
                   ]}
                 ],

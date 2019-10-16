@@ -166,7 +166,7 @@ export default function Order({roleName}) {
         try {
           const result = await OrderAPI.getFlexOrderDataForPDF({data: data});
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
-          var dd = BudgetAssistant(result,data);
+          var dd = FlexTypeDD(result,data);
           pdfmake.createPdf(dd).open();
           // pdfmake.createPdf(dd).download('document.pdf');
         } catch (error) {

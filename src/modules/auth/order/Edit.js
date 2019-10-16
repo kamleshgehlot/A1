@@ -27,7 +27,9 @@ import AddIcon from '@material-ui/icons/Add';
 import DoneIcon from '@material-ui/icons/Done';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {useCommonStyles} from '../../common/StyleComman'; 
-
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 
 // import validate from '../../common/validation/OrderRuleValidation';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -429,22 +431,24 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="order_date"
-                      name="order_date"
-                      type="date"
-                      defaultValue= {inputs.order_date}
-                      required
-                      disabled
-                      fullWidth
-                    />
+                  <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="order_date"
+                        name="order_date"
+                        format="dd/MM/yyyy"
+                        disablePast = {true}
+                        value={inputs.order_date}
+                        fullWidth 
+                        disabled
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}                        
+                      />
+                    </MuiPickersUtilsProvider>                                        
                   </Grid>
                   
                   <Grid item xs={12} sm={4}>

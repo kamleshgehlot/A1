@@ -732,7 +732,7 @@ return (
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                      { oldBudget }
+                      {"$" + oldBudget }
                     </Typography>
                   </Grid>
                   : null
@@ -740,12 +740,12 @@ return (
                   
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                     Total Income: {inputs.income}
+                     Total Income: {"$" + inputs.income}
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                     Total Expenses: {inputs.expenditure}
+                     Total Expenses: {"$" + inputs.expenditure}
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>

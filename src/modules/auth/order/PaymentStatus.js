@@ -292,7 +292,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           // else if(flexOrder[0].frequency ===4){addDays = 7;}
 
           for(let i=1; i<= flexOrder[0].no_of_payment; i++){
-            if(flexOrder[0].frequency ===1){addDays = 30;}            
+            if(flexOrder[0].frequency ===1){addDays = 30;}
             else if(flexOrder[0].frequency ===2){addDays = 15;}
             else if(flexOrder[0].frequency ===4){addDays = 7;}
             var month = paymentDate.getMonth() + 1;

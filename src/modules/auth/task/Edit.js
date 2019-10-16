@@ -267,7 +267,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   margin="dense"
                   id="due_date"
                   name="due_date"
-                  format="dd/MM/yyyy"
+                  format="dd-MM-yyyy"
                   disablePast = {true}
                   value={taskList.due_date}
                   fullWidth                       

@@ -20,17 +20,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
-import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Divider from '@material-ui/core/Divider';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
@@ -237,52 +228,64 @@ function calculateNoOfPayment(value) {
           firstPayDate.setMonth(firstPayDate.getMonth() + 1);                   
         }        
       }else if(frequency == 2){
-        let date1 = new Date(firstPaymentDate);
-        let date2 = new Date(firstPaymentDate);
-            date2.setDate(date2.getDate() + 15);
-        for(let i=1; i <= (duration * 2); i++){
-          if(i%2 != 0){
-            // console.log('date 1',date1);
-            paymentDates.push(date1.toString())            
-          }else if(i%2 == 0){
-            // console.log('date 2',date2);
-            paymentDates.push(date2.toString())            
+        // let date1 = new Date(firstPaymentDate);
+        // let date2 = new Date(firstPaymentDate);
+        //     date2.setDate(date2.getDate() + 15);
+        // for(let i=1; i <= (duration * 2); i++){
+        //   if(i%2 != 0){
+        //     // console.log('date 1',date1);
+        //     paymentDates.push(date1.toString())            
+        //   }else if(i%2 == 0){
+        //     // console.log('date 2',date2);
+        //     paymentDates.push(date2.toString())            
 
-            date1.setMonth(date1.getMonth() + 1);
-            date2.setMonth(date2.getMonth() + 1);            
-          }
-        }        
+        //     date1.setMonth(date1.getMonth() + 1);
+        //     date2.setMonth(date2.getMonth() + 1);            
+        //   }
+        // } 
+        let firstPayDate = new Date(firstPaymentDate);
+        for(let i = 1; i<=26 ; i++){
+          // console.log('date',firstPayDate)
+          paymentDates.push(firstPayDate.toString());
+          firstPayDate.setDate(firstPayDate.getDate() + 15);
+        }         
       }else if(frequency == 4){
-        let date1 = new Date(firstPaymentDate);
-        let date2 = new Date(firstPaymentDate);
-        let date3 = new Date(firstPaymentDate);
-        let date4 = new Date(firstPaymentDate);
-            date2.setDate(date1.getDate() + 7);
-            date3.setDate(date3.getDate() + 14);
-            date4.setDate(date4.getDate() + 21);
-        for(let i=1, j=1; i <= (duration * 4); i++, j++){
-          if(j==1){
-            // console.log('date 1',date1);
-            paymentDates.push(date1.toString())
-          }else if (j==2){
-            // console.log('date 2',date2);
-            paymentDates.push(date2.toString())
-          }else if (j==3){
-            // console.log('date 3',date3);
-            paymentDates.push(date3.toString())
-          }else if (j==4){
-            // console.log('date 4',date4);
-            paymentDates.push(date4.toString())
-            j = 0;
-          }
+        // let date1 = new Date(firstPaymentDate);
+        // let date2 = new Date(firstPaymentDate);
+        // let date3 = new Date(firstPaymentDate);
+        // let date4 = new Date(firstPaymentDate);
+        //     date2.setDate(date1.getDate() + 7);
+        //     date3.setDate(date3.getDate() + 14);
+        //     date4.setDate(date4.getDate() + 21);
+        // for(let i=1, j=1; i <= (duration * 4); i++, j++){
+        //   if(j==1){
+        //     // console.log('date 1',date1);
+        //     paymentDates.push(date1.toString())
+        //   }else if (j==2){
+        //     // console.log('date 2',date2);
+        //     paymentDates.push(date2.toString())
+        //   }else if (j==3){
+        //     // console.log('date 3',date3);
+        //     paymentDates.push(date3.toString())
+        //   }else if (j==4){
+        //     // console.log('date 4',date4);
+        //     paymentDates.push(date4.toString())
+        //     j = 0;
+        //   }
           
-          if(i%4 == 0){
-            date1.setMonth(date1.getMonth() + 1);
-            date2.setMonth(date2.getMonth() + 1);            
-            date3.setMonth(date3.getMonth() + 1);            
-            date4.setMonth(date4.getMonth() + 1);            
-          }
-        }
+        //   if(i%4 == 0){
+        //     date1.setMonth(date1.getMonth() + 1);
+        //     date2.setMonth(date2.getMonth() + 1);            
+        //     date3.setMonth(date3.getMonth() + 1);            
+        //     date4.setMonth(date4.getMonth() + 1);            
+        //   }
+        // }
+        let firstPayDate = new Date(firstPaymentDate);
+        for(let i = 1; i<=52; i++){
+          // console.log('date',firstPayDate)
+          paymentDates.push(firstPayDate.toString());
+          firstPayDate.setDate(firstPayDate.getDate() + 7);
+        }     
       }
       
       // console.log('payment dates',paymentDates);
@@ -350,15 +353,15 @@ function calculateNoOfPayment(value) {
           let installment = (parseFloat(product.rental) * 2);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
-            {name: 'no_of_payment', value: (duration * 2)},
-            {name: 'total_payment_amt', value: (installment * (duration * 2)).toFixed(2)},
+            {name: 'no_of_payment', value: ((duration * 2) + (duration/12 * 2))},
+            {name: 'total_payment_amt', value: (installment * ((duration * 2) + (duration/12 * 2))).toFixed(2)},
           ]);
         }else if(frequency == 4){ 
           let installment = (parseFloat(product.rental));
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
-            {name: 'no_of_payment', value: (duration * 4)},
-            {name: 'total_payment_amt', value: (installment * (duration * 4)).toFixed(2)},
+            {name: 'no_of_payment', value: ((duration * 4) + (duration/12 * 4))},
+            {name: 'total_payment_amt', value: (installment * ((duration * 4) + (duration/12 * 4))).toFixed(2)},
           ]);        
         }
       }      
@@ -393,8 +396,8 @@ function calculateNoOfPayment(value) {
   //   ]);
   // },[inputs.ppsr_fee, inputs.discount,inputs.delivery_fee, inputs.cash_price]);
   
-  console.log('fixd ordr',fixedOrderList);
-  console.log('inputs',inputs);
+  // console.log('fixd ordr',fixedOrderList);
+  // console.log('inputs',inputs);
   
 
 return (
@@ -606,7 +609,7 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="MM/dd/yyyy"
+                        format="dd/MM/yyyy"
                         disablePast = {true}
                         // defaultValue = {new Date()}
                         defaultValue = {""}
@@ -635,7 +638,7 @@ return (
                             margin="dense"
                             id="last_payment"
                             name="last_payment"
-                            format="MM/dd/yyyy"
+                            format="dd/MM/yyyy"
                             disablePast = {true}
                             defaultValue = {""}
                             // defaultValue = {new Date()}
@@ -778,7 +781,7 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="MM/dd/yyyy"
+                          format="dd/MM/yyyy"
                           disablePast = {true}
                           value={inputs.exp_delivery_date}
                           error={errors.exp_delivery_date}

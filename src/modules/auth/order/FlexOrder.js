@@ -592,7 +592,7 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="MM/dd/yyyy"
+                        format="dd/MM/yyyy"
                         disablePast = {true}
                         // defaultValue = {new Date()}
                         defaultValue = {""}
@@ -744,7 +744,7 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="MM/dd/yyyy"
+                          format="dd/MM/yyyy"
                           disablePast = {true}
                           defaultValue = {""}
                           value={inputs.exp_delivery_date}
