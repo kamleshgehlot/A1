@@ -1,101 +1,37 @@
 import { logo } from '../../../common/Logo.js';
-
-function buildTableBody(data, columns, valueKeys, orderType) {
-  var body = [];
-
-  body.push([
-    { text: 'PRODUCT AND CREDIT DETAILS: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10, colSpan: 3}, {},{}
-  ]);
-
-  var dataRow1 = [];
-
-  dataRow1.push(
-    { text: columns[0], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }
-  );
-  dataRow1.push(    
-    { text: columns[1], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }
-  );
-  dataRow1.push(
-    { text: columns[2], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }                   
-  );
-
-  body.push(dataRow1);
-
-  data.forEach(function(row) {
-    var dataRow = [];
-
-    valueKeys.forEach(function(column) {
-      if(column === 'paymentType') {
-        dataRow.push({ text: orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
-
-      } else {
-        dataRow.push({ text: row[column.toLowerCase()], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
-      }
-    })
-
-    body.push(dataRow);
-  });
-
-  return body;
-}
+import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../../utils/datetime';
+import { styles } from './Styles.js';
 
 export default function layout(data,order) {
 
   const franchise = data.franchise;
   const products = data.product;
-  const customer = data.customer;
+  const customer = data.customer[0];
   const orderType = data.flexOrder;
-  const budget = data.budget; 
+  const budget = data.budget[0];
   const user = data.user; 
 
   // console.log(franchise);
   // console.log("product", products);
   // console.log(orderType);
   // console.log(customer);
-  // console.log(budget);
+  console.log('budget==',budget);
   // console.log(order);
-  // console.log(user);
-
-  // const productList = [];
-
-//   products.forEach(function(data) {
-//   var dataRow = [];
-//   // dataRow.push('[');
-//   dataRow.push({ text: data.name, style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
-//   dataRow.push({ text: data.description, style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
-//   dataRow.push({ text: (orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT'), style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);  
-//   // dataRow.push(']');
-//   productList.push(dataRow)
-// });
-// var body_temp = [];
-// console.log('pdf----', orderId);
-  // products.map(data =>{
-  //   // console.log(data)
-  //   productList.toString([
-  //   // productList.append([
-  //     { text: data.name,  bold: true, alignment: screenLeft, fontSize: 8,  },
-  //     { text: data.description,  bold: true, alignment: screenLeft, fontSize: 8,  },
-  //     { text: (orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT'),  bold: true, alignment: screenLeft, fontSize: 8,  },
-  //   ],
-  //   );
-  // });
-
-// console.log('pdf----', [productList]);
+  console.log(data);
 
   var dd = {
     content: 
       [
-        
           { 
             columns: [                 
-               { text: [{ text: '\n' + franchise[0].location + '\n', style: 'Header1Center' },{ text: '[PH] ', style: 'Header1Center', bold: true },{ text: franchise[0].contact + '\n', style: 'Header1Center' },{ text: 'Email: ', style: 'Header1Center', bold: true },{ text: franchise[0].email + '\n', style: 'Header1Center' } ]}, 
-               [ { image: logo,
-                  fit: [150, 150], style: 'Header2Center'},
-                 {text: 'RENT-FLEX ORDER FORM', style: 'Header2Center', bold: true }, 
+               { text: [{ text: '\n' + franchise[0].location + '\n', style: styles.Header1Center },{ text: '[PH] ', style: styles.Header1Center, bold: true },{ text: franchise[0].contact + '\n', style: styles.Header1Center },{ text: 'Email: ', style: styles.Header1Center, bold: true },{ text: franchise[0].email + '\n', style: styles.Header1Center } ]}, 
+               [ { image: logo, fit: [150, 150], style: styles.Header2Center},
+                 {text: '\nBUDGET ASSISTANT', style: styles.Header2Center, bold: true }, 
                ],
-               { text: '\n\n\nApplication#: ' + order.order_id , style: 'Header3Center'},
+               { text: '\n\n\n\n\n___________________________', style: styles.Header3Center},
             ]
           },
+          '\n',
           {
             table: {
               widths: ['*'],
@@ -103,283 +39,254 @@ export default function layout(data,order) {
                   [{
                      border: [true, true, true, false],
                       table: {
-                        widths: [70,'*','*','*'],
+                        widths: ['*','*','*','*'],
+                        // heights: 40,                           
                         body: [
                           [
-                            
-                            { text: 'Date: ' + new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + (new Date().getFullYear()), style: 'Header3Center', bold: true, alignment: screenLeft }, 
-                            { text: 'Team Leader: ' + '', style: 'Header3Center', bold: true, alignment: screenLeft }, 
-                            { text: 'Salesperson: ' + user[0].name , style: 'Header3Center', bold: true, alignment: screenLeft }, 
-                            { text: 'Sales Type: ', style: 'Header3Center', bold: true, alignment: screenLeft }, 
-                          ]
+                            { style: styles.margins, text: [
+                              { text: 'WEEKLY INCOME', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                              { text: '(after tax)', style: styles.Header1Center,  alignment: screenLeft }, 
+                              { text: '\n(A)', style: styles.Header1Center,  alignment: screenLeft }, 
+                            ]},
+                            { text: '$', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                            { style: styles.margins, text: [
+                              { text: 'WEEKLY EXPENDITURE', style: styles.Header1Center,  bold: true,  alignment: screenLeft },                               
+                              { text: '\n(B)', style: styles.Header1Center,  alignment: screenLeft }, 
+                            ]},
+                            { text: '$', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                          ],
+                          [
+                            { text: 'Work', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.work, style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: 'Rent / Mortgage', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.rent, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            { text: 'Benefits(s)', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.benefits, style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: 'Power', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.power, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            { text: 'Accomodation Allowance', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.accomodation, style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: 'Landline Phone', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.telephone, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            { text: 'Childcare', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.childcare, style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: 'Mobile Phone', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.mobile, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            {},
+                            {},
+                            { text: 'Vehicle Finance', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.vehicle, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            {},
+                            {},
+                            { text: 'Vehicle Fuel', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.vehicle_fuel, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            {},
+                            {},
+                            { text: 'Public Transport', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.transport, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            {},
+                            {},
+                            { text: 'Food', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.food, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            {},
+                            {},
+                            { text: 'Credit / Store Card(s)', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.credit_card, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            {},
+                            {},
+                            { text: 'Loans / Hire Purchase', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.loan, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            {},
+                            {},
+                            { text: 'Other', style: styles.Header1Center, alignment: screenLeft }, 
+                            { text: budget.other_expenditure, style: styles.Header1Center, alignment: screenLeft }, 
+                          ],
+                          [
+                            { text: 'TOTAL INCOME=', style: styles.alignRight, bold: true, fillColor: '#C5C7C0'}, 
+                            { text: budget.income, style: styles.alignRight , bold: true }, 
+                            { text: 'TOTAL EXPENDITURE=', style: styles.alignRight, bold: true, fillColor: '#C5C7C0' }, 
+                            { text: budget.expenditure, style: styles.alignRight, bold: true },   
+                          ],
+                          [
+                            { text: 'TOTAL SURPLUS / DEFICIT (A-B)', style: styles.alignRight,  colSpan: 3, fillColor: '#C5C7C0', bold: true }, {}, {},
+                            { text: budget.surplus, style: styles.alignRight, bold: true },                             
+                          ],
                         ]
-                      },                      
+                      },    
+                      layout: {                     
+                        paddingTop:  function(i, node) { return 5; },
+                        paddingBottom: function(i, node) { return 5; }, 
+                      },                  
+                  }],
+                  [{
+                    border: [true, false, true, false],
+                    table: {
+                      widths: ['*','25%'],                     
+                      body: [
+                        [
+                          { text: 'How much can you afford to pay on a weekly basis?', style: styles.Header1Center, italics: true, bold: true, alignment: screenLeft, fillColor: '#C5C7C0' }, 
+                          { text: budget.afford_amt, style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                        ],                        
+                      ]
+                    },
+                    layout: {                     
+                      paddingTop:  function(i, node) { return 5; },
+                      paddingBottom: function(i, node) { return 5; }, 
+                    },  
+                  }],
+                  [{
+                    border: [true, false, true, false],
+                    table: {
+                      widths: ['30%','*'],                     
+                      body: [
+                        [
+                          { text: 'Income Details', style: styles.Header1Center, colSpan : 2, bold: true, alignment: screenLeft, }, {},
+                        ],
+                        [
+                          { text: 'Employer', style: styles.Header1Center, alignment: screenLeft, }, 
+                          { text: customer.employer_name, style: styles.Header1Center, alignment: screenLeft }, 
+                        ],
+                        [
+                          { text: 'Address', style: styles.Header1Center, alignment: screenLeft, }, 
+                          { text: customer.employer_address, style: styles.Header1Center, alignment: screenLeft }, 
+                        ],
+                        [
+                          { text: 'Contact Telephone Number', style: styles.Header1Center, alignment: screenLeft, }, 
+                          { text: customer.employer_telephone, style: styles.Header1Center, alignment: screenLeft }, 
+                        ],
+                        [
+                          { text: 'Email', style: styles.Header1Center, alignment: screenLeft, }, 
+                          { text: customer.employer_email, style: styles.Header1Center, alignment: screenLeft }, 
+                        ],
+                        [
+                          { text: 'Length of time with Current Employer', style: styles.Header1Center, alignment: screenLeft, }, 
+                          { text: customer.employer_tenure + ' year', style: styles.Header1Center, alignment: screenLeft }, 
+                        ],
+                      ]
+                    },
+                    layout: {                     
+                      paddingTop:  function(i, node) { return 5; },
+                      paddingBottom: function(i, node) { return 5; }, 
+                    },  
+                  }],
+                  [{
+                    border: [true, false, true, false],
+                    table: {
+                      widths: ['45%','*','*','*','*','*','*'], 
+                      body: [
+                        [
+                          { text: 'Why would you be renting/buying these Product(s)?', style: styles.Header1Center, italics: true, bold: true, alignment: screenLeft, fillColor: '#C5C7C0' }, 
+                          { text: 'Personal Use', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                          { text: 'Liesure', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                          { text: 'Family', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                          { text: 'Gift', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                          { text: 'Essential', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                          { text: 'Other', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                        ],                        
+                      ]
+                    },
+                    layout: {                     
+                      paddingTop:  function(i, node) { return 5; },
+                      paddingBottom: function(i, node) { return 5; }, 
+                    },  
+                  }],
+                  [{
+                    border: [true, false, true, false],
+                    table: {
+                      widths: ['*'], 
+                      body: [
+                        [
+                          { text: 'Additional Comments\n', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                        ],
+                        [{}],[{}],[{}],[{}],
+                        
+                      ]
+                    },
+                    layout: {                                           
+                      paddingBottom: function(i, node) { return 15; }, 
+                    },  
                   }],
                   [{
                     border: [true, false, true, false],
                     table: {
                       widths: ['*'],
-                      // margin: [100,20,10,40],
-                      // fillColor: 'gray',
-                      // background: 'gray',
                       body: [
                         [
-                          { text: 'CUSTOMER DETAILS: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0' }, 
-                        ],
+                          { text: 'CUSTOMER DECLARATION: ', bold: true, alignment: screenLeft, fontSize: 9 , fillColor: '#C5C7C0'}
+                        ],  
                         [
-                       
-                        {style:'margins', text: [  
-                          { text: customer[0].customer_name + '\n', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                          { text: customer[0].address + ',\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: customer[0].city + ' - '+ customer[0].postcode + '\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'PH: ', style: 'Header1Center', alignment: screenLeft, bold: true }, 
-                          { text: customer[0].telephone + '\t\t', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'Mobile: ', style: 'Header1Center', alignment: screenLeft, bold: true }, 
-                          { text: customer[0].mobile + '\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'Email: ', style: 'Header1Center', alignment: screenLeft, bold: true }, 
-                          { text: customer[0].email + '\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'Date of Birth: ' + customer[0].dob, style: 'Header1Center', alignment: screenLeft }, 
-                          { text: '\nWorking Status :' + (customer[0].is_working == 1 ? 'Yes' : 'No'), style: 'Header1Center', alignment: screenLeft }, 
-                        ]}
+                          {style:styles.margins, fillColor: '#C5C7C0', text: [  
+                            { text: 'I ', alignment: screenLeft,  bold: true, fontSize:8},                    
+                            { text: customer.customer_name , alignment: screenLeft,  bold: true, fontSize:9},
+                            { text: ' understand, that by singing this budget form is to confirm that all of the date provided above is ture and correct as of the date that this declaration was signed and dated', alignment: screenLeft,  bold: true, fontSize:8},
+                            { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
+                            { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDateDDMMYYYY(), alignment: screenLeft,  bold: true, fontSize:8},
+                          ]}
                         ],
                       ]
                     },
-                // layout: 'noBorders'
-                }],
-                [{
-                  border: [true, false, true, false],
-                  table: {
-                    widths: ['*'],
-                    // margin: [100,20,10,40],
-                    // fillColor: 'gray',
-                    // background: 'gray',
-                    body: [
-                      [
-                        { text: 'ID Sighted: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10 }, 
-                      ],
-                      [
-                      {style:'margins', text: [  
-                        { text: customer[0].id_type_name + '\t\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                        { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: 'Header1Center', alignment: screenLeft }, 
-                        { text: 'Expiry Date: ' + customer[0].expiry_date +  '\n', style: 'Header1Center', alignment: screenLeft },                         
-                      ]}
-                      ],
-                    ]
-                  },
-              // layout: 'noBorders'
-              }],
-              [{
-                border: [true, false, true, false],
-                table: {
-                  widths: ['*','*'],
-                  // margin: [100,20,10,40],
-                  // fillColor: 'gray',
-                  // background: 'gray',
-                  body: [
-                    [
-                      { text: [  
-                        { text: 'ALTERNATE CONTACTS: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10}, 
-                        { text: '(Can be your Father, Mother, Son, Daughter or a Friend)',  bold: true, alignment: screenLeft, fontSize: 7 },
-                      ], colSpan: 2},{}
-                    ],
-                    [
-                    {style:'margins', text: [
-                      { text: 'Name:\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft },   
-                      { text: customer[0].alt_c1_name + '\n', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                      { text: 'Address:\t\t\t' + customer[0].alt_c1_address + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Contact:\t\t\t' + customer[0].alt_c1_contact + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Relationship:\t' + customer[0].alt_c1_relation , style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                    ]},
-                    {style:'margins', text: [
-                      { text: 'Name:\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft },   
-                      { text: customer[0].alt_c2_name + '\n', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                      { text: 'Address:\t\t\t' + customer[0].alt_c2_address + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Contact:\t\t\t' + customer[0].alt_c2_contact + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Relationship:\t' + customer[0].alt_c2_relation , style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                    ]},
-                    ],
-                  ]
-                },
-            // layout: 'noBorders'
-            }],
-            [{
-              border: [true, false, true, true],
-              table: {
-                widths: ['*','*','*'],
-                // margin: [100,20,10,40],
-                // fillColor: 'gray',
-                // background: 'gray',
-                body:buildTableBody(products, ['Product', 'Description', 'Payment Type'], ['name', 'description', 'paymentType'], orderType),
-                  // productList,
-                   // products.map(data =>{
-                    // console.log(data)
-                    // products.map((data, index) =>{
-                    //   return(
-                    //     [
-                    //       { text: 'Product', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 },
-                    //       { text: 'Description', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 },
-                    //       { text: 'Payment Type', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 },                    
-                    //     ]
-                    //   )
-                    // })
-                    
-                  // products.map((data) => {
-                  // // var dataRow = [];
-                  // // dataRow.push('[');
-                  // return(
-                  // [
-                  //   { text: data.name, style: 'margins', bold: true, alignment: screenLeft, fontSize: 8, },
-                  //   { text: data.description, style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },
-                  //   { text: (orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT'), style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },
-                  // ]
-                  // )
-                  // dataRow.push(']');
-                  // productList.push(dataRow)
-                // })                 
-                //]
-              },
-          }],             
+                  }],
         ],              
       },
     },
-    '\n',
-    {
-      table: {
-              widths: ['*'],              
-              body: [
-                [
-                  { text: 'PAYMENT PLAN DETAILS: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0' }, 
-                ],
-                [
-                {style:'margins', text: [  
-                  { text: 'New Customer :' + (order.customer_type===1 ? 'Yes' : order.customer_type===2 ? 'No' : ''), style: 'Header1Center', alignment: screenLeft,  bold: true, }, 
-                  { text: '\nExisting Customer :' + (order.customer_type===2 ? 'Yes' : order.customer_type===1 ? 'No' : ''), style: 'Header1Center', alignment: screenLeft,  bold: true, }, 
-                ]}
-                ],
-              ]
-            },
-    },
-    '\n',
-    {
-      
-      table: {
-              widths: ['*','*','*'],
-              body: [
-                [
-                  { text: 'PAYMENT METHOD & FREQUENCY: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0', colSpan: 3},{},{}
-                ],
-                [
-                  { text: 'DAY YOU GET PAID [         ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
-                  { text: 'DAY PAYMENT DEBITED [         ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
-                  { text: 'PAYMENT START DATE      /  /   ',  bold: true, alignment: screenLeft, fontSize: 8 }, 
-                ],
-                [
-                  { text: 'FREQUENCY OF PAYMENT',  bold: true, alignment: screenLeft, fontSize:8, fillColor: '#C5C7C0'  },                   
-                  { text: '$' +  orderType[0].each_payment_amt +'  '+ (orderType[0].frequency == 1 ? 'PAID WEEKLY' :  'PAID FORTNIGHTLY'),   bold: true, alignment: screenLeft, fontSize:8, colSpan: 2 }, {}
-                  // { text: '$             PAID FORTNIGHTLY',  bold: true, alignment: screenLeft, fontSize:8 }, 
-                ],
-              ]
-            },
-    },
-    '\n',
-    {
-      
-      table: {
-              widths: ['*'],
-              body: [
-                [
-                  { text: 'DELIVERY DETAILS: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
-                ],  
-                [
-                  {style:'margins', text: [  
-                    { text: 'NUMBER OF PAYMENTS:  ' + orderType[0].no_of_payment , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tBOND AMOUNT: $' + orderType[0].bond_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  orderType[0].exp_delivery_date, alignment: screenLeft,  bold: true, fontSize:8}, 
-                  ]}
-                ],
-              ]
-            },
-    },
-    '\n',
-    {
-      table: {
-              widths: ['*'],
-              body: [
-                [
-                  { text: 'DECLARATION: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
-                ],  
-                [
-                  {style:'margins', text: [  
-                    { text: 'I ', alignment: screenLeft,  bold: true, fontSize:8},                    
-                    { text: customer[0].customer_name , alignment: screenLeft,  bold: true, fontSize:9}, 
-                    { text: ' AGREE TO RENT THE GOOD(S) ABOVE ON THE TERMS AND CONDITIONS IN THIS RENT-FLEX CONTRACT AND IN THE GENERAL TERMS AND CONDITIONS AND CONFIRM TO THE BEST OF MY KNOWLEDGE THAT ALL THE ABOVE INFORMATION IS TRUE AND CORRECT.', alignment: screenLeft,  bold: true, fontSize:8},                    
-                    { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
-                    { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + (new Date().getFullYear()), alignment: screenLeft,  bold: true, fontSize:8},
-                  ]}
-                ],
-              ]
-            },
-    },
-    '\n',
-    {
-      table: {
-              widths: ['*'],
-              body: [
-                [
-                  { text: 'NOTICE TO CUSTOMER: RIGHT OF CANCELLATION:', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
-                ],  
-                [
-                  {style:'margins', text: [  
-                    { text: 'Summary of your right to cancel under section 36F(1) of the Fair Trading Act 1986',italics: true, alignment: screenLeft,  bold: true, fontSize:8},                    
-                    { text: '\nThe Fair Trading Act 1986 (“the Act”) gives you a right to cancel this Rent-Flex Contract:', alignment: screenLeft,  fontSize:8},                    
-                    { text: '\n(a)\t\tAt any time before you take possession of the Goods; and', alignment: screenLeft,   fontSize:8},
-                    { text: '\n(b)\t\tIn any way (including oral or written) that shows your intention to cancel or withdraw from this Rent-Flex Contract.', alignment: screenLeft,   fontSize:8},
-
-                    { text: '\n\nSummary of your right to cancel under Section 36M(1) of the Fair Trading Act 1986',italics: true, alignment: screenLeft, bold: true,  fontSize:8},
-                    { text: '\n(a)\t\tWithin 5 working days after the date you receive a copy of this Rent-Flex Contract; or', alignment: screenLeft,   fontSize:8},
-                    { text: '\n(b)\t\tIf we fail to make disclosure under section 36L of the Act, at any time.', alignment: screenLeft,   fontSize:8},
-                    { text: '\nThis statement only contains a summary of your rights and obligations in connection with your right to cancel. If there is anything about your rights or obligations under the Fair Trading Act 1986 that you do not understand, if there is a dispute about your rights, or if you think that we are being unreasonable in any way, you should seek legal advice immediately.', alignment: screenLeft,   fontSize:8},
-                  ]}
-                ],
-              ]
-            },
-    }
-
   ],
-    styles: {
-      // Header
-      Header1Center: {
-        fontSize: 8,
-        alignment: 'center',
-      },
-      Header2Center: {
-        fontSize: 13,
-        alignment: 'center',
-      },
-      Header3Center: {
-        fontSize: 9,
-        alignment: 'center',
-      },
-      custoemr: {
-        // fontSize: 10,
-        alignment: 'right',
-      },
-      margins:{
-        margin: [10,0,0,0]
-      },
-      // Customer: {
-      //   fontSize: 10,
-      //   alignment: 'left',
-      //   margin: [40, 5]
-      // },
-      ItemHeader: {
-        fontSize: 10,
-        bold: true
-      },
-      Common: {
-        fontSize: 10,
-      }
-    },
+  //   styles: {
+  //     // Header
+  //     Header1Center: {
+  //       fontSize: 8,
+  //       alignment: 'center',
+  //     },
+  //     Header2Center: {
+  //       fontSize: 13,
+  //       alignment: 'center',
+  //     },
+  //     Header3Center: {
+  //       fontSize: 9,
+  //       alignment: 'center',
+  //     },
+  //     custoemr: {        
+  //       alignment: 'right',
+  //     },
+  //     alignRight: {  
+  //       fontSize: 8,      
+  //       alignment: 'right',
+  //     },
+  //     margins:{
+  //       margin: [10,0,0,0]
+  //     },
+  //     // Customer: {
+  //     //   fontSize: 10,
+  //     //   alignment: 'left',
+  //     //   margin: [40, 5]
+  //     // },
+  //     ItemHeader: {
+  //       fontSize: 10,
+  //       bold: true
+  //     },
+  //     Common: {
+  //       fontSize: 10,
+  //     }
+  //   },
     pageSize: 'A4',
     pageOrientation: 'portrait',
   }

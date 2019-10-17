@@ -43,8 +43,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Add from './Add';
 import Edit from './Edit';
 import PaymentStatus from './PaymentStatus';
-import FlexTypeDD from './FlexTypeDoc';
-import FixedTypeDD from './FixedOrderDoc';
+
 
 import Open from './OrderComponent/Open';
 import Finance from './OrderComponent/Finance';
@@ -59,10 +58,14 @@ import ProcessDialog from '../ProcessDialog.js';
 import CommentDialog from '../CommentDialog.js';
 import CommentView from './CommentView.js';
 
-// API CALL
-import OrderAPI from '../../../api/franchise/Order';
 import RentFlexContract from './Documentation/RentFlexContract';
 import BudgetAssistant from './Documentation/BudgetAssistant';
+import FixedOrderForm from './Documentation/FixedOrderForm';
+import FlexOrderForm from './Documentation/FlexOrderForm';
+
+// API CALL
+import OrderAPI from '../../../api/franchise/Order';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -166,7 +169,14 @@ export default function Order({roleName}) {
         try {
           const result = await OrderAPI.getFlexOrderDataForPDF({data: data});
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
-          var dd = FlexTypeDD(result,data);
+          
+          // let flexOrderForm = FlexOrderForm(result,data);
+          // let rentFlexContract = RentFlexContract(result,data);
+          // let budgetAssistant =BudgetAssistant(result,data);
+          // let dd = [];
+          // dd.append(flexOrderForm.content,rentFlexContract.content,budgetAssistant.content);
+          
+          var dd = FlexOrderForm(result,data);
           pdfmake.createPdf(dd).open();
           // pdfmake.createPdf(dd).download('document.pdf');
         } catch (error) {
@@ -180,7 +190,7 @@ export default function Order({roleName}) {
         try {
           const result = await OrderAPI.getFixedOrderDataForPDF({data: data});
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
-          var dd = FixedTypeDD(result,data);
+          var dd = FixedOrderForm(result,data);
       //  pdfmake.createPdf(dd).download('document.pdf');
           pdfmake.createPdf(dd).open();
         } catch (error) {

@@ -389,16 +389,14 @@ function calculateNoOfPayment(value) {
   }, []);
 
   
-  // useEffect(() => {
-  //   let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.discount) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );    
-  //   handleRandomInput([
-  //     {name: 'int_unpaid_bal', value:  unpaidBal.toFixed(2)},
-  //   ]);
-  // },[inputs.ppsr_fee, inputs.discount,inputs.delivery_fee, inputs.cash_price]);
-  
-  // console.log('fixd ordr',fixedOrderList);
-  // console.log('inputs',inputs);
-  
+//   useEffect(() => {
+//     let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.discount) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );
+//     // setInput('int_unpaid_bal', unpaidBal.toFixed(2))
+//     handleRandomInput([
+//       {name: 'int_unpaid_bal', value:  unpaidBal.toFixed(2)},
+//     ]);
+// }, inputs != "" && [inputs.ppsr_fee, inputs.discount,inputs.delivery_fee, inputs.cash_price]);
+
 
 return (
     <div>

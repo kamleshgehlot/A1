@@ -50,6 +50,7 @@ import Tab from './Tab';
 
 // Helpers
 import { APP_TOKEN } from '../../../api/Constants';
+import { API_URL } from '../../../api/Constants';
 
 // API CALL
 import RoleAPI from '../../../api/franchise/Role';
@@ -524,6 +525,11 @@ export default function ClippedDrawer(props) {
     props.history.push('/login');
   }
 
+
+  const downloadCustomerDeclaration = () => {
+    // <a href={API_URL + "/api/download?path=customer/" + inputs.id_proof }  download >{inputs.id_proof}</a>
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -638,7 +644,13 @@ export default function ClippedDrawer(props) {
                
                 <Tab roleName="CSR" nodeId="9" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
                 
-                <Tab roleName="CSR" nodeId="21" handleClick={handleCsrTaskReportClick} labelIcon={TaskIcon} labelText="Generate Task Report"/> 
+                <Tab roleName="CSR" nodeId="21" handleClick={handleCsrTaskReportClick} labelIcon={TaskIcon} labelText="Generate Task Report"/>
+
+                <StyledTreeItem nodeId="22" labelText="Download Doc"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
+                  <a href={API_URL + "/api/download?path=ApplicationFiles/CustomerDeclaration.pdf"}  download >
+                    <StyledTreeItem nodeId="23" labelText="Customer Declaration"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} />
+                  </a>
+                </StyledTreeItem>
              
               </StyledTreeItem>
             :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }

@@ -768,7 +768,8 @@ Order.prototype.getCustomerDetails = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT c.*,  i.name as id_type_name from customer as c inner join id_type as i on c.id_type = i.id where c.id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+        // connection.query('SELECT c.*,  i.name as id_type_name from customer as c inner join id_type as i on c.id_type = i.id where c.id = "'+that.lastInsertId+'"',function (error, rows, fields) {
+          connection.query('SELECT c.*,  ci.employer_name, ci.employer_address, ci.employer_telephone, ci.employer_email, ci.employer_tenure, i.name as id_type_name from customer as c inner join id_type as i on c.id_type = i.id INNER JOIN customer_income as ci on c.id = ci.cust_id where c.id = "'+that.lastInsertId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {

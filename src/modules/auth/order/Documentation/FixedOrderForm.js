@@ -1,23 +1,25 @@
-import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../utils/datetime';
-import { logo } from '../../common/Logo.js';
+import { logo } from '../../../common/Logo.js';
+import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../../utils/datetime';
+import { styles } from './Styles.js';
+
 
 function buildTableBody(data, columns, valueKeys, orderType) {
   var body = [];
 
   body.push([
-    { text: 'PRODUCT AND CREDIT DETAILS: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10, colSpan: 3}, {},{}
+    { text: 'PRODUCT AND CREDIT DETAILS: ', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 10, colSpan: 3}, {},{}
   ]);
 
   var dataRow1 = [];
 
   dataRow1.push(
-    { text: columns[0], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }
+    { text: columns[0], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8 }
   );
   dataRow1.push(    
-    { text: columns[1], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }
+    { text: columns[1], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8 }
   );
   dataRow1.push(
-    { text: columns[2], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8 }                   
+    { text: columns[2], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8 }                   
   );
 
   body.push(dataRow1);
@@ -27,10 +29,10 @@ function buildTableBody(data, columns, valueKeys, orderType) {
 
     valueKeys.forEach(function(column) {
       if(column === 'paymentType') {
-        dataRow.push({ text: orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT', style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
+        dataRow.push({ text: orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
 
       } else {
-        dataRow.push({ text: row[column.toLowerCase()], style: 'margins', bold: true, alignment: screenLeft, fontSize: 8,  },);
+        dataRow.push({ text: row[column.toLowerCase()], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
       }
     })
 
@@ -41,7 +43,7 @@ function buildTableBody(data, columns, valueKeys, orderType) {
 }
 
 
-export default function layout(data,order) {
+export default function FixedOrderForm(data,order) {
 
   const franchise = data.franchise;
   const products = data.product;
@@ -66,17 +68,17 @@ export default function layout(data,order) {
           { 
             columns: [                 
               { text: [
-                 { text: '\n' + franchise[0].location + '\n', style: 'Header1Center' },
-                 { text: '[PH] ', style: 'Header1Center', bold: true },
-                 { text: franchise[0].contact + '\n', style: 'Header1Center' },
-                 { text: 'Email: ', style: 'Header1Center', bold: true },
-                 { text: franchise[0].email + '\n', style: 'Header1Center' } 
+                 { text: '\n' + franchise[0].location + '\n', style: styles.Header1Center },
+                 { text: '[PH] ', style: styles.Header1Center, bold: true },
+                 { text: franchise[0].contact + '\n', style: styles.Header1Center },
+                 { text: 'Email: ', style: styles.Header1Center, bold: true },
+                 { text: franchise[0].email + '\n', style: styles.Header1Center } 
                 ]
               },
-               [ { image: logo,  fit: [150, 150], style: 'Header2Center'},
-                 {text: 'RENT-FIX ORDER FORM', style: 'Header2Center', bold: true }, 
+               [ { image: logo,  fit: [150, 150], style: styles.Header2Center},
+                 {text: 'RENT-FIX ORDER FORM', style: styles.Header2Center, bold: true }, 
                ],
-               { text: '\n\n\nApplication#: ' + order.order_id , style: 'Header3Center'},
+               { text: '\n\n\nApplication#: ' + order.order_id , style: styles.Header3Center},
             ]
           },
           {
@@ -90,10 +92,10 @@ export default function layout(data,order) {
                         body: [
                           [
                             
-                            { text: 'Date: ' + getCurrentDateDDMMYYYY(), style: 'Header3Center', bold: true, alignment: screenLeft }, 
-                            { text: 'Team Leader: ' + '', style: 'Header3Center', bold: true, alignment: screenLeft }, 
-                            { text: 'Salesperson: ' + user[0].name , style: 'Header3Center', bold: true, alignment: screenLeft }, 
-                            { text: 'Sales Type: ', style: 'Header3Center', bold: true, alignment: screenLeft }, 
+                            { text: 'Date: ' + getCurrentDateDDMMYYYY(), style: styles.Header3Center, bold: true, alignment: screenLeft }, 
+                            { text: 'Team Leader: ' + '', style: styles.Header3Center, bold: true, alignment: screenLeft }, 
+                            { text: 'Salesperson: ' + user[0].name , style: styles.Header3Center, bold: true, alignment: screenLeft }, 
+                            { text: 'Sales Type: ', style: styles.Header3Center, bold: true, alignment: screenLeft }, 
                           ]
                         ]
                       },                      
@@ -104,21 +106,21 @@ export default function layout(data,order) {
                       widths: ['*'],                    
                       body: [
                         [
-                          { text: 'CUSTOMER DETAILS: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0' }, 
+                          { text: 'CUSTOMER DETAILS: ', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0' }, 
                         ],
                         [                     
-                        {style:'margins', text: [  
-                          { text: customer[0].customer_name + '\n', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                          { text: customer[0].address + ',\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: customer[0].city + ' - '+ customer[0].postcode + '\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'PH: ', style: 'Header1Center', alignment: screenLeft, bold: true }, 
-                          { text: customer[0].telephone + '\t\t', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'Mobile: ', style: 'Header1Center', alignment: screenLeft, bold: true }, 
-                          { text: customer[0].mobile + '\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'Email: ', style: 'Header1Center', alignment: screenLeft, bold: true }, 
-                          { text: customer[0].email + '\n', style: 'Header1Center', alignment: screenLeft }, 
-                          { text: 'Date of Birth: ' + customer[0].dob, style: 'Header1Center', alignment: screenLeft }, 
-                          { text: '\nWorking Status :' + (customer[0].is_working == 1 ? 'Yes' : 'No'), style: 'Header1Center', alignment: screenLeft }, 
+                        {style:styles.margins, text: [  
+                          { text: customer[0].customer_name + '\n', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                          { text: customer[0].address + ',\n', style: styles.Header1Center, alignment: screenLeft }, 
+                          { text: customer[0].city + ' - '+ customer[0].postcode + '\n', style: styles.Header1Center, alignment: screenLeft }, 
+                          { text: 'PH: ', style: styles.Header1Center, alignment: screenLeft, bold: true }, 
+                          { text: customer[0].telephone + '\t\t', style: styles.Header1Center, alignment: screenLeft }, 
+                          { text: 'Mobile: ', style: styles.Header1Center, alignment: screenLeft, bold: true }, 
+                          { text: customer[0].mobile + '\n', style: styles.Header1Center, alignment: screenLeft }, 
+                          { text: 'Email: ', style: styles.Header1Center, alignment: screenLeft, bold: true }, 
+                          { text: customer[0].email + '\n', style: styles.Header1Center, alignment: screenLeft }, 
+                          { text: 'Date of Birth: ' + customer[0].dob, style: styles.Header1Center, alignment: screenLeft }, 
+                          { text: '\nWorking Status :' + (customer[0].is_working == 1 ? 'Yes' : 'No'), style: styles.Header1Center, alignment: screenLeft }, 
                         ]}
                         ],
                       ]
@@ -131,13 +133,13 @@ export default function layout(data,order) {
                     widths: ['*'],                   
                     body: [
                       [
-                        { text: 'ID Sighted: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10 }, 
+                        { text: 'ID Sighted: ', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 10 }, 
                       ],
                       [
-                      {style:'margins', text: [  
-                        { text: customer[0].id_type_name + '\t\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                        { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: 'Header1Center', alignment: screenLeft }, 
-                        { text: 'Expiry Date: ' + getDateInDDMMYYYY(customer[0].expiry_date) +  '\n', style: 'Header1Center', alignment: screenLeft },                         
+                      {style:styles.margins, text: [  
+                        { text: customer[0].id_type_name + '\t\t\t\t\t', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                        { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: styles.Header1Center, alignment: screenLeft }, 
+                        { text: 'Expiry Date: ' + getDateInDDMMYYYY(customer[0].expiry_date) +  '\n', style: styles.Header1Center, alignment: screenLeft },                         
                       ]}
                       ],
                     ]
@@ -154,24 +156,24 @@ export default function layout(data,order) {
                   body: [
                     [
                       { text: [  
-                        { text: 'ALTERNATE CONTACTS: ', style: 'margins', bold: true, alignment: screenLeft, fontSize: 10}, 
+                        { text: 'ALTERNATE CONTACTS: ', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 10}, 
                         { text: '(Can be your Father, Mother, Son, Daughter or a Friend)',  bold: true, alignment: screenLeft, fontSize: 7 },
                       ], colSpan: 2},{}
                     ],
                     [
-                    {style:'margins', text: [
-                      { text: 'Name:\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft },   
-                      { text: customer[0].alt_c1_name + '\n', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                      { text: 'Address:\t\t\t' + customer[0].alt_c1_address + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Contact:\t\t\t' + customer[0].alt_c1_contact + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Relationship:\t' + customer[0].alt_c1_relation , style: 'Header1Center', bold: true, alignment: screenLeft }, 
+                    {style:styles.margins, text: [
+                      { text: 'Name:\t\t\t\t', style: styles.Header1Center,  bold: true,  alignment: screenLeft },   
+                      { text: customer[0].alt_c1_name + '\n', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                      { text: 'Address:\t\t\t' + customer[0].alt_c1_address + '\n', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                      { text: 'Contact:\t\t\t' + customer[0].alt_c1_contact + '\n', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                      { text: 'Relationship:\t' + customer[0].alt_c1_relation , style: styles.Header1Center, bold: true, alignment: screenLeft }, 
                     ]},
-                    {style:'margins', text: [
-                      { text: 'Name:\t\t\t\t', style: 'Header1Center',  bold: true,  alignment: screenLeft },   
-                      { text: customer[0].alt_c2_name + '\n', style: 'Header1Center',  bold: true,  alignment: screenLeft }, 
-                      { text: 'Address:\t\t\t' + customer[0].alt_c2_address + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Contact:\t\t\t' + customer[0].alt_c2_contact + '\n', style: 'Header1Center', bold: true, alignment: screenLeft }, 
-                      { text: 'Relationship:\t' + customer[0].alt_c2_relation , style: 'Header1Center', bold: true, alignment: screenLeft }, 
+                    {style:styles.margins, text: [
+                      { text: 'Name:\t\t\t\t', style: styles.Header1Center,  bold: true,  alignment: screenLeft },   
+                      { text: customer[0].alt_c2_name + '\n', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                      { text: 'Address:\t\t\t' + customer[0].alt_c2_address + '\n', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                      { text: 'Contact:\t\t\t' + customer[0].alt_c2_contact + '\n', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                      { text: 'Relationship:\t' + customer[0].alt_c2_relation , style: styles.Header1Center, bold: true, alignment: screenLeft }, 
                     ]},
                     ],
                   ]
@@ -197,9 +199,9 @@ export default function layout(data,order) {
                   { text: 'PAYMENT PLAN DETAILS: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0' }, 
                 ],
                 [
-                {style:'margins', text: [  
-                  { text: 'New Customer :' + (order.customer_type===1 ? 'Yes' : order.customer_type===2 ? 'No' : ''), style: 'Header1Center', alignment: screenLeft,  bold: true, }, 
-                  { text: '\nExisting Customer :' + (order.customer_type===2 ? 'Yes' : order.customer_type===1 ? 'No' : ''), style: 'Header1Center', alignment: screenLeft,  bold: true, }, 
+                {style:styles.margins, text: [  
+                  { text: 'New Customer :' + (order.customer_type===1 ? 'Yes' : order.customer_type===2 ? 'No' : ''), style: styles.Header1Center, alignment: screenLeft,  bold: true, }, 
+                  { text: '\nExisting Customer :' + (order.customer_type===2 ? 'Yes' : order.customer_type===1 ? 'No' : ''), style: styles.Header1Center, alignment: screenLeft,  bold: true, }, 
                 ]}
                 ],
               ]
@@ -236,7 +238,7 @@ export default function layout(data,order) {
                   { text: 'DELIVERY DETAILS: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
                 ],  
                 [
-                  {style:'margins', text: [  
+                  {style:styles.margins, text: [  
                     { text: 'MINIMUM PAYMENTS:  ' + orderType[0].minimum_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tTOTAL AMOUNT: $' + orderType[0].total_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDateInDDMMYYYY(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
@@ -255,7 +257,7 @@ export default function layout(data,order) {
                   { text: 'RENT-FIX TERM: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
                 ],  
                 [
-                  {style:'margins', text: [  
+                  {style:styles.margins, text: [  
                     { text: 'START DATE:  ' + getDateInDDMMYYYY(orderType[0].first_payment) , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tEND DATE:  ' + getDateInDDMMYYYY(orderType[0].last_payment), alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tTOTAL PAYMENTS:  ' +  orderType[0].no_of_payment, alignment: screenLeft,  bold: true, fontSize:8}, 
@@ -273,7 +275,7 @@ export default function layout(data,order) {
                   { text: 'DECLARATION: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
                 ],  
                 [
-                  {style:'margins', text: [  
+                  {style:styles.margins, text: [  
                     { text: 'I ', alignment: screenLeft,  bold: true, fontSize:8},                    
                     { text: customer[0].customer_name , alignment: screenLeft,  bold: true, fontSize:9}, 
                     { text: ' agree to RENT-PURCHASE THE GOOD(s) above on the terms and conditions in this RENT-FIX CONTRACT and in the general terms and conditions and confirm to the best of my knowledge that all the above information is true and correct.', alignment: screenLeft,  bold: true, fontSize:8},                    
@@ -293,7 +295,7 @@ export default function layout(data,order) {
                   { text: 'NOTICE TO CUSTOMER: RIGHT OF CANCELLATION:', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
                 ],  
                 [
-                  {style:'margins', text: [  
+                  {style:styles.margins, text: [  
                     { text: 'Summary of your right to cancel under section 36F(1) of the Fair Trading Act 1986',italics: true, alignment: screenLeft,  bold: true, fontSize:8},                    
                     { text: '\\t\t\t\tThe Fair Trading Act 1986 gives you a right to cancel this Rent-Fix Contract: at any time before you take possession of the Goods; and in any way (including oral or written) that shows your intention to cancel or withdraw from this Rent-Fix Contract.', alignment: screenLeft,  fontSize:8},                    
                    
@@ -308,42 +310,8 @@ export default function layout(data,order) {
               ]
             },
     }
-
   ],  
-    styles: {
-      // Header
-      Header1Center: {
-        fontSize: 8,
-        alignment: 'center',
-      },
-      Header2Center: {
-        fontSize: 13,
-        alignment: 'center',
-      },
-      Header3Center: {
-        fontSize: 9,
-        alignment: 'center',
-      },
-      custoemr: {
-        // fontSize: 10,
-        alignment: 'right',
-      },
-      margins:{
-        margin: [10,0,0,0]
-      },
-      // Customer: {
-      //   fontSize: 10,
-      //   alignment: 'left',
-      //   margin: [40, 5]
-      // },
-      ItemHeader: {
-        fontSize: 10,
-        bold: true
-      },
-      Common: {
-        fontSize: 10,
-      }
-    },
+   
     pageSize: 'A4',
     pageOrientation: 'portrait',
   }

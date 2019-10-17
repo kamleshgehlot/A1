@@ -473,9 +473,9 @@ const editOrder = async function (req, res, next) {
       };
       
       if(orderParams.order_id!= '' || orderParams.order_id != null){
-        // console.log('hello.',orderParams);
+        console.log('hello.',req.body.data);
         try{
-          const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget();
+          const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id, customer_id: req.body.data.customer_id}).getBudget();
               // console.log('budget..',budget)
           const flexOrder = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.data.order_type_id}).getFlexOrder();
               // console.log('flexOrder..',flexOrder)
@@ -521,7 +521,7 @@ const editOrder = async function (req, res, next) {
     if(orderParams.order_id!= '' || orderParams.order_id != null){
       // console.log('hello.',orderParams);
       try{
-        const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id}).getBudget();
+        const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id, customer_id: req.body.data.customer_id}).getBudget();
             // console.log('budget..',budget)
         const fixedOrder = await  new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.data.order_type_id}).getFixedOrder();
             // console.log('flexOrder..',flexOrder)
