@@ -19,6 +19,7 @@ import ProductIcon from '@material-ui/icons/AddShoppingCart';
 import DeliveryIcon from '@material-ui/icons/LocalShipping';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PersonAddIcon from '@material-ui/icons/GroupAdd';
+import PDFIcon from '@material-ui/icons/PictureAsPdf';
 import TreeView from "@material-ui/lab/TreeView";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -59,6 +60,8 @@ import TaskList from '../task/TaskList';
 
 import StyledTreeItem from './StyledTreeItem';
 import TaskReport from './report/TaskReport';
+import { fontSize } from '@material-ui/system';
+import { inherits } from 'util';
 
 const drawerWidth = 220;
 
@@ -92,7 +95,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: 'left',
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary,        
   },
   fonttransform:{
     textTransform:"initial",
@@ -113,7 +116,8 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(8),
     maxWidth: 250,
     minWidth: 200
-  }
+  },
+  
 }));
 
 export default function ClippedDrawer(props) {
@@ -646,10 +650,23 @@ export default function ClippedDrawer(props) {
                 
                 <Tab roleName="CSR" nodeId="21" handleClick={handleCsrTaskReportClick} labelIcon={TaskIcon} labelText="Generate Task Report"/>
 
-                <StyledTreeItem nodeId="22" labelText="Download Doc"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
-                  <a href={API_URL + "/api/download?path=ApplicationFiles/CustomerDeclaration.pdf"}  download >
-                    <StyledTreeItem nodeId="23" labelText="Customer Declaration"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} />
+                <StyledTreeItem nodeId="22" labelText="Download Doc"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}>  
+                  <a href={API_URL + "/api/download?path=ApplicationFiles/CustomerDeclaration.pdf"} download  >
+                    <StyledTreeItem nodeId="23" labelText="Customer Declaration"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon} />
                   </a>
+                  <a href={API_URL + "/api/download?path=ApplicationFiles/EasyDebit.pdf"}  download >
+                    <StyledTreeItem nodeId="24" labelText="EasyDebit Form"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                  </a>
+                  <a href={API_URL + "/api/download?path=ApplicationFiles/InsuranceForm.pdf"}  download >
+                    <StyledTreeItem nodeId="25" labelText="Insurance Form"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                  </a>
+                  <a href={API_URL + "/api/download?path=ApplicationFiles/NoticeOfCancellation.pdf"}  download >
+                    <StyledTreeItem nodeId="25" labelText="Notice of Cancellation "  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                  </a>
+                  <a href={API_URL + "/api/download?path=ApplicationFiles/Specification.pdf"}  download >
+                    <StyledTreeItem nodeId="26" labelText="Specification"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                  </a>
+
                 </StyledTreeItem>
              
               </StyledTreeItem>

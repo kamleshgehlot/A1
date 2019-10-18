@@ -713,8 +713,6 @@ return (
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
-                      disabled
-                      // required
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"
@@ -746,8 +744,6 @@ return (
                       error={errors.total_payment_amt}
                       helperText={errors.total_payment_amt}
                       fullWidth
-                      disabled
-                      // required
                       type="text"
                       // placeholder="Franchise Name"
                       margin="dense"

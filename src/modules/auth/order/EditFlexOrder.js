@@ -67,19 +67,11 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(-3),
   },
   labelTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
-    fontWeight: theme.typography.fontWeightBold,
+     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
   },
   subTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
     fontSize: theme.typography.pxToRem(14),
     fontWeight: theme.typography.fontWeightBold,
     marginTop: 12,
@@ -133,80 +125,24 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   const classes = useStyles();
   const styleClass = useCommonStyles();
   const [frequency, setFrequency] = useState(flexOrderList.frequency);
-  const [duration, setDuration] = useState(flexOrderList.duration);
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(flexOrderList.before_delivery_amt);
   const [firstPaymentDate,setFirstPaymentDate] = useState(flexOrderList.first_payment);
-  const [dateArray,setDateArray] = useState([]);
-  const [flexNull,setFlexNull] = useState(true);
-  // const [inputs,setInputs] = useState([]);  
+  
 
-  
-  const setDateFormat = (date) => {
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    return fullDate;
-  }
-  
   function handleDateChange(date){    
-    // handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
     handleInputChange({target:{name: 'first_payment', value: date}})
     setFirstPaymentDate(date);
   }
 
   function handleDeliveryDate(date){
-    // handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
     handleInputChange({target:{name: 'exp_delivery_date', value: date}})
   }
 
   function handleDeliveryTime(time){      
-    // let dTime = new Date(time);
     handleInputChange({target:{name: 'exp_delivery_time', value: time}})     
   }
-  
-  // function handleInputBlur(e){
-  //   if(e.target.value===''){
-  //     setInputs({
-  //       ...inputs,
-  //       [e.target.name]: 0,
-  //     });
-  //   }
-  // }
-
-  // function handleInputFocus(e){
-  //   if(e.target.value==='0'){
-  //     setInputs({
-  //       ...inputs,
-  //       [e.target.name]: '',
-  //     });
-  //   }
-  // }
-  
-  // function handleInputChange(e){
-  //   // console.log('valueee',e.target.value)
-  //   // if(e.target.value===""){
-  //     // setInputs({
-  //     //   ...inputs,
-  //     //   [e.target.name]: 0,
-  //     // });
-  //   // }
-  //   // else{
-  //   setInputs({
-  //     ...inputs,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // // }
-
-  // }
-  // console.log('inputs.',inputs);
 
   function flex(e){
-    // e.preventDefault();    
-
     const data = {
       goods_rent_price : parseFloat(inputs.goods_rent_price).toFixed(2),
       ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
@@ -214,14 +150,11 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       weekly_total : parseFloat(inputs.weekly_total).toFixed(2),
       frequency : parseFloat(inputs.frequency).toFixed(2),
       first_payment : inputs.first_payment,
-      duration: inputs.duration,
-      // no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
       each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
-      // total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
+      bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
       exp_delivery_date : inputs.exp_delivery_date,
-      exp_delivery_time : inputs.exp_delivery_time,
-      bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
+      exp_delivery_time : inputs.exp_delivery_time,      
     }
     setFlexOrderList(data);
     handleFlexClose(false);
@@ -234,12 +167,6 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     setInput('frequency', Number(e.target.value));
   }
   
-  const handleDuration = (e) => {
-    setDuration(Number(e.target.value));
-    setInput('duration', Number(e.target.value))
-  }
-
-  
   const handleNumberOfPaymentBefDelivery = (e) =>{
     calculateNoOfPayment(e.target.value);
   }
@@ -247,162 +174,52 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   function calculateNoOfPayment(value) {
     const validNumber = /^[0-9]*$/;
     if (value === '' || validNumber.test(value)) {
-      // let temp = paymentBeforeDelivery;
       setPaymentBeforeDelivery(value);
       setInput( 'before_delivery_amt' , value);
-      // if(Number(value) > Number(inputs.no_of_payment)){
-      //   alert('Number of payment before delivery should be less then or equal to total number of payment.');
-      //   setPaymentBeforeDelivery(temp);
-      //   setInput( 'before_delivery_amt' , temp);
-      // }
     }
   }
   
-  // const handleNumberOfPaymentBefDelivery = (e) =>{
-  //   const validNumber = /^[0-9]*$/;
-  //   if (e.target.value === '' || validNumber.test(e.target.value)) {
-  //     let temp = paymentBeforeDelivery;
-  //     setPaymentBeforeDelivery(e.target.value);
-  //     setInput( 'before_delivery_amt' , e.target.value);
-  //     if(e.target.value > inputs.no_of_payment){
-  //       alert('Number of payment before delivery should be less then or equal to total number of payment.');
-  //       setPaymentBeforeDelivery(temp);
-  //       setInput( 'before_delivery_amt' , temp);
-  //     }
-  //   }
-  // }
-
 
   
   
   useEffect(() => {
-    if(duration != '' && frequency != '' && firstPaymentDate != ''){
-      let paymentDates = [];
-
-      if(frequency == 1){
-        let firstPayDate = new Date(firstPaymentDate);
-        for(let i=0; i< duration; i++){
-          // console.log('date',firstPayDate)
-          paymentDates.push(firstPayDate.toString())
-          firstPayDate.setMonth(firstPayDate.getMonth() + 1);                   
-        }        
-      }else if(frequency == 2){
-        let date1 = new Date(firstPaymentDate);
-        let date2 = new Date(firstPaymentDate);
-            date2.setDate(date2.getDate() + 15);
-        for(let i=1; i <= (duration * 2); i++){
-          if(i%2 != 0){
-            // console.log('date 1',date1);
-            paymentDates.push(date1.toString())            
-          }else if(i%2 == 0){
-            // console.log('date 2',date2);
-            paymentDates.push(date2.toString())            
-
-            date1.setMonth(date1.getMonth() + 1);
-            date2.setMonth(date2.getMonth() + 1);            
-          }
-        }        
-      }else if(frequency == 4){
-        let date1 = new Date(firstPaymentDate);
-        let date2 = new Date(firstPaymentDate);
-        let date3 = new Date(firstPaymentDate);
-        let date4 = new Date(firstPaymentDate);
-            date2.setDate(date1.getDate() + 7);
-            date3.setDate(date3.getDate() + 14);
-            date4.setDate(date4.getDate() + 21);
-        for(let i=1, j=1; i <= (duration * 4); i++, j++){
-          if(j==1){
-            // console.log('date 1',date1);
-            paymentDates.push(date1.toString())
-          }else if (j==2){
-            // console.log('date 2',date2);
-            paymentDates.push(date2.toString())
-          }else if (j==3){
-            // console.log('date 3',date3);
-            paymentDates.push(date3.toString())
-          }else if (j==4){
-            // console.log('date 4',date4);
-            paymentDates.push(date4.toString())
-            j = 0;
-          }
-          
-          if(i%4 == 0){
-            date1.setMonth(date1.getMonth() + 1);
-            date2.setMonth(date2.getMonth() + 1);            
-            date3.setMonth(date3.getMonth() + 1);            
-            date4.setMonth(date4.getMonth() + 1);            
-          }
-        }
-      }
-      setDateArray(paymentDates);      
+    if(frequency != '' && firstPaymentDate != ''){
       if(flexOrderList) {
         if(flexOrderList.before_delivery_amt && Number(flexOrderList.before_delivery_amt) > 0) {
           calculateNoOfPayment(flexOrderList.before_delivery_amt);
         }
       }
     }
-  },[duration, frequency, firstPaymentDate]);
+  },[frequency, firstPaymentDate]);
 
 
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
-      let delivery_date = new Date(dateArray[paymentBeforeDelivery - 1]);      
-      if(flexOrderList !== null && flexNull === true){
-        delivery_date = flexOrderList.exp_delivery_date;
-      }
       handleRandomInput([
-        // {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
-        {name: 'exp_delivery_date', value: delivery_date },
         {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
       ]);
-      setFlexNull(false);
     }else{
       handleRandomInput([
-        // {name: 'minimum_payment_amt', value: ''},
         {name: 'bond_amt', value: ''},
-        {name: 'exp_delivery_date', value: ''},
       ]);
     }
-
   },[paymentBeforeDelivery]);
 
-  
   useEffect(()=>{
-      if(frequency != '' && duration != ''){    
-        if(frequency == 1){
-          let installment = (parseFloat(product.rental) * 4);
-          handleRandomInput([
-            {name: 'each_payment_amt', value: installment},
-            // {name: 'no_of_payment', value: duration},
-            // {name: 'total_payment_amt', value: (installment * duration)},
-          ]);
-          // setInputsAll(val);
-        }else if(frequency == 2){ 
-          let installment = (parseFloat(product.rental) * 2);
-          handleRandomInput([
-            {name: 'each_payment_amt', value: installment},
-            // {name: 'no_of_payment', value: (duration * 2)},
-            // {name: 'total_payment_amt', value: (installment * (duration * 2))},
-          ]);
-        }else if(frequency == 4){ 
-          let installment = (parseFloat(product.rental));
-          handleRandomInput([
-            {name: 'each_payment_amt', value: installment},
-            // {name: 'no_of_payment', value: (duration * 4)},
-            // {name: 'total_payment_amt', value: (installment * (duration * 4))},
-          ]);        
-        }
-      }      
-      // if(Number(paymentBeforeDelivery) > Number(inputs.no_of_payment)){
-      //   setPaymentBeforeDelivery('');
-      //   handleRandomInput([
-      //     // {name: 'minimum_payment_amt', value: ''},
-      //     {name: 'before_delivery_amt', value: ''},   
-      //     {name: 'exp_delivery_date', value: ''},     
-      //   ]);
-      //   alert('Number of payment before delivery should be less then or equal to total number of payment.');
-      // }
-  },[duration,frequency]);
+    if(frequency != ''){    
+      if(frequency == 1){
+        let installment = (parseFloat(product.rental) * 4);
+        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
+      }else if(frequency == 2){ 
+        let installment = (parseFloat(product.rental) * 2);
+        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
+      }else if(frequency == 4){ 
+        let installment = (parseFloat(product.rental));
+        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
+      }
+    }            
+},[frequency]);
+
 
 
   const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
@@ -439,21 +256,16 @@ return (
               </Typography>
               </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="goods_rent_price"
                       name="goods_rent_price"
                       label="Rent Price of Goods"
                       value={inputs.goods_rent_price}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.goods_rent_price}
                       helperText={errors.goods_rent_price}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -464,21 +276,16 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="ppsr_fee"
                       name="ppsr_fee"
                       label="PPSR Fee (if applicable)"
                       value={inputs.ppsr_fee}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.ppsr_fee}
                       helperText={errors.ppsr_fee}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -489,21 +296,16 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="liability_fee"
                       name="liability_fee"
                       label="Liability Waiver Fee "
                       value={inputs.liability_fee}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.liability_fee}
                       helperText={errors.liability_fee}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -515,21 +317,16 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
                       id="weekly_total"
                       name="weekly_total"
                       label="TOTAL PER WEEK/ FORTNIGHT"
                       value={inputs.weekly_total}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.weekly_total}
                       helperText={errors.weekly_total}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -569,29 +366,6 @@ return (
                     </Select>            
                   </Grid>
 
-                <Grid item xs={12} sm={4}>    
-                <InputLabel className={classes.textsize} htmlFor="duration">Duration *</InputLabel>
-                  <Select
-                    id="duration"
-                    name="duration"
-                    value={inputs.duration}
-                    onChange={handleDuration}
-                    error={errors.duration}
-                    margin='dense'                      
-                    helperText={errors.duration}
-                    fullWidth                      
-                    className={classes.textsize}
-                    required                      
-                  > 
-                    <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
-                    <MenuItem className={classes.textsize} value="12">1 Year</MenuItem>
-                    <MenuItem className={classes.textsize} value="24">2 Year</MenuItem>
-                    <MenuItem className={classes.textsize} value="36">3 Year</MenuItem>
-                    <MenuItem className={classes.textsize} value="48">4 Year</MenuItem>
-                    <MenuItem className={classes.textsize} value="60">5 Year</MenuItem>                      
-                  </Select>                          
-                </Grid>
-                   
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     First Payment Date
@@ -603,7 +377,6 @@ return (
                         name="first_payment"
                         format="dd/MM/yyyy"
                         disablePast = {true}
-                        // defaultValue = {new Date()}
                         value={inputs.first_payment}
                         fullWidth 
                         InputProps={{
@@ -614,41 +387,9 @@ return (
                         onChange={handleDateChange}
                         onError={errors.first_payment}
                         helperText={errors.first_payment} 
-                        // error={errors.first_payment}
-                        // helperText={errors.first_payment}                               
                       />
                     </MuiPickersUtilsProvider>
                 </Grid>
-                {/* <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                      Number of Payments 
-                  </Typography>
-                  <TextField
-                      id="no_of_payment"
-                      name="no_of_payment"
-                      // label="no_of_payment/Mortgage"
-                      value={inputs.no_of_payment}
-                      onChange={handleNumberInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.no_of_payment}
-                      helperText={errors.no_of_payment}
-                      fullWidth
-                      disabled
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      // InputProps={{
-                      //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      // }}
-                    />
-                </Grid> */}
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Amount of Each Payments
@@ -659,15 +400,11 @@ return (
                       // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
                       disabled
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -677,36 +414,6 @@ return (
                       }}
                     />
                 </Grid>
-                {/* <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                      Total Amount of Payments
-                  </Typography>
-                  <TextField
-                      id="total_payment_amt"
-                      name="total_payment_amt"
-                      // label="total_payment_amt/Mortgage"
-                      value={inputs.total_payment_amt}
-                      onChange={handlePriceInput}
-                      disabled
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.total_payment_amt}
-                      helperText={errors.total_payment_amt}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                     
-                </Grid>
-                 */}
                 <Grid item xs={12} sm={8}>
                   <Typography  className={classes.subTitle}>
                       Minimun Number of Payments before delivery
@@ -714,17 +421,12 @@ return (
                   <TextField
                       id="before_delivery_amt"
                       name="before_delivery_amt"
-                      // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
                       onChange={handleNumberOfPaymentBefDelivery}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         classes: {
@@ -734,7 +436,29 @@ return (
                       
                     />
                 </Grid>
-
+                  <Grid item xs={12} sm={4}>
+                    <Typography  className={classes.subTitle}>
+                      Bond Amt
+                    </Typography>
+                    <TextField
+                        id="bond_amt"
+                        name="bond_amt"
+                        // label="bond_amt/Mortgage"
+                        value={inputs.bond_amt}
+                        onChange={handlePriceInput}
+                        error={errors.bond_amt}
+                        helperText={errors.bond_amt}
+                        fullWidth
+                        type="text"
+                        margin="dense"
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                      />
+                  </Grid>
                   <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                    Expected Delivery Date
@@ -747,8 +471,6 @@ return (
                           format="dd/MM/yyyy"
                           disablePast = {true}                          
                           value={inputs.exp_delivery_date}
-                          // fullWidth 
-                          // type="datetime-local"
                           InputProps={{
                             classes: {
                               input: classes.textsize,
@@ -757,8 +479,6 @@ return (
                           onChange={handleDeliveryDate}
                           error={errors.exp_delivery_date}
                           helperText={errors.exp_delivery_date}   
-                          // error={errors.exp_delivery_date}
-                          // helperText={errors.exp_delivery_date}                               
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>
@@ -772,7 +492,6 @@ return (
                             margin="dense"
                             id="exp_delivery_time"
                             name="exp_delivery_time"
-                            // label="Time picker" 
                             defaultValue = {""}
                             value={inputs.exp_delivery_time}
                             onChange={handleDeliveryTime}
@@ -783,43 +502,9 @@ return (
                                 input: classes.textsize,
                               },
                             }}
-                            // error={errors.exp_delivery_time}
-                            // helperText={errors.exp_delivery_time}
-                            // KeyboardButtonProps={{
-                            //   'aria-label': 'change time',
-                            // }}
                           />
                       </MuiPickersUtilsProvider>
-                  </Grid>
-                
-                
-                <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Bond Amt
-                  </Typography>
-                  <TextField
-                      id="bond_amt"
-                      name="bond_amt"
-                      // label="bond_amt/Mortgage"
-                      value={inputs.bond_amt}
-                      onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.bond_amt}
-                      helperText={errors.bond_amt}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                </Grid>
+                  </Grid>               
                 <Grid item xs={12} sm={12}>
                     
                     <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>

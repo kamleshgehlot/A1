@@ -97,12 +97,13 @@ const useStyles = makeStyles(theme => ({
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
-  },
-  drpdwn:{
-    marginTop: theme.spacing(1),
-  },
+  }, 
   buttonMargin: {
     margin: theme.spacing(1),
+  },  
+  drpdwn:{
+    marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
   },
 }));
 
@@ -121,6 +122,8 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
   const [oldBudget, setOldBudget] = useState(0);
   const [errorSurplus, setErrorSurplus] = useState();
   const [errorAfford, setErrorAfford] = useState();
+  const [errorDebitedDay, setErrorDebitedDay] = useState('');
+  const [errorPaidDay, setErrorPaidDay] = useState('');
 
  
 console.log('inputs',inputs);
@@ -153,12 +156,12 @@ console.log('inputs',inputs);
     }
   }
 
-  // function handleInputChange(e){
-  //   setInputs({
-  //     ...inputs,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // }
+  function handleInputChange(e){
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
+  }
 
   function handleSubmit(e){
     e.preventDefault();
@@ -179,6 +182,22 @@ console.log('inputs',inputs);
     }else{
       setErrorAfford('');
     }
+    if(inputs.paid_day == ""){
+      setErrorPaidDay('Paid Day is required');
+      check=true;
+    }
+    else{
+      setErrorPaidDay('');
+    }
+    if(inputs.debited_day == ""){
+      setErrorDebitedDay('Debited Day is Required');
+      check=true;
+    }
+    else{
+      setErrorDebitedDay('');
+    }
+
+
     if(check===false){
       const data = {
         work: parseFloat(inputs.work),
@@ -201,74 +220,28 @@ console.log('inputs',inputs);
         surplus  : parseFloat(inputs.surplus),
         afford_amt : parseFloat(inputs.afford_amt),
         pre_order_exp : parseFloat(oldBudget),
+        paid_day : inputs.paid_day,
+        debited_day : inputs.debited_day,
       }
       setBudgetList(data);
       handleBudgetClose(false);
     }
   }
 
-  useEffect(() => {
-    if(inputs.length ===0){
-      inputs.work = 0;
-      inputs.benefits = 0;
-      inputs.accomodation = 0;
-      inputs.childcare = 0;
-      inputs.rent = 0;
-      inputs.power = 0;
-      inputs.telephone = 0;
-      inputs.mobile = 0;
-      inputs.vehicle = 0;
-      inputs.vehicle_fuel = 0;
-      inputs.transport = 0;
-      inputs.food = 0;
-      inputs.credit_card = 0;
-      inputs.loan = 0;
-      inputs.other_expenditure =0;
-      inputs.surplus = 0;
-      inputs.income = 0;
-      inputs.expenditure = 0;
-      inputs.afford_amt = 0;
-    }
-  },[]);
 
   useEffect(() => {
-    if(customer_id != ''){
       const fetchData = async () => {
         try {
-          const order = await Order.getExistingBudget({customer_id: customer_id});
-          // console.log('budgt',order);
+          const order = await Order.getExistingBudget({customer_id: customer_id});          
           setOldBudgetList(order);
           if(order.length > 0 && budgetList.length === 0 ){
-              let budget = order[0];
-              inputs.work = budget.work;
-              inputs.benefits = budget.benefits;
-              inputs.accomodation = budget.accomodation;
-              inputs.childcare = budget.childcare;
-              inputs.rent = budget.rent;
-              inputs.power = budget.power;
-              inputs.telephone = budget.telephone;
-              inputs.mobile = budget.mobile;
-              inputs.vehicle = budget.vehicle;
-              inputs.vehicle_fuel = budget.vehicle_fuel;
-              inputs.transport = budget.transport;
-              inputs.food = budget.food;
-              inputs.credit_card = budget.credit_card;
-              inputs.loan = budget.loan;
-              inputs.other_expenditure =budget.other_expenditure;
-              inputs.surplus = budget.surplus;
-              inputs.income = budget.income;
-              inputs.expenditure = budget.expenditure;
-              if(budget.is_active == 1){
-                inputs.afford_amt = budget.afford_amt;  
-              }              
+            setInputs(order[0]);
           }
-          // setInputs(order.oldBudget[0]);
         } catch (error) {
           console.log('Error..',error);
         }
       };
       fetchData();
-    }
   }, []);
 
   
@@ -748,6 +721,52 @@ return (
                         },
                       }}
                     />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you get paid</InputLabel>
+                    <Select
+                        margin="dense"
+                        name="paid_day"
+                        onChange = {handleInputChange}
+                        value={inputs.paid_day}
+                        name = 'paid_day'
+                        id = 'paid_day'
+                        className={classes.drpdwn}
+                        fullWidth
+                        error={errorPaidDay}
+                        helperText={errorPaidDay}
+                        label="Day you get paid"
+                        required
+                      >
+                        <MenuItem className={classes.textsize} value={'Monday'}>{'Monday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Tuesday'}>{'Tuesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Wednesday'}>{'Wednesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Thursday'}>{'Thursday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Friday'}>{'Friday'}</MenuItem>
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you want to be debited</InputLabel>
+                    <Select
+                        margin="dense"
+                        name="debited_day"
+                        onChange = {handleInputChange}
+                        value={inputs.debited_day}
+                        name = 'debited_day'
+                        id = 'debited_day'
+                        className={classes.drpdwn}
+                        fullWidth
+                        error={errorDebitedDay}
+                        helperText={errorDebitedDay}
+                        label="Day you want to be debited"
+                        required
+                      >
+                        <MenuItem className={classes.textsize} value={'Monday'}>{'Monday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Tuesday'}>{'Tuesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Wednesday'}>{'Wednesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Thursday'}>{'Thursday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Friday'}>{'Friday'}</MenuItem>
+                    </Select>
                   </Grid>
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>

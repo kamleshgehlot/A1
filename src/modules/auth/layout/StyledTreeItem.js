@@ -44,6 +44,7 @@ const useTreeItemStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   labelText: {
+    fontSize : 12,
     fontWeight: "inherit",
     flexGrow: 1
   }
@@ -78,7 +79,7 @@ export default function StyledTreeItem(props) {
       }
       style={{
         "--tree-view-color": color,
-        "--tree-view-bg-color": bgColor
+        "--tree-view-bg-color": bgColor        
       }}
       classes={{
         root: classes.root,

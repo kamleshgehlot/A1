@@ -101,6 +101,7 @@ const useStyles = makeStyles(theme => ({
   },
   drpdwn:{
     marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
   },
   buttonMargin: {
     margin: theme.spacing(1),
@@ -123,6 +124,8 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
   const [oldBudgetList, setOldBudgetList] = useState(totalBudgetList);
   const [surplusBool, setSurplusBool] = useState();
   const [errorSurplus, setErrorSurplus] = useState();
+  const [errorDebitedDay, setErrorDebitedDay] = useState('');
+  const [errorPaidDay, setErrorPaidDay] = useState('');
   const [errorAfford, setErrorAfford] = useState();
 
 
@@ -154,12 +157,12 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
     }
   }
 
-  // function handleinputChange(e){
-  //   setInputs({
-  //     ...inputs,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // }
+  function handleInputChange(e){
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
+  }
 
   const updateBudget = async (data) => {
     const result = await Order.updateBudget({customer_id: customer_id, budgetList : data});
@@ -189,6 +192,22 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
     else{
       setErrorAfford('');
     }
+    if(inputs.paid_day == ""){
+      setErrorPaidDay('Paid Day is required');
+      check=true;
+    }
+    else{
+      setErrorPaidDay('');
+    }
+    if(inputs.debited_day == ""){
+      setErrorDebitedDay('Debited Day is Required');
+      check=true;
+    }
+    else{
+      setErrorDebitedDay('');
+    }
+
+
     if(check===false){
         const data = {
         work: parseFloat(inputs.work),
@@ -211,6 +230,8 @@ export default function Budget({ open, handleBudgetClose, setBudgetList, budgetL
         surplus  : parseFloat(inputs.surplus),
         afford_amt : parseFloat(inputs.afford_amt),
         pre_order_exp : parseFloat(oldBudget),
+        paid_day : inputs.paid_day,
+        debited_day : inputs.debited_day,
       }
       setBudgetList(data);      
 
@@ -720,6 +741,55 @@ return (
                         },
                       }}
                     />
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you get paid</InputLabel>
+                    <Select
+                        margin="dense"
+                        name="paid_day"
+                        onChange = {handleInputChange}
+                        value={inputs.paid_day}
+                        name = 'paid_day'
+                        id = 'paid_day'
+                        className={classes.drpdwn}
+                        fullWidth
+                        error={errorPaidDay}
+                        helperText={errorPaidDay}
+                        label="Day you get paid"
+                        required
+                        disabled={isEditable === 0}
+                      >
+                        <MenuItem className={classes.textsize} value={'Monday'}>{'Monday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Tuesday'}>{'Tuesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Wednesday'}>{'Wednesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Thursday'}>{'Thursday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Friday'}>{'Friday'}</MenuItem>
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you want to be debited</InputLabel>
+                    <Select
+                        margin="dense"
+                        name="debited_day"
+                        onChange = {handleInputChange}
+                        value={inputs.debited_day}
+                        name = 'debited_day'
+                        id = 'debited_day'
+                        className={classes.drpdwn}
+                        fullWidth
+                        error={errorDebitedDay}
+                        helperText={errorDebitedDay}
+                        label="Day you want to be debited"
+                        required
+                        disabled={isEditable === 0}
+                      >
+                        <MenuItem className={classes.textsize} value={'Monday'}>{'Monday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Tuesday'}>{'Tuesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Wednesday'}>{'Wednesday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Thursday'}>{'Thursday'}</MenuItem>
+                        <MenuItem className={classes.textsize} value={'Friday'}>{'Friday'}</MenuItem>
+                    </Select>
                   </Grid>
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
