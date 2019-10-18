@@ -215,6 +215,17 @@ export default function ViewHistoryList({historyList, roleName}) {
                         )                          
                         })                                                
                     }
+                    { historyList.length !== (index + 1) &&                        
+                      (historyList.length > 0 && historyList != "" ? [historyList[index+1]] : []).map((innerData, innerIndex) => {
+                        return(
+                          <p>{
+                            "Days to get & debited: " +
+                            (data.paid_day !== innerData.paid_day ? "Day when get paid: " + innerData.paid_day + " =>  " + data.paid_day +", ": '') +
+                            (data.debited_day !== innerData.debited_day ? "Day to be debited: " + innerData.debited_day + " => " + data.debited_day : '') 
+                          }</p>
+                        )                          
+                        })                                                
+                    }
                     </Typography>
                 </React.Fragment>
               }
