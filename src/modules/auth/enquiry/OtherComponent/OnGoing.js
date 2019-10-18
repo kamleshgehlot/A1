@@ -162,7 +162,7 @@ return (
                 </IconButton>
               </Tooltip>     
               <Tooltip title="Archive Enquiry">                              
-                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleDeleteEnquiry(data); }}>
+                <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleDeleteEnquiry(data, true); }}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>         

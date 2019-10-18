@@ -368,6 +368,31 @@ return (
 
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
+                    Amount of Each Payment
+                  </Typography>
+                  <TextField
+                      id="each_payment_amt"
+                      name="each_payment_amt"
+                      // label="each_payment_amt/Mortgage"
+                      value={inputs.each_payment_amt}
+                      onChange={handlePriceInput}
+                      error={errors.each_payment_amt}
+                      helperText={errors.each_payment_amt}
+                      fullWidth
+                      disabled
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                    />
+                </Grid>
+                
+                <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
                     First Payment Date
                   </Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -389,30 +414,6 @@ return (
                         helperText={errors.first_payment} 
                       />
                     </MuiPickersUtilsProvider>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Amount of Each Payments
-                  </Typography>
-                  <TextField
-                      id="each_payment_amt"
-                      name="each_payment_amt"
-                      // label="each_payment_amt/Mortgage"
-                      value={inputs.each_payment_amt}
-                      onChange={handlePriceInput}
-                      error={errors.each_payment_amt}
-                      helperText={errors.each_payment_amt}
-                      fullWidth
-                      disabled
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
                 </Grid>
                 <Grid item xs={12} sm={8}>
                   <Typography  className={classes.subTitle}>

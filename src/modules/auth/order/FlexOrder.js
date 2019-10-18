@@ -377,7 +377,34 @@ return (
                       <MenuItem className={classes.textsize} value="1">Monthly</MenuItem>                      
                     </Select> 
                    </Grid>
-                   
+                   <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                    Amount of Each Payment
+                  </Typography>
+                  <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="each_payment_amt"
+                      name="each_payment_amt"
+                      value={inputs.each_payment_amt}
+                      onChange={handlePriceInput}
+                      error={errors.each_payment_amt}
+                      helperText={errors.each_payment_amt}
+                      fullWidth
+                      disabled
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                    />
+                </Grid>
                  <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     First Payment Date
@@ -405,34 +432,7 @@ return (
                       />
                     </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Amount of Each Payments
-                  </Typography>
-                  <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="each_payment_amt"
-                      name="each_payment_amt"
-                      value={inputs.each_payment_amt}
-                      onChange={handlePriceInput}
-                      error={errors.each_payment_amt}
-                      helperText={errors.each_payment_amt}
-                      fullWidth
-                      disabled
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                </Grid>
+                
                 <Grid item xs={12} sm={8}>
                   <Typography  className={classes.subTitle}>
                       Minimun Number of Payments before delivery

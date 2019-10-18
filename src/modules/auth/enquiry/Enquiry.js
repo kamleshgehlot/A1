@@ -31,6 +31,7 @@ import ConvertInOrder from '../order/Add';
 import OnGoing from './OtherComponent/OnGoing';
 import Converted from './OtherComponent/Converted';
 import Archived from './OtherComponent/Archived';
+import ArchiveCommentBox from './ArchiveCommentBox.js';
 
 // API CALL
 import EnquiryAPI from '../../../api/franchise/Enquiry';
@@ -112,11 +113,12 @@ export default function Enquiry({roleName}) {
   const [conversionData,setConversionData] = useState([]);
   const [searchText, setSearchText]  = useState('');
   const [value, setValue] = React.useState(0);
-
+  const [openArchiveCommentView, setOpenArchiveCommentView]  = useState(false);
+  const [enquiryData, setEnquiryData] =  useState('');
   const [onGoingList, setOnGoingList] = useState([]);
   const [convertedList, setConvertedList] = useState([]);
   const [archivedList, setArchivedList] = useState([]);
-
+  const [isDeleted, setIsDeleted] = useState(false);
   const classes = useStyles();
 
   const loadEnquiryList = async () =>{
@@ -157,11 +159,16 @@ export default function Enquiry({roleName}) {
     // console.log(response);
   }
   
-  const handleDeleteEnquiry = async (data) => {
-    const result = await EnquiryAPI.deleteEnquiry({id : data.id});
-    setEnquiryList(result.enquiryList);
-    handleTabsData(result.enquiryList);
+  const handleDeleteEnquiry = async (data, isDeleted) => {
+    setIsDeleted(isDeleted);
+    setEnquiryData(data);
+    setOpenArchiveCommentView(true);    
   }
+
+  function handleViewClose() {
+    setOpenArchiveCommentView(false);
+  }
+
 
   function handleClickOrderOpen(data){
     let mainCategory, category, subCategory;
@@ -322,15 +329,15 @@ export default function Enquiry({roleName}) {
                 {convertedList && <Converted enquiryList={convertedList} productList={productList} /> }
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {archivedList && <Archived enquiryList={archivedList} productList={productList} /> } 
+                {archivedList && <Archived enquiryList={archivedList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry} /> } 
               </TabPanel>
             </Paper>
           </Grid>
         </Grid>
-      { open ? <Add leadData={""} open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convertLead={0} /> : null }
-      {/* {customerOpen ? <CustomerAdd open={customerOpen} handleClose={closeCustomerPage} handleSnackbarClick={handleSnackbarClick} setCustomerList={setEnquiryListFn} enquiryData={enquiryData} setCustomer={setCustomer} /> : null} */}
+      { open ? <Add leadData={""} open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convertLead={0} /> : null }      
       {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertEnquiryId} converted_name={'enquiry'} conversionData={conversionData} /> : null }
-      {/* {convertedEnquiryOpen ? <ConvertedEnquiry open={convertedEnquiryOpen} handleClose={handleCompleteEnquiryClickClose} handleSnackbarClick={handleSnackbarClick}  /> : null} */}
+      {openArchiveCommentView ?<ArchiveCommentBox open={openArchiveCommentView} handleViewClose={handleViewClose} enquiryData={enquiryData} setEnquiryList={setEnquiryList} handleTabsData={handleTabsData} isDeleted={isDeleted} /> :null}
+      
       
     </div>
   );

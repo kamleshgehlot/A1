@@ -22,6 +22,7 @@ var Enquiry = function (params) {
   this.franchise_id=params.franchise_id;
   this.searchText=params.searchText;
   this.is_existing = '';
+  this.comment = params.comment;
 
   if(params.customer_id !== "" && params.customer_id !== undefined && params.customer_id > 0){
     this.is_existing = 1;
@@ -101,7 +102,7 @@ Enquiry.prototype.getAll = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
-          connection.query('select id, customer_id, is_existing_customer, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry order by id desc',function (error, rows, fields) {
+          connection.query('select id, customer_id, is_existing_customer, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by, converted_to, reason_to_delete from enquiry order by id desc',function (error, rows, fields) {
 
           if (!error) {
               // console.log("rows...",rows);
@@ -136,7 +137,7 @@ Enquiry.prototype.convertedList = function () {
     
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 1  AND is_active = 1  order by id desc',function (error, rows, fields) {
+        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, reason_to_delete, is_active, created_by from enquiry WHERE converted_to = 1  AND is_active = 1  order by id desc',function (error, rows, fields) {
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);
@@ -171,7 +172,7 @@ Enquiry.prototype.nonConvertList = function () {
     
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to = 0 AND is_active = 1 order by id desc',function (error, rows, fields) {
+        connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, reason_to_delete, created_by from enquiry WHERE converted_to = 0 AND is_active = 1 order by id desc',function (error, rows, fields) {
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);
@@ -270,7 +271,7 @@ Enquiry.prototype.searchData = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
-          connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by,converted_to from enquiry where customer_name LIKE "%'+that.searchText+'%" OR contact LIKE "%'+that.searchText+'%" order by id desc',function (error, rows, fields) {                            
+          connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by, converted_to, reason_to_delete from enquiry where customer_name LIKE "%'+that.searchText+'%" OR contact LIKE "%'+that.searchText+'%" order by id desc',function (error, rows, fields) {                            
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);
@@ -307,7 +308,7 @@ Enquiry.prototype.deleteEnquiry = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('update enquiry set is_active = 0 where id = "'+that.enquiry_id+'"',function (error, rows, fields) {
+        connection.query('update enquiry set is_active = 0, reason_to_delete = "'+that.comment+'" where id = "'+that.enquiry_id+'"',function (error, rows, fields) {
           if (!error) {
               resolve(rows);
           } else {

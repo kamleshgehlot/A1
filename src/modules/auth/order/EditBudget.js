@@ -116,7 +116,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Budget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, customer_id, isEditable}) {
+export default function EditBudget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, customer_id, isEditable}) {
   const styleClass = useCommonStyles();  
   const classes = useStyles();
   const [inputs, setInputs] = useState(budgetList);

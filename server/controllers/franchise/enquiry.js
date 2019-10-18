@@ -106,6 +106,7 @@ const deleteEnquiry = async function (req, res, next) {
   let EnquiryParams = {
     user_id: req.decoded.user_id,
     enquiry_id : req.body.id,
+    comment : req.body.comment,
   };
 	try{
     const newEnquiry = new Enquiry(EnquiryParams);

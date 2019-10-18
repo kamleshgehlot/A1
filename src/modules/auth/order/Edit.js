@@ -188,7 +188,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
        
       
         const budget = await Order.getCurrespondingBudget({customer_id: editableData.customer_id, budgetId: editableData.budget_id});
-        console.log('budget',budget)
         setBudgetList(budget[0]);
         setTotalBudgetList(budget);
 
@@ -219,7 +218,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
       }
       }); 
   },[]);
-  console.log('category', mainCategory, category, subCategory, assignInterest, product);
   
   function validate(values) {
     let errors = {};    

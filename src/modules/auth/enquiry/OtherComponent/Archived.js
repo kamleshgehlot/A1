@@ -114,7 +114,7 @@ function TabPanel(props) {
   );
 }
 
-export default function Open({enquiryList, productList }) {
+export default function Open({enquiryList, productList, handleDeleteEnquiry}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
 
@@ -127,6 +127,7 @@ return (
       <StyledTableCell>Customer Name</StyledTableCell>
       <StyledTableCell>Contact No.</StyledTableCell>
       <StyledTableCell>Product interested in</StyledTableCell>
+      <StyledTableCell>Options</StyledTableCell>
     </TableRow>
   </TableHead>
   <TableBody>
@@ -153,7 +154,14 @@ return (
                   ) 
                   })
                 }                                  
-            </StyledTableCell>            
+            </StyledTableCell>   
+            <StyledTableCell>   
+              <Tooltip title="View Comment">
+                <IconButton  size="small" className={classes.fab}  value={data.id} name={data.id} onClick={(event) => { handleDeleteEnquiry(data, false) }} >
+                  <CommentIcon />
+                </IconButton>
+              </Tooltip>    
+            </StyledTableCell>       
           </TableRow>
         )
       })
