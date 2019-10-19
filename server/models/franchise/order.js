@@ -51,7 +51,15 @@ var Order = function (params) {
   this.cancel_by = params.cancel_by;
   this.cancel_reason = params.cancel_reason;
   this.cancellation_charge = params.cancellation_charge;
-      
+
+
+  this.product_brand = params.product_brand;
+  this.product_color = params.product_color;
+  this.product_cost = params.product_cost;
+  this.specification = params.specification;
+  this.invoice_number = params.invoice_number;
+  this.delivery_date = params.delivery_date;
+  this.purchase_from = params.purchase_from;
 };
 
 
@@ -1058,6 +1066,61 @@ Order.prototype.getCompanyDetail = function () {
 };
 
 
+
+Order.prototype.getProductAndCategoryName = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName["prod"]});
+        connection.query('select p.id as product_id, p.name as product_name, mc.category as main_category, c.category as category, sc.category as sub_category from product as p INNER JOIN category as mc on p.maincat = mc.id INNER JOIN category as c on p.category = c.id INNER JOIN category as sc on p.subcat = sc.id where p.id = "'+that.products_id+'"',function (error, productRows, fields) {
+          resolve(productRows);
+        });
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+      connection.release();
+      console.log('Data Selected %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Order.prototype.submitDeliveredProduct = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        const Values = [
+          [that.order_id, that.customer_id, that.products_id, that.related_to, that.invoice_number, that.purchase_from, that.product_cost, that.product_color, that.product_brand,  that.delivery_date, that.specification, 1, that.created_by]
+        ]
+
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, product_related_to, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, is_active, created_by) VALUES ?',[Values],function (error, productRows, fields) {
+          resolve(productRows);
+        });
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+      connection.release();
+      console.log('Data Selected %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
 
 
 

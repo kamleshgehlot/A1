@@ -59,7 +59,7 @@ function TabPanel(props) {
 
 export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
   uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, 
-  handleClickViewOpen, handleOrderCancellationOpen }) {
+  handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen }) {
   const styleClass = useCommonStyles();
 
 return (  
@@ -194,9 +194,8 @@ return (
                     </IconButton>
                   </Tooltip>
                 </label>                                
-                <Tooltip title="Check if Delivered">
-                  <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleDelivered(data.id); }} disabled={(data.delivery_doc_uploaded !==1 || data.order_status >=6) ? true : false}>
-                    {/* {data.order_status ===6 ? <SelectedCheckBox /> : data.order_status !==6 ? <UnselectedCheckBox />  : ''}                                    */}
+                <Tooltip title="proceed to Delivered">
+                  <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => {  handleDeliveredProductOpen(data); }} disabled={(data.delivery_doc_uploaded !==1 || data.order_status >=6) ? true : false}>                    
                     <SendIcon />
                   </IconButton>
                 </Tooltip>                                 

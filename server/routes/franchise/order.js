@@ -43,7 +43,7 @@ const DeliveredDoc = multer({ storage: Delivery });
 const validateToken = require('../../utils').validateToken;
 
 const orderRouter = express.Router();
-
+console.log('testing------------------ds');
 
 orderRouter.route("/getnewid").get(validateToken, Order.getnewid);
 orderRouter.route("/getall").get(validateToken, Order.getAll);
@@ -68,6 +68,10 @@ orderRouter.route("/get-flex-order-data-for-PDF").post(validateToken, Order.getF
 orderRouter.route("/get-fixed-order-data-for-PDF").post(validateToken, Order.getFixedOrderDataForPDF);
 orderRouter.route("/getRequiredDataToCancel").post(validateToken, Order.getRequiredDataToCancel);
 orderRouter.route("/submitCancel").post(validateToken, Order.submitCancel);
+orderRouter.route("/getDeliveredProductData").post(validateToken, Order.getDeliveredProductData);
+orderRouter.route("/getProductAndCategoryName").post(validateToken, Order.getProductAndCategoryName);
+orderRouter.route("/submitDeliveredProduct").post(validateToken, Order.submitDeliveredProduct);
+
 
 
 module.exports = orderRouter;

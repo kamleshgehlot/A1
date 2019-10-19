@@ -381,6 +381,63 @@ export default {
     }
   },
 
+  getDeliveredProductData: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getDeliveredProductData`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  getProductAndCategoryName: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getProductAndCategoryName`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+  
+
+  
+  submitDeliveredProduct: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/submitDeliveredProduct`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+
   getFlexOrderDataForPDF: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/get-flex-order-data-for-PDF`;
     try {

@@ -53,7 +53,7 @@ export default function CommentDialog({open, handleCommentBoxClose, orderData, s
             setSnackbarContent({message:"Failed to post", variant: "error"});
             setSnackbarOpen(true);
           }
-        }  
+        }
         setResponse(result);
         handleCommentBoxClose(false);
       }else{

@@ -463,6 +463,83 @@ const editOrder = async function (req, res, next) {
     }
   };
 
+  
+  const submitDeliveredProduct = async function (req, res, next) {
+    console.log('req.body',req.body);
+    let orderParams = {
+      id : req.body.id,
+      user_id: req.decoded.user_id,  
+      userid: req.decoded.userId,    
+      product_brand : req.body.product_brand,
+      product_color : req.body.product_color,
+      product_cost : req.body.product_cost,
+      specification : req.body.specification,
+      invoice_number : req.body.invoice_number,
+      delivery_date : req.body.delivery_date,
+      purchase_from : req.body.purchase_from,
+
+      products_id : req.body.product_id,
+      customer_id : req.body.customer_id,
+      related_to : req.body.related_to,
+      
+      order_id: req.body.order_id,
+      user_role: req.body.user_role,
+      comment: req.body.comment, 
+
+      assigned_to: req.body.assigned_to,       
+      delivered_date: req.body.delivered_date, 
+      delivered_time: req.body.delivered_time,
+
+      created_by : req.decoded.id,
+    };
+    console.log('req.',orderParams);
+    
+    try {
+      const newOrder = new Order(orderParams);
+
+      const postComment = await newOrder.postComment();
+      const delivered   = await newOrder.Delivered();
+      const postProductDetail = await newOrder.submitDeliveredProduct();
+      
+      const order = await newOrder.getOrderList();
+      res.send({ order: order});
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+  const getProductAndCategoryName = async function(req, res, next) {
+    let orderParams = {
+      user_id: req.decoded.user_id,      
+      products_id : req.body.product_id,
+    };
+    try {
+      const newOrder = new Order(orderParams);
+      const result = await newOrder.getProductAndCategoryName();
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const getDeliveredProductData = async function(req, res, next) {
+    let orderParams = {
+      id: req.body.id,
+      user_id: req.decoded.user_id,      
+      products_id : req.body.product_id,
+      customer_id : req.body.customer_id,      
+    };
+    try {
+      const newOrder = new Order(orderParams);
+      // const result = await newOrder.getDeliveredProductData();
+      // res.send({ response: result});
+    } catch (error) {
+      next(error);
+    }
+  };
+
   const getFlexOrderDataForPDF = async function (req, res, next) {
       let orderParams = {
         user_id: req.decoded.user_id,
@@ -578,5 +655,8 @@ module.exports = {
   assignToDelivery, 
   getPaymentHistory, 
   paymentSubmit, 
-  Delivered 
+  Delivered,
+  getDeliveredProductData,
+  getProductAndCategoryName,
+  submitDeliveredProduct,
 };

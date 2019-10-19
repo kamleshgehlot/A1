@@ -57,6 +57,7 @@ import ConfirmationDialog from '../ConfirmationDialog.js';
 import ProcessDialog from '../ProcessDialog.js';
 import CommentDialog from '../CommentDialog.js';
 import CommentView from './CommentView.js';
+import UpdateDeliveredProduct from './UpdateDeliveredProduct.js';
 
 import RentFlexContract from './Documentation/RentFlexContract';
 import BudgetAssistant from './Documentation/BudgetAssistant';
@@ -150,8 +151,10 @@ export default function Order({roleName}) {
   const [commentData,setCommentData] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [processDialog,setProcessDialog] = useState(false);
-  const [response,setResponse] = useState([]);
+  const [response, setResponse] = useState([]);
   const [openCancelForm, setOpenCancelForm] = useState(false);
+  const [openProductDelivered, setOpenProductDelivered] = useState(false);
+  
   //Tab Data for corresponding role 
   const [openTab,setOpenTab] = useState([]);
   const [financeTab,setFinanceTab] = useState([]);
@@ -317,16 +320,26 @@ export default function Order({roleName}) {
     setEditOpen(true);
   }
 
-  function handleAssignToFinance(data){;
+  function handleAssignToFinance(data){
     setOrderId(data);
     setNextStep('Finance');
     setConfirmation(true);
   }
 
-  function handleAssignToDelivery(data){;
+  function handleAssignToDelivery(data){
     setOrderId(data);
     setNextStep('Delivery');
     setConfirmation(true);
+  }
+
+  function handleDeliveredProdcutClose(data){
+    setOpenProductDelivered(false);
+  }
+
+  function handleDeliveredProductOpen(data){
+    // console.log('prod',data);
+    setOrderData(data);
+    setOpenProductDelivered(true);
   }
 
   function handleDelivered(data){    
@@ -356,9 +369,8 @@ export default function Order({roleName}) {
   }
 
   function handleOrderList(response){
-      // console.log('retrun', response);
-      setOrder(response.order);
-      handleTabsData(response.order);
+    setOrder(response.order);
+    handleTabsData(response.order);
   }
 
 
@@ -581,7 +593,7 @@ export default function Order({roleName}) {
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                   createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
-                  handleClickViewOpen = {handleClickViewOpen}/> }
+                  handleClickViewOpen = {handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen} /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {financeTab && <Finance order= {financeTab} roleName={roleName} />}
@@ -607,7 +619,8 @@ export default function Order({roleName}) {
                     handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                     createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}
-                    handleClickViewOpen = {handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen} /> }
+                    handleClickViewOpen = {handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen} 
+                    handleDeliveredProductOpen={handleDeliveredProductOpen} /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
@@ -630,7 +643,8 @@ export default function Order({roleName}) {
                     handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                     createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
-                    handleClickViewOpen = {handleClickViewOpen} /> }
+                    handleClickViewOpen = {handleClickViewOpen} 
+                    handleDeliveredProductOpen={handleDeliveredProductOpen} /> }
                 </TabPanel>                
                 <TabPanel value={value} index={1}>
                   {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
@@ -665,6 +679,7 @@ export default function Order({roleName}) {
      {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null }
      {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId}  /> :null}
      {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} /> : null}
+     {openProductDelivered ? <UpdateDeliveredProduct open={openProductDelivered} handleClose={handleDeliveredProdcutClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
     </div>
   );
 }
