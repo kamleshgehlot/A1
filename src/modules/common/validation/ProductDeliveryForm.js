@@ -14,7 +14,7 @@ export default function validate(values) {
   } 
   if (!values.product_cost) {
     errors.product_cost  = 'Product Cost is required';
-  } else if (!validDecimalNumber.test(values.product_cost )) {
+  } else if (validDecimalNumber.test(values.product_cost )) {
     errors.product_cost  = 'Product Cost is invalid';
   } 
   
