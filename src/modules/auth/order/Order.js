@@ -180,7 +180,7 @@ export default function Order({roleName}) {
             content: []
           };
           let flexOrderForm = FlexOrderForm(result,data);
-          let rentFlexContract = RentFlexContract(result,data);
+          let rentFlexContract = RentFlexContract(result,data, true);
           let budgetAssistant =BudgetAssistant(result,data);
 
           if(flexOrderForm.content) {
@@ -218,7 +218,7 @@ export default function Order({roleName}) {
             content: []
           };
           let fixedOrderForm = FixedOrderForm(result,data);
-          let rentFlexContract = RentFlexContract(result,data);
+          let rentFlexContract = RentFlexContract(result,data, false);
           let budgetAssistant =BudgetAssistant(result,data);
 
           if(fixedOrderForm.content) {

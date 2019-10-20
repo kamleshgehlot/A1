@@ -3,7 +3,7 @@ import { logo } from '../../../common/Logo.js';
 import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../../utils/datetime';
 import { styles } from './Styles.js';
 
-export default function layout(data,order) {
+export default function layout(data,order, isFlex) {
 
   const franchise = data.franchise;
   const products = data.product;
@@ -34,7 +34,7 @@ export default function layout(data,order) {
             columns: [                 
                 { image: logo, fit: [150, 150], style: styles.Header1 },                                
               [ { text: 'DISCLOSURE STATEMENT FOR CONSUMER LEASE', style: styles.Header2, bold: true },
-                { text: 'RENT-FLEX CONTRACT', style: styles.Header2, bold: true },
+                { text: `RENT-${isFlex ? 'FLEX' : 'FIX'} CONTRACT`, style: styles.Header2, bold: true },
               ],
               [ 
                { text: '\nStatement Date ' , style: styles.Header3},                             
@@ -120,7 +120,7 @@ export default function layout(data,order) {
                             { text: '\nThis consumer lease has a Minimum Term of Six(6) Months.\n', bold:true, style: styles.Header3CenterFont8,  alignment: screenLeft },
                             { text: 'If you terminate the lease before six months you will be liable To pay an Early Termination Fee\n\n\n', style: styles.Header3CenterFont8,  alignment: screenLeft },
                             { text: 'Option to purchase\n', style: styles.Header3CenterFont8, bold:true,  alignment: screenLeft },
-                            { text: 'Under this Rent-Flex Contract there is no option to purchase the Good.', style: styles.Header3CenterFont8, italics: true, alignment: screenLeft },
+                            { text: `Under this Rent-${isFlex ? 'Flex' : 'Fix'} Contract there is no option to purchase the Good.`, style: styles.Header3CenterFont8, italics: true, alignment: screenLeft },
                           ], 
                         },                        
                       ],
@@ -588,7 +588,7 @@ export default function layout(data,order) {
                   ],                    
                 ],                
                 [
-                  { text: 'For our General Terms and Conditions please see attached Rent-Flex Terms and Conditions.', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
+                  { text: `For our General Terms and Conditions please see attached Rent-${isFlex ? 'Flex' : 'Fix'} Terms and Conditions.`, style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
                 ],          
         ],              
       },
