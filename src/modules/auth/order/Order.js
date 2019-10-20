@@ -188,8 +188,8 @@ export default function Order({roleName}) {
             doc.content.push({text: '', pageBreak: "after"});
           }
          
-          if(flexOrderForm.content) {
-            doc.content.push(flexOrderForm.content);
+          if(rentFlexContract.content) {
+            doc.content.push(rentFlexContract.content);
             doc.content.push({text: '', pageBreak: "after"});
           }
 
