@@ -173,15 +173,24 @@ export default function Order({roleName}) {
           const result = await OrderAPI.getFlexOrderDataForPDF({data: data});
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
           
-          // let flexOrderForm = FlexOrderForm(result,data);
-          // let rentFlexContract = RentFlexContract(result,data);
-          // let budgetAssistant =BudgetAssistant(result,data);
-          // let dd = [];
-          // dd.append(flexOrderForm.content,rentFlexContract.content,budgetAssistant.content);
-          
-          var dd = FlexOrderForm(result,data);
-          pdfmake.createPdf(dd).open();
-          // pdfmake.createPdf(dd).download('document.pdf');
+          let doc = {
+            pageSize: "A4",
+            pageOrientation: "portrait",
+            pageMargins: [30, 30, 30, 30],
+            content: []
+          };
+          let flexOrderForm = FlexOrderForm(result,data);
+          let rentFlexContract = RentFlexContract(result,data);
+          let budgetAssistant =BudgetAssistant(result,data);
+
+          doc.content.push(flexOrderForm.content);
+          doc.content.push({text: '', pageBreak: "after"});
+          doc.content.push(rentFlexContract.content);
+          doc.content.push({text: '', pageBreak: "after"});
+          doc.content.push(budgetAssistant.content);
+
+          pdfmake.createPdf(doc).open();
+
         } catch (error) {
           console.log(error);
         }
