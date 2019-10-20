@@ -210,9 +210,32 @@ export default function Order({roleName}) {
         try {
           const result = await OrderAPI.getFixedOrderDataForPDF({data: data});
           pdfmake.vfs = pdfFonts.pdfMake.vfs;
-          var dd = FixedOrderForm(result,data);
-      //  pdfmake.createPdf(dd).download('document.pdf');
-          pdfmake.createPdf(dd).open();
+
+          let doc = {
+            pageSize: "A4",
+            pageOrientation: "portrait",
+            pageMargins: [30, 30, 30, 30],
+            content: []
+          };
+          let fixedOrderForm = FixedOrderForm(result,data);
+          let rentFlexContract = RentFlexContract(result,data);
+          let budgetAssistant =BudgetAssistant(result,data);
+
+          if(fixedOrderForm.content) {
+            doc.content.push(fixedOrderForm.content);
+            doc.content.push({text: '', pageBreak: "after"});
+          }
+         
+          if(rentFlexContract.content) {
+            doc.content.push(rentFlexContract.content);
+            doc.content.push({text: '', pageBreak: "after"});
+          }
+
+          if(budgetAssistant.content) {
+            doc.content.push(budgetAssistant.content);
+          }
+
+          pdfmake.createPdf(doc).open();
         } catch (error) {
           console.log(error);
         }
