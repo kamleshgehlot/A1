@@ -507,15 +507,20 @@ Customer.prototype.commentList = function () {
       if (!error) {
 
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select c.customer_id, c.created_by, u.name as created_by_name, c.comment, c.is_active,  DATE_FORMAT(c.created_at, \'%W %d %M %Y %H:%i:%s\') created_at from comment_on_customer as c inner join user as u on u.id = c.created_by where customer_id = "' + that.customer_id + '" order by c.id desc', function (error, rows, fields) {
-          if (!error) {
-            resolve(rows);
-          } else {
-            console.log("Error...", error);
-            reject(error);
-          }
+        connection.query('SET @@session.time_zone="+12:00";', function (error, rows, fields) {
+          if(error) reject(error);
 
-        })
+          connection.query('select c.customer_id, c.created_by, u.name as created_by_name, c.comment, c.is_active, DATE_FORMAT(c.created_at, \'%W %d %M %Y %H:%i:%s\') created_at from comment_on_customer as c inner join user as u on u.id = c.created_by where customer_id = "' + that.customer_id + '" order by c.id desc', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+  
+          })
+        });
+       
       } else {
         console.log("Error...", error);
         reject(error);

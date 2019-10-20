@@ -87,10 +87,10 @@ const register = async function (req, res, next) {
           html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong>'
         }
 
-        trans.sendMail(mail, (err, info) => {
-          if (err) {
-            console.log(err);
-            throw err;
+        trans.sendMail(mail, (error, info) => {
+          if (error) {
+            console.log(error);
+            throw error;
           }
           console.log('Message sent: %s', info.messageId);
           // Preview only available when sending through an Ethereal account
@@ -136,7 +136,7 @@ const searchData = async function (req, res, next) {
     const result = await newCustomer.searchData();
 
     res.send({ customerList: result });
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 };
@@ -151,7 +151,7 @@ const getSingleCustomer = async function (req, res, next) {
     const result = await newCustomer.getSingleCustomer();
 
     res.send({ customer: result });
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 };
@@ -169,7 +169,7 @@ const postComment = async function (req, res, next) {
 
     const commentList = await newCustomer.commentList();
     res.send(commentList);
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 };
@@ -184,7 +184,7 @@ const getCommentList = async function (req, res, next) {
   try {
     const commentList = await newCustomer.commentList();
     res.send(commentList);
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 };
