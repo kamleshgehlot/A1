@@ -15,3 +15,7 @@ export function getDateInDDMMYYYY(date) {
 export function getCurrentDateDDMMYYYY() {
   return moment().format("DD-MM-YYYY")
 }
+
+export function getTime(date) {
+  return moment(date).format("HH:mm")
+}

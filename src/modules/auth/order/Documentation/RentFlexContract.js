@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { logo } from '../../../common/Logo.js';
-import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../../utils/datetime';
+import { getDate, getCurrentDate, getDateInDDMMYYYY, getTime, getCurrentDateDDMMYYYY } from '../../../../utils/datetime';
 import { styles } from './Styles.js';
 
 export default function layout(data,order) {
@@ -8,9 +8,11 @@ export default function layout(data,order) {
   const franchise = data.franchise;
   const products = data.product;
   const customer = data.customer;
-  const orderType = data.flexOrder;
+  const orderType = data.flexOrder[0];
   const budget = data.budget; 
-  const user = data.user; 
+  const user = data.user[0]; 
+  console.log('user',user);
+  console.log('orderTypeuser',orderType);
 
 
   var dd = {
@@ -79,21 +81,23 @@ export default function layout(data,order) {
                     table: {
                       widths: ['40%','60%'],
                       body: [                        
-                        [
+                        [[
                           {style:styles.margins, text: [
                             { text: 'You may send notices to the creditor by:\n', style: styles.Header3CenterFont8,  bold: true,  alignment: screenLeft },
-                            { ul: [
-                                { text: '\t*\tWriting to the creditor at the creditor\'s portal address; or \n', style: styles.Header3CenterFont8,  bold: true,  alignment: screenLeft }, 
-                                { text: '\t*\tSending an email to the address specified', style: styles.Header3CenterFont8,  bold: true,  alignment: screenLeft },
-                              ]
-                            },
+                            
                           ], fillColor: '#C5C7C0',
-                        },
+                          },
+                          { ul: [
+                            { text: 'Writing to the creditor at the creditor\'s portal address; or \n', style: styles.Header3CenterFont8,  bold: true,  alignment: screenLeft }, 
+                            { text: 'Sending an email to the address specified', style: styles.Header3CenterFont8,  bold: true,  alignment: screenLeft },
+                          ], fillColor: '#C5C7C0',
+                          },
+                        ],
                           {style:styles.margins, text: [
-                            { text: 'Name:\t\t\t\t',   alignment: screenLeft, fontSize: 10},   
-                            { text: '\nAddress:\t\t\t', alignment: screenLeft,  fontSize: 10 }, 
-                            { text: '\nPhone:\t\t\t', alignment: screenLeft, fontSize: 10 }, 
-                            { text: '\nEmail:\t', alignment: screenLeft, fontSize: 10 }, 
+                            { text: 'Name:\t\t' + user.name,   alignment: screenLeft, fontSize: 10},   
+                            { text: '\nAddress:\t' + user.location, alignment: screenLeft,  fontSize: 10 }, 
+                            { text: '\nPhone:\t\t' + user.contact, alignment: screenLeft, fontSize: 10 }, 
+                            { text: '\nEmail:\t\t'+ user.email, alignment: screenLeft, fontSize: 10 }, 
                           ], fillColor: '#C5C7C0',
                         },
                         ],
@@ -114,7 +118,7 @@ export default function layout(data,order) {
                     body: [                                             
                       [
                         { text: '\nRent Price of Goods', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                        { text: '\n$_________________________________', style: styles.Header3CenterFont8,  alignment: screenLeft },
+                        { text: '\n$'+ orderType.goods_rent_price, style: styles.Header3CenterFont8,  alignment: screenLeft },
                         {style:styles.margins, rowSpan:5, 
                           text: [  
                             { text: '\nThis consumer lease has a Minimum Term of Six(6) Months.\n', bold:true, style: styles.Header3CenterFont8,  alignment: screenLeft },
@@ -126,11 +130,11 @@ export default function layout(data,order) {
                       ],
                       [
                         { text: '\nPPSR Fee (if applicable)', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                        { text: '\n$_________________________________', style: styles.Header3CenterFont8,  alignment: screenLeft },{}
+                        { text: '\n$' + orderType.ppsr_fee, style: styles.Header3CenterFont8,  alignment: screenLeft },{}
                       ],
                       [
                         { text: '\nLiability Waiver Fee*', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                        { text: '\n$_________________________________', style: styles.Header3CenterFont8,  alignment: screenLeft },{}
+                        { text: '\n$' + orderType.liability_fee, style: styles.Header3CenterFont8,  alignment: screenLeft },{}
                         // { text: 'Rent Price of Goods', style: styles.Header3CenterFont8,  alignment: screenLeft },
                       ],
                       [
@@ -181,13 +185,17 @@ export default function layout(data,order) {
                       ],  
                       [
                         {style:styles.margins, text: [  
-                          { text: '\nFrequency \t\t\t_______________________', alignment: screenLeft, fontSize: 8, },
-                          { text: '\n\nFirst payment \t\t_______________________\n\n',  alignment: screenLeft, fontSize: 8,},
+                          { text: '\nFrequency \t\t\t' , alignment: screenLeft, fontSize: 8, },
+                            orderType.frequency === 1 ? { text: 'Monthly' , alignment: screenLeft, fontSize: 8, }
+                          : orderType.frequency === 2 ? { text: 'Fortnightly' , alignment: screenLeft, fontSize: 8, }  
+                          : orderType.frequency === 4 ? { text: 'Weekly' , alignment: screenLeft, fontSize: 8, }  :'',
+                          
+                          { text: '\n\nFirst payment \t\t'+ getCurrentDateDDMMYYYY(orderType.first_payment) + '\n\n',  alignment: screenLeft, fontSize: 8,},
                         ],border: [true, false, true, true],},
                           { text: '', border: [true, false, true, false],},
                           { text: '\n\nINDEFINITE\n', style: styles.paymentBody, border: [true, false, true, true],},
                           { text: '', border: [true, false, true, false],},
-                          { text: '\n\n$___________\n',  style: styles.paymentBody, border: [true, false, true, true], },
+                          { text: '\n\n$'+ orderType.each_payment_amt + '\n',  style: styles.paymentBody, border: [true, false, true, true], },
                           { text: '', border: [true, false, true, false],},
                           { text: '\n\nINDEFINITE\n', style: styles.paymentBody, border: [true, false, true, true],},
                       ],                                    
@@ -204,7 +212,7 @@ export default function layout(data,order) {
                       [
                         {style:styles.margins, text: [  
                           { text: 'Minimum number of Payments before Delivery',   fontSize:8, alignment: screenLeft, bold: true,},
-                          { text: '\n\n\n_____________________________', style: styles.paymentHeading,},
+                          { text: '\n\n\n' + orderType.before_delivery_amt, style: styles.paymentHeading, fontSize:10,},
                           { text: '\n\nWe require the Bond to be paid by you on/before the Delivery Date to source' 
                                 + 'performance of your obligations under the contract, or the payment of money payable under ' 
                                 + 'the contract, or both.', fontSize:8, alignment: screenLeft},
@@ -213,15 +221,15 @@ export default function layout(data,order) {
                         { text: '', border: [true, false, true, false],},                        
                         {style:styles.margins, text: [  
                           { text: 'Expected Delivery Date',   style: styles.paymentHeading},
-                          { text: '\n\n____________________', style: styles.paymentHeading,},
+                          { text: '\n\n' + getCurrentDateDDMMYYYY(orderType.exp_delivery_date), style: styles.paymentHeading,},
                           { text: '\n\nExpected Time of Delivery', style: styles.paymentHeading},
-                          { text: '\n\n_______________AM/PM', style: styles.paymentHeading},
+                          { text: '\n\n' + orderType.exp_delivery_time, style: styles.paymentHeading},
                           ],
                         },                        
                         { text: '', border: [true, false, true, false],},
                         {style:styles.margins, text: [  
                           { text: 'Bond Amt.',  style: styles.paymentHeading},
-                          { text: '\n\n\n$_____________________', style: styles.paymentHeading,},
+                          { text: '\n\n\n$' + orderType.bond_amt, style: styles.paymentHeading, fontSize: 10},
                           ],
                         },   
                       ],                                                           

@@ -53,8 +53,8 @@ export default function flexOrderForm(data,order) {
   // console.log(franchise);
   // console.log("product", products);
   // console.log(orderType);
-  // console.log(customer);
-  // console.log(budget);
+  console.log(customer);
+  console.log(budget);
   // console.log(order);
   // console.log(user);
 
@@ -136,6 +136,7 @@ export default function flexOrderForm(data,order) {
                       [
                       {style:styles.margins, text: [  
                         { text: customer[0].id_type_name + '\t\t\t\t\t', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                        customer[0].id_type === 2 ? { text: 'V# : ' + customer[0].dl_version_number + '\t\t\t\t\t', style: styles.Header1Center,  alignment: screenLeft } : '',
                         { text: 'ID# : '+ customer[0].id_number +'\t\t\t\t\t', style: styles.Header1Center, alignment: screenLeft }, 
                         { text: 'Expiry Date: ' + getDateInDDMMYYYY(customer[0].expiry_date) +  '\n', style: styles.Header1Center, alignment: screenLeft },                         
                       ]}
@@ -215,9 +216,9 @@ export default function flexOrderForm(data,order) {
                   { text: 'PAYMENT METHOD & FREQUENCY: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0', colSpan: 3},{},{}
                 ],
                 [
-                  { text: 'DAY YOU GET PAID [         ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
-                  { text: 'DAY PAYMENT DEBITED [         ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
-                  { text: 'PAYMENT START DATE      /  /   ',  bold: true, alignment: screenLeft, fontSize: 8 }, 
+                   { text: 'DAY YOU GET PAID [ ' + budget[0].paid_day + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
+                  { text: 'DAY PAYMENT DEBITED [ ' + budget[0].debited_day + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
+                  { text: 'PAYMENT START DATE: ' +  getDateInDDMMYYYY(orderType[0].first_payment),  bold: true, alignment: screenLeft, fontSize: 8 }, 
                 ],
                 [
                   { text: 'FREQUENCY OF PAYMENT',  bold: true, alignment: screenLeft, fontSize:8, fillColor: '#C5C7C0'  },                   
@@ -238,8 +239,8 @@ export default function flexOrderForm(data,order) {
                 ],  
                 [
                   {style:styles.margins, text: [  
-                    { text: 'NUMBER OF PAYMENTS:  ' + orderType[0].no_of_payment , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: '\t\t\t\t\t\t\t\tBOND AMOUNT: $' + orderType[0].bond_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
+                    // { text: 'NUMBER OF PAYMENTS:  ' + orderType[0].no_of_payment , alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: 'BOND AMOUNT: $' + orderType[0].bond_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDateInDDMMYYYY(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
                   ]}
                 ],
