@@ -183,11 +183,19 @@ export default function Order({roleName}) {
           let rentFlexContract = RentFlexContract(result,data);
           let budgetAssistant =BudgetAssistant(result,data);
 
-          doc.content.push(flexOrderForm.content);
-          doc.content.push({text: '', pageBreak: "after"});
-          doc.content.push(rentFlexContract.content);
-          doc.content.push({text: '', pageBreak: "after"});
-          doc.content.push(budgetAssistant.content);
+          if(flexOrderForm.content) {
+            doc.content.push(flexOrderForm.content);
+            doc.content.push({text: '', pageBreak: "after"});
+          }
+         
+          if(flexOrderForm.content) {
+            doc.content.push(flexOrderForm.content);
+            doc.content.push({text: '', pageBreak: "after"});
+          }
+
+          if(budgetAssistant.content) {
+            doc.content.push(budgetAssistant.content);
+          }
 
           pdfmake.createPdf(doc).open();
 
