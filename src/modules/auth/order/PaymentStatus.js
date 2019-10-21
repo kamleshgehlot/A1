@@ -152,12 +152,19 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [payResopnse, setPayResopnse] = React.useState([]);
   const [paymentHistory,setPaymentHistory] = useState([]);
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
-
+  const [paymentAmt, setPaymentAmt] = useState('');
 
   function handleDateChange(date){
     setPaymentRecDate(getDate(date));    
   }
 
+
+  const handlePriceInput = e => {
+    const validDecimalNumber = /^\d*\.?\d*$/;
+    if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
+      setPaymentAmt(e.target.value);
+    }
+  }
 
     const getPaymentHistory = async () => {
       try {
@@ -181,8 +188,9 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     const getFixedPaymentTable = async () => {
       try {
         const fixOrder = await Order.getCurrespondingFixedOrder({fixedOrderId: orderData.order_type_id});
+          setPaymentAmt(fixOrder[0].each_payment_amt.toFixed(2));
           let payment_table=[];
-          var paymentDate = new Date(fixOrder[0].first_payment);          
+          var paymentDate = new Date(fixOrder[0].first_payment);                    
           let totalPaid = fixOrder[0].each_payment_amt;
           let addDays = fixOrder[0].frequency;
           var date ="";
@@ -400,8 +408,9 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               customer_id: orderData.customer_id,
               installment_no : payResopnse.installment_no,
               payment_date: payResopnse.payment_date,
-              payment_amt : payResopnse.payment_amt,
-              total_paid : payResopnse.total_paid,   
+              // payment_amt : payResopnse.payment_amt.toFixed(2),
+              payment_amt : paymentAmt,
+              total_paid : payResopnse.total_paid.toFixed(2),
               installment_before_delivery : payResopnse.installment_before_delivery,
               last_installment_no : payResopnse.last_installment_no,
               payment_rec_date : paymentRecDate,
@@ -487,7 +496,33 @@ return (
                                     })
                                 }   
                             </StyledTableCell>
-                            <StyledTableCell>{data.payment_amt}</StyledTableCell>
+                            <StyledTableCell>
+                              {data.installment_no === (paymentHistory[0].installment_no + 1) ?
+                                  <TextField 
+                                  id="payment_amt"
+                                  name="payment_amt"
+                                  // label="payment_amt"
+                                  value={paymentAmt}
+                                  onChange={handlePriceInput}
+                                  fullWidth
+                                  type="text"
+                                  margin="dense"
+                                  InputProps={{
+                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                    classes: {
+                                      input: classes.textsize,
+                                    },
+                                  }}
+                                />
+                                : 
+                                (paymentHistory.length > 0 ? paymentHistory : []).map((hdata, index) => {
+                                    return(
+                                      hdata.installment_no === data.installment_no ? hdata.payment_amt : ''
+                                    )
+                                })
+                              }   
+                            </StyledTableCell>
+                            {/* <StyledTableCell>{data.payment_amt}</StyledTableCell> */}
                             {/* {paymentHistory != "" ? paymentHistory.} */}
                             <StyledTableCell >
                                 {data.installment_no <= paymentHistory[0].installment_no ? data.total_paid : ''}

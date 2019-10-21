@@ -60,6 +60,7 @@ import CommentView from './CommentView.js';
 import UpdateDeliveredProduct from './UpdateDeliveredProduct.js';
 
 import RentFlexContract from './Documentation/RentFlexContract';
+import RentFixContract from './Documentation/RentFixContract';
 import BudgetAssistant from './Documentation/BudgetAssistant';
 import FixedOrderForm from './Documentation/FixedOrderForm';
 import FlexOrderForm from './Documentation/FlexOrderForm';
@@ -180,7 +181,7 @@ export default function Order({roleName}) {
             content: []
           };
           let flexOrderForm = FlexOrderForm(result,data);
-          let rentFlexContract = RentFlexContract(result,data, true);
+          let rentFlexContract = RentFlexContract(result,data);
           let budgetAssistant =BudgetAssistant(result,data);
 
           if(flexOrderForm.content) {
@@ -217,8 +218,8 @@ export default function Order({roleName}) {
             pageMargins: [30, 30, 30, 30],
             content: []
           };
-          let fixedOrderForm = FixedOrderForm(result,data);
-          // let rentFlexContract = RentFlexContract(result,data, false);
+          let fixedOrderForm = FixedOrderForm(result,data);          
+          let rentFixContract = RentFixContract(result,data);
           let budgetAssistant =BudgetAssistant(result,data);
 
           if(fixedOrderForm.content) {
@@ -226,10 +227,10 @@ export default function Order({roleName}) {
             doc.content.push({text: '', pageBreak: "after"});
           }
          
-          // if(rentFlexContract.content) {
-          //   doc.content.push(rentFlexContract.content);
-          //   doc.content.push({text: '', pageBreak: "after"});
-          // }
+          if(rentFixContract.content) {
+            doc.content.push(rentFixContract.content);
+            doc.content.push({text: '', pageBreak: "after"});
+          }
 
           if(budgetAssistant.content) {
             doc.content.push(budgetAssistant.content);

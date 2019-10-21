@@ -8,10 +8,10 @@ export default function layout(data,order) {
   const franchise = data.franchise[0];
   const products = data.product;
   const customer = data.customer;
-  const orderType = data.flexOrder[0];
+  const orderType = data.fixedOrder[0];
   const budget = data.budget; 
   const user = data.user[0]; 
-  console.log('user',user);
+  console.log('franchise',franchise);
   console.log('orderTypeuser',orderType);
 
 
@@ -35,8 +35,9 @@ export default function layout(data,order) {
           { 
             columns: [                 
                 { image: logo, fit: [150, 150], style: styles.Header1 },                                
-              [ { text: 'DISCLOSURE STATEMENT FOR CONSUMER LEASE', style: styles.Header2, bold: true },
-                { text: `RENT-FLEX CONTRACT`, style: styles.Header2, bold: true },
+              [ { text: 'DISCLOSURE STATEMENT FOR CONSUMER CREDIT CONTRACTS', style: styles.Header2, bold: true },
+                { text: `(other then revolving credit contracts)`, style: styles.Header3CenterFont8 },
+                { text: `RENT-FIX CONTRACT`, style: styles.Header2, bold: true },
               ],
               [ 
                { text: '\nStatement Date ' , style: styles.Header3},                             
@@ -58,33 +59,33 @@ export default function layout(data,order) {
                         body: [
                           [
                             {style:styles.margins, text: [  
-                              { text: 'Inial disclosure statement under section 64 of Credit Contracts and Consumer Finance Act 2003 for consumer lease contracts.', style: styles.JustifyFont8, bold: true, }, 
+                              { text: 'Inial disclosure statement under section 17 of Credit Contracts and Consumer Finance Act 2003 for consumer credit contracts other than revolving credit contracts.', style: styles.JustifyFont8, bold: true, }, 
                               { text: '\nIMPORTANT -', style: styles.JustifyFont8, bold: true, }, 
                               { text: 'This document sets out key information about your consumer lease contract. You should read it thoroughly.'
-                                    + 'if you do not understand anything in this document, you should seek independent advice. you should keep this disclosure statement'
-                                    + 'and a copy of your consumer credit contract in a safe place.', style: styles.JustifyFont8, }, 
-                              { text: '\nThe law gives you a limited right to cancel the consumer lease contract (see below for further details). Note That strict time limits apply.', style: styles.JustifyFont8, }, 
+                                    + 'if you do not understand anything in this document, you should seek independent advice. you should keep this disclosure statement '
+                                    + 'and a copy of your consumer credit contract in a safe place.', style: styles.JustifyFont8 }, 
+                              { text: '\nThe law gives you a limited right to cancel the consumer lease contract (see below for further details). Note That strict time limits apply.', style: styles.JustifyFont8}, 
                             ]},
                           ]
                         ]
                       },                      
                   }],
                   [
-                    {style:styles.margins, text: [
-                      { text: '\nFULL NAME AND ADDRESS OF CREDITOR ', style: styles.JustifyFont8, bold: true,  },
-                      { text: '(this is the person providing you the credit)', style: styles.JustifyFont8,  }, 
+                    {style:styles.margins, text: [  
+                      { text: '\nFULL NAME AND ADDRESS OF CREDITOR ', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
+                      { text: '(this is the person providing you the credit)', style: styles.Header3CenterFont8, alignment: screenLeft }, 
                     ], border: [true, false, true, false]},
                   ],
 
                   [{
-                    border: [true, false, true, false],
+                    border: [true, false, true, false],                    
                     table: {
                       fillColor: '#C5C7C0',
                       widths: ['40%','60%'],
                       body: [                        
                         [[
                           {style:styles.margins, text: [
-                            { text: 'You may send notices to the creditor by:\n', style: styles.JustifyFont8,  bold: true,   },
+                            { text: 'You may send notices to the creditor by:\n', style: styles.Header3CenterFont8,  bold: true,  alignment: screenLeft },
                           ],},
                           
                           { ul: [
@@ -94,10 +95,10 @@ export default function layout(data,order) {
                         ],
                         
                         {style:styles.margins, text: [
-                            { text: 'Name:\t\t' + franchise.franchise_name,   alignment: screenLeft, fontSize: 10},   
-                            { text: '\nAddress:\t' + franchise.location, alignment: screenLeft,  fontSize: 10 }, 
-                            { text: '\nPhone:\t\t' + franchise.contact, alignment: screenLeft, fontSize: 10 }, 
-                            { text: '\nEmail:\t\t'+ franchise.email, alignment: screenLeft, fontSize: 10 }, 
+                            { text: 'Name:       ' + franchise.franchise_name,   alignment: screenLeft, fontSize: 10},   
+                            { text: '\nAddress:  ' + franchise.location, alignment: screenLeft,  fontSize: 10 }, 
+                            { text: '\nPhone:    ' + franchise.contact, alignment: screenLeft, fontSize: 10 }, 
+                            { text: '\nEmail:    ' + franchise.email, alignment: screenLeft, fontSize: 10 }, 
                           ],
                         },
                         ],
@@ -107,49 +108,51 @@ export default function layout(data,order) {
 
                 [
                   {style:styles.margins, text: [  
-                    { text: 'CONSUMER LEASE DETAILS', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
+                    { text: 'CREDIT DETAILS', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
                   ], border: [true, false, true, false]},
                 ],
                 [{
                   border: [true, false, true, false],
                   // layout: 'noBorders',
                   table: {                    
-                    widths: ['30%','30%','40%'],
+                    widths: ['50%','30%','20%'],
+                    margin: [10,0,0,10],
                     body: [                                             
                       [
-                        { text: '\nRent Price of Goods', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                        { text: '\n$'+ orderType.goods_rent_price, style: styles.Header3CenterFont8,  alignment: screenLeft },
-                        {style:styles.margins, rowSpan:5, 
+                        {style:styles.margins, rowSpan:4,
                           text: [  
-                            { text: '\nThis consumer lease has a Minimum Term of Six(6) Months.\n', bold:true, style: styles.Header3CenterFont8,  alignment: screenLeft },
-                            { text: 'If you terminate the lease before six months you will be liable To pay an Early Termination Fee\n\n\n', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                            { text: 'Option to purchase\n', style: styles.Header3CenterFont8, bold:true,  alignment: screenLeft },
-                            { text: `Under this Rent-Flex Contract there is no option to purchase the Good.`, style: styles.Header3CenterFont8, italics: true, alignment: screenLeft },
+                            { text: '\nInitial Unpaid Balance', bold:true, alignment: screenLeft },
+                            { text: '\n\nThis is the amount you owe as at the date of this statement (including any fees charged by the creditor).', style: styles.JustifyFont8 },
+                            { text: `\n\n\t\t$` + orderType.int_unpaid_bal, fontSize: 10, bold: true, alignment: screenLeft },
+                            { text: ` made up of\n`, style: styles.JustifyFont8, bold: true},
                           ], 
-                        },                        
+                        },
+                        { text: '\nCash Price', style: styles.JustifyFont8,  bold:true}, 
+                        
+                        { text: '\n$' + orderType.cash_price, style: styles.JustifyFont8,  bold:true},                    
                       ],
                       [
-                        { text: '\nPPSR Fee (if applicable)', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                        { text: '\n$' + orderType.ppsr_fee, style: styles.Header3CenterFont8,  alignment: screenLeft },{}
+                        {},
+                        { text: 'Delivery Fee', style: styles.JustifyFont8,  bold:true},
+                        { text: '$' + orderType.delivery_fee, style: styles.JustifyFont8,  bold:true},
                       ],
                       [
-                        { text: '\nLiability Waiver Fee*', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                        { text: '\n$' + orderType.liability_fee, style: styles.Header3CenterFont8,  alignment: screenLeft },{}
-                        // { text: 'Rent Price of Goods', style: styles.Header3CenterFont8,  alignment: screenLeft },
-                      ],
-                      [
-                        { text: '*$1.5 per week or $3.00 per fornight', alignment: screenLeft, fontSize:8 },
-                        { text: '', style: styles.JustifyFont8,  },{}
-                      ],
-                      [
+                        {},
                         {style:styles.margins, text: [
-                          { text: 'TOTAL ', style: styles.JustifyFont8,  bold:true, },
-                          { text: 'PER WEEK / FORNIGHT', style: styles.JustifyFont8,  },
-                          { text: '\n(Please circle which is applicable)', fontSize: 6,  alignment: screenLeft },
+                          { text: 'PPSR Fee ', style: styles.JustifyFont8,  bold:true},
+                          { text: '(if applicable)', style: styles.JustifyFont8, },
+                        ]},
+                        { text: '$' + orderType.ppsr_fee, style: styles.JustifyFont8,  bold:true},
+                      ],
+                      [
+                        {},
+                        { text: 'Liability Wavier Fee', style: styles.JustifyFont8,  bold:true},
+                        {style:styles.margins, text: [
+                          { text: '$' + (orderType.frequency === 4 ? (orderType.no_of_payment * 1.5).toFixed(2) : orderType.frequency === 2 ? (orderType.no_of_payment * 3).toFixed(2) : ''), style: styles.JustifyFont8,  bold:true},
+                          { text: '\n(being $1.5 per week or $3.00 per fortnight multiplied by the number of payments)', fontSize: 6,  alignment: screenLeft },
                           ],
-                        },                        
-                        { text: '$' + orderType.each_payment_amt , style: styles.JustifyFont8, bold:true},{}
-                      ],                     
+                        }, 
+                      ],
                     ], 
                   },
                   layout: {
@@ -172,7 +175,7 @@ export default function layout(data,order) {
                 [{
                   border: [true, false, true, false],
                   table: {                    
-                    widths: ['40%','5%','15%','5%','15%','5%','15%'],
+                    widths: ['40%','2%','18%','2%','18%','2%','18%'],
                     body: [
                       [
                         { text: 'Timing of Payments', style: styles.paymentHeading, border: [true, true, false, false],},
@@ -185,20 +188,25 @@ export default function layout(data,order) {
                       ],  
                       [
                         {style:styles.margins, text: [  
-                          { text: '\nFrequency \t\t\t' , alignment: screenLeft, fontSize: 8, },
+                          { text: 'Frequency \t\t\t' , alignment: screenLeft, fontSize: 8, },
                             orderType.frequency === 1 ? { text: 'Monthly' , alignment: screenLeft, fontSize: 8, }
                           : orderType.frequency === 2 ? { text: 'Fortnightly' , alignment: screenLeft, fontSize: 8, }  
                           : orderType.frequency === 4 ? { text: 'Weekly' , alignment: screenLeft, fontSize: 8, }  :'',
                           
-                          { text: '\n\nFirst payment \t\t'+ getDateInDDMMYYYY(orderType.first_payment) + '\n\n',  alignment: screenLeft, fontSize: 8,},
+                          { text: '\n\nFirst payment \t\t'+ getDateInDDMMYYYY(orderType.first_payment),  alignment: screenLeft, fontSize: 8,},
+                          { text: '\n\nLast payment \t\t'+ getDateInDDMMYYYY(orderType.last_payment) + '\n\n',  alignment: screenLeft, fontSize: 8,},
                         ],border: [true, false, true, true],},
                           { text: '', border: [true, false, true, false],},
-                          { text: '\n\nINDEFINITE\n', style: styles.paymentBody, border: [true, false, true, true],},
+                          { text: '\n\n'+ orderType.no_of_payment + '\n', style: styles.paymentBody, border: [true, false, true, true],},
                           { text: '', border: [true, false, true, false],},
                           { text: '\n\n$'+ orderType.each_payment_amt + '\n',  style: styles.paymentBody, border: [true, false, true, true], },
                           { text: '', border: [true, false, true, false],},
-                          { text: '\n\nINDEFINITE\n', style: styles.paymentBody, border: [true, false, true, true],},
-                      ],                                    
+                          { text: '\n\n'+ orderType.total_payment_amt + '\n', style: styles.paymentBody, border: [true, false, true, true],},
+                      ],  
+                      [
+                        { text: 'Should you wish to purchase the goods at the end of the Rent-Fix Term you will need to pay the Residual Value payment', style : styles.Header2Center, bold:true, fontSize: 9, colSpan: 7, border: [true, false, true, true],},
+                        {},{},{},{},{},{}
+                      ],
                     ], 
                   },
                 }],
@@ -213,7 +221,7 @@ export default function layout(data,order) {
                         {style:styles.margins, text: [  
                           { text: 'Minimum number of Payments before Delivery',   fontSize:8, alignment: screenLeft, bold: true,},
                           { text: '\n\n\n' + orderType.before_delivery_amt, style: styles.paymentHeading, fontSize:10,},
-                          { text: '\n\nWe require the Bond to be paid by you on/before the Delivery Date to source' 
+                          { text: '\n\nWe require the minimum number of payments to be paid by you on/before the Delivery Date to source' 
                                 + ' performance of your obligations under the contract, or the payment of money payable under ' 
                                 + 'the contract, or both.', fontSize:8, alignment: screenLeft},
                           ],
@@ -228,8 +236,8 @@ export default function layout(data,order) {
                         },                        
                         { text: '', border: [true, false, true, false],},
                         {style:styles.margins, text: [  
-                          { text: 'Bond Amt.',  style: styles.paymentHeading},
-                          { text: '\n\n\n$' + orderType.bond_amt, style: styles.paymentHeading, fontSize: 10},
+                          { text: 'Minimum Payment Amount',  style: styles.paymentHeading},
+                          { text: '\n\n\n$' + orderType.minimum_payment_amt, style: styles.paymentHeading, fontSize: 10},
                           ],
                         },   
                       ],                                                           
@@ -239,10 +247,39 @@ export default function layout(data,order) {
 
                 [
                   {style:styles.margins, text: [  
+                    { text: 'INTEREST', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
+                  ], border: [true, false, true, false]},
+                ],
+                [{
+                  border: [true, false, true, false],
+                  table: {                    
+                    widths: ['70%','2%','28%'],
+                    body: [
+                      [[
+                        { text: 'Annual interest rate(s).',   fontSize:8, alignment: screenLeft, lineHeight: 1.5, bold:true},
+                        { ul:[
+                            { text: '19.99% fixed for the whole term of the contract, being   ' + orderType.interest_rate + ' weeks', fontSize:8, alignment: screenLeft},
+                            { text: 'Daily interest rate of   ' + orderType.interest_rate_per +'%', fontSize:8, alignment: screenLeft},
+                          ],lineHeight: 1.5,
+                        },
+                        { text: 'Interest charges are calculated by multiplying the unpaid balance at the end of the day by a daily interest rate. The daily interest rate is calculated by dividing the annual interest rate by 365. Interest is charged to your account weekly.', fontSize:8, style: styles.JustifyFont8, lineHeight: 1.5,},
+                      ],
+                      { text: '', border: [true, false, true, false],},
+                      [
+                        { text: 'Total interest charges',   fontSize:8, alignment: screenLeft, lineHeight: 1.5, bold:true},
+                        { text: 'This is the total amount of interest charges payable under the contract.', fontSize:8, style: styles.JustifyFont8, lineHeight: 1.5,},
+                        { text: '\n$' + orderType.total_interest, style: styles.Header3CenterFont8, lineHeight: 1.5, bold:true},
+                      ],
+                    ],                                                           
+                    ], 
+                  },
+                }],
+                
+                [
+                  {style:styles.margins, text: [  
                     { text: 'CREDIT FEE AND CHARGES', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
                   ], border: [true, false, true, false]},
                 ],
-
                 [{
                   border: [true, false, true, false],
                   table: {                    
@@ -250,7 +287,7 @@ export default function layout(data,order) {
                     body: [
                       [
                         {style:styles.margins, text: [  
-                          { text: 'The following credit fee(s) and charge(s) (which are not included in the initial unpaidbalance) are, or may become, payable under, or in connection with, the contract Your consumer lease may allow the creditor to vary this/these fee(s) and charge(s).',   fontSize:8, alignment: screenLeft,},                          
+                          { text: 'The following credit fee(s) and charge(s) (which are not included in the initial unpaid balance) are, or may become, payable under, or in connection with, the contract Your credit contract may allow the creditor to vary this/these fee(s) and charge(s).',   fontSize:8, alignment: screenLeft,},
                           { text: '\nEarly Termination Fee:      $' + (orderType.frequency * orderType.each_payment_amt).toFixed(2) + ', ', fontSize:8, alignment: screenLeft, bold: true},
                           { text: 'being 2 fortnightly payment instalments or 4 weekly payment instalments.', fontSize:8, alignment: screenLeft},
                           { text: '\nLiability Waiver Excess:    $' + (orderType.frequency * orderType.each_payment_amt).toFixed(2) + ', ', fontSize:8, alignment: screenLeft, bold : true},
@@ -262,6 +299,13 @@ export default function layout(data,order) {
                     ], 
                   },
                 }],
+
+                [
+                  { text : '',
+                    pageBreak: "after",
+                  },            
+                ],
+               
 
                 [
                   {style:styles.margins, text: [  
@@ -308,11 +352,7 @@ export default function layout(data,order) {
                     ], 
                   },
                 }],      
-                [
-                  { text : '',
-                    pageBreak: "after",
-                  },            
-                ],
+                
                 [
                   {style:styles.margins, text: [  
                     { text: 'WHAT COULD HAPPEN IF YOU FAIL TO MEET YOUR COMMITMENTS', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
@@ -328,7 +368,7 @@ export default function layout(data,order) {
                           { text: 'Security interest(s)',   fontSize:8, bold: true, alignment: screenLeft,},                          
                           { text: '\nThis is secured credit.  If you fail to meet your commitments under the contract, the creditor may be entitled to repossess and sell this property.', fontSize:8, alignment: screenLeft},
                           { text: '\nDescription of security Interest\'s):', fontSize:8, bold: true, alignment: screenLeft},
-                          { text: '\nProperty which is (or will be) subject to a security interest:', fontSize:8, alignment: screenLeft, },                          
+                          { text: '\nProperty which is or will be) subject to a security interest:', fontSize:8, alignment: screenLeft, },                          
                           ],                         
                         },                        
                       ],
@@ -340,7 +380,7 @@ export default function layout(data,order) {
                             body: [
                               [                               
                                 { text: 'Item', fontSize:8, alignment: screenLeft},
-                                { text: 'Description', fontSize:8, alignment: screenLeft},
+                                { text: 'Make', fontSize:8, alignment: screenLeft},
                               ],
                               [                               
                                 { text: '\n', fontSize:8, alignment: screenLeft},
@@ -372,9 +412,9 @@ export default function layout(data,order) {
                       [
                         {style:styles.margins, text: [  
                           { text: 'Penalty Interest -',   fontSize:8, alignment: screenLeft, bold: true},                          
-                          { text: '\nIn the event of a default in payment, and while the default continues, you must pay the penalty interest charges. ', fontSize:8, alignment: screenLeft},
-                          { text: '\nPenalty Interest is charged from the time you fail to make a due payment until the arrears are paid. Penalty interest is calculated by multiplying the amount in arrears at the end of the day by a daily penalty interest rate. The daily penalty interest rate is calculated by dividing the annual penalty interest rate by 365. Interest is charged to your account weekly.', fontSize:8, alignment: screenLeft},
-                          { text: '\nAnnual Penalty Interest rate is: 10%', fontSize:8, alignment: screenLeft},
+                          { text: '\nIn the event of a default in payment, and while the default continues, you must pay the penalty interest charges. ', style: styles.JustifyFont8,},
+                          { text: '\nPenalty Interest is charged from the time you fail to make a due payment until the arrears are paid. Penalty interest is calculated by multiplying the amount in arrears at the end of the day by a daily penalty interest rate. The daily penalty interest rate is calculated by dividing the annual penalty interest rate by 365. Interest is charged to your account weekly.', style: styles.JustifyFont8,},
+                          { text: '\nAnnual Penalty Interest rate is: 5% on top of the annual interest charged.', style: styles.JustifyFont8,},
                           
                           { text: '\n\nDefault Fees -',   fontSize:8, alignment: screenLeft, bold: true},                          
                           { text: '\nIn the event of a breach of the contract or on the enforcement of the contract, the default fees specified below are payable. Your credit contract may allow the creditor to vary these fees and charges.', style: styles.JustifyFont8,},
@@ -383,7 +423,7 @@ export default function layout(data,order) {
                           { text: 'is charged when a payment is not made when it becomes due.',  style: styles.JustifyFont8,},
                           { text: '\nRepossession Fee: will be the reasonable fees incurred by us when a repossession attempt is made.',  style: styles.JustifyFont8,},
                           ],lineHeight: 1.2,
-                        },                                            
+                        },                            
                       ],                                                           
                     ], 
                   },
@@ -391,7 +431,7 @@ export default function layout(data,order) {
 
                 [
                   {style:styles.margins, text: [  
-                    { text: 'TERMINATION', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
+                    { text: 'FULL PREPAYMENT', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
                   ], border: [true, false, true, false]},
                 ],
 
@@ -402,12 +442,11 @@ export default function layout(data,order) {
                     body: [
                       [
                         {style:styles.margins, text: [  
-                          { text: 'EARLY TERMINATION',   fontSize:8, alignment: screenLeft, bold: true},                          
-                          { text: '\nIf you seek to terminate the contract before the Minimum Term, you may be required to pay a fee or charge to compensate the creditor for any loss resulting from the early termination.', fontSize:8, alignment: screenLeft},
-                          { text: '\nEarly Termination Fee: will be 2 fortnightly payment instalments or 4 weekly payment instalments,', fontSize:8, alignment: screenLeft},
-                          
-                          { text: '\n\nTERMINATION',   fontSize:8, alignment: screenLeft, bold: true},                          
-                          { text: '\nIf you seek to terminate the contract after the Minimum Term, you must provide the creditor with one payment period notice. At this stage, we will arrange a time to Collect the Goods from you, or you can return them to our store.',   fontSize:8, alignment: screenLeft,},
+                          { text: 'If you pay the unpaid balance in full before the final payment is due',   style: styles.JustifyFont8,}, 
+                          { text: ' (full prepayment),',   style: styles.JustifyFont8, bold: true}, 
+                          { text: ' you may be required to pay a fee or charge to compensate the creditor for any loss resulting from the full prepayment. The creditor may have suffered a loss if the creditor\'s current interest rate is lower than the interest rate is applying to your original consumer credit contract. You may also have to pay the creditor\'s administrative costs relating to the full prepayment.',   style: styles.JustifyFont8,}, 
+                          { text: '\nThe amount you may have to pay to compensate the creditor for the loss is calculated using the formula prescribed in regulation 9 or regulation 11 of the Credit Contracts and Consumer Finance Regulations 2004',   style: styles.JustifyFont8,}, 
+                          { text: '\n\nAdminstrative costs/fees will be the reasonable fees incurred by us.',   style: styles.JustifyFont8,}, 
                           ],lineHeight: 1.2,
                         },                         
                       ],                                                           
@@ -464,6 +503,7 @@ export default function layout(data,order) {
                           type: 'lower-alpha', fontSize: 8,
                           ol: [
                             { text: 'the amount of any reasonable expenses the creditor had to pay in connection with the contract and its cancellation (including legal fees and fees for credit reports, etc);',  style: styles.JustifyFont8,},
+                            { text: 'interest for the period from the day you received the property or services until the day you either pay the cash price for the property of services or return the property to the creditor;',  style: styles.JustifyFont8,},
                             { text: 'the costs of repairing any property you return if the property was damaged while it was in your possession.',  style: styles.JustifyFont8,},
                           ]
                         },                        
@@ -471,12 +511,7 @@ export default function layout(data,order) {
                       ],                                                           
                     ], 
                   },
-                }],
-                [
-                  { text : '',
-                    pageBreak: "after",
-                  },            
-                ],
+                }],               
                 [
                   {style:styles.margins, text: [  
                     { text: 'WHAT TO DO IF YOU SUFFER UNFORESEEN HARDSHIP', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft }, 
@@ -489,8 +524,8 @@ export default function layout(data,order) {
                     body: [
                       [[
                         {style:styles.margins, text: [  
-                          { text: 'If you are unable reasonably to keep up your payments or other obligations because of illness, injury, loss of employment, the end of a relationship, or other reasonable cause, you may be able to apply to the creditor for a hardship variation. ',   fontSize:8, alignment: screenLeft,},                          
-                          { text: '\nTo apply for a hardship variation, you need to:',   fontSize:8, alignment: screenLeft,},                           
+                          { text: 'If you are unable reasonably to keep up your payments or other obligations because of illness, injury, loss of employment, the end of a relationship, or other reasonable cause, you may be able to apply to the creditor for a hardship variation. ',  style: styles.JustifyFont8,},                          
+                          { text: '\nTo apply for a hardship variation, you need to:',  style: styles.JustifyFont8,},                           
                           
                           
                           ], lineHeight: 1.2,                            
@@ -531,7 +566,7 @@ export default function layout(data,order) {
                         [
                           {style:styles.margins, text: [  
                             { text: 'Name of dispute resolution scheme: ', style: styles.Header3CenterFont8, alignment: screenLeft },
-                            { text: 'Financial Dispute Resolution Service', style: styles.Header3CenterFont8, bold: true, alignment: screenLeft, decoration: 'underline',decorationStyle: 'solid', decorationColor: 'black',  },
+                            { text: 'Financial Dispute Resolution Service', style: styles.Header3CenterFont8, bold: true,  alignment: screenLeft, decoration: 'underline',decorationStyle: 'solid', decorationColor: 'black',  },
                             { text: '\n\nIt is free to make a complaint to this independent dispute resolution scheme.   This scheme can help you to resolve any disagreements you have with the creditor.', style: styles.Header3CenterFont8, alignment: screenLeft },
                             { text: '\n\nContact details of dispute resolution scheme:', style: styles.Header3CenterFont8, alignment: screenLeft },
                             { text: '\n\nPhone:', style: styles.Header3CenterFont8, alignment: screenLeft },
@@ -606,9 +641,9 @@ export default function layout(data,order) {
                   ],    
                   [
                     {style:styles.margins, text: [  
-                      { text: '\n\n\nFor our General Terms and Conditions please see attached Rent-Flex Terms and Conditions.\n', style: styles.Header3CenterFont8, fontSize: 9, bold: true,}, 
+                      { text: '\n\n\nFor our General Terms and Conditions please see attached Rent-Fix Terms and Conditions.\n', style: styles.Header3CenterFont8, fontSize: 9, bold: true,}, 
                     ], border: [true, false, true, true]},
-                  ],            
+                  ],      
         ],              
       },
     },  

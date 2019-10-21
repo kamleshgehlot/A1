@@ -18,6 +18,10 @@ export const styles = {
     fontSize: 8,
     alignment: 'center',
   },
+  JustifyFont8: {
+    fontSize: 8,
+    alignment: 'justify',
+  },
   Header1Center: {
     fontSize: 8,
     alignment: 'center',
