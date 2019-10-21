@@ -201,7 +201,7 @@ export default function layout(data,order) {
                           { text: '', border: [true, false, true, false],},
                           { text: '\n\n$'+ orderType.each_payment_amt + '\n',  style: styles.paymentBody, border: [true, false, true, true], },
                           { text: '', border: [true, false, true, false],},
-                          { text: '\n\n'+ orderType.total_payment_amt + '\n', style: styles.paymentBody, border: [true, false, true, true],},
+                          { text: '\n\n$'+ orderType.total_payment_amt + '\n', style: styles.paymentBody, border: [true, false, true, true],},
                       ],  
                       [
                         { text: 'Should you wish to purchase the goods at the end of the Rent-Fix Term you will need to pay the Residual Value payment', style : styles.Header2Center, bold:true, fontSize: 9, colSpan: 7, border: [true, false, true, true],},
