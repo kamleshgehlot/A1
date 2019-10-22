@@ -27,6 +27,9 @@ import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import { APP_TOKEN } from '../../../api/Constants';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
@@ -119,6 +122,7 @@ const useStyles = makeStyles(theme => ({
   },
   drpdwn:{
     marginTop: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
   },
   group: {
     // margin: theme.spacing(1, 0),
@@ -140,8 +144,8 @@ export default function ViewCustomer({ open, handleClose, handleSnackbarClick, c
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
-  // const [otherIdType, setOtherIdType] = useState(inputs.id_type ===0 ? false : true);
-  // const [otherIdTypeValue, setOtherIdTypeValue] = useState(inputs.other_id_type);
+  // const [otherIdType, setOtherIdType] = useState(customerList.id_type ===0 ? false : true);
+  // const [otherIdTypeValue, setOtherIdTypeValue] = useState(customerList.other_id_type);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
@@ -469,23 +473,27 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize} htmlFor="dob">Date Of Birth</InputLabel>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="dob"
-                      name="dob"
-                      // label=""
-                      type="date"
-                      value={customerList.dob} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      disabled
-                    />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="dob"
+                        name="dob"
+                        format="dd/MM/yyyy"
+                        disableFuture = {true}
+                        value={customerList.dob}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        disabled
+                      />
+                    </MuiPickersUtilsProvider>
+                    
+                    {customerList.is_adult === 1 && customerList.dob != "" ?  <p className={classes.dobMsg} style={{'color':'#75C019'}} A2B631>Person is over 18 year</p> 
+                    :customerList.is_adult === 0 && customerList.dob != ""  ?  <p className={classes.dobMsg} style={{'color':'#F5BB00'}}>Person is not over 18 year</p>
+                    : ''}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
@@ -493,11 +501,11 @@ return (
                         margin="dense"
                         name="id_type"
                         onChange = {handleIdType}
-                        // value={parseInt(inputs.id_type)}
+                        // value={parseInt(customerList.id_type)}
                         value={parseInt(customerList.id_type)}
                         name = 'id_type'
                         id = 'id_type'
-                        className={classes.margin}
+                        className={classes.drpdwn}
                         fullWidth
                         label="Select Id Proof"
                         required
@@ -538,23 +546,22 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize} htmlFor="expiry_date">Expiry Date</InputLabel>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="expiry_date"
-                      name="expiry_date"
-                      // label=""
-                      type="date"
-                      value={customerList.expiry_date} 
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      disabled
-                    />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        margin="dense"
+                        id="expiry_date"
+                        name="expiry_date"
+                        format="dd/MM/yyyy"
+                        value={customerList.expiry_date}
+                        fullWidth 
+                        InputProps={{
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                        disabled                                               
+                      />
+                    </MuiPickersUtilsProvider>   
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize} htmlFor="is_adult">Over 18 Years?</InputLabel>
@@ -809,7 +816,7 @@ return (
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="employer_name">Employer Name</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_name">{customerList.is_working == 1 ? "Employer Name *" : "Beneficiary Name *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -829,7 +836,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="employer_address">Employer Address</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_address">{customerList.is_working == 1 ? "Employer Address *" : "Beneficiary Address *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -849,7 +856,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="employer_telephone">Employer Telephone#</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_telephone">{customerList.is_working == 1 ? "Employer Telephone# *" : "Beneficiary Telephone# *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -890,7 +897,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="employer_tenure">Tenure of Employer</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_tenure">{customerList.is_working == 1 ? "Tenure of Employer(in Years) *" : "Tenure with Beneficiary(in Years) *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {

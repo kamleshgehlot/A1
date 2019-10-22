@@ -38,8 +38,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import DateFnsUtils from '@date-io/date-fns';
 import {useCommonStyles} from '../../common/StyleComman'; 
-
-
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import 'date-fns';
 
@@ -49,14 +47,14 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
 import ConfirmationDialog from '../ConfirmationDialog.js';
-import { getDate, getCurrentDate } from '../../../utils/datetime';
+import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getDateInDDMMYYYY, setDBDateFormat } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 
-const RESET_VALUES = {
-  
-};
+import FixPaymentTable from './OrderComponent/FixPaymentTable';
+import FlexPaymentTable from './OrderComponent/FlexPaymentTable';
+
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -158,7 +156,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     setPaymentRecDate(getDate(date));    
   }
 
-
   const handlePriceInput = e => {
     const validDecimalNumber = /^\d*\.?\d*$/;
     if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
@@ -166,216 +163,141 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     }
   }
 
-    const getPaymentHistory = async () => {
-      try {
-        const existingPayment = await Order.getPaymentHistory({id: orderData.id});
-        if(existingPayment != ""){
-          setPaymentHistory(existingPayment);
-        }else{          
-          let temp=[];
-            temp.push({
-              installment_no: 0,
-            });
-          setPaymentHistory(temp);
-        }
+  const getPaymentHistory = async () => {
+    try {
+      const existingPayment = await Order.getPaymentHistory({id: orderData.id});
+        setPaymentHistory(existingPayment);
       } catch (error) {
         console.log('Error..',error);
       }
-    };
+  };
   
+  const handleFixPaymentStatus = (noOfPayment, fixData, paymentHistory) => {
+    let payment_table=[];
+    let payDate = new Date(fixData.first_payment);
 
+    for(let i=1; i<= noOfPayment; i++){
+      let bool = false;
+        (paymentHistory.length > 0 ? paymentHistory : []).map((historyData, index) => {
+          if(i === historyData.installment_no){
+            payment_table.push({
+              sr_no : i,
+              installment_no: i,
+              payment_date: getDateInDDMMYYYY(payDate),
+              payment_rec_date: getDateInDDMMYYYY(historyData.payment_rec_date),
+              payment_amt : historyData.payment_amt.toFixed(2),
+              total_paid : historyData.total_paid.toFixed(2),
+              installment_before_delivery : fixData.before_delivery_amt,
+              last_installment_no : fixData.no_of_payment,
+              status : "Paid",
+            });
+            bool = true;
+          }
+        });
+
+        if(bool === false){
+          payment_table.push({
+            sr_no : i,
+            installment_no: i,
+            payment_date: getDateInDDMMYYYY(payDate),
+            payment_rec_date: '',
+            payment_amt : '',
+            total_paid : '',
+            installment_before_delivery : fixData.before_delivery_amt,
+            last_installment_no : fixData.no_of_payment,
+            status : "Pending",
+          });
+        }
+
+        if(fixData.frequency === 1){        
+          payDate.setMonth(payDate.getMonth() + 1);
+        }else if(fixData.frequency === 2){
+          payDate.setDate(payDate.getDate() + 15);
+        }else if(fixData.frequency === 4){
+          payDate.setDate(payDate.getDate() + 7);
+        }
+      }
+    setPaymentStatus(payment_table); 
+  }
   
-    const getFixedPaymentTable = async () => {
+  
+  const getFixedPaymentTable = async () => {
       try {
         const fixOrder = await Order.getCurrespondingFixedOrder({fixedOrderId: orderData.order_type_id});
-          setPaymentAmt(fixOrder[0].each_payment_amt.toFixed(2));
-          let payment_table=[];
-          var paymentDate = new Date(fixOrder[0].first_payment);                    
-          let totalPaid = fixOrder[0].each_payment_amt;
-          let addDays = fixOrder[0].frequency;
-          var date ="";
-          var monthCount = 0;
-          var aa =0;
-          var isFeb = 0;          
-          
-          // if(fixOrder[0].frequency ===1){addDays = 30;}
-          // else if(fixOrder[0].frequency ===2){addDays = 15;}
-          // else if(fixOrder[0].frequency ===4){addDays = 7;}
-
-          for(let i=1; i<= fixOrder[0].no_of_payment; i++){
-            if(fixOrder[0].frequency ===1){addDays = 30;}
-            else if(fixOrder[0].frequency ===2){addDays = 15;}
-            else if(fixOrder[0].frequency ===4){addDays = 7;}
-            var month = paymentDate.getMonth() + 1;
-            var day = paymentDate.getDate();
-            var year = paymentDate.getFullYear();
-            if(month < 10){
-                month = '0' + month.toString();
-              }
-            if(day < 10){
-                day = '0' + day.toString();
-              }
-            
-            date = year + '-' + month + '-' + day;           
-
-            payment_table.push({
-              sr_no : i,
-              installment_no: i,
-              payment_date: date,
-              payment_amt : fixOrder[0].each_payment_amt,
-              total_paid : totalPaid,
-              installment_before_delivery : fixOrder[0].before_delivery_amt,
-              last_installment_no : fixOrder[0].no_of_payment,
-            });
-            // let a = new Date(paymentDate.getFullYear, paymentDate.getMonth() + 1, 0).getDate();
-            let a = new Date(year, month, 0).getDate();
-            // // console.log(aa);
-            // // paymentDate.setDate();
-            if(fixOrder[0].frequency===1){
-              // let a = new Date(year, month, 0).getDate();
-              if(a === 31){
-                addDays += 1;
-              }else if(a < 30){
-                let b = 30 -a;
-                addDays -= b;
-              }
-            }
-            else if(fixOrder[0].frequency===2){
-              
-                var isDaysOver = paymentDate.getDate() + 15;
-                  if(isDaysOver > a){                    
-                      if(a === 31){
-                        addDays += 1;
-                      }else if(a < 30){
-                        if(isFeb===0){
-                          let b = 30 -a;
-                          addDays -= b;
-                          isFeb = 1;
-                        }else{
-                          isFeb = 0;
-                        }
-                      }                   
-                      aa = 0;
-                  }else{  
-                    if(aa===0){
-                      addDays =  15;
-                      aa = 1;
-                    }else if(aa===1){
-                      if(a === 31){
-                        addDays += 1;
-                      }else if(a < 30){
-                        if(isFeb===0){
-                          let b = 30 -a;
-                          addDays -= b;
-                          isFeb = 1;
-                        }else{
-                          isFeb = 0;
-                        }
-                      }                     
-                      aa = 0;
-                    }
-                }
-              }
-            paymentDate.setDate(paymentDate.getDate() + addDays)            
-            totalPaid = totalPaid + fixOrder[0].each_payment_amt; 
-          }
-            setPaymentStatus(payment_table);             
+        const existingPayment = await Order.getPaymentHistory({id: orderData.id});
+        const fixData = fixOrder[0];
+        setPaymentAmt(fixData.each_payment_amt);
+        handleFixPaymentStatus(fixData.no_of_payment, fixData, existingPayment);
       } catch (error) {
         console.log('Error..',error);
       }
-    };
+  };
 
+  const handleFlexPaymentStatus = (minimumBeforeDelivery, flexData, paymentHistory) => {
+    let payment_table=[];
+    let payDate = new Date(flexData.first_payment);
+    let maxInstallmentNumber = 0;
+    if(minimumBeforeDelivery > paymentHistory.length){
+      maxInstallmentNumber = Number(minimumBeforeDelivery);
+    }else{
+      maxInstallmentNumber = Number(paymentHistory.length + 1)
+    }
 
-    const getFlexPaymentTable = async () => {
+    for(let i=1; i<= maxInstallmentNumber; i++){
+      let bool = false;
+        (paymentHistory.length > 0 ? paymentHistory : []).map((historyData, index) => {
+          if(i === historyData.installment_no){
+            payment_table.push({
+              sr_no : i,
+              installment_no: i,
+              payment_date: getDateInDDMMYYYY(payDate),
+              payment_rec_date: getDateInDDMMYYYY(historyData.payment_rec_date),
+              payment_amt : historyData.payment_amt.toFixed(2),
+              total_paid : historyData.total_paid.toFixed(2),
+              installment_before_delivery : flexData.before_delivery_amt,
+              last_installment_no : '',
+              status : "Paid",
+            });
+            bool = true;
+          }
+        });
+
+        if(bool === false){
+          payment_table.push({
+            sr_no : i,
+            installment_no: i,
+            payment_date: getDateInDDMMYYYY(payDate),
+            payment_rec_date: '',
+            payment_amt : '',
+            total_paid : '',
+            installment_before_delivery : flexData.before_delivery_amt,
+            last_installment_no : '',
+            status : "Pending",
+          });
+        }
+
+        if(flexData.frequency === 1){        
+          payDate.setMonth(payDate.getMonth() + 1);
+        }else if(flexData.frequency === 2){
+          payDate.setDate(payDate.getDate() + 15);
+        }else if(flexData.frequency === 4){
+          payDate.setDate(payDate.getDate() + 7);
+        }
+      }
+    setPaymentStatus(payment_table); 
+  }
+
+  const getFlexPaymentTable = async () => {
       try {
         const flexOrder = await Order.getCurrespondingFlexOrder({flexOrderId: orderData.order_type_id});
-          let payment_table=[];
-          var paymentDate = new Date(flexOrder[0].first_payment);          
-          let totalPaid = flexOrder[0].each_payment_amt;
-          let addDays = flexOrder[0].frequency;
-          var aa = 0;
-          var isFeb = 0;
-          // if(flexOrder[0].frequency ===1){addDays = 30;}
-          // else if(flexOrder[0].frequency ===2){addDays = 15;}
-          // else if(flexOrder[0].frequency ===4){addDays = 7;}
-
-          for(let i=1; i<= flexOrder[0].no_of_payment; i++){
-            if(flexOrder[0].frequency ===1){addDays = 30;}
-            else if(flexOrder[0].frequency ===2){addDays = 15;}
-            else if(flexOrder[0].frequency ===4){addDays = 7;}
-            var month = paymentDate.getMonth() + 1;
-            var day = paymentDate.getDate();
-            var year = paymentDate.getFullYear();
-            if(month < 10){
-                month = '0' + month.toString();
-              }
-            if(day < 10){
-                day = '0' + day.toString();
-              }
-            var date = year + '-' + month + '-' + day;            
-
-            payment_table.push({
-              sr_no : i,
-              installment_no: i,
-              payment_date: date,
-              payment_amt : flexOrder[0].each_payment_amt,
-              total_paid : totalPaid,
-              installment_before_delivery : flexOrder[0].before_delivery_amt,
-              last_installment_no : flexOrder[0].no_of_payment,
-            });
-
-            let a = new Date(year, month, 0).getDate();
-            if(flexOrder[0].frequency===1){
-              if(a === 31){
-                addDays += 1;
-              }else if(a < 30){
-                let b = 30 -a;
-                addDays -= b;
-              }
-            }else if(flexOrder[0].frequency===2){
-              var isDaysOver = paymentDate.getDate() + 15;
-                if(isDaysOver > a){ 
-                    if(a === 31){
-                      addDays += 1;
-                    }else if(a < 30){
-                      if(isFeb===0){
-                        let b = 30 -a;
-                        addDays -= b;
-                        isFeb = 1;
-                      }else{
-                        isFeb = 0;
-                      }
-                    }
-                    aa = 0;
-                }else{  
-                  if(aa===0){
-                    addDays =  15;
-                    aa = 1;
-                  }else if(aa===1){
-                    if(a === 31){
-                      addDays += 1;
-                    }else if(a < 30){
-                      if(isFeb===0){
-                        let b = 30 -a;
-                        addDays -= b;
-                        isFeb = 1;
-                      }else{
-                        isFeb = 0;
-                      }
-                    }
-                    aa = 0;
-                  }
-                }
-              }
-            
-            paymentDate.setDate(paymentDate.getDate() + addDays)
-            totalPaid = totalPaid + flexOrder[0].each_payment_amt; 
-          }
-            setPaymentStatus(payment_table);             
-      } catch (error) {
-        console.log('Error..',error);
-      }
-    };
+        const existingPayment = await Order.getPaymentHistory({id: orderData.id});
+        const flexData = flexOrder[0];
+        setPaymentAmt(flexData.each_payment_amt);
+        handleFlexPaymentStatus(flexData.before_delivery_amt, flexData, existingPayment);                   
+    } catch (error) {
+      console.log('Error..',error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -399,35 +321,37 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     setConfirmation(true);
   }
 
-  function handleConfirmationDialog (response){
-    if(response === 1){
-      const fetchData = async () => {
-          try {
-            await Order.paymentSubmit({
-              order_id : orderData.id,
-              customer_id: orderData.customer_id,
-              installment_no : payResopnse.installment_no,
-              payment_date: payResopnse.payment_date,
-              // payment_amt : payResopnse.payment_amt.toFixed(2),
-              payment_amt : paymentAmt,
-              total_paid : payResopnse.total_paid.toFixed(2),
-              installment_before_delivery : payResopnse.installment_before_delivery,
-              last_installment_no : payResopnse.last_installment_no,
-              payment_rec_date : paymentRecDate,
-            });              
-            await getPaymentHistory();
-            if(orderData.order_type===1){
-              getFixedPaymentTable();
-            }else if(orderData.order_type===2){
-              getFlexPaymentTable();
-            }            
-          } catch (error) {
-            console.log('Error..',error);
-          }
-        };
-        fetchData();   
-    }
+  const handleConfirmationDialog = async (response) => {
     setConfirmation(false);
+    if(response === 1){
+      let totalPaid = 0;
+      if(paymentHistory == "" || paymentHistory == [] || paymentHistory.length == 0){
+        totalPaid = Number(paymentAmt);
+      }else{
+        totalPaid = (Number(paymentHistory[paymentHistory.length -1].total_paid) + Number(paymentAmt));
+      }
+      try {
+        await Order.paymentSubmit({
+          order_id : orderData.id,
+          customer_id: orderData.customer_id,
+          installment_no : payResopnse.installment_no,
+          payment_date: setDBDateFormat(payResopnse.payment_date),
+          payment_rec_date : getDate(paymentRecDate),
+          payment_amt : paymentAmt,
+          total_paid : totalPaid,
+          installment_before_delivery : payResopnse.installment_before_delivery,
+          last_installment_no : payResopnse.last_installment_no,          
+        });
+        await getPaymentHistory();
+        if(orderData.order_type===1){
+          getFixedPaymentTable();
+        }else if(orderData.order_type===2){
+          getFlexPaymentTable();
+        }            
+      } catch (error) {
+        console.log('Error..',error);
+      }        
+    }    
   }
 
 
@@ -436,117 +360,24 @@ return (
       <Dialog maxWidth open={open} TransitionComponent={Transition}>
         <form > 
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              
-              <Typography variant="h6" className={classes.title}>
-                Payment Status
-              </Typography>
-              
-              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
-            </Toolbar>
+            <Toolbar>              
+              <Typography variant="h6" className={classes.title}> Payment Status </Typography>
+                <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+              </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
           <Paper className={classes.paper}>            
             <Grid container spacing={4}>               
-                <Grid item xs={12} sm={12}>        
-                <Table >
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>#</StyledTableCell>
-                        <StyledTableCell>Payment Date</StyledTableCell>
-                        <StyledTableCell>Payment Rec. Date</StyledTableCell>
-                        <StyledTableCell>Installment Amt. </StyledTableCell>
-                        <StyledTableCell>Paid Amt.</StyledTableCell>
-                        <StyledTableCell>Status</StyledTableCell>
-                        <StyledTableCell>Option</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      { (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
-                        return(
-                          <TableRow className={ data.installment_no === data.installment_before_delivery ? classes.highlightRow : null}>
-                            <StyledTableCell>{data.sr_no}</StyledTableCell>
-                            <StyledTableCell>{data.payment_date}</StyledTableCell>
-                            <StyledTableCell>
-                              {data.installment_no === (paymentHistory[0].installment_no + 1) ?
-                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <KeyboardDatePicker
-                                      margin="dense"
-                                      id="payment_rec_date"
-                                      name="payment_rec_date"
-                                      format="dd/MM/yyyy"
-                                      value={paymentRecDate}
-                                      fullWidth 
-                                      InputProps={{
-                                        classes: {
-                                          input: classes.textsize,
-                                        },                                        
-                                      }}                                      
-                                      disableFuture
-                                      onChange={handleDateChange}
-                                      // error={errors.first_payment}
-                                      // helperText={errors.first_payment}                               
-                                    />
-                                    </MuiPickersUtilsProvider>
-                                :   (paymentHistory.length > 0 ? paymentHistory : []).map((hdata, index) => {
-                                        return(
-                                          hdata.installment_no === data.installment_no ? getDate(hdata.payment_rec_date) : ''
-                                        )
-                                    })
-                                }   
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {data.installment_no === (paymentHistory[0].installment_no + 1) ?
-                                  <TextField 
-                                  id="payment_amt"
-                                  name="payment_amt"
-                                  // label="payment_amt"
-                                  value={paymentAmt}
-                                  onChange={handlePriceInput}
-                                  fullWidth
-                                  type="text"
-                                  margin="dense"
-                                  InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                    classes: {
-                                      input: classes.textsize,
-                                    },
-                                  }}
-                                />
-                                : 
-                                (paymentHistory.length > 0 ? paymentHistory : []).map((hdata, index) => {
-                                    return(
-                                      hdata.installment_no === data.installment_no ? hdata.payment_amt : ''
-                                    )
-                                })
-                              }   
-                            </StyledTableCell>
-                            {/* <StyledTableCell>{data.payment_amt}</StyledTableCell> */}
-                            {/* {paymentHistory != "" ? paymentHistory.} */}
-                            <StyledTableCell >
-                                {data.installment_no <= paymentHistory[0].installment_no ? data.total_paid : ''}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {data.installment_no <= paymentHistory[0].installment_no ? 'Paid' : 'Pending' } 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {/* {data.installment_no < paymentHistory[0].installment_no ?  */}
-                               <Button variant="contained" color='primary' className={classes.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = {data.installment_no === (paymentHistory[0].installment_no + 1) ? false : true}>Paid Installment</Button>
-                               {/* : null} */}
-                            </StyledTableCell>
-                          </TableRow>
-                        )
-                      })
-
-                      }
-                    </TableBody>
-                </Table>
+                <Grid item xs={12} sm={12}>    
+                {orderData.order_type===1 ?
+                  <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />
+                :orderData.order_type===2 ?
+                  <FlexPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />
+                :''
+                } 
                 </Grid>
                 <Grid item xs={12} sm={12}>                      
-                  {/* <Button  variant="contained"  color="primary" className={classes.button}>
-                    save
-                  </Button> */}
                   <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                     Close
                   </Button> 

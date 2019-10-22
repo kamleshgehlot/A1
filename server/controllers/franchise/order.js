@@ -234,7 +234,7 @@ const getRequiredDataToCancel = async function(req, res, next) {
 };
 
 const paymentSubmit = async function(req, res, next) {
-  // console.log('req.body  order',req.body)
+  console.log('req.body  order',req.body)
   try {
     const payment = await new Order({
       user_id : req.decoded.user_id, 
@@ -351,6 +351,7 @@ const postOrder = async function (req, res, next) {
       const newOrder = new Order(orderParams);
 
       await newOrder.postOrder();
+
       if(req.body.converted_to !== 0){
         if(req.body.converted_name === 'lead'){
           newOrder.convertedLead(function(res){});
@@ -391,6 +392,8 @@ const postOrder = async function (req, res, next) {
 };
 
 const editOrder = async function (req, res, next) {
+  // console.log('req.order',req.body);
+  
     let orderParams = {
       id: req.body.id,
       user_id: req.decoded.user_id,      
@@ -465,7 +468,7 @@ const editOrder = async function (req, res, next) {
 
   
   const submitDeliveredProduct = async function (req, res, next) {
-    console.log('req.body',req.body);
+    // console.log('req.body',req.body);
     let orderParams = {
       id : req.body.id,
       user_id: req.decoded.user_id,  
@@ -492,7 +495,7 @@ const editOrder = async function (req, res, next) {
 
       created_by : req.decoded.id,
     };
-    console.log('req.',orderParams);
+    // console.log('req.',orderParams);
     
     try {
       const newOrder = new Order(orderParams);
@@ -550,7 +553,7 @@ const editOrder = async function (req, res, next) {
       };
       
       if(orderParams.order_id!= '' || orderParams.order_id != null){
-        console.log('hello.',req.body.data);
+        // console.log('hello.',req.body.data);
         try{
           const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id, customer_id: req.body.data.customer_id}).getBudget();
               // console.log('budget..',budget)

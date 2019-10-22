@@ -622,7 +622,7 @@ Order.prototype.getPaymentHistory = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from payment_status where order_id = "'+that.id+'" ORDER BY installment_no DESC',function (error, rows, fields) {
+        connection.query('SELECT * from payment_status where order_id = "'+that.id+'" ORDER BY installment_no',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -702,7 +702,6 @@ Order.prototype.paymentSubmit = function () {
                     });
                   }
                   if(that.installment_no === that.last_installment_no){
-                      // connection.query('UPDATE orders SET order_status = 8 where id = "'+that.order_id+'"', function (error, rows, fields) {
                       connection.query('UPDATE orders as o INNER JOIN budget as b ON (o.budget_id = b.id) SET o.order_status = 8, b.is_active = 0 where o.id = "'+that.order_id+'"', function (error, rows, fields) {
                     if(!error){
                             resolve(rows);

@@ -19,3 +19,10 @@ export function getCurrentDateDDMMYYYY() {
 export function getTime(date) {
   return moment(date).format("HH:mm")
 }
+
+export function setDBDateFormat(date){
+  let day = date.split('-')[0];
+  let month = date.split('-')[1];
+  let year = date.split('-')[2];
+  return (year + '-' + month + '-' + day) ;
+}

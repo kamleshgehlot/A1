@@ -191,18 +191,32 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
   
   useEffect(()=>{
+      let eachPaymentAmt = 0;
+
       if(frequency != ''){    
         if(frequency == 1){
           let installment = (parseFloat(product.rental) * 4);
-          handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
+          handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);
+          eachPaymentAmt = installment;          
         }else if(frequency == 2){ 
           let installment = (parseFloat(product.rental) * 2);
           handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
+          eachPaymentAmt = installment; 
         }else if(frequency == 4){ 
           let installment = (parseFloat(product.rental));
           handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
+          eachPaymentAmt = installment; 
         }
-      }            
+      }    
+      if(paymentBeforeDelivery!= ''){
+        handleRandomInput([
+          {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
+        ]);
+      }else{
+        handleRandomInput([
+          {name: 'bond_amt', value: ''},
+        ]);
+      }        
   },[frequency]);
   
 
@@ -213,7 +227,7 @@ const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handleP
   flex,
   validate
 );
-
+console.log('inputs...',inputs);
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -416,7 +430,6 @@ return (
                         name="first_payment"
                         format="dd/MM/yyyy"
                         disablePast = {true}
-                        // defaultValue = {new Date()}
                         defaultValue = {""}
                         value={inputs.first_payment}
                         fullWidth 

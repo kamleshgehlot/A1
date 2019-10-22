@@ -436,7 +436,6 @@ return (
                         id="order_date"
                         name="order_date"
                         format="dd/MM/yyyy"
-                        disablePast = {true}
                         value={inputs.order_date}
                         fullWidth 
                         disabled

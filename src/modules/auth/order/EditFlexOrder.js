@@ -128,7 +128,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(flexOrderList.before_delivery_amt);
   const [firstPaymentDate,setFirstPaymentDate] = useState(flexOrderList.first_payment);
   
-
+  
   function handleDateChange(date){    
     handleInputChange({target:{name: 'first_payment', value: date}})
     setFirstPaymentDate(date);
@@ -190,7 +190,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
         }
       }
     }
-  },[frequency, firstPaymentDate]);
+  },[]);
 
 
   useEffect(() => {
@@ -206,18 +206,32 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   },[paymentBeforeDelivery]);
 
   useEffect(()=>{
+    let eachPaymentAmt = 0;
+
     if(frequency != ''){    
       if(frequency == 1){
         let installment = (parseFloat(product.rental) * 4);
         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
+        eachPaymentAmt = installment;          
       }else if(frequency == 2){ 
         let installment = (parseFloat(product.rental) * 2);
         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
+        eachPaymentAmt = installment;          
       }else if(frequency == 4){ 
         let installment = (parseFloat(product.rental));
         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
+        eachPaymentAmt = installment;          
       }
-    }            
+    }     
+    if(paymentBeforeDelivery!= ''){
+      handleRandomInput([
+        {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
+      ]);
+    }else{
+      handleRandomInput([
+        {name: 'bond_amt', value: ''},
+      ]);
+    }              
 },[frequency]);
 
 
@@ -233,7 +247,8 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     setInputsAll(flexOrderList);
   }, []);
 
-
+  console.log('inputs...',inputs);
+  
 return (
     <div>
       <Dialog maxWidth="sm" open={open}  TransitionComponent={Transition}>
