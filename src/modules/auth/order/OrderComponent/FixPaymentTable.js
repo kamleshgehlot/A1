@@ -49,6 +49,7 @@ return (
   <TableHead>
     <TableRow>
       <StyledTableCell>#</StyledTableCell>
+      <StyledTableCell>Installment No.</StyledTableCell>
       <StyledTableCell>Payment Date</StyledTableCell>
       <StyledTableCell>Payment Rec. Date</StyledTableCell>
       <StyledTableCell>Last Payment </StyledTableCell>
@@ -61,7 +62,8 @@ return (
     {(paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
       return(
         <TableRow className={data.installment_no === data.installment_before_delivery ? styleClass.highlightRow : null}>
-          <StyledTableCell>{data.sr_no}</StyledTableCell>
+          <StyledTableCell>{index + 1}</StyledTableCell>
+          <StyledTableCell>{data.installment_no}</StyledTableCell>
           <StyledTableCell>{data.payment_date}</StyledTableCell>
           <StyledTableCell>
             {data.payment_rec_date === "" && totalPaidInstallment === index  ?

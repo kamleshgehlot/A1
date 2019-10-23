@@ -402,7 +402,7 @@ export default function CustomerList({userId, roleName}) {
           <Grid item xs={12} sm={12}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                  <Tab label={<BadgeComp count={activeTab.length} label="Active" />} /> 
+                  <Tab label={<BadgeComp count={activeTab.length} label="Open" />} /> 
                   <Tab label={<BadgeComp count={holdTab.length} label="Hold" />} /> 
                   <Tab label={<BadgeComp count={financialHardshipTab.length} label="Financial Hardship" />} /> 
                 </Tabs>

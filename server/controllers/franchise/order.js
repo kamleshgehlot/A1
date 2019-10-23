@@ -244,6 +244,8 @@ const paymentSubmit = async function(req, res, next) {
       payment_date: req.body.payment_date,
       payment_amt : req.body.payment_amt,
       total_paid : req.body.total_paid,
+      due_installment_amt : req.body.due_installment_amt,
+      sub_installment_no : req.body.sub_installment_no,
       // status : req.body.status, 
       created_by: req.decoded.id,    
       installment_before_delivery : req.body.installment_before_delivery,

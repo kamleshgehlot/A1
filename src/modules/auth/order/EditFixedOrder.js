@@ -126,7 +126,7 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
       cash_price : parseFloat(inputs.cash_price).toFixed(2),
       delivery_fee : parseFloat(inputs.delivery_fee).toFixed(2),
       ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
-      discount : parseFloat(inputs.discount).toFixed(2),
+      liability_wavier_fee : parseFloat(inputs.liability_wavier_fee).toFixed(2),
       frequency : inputs.frequency,
       first_payment : inputs.first_payment,
       last_payment : inputs.last_payment,
@@ -451,12 +451,12 @@ function calculateNoOfPayment(value) {
   // },[inputs.total_payment_amt]);
 
 //   useEffect(() => {
-//     let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.discount) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );
+//     let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.liability_wavier_fee) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );
 //     // setInput('int_unpaid_bal', unpaidBal.toFixed(2))
 //     handleRandomInput([
 //       {name: 'int_unpaid_bal', value:  unpaidBal.toFixed(2)},
 //     ]);
-// }, inputs != "" && [inputs.ppsr_fee, inputs.discount,inputs.delivery_fee, inputs.cash_price]);
+// }, inputs != "" && [inputs.ppsr_fee, inputs.liability_wavier_fee,inputs.delivery_fee, inputs.cash_price]);
 
 
 return (
@@ -480,6 +480,81 @@ return (
                 Credit Details
               </Typography>
               </Grid>
+              <Grid item xs={12} sm={6}>
+                {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
+                <TextField
+                  id="cash_price"
+                  name="cash_price"
+                  label="Cash Price"
+                  value={inputs.cash_price}
+                  onChange={handlePriceInput}
+                  // onFocus={handleInputFocus}
+                  // onBlur={handleInputBlur}
+                  error={errors.cash_price}
+                  helperText={errors.cash_price}
+                  fullWidth
+                  // required
+                  type="text"
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="liability_wavier_fee"
+                  name="liability_wavier_fee"
+                  label="Liability Wavier Fee"
+                  value={inputs.liability_wavier_fee}
+                  onChange={handlePriceInput}
+                  error={errors.liability_wavier_fee}
+                  helperText={errors.liability_wavier_fee}
+                  fullWidth
+                  type="text"
+                  margin="dense"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                />
+              </Grid>   
+              <Grid item xs={12} sm={6}>
+                {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
+                <TextField
+                  id="delivery_fee"
+                  name="delivery_fee"
+                  label="Delivery Fee"
+                  value={inputs.delivery_fee}
+                  onChange={handlePriceInput}
+                  // onFocus={handleInputFocus}
+                  // onBlur={handleInputBlur}
+                  error={errors.delivery_fee}
+                  helperText={errors.delivery_fee}
+                  fullWidth
+                  // required
+                  type="text"
+                  // placeholder="Franchise Name"
+                  margin="dense"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}                      
+                />
+              </Grid>   
               <Grid item xs={12} sm={6}>
                     {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
@@ -505,81 +580,9 @@ return (
                       }}
                     />
                   </Grid>   
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      id="delivery_fee"
-                      name="delivery_fee"
-                      label="Delivery Fee"
-                      value={inputs.delivery_fee}
-                      onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.delivery_fee}
-                      helperText={errors.delivery_fee}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}                      
-                    />
-                  </Grid>               
-                  <Grid item xs={12} sm={6}>
-                    {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
-                      id="cash_price"
-                      name="cash_price"
-                      label="Cash Price"
-                      value={inputs.cash_price}
-                      onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      error={errors.cash_price}
-                      helperText={errors.cash_price}
-                      fullWidth
-                      // required
-                      type="text"
-                      // placeholder="Franchise Name"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="discount"
-                      name="discount"
-                      label="Discount"
-                      value={inputs.discount}
-                      onChange={handlePriceInput}
-                      error={errors.discount}
-                      helperText={errors.discount}
-                      fullWidth
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                  </Grid>                  
+                              
+                  
+                                
                   <Grid item xs={12} sm={12}>
                     {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField

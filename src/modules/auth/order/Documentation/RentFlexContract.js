@@ -40,7 +40,7 @@ export default function layout(data,order) {
               ],
               [ 
                { text: '\nStatement Date ' , style: styles.Header3},                             
-               { text: getCurrentDate() , style: styles.Header3},
+               { text: getCurrentDateDDMMYYYY() , style: styles.Header3},
               ],
             ]
           },
@@ -186,11 +186,12 @@ export default function layout(data,order) {
                       [
                         {style:styles.margins, text: [  
                           { text: '\nFrequency \t\t\t' , alignment: screenLeft, fontSize: 8, },
-                            orderType.frequency === 1 ? { text: 'Monthly' , alignment: screenLeft, fontSize: 8, }
-                          : orderType.frequency === 2 ? { text: 'Fortnightly' , alignment: screenLeft, fontSize: 8, }  
-                          : orderType.frequency === 4 ? { text: 'Weekly' , alignment: screenLeft, fontSize: 8, }  :'',
+                            orderType.frequency === 1 ? { text: 'Monthly' , alignment: screenLeft,  fontSize: 10, bold:true  }
+                          : orderType.frequency === 2 ? { text: 'Fortnightly' , alignment: screenLeft,  fontSize: 10, bold:true  }  
+                          : orderType.frequency === 4 ? { text: 'Weekly' , alignment: screenLeft,  fontSize: 10, bold:true  }  :'',
                           
-                          { text: '\n\nFirst payment \t\t'+ getDateInDDMMYYYY(orderType.first_payment) + '\n\n',  alignment: screenLeft, fontSize: 8,},
+                          { text: '\n\nFirst payment \t\t',  alignment: screenLeft, fontSize: 8,},
+                          { text: getDateInDDMMYYYY(orderType.first_payment) + '\n\n',  alignment: screenLeft,   fontSize: 10, bold:true },
                         ],border: [true, false, true, true],},
                           { text: '', border: [true, false, true, false],},
                           { text: '\n\nINDEFINITE\n', style: styles.paymentBody, border: [true, false, true, true],},
@@ -212,7 +213,7 @@ export default function layout(data,order) {
                       [
                         {style:styles.margins, text: [  
                           { text: 'Minimum number of Payments before Delivery',   fontSize:8, alignment: screenLeft, bold: true,},
-                          { text: '\n\n\n' + orderType.before_delivery_amt, style: styles.paymentHeading, fontSize:10,},
+                          { text: '\n\n\n' + orderType.before_delivery_amt, style: styles.paymentBody,},
                           { text: '\n\nWe require the Bond to be paid by you on/before the Delivery Date to source' 
                                 + ' performance of your obligations under the contract, or the payment of money payable under ' 
                                 + 'the contract, or both.', fontSize:8, alignment: screenLeft},
@@ -221,15 +222,15 @@ export default function layout(data,order) {
                         { text: '', border: [true, false, true, false],},                        
                         {style:styles.margins, text: [  
                           { text: 'Expected Delivery Date',   style: styles.paymentHeading},
-                          { text: '\n\n' + getCurrentDateDDMMYYYY(orderType.exp_delivery_date), style: styles.paymentHeading,},
+                          { text: '\n\n' + getCurrentDateDDMMYYYY(orderType.exp_delivery_date), style: styles.paymentBody,},
                           { text: '\n\nExpected Time of Delivery', style: styles.paymentHeading},
-                          { text: '\n\n' + orderType.exp_delivery_time, style: styles.paymentHeading},
+                          { text: '\n\n' + orderType.exp_delivery_time, style: styles.paymentBody},
                           ],
                         },                        
                         { text: '', border: [true, false, true, false],},
                         {style:styles.margins, text: [  
                           { text: 'Bond Amt.',  style: styles.paymentHeading},
-                          { text: '\n\n\n$' + orderType.bond_amt, style: styles.paymentHeading, fontSize: 10},
+                          { text: '\n\n\n$' + orderType.bond_amt, style: styles.paymentBody, fontSize: 10},
                           ],
                         },   
                       ],                                                           

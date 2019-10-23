@@ -29,8 +29,7 @@ function buildTableBody(data, columns, valueKeys, orderType) {
 
     valueKeys.forEach(function(column) {
       if(column === 'paymentType') {
-        dataRow.push({ text: orderType[0].frequency == 1 ? 'WEEKLY PAYMENT' :  'FORTNIGHTLY PAYMENT', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
-
+        dataRow.push({ text: orderType[0].frequency == 1 ? 'MONTHLY PAYMENT' : orderType[0].frequency == 2 ? 'FORTNIGHTLY PAYMENT' : orderType[0].frequency == 4 ? 'WEEKLY PAYMENT': '', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
       } else {
         dataRow.push({ text: row[column.toLowerCase()], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
       }
@@ -119,7 +118,7 @@ export default function FixedOrderForm(data,order) {
                           { text: customer[0].mobile + '\n', style: styles.Header1Center, alignment: screenLeft }, 
                           { text: 'Email: ', style: styles.Header1Center, alignment: screenLeft, bold: true }, 
                           { text: customer[0].email + '\n', style: styles.Header1Center, alignment: screenLeft }, 
-                          { text: 'Date of Birth: ' + customer[0].dob, style: styles.Header1Center, alignment: screenLeft }, 
+                          { text: 'Date of Birth: ' + getDateInDDMMYYYY(customer[0].dob), style: styles.Header1Center, alignment: screenLeft }, 
                           { text: '\nWorking Status :' + (customer[0].is_working == 1 ? 'Yes' : 'No'), style: styles.Header1Center, alignment: screenLeft }, 
                         ]}
                         ],
@@ -224,7 +223,7 @@ export default function FixedOrderForm(data,order) {
                 ],
                 [
                   { text: 'FREQUENCY OF PAYMENT',  bold: true, alignment: screenLeft, fontSize:8, fillColor: '#C5C7C0'  },                   
-                  { text: '$' +  orderType[0].each_payment_amt +'  '+ (orderType[0].frequency == 1 ? 'PAID WEEKLY' :  'PAID FORTNIGHTLY'),   bold: true, alignment: screenLeft, fontSize:8, colSpan: 2 }, {}                 
+                  { text: '$' +  orderType[0].each_payment_amt +'  '+ ( orderType[0].frequency == 1 ? 'MONTHLY PAYMENT' : orderType[0].frequency == 2 ? 'FORTNIGHTLY PAYMENT' : orderType[0].frequency == 4 ? 'WEEKLY PAYMENT': ''),   bold: true, alignment: screenLeft, fontSize:8, colSpan: 2 }, {}                 
                 ],
               ]
             },

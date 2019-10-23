@@ -41,7 +41,7 @@ export default function layout(data,order) {
               ],
               [ 
                { text: '\nStatement Date ' , style: styles.Header3},                             
-               { text: getCurrentDate() , style: styles.Header3},
+               { text: getCurrentDateDDMMYYYY() , style: styles.Header3},
               ],
             ]
           },
@@ -98,7 +98,7 @@ export default function layout(data,order) {
                             { text: 'Name:       ' + franchise.franchise_name,   alignment: screenLeft, fontSize: 10},   
                             { text: '\nAddress:  ' + franchise.location, alignment: screenLeft,  fontSize: 10 }, 
                             { text: '\nPhone:    ' + franchise.contact, alignment: screenLeft, fontSize: 10 }, 
-                            { text: '\nEmail:    ' + franchise.email, alignment: screenLeft, fontSize: 10 }, 
+                            { text: '\nEmail:     ' + franchise.email, alignment: screenLeft, fontSize: 10 }, 
                           ],
                         },
                         ],
@@ -189,12 +189,14 @@ export default function layout(data,order) {
                       [
                         {style:styles.margins, text: [  
                           { text: 'Frequency \t\t\t' , alignment: screenLeft, fontSize: 8, },
-                            orderType.frequency === 1 ? { text: 'Monthly' , alignment: screenLeft, fontSize: 8, }
-                          : orderType.frequency === 2 ? { text: 'Fortnightly' , alignment: screenLeft, fontSize: 8, }  
-                          : orderType.frequency === 4 ? { text: 'Weekly' , alignment: screenLeft, fontSize: 8, }  :'',
+                            orderType.frequency === 1 ? { text: 'Monthly' , alignment: screenLeft, fontSize: 10, bold:true }
+                          : orderType.frequency === 2 ? { text: 'Fortnightly' , alignment: screenLeft, fontSize: 10, bold:true }  
+                          : orderType.frequency === 4 ? { text: 'Weekly' , alignment: screenLeft, fontSize: 10, bold:true }  :'',
                           
-                          { text: '\n\nFirst payment \t\t'+ getDateInDDMMYYYY(orderType.first_payment),  alignment: screenLeft, fontSize: 8,},
-                          { text: '\n\nLast payment \t\t'+ getDateInDDMMYYYY(orderType.last_payment) + '\n\n',  alignment: screenLeft, fontSize: 8,},
+                          { text: '\n\nFirst payment \t\t',  alignment: screenLeft, fontSize: 8,},
+                          { text: getDateInDDMMYYYY(orderType.first_payment),  alignment: screenLeft, fontSize: 10, bold:true},
+                          { text: '\n\nLast payment \t\t',  alignment: screenLeft, fontSize: 8,},
+                          { text: getDateInDDMMYYYY(orderType.last_payment) + '\n\n',  alignment: screenLeft, fontSize: 10, bold:true},
                         ],border: [true, false, true, true],},
                           { text: '', border: [true, false, true, false],},
                           { text: '\n\n'+ orderType.no_of_payment + '\n', style: styles.paymentBody, border: [true, false, true, true],},
@@ -220,7 +222,7 @@ export default function layout(data,order) {
                       [
                         {style:styles.margins, text: [  
                           { text: 'Minimum number of Payments before Delivery',   fontSize:8, alignment: screenLeft, bold: true,},
-                          { text: '\n\n\n' + orderType.before_delivery_amt, style: styles.paymentHeading, fontSize:10,},
+                          { text: '\n\n\n' + orderType.before_delivery_amt, style: styles.paymentBody, fontSize:10,},
                           { text: '\n\nWe require the minimum number of payments to be paid by you on/before the Delivery Date to source' 
                                 + ' performance of your obligations under the contract, or the payment of money payable under ' 
                                 + 'the contract, or both.', fontSize:8, alignment: screenLeft},
@@ -229,15 +231,15 @@ export default function layout(data,order) {
                         { text: '', border: [true, false, true, false],},                        
                         {style:styles.margins, text: [  
                           { text: 'Expected Delivery Date',   style: styles.paymentHeading},
-                          { text: '\n\n' + getCurrentDateDDMMYYYY(orderType.exp_delivery_date), style: styles.paymentHeading,},
+                          { text: '\n\n' + getCurrentDateDDMMYYYY(orderType.exp_delivery_date), style: styles.paymentBody,},
                           { text: '\n\nExpected Time of Delivery', style: styles.paymentHeading},
-                          { text: '\n\n' + orderType.exp_delivery_time, style: styles.paymentHeading},
+                          { text: '\n\n' + orderType.exp_delivery_time, style: styles.paymentBody},
                           ],
                         },                        
                         { text: '', border: [true, false, true, false],},
                         {style:styles.margins, text: [  
                           { text: 'Minimum Payment Amount',  style: styles.paymentHeading},
-                          { text: '\n\n\n$' + orderType.minimum_payment_amt, style: styles.paymentHeading, fontSize: 10},
+                          { text: '\n\n\n$' + orderType.minimum_payment_amt, style: styles.paymentBody, fontSize: 10},
                           ],
                         },   
                       ],                                                           
@@ -258,8 +260,14 @@ export default function layout(data,order) {
                       [[
                         { text: 'Annual interest rate(s).',   fontSize:8, alignment: screenLeft, lineHeight: 1.5, bold:true},
                         { ul:[
-                            { text: '19.99% fixed for the whole term of the contract, being   ' + orderType.interest_rate + ' weeks', fontSize:8, alignment: screenLeft},
-                            { text: 'Daily interest rate of   ' + orderType.interest_rate_per +'%', fontSize:8, alignment: screenLeft},
+                          {style:styles.margins, text: [  
+                            { text: '19.99% fixed for the whole term of the contract, being   ', fontSize:8, alignment: screenLeft},
+                            { text: orderType.interest_rate + ' weeks', style: styles.paymentBody},
+                          ]},
+                          {style:styles.margins, text: [  
+                            { text: 'Daily interest rate of   ', fontSize:8, alignment: screenLeft},
+                            { text: orderType.interest_rate_per +'%', style: styles.paymentBody },
+                          ]}
                           ],lineHeight: 1.5,
                         },
                         { text: 'Interest charges are calculated by multiplying the unpaid balance at the end of the day by a daily interest rate. The daily interest rate is calculated by dividing the annual interest rate by 365. Interest is charged to your account weekly.', fontSize:8, style: styles.JustifyFont8, lineHeight: 1.5,},
@@ -268,7 +276,7 @@ export default function layout(data,order) {
                       [
                         { text: 'Total interest charges',   fontSize:8, alignment: screenLeft, lineHeight: 1.5, bold:true},
                         { text: 'This is the total amount of interest charges payable under the contract.', fontSize:8, style: styles.JustifyFont8, lineHeight: 1.5,},
-                        { text: '\n$' + orderType.total_interest, style: styles.Header3CenterFont8, lineHeight: 1.5, bold:true},
+                        { text: '\n$' + orderType.total_interest, style: styles.paymentBody, lineHeight: 1.5},
                       ],
                     ],                                                           
                     ], 

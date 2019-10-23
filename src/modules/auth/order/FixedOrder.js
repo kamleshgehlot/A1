@@ -55,7 +55,7 @@ const RESET_VALUES = {
   exp_delivery_time : '',
 
   int_unpaid_bal : 0,
-  discount : 0,
+  liability_wavier_fee : 0,
   cash_price  : 0,
   delivery_fee : 0,
   ppsr_fee : 0,
@@ -158,7 +158,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       cash_price : parseFloat(inputs.cash_price).toFixed(2),
       delivery_fee : parseFloat(inputs.delivery_fee).toFixed(2),
       ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
-      discount : parseFloat(inputs.discount).toFixed(2),
+      liability_wavier_fee : parseFloat(inputs.liability_wavier_fee).toFixed(2),
       frequency : inputs.frequency,
       duration: inputs.duration,
       first_payment : inputs.first_payment,
@@ -437,12 +437,12 @@ function calculateNoOfPayment(value) {
 
   
   useEffect(() => {
-    let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.discount) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );
+    let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.liability_wavier_fee) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );
     
     handleRandomInput([      
       {name: 'int_unpaid_bal', value:  unpaidBal.toFixed(2)},
     ]);
-  },[inputs.ppsr_fee, inputs.discount,inputs.delivery_fee, inputs.cash_price]);
+  },[inputs.ppsr_fee, inputs.liability_wavier_fee,inputs.delivery_fee, inputs.cash_price]);
   
   
   useEffect(() => {
@@ -488,20 +488,45 @@ return (
               </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="cash_price"
+                  name="cash_price"
+                  label="Cash Price"
+                  value={inputs.cash_price}
+                  onChange={handlePriceInput}
+                  error={errors.cash_price}
+                  helperText={errors.cash_price}
+                  fullWidth
+                  type="text"
+                  margin="dense"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
                     <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      id="ppsr_fee"
-                      name="ppsr_fee"
-                      label="PPSR Fee"
-                      value={inputs.ppsr_fee}
+                      id="liability_wavier_fee"
+                      name="liability_wavier_fee"
+                      label="Liability Wavier Fee"
+                      value={inputs.liability_wavier_fee}
                       onChange={handlePriceInput}
-                      error={errors.ppsr_fee}
-                      helperText={errors.ppsr_fee}
+                      error={errors.liability_wavier_fee}
+                      helperText={errors.liability_wavier_fee}
                       fullWidth
                       type="text"
                       margin="dense"
@@ -535,8 +560,7 @@ return (
                         classes: {
                           input: classes.textsize,
                         },
-                      }}
-                      
+                      }}                      
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -547,13 +571,13 @@ return (
                           input: classes.textsize,
                         },
                       }}
-                      id="cash_price"
-                      name="cash_price"
-                      label="Cash Price"
-                      value={inputs.cash_price}
+                      id="ppsr_fee"
+                      name="ppsr_fee"
+                      label="PPSR Fee"
+                      value={inputs.ppsr_fee}
                       onChange={handlePriceInput}
-                      error={errors.cash_price}
-                      helperText={errors.cash_price}
+                      error={errors.ppsr_fee}
+                      helperText={errors.ppsr_fee}
                       fullWidth
                       type="text"
                       margin="dense"
@@ -564,32 +588,8 @@ return (
                         },
                       }}
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="discount"
-                      name="discount"
-                      label="Discount"
-                      value={inputs.discount}
-                      onChange={handlePriceInput}
-                      error={errors.discount}
-                      helperText={errors.discount}
-                      fullWidth
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                    />
-                  </Grid>
+                  </Grid>                  
+                  
                   <Grid item xs={12} sm={12}>
                     <TextField
                      

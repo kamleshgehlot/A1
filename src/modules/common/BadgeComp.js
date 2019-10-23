@@ -70,7 +70,7 @@ export default function BadgeComp({count, label}) {
   const classes = useStyles();
 
   return (
-    <Badge className={classes.badge} color="secondary" badgeContent={count}
+    <Badge className={classes.badge} max={count} color="secondary" badgeContent={count}
     classes={{ badge: classes.customBadge }}>{label}</Badge>
   )
 }
