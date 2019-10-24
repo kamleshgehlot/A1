@@ -235,26 +235,134 @@ const getRequiredDataToCancel = async function(req, res, next) {
 
 const paymentSubmit = async function(req, res, next) {
   console.log('req.body  order',req.body)
-  try {
-    const payment = await new Order({
-      user_id : req.decoded.user_id, 
-      order_id : req.body.order_id,
-      customer_id: req.body.customer_id,
-      installment_no : req.body.installment_no,
-      payment_date: req.body.payment_date,
-      payment_amt : req.body.payment_amt,
-      total_paid : req.body.total_paid,
-      due_installment_amt : req.body.due_installment_amt,
-      sub_installment_no : req.body.sub_installment_no,
-      // status : req.body.status, 
-      created_by: req.decoded.id,    
-      installment_before_delivery : req.body.installment_before_delivery,
-      last_installment_no : req.body.last_installment_no,
-      payment_rec_date : req.body.payment_rec_date,
-    }).paymentSubmit();
 
-    // const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-      res.send({});
+  let orderParams = {
+    user_id : req.decoded.user_id, 
+    order_id : req.body.order_id,
+    customer_id: req.body.customer_id,
+    installment_no : req.body.installment_no,
+    payment_date: req.body.payment_date,
+    payment_amt : req.body.payment_amt,
+    total_paid : req.body.total_paid,
+    due_installment_amt : req.body.due_installment_amt,
+    sub_installment_no : req.body.sub_installment_no,
+    created_by: req.decoded.id,    
+    installment_before_delivery : req.body.installment_before_delivery,
+    last_installment_no : req.body.last_installment_no,
+    payment_rec_date : req.body.payment_rec_date,
+    each_payment_amt : req.body.each_payment_amt,
+    paymentStatus : req.body.paymentStatus,
+  }   
+  try {
+    const newPayment = new Order(orderParams);
+    
+    if(orderParams.payment_amt === orderParams.each_payment_amt){
+      if(orderParams.due_installment_amt === 0){
+        newPayment.total_paid = Number(newPayment.total_paid) + Number(orderParams.payment_amt);
+        const payment = await newPayment.paymentSubmit();
+      }
+    }
+
+
+
+    if(orderParams.payment_amt < orderParams.each_payment_amt){
+      
+      if(orderParams.due_installment_amt === 0){
+        newPayment.total_paid = Number(newPayment.total_paid) + Number(orderParams.payment_amt);
+        newPayment.due_installment_amt = Number(orderParams.each_payment_amt) - Number(orderParams.payment_amt);
+        newPayment.sub_installment_no = 1;
+        const payment = await newPayment.paymentSubmit();
+      }else if(orderParams.due_installment_amt > 0){
+        if(orderParams.due_installment_amt >= orderParams.payment_amt){
+          newPayment.total_paid = Number(newPayment.total_paid) + Number(orderParams.payment_amt);
+          newPayment.due_installment_amt = Number(orderParams.due_installment_amt) - Number(orderParams.payment_amt);
+          newPayment.sub_installment_no = newPayment.sub_installment_no + 1;
+          const payment = await newPayment.paymentSubmit();
+        }else if(orderParams.due_installment_amt < orderParams.payment_amt){
+          
+          let payAmt = Number(orderParams.payment_amt);
+          let due = Number(orderParams.due_installment_amt);
+
+          newPayment.due_installment_amt = 0;
+          newPayment.sub_installment_no = Number(newPayment.sub_installment_no) + 1;
+          newPayment.payment_amt = Number(orderParams.due_installment_amt);
+          newPayment.total_paid = Number(newPayment.total_paid) + Number(orderParams.due_installment_amt);
+          const payment = await newPayment.paymentSubmit();
+
+          let instNo = req.body.installment_no;
+          payAmt = payAmt - due;         
+          newPayment.due_installment_amt = Number(orderParams.each_payment_amt) - Number(payAmt);
+          newPayment.sub_installment_no = 1;
+          newPayment.payment_amt = payAmt;
+          newPayment.total_paid = Number(newPayment.total_paid) + payAmt;
+          newPayment.installment_no = instNo + 1;
+          newPayment.payment_date = orderParams.paymentStatus[instNo].payment_date;
+          const payment1 = await newPayment.paymentSubmit();
+        }
+      }
+    }
+
+    // const payment = await newPayment.paymentSubmit(); 
+    res.send({});
+    
+    // if(Number(req.body.payment_amt) > Number(req.body.each_payment_amt)){
+    //   let payAmt = Number(req.body.payment_amt);
+    //   let eachPayAmt = Number(req.body.each_payment_amt);
+
+    //   let advanceTime = Math.ceil(payAmt/eachPayAmt);
+    //   let advancePay = payAmt;
+    //   let paidAmt = (Number(req.body.total_paid) - payAmt);
+    //   let instNo = req.body.installment_no;
+      
+      // if(req.body.due_installment_amt > 0){
+      //   newPayment.payment_amt = Number(req.body.due_installment_amt);
+      //   newPayment.total_paid = paidAmt + Number(req.body.due_installment_amt);
+      //   newPayment.installment_no = instNo;
+      //   newPayment.payment_date =  req.body.paymentStatus[instNo - 1].payment_date;
+      //   newPayment.due_installment_amt = 0;
+      //   newPayment.sub_installment_no = 0;
+        
+      //   const payment = await newPayment.paymentSubmit(); 
+      //   payAmt = payAmt - req.body.due_installment_amt;
+      //   paidAmt = paidAmt + Number(req.body.due_installment_amt);
+      //   advancePay = payAmt;
+      //   instNo = instNo + 1;
+      // }
+
+    //   for(let i=1; i<= advanceTime; i++){
+    //     if(advancePay >= eachPayAmt){
+    //       newPayment.payment_amt = eachPayAmt;
+    //       newPayment.total_paid = paidAmt + eachPayAmt;
+    //       newPayment.installment_no = instNo;
+    //       newPayment.payment_date =  req.body.paymentStatus[instNo - 1].payment_date;
+         
+
+    //       paidAmt  = paidAmt + eachPayAmt;
+    //       instNo = instNo + 1;
+    //     }else{
+    //       newPayment.payment_amt = advancePay;
+    //       newPayment.total_paid = paidAmt + advancePay;
+    //       newPayment.installment_no = instNo;
+    //       newPayment.payment_date =  req.body.paymentStatus[instNo - 1].payment_date;
+    //       newPayment.sub_installment_no = 1;
+    //       newPayment.due_installment_amt = eachPayAmt - advancePay;
+
+    //       paidAmt  = paidAmt + advancePay;
+    //       instNo = instNo + 1;
+
+    //     }
+    //     const payment = await newPayment.paymentSubmit();
+    //     advancePay = advancePay - eachPayAmt;
+    //   }
+    // }else{
+    //   console.log('jele')
+    //   const payment = await newPayment.paymentSubmit();      
+    // }
+    // res.send({});
+    
+    
+
+    
   } catch (error) {
     next(error);
   }

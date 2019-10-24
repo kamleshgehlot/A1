@@ -150,9 +150,10 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [payResopnse, setPayResopnse] = React.useState([]);
   const [paymentHistory,setPaymentHistory] = useState([]);
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
-  const [paymentAmt, setPaymentAmt] = useState('');
+  const [payAmt, setPayAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
-
+  let advancedAmt = 0;
+  let paymentAmt = payAmt;
   function handleDateChange(date){
     setPaymentRecDate(getDate(date));    
   }
@@ -160,7 +161,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const handlePriceInput = e => {
     const validDecimalNumber = /^\d*\.?\d*$/;
     if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
-      setPaymentAmt(e.target.value);
+      setPayAmt(e.target.value);
     }
   }
 
@@ -226,6 +227,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       }
     setPaymentStatus(payment_table); 
   }
+
   
   const getFixedPaymentTable = async () => {
       try {
@@ -235,21 +237,39 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         setOrderTypeData(fixOrder[0]);
             if(existingPayment.length > 0){
               if(existingPayment[existingPayment.length -1].due_installment_amt == 0){
-                setPaymentAmt(fixData.each_payment_amt);
+                paymentAmt = (fixData.each_payment_amt);
               }else{
-                setPaymentAmt(existingPayment[existingPayment.length -1].due_installment_amt);
+                paymentAmt = (existingPayment[existingPayment.length -1].due_installment_amt);
               }
             }else{
-              setPaymentAmt(fixData.each_payment_amt);
+                paymentAmt = (fixData.each_payment_amt);
             }        
         handleFixPaymentStatus(fixData.no_of_payment, fixData, existingPayment);
+        // console.log('advancedAmt',advancedAmt);
+        // if(advancedAmt > 0){
+        //   let lastIndex = 0;
+        //   paymentAmt = (advancedAmt);
+
+        //   console.log('PaymentAmt',paymentAmt);
+          
+          
+
+        //   paymentStatus.map((data, index) => {
+        //     if(data.status === "Paid" && data.payment_rec_date !== ""){
+        //       lastIndex = lastIndex + 1;
+        //     }
+        //   });
+
+        //   console.log('result',lastIndex);
+        //   setPayResopnse(paymentStatus[lastIndex]);
+        //   submitPayment(paymentStatus[lastIndex]);
+        // }
       } catch (error) {
         console.log('Error..',error);
       }
   };
-
+  // console.log('PaymentStatus', paymentStatus);
   const handleFlexPaymentStatus = (minimumBeforeDelivery, flexData, paymentHistory) => {
-    console.log('paymentHistory',paymentHistory);
     
     let lastInstallmentNo = 0;
     let payment_table=[];
@@ -323,12 +343,12 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         setOrderTypeData(flexOrder[0]);
             if(existingPayment.length > 0){
               if(existingPayment[existingPayment.length -1].due_installment_amt == 0){
-                setPaymentAmt(flexData.each_payment_amt);
+                paymentAmt = (flexData.each_payment_amt);
               }else{
-                setPaymentAmt(existingPayment[existingPayment.length -1].due_installment_amt);
+                paymentAmt = (existingPayment[existingPayment.length -1].due_installment_amt);
               }
             }else{
-              setPaymentAmt(flexData.each_payment_amt);
+                paymentAmt = (flexData.each_payment_amt);
             }             
         handleFlexPaymentStatus(flexData.before_delivery_amt, flexData, existingPayment);                   
     } catch (error) {
@@ -353,11 +373,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   }, []);
   
   
-  function handlePaymentSubmit(response){
-    setPayResopnse(response);
-    setConfirmation(true);
-  }
-
+ 
   const handleConfirmationDialog = async (response) => {
     setConfirmation(false);
     if(response === 1){
@@ -366,33 +382,25 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       let subInstallmentNo = 0;
       
       if(paymentHistory == "" || paymentHistory == [] || paymentHistory.length == 0){
-
-        // totalPaid = Number(paymentAmt);
-        // if(paymentAmt < orderTypeData.each_payment_amt){
-        //   dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));
-        //   subInstallmentNo = 1;
-        // }
+        totalPaid = Number(paymentAmt);
+        if(paymentAmt !== orderTypeData.each_payment_amt){
+          dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));
+          subInstallmentNo = 1;
+        }
       }else{
-        const lastPayRecord = paymentHistory[paymentHistory.length -1];
-        totalPaid = lastPayRecord.total_paid;
-        dueInstallment = lastPayRecord.due_installment_amt;
-        subInstallmentNo = lastPayRecord.sub_installment_no;
-        // totalPaid = (Number(paymentHistory[paymentHistory.length -1].total_paid) + Number(paymentAmt));
+        totalPaid = (Number(paymentHistory[paymentHistory.length -1].total_paid) + Number(paymentAmt));
         
-        // // if(paymentAmt <= orderTypeData.each_payment_amt && paymentHistory[paymentHistory.length -1].due_installment_amt == 0){
-        //   if(paymentHistory[paymentHistory.length -1].due_installment_amt == 0){
-        //     dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));    
-        //     if(dueInstallment !== 0){
-        //       subInstallmentNo = 1;
-        //     }          
-        //   }else{
-        //     dueInstallment =  Number(paymentHistory[paymentHistory.length -1].due_installment_amt) - Number(paymentAmt);
-        //     subInstallmentNo = (paymentHistory[paymentHistory.length -1].sub_installment_no) + 1;
-        //   }
-        // // }else{
-        // //     dueInstallment =  Number(paymentHistory[paymentHistory.length -1].due_installment_amt);
-        // //     subInstallmentNo = (paymentHistory[paymentHistory.length -1].sub_installment_no) + 1;
-        // // }
+        if(paymentHistory[paymentHistory.length -1].due_installment_amt == 0){
+          dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));    
+          if(dueInstallment !== 0){
+            subInstallmentNo = 1;
+          }          
+        }else{
+          dueInstallment =  Number(paymentHistory[paymentHistory.length -1].due_installment_amt) - Number(paymentAmt);
+          // if(dueInstallment !== 0){
+            subInstallmentNo = (paymentHistory[paymentHistory.length -1].sub_installment_no) + 1;
+          // }          
+        }
       }
    
 
@@ -408,9 +416,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           due_installment_amt : dueInstallment,
           sub_installment_no : subInstallmentNo,
           installment_before_delivery : payResopnse.installment_before_delivery,
-          last_installment_no : payResopnse.last_installment_no,
-          each_payment_amt : orderTypeData.each_payment_amt,
-          paymentStatus : paymentStatus,
+          last_installment_no : payResopnse.last_installment_no,          
         });
         await getPaymentHistory();
         if(orderData.order_type===1){
@@ -423,6 +429,83 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       }        
     }    
   }
+
+  function handlePaymentSubmit(response){
+    setPayResopnse(response);
+    setConfirmation(true);
+  }
+
+  // const handleConfirmationDialog = async (isConfirm) => {
+  //   setConfirmation(false);
+  //   if(isConfirm === 1){       
+  //     submitPayment(payResopnse);
+  //   }    
+  // }
+
+  // const submitPayment = async (response) =>{
+  //   let totalPaid = 0;
+  //   let dueInstallment = 0;
+  //   let subInstallmentNo = 0;
+    
+  //   if(paymentHistory == "" || paymentHistory == [] || paymentHistory.length == 0){
+      
+  //     if(paymentAmt == orderTypeData.each_payment_amt){
+  //       totalPaid = Number(paymentAmt);  
+  //     }else if(paymentAmt < orderTypeData.each_payment_amt){
+  //       dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));
+  //       subInstallmentNo = 1;
+  //       totalPaid = Number(paymentAmt);  
+  //     }else if(paymentAmt > orderTypeData.each_payment_amt){        
+  //       advancedAmt = ((Number(paymentAmt) - Number(orderTypeData.each_payment_amt)));
+  //       totalPaid = Number(orderTypeData.each_payment_amt);  
+  //       paymentAmt = (Number(orderTypeData.each_payment_amt));
+  //     }
+  //   } else{
+  //       if(paymentAmt <= Number(orderTypeData.each_payment_amt)){
+  //           totalPaid = (Number(paymentHistory[paymentHistory.length -1].total_paid) + Number(paymentAmt));
+            
+  //           if(paymentHistory[paymentHistory.length -1].due_installment_amt == 0){
+  //             dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));    
+  //             if(dueInstallment !== 0){
+  //               subInstallmentNo = 1;
+  //             } 
+  //             advancedAmt = (Number(advancedAmt) - Number(paymentAmt)); 
+  //           }else{
+  //             dueInstallment =  Number(paymentHistory[paymentHistory.length -1].due_installment_amt) - Number(paymentAmt);
+  //             subInstallmentNo = (paymentHistory[paymentHistory.length -1].sub_installment_no) + 1;
+  //           }
+  //       }else if(paymentAmt > Number(orderTypeData.each_payment_amt)){
+  //         totalPaid = (Number(paymentHistory[paymentHistory.length -1].total_paid) + Number(orderTypeData.each_payment_amt));
+  //         advancedAmt = ((Number(paymentAmt) - Number(orderTypeData.each_payment_amt)));
+  //         paymentAmt = (Number(orderTypeData.each_payment_amt));
+  //       }
+  //   }
+ 
+
+  //   try {
+  //     await Order.paymentSubmit({
+  //       order_id : orderData.id,
+  //       customer_id: orderData.customer_id,
+  //       installment_no : payResopnse.installment_no,
+  //       payment_date: setDBDateFormat(payResopnse.payment_date),
+  //       payment_rec_date : getDate(paymentRecDate),
+  //       payment_amt : paymentAmt,
+  //       total_paid : totalPaid,
+  //       due_installment_amt : dueInstallment,
+  //       sub_installment_no : subInstallmentNo,
+  //       installment_before_delivery : payResopnse.installment_before_delivery,
+  //       last_installment_no : payResopnse.last_installment_no,          
+  //     });
+  //     await getPaymentHistory();
+  //     if(orderData.order_type===1){
+  //       getFixedPaymentTable();
+  //     }else if(orderData.order_type===2){
+  //       getFlexPaymentTable();
+  //     }            
+  //   } catch (error) {
+  //     console.log('Error..',error);
+  //   } 
+  // }
 
 
 return (
