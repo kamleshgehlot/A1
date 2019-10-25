@@ -143,8 +143,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
-
-  const [order, setOrder] = useState([]);
+  
   const [paymentStatus, setPaymentStatus] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
   const [payResopnse, setPayResopnse] = React.useState([]);
@@ -210,7 +209,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               payment_amt : '',
               total_paid : '',
               due_installment_amt : '',
-              sub_installment_no : '',
+              sub_installment_no : 0,
               installment_before_delivery : fixData.before_delivery_amt,
               last_installment_no : fixData.no_of_payment,
               status : "Pending",
@@ -249,8 +248,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   };
 
   const handleFlexPaymentStatus = (minimumBeforeDelivery, flexData, paymentHistory) => {
-    console.log('paymentHistory',paymentHistory);
-    
     let lastInstallmentNo = 0;
     let payment_table=[];
     let payDate = new Date(flexData.first_payment);
@@ -296,14 +293,14 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             payment_amt : '',
             total_paid : '',
             due_installment_amt : '',
-            sub_installment_no : '',
+            sub_installment_no : 0,
             installment_before_delivery : flexData.before_delivery_amt,
             last_installment_no : '',
             status : "Pending",
           });
         }
 
-        if(flexData.frequency === 1){        
+        if(flexData.frequency === 1){
           payDate.setMonth(payDate.getMonth() + 1);
         }else if(flexData.frequency === 2){
           payDate.setDate(payDate.getDate() + 15);
@@ -358,41 +355,20 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     setConfirmation(true);
   }
 
-  const handleConfirmationDialog = async (response) => {
+  const handleConfirmationDialog = async (isConfirm) => {
     setConfirmation(false);
-    if(response === 1){
+    if(isConfirm === 1){
       let totalPaid = 0;
       let dueInstallment = 0;
       let subInstallmentNo = 0;
       
       if(paymentHistory == "" || paymentHistory == [] || paymentHistory.length == 0){
-
-        // totalPaid = Number(paymentAmt);
-        // if(paymentAmt < orderTypeData.each_payment_amt){
-        //   dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));
-        //   subInstallmentNo = 1;
-        // }
+        
       }else{
         const lastPayRecord = paymentHistory[paymentHistory.length -1];
         totalPaid = lastPayRecord.total_paid;
         dueInstallment = lastPayRecord.due_installment_amt;
         subInstallmentNo = lastPayRecord.sub_installment_no;
-        // totalPaid = (Number(paymentHistory[paymentHistory.length -1].total_paid) + Number(paymentAmt));
-        
-        // // if(paymentAmt <= orderTypeData.each_payment_amt && paymentHistory[paymentHistory.length -1].due_installment_amt == 0){
-        //   if(paymentHistory[paymentHistory.length -1].due_installment_amt == 0){
-        //     dueInstallment =  (Number(orderTypeData.each_payment_amt) - Number(paymentAmt));    
-        //     if(dueInstallment !== 0){
-        //       subInstallmentNo = 1;
-        //     }          
-        //   }else{
-        //     dueInstallment =  Number(paymentHistory[paymentHistory.length -1].due_installment_amt) - Number(paymentAmt);
-        //     subInstallmentNo = (paymentHistory[paymentHistory.length -1].sub_installment_no) + 1;
-        //   }
-        // // }else{
-        // //     dueInstallment =  Number(paymentHistory[paymentHistory.length -1].due_installment_amt);
-        // //     subInstallmentNo = (paymentHistory[paymentHistory.length -1].sub_installment_no) + 1;
-        // // }
       }
    
 
@@ -401,7 +377,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           order_id : orderData.id,
           customer_id: orderData.customer_id,
           installment_no : payResopnse.installment_no,
-          payment_date: setDBDateFormat(payResopnse.payment_date),
+          payment_date:  setDBDateFormat(payResopnse.payment_date),
           payment_rec_date : getDate(paymentRecDate),
           payment_amt : paymentAmt,
           total_paid : totalPaid,
@@ -410,7 +386,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           installment_before_delivery : payResopnse.installment_before_delivery,
           last_installment_no : payResopnse.last_installment_no,
           each_payment_amt : orderTypeData.each_payment_amt,
-          paymentStatus : paymentStatus,
+          frequency : orderTypeData.frequency,          
         });
         await getPaymentHistory();
         if(orderData.order_type===1){

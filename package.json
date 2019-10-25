@@ -22,6 +22,7 @@
     "@material-ui/icons": "^4.1.0",
     "@material-ui/lab": "^4.0.0-alpha.25",
     "@material-ui/pickers": "^3.2.4",
+    "add-subtract-date": "^1.0.14",
     "apexcharts": "^3.8.6",
     "axios": "^0.18.0",
     "body-parser": "^1.19.0",
