@@ -117,7 +117,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData}) {
+export default function Edit({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData, viewOnly}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
@@ -435,7 +435,7 @@ return (
                         margin="dense"
                         id="order_date"
                         name="order_date"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
                         value={inputs.order_date}
                         fullWidth 
                         disabled
@@ -443,7 +443,7 @@ return (
                           classes: {
                             input: classes.textsize,
                           },
-                        }}                        
+                        }}   
                       />
                     </MuiPickersUtilsProvider>                                        
                   </Grid>
@@ -473,7 +473,7 @@ return (
                       fullWidth
                       required
                       className={classes.textsize}
-                      // disabled = {budgetList ==""}
+                      disabled= {viewOnly}
                     > 
                     <MenuItem className={classes.textsize} disabled value={""}>Select Main Category</MenuItem>
                      {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data,index)=>{
@@ -496,7 +496,7 @@ return (
                       fullWidth
                       required
                       className={classes.textsize}
-                      // disabled = {mainCategory ==""}
+                      disabled= {viewOnly}
                     >    
                      {(categoryList.length > 0 ? categoryList : []).map((data,index)=>{
                       return(
@@ -517,7 +517,7 @@ return (
                       fullWidth
                       required
                       className={classes.textsize}
-                      // disabled = {category ==""}
+                      disabled= {viewOnly}
                     >    
                      {(subCategoryList.length > 0 ? subCategoryList : []).map((data,index)=>{
                       return(
@@ -539,6 +539,7 @@ return (
                       fullWidth
                       required
                       className={classes.textsize}
+                      disabled= {viewOnly}
                     >    
                      {(productList.length > 0 ? productList : []).map((data,index)=>{
                       return(
@@ -573,6 +574,7 @@ return (
                       fullWidth
                       required
                       className={classes.textsize}
+                      disabled= {viewOnly}
                     >    
                       <MenuItem className={classes.textsize} value={1}>EasyPay</MenuItem>
                       <MenuItem className={classes.textsize} value={2}>Credit</MenuItem>
@@ -584,7 +586,7 @@ return (
                    
                    
                    <Grid item xs={12} sm={12}>                    
-                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {!savebtn}>
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {!savebtn || viewOnly}>
                       save
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
@@ -599,8 +601,8 @@ return (
         </form>
       </Dialog>
     {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={0} /> : null }
-    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} product={product} /> : null }
-    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} product={product} /> : null }
+    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} product={product} viewOnly={viewOnly}/> : null }
+    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} product={product}  viewOnly={viewOnly} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
     </div>
   );

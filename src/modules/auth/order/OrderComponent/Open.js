@@ -18,7 +18,7 @@ import SendIcon from '@material-ui/icons/send';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CommentIcon from '@material-ui/icons/Comment';
-
+import ViewArrayIcon from '@material-ui/icons/ViewArray'
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
@@ -59,7 +59,7 @@ function TabPanel(props) {
 
 export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
   uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, 
-  handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen }) {
+  handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen, handleOrderView }) {
   const styleClass = useCommonStyles();
 
 return (  
@@ -148,6 +148,11 @@ return (
           </StyledTableCell>
         : roleName === 'Finance' ? 
           <StyledTableCell>
+                  <Tooltip title="View Order Detail">
+                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderView(data); }} >
+                      <ViewArrayIcon />  
+                    </IconButton>
+                  </Tooltip>
                   <Tooltip title="View">
                     <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
                       <CommentIcon />

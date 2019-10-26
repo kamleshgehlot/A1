@@ -526,6 +526,7 @@ return (
                       }}
                     />
                   </Grid>
+                  {console.log('oldbudget',oldBudgetList)}
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
@@ -779,6 +780,12 @@ return (
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
+                    {/* {
+                     (oldBudgetList.length > 0 ? oldBudgetList : []).map(data =>{
+                       data.is_active == 1 ? ('OrderId: ' + data.id + '$' +(data.afford_amt * 4) + ',  ')
+                       :''
+                     })
+                    }     */}
                       {"$" + oldBudget }
                     </Typography>
                   </Grid>

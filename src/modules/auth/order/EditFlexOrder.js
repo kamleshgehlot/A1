@@ -120,7 +120,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId,  affordAmt, product}) {
+export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId,  affordAmt, product, viewOnly}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -288,6 +288,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -308,6 +309,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -328,7 +330,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
-                      
+                      disabled = {viewOnly}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -349,6 +351,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                   </Grid>
 
@@ -372,7 +375,8 @@ return (
                       helperText={errors.frequency}
                       fullWidth                      
                       className={classes.textsize}
-                      required                      
+                      required  
+                      disabled = {viewOnly}                    
                     > 
                       <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
                       <MenuItem className={classes.textsize} value="4">Weekly</MenuItem>
@@ -427,6 +431,7 @@ return (
                         onChange={handleDateChange}
                         onError={errors.first_payment}
                         helperText={errors.first_payment} 
+                        disabled = {viewOnly}
                       />
                     </MuiPickersUtilsProvider>
                 </Grid>
@@ -449,6 +454,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                       
                     />
                 </Grid>
@@ -473,6 +479,7 @@ return (
                             input: classes.textsize,
                           },
                         }}
+                        disabled = {viewOnly}
                       />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -495,6 +502,7 @@ return (
                           onChange={handleDeliveryDate}
                           error={errors.exp_delivery_date}
                           helperText={errors.exp_delivery_date}   
+                          disabled = {viewOnly}
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>
@@ -518,12 +526,13 @@ return (
                                 input: classes.textsize,
                               },
                             }}
+                            disabled = {viewOnly}
                           />
                       </MuiPickersUtilsProvider>
                   </Grid>               
                 <Grid item xs={12} sm={12}>
                     
-                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {viewOnly}>
                       Save
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleFlexClose} className={classes.button}>

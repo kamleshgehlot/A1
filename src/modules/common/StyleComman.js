@@ -39,6 +39,10 @@ export const useCommonStyles = makeStyles(theme => ({
     backgroundColor: "#CBF6BF",
     color: theme.palette.common.white,
   },
+  expansionMargin:{
+    marginRight: -50,
+    marginLeft: -50,
+  },
   // drawer: {
   //   width: drawerWidth,
   //   flexShrink: 0,

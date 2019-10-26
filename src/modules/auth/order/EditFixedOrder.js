@@ -108,7 +108,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, fixedOrderId,  product}) {
+export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, fixedOrderId,  product, viewOnly}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -503,6 +503,7 @@ return (
                       input: classes.textsize,
                     },
                   }}
+                  disabled = {viewOnly}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -528,6 +529,7 @@ return (
                       input: classes.textsize,
                     },
                   }}
+                  disabled = {viewOnly}
                 />
               </Grid>   
               <Grid item xs={12} sm={6}>
@@ -552,7 +554,8 @@ return (
                     classes: {
                       input: classes.textsize,
                     },
-                  }}                      
+                  }}         
+                  disabled = {viewOnly}             
                 />
               </Grid>   
               <Grid item xs={12} sm={6}>
@@ -578,6 +581,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                   </Grid>   
                               
@@ -606,6 +610,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                   </Grid>
 
@@ -629,7 +634,8 @@ return (
                       helperText={errors.frequency}
                       fullWidth                      
                       className={classes.textsize}
-                      required                      
+                      required         
+                      disabled = {viewOnly}             
                     > 
                       <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
                       <MenuItem className={classes.textsize} value="4">Weekly</MenuItem>
@@ -651,7 +657,8 @@ return (
                     helperText={errors.duration}
                     fullWidth                      
                     className={classes.textsize}
-                    required                      
+                    required      
+                    disabled = {viewOnly}                
                   > 
                     <MenuItem className={classes.textsize} value="" disabled>Select Option</MenuItem>
                     <MenuItem className={classes.textsize} value="12">1 Year</MenuItem>
@@ -684,7 +691,8 @@ return (
                         }}
                         onChange={handleDateChange}
                         error={errors.first_payment}
-                        helperText={errors.first_payment}   
+                        helperText={errors.first_payment} 
+                        disabled = {viewOnly}  
                         // error={errors.first_payment}
                         // helperText={errors.first_payment}                               
                       />
@@ -772,6 +780,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -798,6 +807,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                      
                 </Grid>
@@ -827,6 +837,7 @@ return (
                         },
                       }}
                       
+                      disabled = {viewOnly}
                     />
                 </Grid>
                 
@@ -851,6 +862,7 @@ return (
                               input: classes.textsize,
                             },
                           }}
+                          disabled = {viewOnly}
                           onChange={handleDeliveryDate}
                           // error={errors.exp_delivery_date}
                           // helperText={errors.exp_delivery_date}                               
@@ -876,6 +888,7 @@ return (
                                 input: classes.textsize,
                               },
                             }}
+                            disabled = {viewOnly}
                             // error={errors.exp_delivery_time}
                             // helperText={errors.exp_delivery_time}
                             // KeyboardButtonProps={{
@@ -911,6 +924,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12}>
@@ -941,6 +955,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                       // InputProps={{
                       //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                      
@@ -967,6 +982,7 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                       // InputProps={{
                       //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         
@@ -997,11 +1013,12 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      disabled = {viewOnly}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     
-                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {viewOnly}>
                       save
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleFixedClose} className={classes.button}>

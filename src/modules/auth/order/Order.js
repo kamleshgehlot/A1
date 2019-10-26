@@ -163,7 +163,7 @@ export default function Order({roleName}) {
   const [deliveredTab,setDeliveredTab] = useState([]);
   const [completedTab,setCompletedTab] = useState([]);
   const [cancelledTab,setCancelledTab] = useState([]);
-  
+  const [viewOnly, setViewOnly] = useState(false);
   //value is for tabs  
   const [value, setValue] = React.useState(0);  
 
@@ -359,6 +359,13 @@ export default function Order({roleName}) {
   function handleEditOpen(data){
     setEditableData(data);
     setEditOpen(true);
+    setViewOnly(false);
+  }
+
+  function handleOrderView (data){
+    setEditableData(data);
+    setEditOpen(true);
+    setViewOnly(true);
   }
 
   function handleAssignToFinance(data){
@@ -634,7 +641,7 @@ export default function Order({roleName}) {
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                   createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
-                  handleClickViewOpen = {handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen} /> }
+                  handleClickViewOpen = {handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen} handleOrderView={handleOrderView} /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {financeTab && <Finance order= {financeTab} roleName={roleName} />}
@@ -661,7 +668,7 @@ export default function Order({roleName}) {
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                     createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}
                     handleClickViewOpen = {handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen} 
-                    handleDeliveredProductOpen={handleDeliveredProductOpen} /> }
+                    handleDeliveredProductOpen={handleDeliveredProductOpen}  handleOrderView={handleOrderView}/> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
@@ -685,7 +692,7 @@ export default function Order({roleName}) {
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                     createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
                     handleClickViewOpen = {handleClickViewOpen} 
-                    handleDeliveredProductOpen={handleDeliveredProductOpen} /> }
+                    handleDeliveredProductOpen={handleDeliveredProductOpen}  handleOrderView={handleOrderView} /> }
                 </TabPanel>                
                 <TabPanel value={value} index={1}>
                   {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
@@ -714,7 +721,7 @@ export default function Order({roleName}) {
 
      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData} convertId={0} converstionData={""}/> : null }
      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData}  /> : null }
-     {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} /> : null}
+     {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} viewOnly={viewOnly} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
      {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null }
