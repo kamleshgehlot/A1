@@ -366,9 +366,14 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         
       }else{
         const lastPayRecord = paymentHistory[paymentHistory.length -1];
-        totalPaid = lastPayRecord.total_paid;
+        totalPaid = lastPayRecord.total_paid;        
         dueInstallment = lastPayRecord.due_installment_amt;
-        subInstallmentNo = lastPayRecord.sub_installment_no;
+        
+        if(Number(lastPayRecord.due_installment_amt)===0){
+          subInstallmentNo = 0;
+        }else{
+          subInstallmentNo = lastPayRecord.sub_installment_no;
+        }
       }
    
 
