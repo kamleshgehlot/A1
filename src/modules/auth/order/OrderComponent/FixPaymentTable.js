@@ -184,14 +184,12 @@ return (
             <Table style={{width : '100%'}}>
             <TableBody style={{width : '100%'}}>{
             (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
+              {inc = inc + 1}
               
             return(
             (singleData.installment_no == data.installment_no && data.sub_installment_no != 0) &&
-            <div style={{marginTop: -8, marginBottom: -10, marginLeft: -20,marginRight: -18}}>   
-            
                 <TableRow  style={{width : '100%'}} className={data.installment_no === data.installment_before_delivery ? styleClass.highlightRow : null}>
                       {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
-                      {inc = inc + 1}
                       <StyledTableCell style={{minWidth:160}}>{data.installment_no + '.' + inc}</StyledTableCell>
                       <StyledTableCell style={{minWidth:152}}>{data.payment_date}</StyledTableCell>
                       <StyledTableCell style={{minWidth:270}}>
@@ -243,7 +241,6 @@ return (
                       </StyledTableCell>
                       {/* {isExpansionExist === false && setExpansionHeader('')} */}
                     </TableRow>     
-                    </div>
             )})}
             </TableBody>
             </Table>
