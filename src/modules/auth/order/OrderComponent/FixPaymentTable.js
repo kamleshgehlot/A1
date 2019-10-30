@@ -158,41 +158,41 @@ return (
               <TableCell colSpan='8'>
                 <div style={{marginTop: -13, marginBottom: -15, marginLeft: -17,marginRight: -17}}>
             <ExpansionPanel >
-            <ExpansionPanelSummary expandIcon={'+'} id="panel1a-header" style={{marginLeft: -7,marginRight: -15, fontSize: 10}}>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} id="panel1a-header" style={{marginLeft: -7,marginRight: -15, fontSize: 10}}>
               { inc = 0,
-                isExpansionExist === false ?  
-                singleData.installment_no   
-                // <div style={{marginTop: -13, marginBottom: -15, marginLeft: -17,marginRight: -60}}>
-                //   <TableRow  className={singleData.installment_no === singleData.installment_before_delivery ? styleClass.highlightRow : null}>
-                //   {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
-                //     <StyledTableCell style={{minWidth:160}}>{singleData.installment_no}</StyledTableCell>
-                //     <StyledTableCell style={{minWidth:152}}>{singleData.payment_date}</StyledTableCell>
-                //     <StyledTableCell style={{minWidth:270}}> {singleData.payment_rec_date}   </StyledTableCell>
-                //     <StyledTableCell style={{minWidth:230}}> {singleData.payment_amt}   </StyledTableCell>
-                //     <StyledTableCell style={{minWidth:145}}> {singleData.total_paid !== "" ? singleData.total_paid : ''} </StyledTableCell>
-                //     <StyledTableCell style={{minWidth:0}}> {singleData.status} </StyledTableCell>
-                //     {/* <StyledTableCell style={{minWidth:-100}}>
-                //       <Button variant="contained" color='primary' className={styleClass.button} disabled>Paid Installment</Button>
-                //     </StyledTableCell> */}
-                //   </TableRow>     
-                // </div>          
+                isExpansionExist === false ? 
+                // singleData.installment_no                 
+                <div style={{marginTop: -13, marginBottom: -14, marginLeft: -17, marginRight: -60, width: '100%'}}>
+                  <TableRow  className={singleData.installment_no === singleData.installment_before_delivery ? styleClass.highlightRow : null}>
+                  {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
+                    <StyledTableCell style={{minWidth:186}}>{singleData.installment_no}</StyledTableCell>
+                    <StyledTableCell style={{minWidth:168}}>{singleData.payment_date}</StyledTableCell>
+                    <StyledTableCell style={{minWidth:308}}> {singleData.payment_rec_date}   </StyledTableCell>
+                    <StyledTableCell style={{minWidth:258}}> {singleData.payment_amt}   </StyledTableCell>
+                    <StyledTableCell style={{minWidth:167}}> {singleData.total_paid !== "" ? singleData.total_paid : ''} </StyledTableCell>
+                    <StyledTableCell style={{minWidth:235}}> {singleData.status} </StyledTableCell>                    
+                  </TableRow>     
+                </div>          
                 :''                
               }
             </ExpansionPanelSummary >
               
-            <ExpansionPanelDetails >
+            <ExpansionPanelDetails style={{margin : '-13px 0px -23px -23px', display: 'table-row'}}>
             <Table style={{width : '100%'}}>
             <TableBody style={{width : '100%'}}>{
             (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
-              {inc = inc + 1}
+              
               
             return(
+
             (singleData.installment_no == data.installment_no && data.sub_installment_no != 0) &&
+              // <div style={{marginTop: -13, marginBottom: -15, marginLeft: -17, marginRight: -60, width: '100%'}}>
                 <TableRow  style={{width : '100%'}} className={data.installment_no === data.installment_before_delivery ? styleClass.highlightRow : null}>
                       {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
-                      <StyledTableCell style={{minWidth:160}}>{data.installment_no + '.' + inc}</StyledTableCell>
-                      <StyledTableCell style={{minWidth:152}}>{data.payment_date}</StyledTableCell>
-                      <StyledTableCell style={{minWidth:270}}>
+                      <p style={{display:'none'}}>{inc = inc + 1}</p>
+                      <StyledTableCell style={{minWidth:188}}>{data.installment_no + '.' + inc}</StyledTableCell>
+                      <StyledTableCell style={{minWidth:175}}>{data.payment_date}</StyledTableCell>
+                      <StyledTableCell style={{minWidth:316}}>
                         {data.payment_rec_date === "" && totalPaidInstallment === index  ?
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
@@ -214,7 +214,7 @@ return (
                           : data.payment_rec_date
                         }   
                       </StyledTableCell>
-                      <StyledTableCell style={{minWidth:230}}>
+                      <StyledTableCell style={{minWidth:265}}>
                         {data.payment_amt === "" && totalPaidInstallment === index ?
                             <TextField 
                             id="payment_amt"
@@ -234,9 +234,9 @@ return (
                           : data.payment_amt              
                         }   
                       </StyledTableCell>                            
-                      <StyledTableCell style={{minWidth:145}}> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
-                      <StyledTableCell style={{minWidth:150}}> {data.status} </StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell style={{minWidth:120}}> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
+                      <StyledTableCell style={{minWidth:0}}> {data.status} </StyledTableCell>
+                      <StyledTableCell style={{minWidth:0}}>
                         <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
                       </StyledTableCell>
                       {/* {isExpansionExist === false && setExpansionHeader('')} */}

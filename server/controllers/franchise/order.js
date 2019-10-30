@@ -647,15 +647,14 @@ const editOrder = async function (req, res, next) {
 
   const getDeliveredProductData = async function(req, res, next) {
     let orderParams = {
-      id: req.body.id,
-      user_id: req.decoded.user_id,      
-      products_id : req.body.product_id,
-      customer_id : req.body.customer_id,      
+      id: req.body.order_id,
+      user_id: req.decoded.user_id, 
+      customer_id : req.body.customer_id,
     };
     try {
       const newOrder = new Order(orderParams);
-      // const result = await newOrder.getDeliveredProductData();
-      // res.send({ response: result});
+      const result = await newOrder.getDeliveredProductData();
+      res.send(result);
     } catch (error) {
       next(error);
     }

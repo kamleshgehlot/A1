@@ -151,6 +151,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
   const [paymentAmt, setPaymentAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
+  const [requesedData, setRequesedData] = useState([]);
 
   function handleDateChange(date){
     setPaymentRecDate(getDate(date));    
@@ -336,7 +337,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   useEffect(() => {
     const fetchData = async () => {
       try{
-        await getPaymentHistory();        
+        await getPaymentHistory();     
+        await getRequiredData();   
         if(orderData.order_type===1){
           await getFixedPaymentTable();
         }else if(orderData.order_type===2){
@@ -349,6 +351,18 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     fetchData();   
   }, []);
   
+  
+  const getRequiredData = async () => {
+    try {
+      const result = await Order.getProductAndCategoryName({
+        product_id : orderData.product_id,
+      });
+      setRequesedData(result[0]);
+      console.log('result...',result);
+    } catch (error) {
+      console.log('Error..',error);
+    }
+};
   
   function handlePaymentSubmit(response){
     setPayResopnse(response);
@@ -418,8 +432,64 @@ return (
           </AppBar>
 
           <div className={classes.root}>
-          <Paper className={classes.paper}>            
-            <Grid container spacing={4}>               
+          <Paper className={classes.paper}> 
+          {/* <p> */}
+          <Grid container >  
+            <Grid item xs={12} sm={1}></Grid>
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Order Id: " + orderData.order_id }
+              </Typography> 
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Customer Name: " + orderData.customer_name }
+              </Typography>
+              
+            </Grid>
+            <Grid item xs={12} sm={1}></Grid>
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Customer Id:  " + orderData.customer_id }
+              </Typography>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Rental Type: " + orderData.order_type_name }
+              </Typography>              
+            </Grid>
+            <Grid item xs={12} sm={1}></Grid>
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Order Date:  " + orderData.order_date }
+              </Typography>
+              <Typography variant="h6" className={classes.labelTitle}>
+                {"Payment Mode: " + orderData.payment_mode_name }
+            </Typography>
+            </Grid>
+            <Grid item xs={12} sm={1}></Grid>
+            <Grid item xs={12} sm={11}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
+              </Typography>                  
+            </Grid>
+            <Grid item xs={12} sm={12}>   
+              <Divider />
+              <Typography variant="h6" className={classes.labelTitle}>
+              {'\n'}  
+              </Typography> 
+                
+            </Grid> 
+          </Grid>
+
+  
+          
+          
+          
+
+            
+          
+          
+          
+            <Grid container spacing={4}>                              
+              
+{console.log('orderata',orderData)}
                 <Grid item xs={12} sm={12}>    
                 {orderData.order_type===1 ?
                   <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />

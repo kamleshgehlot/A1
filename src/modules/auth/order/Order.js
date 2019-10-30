@@ -58,6 +58,7 @@ import ProcessDialog from '../ProcessDialog.js';
 import CommentDialog from '../CommentDialog.js';
 import CommentView from './CommentView.js';
 import UpdateDeliveredProduct from './UpdateDeliveredProduct.js';
+import ViewDeliveredProductDetails from './ViewDeliveredProductDetails';
 
 import RentFlexContract from './Documentation/RentFlexContract';
 import RentFixContract from './Documentation/RentFixContract';
@@ -155,7 +156,7 @@ export default function Order({roleName}) {
   const [response, setResponse] = useState([]);
   const [openCancelForm, setOpenCancelForm] = useState(false);
   const [openProductDelivered, setOpenProductDelivered] = useState(false);
-  
+  const [openViewDeliveredDetail, setOpenViewDeliveredDetail] = useState(false);
   //Tab Data for corresponding role 
   const [openTab,setOpenTab] = useState([]);
   const [financeTab,setFinanceTab] = useState([]);
@@ -385,10 +386,19 @@ export default function Order({roleName}) {
   }
 
   function handleDeliveredProductOpen(data){
-    // console.log('prod',data);
     setOrderData(data);
     setOpenProductDelivered(true);
   }
+
+  function handleViewDeliveredDetail(data){
+    setOpenViewDeliveredDetail(false);
+  }
+  
+  function handleViewDeliveredDetailOpen(data){
+    setOrderData(data);
+    setOpenViewDeliveredDetail(true);
+  }
+
 
   function handleDelivered(data){    
     setCommentData({order_id: data, user_id: userId, roleName: roleName});
@@ -641,7 +651,8 @@ export default function Order({roleName}) {
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                   createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
-                  handleClickViewOpen = {handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen} handleOrderView={handleOrderView} /> }
+                  handleClickViewOpen = {handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
+                  handleOrderView={handleOrderView}  /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {financeTab && <Finance order= {financeTab} roleName={roleName} />}
@@ -650,10 +661,10 @@ export default function Order({roleName}) {
                   {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
+                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen = {handleViewDeliveredDetailOpen}/>}
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  {completedTab && <Completed order= {completedTab} roleName={roleName} />}
+                  {completedTab && <Completed order= {completedTab} roleName={roleName} handleViewDeliveredDetailOpen = {handleViewDeliveredDetailOpen}/>}
                 </TabPanel>
                 <TabPanel value={value} index={5}>
                   {cancelledTab && <Cancelled order= {cancelledTab} roleName={roleName} />}
@@ -674,10 +685,10 @@ export default function Order({roleName}) {
                   {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
+                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen = {handleViewDeliveredDetailOpen} />}
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                  {completedTab && <Completed order= {completedTab} roleName={roleName} />}
+                  {completedTab && <Completed order= {completedTab} roleName={roleName} handleViewDeliveredDetailOpen = {handleViewDeliveredDetailOpen} />}
                 </TabPanel>
                 <TabPanel value={value} index={4}>
                   {cancelledTab && <Cancelled order= {cancelledTab} roleName={roleName} />}
@@ -695,7 +706,7 @@ export default function Order({roleName}) {
                     handleDeliveredProductOpen={handleDeliveredProductOpen}  handleOrderView={handleOrderView} /> }
                 </TabPanel>                
                 <TabPanel value={value} index={1}>
-                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} />}
+                  {deliveredTab && <Delivered order= {deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen = {handleViewDeliveredDetailOpen} />}
                 </TabPanel>                
               </div> : ''}
 
@@ -728,6 +739,7 @@ export default function Order({roleName}) {
      {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId}  /> :null}
      {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} /> : null}
      {openProductDelivered ? <UpdateDeliveredProduct open={openProductDelivered} handleClose={handleDeliveredProdcutClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
+     {openViewDeliveredDetail ? <ViewDeliveredProductDetails open={openViewDeliveredDetail} handleClose={handleViewDeliveredDetail} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
     </div>
   );
 }

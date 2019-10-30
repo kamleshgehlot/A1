@@ -15,7 +15,7 @@ import PrintIcon from '@material-ui/icons/Print';
 import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
-
+import CommentIcon from '@material-ui/icons/Comment';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
@@ -54,7 +54,7 @@ function TabPanel(props) {
   );
 }
 
-export default function Delivered({order, roleName}) {
+export default function Delivered({order, roleName, handleViewDeliveredDetailOpen}) {
   const styleClass = useCommonStyles();
 
 return (  
@@ -72,7 +72,7 @@ return (
           {/* <StyledTableCell>Assigned To</StyledTableCell> */}
           <StyledTableCell>Rental Type</StyledTableCell>
           <StyledTableCell>Payment Mode</StyledTableCell>
-          {/* <StyledTableCell>Action</StyledTableCell> */}
+          <StyledTableCell>Action</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -96,7 +96,13 @@ return (
               data.payment_mode == 5 ? 'Cash' : ''
               }
             </StyledTableCell>
-            {/* <StyledTableCell></StyledTableCell> */}
+            <StyledTableCell>
+              <Tooltip title="View">
+                <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleViewDeliveredDetailOpen(data); }} >
+                  <CommentIcon />
+                </IconButton>
+              </Tooltip>
+            </StyledTableCell>
         </TableRow>
         )        
       })
