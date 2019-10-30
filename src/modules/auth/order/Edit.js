@@ -400,7 +400,7 @@ return (
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" className={classes.title}>
-                Update Order
+                {viewOnly ? "View Order Details" : "Update Order" }
               </Typography>            
               <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>

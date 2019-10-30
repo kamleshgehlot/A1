@@ -1,4 +1,4 @@
-import { validString, validNumber, validDecimalNumber, validEmail, validAlpha } from './Regex';
+import { validString, validNumber, validDecimalNumber, validFullLengthDecimalNumber, validEmail, validAlpha } from './Regex';
 
 export default function validate(values) {
   let errors = {};
@@ -14,9 +14,10 @@ export default function validate(values) {
   } 
   if (!values.product_cost) {
     errors.product_cost  = 'Product Cost is required';
-  } else if (validDecimalNumber.test(values.product_cost )) {
-    errors.product_cost  = 'Product Cost is invalid';
   } 
+  // else if (validFullLengthDecimalNumber.test(values.product_cost )) {
+  //   errors.product_cost  = 'Product Cost is invalid';
+  // } 
   
   if (!values.specification) {
     errors.specification = 'Specification is required';

@@ -141,12 +141,12 @@ const StyledTableRow = withStyles(theme => ({
   }));
 
 
-export default function TaskList({roleName}) {
+export default function TaskList({roleName, showTaskData}) {
 
   const classes = useStyles();
   const uid = APP_TOKEN.get().uid;
   const userId = APP_TOKEN.get().userId;
-  
+  const [isOpen, setIsOpen] = useState(showTaskData ? true : false);
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [rescheduleEditOpen, setRescheduleEditOpen] = useState(false);  
@@ -179,7 +179,12 @@ export default function TaskList({roleName}) {
   //value is for tabs  
   const [value, setValue] = React.useState(0);  
  
-  
+  useEffect(() =>{
+    if(isOpen) {
+      handleClickStaffEditOpen(showTaskData);
+      setIsOpen(false);
+    }
+  });
       
   useEffect(() => {
     const fetchData = async () => {

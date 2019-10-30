@@ -19,9 +19,9 @@ import LeadAPI from '../../../../../api/Lead';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    display: 'flex',
+    // display: 'flex',
+    maxHeight : 150,
     // height: 224,
   },
   tabs: {
@@ -100,7 +100,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-export default function Panel1({roleName, roleId, handleLeadClick}) {
+export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskClick}) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [taskList, setTaskList] = React.useState([]);
@@ -131,8 +131,8 @@ export default function Panel1({roleName, roleId, handleLeadClick}) {
   };
 
   return (
-    <div className={classes.root}  style={{ width: '80%' }}>             
-    <Paper style={{ width: '42%', height: '250', 'marginRight':'5px', }}>             
+    <div className={classes.root}  style={{ width: '100%' }}>             
+    <Paper >             
       <Grid container spacing={4}  style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12} >   
           <Typography variant="h6" className={classes.labelTitle} color="primary">
@@ -146,8 +146,7 @@ export default function Panel1({roleName, roleId, handleLeadClick}) {
       </Grid>
     </Paper>
   {roleName != 'Super Admin' && roleId != 0 && 
-    <Paper style={{ width: '42%', height: '250', 'marginLeft':'5px' }}>  
-    {console.log('taskkkkk')}           
+    <Paper >  
       <Grid container spacing={4} style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12}>   
           <Typography variant="h6" className={classes.labelTitle} color="primary">
@@ -156,7 +155,7 @@ export default function Panel1({roleName, roleId, handleLeadClick}) {
           <Divider />
         </Grid>
         <Grid item xs={12} sm={12}>   
-          <TaskList taskList={taskList} roleName={ roleName} />   
+          <TaskList taskList={taskList} roleName={roleName} handleTaskClick={handleTaskClick} />   
         </Grid>
       </Grid>
     </Paper>

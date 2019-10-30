@@ -399,7 +399,7 @@ Order.prototype.getExistingBudget = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT b.id, b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.vehicle_fuel, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.paid_day, b.debited_day,  b.total_income as income, b.total_expenditure as expenditure, b.paid_day, b.debited_day, b.total_surplus as surplus, b.afford_amt,  b.pre_order_exp, b.is_active from budget as b where b.customer_id= "'+that.customer_id+'" order by b.id desc',function (error, rows, fields) {
+        connection.query('SELECT  o.order_id, b.id, b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.vehicle_fuel, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.paid_day, b.debited_day,  b.total_income as income, b.total_expenditure as expenditure, b.paid_day, b.debited_day, b.total_surplus as surplus, b.afford_amt,  b.pre_order_exp, b.is_active from budget as b LEFT JOIN orders as o on b.id = o.budget_id where b.customer_id= "'+that.customer_id+'" order by b.id desc',function (error, rows, fields) {
           // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
           // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4',function (error, rows, fields) {
             if (!error) {
@@ -1109,7 +1109,7 @@ Order.prototype.submitDeliveredProduct = function () {
         ]
 
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, product_related_to, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, is_active, created_by) VALUES ?',[Values],function (error, productRows, fields) {
+        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, related_to, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, is_active, created_by) VALUES ?',[Values],function (error, productRows, fields) {
           resolve(productRows);
         });
         } else {
@@ -1342,7 +1342,7 @@ Order.prototype.getDeliveredProductData = function () {
       }
       if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-           connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.product_related_to, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp INNER JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
+           connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.related_to, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp INNER JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
               if (!error) {              
                 resolve(rows);
               } else {

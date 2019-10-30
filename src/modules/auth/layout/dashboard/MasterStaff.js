@@ -11,12 +11,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function MasterStaff({roleName, roleId}) {
+export default function MasterStaff({roleName, roleId,  handleLeadClick, handleTaskClick}) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Panel1 roleName={roleName} roleId={roleId} />
+      <Panel1 roleName={roleName} roleId={roleId}  handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick} />
     </div>
   );
 }

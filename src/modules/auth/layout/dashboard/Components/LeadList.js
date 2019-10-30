@@ -51,6 +51,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 export default function LeadList({leadList, roleName, handleLeadClick }) {
+  console.log('roleName',roleName);
   // const styleClass = useCommonStyles();
   const [showTask, setShowTask] = useState(false);
   const [franchiseListd, setFranchiseList] = useState({});
@@ -126,7 +127,9 @@ return (
             }) : <StyledTableCell style={{minWidth: 300, align: 'left'}}> Master Admin</StyledTableCell>
           }
         <StyledTableCell style={{minWidth: 200, align: 'left'}}>{data.message}</StyledTableCell>
-        <StyledTableCell style={{minWidth: 100, align: 'left'}} onClick={() => handleLeadClick("CSR", data)}>View</StyledTableCell>
+        <StyledTableCell style={{minWidth: 100, align: 'left'}}>
+          <Button variant="text" size="small" color="primary" onClick={() => handleLeadClick(roleName, data)} style={{fontSize:'10px'}}>View</Button>
+        </StyledTableCell>
       </TableRow>
          );
      })}       

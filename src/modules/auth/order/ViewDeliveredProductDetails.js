@@ -169,7 +169,7 @@ return (
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" className={classes.title}>
-                Update Product
+                View Delivered Product Detail
               </Typography>              
               <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>

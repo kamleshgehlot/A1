@@ -50,15 +50,9 @@ const useStyles = makeStyles({
 
 
 
-export default function TaskList({taskList, roleName}) {
+export default function TaskList({taskList, roleName, handleTaskClick}) {
   // const styleClass = useCommonStyles();
   const [showTask, setShowTask] = useState(false);
-  
-  const handleTaskOpen = () =>{
-    setShowTask(true);
-  }
-
-
   
 const columns = [
   { id: 'sno', label: '#', minWidth: 10, align: 'right'},
@@ -109,7 +103,7 @@ return (
           <StyledTableCell style={{minWidth: 200, align: 'left'}}> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
           <StyledTableCell style={{minWidth: 150, align: 'left'}}>{data.due_date}</StyledTableCell>
           <StyledTableCell style={{minWidth: 100, align: 'left'}}> 
-            {/* <Button variant="text" size="small" color="primary" onClick={handleTaskOpen} style={{fontSize:'10px'}}>View Task</Button> */}
+            <Button variant="text" size="small" color="primary" onClick={() => handleTaskClick(roleName, data)} style={{fontSize:'10px'}}>View</Button>
         </StyledTableCell>
       </TableRow>
       )      

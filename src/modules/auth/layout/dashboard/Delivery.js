@@ -77,13 +77,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function Delivery({roleName, roleId}) {
+export default function Delivery({roleName, roleId, handleLeadClick, handleTaskClick}) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   return (
     <div className={classes.root}>
-      <Panel1 roleName={roleName} roleId={roleId} />
+      <Panel1 roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick} />
     </div>
   );
 }

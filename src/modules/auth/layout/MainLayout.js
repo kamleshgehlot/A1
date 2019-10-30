@@ -137,7 +137,8 @@ export default function ClippedDrawer(props) {
   const [showCustomer, setShowCustomer] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [showLead, setShowLead] = useState(false);
-  const [leadData, setLeadData] = useState({})
+  const [leadData, setLeadData] = useState({});
+  const [taskData, setTaskData] = useState({});
   const [showProfile, setShowProfile] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showFranchiseDetail, setShowFranchiseDetail] = useState(false);
@@ -185,7 +186,7 @@ export default function ClippedDrawer(props) {
     setSnackbarOpen(false);
   }
 
-  function handleDashboardClick(role,roleId){
+  function handleDashboardClick(role, roleId){
     setRoleAs(role);
     setRole_Id(roleId);
     setShowFranchise(false);
@@ -274,6 +275,7 @@ export default function ClippedDrawer(props) {
   function handleFranchiseStaffClick(role){
     
     setRoleAs(role);
+
     setShowFranchiseStaff(true);
     setShowMasterStaff(false);
     setShowFranchise(false);
@@ -292,10 +294,11 @@ export default function ClippedDrawer(props) {
     setShowCsrTaskReport(false); 
   }
   
-  function handleTaskClick(role){
+  function handleTaskClick(role, data){
     
     setRoleAs(role);
     setShowTask(true);
+    setTaskData(data);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
     setShowFranchise(false);
@@ -726,7 +729,7 @@ export default function ClippedDrawer(props) {
           showFranchiseStaff ? <FranchiseStaff  franchiseId={franchiseId} roleName={roleAs}/> : null
         }
         {
-          showTask ? <TaskList roleName={roleAs}/> : null
+          showTask ? <TaskList roleName={roleAs} showTaskData={taskData} /> : null
         }
         {
           showCustomer ? <Customer userId={userId} roleName={roleAs}/> : null
@@ -741,7 +744,7 @@ export default function ClippedDrawer(props) {
           showEnquiry ? <Enquiry roleName={roleAs}/>:null
         }
         {
-          showLead ? <Lead roleName={roleAs} showLeadData={leadData}/>:null
+          showLead ? <Lead roleName={roleAs} showLeadData={leadData} />:null
         }
         {
           showOrder ? <Order roleName={roleAs}/>:null
@@ -750,7 +753,7 @@ export default function ClippedDrawer(props) {
           showFranchiseDetail ? <FranchiseDetail roleName={roleAs}/>:null
         }
         {
-          showDashboard ? <MainDashboard roleName={roleAs} roleId={role_Id}  handleLeadClick={handleLeadsClick}/>:null
+          showDashboard ? <MainDashboard roleName={roleAs} roleId={role_Id}  handleLeadClick={handleLeadsClick} handleTaskClick={handleTaskClick} />:null
         }
         {
           showFinanceReport ? <FinanceReport roleName={roleAs} /> : null
