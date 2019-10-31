@@ -775,17 +775,19 @@ return (
                   }
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="h6" className={classes.labelTitle}>
-                      {                        
-                        "OrderId: " +
+                      {
                         (oldBudgetList.length > 0 ? oldBudgetList : []).map(data =>{
+                          // console.log('budgetData',data);
                           return(
-                            data.is_active == 1 ? (data.order_id + '  ($' +(data.afford_amt * 4) + ')')
-                          :'')
+                            <Typography variant="h6" className={classes.labelTitle} align="right">
+                            {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt * 4) + ')')
+                            :''}
+                          </Typography>)
                         })
                       }
-                      {"\nTotal:  $" + oldBudget }
-                    </Typography>
+                      <Typography variant="h6" className={classes.labelTitle}  align="right">
+                        {"Total:  $" + oldBudget }  
+                      </Typography>
                   </Grid>
                   : null
                   }

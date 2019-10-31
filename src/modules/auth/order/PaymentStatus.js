@@ -152,6 +152,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [paymentAmt, setPaymentAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
   const [requesedData, setRequesedData] = useState([]);
+  const [totalPaid, setTotalPaid] = useState(0);
+
 
   function handleDateChange(date){
     setPaymentRecDate(getDate(date));    
@@ -233,7 +235,9 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         const existingPayment = await Order.getPaymentHistory({id: orderData.id});
         const fixData = fixOrder[0];
         setOrderTypeData(fixOrder[0]);
+
             if(existingPayment.length > 0){
+              setTotalPaid(existingPayment[existingPayment.length -1].total_paid);
               if(existingPayment[existingPayment.length -1].due_installment_amt == 0){
                 setPaymentAmt(fixData.each_payment_amt);
               }else{
@@ -253,6 +257,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     let payment_table=[];
     let payDate = new Date(flexData.first_payment);
     let maxInstallmentNumber = 0;
+
     if(paymentHistory.length > 0) {
       lastInstallmentNo = paymentHistory[paymentHistory.length -1].installment_no;
     }
@@ -319,7 +324,10 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         const existingPayment = await Order.getPaymentHistory({id: orderData.id});
         const flexData = flexOrder[0];
         setOrderTypeData(flexOrder[0]);
+
             if(existingPayment.length > 0){
+              setTotalPaid(existingPayment[existingPayment.length -1].total_paid);
+
               if(existingPayment[existingPayment.length -1].due_installment_amt == 0){
                 setPaymentAmt(flexData.each_payment_amt);
               }else{
@@ -358,7 +366,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         product_id : orderData.product_id,
       });
       setRequesedData(result[0]);
-      console.log('result...',result);
     } catch (error) {
       console.log('Error..',error);
     }
@@ -434,8 +441,7 @@ return (
           <div className={classes.root}>
           <Paper className={classes.paper}> 
           {/* <p> */}
-          <Grid container >  
-            <Grid item xs={12} sm={1}></Grid>
+          <Grid container  justify="space-around">  
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
                   {"Order Id: " + orderData.order_id }
@@ -445,7 +451,6 @@ return (
               </Typography>
               
             </Grid>
-            <Grid item xs={12} sm={1}></Grid>
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
                   {"Customer Id:  " + orderData.customer_id }
@@ -454,7 +459,6 @@ return (
                   {"Rental Type: " + orderData.order_type_name }
               </Typography>              
             </Grid>
-            <Grid item xs={12} sm={1}></Grid>
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
                   {"Order Date:  " + orderData.order_date }
@@ -463,33 +467,42 @@ return (
                 {"Payment Mode: " + orderData.payment_mode_name }
             </Typography>
             </Grid>
-            <Grid item xs={12} sm={1}></Grid>
             <Grid item xs={12} sm={11}>
               <Typography variant="h6" className={classes.labelTitle}>
                 {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
               </Typography>                  
             </Grid>
-            <Grid item xs={12} sm={12}>   
-              <Divider />
+            <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
-              {'\n'}  
-              </Typography> 
-                
+                  {"Each Installment Amt. " + 
+                    (orderTypeData.frequency === 1 ? "(Monthly): " :
+                     orderTypeData.frequency === 2 ? "(Fortnightly): " :
+                     orderTypeData.frequency === 4 ? "(Weekly): " : '')
+                   + "$" + orderTypeData.each_payment_amt }
+              </Typography>              
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Total Paid Amt.:  " + totalPaid.toFixed(2) }
+              </Typography>              
+            </Grid>
+            
+            <Grid item xs={12} sm={3}>
+              {orderData.order_type===1 ?
+                <Typography variant="h6" className={classes.labelTitle}>
+                  {"Total to be Paid:  " + orderTypeData.total_payment_amt }
+                </Typography>              
+              :null
+              }
+            </Grid>
+            <Grid item xs={12} sm={11}>   
+              <Divider />
+              <Typography variant="h6" className={classes.labelTitle}> {'\n'} </Typography> 
             </Grid> 
           </Grid>
 
-  
-          
-          
-          
-
             
-          
-          
-          
             <Grid container spacing={4}>                              
-              
-{console.log('orderata',orderData)}
                 <Grid item xs={12} sm={12}>    
                 {orderData.order_type===1 ?
                   <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />

@@ -43,6 +43,7 @@ import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 import { parse } from 'path';
 import { async } from 'q';
+import { borderRight } from '@material-ui/system';
 
 const RESET_VALUES = {
   
@@ -801,9 +802,23 @@ return (
                   }
                   { (oldBudgetList.length > 0) ?
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="h6" className={classes.labelTitle}>
-                      {"$" + oldBudget }
-                    </Typography>
+                      { oldBudgetList.length > 0 && isEditable === 1 ? 
+                        oldBudgetList.map(data =>{
+                          // console.log('editBudgetData',data);
+                          return(
+                            <Typography variant="h6" className={classes.labelTitle} align="right">
+                            {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt * 4) + ')')
+                            :''}
+                          </Typography>)
+                        })
+                        :
+                          <Typography variant="h6" className={classes.labelTitle}  align="right">
+                             {( "OrderId: " + inputs.order_id + '  ($' +(inputs.pre_order_exp) + ')')}
+                          </Typography>
+                      }
+                      <Typography variant="h6" className={classes.labelTitle}  align="right">
+                        {"Total:  $" + oldBudget }  
+                      </Typography>
                   </Grid>
                   : null
                   }

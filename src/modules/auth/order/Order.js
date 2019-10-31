@@ -679,7 +679,8 @@ export default function Order({roleName}) {
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                     createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}
                     handleClickViewOpen = {handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen} 
-                    handleDeliveredProductOpen={handleDeliveredProductOpen}  handleOrderView={handleOrderView}/> }
+                    handleDeliveredProductOpen={handleDeliveredProductOpen}  handleOrderView={handleOrderView}
+                    handleViewDeliveredDetailOpen = {handleViewDeliveredDetailOpen} /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {underDeliveryTab && <UnderDelivery order= {underDeliveryTab} roleName={roleName} />}

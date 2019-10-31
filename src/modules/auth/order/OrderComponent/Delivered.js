@@ -16,6 +16,7 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import CommentIcon from '@material-ui/icons/Comment';
+import DoneIcon from '@material-ui/icons/Done';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
@@ -97,9 +98,9 @@ return (
               }
             </StyledTableCell>
             <StyledTableCell>
-              <Tooltip title="View">
+              <Tooltip title="View Delivered Product Detail">
                 <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleViewDeliveredDetailOpen(data); }} >
-                  <CommentIcon />
+                  <DoneIcon />
                 </IconButton>
               </Tooltip>
             </StyledTableCell>

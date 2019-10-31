@@ -18,6 +18,7 @@ import SendIcon from '@material-ui/icons/send';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CommentIcon from '@material-ui/icons/Comment';
+import DoneIcon from '@material-ui/icons/Done';
 import ViewArrayIcon from '@material-ui/icons/ViewArray'
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
@@ -59,9 +60,9 @@ function TabPanel(props) {
 
 export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
   uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, 
-  handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen, handleOrderView }) {
+  handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen, handleOrderView, handleViewDeliveredDetailOpen }) {
   const styleClass = useCommonStyles();
-
+// console.log('order',order)
 return (  
   <Table >
     <TableHead>
@@ -163,10 +164,14 @@ return (
                       <PaymentIcon />  
                     </IconButton>
                   </Tooltip>
-
                   <Tooltip title="Assign to Delivery">
                     <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToDelivery(data.id); }} disabled= {data.order_status !==4  || data.assigned_to===5}>
                       <SendIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="View Delivered Product Detail">
+                    <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleViewDeliveredDetailOpen(data); }} disabled = {data.order_status !== 6}>
+                      <DoneIcon />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Cancel Order">
