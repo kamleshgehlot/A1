@@ -49,13 +49,13 @@ export default function FixedOrderForm(data,order) {
   const customer = data.customer;
   const orderType = data.fixedOrder;
   const budget = data.budget; 
-  const user = data.user; 
+  const user = data.user[0]; 
 
   // console.log(franchise);
   // console.log("product", products);
-  // console.log(orderType);
-  console.log(customer);
-  console.log(budget);
+  // // console.log(orderType);
+  // console.log(customer);
+  // console.log(budget);
   // console.log(order);
   // console.log(user);
 
@@ -92,8 +92,8 @@ export default function FixedOrderForm(data,order) {
                           [
                             
                             { text: 'Date: ' + getCurrentDateDDMMYYYY(), style: styles.Header3Center, bold: true, alignment: screenLeft }, 
-                            { text: 'Team Leader: ' + '', style: styles.Header3Center, bold: true, alignment: screenLeft }, 
-                            { text: 'Salesperson: ' + user[0].name , style: styles.Header3Center, bold: true, alignment: screenLeft }, 
+                            { text: 'Team Leader: ' + user.director_name, style: styles.Header3Center, bold: true, alignment: screenLeft }, 
+                            { text: 'Salesperson: ' + user.name , style: styles.Header3Center, bold: true, alignment: screenLeft }, 
                             { text: 'Sales Type: ', style: styles.Header3Center, bold: true, alignment: screenLeft }, 
                           ]
                         ]

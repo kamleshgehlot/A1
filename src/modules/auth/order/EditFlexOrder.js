@@ -35,7 +35,7 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import {useCommonStyles} from '../../common/StyleComman'; 
-
+import {getDate, getCurrentDate } from '../../../utils/datetime'
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -149,11 +149,11 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       liability_fee : parseFloat(inputs.liability_fee).toFixed(2),
       weekly_total : parseFloat(inputs.weekly_total).toFixed(2),
       frequency : parseFloat(inputs.frequency).toFixed(2),
-      first_payment : inputs.first_payment,
+      first_payment : getDate(inputs.first_payment),
       each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
       bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
-      exp_delivery_date : inputs.exp_delivery_date,
+      exp_delivery_date : getDate(inputs.exp_delivery_date),
       exp_delivery_time : inputs.exp_delivery_time,      
     }
     setFlexOrderList(data);
@@ -419,7 +419,8 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
                         disablePast = {true}
                         value={inputs.first_payment}
                         fullWidth 
@@ -429,8 +430,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        onError={errors.first_payment}
-                        helperText={errors.first_payment} 
+                        // onError={errors.first_payment}
+                        // helperText={errors.first_payment} 
                         disabled = {viewOnly}
                       />
                     </MuiPickersUtilsProvider>
@@ -491,7 +492,8 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="dd/MM/yyyy"
+                          format="dd-MM-yyyy"
+                          placeholder="DD-MM-YYYY"
                           disablePast = {true}                          
                           value={inputs.exp_delivery_date}
                           InputProps={{
@@ -500,8 +502,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          error={errors.exp_delivery_date}
-                          helperText={errors.exp_delivery_date}   
+                          // error={errors.exp_delivery_date}
+                          // helperText={errors.exp_delivery_date}   
                           disabled = {viewOnly}
                         />
                         </MuiPickersUtilsProvider>

@@ -1161,7 +1161,8 @@ Order.prototype.getCSRDetail = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select u.name, s.location, s.contact, s.email from user as u INNER JOIN staff as s on u.id = s.franchise_user_id where u.id = "'+that.id+'"',function (error, rows, fields) {   
+        // connection.query('select u.name, s.location, s.contact, s.email from user as u INNER JOIN staff as s on u.id = s.franchise_user_id where u.id = "'+that.id+'"',function (error, rows, fields) {   
+          connection.query('select (SELECT name from user where id = 1) as director_name, u.name, s.location, s.contact, s.email from user as u INNER JOIN staff as s on u.id = s.franchise_user_id where u.id = "'+that.id+'"',function (error, rows, fields) {   
           resolve(rows);
         });
         } else {

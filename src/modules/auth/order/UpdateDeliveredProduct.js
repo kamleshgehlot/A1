@@ -27,13 +27,12 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import 'date-fns';
-
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
 import Order from '../../../api/franchise/Order';
 import ConfirmationDialog from '../ConfirmationDialog.js';
-import { getDate, getCurrentDate } from '../../../utils/datetime';
+import { getDate, getCurrentDate, getDateInDDMMYYYY } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import validate from '../../common/validation/ProductDeliveryForm';
@@ -126,7 +125,7 @@ const RESET_VALUES  = {
   product_cost : '',
   specification : '',
   invoice_number : '',
-  delivery_date : new Date(),  
+  delivery_date : getCurrentDate(),
   purchase_from : '',
 }
 
@@ -140,7 +139,6 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
   const [savebtn, setSavebtn] = React.useState(false);
 
 
-  console.log('orderdata',orderData);
   function handleDateChange(date){
     handleInputChange({target:{name: 'delivery_date', value: date}})
   }
@@ -172,7 +170,7 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
       product_cost : inputs.product_cost,
       specification : inputs.specification,
       invoice_number : inputs.invoice_number,
-      delivery_date : inputs.delivery_date,
+      delivery_date : getDate(inputs.delivery_date),
       purchase_from : inputs.purchase_from,
       
       product_id : orderData.product_id,
@@ -184,23 +182,12 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
       comment: inputs.comment, 
 
       assigned_to: 5,       
-      delivered_date: inputs.delivery_date, 
+      delivered_date: getDate(inputs.delivery_date),
       delivered_time: new Date(),
     });
     handleOrderList(result);
     handleClose();
   }
-
-  // function handleConfirmationOpen(){      
-  //     setConfirmation(true);
-  // }
-
-  // function handleConfirmationDialog (response){
-  //   if(response === 1){     
-  //     // submit();      
-  //   }
-  //   setConfirmation(false);
-  // }
 
 
   const { inputs, handleInputChange,  handleNumberInput, handlePriceInput, handleRandomInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
@@ -208,9 +195,6 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
     submit,
     validate
   ); 
-
-  console.log('inputs',inputs);
-
 
 
 return (
@@ -262,7 +246,8 @@ return (
                         margin="dense"
                         id="delivery_date"
                         name="delivery_date"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
                         value={inputs.delivery_date}
                         fullWidth 
                         InputProps={{
@@ -271,8 +256,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        error={errors.delivery_date}
-                        helperText={errors.delivery_date}                               
+                        // error={errors.delivery_date}
+                        // helperText={errors.delivery_date}                               
                       />
                     </MuiPickersUtilsProvider>
                   </Grid>

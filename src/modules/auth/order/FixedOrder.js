@@ -42,17 +42,17 @@ import Order from '../../../api/franchise/Order';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import {useCommonStyles} from '../../common/StyleComman'; 
-
+import {getDate, getCurrentDate } from '../../../utils/datetime'
 
 import { FormLabel } from '@material-ui/core';
 import validate from '../../common/validation/FixedOrderValidation';
 
 
 const RESET_VALUES = {
-  exp_delivery_date : '',
-  first_payment : '',
-  last_payment : '',
-  exp_delivery_time : '',
+  exp_delivery_date : getCurrentDate(),
+  first_payment : getCurrentDate(),
+  last_payment : getCurrentDate(),
+  exp_delivery_time : getCurrentDate(),
 
   int_unpaid_bal : 0,
   liability_wavier_fee : 0,
@@ -161,13 +161,13 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       liability_wavier_fee : parseFloat(inputs.liability_wavier_fee).toFixed(2),
       frequency : inputs.frequency,
       duration: inputs.duration,
-      first_payment : inputs.first_payment,
-      last_payment : inputs.last_payment,
+      first_payment : getDate(inputs.first_payment),
+      last_payment : getDate(inputs.last_payment),
       no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
       each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
       total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
       before_delivery_amt : inputs.before_delivery_amt,
-      exp_delivery_date : inputs.exp_delivery_date,
+      exp_delivery_date : getDate(inputs.exp_delivery_date),
       exp_delivery_time : inputs.exp_delivery_time,
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt).toFixed(2),
       intrest_rate : parseFloat(inputs.intrest_rate).toFixed(2),
@@ -182,23 +182,19 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
  
 
   function handleDateChange(date){
-    // handleInputChange({target:{name: 'first_payment', value: handleSetDateFormat(date)}})
     handleInputChange({target:{name: 'first_payment', value: date}})
     setFirstPaymentDate(date);
   }
 
   function handleLastDate(date){
-    // handleInputChange({target:{name: 'last_payment', value: handleSetDateFormat(date)}})
     handleInputChange({target:{name: 'last_payment', value: date}})
   }
 
   function handleDeliveryDate(date){
-    // handleInputChange({target:{name: 'exp_delivery_date', value: handleSetDateFormat(date)}})
     handleInputChange({target:{name: 'exp_delivery_date', value: date}})
   }
 
   function handleDeliveryTime(time){          
-    // const deliveryTime =  handleSetTimeFormat(time);
     handleInputChange({target:{name: 'exp_delivery_time', value: time}})
   }
 
@@ -678,10 +674,9 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
                         disablePast = {true}
-                        // defaultValue = {new Date()}
-                        defaultValue = {""}
                         value={inputs.first_payment}
                         fullWidth 
                         InputProps={{
@@ -690,9 +685,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        // onBlur={handleDateChange}
-                        error={errors.first_payment}
-                        helperText={errors.first_payment}        
+                        // error={errors.first_payment}
+                        // helperText={errors.first_payment}        
                         disabled = {frequency == "" || duration == ""}
                       />
                     </MuiPickersUtilsProvider>
@@ -708,11 +702,10 @@ return (
                         margin="dense"
                         id="last_payment"
                         name="last_payment"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
                         disabled
                         disablePast = {true}
-                        defaultValue = {""}
-                        // defaultValue = {new Date()}
                         value={inputs.last_payment}
                         fullWidth 
                         InputProps={{
@@ -721,8 +714,8 @@ return (
                           },
                         }}
                         onChange={handleLastDate}
-                        error={errors.last_payment}
-                        helperText={errors.last_payment}                               
+                        // error={errors.last_payment}
+                        // helperText={errors.last_payment}                               
                         // disabled = {frequency == "" || duration == ""}                       
                       />
                     </MuiPickersUtilsProvider>
@@ -877,7 +870,8 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="dd/MM/yyyy"
+                          format="dd-MM-yyyy"
+                          placeholder="DD-MM-YYYY"
                           disablePast = {true}                          
                           value={inputs.exp_delivery_date}                          
                           InputProps={{
@@ -886,8 +880,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          error={errors.exp_delivery_date}
-                          helperText={errors.exp_delivery_date}                               
+                          // error={errors.exp_delivery_date}
+                          // helperText={errors.exp_delivery_date}                               
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>

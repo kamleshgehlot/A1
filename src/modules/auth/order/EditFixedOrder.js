@@ -37,6 +37,7 @@ import Order from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
 import validate from '../../common/validation/FixedOrderValidation';
+import {getDate, getCurrentDate } from '../../../utils/datetime'
 
 const RESET_VALUES = {  
 };
@@ -56,10 +57,6 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(-3),
   },
   labelTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
@@ -128,14 +125,14 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
       ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
       liability_wavier_fee : parseFloat(inputs.liability_wavier_fee).toFixed(2),
       frequency : inputs.frequency,
-      first_payment : inputs.first_payment,
-      last_payment : inputs.last_payment,
+      first_payment : getDate(inputs.first_payment),
+      last_payment : getDate(inputs.last_payment),
       duration: inputs.duration,
       no_of_payment : parseFloat(inputs.no_of_payment).toFixed(2),
       each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
       total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt).toFixed(2),
-      exp_delivery_date : inputs.exp_delivery_date,
+      exp_delivery_date : getDate(inputs.exp_delivery_date),
       exp_delivery_time : inputs.exp_delivery_time,
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt).toFixed(2),
       interest_rate : parseFloat(inputs.interest_rate).toFixed(2),
@@ -147,24 +144,20 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   }
 
   function handleDateChange(date){
-    // handleInputChange({target:{name: 'first_payment', value: setDateFormat(date)}})
     handleInputChange({target:{name: 'first_payment', value: date}})
 
     setFirstPaymentDate(date);
   }
 
   function handleLastDate(date){
-    // handleInputChange({target:{name: 'last_payment', value: setDateFormat(date)}})
     handleInputChange({target:{name: 'last_payment', value: date}})
   }
 
   function handleDeliveryDate(date){
-    // handleInputChange({target:{name: 'exp_delivery_date', value: setDateFormat(date)}})
     handleInputChange({target:{name: 'exp_delivery_date', value: date}})
   }
 
   function handleDeliveryTime(time){      
-    // handleInputChange({target:{name: 'exp_delivery_time', value: time}})
     handleInputChange({target:{name: 'exp_delivery_time', value: time}})
   }
   
@@ -678,9 +671,9 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="dd/MM/yyyy"
-                        disablePast = {true}
-                        // defaultValue = {new Date()}
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
+                        disablePast = {true}                        
                         defaultValue = {""}
                         value={inputs.first_payment}
                         fullWidth 
@@ -690,8 +683,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        error={errors.first_payment}
-                        helperText={errors.first_payment} 
+                        // error={errors.first_payment}
+                        // helperText={errors.first_payment} 
                         disabled = {viewOnly}  
                         // error={errors.first_payment}
                         // helperText={errors.first_payment}                               
@@ -708,23 +701,20 @@ return (
                             margin="dense"
                             id="last_payment"
                             name="last_payment"
-                            format="dd/MM/yyyy"
-                            disablePast = {true}
-                            defaultValue = {""}
-                            // defaultValue = {new Date()}
+                            format="dd-MM-yyyy"
+                            placeholder="DD-MM-YYYY"
+                            disablePast = {true}                            
                             value={inputs.last_payment}
                             fullWidth 
-                            error={errors.last_payment}
-                            helperText={errors.last_payment} 
+                            // error={errors.last_payment}
+                            // helperText={errors.last_payment} 
                             InputProps={{
                               classes: {
                                 input: classes.textsize,
                               },
                             }}
                             onChange={handleLastDate}
-                            disabled
-                            // error={errors.last_payment}
-                            // helperText={errors.last_payment}                               
+                            disabled                            
                           />
                         </MuiPickersUtilsProvider>
                   </Grid>
@@ -850,22 +840,19 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="dd/MM/yyyy"
+                          format="dd-MM-yyyy"
+                          placeholder="DD-MM-YYYY"
                           disablePast = {true}
                           value={inputs.exp_delivery_date}
-                          error={errors.exp_delivery_date}
-                          helperText={errors.exp_delivery_date}
-                          // fullWidth 
-                          // type="datetime-local"
+                          // error={errors.exp_delivery_date}
+                          // helperText={errors.exp_delivery_date}                          
                           InputProps={{
                             classes: {
                               input: classes.textsize,
                             },
                           }}
                           disabled = {viewOnly}
-                          onChange={handleDeliveryDate}
-                          // error={errors.exp_delivery_date}
-                          // helperText={errors.exp_delivery_date}                               
+                          onChange={handleDeliveryDate}                          
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>
@@ -888,12 +875,7 @@ return (
                                 input: classes.textsize,
                               },
                             }}
-                            disabled = {viewOnly}
-                            // error={errors.exp_delivery_time}
-                            // helperText={errors.exp_delivery_time}
-                            // KeyboardButtonProps={{
-                            //   'aria-label': 'change time',
-                            // }}
+                            disabled = {viewOnly}                            
                           />
                       </MuiPickersUtilsProvider>
                 </Grid>

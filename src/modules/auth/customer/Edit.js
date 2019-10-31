@@ -35,6 +35,8 @@ import { API_URL } from '../../../api/Constants';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
+import {getDate, getCurrentDate} from '../../../utils/datetime';
+
 
 const RESET_VALUES = {
   id: '',
@@ -132,6 +134,10 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(-3),
     color: 'white',
   },
+  dobMsg : {
+    marginTop : theme.spacing(-1),
+    fontSize: theme.typography.pxToRem(12),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -188,11 +194,11 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       email : inputs.email,
       gender : inputs.gender,
       is_working : inputs.is_working,
-      dob : inputs.dob,
+      dob : getDate(inputs.dob),
       id_type :  inputs.id_type,
       id_number:  inputs.id_number,
-      expiry_date :  inputs.expiry_date,
-      is_adult : 1,
+      expiry_date : getDate(inputs.expiry_date),
+      is_adult : inputs.is_adult,
       id_proof :  inputs.id_proof,
       dl_version_number : inputs.dl_version_number,
 
@@ -226,7 +232,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       formData.append('avatar', document.getElementById('id_proof').files[x])
     }
     const response = await Customer.register({ formData: formData });
-    
     setCustomerList(response.customerList);
     setpLoading(false);
     setSavebtn(true);
@@ -245,29 +250,43 @@ function handleIdType(event){
   setInput('id_type',event.target.value);      
 }
   
-  function handleDate(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'dob', value: fullDate}})
+function handleDate(date){
+  let date1 = new Date(date);
+  let yy = date1.getFullYear();
+  let mm = date1.getMonth() + 1 ;
+  let dd = date1.getDate();
+  if(mm< 10){ mm = '0' + mm.toString()}
+  if(dd< 10){ dd = '0' + dd.toString()}
+  let fullDate = yy+ '-'+mm+'-'+dd;
+
+      let today = new Date();
+      let nowyear = today.getFullYear();
+      let nowmonth = today.getMonth() + 1;
+      let nowday = today.getDate();
+      let age = nowyear - yy;
+      let age_month = nowmonth - mm;
+      let age_day = nowday - dd;
+      
+      if(age_month < 0 || (age_month == 0 && age_day <0)) {
+              age = parseInt(age) -1;
+      }    
+      if ((age == 18 && age_month <= 0 && age_day <=0) || age < 18) {
+        inputs.is_adult = 0;
+      }
+      else {
+        inputs.is_adult = 1;
+      }
+    setInput('dob',date);
   }
+
   function handleExpiryDate(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'expiry_date', value: fullDate}})
+    setInput('expiry_date',date);
   }
+
   function handleOtherIdType(event){
     setOtherIdTypeValue(event.target.value)
   }
+
   const { inputs, handleInputChange, handleSubmit, handleNumberInput, handlePriceInput, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     editCustomer,
@@ -508,30 +527,13 @@ function handleIdType(event){
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="dob">Date Of Birth</InputLabel>
-                    {/* <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      margin="dense"
-                      id="dob"
-                      name="dob"
-                      // label=""
-                      type="date"
-                      value={inputs.dob} 
-                      onChange={handleInputChange}
-                      error={errors.dob}
-                      helperText={errors.dob}
-                      required
-                      fullWidth
-                    /> */}
-                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
                                 id="dob"
                                 name="dob"
-                                format="dd/MM/yyyy"
+                                format="dd-MM-yyyy"
+                                placeholder="DD-MM-YYYY"
                                 disableFuture = {true}
                                 value={inputs.dob}
                                 fullWidth 
@@ -541,10 +543,13 @@ function handleIdType(event){
                                   },
                                 }}
                                 onChange={handleDate}
-                                error={errors.dob}
-                                helperText={errors.dob}                               
+                                // error={errors.dob}
+                                // helperText={errors.dob}                               
                               />
-                            </MuiPickersUtilsProvider>
+                      </MuiPickersUtilsProvider>
+                      {inputs.is_adult === 1 && inputs.dob != "" ?  <p className={classes.dobMsg} style={{'color':'#75C019'}} A2B631>Person is over 18 year</p> 
+                      :inputs.is_adult === 0 && inputs.dob != ""  ?  <p className={classes.dobMsg} style={{'color':'#F5BB00'}}>Person is not over 18 year</p>
+                      : ''}
                   </Grid>
                   <Grid item xs={12} sm={inputs.id_type == 2 ? 3 : 6}>
                     <InputLabel className={classes.textsize}  htmlFor="id_type">ID Proof</InputLabel>
@@ -627,26 +632,26 @@ function handleIdType(event){
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel className={classes.textsize}  htmlFor="expiry_date">Expiry Date</InputLabel>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                              <KeyboardDatePicker
-                                margin="dense"
-                                id="expiry_date"
-                                name="expiry_date"
-                                format="dd/MM/yyyy"
-                                disablePast = {true}
-                                value={inputs.expiry_date}
-                                fullWidth 
-                                InputProps={{
-                                  classes: {
-                                    input: classes.textsize,
-                                  },
-                                }}
-                                onChange={handleExpiryDate}
-                                error={errors.expiry_date}
-                                helperText={errors.expiry_date}                               
-                              />
-                            </MuiPickersUtilsProvider>
-                    
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          margin="dense"
+                          id="expiry_date"
+                          name="expiry_date"
+                          format="dd/MM/yyyy"
+                          placeholder="DD-MM-YYYY"
+                          disablePast = {true}
+                          value={inputs.expiry_date}
+                          fullWidth 
+                          InputProps={{
+                            classes: {
+                              input: classes.textsize,
+                            },
+                          }}
+                          onChange={handleExpiryDate}
+                          // error={errors.expiry_date}
+                          // helperText={errors.expiry_date}                               
+                        />
+                      </MuiPickersUtilsProvider>
                   </Grid>
                  
                   <Grid item xs={12} sm={6}>

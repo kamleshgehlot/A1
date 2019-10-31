@@ -142,7 +142,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+  // console.log('tasklist',taskList);
 
   const addTaskMaster = async () => {
     setpLoading(true);
@@ -153,7 +153,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
       task_id : taskList.task_id,
       assign_to_role : taskList.assign_to_role_id,
       assigned_to : taskList.assign_to,
-      due_date : taskList.due_date,
+      due_date : getDate(taskList.due_date),
       start_date : taskList.start_date,
       reschedule_req_date : taskList.reschedule_req_date,
       last_due_date : taskList.last_due_date,
@@ -221,8 +221,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
 
 
   function handleDate(date){    
-    let date1 = getDate(date);
-    handleInputChange({target:{name: 'due_date', value: date1}});
+    handleInputChange({target:{name: 'due_date', value: date}});
   }
 
   return (
@@ -274,14 +273,13 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                     margin="dense"
                     id="due_date"
                     name="due_date"
-                    format="dd/MM/yyyy"
+                    format="dd-MM-yyyy"
+                    placeholder="DD-MM-YYYY"
                     disablePast = {true}
                     value={taskList.due_date}
                     fullWidth 
                     disabled
                     onChange={handleDate}
-                    // error={errors.due_date}
-                    // helperText={errors.due_date}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>

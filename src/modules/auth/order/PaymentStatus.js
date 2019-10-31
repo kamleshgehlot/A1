@@ -156,7 +156,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
 
 
   function handleDateChange(date){
-    setPaymentRecDate(getDate(date));    
+      setPaymentRecDate(date);    
   }
 
   const handlePriceInput = e => {
@@ -483,18 +483,20 @@ return (
             </Grid>
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
-                  {"Total Paid Amt.:  " + totalPaid.toFixed(2) }
+                {orderData.order_type===1 ?
+                  ("Total Expected:  " + orderTypeData.total_payment_amt) 
+                :orderData.order_type===2 ?
+                  ("Bond Amt:  " + orderTypeData.bond_amt )
+                :''}
+              </Typography>                            
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Total Received Amt.:  " + totalPaid.toFixed(2) }
               </Typography>              
             </Grid>
             
-            <Grid item xs={12} sm={3}>
-              {orderData.order_type===1 ?
-                <Typography variant="h6" className={classes.labelTitle}>
-                  {"Total to be Paid:  " + orderTypeData.total_payment_amt }
-                </Typography>              
-              :null
-              }
-            </Grid>
+            
             <Grid item xs={12} sm={11}>   
               <Divider />
               <Typography variant="h6" className={classes.labelTitle}> {'\n'} </Typography> 

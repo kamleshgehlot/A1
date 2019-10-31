@@ -36,7 +36,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
-
+import {getDate, getCurrentDate } from '../../../utils/datetime'
 import validate from '../../common/validation/FlexOrderValidation';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import useSignUpForm from '../franchise/CustomHooks';
@@ -47,11 +47,11 @@ const RESET_VALUES = {
   liability_fee : '',
   weekly_total : '',
   frequency : '',
-  first_payment : '',
+  first_payment : getCurrentDate(),
   each_payment_amt : '',
   before_delivery_amt : '',
-  exp_delivery_date : '',
-  exp_delivery_time : '',
+  exp_delivery_date : getCurrentDate(),
+  exp_delivery_time : getCurrentDate(),
   bond_amt : '',
 };
 
@@ -150,9 +150,9 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
         before_delivery_amt : inputs.before_delivery_amt,
         bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
-        exp_delivery_date : inputs.exp_delivery_date,
+        exp_delivery_date : getDate(inputs.exp_delivery_date),
         exp_delivery_time : inputs.exp_delivery_time,
-        first_payment : inputs.first_payment,        
+        first_payment : getDate(inputs.first_payment), 
       }
       setFlexOrderList(data);
       handleOrderType(2);
@@ -428,9 +428,9 @@ return (
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
-                        format="dd/MM/yyyy"
-                        disablePast = {true}
-                        defaultValue = {""}
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
+                        disablePast = {true}                        
                         value={inputs.first_payment}
                         fullWidth 
                         InputProps={{
@@ -439,8 +439,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        error={errors.first_payment}
-                        helperText={errors.first_payment}  
+                        // error={errors.first_payment}
+                        // helperText={errors.first_payment}  
                         disabled = {frequency == ""}                             
                       />
                     </MuiPickersUtilsProvider>
@@ -504,9 +504,9 @@ return (
                           margin="dense"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
-                          format="dd/MM/yyyy"
+                          format="dd-MM-yyyy"
+                          placeholder="DD-MM-YYYY"
                           disablePast = {true}
-                          defaultValue = {""}
                           value={inputs.exp_delivery_date}
                           InputProps={{
                             classes: {
@@ -514,8 +514,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          error={errors.exp_delivery_date}
-                          helperText={errors.exp_delivery_date}                               
+                          // error={errors.exp_delivery_date}
+                          // helperText={errors.exp_delivery_date}                               
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>

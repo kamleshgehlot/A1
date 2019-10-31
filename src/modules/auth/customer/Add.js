@@ -38,7 +38,7 @@ import Customer from '../../../api/franchise/Customer';
 import UserAPI from '../../../api/User';
 import useSignUpForm from '../franchise/CustomHooks';
 import Budget from '../../auth/order/Budget'
-
+import {getDate, getCurrentDate} from '../../../utils/datetime';
 
 const RESET_VALUES = {
   id: '',
@@ -51,11 +51,11 @@ const RESET_VALUES = {
   email : '',
   gender : '',
   is_working : '',
-  dob : '',
+  dob : getCurrentDate(),
   id_type : '',
   id_number: '',
-  expiry_date : '',
-  is_adult :'',
+  expiry_date : getCurrentDate(),
+  is_adult :0,
   id_proof : '',
   other_id_type:'',
 
@@ -144,7 +144,6 @@ const useStyles = makeStyles(theme => ({
   dobMsg : {
     marginTop : theme.spacing(-1),
     fontSize: theme.typography.pxToRem(12),
-    // color: 'green',
   },
 }));
 
@@ -220,9 +219,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       {name: 'mobile', value:  conversionData.customer_contact}
     ]);
     }
-    // conversionData!= '' ? inputs['customer_name'] = conversionData.customer_name : ''
-    // conversionData!= '' ? inputs['mobile'] = conversionData.customer_contact : ''
-    
   }, []);
 
    function handleIdType(event){
@@ -235,53 +231,40 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     } 
       setInput('id_type',event.target.value);      
     }
-
-    // function handleOtherIdType(event){
-    //   // setOtherIdTypeValue(event.target.value)
-    //   setInput('other_id_type',event.target.value)
-    // }
-  
+ 
     function handleDate(date){
-      let date1 = new Date(date);
-      let yy = date1.getFullYear();
-      let mm = date1.getMonth() + 1 ;
-      let dd = date1.getDate();
-      if(mm< 10){ mm = '0' + mm.toString()}
-      if(dd< 10){ dd = '0' + dd.toString()}
-      let fullDate = yy+ '-'+mm+'-'+dd;
+          let date1 = new Date(date);
+          let yy = date1.getFullYear();
+          let mm = date1.getMonth() + 1 ;
+          let dd = date1.getDate();
+          if(mm< 10){ mm = '0' + mm.toString()}
+          if(dd< 10){ dd = '0' + dd.toString()}
+          let fullDate = yy+ '-'+mm+'-'+dd;
 
-    
-      let today = new Date();
-      let nowyear = today.getFullYear();
-      let nowmonth = today.getMonth() + 1;
-      let nowday = today.getDate();
-     
-      let age = nowyear - yy;
-      let age_month = nowmonth - mm;
-      let age_day = nowday - dd;
-      
-    if(age_month < 0 || (age_month == 0 && age_day <0)) {
-            age = parseInt(age) -1;
-    }    
-    if ((age == 18 && age_month <= 0 && age_day <=0) || age < 18) {
-          inputs.is_adult = 0;
-    }
-    else {
-          // alert("You have crossed your 18th birthday !");
+        
+          let today = new Date();
+          let nowyear = today.getFullYear();
+          let nowmonth = today.getMonth() + 1;
+          let nowday = today.getDate();
+         
+          let age = nowyear - yy;
+          let age_month = nowmonth - mm;
+          let age_day = nowday - dd;
+          
+        if(age_month < 0 || (age_month == 0 && age_day <0)) {
+                age = parseInt(age) -1;
+        }    
+        if ((age == 18 && age_month <= 0 && age_day <=0) || age < 18) {
+              inputs.is_adult = 0;
+        }
+        else {
           inputs.is_adult = 1;
-    }
-      handleInputChange({target:{name: 'dob', value: fullDate}})
+        }
+        setInput('dob',date);
     }
     
     function handleExpiryDate(date){
-      let date1 = new Date(date);
-      let yy = date1.getFullYear();
-      let mm = date1.getMonth() + 1 ;
-      let dd = date1.getDate();
-      if(mm< 10){ mm = '0' + mm.toString()}
-      if(dd< 10){ dd = '0' + dd.toString()}
-      let fullDate = yy+ '-'+mm+'-'+dd;
-      handleInputChange({target:{name: 'expiry_date', value: fullDate}})
+      setInput('expiry_date',date);
     }
 
   const addCustomer = async () => {
@@ -301,10 +284,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       email : inputs.email,
       gender : inputs.gender,
       is_working : inputs.is_working,
-      dob : inputs.dob,
+      dob : getDate(inputs.dob),
       id_type :  inputs.id_type,
       id_number:  inputs.id_number,
-      expiry_date :  inputs.expiry_date,
+      expiry_date : getDate(inputs.expiry_date),
       is_adult : inputs.is_adult,
       id_proof :  inputs.id_proof,
       dl_version_number : inputs.dl_version_number,
@@ -592,8 +575,9 @@ return (
                                 margin="dense"
                                 id="dob"
                                 name="dob"
-                                format="dd/MM/yyyy"
+                                format="dd-MM-yyyy"
                                 disableFuture = {true}
+                                placeholder="DD-MM-YYYY"
                                 value={inputs.dob}
                                 fullWidth 
                                 InputProps={{
@@ -603,8 +587,8 @@ return (
                                 }}
                                 required
                                 onChange={handleDate}
-                                error={errors.dob}
-                                helperText={errors.dob}                               
+                                // error={errors.dob}
+                                // helperText={errors.dob}  
                               />
                             </MuiPickersUtilsProvider>
                             
@@ -723,7 +707,8 @@ return (
                         margin="dense"
                         id="expiry_date"
                         name="expiry_date"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
                         disablePast = {true}
                         value={inputs.expiry_date}
                         fullWidth 
@@ -731,10 +716,10 @@ return (
                           classes: {
                             input: classes.textsize,
                           },
-                        }}
+                        }}                        
                         onChange={handleExpiryDate}
-                        error={errors.expiry_date}
-                        helperText={errors.expiry_date}                               
+                        // error={errors.expiry_date}
+                        // helperText={errors.expiry_date}
                       />
                     </MuiPickersUtilsProvider>                    
                   </Grid>

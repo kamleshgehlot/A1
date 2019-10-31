@@ -42,29 +42,8 @@ import useSignUpForm from '../franchise/CustomHooks';
 import {getDate, getCurrentDate } from '../../../utils/datetime'
 import validate from '../../common/validation/OrderRuleValidation';
 
-function getOrderDate() {
-  const dtToday = new Date();
-  let month = dtToday.getMonth() + 1;
-  let day = dtToday.getDate();
-  let year = dtToday.getFullYear();
-  if(month < 10){
-      month = '0' + month.toString();
-    }
-  if(day < 10){
-      day = '0' + day.toString();
-    }
-
-    return year + '-' + month + '-' + day;
-}
-
 const RESET_VALUES = {
-  order_date: getOrderDate(),
-  // main_category : '',
-  // sub_category : '',
-  // category : '',
-  // customer_type : '',
-  // order_type : '',
-  // payment_mode: '',  
+  order_date: getCurrentDate(),  
 };
 
 const useStyles = makeStyles(theme => ({
@@ -237,15 +216,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setBudgetList([]);
   }
 
-   function handleDateChange(date){
-    let date1 = new Date(date);
-    let yy = date1.getFullYear();
-    let mm = date1.getMonth() + 1 ;
-    let dd = date1.getDate();
-    if(mm< 10){ mm = '0' + mm.toString()}
-    if(dd< 10){ dd = '0' + dd.toString()}
-    let fullDate = yy+ '-'+mm+'-'+dd;
-    handleInputChange({target:{name: 'order_date', value: fullDate}})
+   function handleDateChange(date){    
+    handleInputChange({target:{name: 'order_date', value: date}})
   }
 
   useEffect(()=>{    
@@ -377,19 +349,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
   
   useEffect(() => {
-    const dtToday = new Date();
-    let month = dtToday.getMonth() + 1;
-    let day = dtToday.getDate();
-    let year = dtToday.getFullYear();
-    if(month < 10){
-        month = '0' + month.toString();
-      }
-    if(day < 10){
-        day = '0' + day.toString();
-      }
-  let maxDate = year + '-' + month + '-' + day;
-  setInput('order_date', maxDate.toString())
-  
     const fetchData = async () => {
       try {
         
@@ -408,24 +367,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
           }
             setInput('order_id',(orderId + (order_id[0].id+ 1)));
         }
-          
-        // console.log('order id',inputs.order_id);
-        // setInput('order_id',("" + (order_id.id[0].id+ 1)));
-          // let now = Date.now().toString() // '1492341545873'
-          // now += now + Math.floor(Math.random() * 10)
-          // setInput('order_id',([now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
-          
-        //   if(order_id.id[0]!=null){
-        //   let orderNo = "O" + (order_id.id[0].id + 1);
-        //   // setInput('order_id',("O_" + (order_id.id[0].id+ 1)));
-        //   setInput('order_id',(orderNo + "-" + [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
-        //   }
-        //   else{
-        //   let orderNo = ("O1");
-        //   // setInput('order_id',("O_" + (order_id.id[0].id+ 1)));
-        //   setInput('order_id',(orderNo + "-" + [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')));
-        //   // setInput('order_id','O_1');
-        // }
       } catch (error) {
         console.log(error);
       }
@@ -448,7 +389,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       flexOrderType : flexOrderList,
       fixedOrderType : fixedOrderList,
       payment_mode: inputs.payment_mode,
-      order_date  : inputs.order_date,
+      order_date  : getDate(inputs.order_date),
       assigned_to :  3,
       budget_list : budgetList,
       related_to : related_to,
@@ -526,9 +467,9 @@ return (
                         margin="dense"
                         id="order_date"
                         name="order_date"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
                         disablePast = {true}
-                        // defaultValue = {new Date()}
                         value={inputs.order_date}
                         fullWidth 
                         InputProps={{
@@ -537,8 +478,6 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        // error={errors.order_date}
-                        // helperText={errors.order_date}                               
                       />
                     </MuiPickersUtilsProvider>
                   </Grid>

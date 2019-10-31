@@ -27,6 +27,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import {getDate, getCurrentDate } from '../../../../utils/datetime'
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
@@ -138,8 +139,8 @@ export default function TaskReport({roleName}) {
   const [searchName,setSearchName] = useState('');
   const [order, setOrder] = useState([]);
   const [productList, setProductList] = useState([]);
-  const [toDate, setToDate] = useState('');
-  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState(getCurrentDate());
+  const [fromDate, setFromDate] = useState(getCurrentDate());
   const [taskReport, setTaskReport] = useState(false);
   const [reportData,setReportData] = useState([]);
   const [taskDueReport, setTaskDueReport] = useState(false);
@@ -148,19 +149,19 @@ export default function TaskReport({roleName}) {
   useEffect(() => {
     
     currentDate();
-  const fetchData = async () => {
-    setIsError(false);
-    setIsLoading(true);
-    try {
-    
-      
-    } catch (error) {
-      setIsError(true);
-    }
-      setIsLoading(false);
-  };
-  fetchData();
-}, []);
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+        try {
+        
+          
+        } catch (error) {
+          setIsError(true);
+        }
+          setIsLoading(false);
+      };
+    fetchData();
+  }, []);
 
 
   function handleChangeOrder(event) {
@@ -253,7 +254,8 @@ export default function TaskReport({roleName}) {
                           margin="dense"
                           id="from_date"
                           name="from_date"
-                          format="dd/MM/yyyy"
+                          format="dd-MM-yyyy"
+                          placeholder="DD-MM-YYYY"
                           value={fromDate}
                           InputProps={{
                             classes: {
@@ -270,7 +272,8 @@ export default function TaskReport({roleName}) {
                           margin="dense"
                           id="to_date"
                           name="to_date"
-                          format="dd/MM/yyyy"
+                          format="dd-MM-yyyy"
+                          placeholder="DD-MM-YYYY"
                           value={toDate}
                           InputProps={{
                             classes: {

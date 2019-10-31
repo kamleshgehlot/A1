@@ -33,15 +33,6 @@ import FranchiseUsers from '../../../api/FranchiseUsers';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import {getDate, getCurrentDate} from '../../../utils/datetime';
 
-// const RESET_VALUES = {
-//   id: '',
-//   first_name: '',
-//   last_name:'',
-//   location:'',
-//   contact:'',
-//   email:'',
-// };
-
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
@@ -143,7 +134,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       const data = {
         id : taskList.id,
         task_id : taskList.task_id,
-        due_date : taskList.due_date,
+        due_date : getDate(taskList.due_date),
         assign_to_role : taskList.assign_to_role_id, 
         assigned_to : taskList.assign_to,
         task_description : taskList.task_description,
@@ -218,8 +209,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   }
 
   function handleDate(date){    
-    let date1 = getDate(date);
-    handleInputChange({target:{name: 'due_date', value: date1}});
+    handleInputChange({target:{name: 'due_date', value: date}});
   }
   return (
     <div>
@@ -268,12 +258,13 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   id="due_date"
                   name="due_date"
                   format="dd-MM-yyyy"
+                  placeholder="DD-MM-YYYY"
                   disablePast = {true}
                   value={taskList.due_date}
                   fullWidth                       
                   onChange={handleDate}
-                  error={errors.due_date}
-                  helperText={errors.due_date}     
+                  // error={errors.due_date}
+                  // helperText={errors.due_date}     
                   disabled={taskList.status ===2}                          
                 />
               </MuiPickersUtilsProvider>

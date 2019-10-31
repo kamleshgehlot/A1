@@ -126,7 +126,7 @@ const RESET_VALUES  = {
   product_cost : '',
   specification : '',
   invoice_number : '',
-  delivery_date : new Date(),  
+  delivery_date : getCurrentDate(), 
   purchase_from : '',
 }
 
@@ -135,7 +135,7 @@ export default function ViewDeliveredProductDetails({ open, handleClose, handleS
   const classes = useStyles();
   const styleClass = useCommonStyles();
   const [requesedData, setRequesedData] = useState([]);
-  const [inputs, setInputs] = useState([]);
+  const [inputs, setInputs] = useState(RESET_VALUES);
   const [ploading, setpLoading] = React.useState(false);
   
 
@@ -157,7 +157,7 @@ export default function ViewDeliveredProductDetails({ open, handleClose, handleS
   };
   
   useEffect(() => {
-     getRequiredData();
+    getRequiredData();
   },[]);
 
 
@@ -211,7 +211,8 @@ return (
                         margin="dense"
                         id="delivery_date"
                         name="delivery_date"
-                        format="dd/MM/yyyy"
+                        format="dd-MM-yyyy"
+                        placeholder="DD-MM-YYYY"
                         value={inputs.delivery_date}
                         fullWidth 
                         InputProps={{

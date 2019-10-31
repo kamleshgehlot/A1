@@ -273,6 +273,7 @@ export default function CustomerList({userId, roleName}) {
   }
 
   function handleCustomerList(response){
+    // console.log(response);
     setCustomerListData(response);
     handleTabsData(response);    
   }
@@ -304,7 +305,7 @@ export default function CustomerList({userId, roleName}) {
 
 
   
-  function handleTabsData(customerList){  
+  function handleTabsData(customerList){ 
     let activeList = [];
     let holdList = [];
     let financialHardshipList = [];

@@ -144,7 +144,7 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
       task_description : taskList.task_description,
       assign_to_role : taskList.assign_to_role_id,
       assigned_to : taskList.assign_to,
-      due_date : taskList.reschedule_date,
+      due_date : getDate(taskList.reschedule_date),
       start_date : taskList.start_date,
       reschedule_req_date : taskList.reschedule_req_date,
       last_due_date : taskList.due_date,
@@ -223,12 +223,10 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
   }
 
   function handleNewDueDate(date){    
-    let date1 = getDate(date);
-    handleInputChange({target:{name: 'reschedule_date', value: date1}})
+    handleInputChange({target:{name: 'reschedule_date', value: date}})
   }
 
 
-console.log('taskList rescheduled',taskList);
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -276,14 +274,12 @@ console.log('taskList rescheduled',taskList);
                   margin="dense"
                   id="due_date"
                   name="due_date"
-                  format="dd/MM/yyyy"
+                  format="dd-MM-yyyy"
+                  placeholder="DD-MM-YYYY"
                   disablePast = {true}
                   value={taskList.due_date}
                   fullWidth                       
-                  // disabled={(taskList.status !=1 && taskList.status !=3) ? true : false}          
-                  // disabled = {(taskList.status===3 || taskList.status ===2) ? true : false}
                   disabled
-                  // onChange={handleDate}
                   error={errors.due_date}
                   helperText={errors.due_date}                               
                 />
@@ -301,13 +297,14 @@ console.log('taskList rescheduled',taskList);
                     margin="dense"
                     id="reschedule_date"
                     name="reschedule_date"
-                    format="dd/MM/yyyy"
+                    format="dd-MM-yyyy"
+                    placeholder="DD-MM-YYYY"
                     disablePast = {true}
                     value={taskList.reschedule_date}
                     fullWidth                                     
                     onChange={handleNewDueDate}
-                    error={errors.reschedule_date}
-                    helperText={errors.reschedule_date}                               
+                    // error={errors.reschedule_date}
+                    // helperText={errors.reschedule_date}                               
                   />
                 </MuiPickersUtilsProvider>
             </Grid>

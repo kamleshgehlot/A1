@@ -49,7 +49,7 @@ const RESET_VALUES = {
   task_id:'',
   task_description:'',
   assigned_to:'',
-  due_date:'',
+  due_date:getDate(),
   document: '',
   message : '',
 };
@@ -193,7 +193,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
       task_description : inputs.task_description,
       assign_to_role : staffRole,
       assigned_to : inputs.assigned_to,
-      due_date : inputs.due_date,
+      due_date : getDate(inputs.due_date),
       creator_role : roleName,
       message : inputs.message,
       document : inputs.document,
@@ -239,8 +239,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
 }
 
 function handleDate(date){
-  let date1 = getDate(date);
-  handleInputChange({target:{name: 'due_date', value: date1}});
+  handleInputChange({target:{name: 'due_date', value: date}});
 }
 
  const { inputs=null, handleInputChange, handleSubmit, handleReset, errors, setInput } = useSignUpForm(
@@ -299,13 +298,14 @@ return (
                       margin="dense"
                       id="due_date"
                       name="due_date"
-                      format="dd/MM/yyyy"
+                      format="dd-MM-yyyy"
+                      placeholder="DD-MM-YYYY"
                       disablePast = {true}
                       value={inputs.due_date}
                       fullWidth 
                       onChange={handleDate}
-                      error={errors.due_date}
-                      helperText={errors.due_date}
+                      // error={errors.due_date}
+                      // helperText={errors.due_date}
                     />
                 </MuiPickersUtilsProvider>              
                 </Grid>

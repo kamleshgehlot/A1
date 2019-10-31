@@ -139,10 +139,10 @@ return (
       <TableRow>
         {/* <StyledTableCell>#</StyledTableCell> */}
         <StyledTableCell>Installment No.</StyledTableCell>
-        <StyledTableCell>Payment Date</StyledTableCell>
+        <StyledTableCell>Payment Due Date</StyledTableCell>
         <StyledTableCell>Payment Rec. Date</StyledTableCell>
-        <StyledTableCell>Last Payment </StyledTableCell>
-        <StyledTableCell>Total Deposit</StyledTableCell>
+        <StyledTableCell>Amount Paid</StyledTableCell>
+        <StyledTableCell>Total Received</StyledTableCell>
         <StyledTableCell>Status</StyledTableCell>
         <StyledTableCell>Option</StyledTableCell>
       </TableRow>
@@ -165,12 +165,12 @@ return (
                 <div style={{marginTop: -13, marginBottom: -14, marginLeft: -17, marginRight: -60, width: '100%'}}>
                   <TableRow  className={singleData.installment_no === singleData.installment_before_delivery ? styleClass.highlightRow : null}>
                   {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
-                    <StyledTableCell style={{minWidth:186}}>{singleData.installment_no}</StyledTableCell>
-                    <StyledTableCell style={{minWidth:168}}>{singleData.payment_date}</StyledTableCell>
-                    <StyledTableCell style={{minWidth:308}}> {singleData.payment_rec_date}   </StyledTableCell>
-                    <StyledTableCell style={{minWidth:258}}> {singleData.payment_amt}   </StyledTableCell>
-                    <StyledTableCell style={{minWidth:167}}> {singleData.total_paid !== "" ? singleData.total_paid : ''} </StyledTableCell>
-                    <StyledTableCell style={{minWidth:235}}> {singleData.status} </StyledTableCell>                    
+                    <StyledTableCell style={{minWidth:182}}>{singleData.installment_no}</StyledTableCell>
+                    <StyledTableCell style={{minWidth:194}}>{singleData.payment_date}</StyledTableCell>
+                    <StyledTableCell style={{minWidth:298, paddingLeft: 26}}> {singleData.payment_rec_date}   </StyledTableCell>
+                    <StyledTableCell style={{minWidth:250, paddingLeft: 35}}> {singleData.payment_amt}   </StyledTableCell>
+                    <StyledTableCell style={{minWidth:175, paddingLeft: 44}}> {singleData.total_paid !== "" ? singleData.total_paid : ''} </StyledTableCell>
+                    <StyledTableCell style={{minWidth:235, paddingLeft: 46}}> {singleData.status} </StyledTableCell>                    
                   </TableRow>     
                 </div>          
                 :''                
@@ -180,24 +180,27 @@ return (
             <ExpansionPanelDetails style={{margin : '-13px 0px -23px -23px', display: 'table-row'}}>
             <Table style={{width : '100%'}}>
             <TableBody style={{width : '100%'}}>{
-            (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {              
+            (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
+              
               
             return(
+
             (singleData.installment_no == data.installment_no && data.sub_installment_no != 0) &&
               // <div style={{marginTop: -13, marginBottom: -15, marginLeft: -17, marginRight: -60, width: '100%'}}>
                 <TableRow  style={{width : '100%'}} className={data.installment_no === data.installment_before_delivery ? styleClass.highlightRow : null}>
                       {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
                       <p style={{display:'none'}}>{inc = inc + 1}</p>
                       <StyledTableCell style={{minWidth:188}}>{data.installment_no + '.' + inc}</StyledTableCell>
-                      <StyledTableCell style={{minWidth:175}}>{data.payment_date}</StyledTableCell>
-                      <StyledTableCell style={{minWidth:316}}>
+                      <StyledTableCell style={{minWidth:175, paddingLeft: 10}}>{data.payment_date}</StyledTableCell>
+                      <StyledTableCell style={{minWidth:316, paddingLeft: 40}}>
                         {data.payment_rec_date === "" && totalPaidInstallment === index  ?
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
                                 id="payment_rec_date"
                                 name="payment_rec_date"
-                                format="dd/MM/yyyy"
+                                format="dd-MM-yyyy"
+                                placeholder="DD-MM-YYYY"
                                 value={paymentRecDate}
                                 fullWidth 
                                 InputProps={{
@@ -212,7 +215,7 @@ return (
                           : data.payment_rec_date
                         }   
                       </StyledTableCell>
-                      <StyledTableCell style={{minWidth:265}}>
+                      <StyledTableCell style={{minWidth:265, paddingLeft: 30}}>
                         {data.payment_amt === "" && totalPaidInstallment === index ?
                             <TextField 
                             id="payment_amt"
@@ -232,9 +235,9 @@ return (
                           : data.payment_amt              
                         }   
                       </StyledTableCell>                            
-                      <StyledTableCell style={{minWidth:120}}> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
-                      <StyledTableCell style={{minWidth:0}}> {data.status} </StyledTableCell>
-                      <StyledTableCell style={{minWidth:0}}>
+                      <StyledTableCell style={{minWidth:120, paddingLeft: 25}}> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
+                      <StyledTableCell style={{minWidth:0, paddingLeft: 80}}> {data.status} </StyledTableCell>
+                      <StyledTableCell style={{minWidth:0, paddingLeft: 58}}>
                         <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
                       </StyledTableCell>
                       {/* {isExpansionExist === false && setExpansionHeader('')} */}
@@ -261,7 +264,8 @@ return (
                                 margin="dense"
                                 id="payment_rec_date"
                                 name="payment_rec_date"
-                                format="dd/MM/yyyy"
+                                format="dd-MM-yyyy"
+                                placeholder="DD-MM-YYYY"
                                 value={paymentRecDate}
                                 fullWidth 
                                 InputProps={{
