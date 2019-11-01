@@ -16,6 +16,7 @@ import TextField from '@material-ui/core/TextField';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
+import DetailsIcon from '@material-ui/icons/Details';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
 import CreateIcon from '@material-ui/icons/Create';
@@ -34,6 +35,7 @@ import Edit from './Edit';
 import EditBudget from '../order/EditBudget';
 import CommentIcon from '@material-ui/icons/Comment';
 import TablePagination from '@material-ui/core/TablePagination';
+import CustomerBankDetails from './CustomerBankDetails';
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
@@ -184,7 +186,8 @@ export default function CustomerList({userId, roleName}) {
   const [budgetHistoryOpen,setBudgetHistoryOpen] = useState(false);
   const [openCommentView, setOpenCommentView]  = useState(false);
   const [value, setValue] = React.useState(0); 
-
+  const [bankDetailOpen, setBankDetailOpen] = useState(false);
+  const [bankDetailArray, setBankDetailArray] = useState([]);
 
   const [activeTab, setActiveTab] = useState([]);
   const [holdTab, setHoldTab] = useState([]);
@@ -249,6 +252,23 @@ export default function CustomerList({userId, roleName}) {
     setCustomerId(data.id);
     setOpenCommentView(true);
   }
+
+  
+  function handleBankDetailClose(){
+    setBankDetailOpen(false);
+  }
+  
+  const handleBankDetailOpen = async(data) => {
+    const bankDetails = await Customer.getCustomerBankDetail({customer_id: data.id});
+    if(bankDetails == "" || bankDetails == undefined || bankDetails == [] ){
+      setBankDetailArray([]);
+    }else if(bankDetails.length > 0){
+      setBankDetailArray(bankDetails[0]);
+    }
+    setCustomerId(data.id);
+    setBankDetailOpen(true);
+  }
+
 
   const handleViewClose = () => {
     setOpenCommentView(false);
@@ -412,14 +432,14 @@ export default function CustomerList({userId, roleName}) {
             <Paper className={classes.root}>
               <div className={classes.tableWrapper}>
                 <TabPanel value={value} index={0}>
-                  {activeTab && <Active customerList={activeTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} /> }
+                  {activeTab && <Active customerList={activeTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} /> }
                 </TabPanel>              
 
                 <TabPanel value={value} index={1}>
-                  {holdTab && <Hold customerList={holdTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} /> }
+                  {holdTab && <Hold customerList={holdTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} /> }
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                  {financialHardshipTab && <FinancialHardship customerList={financialHardshipTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen}  /> } 
+                  {financialHardshipTab && <FinancialHardship customerList={financialHardshipTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
                 </TabPanel>
               </div>
             </Paper>                            
@@ -431,6 +451,7 @@ export default function CustomerList({userId, roleName}) {
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} /> : null }
       {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} customer_id={customerId} roleName={roleName} /> : null }
       {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} customer_id = {customerId}  /> :null}
+      {bankDetailOpen ?<CustomerBankDetails open={bankDetailOpen} handleClose={handleBankDetailClose} handleSnackbarClick={handleSnackbarClick} bankDetailArray={bankDetailArray} setBankDetailArray = {setBankDetailArray} customer_id={customerId} isAddingDirect={true} /> : null }
     </div>
   );
 }

@@ -123,6 +123,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
 
   const styleClass = useCommonStyles(); 
   const classes = useStyles();
+  const uid = APP_TOKEN.get().uid;
+
   const [budgetOpen, setBudgetOpen] = useState(false);
   const [customerOpen, setCustomerOpen] = useState(false);
   const [fixedOrderOpen, setFixedOrderOpen] = useState(false);
@@ -357,15 +359,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
 
         const order_id = await OrderAPI.getnewid();
         let zero = 0;
-        if(order_id == ""){
-            setInput('order_id','0000001');
+        
+        let code = uid.split('_')[1].toUpperCase();
+        if(order_id == ""){          
+            setInput('order_id',( code + '0000001'));
         }else{
           zero = 7 - (order_id[0].id.toString().length); 
           let orderId='';
           for(let i=0; i< zero ; i++){
             orderId += '0';
           }
-            setInput('order_id',(orderId + (order_id[0].id+ 1)));
+            setInput('order_id',(code + orderId + (order_id[0].id+ 1)));
         }
       } catch (error) {
         console.log(error);

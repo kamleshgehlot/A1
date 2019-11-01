@@ -10,6 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/More';
+import DetailsIcon from '@material-ui/icons/Details';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -38,6 +39,8 @@ import Customer from '../../../api/franchise/Customer';
 import UserAPI from '../../../api/User';
 import useSignUpForm from '../franchise/CustomHooks';
 import Budget from '../../auth/order/Budget'
+import CustomerBankDetails from './CustomerBankDetails';
+
 import {getDate, getCurrentDate} from '../../../utils/datetime';
 
 const RESET_VALUES = {
@@ -167,7 +170,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   const [budgetList,setBudgetList] = useState([]);
+  const [bankDetailArray, setBankDetailArray] = useState([]);
   const [budgetOpen, setBudgetOpen] = useState(false);
+  const [bankDetailOpen, setBankDetailOpen] = useState(false);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -181,6 +186,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   
   function handleBudgetOpen(){
     setBudgetOpen(true);
+  }
+
+  
+  function handleBankDetailClose(){
+    setBankDetailOpen(false);
+  }
+  
+  function handleBankDetailOpen(){
+    setBankDetailOpen(true);
   }
 
 
@@ -312,6 +326,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
       
       other_id_type: inputs.other_id_type,
       budgetData : budgetList,
+      bankDetailData : bankDetailArray,
     }
 
     let formData = new FormData();
@@ -1071,10 +1086,13 @@ return (
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Calculate Budget</InputLabel>
-                    {/* <Typography  className={classes.textsize} htmlFor="user_id">Calculate Budget</Typography> */}
-                    <Button variant={budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField} style={{marginTop : "10px"}}>Add Budget </Button>
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Calculate Budget</InputLabel>                    
+                      <Button variant={budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField} style={{marginTop : "10px"}}>Add Budget </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Bank Details</InputLabel>                    
+                      <Button variant={bankDetailArray!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBankDetailOpen}  className={classes.textField} style={{marginTop : "10px"}}>Add Bank Details </Button>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
@@ -1096,6 +1114,8 @@ return (
         </form>
       </Dialog>
       {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {''}/> : null }
+      {bankDetailOpen ?<CustomerBankDetails open={bankDetailOpen} handleClose={handleBankDetailClose} handleSnackbarClick={handleSnackbarClick} bankDetailArray={bankDetailArray} setBankDetailArray = {setBankDetailArray} customer_id={''} isAddingDirect={false} /> : null }
+      
     </div>
   );
 }

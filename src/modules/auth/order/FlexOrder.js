@@ -146,7 +146,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
         liability_fee : parseFloat(inputs.liability_fee).toFixed(2),
         weekly_total : parseFloat(inputs.weekly_total).toFixed(2),
-        frequency : parseFloat(inputs.frequency).toFixed(2),        
+        frequency :  inputs.frequency,
         each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
         before_delivery_amt : inputs.before_delivery_amt,
         bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
@@ -220,13 +220,26 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
   },[frequency]);
   
 
-
-
 const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
   (flexOrderList === null ? RESET_VALUES : flexOrderList),
   flex,
   validate
 );
+
+
+useEffect(()=>{
+  if(paymentBeforeDelivery!= ''){
+    handleRandomInput([
+      {name: 'bond_amt', value: (paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2)},
+    ]);
+  }else{
+    handleRandomInput([
+      {name: 'bond_amt', value: ''},
+    ]);
+  }  
+},[inputs.each_payment_amt]);
+
+
 console.log('inputs...',inputs);
 return (
     <div>
@@ -408,7 +421,6 @@ return (
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
-                      disabled
                       type="text"
                       margin="dense"
                       InputProps={{

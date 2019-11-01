@@ -50,6 +50,7 @@ var Customer = function (params) {
   this.searchText = params.searchText;
   this.customer_id = params.customer_id;
   this.budgetData = params.budgetData;
+  this.bankDetailData = params.bankDetailData;
   this.comment = params.comment;
 };
 
@@ -430,6 +431,75 @@ Customer.prototype.addBudget = function () {
   });
 };
 
+
+
+Customer.prototype.addBankDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+
+        const detailList = that.bankDetailData;
+        let bankDetailValues = [
+           [that.customer_id, detailList.acc_holder_name, detailList.bank_branch, detailList.bank_address, detailList.bank_code, detailList.branch_number, detailList.acc_number, detailList.suffix, 1, that.created_by]
+        ];
+        connection.query('INSERT INTO customer_bank_detail(customer_id, acc_holder_name, bank_branch, bank_address, bank_code, branch_number, acc_number, suffix, is_active, created_by) VALUES ?', [bankDetailValues], function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
+      connection.release();
+      console.log('Bank Detail Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+Customer.prototype.updateBankDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+
+        const detailList = that.bankDetailData;
+        // let bankDetailValues = [
+        //    [detailList.acc_holder_name, detailList.bank_branch, detailList.bank_address, detailList.bank_code, detailList.branch_number, detailList.acc_number, detailList.suffix, 1, that.created_by]
+        // ];
+        connection.query('UPDATE customer_bank_detail SET acc_holder_name = "'+detailList.acc_holder_name+'", bank_branch = "'+detailList.bank_branch+'", bank_address = "'+detailList.bank_address+'", bank_code = "'+detailList.bank_code+'", branch_number = "'+detailList.branch_number+'", acc_number = "'+detailList.acc_number+'", suffix = "'+detailList.suffix+'", is_active = 1, updated_by = "'+that.updated_by+'" where customer_id = "'+ that.customer_id +'"', function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+        });
+      }
+      connection.release();
+      console.log('Bank Detail Updated for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
 Customer.prototype.getSingleCustomer = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -524,6 +594,33 @@ Customer.prototype.commentList = function () {
       } else {
         console.log("Error...", error);
         reject(error);
+      }
+      connection.release();
+      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Customer.prototype.getCustomerBankDetail = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('select id, customer_id, acc_holder_name, bank_branch, bank_address, bank_code, branch_number, acc_number, suffix, is_active, status, created_by, created_at from customer_bank_detail where customer_id = "' + that.customer_id + '"', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+        });
       }
       connection.release();
       console.log('Customer Added for Franchise Staff %d', connection.threadId);

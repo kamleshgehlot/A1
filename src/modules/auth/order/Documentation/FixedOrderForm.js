@@ -54,7 +54,7 @@ export default function FixedOrderForm(data,order) {
   // console.log(franchise);
   // console.log("product", products);
   // // console.log(orderType);
-  // console.log(customer);
+  // console.log(data);
   // console.log(budget);
   // console.log(order);
   // console.log(user);

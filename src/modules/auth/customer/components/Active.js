@@ -9,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CachedIcon from '@material-ui/icons/Cached';
+import DetailsIcon from '@material-ui/icons/Details';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -98,7 +99,7 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function Active({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen }) {
+export default function Active({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen }) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
@@ -149,6 +150,11 @@ return (
                     <Tooltip title="Update Budget">                              
                       <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
                       <AccountBalanceIcon/>
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Update Bank Detail">                              
+                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleBankDetailOpen(data); }}>
+                      <DetailsIcon />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="View">

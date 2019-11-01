@@ -34,6 +34,10 @@ customerRouter.route("/search").post(validateToken, Customer.searchData);
 customerRouter.route("/postComment").post(validateToken, Customer.postComment);
 customerRouter.route("/getCommentList").post(validateToken, Customer.getCommentList);
 customerRouter.route("/getsinglecustomer").post(validateToken, Customer.getSingleCustomer);
+customerRouter.route("/getCustomerBankDetail").post(validateToken, Customer.getCustomerBankDetail);
+customerRouter.route("/addBankDetail").post(validateToken, Customer.addBankDetail);
+customerRouter.route("/updateBankDetail").post(validateToken, Customer.updateBankDetail);
+
 // userRouter.route("/getUniqueNames").get(validateToken, User.getUniqueNames);
 
 module.exports = customerRouter;

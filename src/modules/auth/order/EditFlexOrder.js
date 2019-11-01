@@ -124,7 +124,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  const [frequency, setFrequency] = useState(flexOrderList.frequency);
+  const [frequency, setFrequency] = useState('');
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(flexOrderList.before_delivery_amt);
   const [firstPaymentDate,setFirstPaymentDate] = useState(flexOrderList.first_payment);
   
@@ -148,7 +148,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       ppsr_fee : parseFloat(inputs.ppsr_fee).toFixed(2),
       liability_fee : parseFloat(inputs.liability_fee).toFixed(2),
       weekly_total : parseFloat(inputs.weekly_total).toFixed(2),
-      frequency : parseFloat(inputs.frequency).toFixed(2),
+      frequency : inputs.frequency,
       first_payment : getDate(inputs.first_payment),
       each_payment_amt : parseFloat(inputs.each_payment_amt).toFixed(2),
       bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
@@ -208,7 +208,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   useEffect(()=>{
     let eachPaymentAmt = 0;
 
-    if(frequency != ''){    
+    if(frequency != ''){
       if(frequency == 1){
         let installment = (parseFloat(product.rental) * 4);
         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
@@ -222,7 +222,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
         eachPaymentAmt = installment;          
       }
-    }     
+    }
     if(paymentBeforeDelivery!= ''){
       handleRandomInput([
         {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
@@ -237,15 +237,19 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
 
 
   const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+    flexOrderList != [] && flexOrderList != "" && flexOrderList != undefined ? flexOrderList : RESET_VALUES,
     flex,
     validate
   ); 
+  
+  useEffect(()=>{
+    if(paymentBeforeDelivery!= ''){
+      setInput('bond_amt',(paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2))
+    }else{
+      setInput('bond_amt','')
+    }  
+  },[inputs.each_payment_amt]);
 
-
-  useEffect(() => {
-    setInputsAll(flexOrderList);
-  }, []);
 
   console.log('inputs...',inputs);
   
@@ -398,7 +402,6 @@ return (
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
-                      disabled
                       type="text"
                       margin="dense"
                       InputProps={{

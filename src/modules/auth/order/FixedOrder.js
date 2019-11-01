@@ -147,12 +147,13 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
   const [frequency, setFrequency] = useState(fixedOrderList === null ? '' : fixedOrderList.frequency);
   const [duration, setDuration] = useState(fixedOrderList === null ? '' : fixedOrderList.duration);
   const [paymentBeforeDelivery,setPaymentBeforeDelivery] = useState(fixedOrderList === null ? '' : fixedOrderList.before_delivery_amt);
-  const [firstPaymentDate,setFirstPaymentDate] = useState(fixedOrderList === null ? '' : fixedOrderList.first_payment);
+  const [firstPaymentDate,setFirstPaymentDate] = useState(fixedOrderList === null ? getCurrentDate() : fixedOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
   const [fixedNull,setFixedNull] = useState(true);
+  const [bool,setBool]= useState(false);
+
 
   function fixed(e){
-    // e.preventDefault();   
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal).toFixed(2),
       cash_price : parseFloat(inputs.cash_price).toFixed(2),
@@ -226,96 +227,6 @@ function calculateNoOfPayment(value) {
     }
   }
 }
-  
-  // useEffect(() => {
-  //   if(duration != '' && frequency != '' && firstPaymentDate != ''){
-  //     let paymentDates = [];
-  //     if(frequency == 1){
-  //       let firstPayDate = new Date(firstPaymentDate);
-  //       for(let i=0; i< duration; i++){
-  //         // console.log('date',firstPayDate)
-  //         paymentDates.push(firstPayDate.toString())
-  //         firstPayDate.setMonth(firstPayDate.getMonth() + 1);                   
-  //       }        
-  //     }else if(frequency == 2){
-  //       // let date1 = new Date(firstPaymentDate);
-  //       // let date2 = new Date(firstPaymentDate);
-  //       //     date2.setDate(date2.getDate() + 15);
-  //       // for(let i=1; i <= (duration * 2); i++){
-  //       //   if(i%2 != 0){
-  //       //     // console.log('date 1',date1);
-  //       //     paymentDates.push(date1.toString())            
-  //       //   }else if(i%2 == 0){
-  //       //     // console.log('date 2',date2);
-  //       //     paymentDates.push(date2.toString())            
-
-  //       //     date1.setMonth(date1.getMonth() + 1);
-  //       //     date2.setMonth(date2.getMonth() + 1);            
-  //       //   }
-  //       // }   
-  //       let firstPayDate = new Date(firstPaymentDate);
-  //       for(let i = 1; i<=26 ; i++){
-  //         // console.log('date',firstPayDate)
-  //         paymentDates.push(firstPayDate.toString());
-  //         firstPayDate.setDate(firstPayDate.getDate() + 15);
-  //       }     
-  //     }else if(frequency == 4){
-  //       // let date1 = new Date(firstPaymentDate);
-  //       // let date2 = new Date(firstPaymentDate);
-  //       // let date3 = new Date(firstPaymentDate);
-  //       // let date4 = new Date(firstPaymentDate);
-  //       //     date2.setDate(date1.getDate() + 7);
-  //       //     date3.setDate(date3.getDate() + 14);
-  //       //     date4.setDate(date4.getDate() + 21);
-  //       // for(let i=1, j=1; i <= (duration * 4); i++, j++){
-  //       //   if(j==1){
-  //       //     // console.log('date 1',date1);
-  //       //     paymentDates.push(date1.toString())
-  //       //   }else if (j==2){
-  //       //     // console.log('date 2',date2);
-  //       //     paymentDates.push(date2.toString())
-  //       //   }else if (j==3){
-  //       //     // console.log('date 3',date3);
-  //       //     paymentDates.push(date3.toString())
-  //       //   }else if (j==4){
-  //       //     // console.log('date 4',date4);
-  //       //     paymentDates.push(date4.toString())
-  //       //     j = 0;
-  //       //   }
-          
-  //       //   if(i%4 == 0){
-  //       //     date1.setMonth(date1.getMonth() + 1);
-  //       //     date2.setMonth(date2.getMonth() + 1);            
-  //       //     date3.setMonth(date3.getMonth() + 1);            
-  //       //     date4.setMonth(date4.getMonth() + 1);            
-  //       //   }
-  //       // }
-  //       let firstPayDate = new Date(firstPaymentDate);
-  //       for(let i = 1; i<=52; i++){
-  //         // console.log('date',firstPayDate)
-  //         paymentDates.push(firstPayDate.toString());
-  //         firstPayDate.setDate(firstPayDate.getDate() + 7);
-  //       }     
-  //     }
-      
-  //     // console.log('payment dates',paymentDates);
-
-  //     setDateArray(paymentDates);  
-
-  //     // const lastPaymentDate = handleSetDateFormat(paymentDates[paymentDates.length - 1]);
-  //     const lastPaymentDate = new Date(paymentDates[paymentDates.length - 1]);
-  //     handleRandomInput([
-  //       {name: 'last_payment', value: lastPaymentDate},        
-  //     ]);
-  //   }
-
-  //   if(fixedOrderList) {
-  //     if(fixedOrderList.before_delivery_amt && Number(fixedOrderList.before_delivery_amt) > 0) {
-  //       calculateNoOfPayment(fixedOrderList.before_delivery_amt);
-  //     }
-  //   }
-  // },[duration, frequency, firstPaymentDate]);
-
 
   useEffect(() => {
     if(duration != '' && frequency != '' && firstPaymentDate != ''){
@@ -369,7 +280,6 @@ function calculateNoOfPayment(value) {
 
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
-      // const delivery_date = handleSetDateFormat(new Date(dateArray[paymentBeforeDelivery - 1]));
       let delivey_date = new Date(dateArray[paymentBeforeDelivery - 1]);
       if(fixedOrderList !== null && fixedNull === true){
         delivey_date = fixedOrderList.exp_delivery_date;
@@ -389,7 +299,7 @@ function calculateNoOfPayment(value) {
 
   
   useEffect(()=>{
-      if(frequency != '' && duration != '') {          
+      if(frequency != '' && duration != '') {
           if(frequency == 1){
           let installment = (parseFloat(product.rental) * 4);
           handleRandomInput([
@@ -440,23 +350,43 @@ function calculateNoOfPayment(value) {
     ]);
   },[inputs.ppsr_fee, inputs.liability_wavier_fee,inputs.delivery_fee, inputs.cash_price]);
   
-  
+
+  const changeBool = (bool) =>{
+    setBool(bool);
+  }
+
   useEffect(() => {
-    if(inputs.no_of_payment !== ""){
-      if(inputs.each_payment_amt != ""){
-        setInput('total_payment_amt',(Number(inputs.no_of_payment) * parseFloat(inputs.each_payment_amt)));
-      }else{
-        setInput('total_payment_amt','');
+    if(bool === true){
+      if(inputs.no_of_payment !== ""){
+        if(inputs.each_payment_amt != ""){
+          handleRandomInput([
+            {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+            {name: 'total_payment_amt', value: (Number(inputs.no_of_payment) * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+          ]);
+        }else{
+          handleRandomInput([
+            {name: 'minimum_payment_amt', value: ''},
+            {name: 'total_payment_amt', value: ''},
+          ]);
+        }
       }
     }
   },[inputs.each_payment_amt]);
   
   useEffect(() => {
-    if(inputs.no_of_payment !== ""){
-      if(inputs.total_payment_amt != ""){
-        setInput('each_payment_amt',( parseFloat(inputs.total_payment_amt) / Number(inputs.no_of_payment)));
-      }else{
-        setInput('each_payment_amt','');
+    if(bool === false){
+      if(inputs.no_of_payment !== ""){
+        if(inputs.total_payment_amt != ""){
+          handleRandomInput([
+            {name: 'each_payment_amt', value: (parseFloat(inputs.total_payment_amt) / Number(inputs.no_of_payment)).toFixed(2)},
+            {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+          ]);
+        }else{
+          handleRandomInput([
+            {name: 'minimum_payment_amt', value: ''},
+            {name: 'each_payment_amt', value: ''},
+          ]);
+        }
       }
     }
   },[inputs.total_payment_amt]);
@@ -757,7 +687,7 @@ return (
                       name="each_payment_amt"
                       // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
-                      onChange={handlePriceInput}
+                      onChange={function(e){handlePriceInput(e); changeBool(true)}}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
@@ -788,7 +718,8 @@ return (
                       name="total_payment_amt"
                       // label="total_payment_amt/Mortgage"
                       value={inputs.total_payment_amt}
-                      onChange={handlePriceInput}
+                      onChange={function(e){handlePriceInput(e); changeBool(false)}}
+                      // onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
                       // onBlur={handleInputBlur}
                       error={errors.total_payment_amt}

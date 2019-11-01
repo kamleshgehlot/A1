@@ -49,8 +49,7 @@ const register = async function (req, res, next) {
     other_id_type: customerData.other_id_type,
     user_id: req.decoded.user_id,
     budgetData: customerData.budgetData,
-
-    // customer_id: '',
+    bankDetailData : customerData.bankDetailData,
   };
 
   // console.log('CustomerParams',CustomerParams)
@@ -70,9 +69,14 @@ const register = async function (req, res, next) {
       const customerResult = await newCustomer.register();
       newCustomer.customer_id = customerResult;
 
-      if (CustomerParams.budgetData != "" && CustomerParams.customer_id != '' && CustomerParams.customer_id != 0) {
+      if (CustomerParams.budgetData != "" && newCustomer.customer_id != '' && newCustomer.customer_id != 0) {
         CustomerParams.created_by = req.decoded.id;
         await newCustomer.addBudget();
+      }
+
+      if (CustomerParams.bankDetailData != "" && newCustomer.customer_id != '' && newCustomer.customer_id != 0) {
+        CustomerParams.created_by = req.decoded.id;
+        await newCustomer.addBankDetail();
       }
 
       if (CustomerParams.email) {
@@ -189,5 +193,76 @@ const getCommentList = async function (req, res, next) {
   }
 };
 
+const getCustomerBankDetail = async function (req, res, next) {
+  console.log('req.body', req.body);
+  let CustomerParams = {
+    user_id: req.decoded.user_id,
+    customer_id: req.body.customer_id,
+  };
+  const newCustomer = new Customer(CustomerParams);
+  try {
+    const bankDetail = await newCustomer.getCustomerBankDetail();    
+    res.send(bankDetail);
+  } catch (error) {
+    next(error);
+  }
+};
 
-module.exports = { register: register, all: all, getidtypelist: getidtypelist, searchData: searchData, getSingleCustomer: getSingleCustomer, postComment: postComment, getCommentList: getCommentList };
+
+const addBankDetail = async function (req, res, next) {
+  let CustomerParams = {    
+    user_id: req.decoded.user_id,
+    customer_id: req.body.customer_id,
+    bankDetailData : req.body.bankDetailData,
+    created_by : req.decoded.id,
+  };
+  const newCustomer = new Customer(CustomerParams);
+  try {
+    const bankDetail = await newCustomer.addBankDetail();
+    if(bankDetail.insertId != 0){
+      res.send({isUpdated: 1});
+    }else{
+      res.send({isUpdated: 0});
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+const updateBankDetail = async function (req, res, next) {
+  let CustomerParams = {
+    user_id: req.decoded.user_id,
+    customer_id: req.body.customer_id,
+    bankDetailData : req.body.bankDetailData,
+    updated_by : req.decoded.id,
+  };
+  const newCustomer = new Customer(CustomerParams);
+  try {
+    const bankDetail = await newCustomer.updateBankDetail();    
+    console.log('bankDetail',bankDetail);
+    if(bankDetail.changedRows > 0){
+      res.send({isUpdated: 1});
+    }else{
+      res.send({isUpdated: 0});
+    }
+    
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+module.exports = { 
+  register: register, 
+  all: all, 
+  getidtypelist: getidtypelist, 
+  searchData: searchData, 
+  getSingleCustomer: getSingleCustomer, 
+  postComment: postComment, 
+  getCommentList: getCommentList, 
+  getCustomerBankDetail: getCustomerBankDetail,
+  addBankDetail : addBankDetail,
+  updateBankDetail : updateBankDetail,
+};

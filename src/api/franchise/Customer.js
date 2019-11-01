@@ -134,4 +134,58 @@ export default {
     }
   },
 
+  getCustomerBankDetail: async (customerId) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/getCustomerBankDetail`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: customerId,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  addBankDetail: async (params) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/addBankDetail`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: params,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  updateBankDetail: async (params) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/updateBankDetail`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: params,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
 };

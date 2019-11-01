@@ -32,7 +32,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import * as pdfmake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-
+import {getDate, getCurrentDate } from '../../../../utils/datetime'
 
 import Paper from '@material-ui/core/Paper';
 
@@ -127,8 +127,8 @@ export default function DeliveryReport({roleName}) {
   const [searchName,setSearchName] = useState('');
   const [order, setOrder] = useState([]);
   const [productList, setProductList] = useState([]);
-  const [toDate, setToDate] = useState('');
-  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState(getCurrentDate());
+  const [fromDate, setFromDate] = useState(getCurrentDate());
   const [orderReport, setOrderReport] = useState(false);
   const [reportData,setReportData] = useState([]);
   const [requiredType, setRequiredType]  = useState('');
@@ -288,7 +288,8 @@ export default function DeliveryReport({roleName}) {
                   margin="dense"
                   id="from_date"
                   name="from_date"
-                  format="MM/dd/yyyy"
+                  placeholder="DD-MM-YYYY"
+                  format="dd-MM-yyyy"
                   value={fromDate}
                   InputProps={{
                     classes: {
@@ -306,7 +307,8 @@ export default function DeliveryReport({roleName}) {
                   margin="dense"
                   id="to_date"
                   name="to_date"
-                  format="MM/dd/yyyy"
+                  placeholder="DD-MM-YYYY"
+                  format="dd-MM-yyyy"
                   value={toDate}
                   InputProps={{
                     classes: {
