@@ -146,8 +146,7 @@ export default function ViewHistoryList({historyList, roleName}) {
     <List className={classes.root}>
     {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {      
       return(
-        <div>          
-          {console.log('rows1',data)}
+        <div>                    
           <ListItem alignItems="flex-start">
             <ListItemIcon>
               <PlayArrowIcon />

@@ -109,6 +109,23 @@ const getComment = async function (req, res, next) {
 };
 
 
+
+const getBudgetComments = async function (req, res, next) {
+
+  let commentParams = {
+    customer_id: req.body.customer_id,
+    user_id : req.decoded.user_id,
+  };
+	try{
+      const newComment = new Order(commentParams);
+	    const result = await newComment.getBudgetComments();
+       res.send(result); 
+	}catch(err){
+    next(error);
+	}
+};
+
+
 const getnewid = async function(req, res, next) {
   try {
     const id = await new Order({user_id: req.decoded.user_id}).getnewid();
@@ -179,9 +196,24 @@ const getBudgetHistory = async function(req, res, next) {
 
 const updateBudget = async function(req, res, next) {  
   // console.log('budget list', req.body);
+  let orderParams ={
+    user_id : req.decoded.user_id,
+    customer_id: req.body.customer_id, 
+    budget_list: req.body.budgetList, 
+    created_by: req.decoded.id,
+  }
   try {
-    const oldBudget = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id, budget_list: req.body.budgetList, created_by: req.decoded.id}).updateBudget();
-    if(oldBudget != ""){
+    const newOrder = new Order(orderParams);
+    const result = await newOrder.updateBudget();
+    // const result = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id, budget_list: req.body.budgetList, created_by: req.decoded.id}).updateBudget();
+    console.log('dasaf',orderParams.budget_list.budget_note);
+    if(orderParams.budget_list.budget_note != "" && orderParams.budget_list.budget_note != undefined && result != ""){
+      newOrder.budget_id = result.budget_id;
+      newOrder.order_id = 0;
+      newOrder.comment = orderParams.budget_list.budget_note;
+      await newOrder.postBudgetComment();
+    }
+    if(result != ""){
       res.send({isUpdated:1}); 
     }else{
       res.send({isUpdated:0}); 
@@ -451,7 +483,8 @@ const postOrder = async function (req, res, next) {
     is_active : req.body.is_active,
     created_by: req.decoded.id,
     duration : req.body.duration,
-    
+    sales_type_id : req.body.sales_type_id,
+    renting_for_id : req.body.renting_for_id,
     converted_to : req.body.converted_to,
   };
   
@@ -468,7 +501,7 @@ const postOrder = async function (req, res, next) {
     try{
       const newOrder = new Order(orderParams);
 
-      await newOrder.postOrder();
+      const result = await newOrder.postOrder();
 
       if(req.body.converted_to !== 0){
         if(req.body.converted_name === 'lead'){
@@ -476,6 +509,13 @@ const postOrder = async function (req, res, next) {
         } else if(req.body.converted_name === 'enquiry'){
           newOrder.convertedEnquiry(function(res){});
         }
+      }
+
+      if(orderParams.budget_list.budget_note != "" && orderParams.budget_list.budget_note != undefined){
+        newOrder.budget_id = result.budget_id;
+        newOrder.order_id = result.order_id;
+        newOrder.comment = orderParams.budget_list.budget_note;
+        await newOrder.postBudgetComment();
       }
         
         // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
@@ -529,6 +569,8 @@ const editOrder = async function (req, res, next) {
       related_to : req.body.related_to,
       is_active : req.body.is_active,
       updated_by: req.decoded.id,
+      sales_type_id : req.body.sales_type_id,
+      renting_for_id : req.body.renting_for_id,
     };
     
     // if(orderParams.budget_list == null && orderParams.flexOrderType == null && orderParams.fixedOrderType == null){
@@ -554,7 +596,15 @@ const editOrder = async function (req, res, next) {
       try{
         const newOrder = new Order(orderParams);
         
-        await newOrder.editOrder();
+        const result = await newOrder.editOrder();
+
+        
+        // if(orderParams.budget_list.budget_note !== ""){
+        //   newOrder.budget_id = result.budget_id;
+        //   newOrder.comment = orderParams.budget_list.budget_note;
+        //   await newOrder.postBudgetComment();
+        // }
+        
           // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
           //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].customer_id}).getCustomerDetails().then(function (customerList) {
           //     new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
@@ -752,6 +802,25 @@ const editOrder = async function (req, res, next) {
     }
   };
 
+
+  const getSalesTypeList = async function(req, res, next) {
+    try {
+      const list = await new Order({user_id : req.decoded.user_id}).getSalesTypeList();
+      res.send(list);
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  const getRentingForList = async function(req, res, next) {
+    try {
+      const list = await new Order({user_id : req.decoded.user_id}).getRentingForList();  
+      res.send(list);
+    } catch (error) {
+      next(error);
+    }
+  };
+
 module.exports = { 
   getnewid, 
   uploadDoc, 
@@ -779,4 +848,7 @@ module.exports = {
   getDeliveredProductData,
   getProductAndCategoryName,
   submitDeliveredProduct,
+  getRentingForList,
+  getSalesTypeList,
+  getBudgetComments,
 };

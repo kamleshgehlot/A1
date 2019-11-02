@@ -147,13 +147,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [mainCategoryList, setMainCategoryList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
-  
+  const [salesTypeList, setSalesTypeList] = useState([]);
+  const [rentingForList, setRentingForList] = useState([]);
+
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
-  // const [related_to, setRelatedTo] = React.useState('');
-
-  // useEffect(() => {
-  // },[]);
+  
   
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
   
@@ -222,6 +221,29 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     handleInputChange({target:{name: 'order_date', value: date}})
   }
 
+  useEffect(() => {
+    fetchSalesTypeList();
+    fetchRentingForList();
+  },[]);
+  
+  const fetchSalesTypeList = async () => {
+    try {
+      const result = await OrderAPI.getSalesTypeList({});
+      setSalesTypeList(result);
+    } catch (error) {
+      console.log('error:',error);
+    }
+  };
+
+  const fetchRentingForList = async () => {
+    try {
+      const result = await OrderAPI.getRentingForList({});
+      setRentingForList(result);
+    } catch (error) {
+      console.log('error:',error);
+    }
+  };
+
   useEffect(()=>{    
     if(conversionData !== "" && conversionData !== undefined){
       async function fetchData() {
@@ -267,7 +289,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
 
   
   function handleChangeMultiple(event) {
-    console.log('product', event.target.value);
     handleRandomInput([ {name: 'product', value:  event.target.value}]);
     setAssignInterest(event.target.value);
 
@@ -280,14 +301,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       }
     });      
   }
-
-  // console.log('conversionData', product);
+ 
   
   function handleMainCategory(event) {
-    console.log('handleMainCategory', event.target.value);
     
     handleRandomInput([ {name: 'main_category', value:  event.target.value}]);
-    // setInput('main_category',event.target.value);
     setMainCategory(event.target.value);
     setCategoryList('');
     setSubCategoryList('');
@@ -311,7 +329,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   function handleCategory(event) {
     console.log('category', event.target.value);    
     handleRandomInput([ {name: 'category', value:  event.target.value}]);
-    // setInput('category',event.target.value);
     setCategory(event.target.value);
     setSubCategoryList('');    
     setProductList('');    
@@ -333,7 +350,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   function handleSubCategory(event) {
     console.log('sub_category', event.target.value);    
     handleRandomInput([ {name: 'sub_category', value:  event.target.value}]);
-    // setInput('sub_category',event.target.value);
     setSubCategory(event.target.value);
     setProductList('');
     setAssignInterest('');
@@ -399,7 +415,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       related_to : related_to,
       is_active : 1,
       converted_to : convertId,
-      converted_name : converted_name,      
+      converted_name : converted_name,  
+      sales_type_id : inputs.sales_type,
+      renting_for_id : inputs.renting_for,
      });
     setAssignInterest('');
     // assignInterest = '';
@@ -422,7 +440,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     addOrder,
     validate
   );
-  // console.log('iputs',inputs);
+  
 return (
   <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -600,32 +618,76 @@ return (
 
                   
                   <Grid item xs={12} sm={12}>
-
                     <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
-                    <Select
-                      // multiple
-                      value={inputs.product}
-                      onChange={handleChangeMultiple}
-                      name= 'product'
-                      id= 'product'
-                      // label='customer'
-                      fullWidth
-                      required
-                      className={classes.textsize}
-                      disabled = {subCategory == "" || budgetList == "" ? true : false}
-                      // disabled = {subCategory ==""}
-                      error={errors.product}
-                      helperText={errors.product}
-                    >    
-                    <MenuItem className={classes.textsize} disabled value={""}>Select Product</MenuItem>
-                     {(productList.length > 0 ? productList : []).map((data,index)=>{
-                      return(
-                         <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>
-                      ) 
-                     })}
-                    </Select>
-                  </Grid>
-                   <Grid item xs={12} sm={6}>
+                      <Select
+                        // multiple
+                        value={inputs.product}
+                        onChange={handleChangeMultiple}
+                        name= 'product'
+                        id= 'product'
+                        // label='customer'
+                        fullWidth
+                        required
+                        className={classes.textsize}
+                        disabled = {subCategory == "" || budgetList == "" ? true : false}
+                        // disabled = {subCategory ==""}
+                        error={errors.product}
+                        helperText={errors.product}
+                      >    
+                        <MenuItem className={classes.textsize} disabled value={""}>Select Product</MenuItem>
+                        {(productList.length > 0 ? productList : []).map((data,index)=>{
+                          return(
+                            <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>
+                          ) 
+                        })}
+                      </Select>
+                    </Grid>
+                    
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="sales_type">Sales Types *</InputLabel>
+                      <Select
+                        value={inputs.sales_type}
+                        onChange={handleInputChange}
+                        name= 'sales_type'
+                        id= 'sales_type'
+                        fullWidth
+                        required
+                        className={classes.textsize}
+                        error={errors.sales_type}
+                        helperText={errors.sales_type}
+                      >    
+                        {(salesTypeList.length > 0 ? salesTypeList : []).map((data,index)=>{
+                          return(
+                            <MenuItem className={classes.textsize} value={data.id}>{data.sales_type_name}</MenuItem>
+                          ) 
+                        })}
+                      </Select>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="renting_for">Why would you be renting these product *</InputLabel>
+                      <Select
+                        value={inputs.renting_for}
+                        onChange={handleInputChange}
+                        name= 'renting_for'
+                        id= 'renting_for'
+                        fullWidth
+                        required
+                        className={classes.textsize}
+                        // disabled = {subCategory == "" || budgetList == "" ? true : false}
+                        error={errors.renting_for}
+                        helperText={errors.renting_for}
+                      >    
+                        {(rentingForList.length > 0 ? rentingForList : []).map((data,index)=>{
+                          return(
+                            <MenuItem className={classes.textsize} value={data.id}>{data.renting_for_name}</MenuItem>
+                          ) 
+                        })}
+                      </Select>
+                    </Grid>
+
+
+                    <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={errors.order_type? classes.errorHeading : classes.labelTitle}>
                       Order Type*
                     </Typography>                    

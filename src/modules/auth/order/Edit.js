@@ -140,12 +140,13 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   const [productList, setProductList] = useState([]);
   const [assignInterest, setAssignInterest] = React.useState([]);
   const [recData, setRecData] = React.useState(editableData);
-  // const [inputs, setInputs] = useState([]);
   
   const [mainCategoryList, setMainCategoryList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
-  
+  const [salesTypeList, setSalesTypeList] = useState([]);
+  const [rentingForList, setRentingForList] = useState([]);
+
   const [mainCategory, setMainCategory] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
@@ -156,6 +157,31 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
   
   
+  
+  useEffect(() => {
+    fetchSalesTypeList();
+    fetchRentingForList();
+  },[]);
+  
+  const fetchSalesTypeList = async () => {
+    try {
+      const result = await OrderAPI.getSalesTypeList({});
+      setSalesTypeList(result);
+    } catch (error) {
+      console.log('error:',error);
+    }
+  };
+
+  const fetchRentingForList = async () => {
+    try {
+      const result = await OrderAPI.getRentingForList({});
+      setRentingForList(result);
+    } catch (error) {
+      console.log('error:',error);
+    }
+  };
+
+
   useEffect(() => {
 
     let assignRoleList = [];
@@ -370,6 +396,8 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
       is_active : 1,
       assigned_to : 0,
       related_to : related_to,
+      sales_type_id : inputs.sales_type,
+      renting_for_id : inputs.renting_for,
      });
     if(response!='invalid'){
       handleOrderRecData(response);
@@ -385,14 +413,11 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
 
   
   const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+    editableData != "" ? editableData : RESET_VALUES,
     editOrder,
     validate
   ); 
-  useEffect(() => {
-    setInputsAll(editableData);
-  }, []);
-    
+  
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -553,6 +578,51 @@ return (
                     {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
                     <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography> */}
                    {/* </Grid> */}
+
+ 
+                   <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="sales_type">Sales Types *</InputLabel>
+                      <Select
+                        value={inputs.sales_type}
+                        onChange={handleInputChange}
+                        name= 'sales_type'
+                        id= 'sales_type'
+                        fullWidth
+                        required
+                        disabled= {viewOnly}
+                        className={classes.textsize}
+                        error={errors.sales_type}
+                        helperText={errors.sales_type}
+                      >    
+                        {(salesTypeList.length > 0 ? salesTypeList : []).map((data,index)=>{
+                          return(
+                            <MenuItem className={classes.textsize} value={data.id}>{data.sales_type_name}</MenuItem>
+                          ) 
+                        })}
+                      </Select>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="renting_for">Why would you be renting these product *</InputLabel>
+                      <Select
+                        value={inputs.renting_for}
+                        onChange={handleInputChange}
+                        name= 'renting_for'
+                        id= 'renting_for'
+                        fullWidth
+                        required
+                        disabled= {viewOnly}
+                        className={classes.textsize}                        
+                        error={errors.renting_for}
+                        helperText={errors.renting_for}
+                      >    
+                        {(rentingForList.length > 0 ? rentingForList : []).map((data,index)=>{
+                          return(
+                            <MenuItem className={classes.textsize} value={data.id}>{data.renting_for_name}</MenuItem>
+                          ) 
+                        })}
+                      </Select>
+                    </Grid>
 
 
                    <Grid item xs={12} sm={6}>

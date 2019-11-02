@@ -134,7 +134,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
   function handleChangeMultiple(event) {
     setAssignRole(event.target.value);
   }
-
+  console.log('assignRole',assignRole);
   useEffect(() => {
     let assignRoleList = [];
     (inputValues.role.split(',')).map((role,index) =>{
@@ -190,24 +190,17 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
       handleEditClose(false);
     }
     else{
-      setAssignError('Password is required');
-      console.log('please')
+      setAssignError('Role is required');
     }
   };
 
-  // const handleInputChange = event => {
-  //   const { name, value } = event.target
-  //   setStaffList({ ...staffList, [name]: value })
-  // }
   
   const { inputs, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+    inputValues != "" ? inputValues : RESET_VALUES,
     addFranchiseStaff,
     validate
   ); 
-  useEffect(() => {
-    setInputsAll(inputValues);
-  }, []);
+  
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>

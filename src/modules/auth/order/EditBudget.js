@@ -34,7 +34,7 @@ import Divider from '@material-ui/core/Divider';
 
 import { APP_TOKEN } from '../../../api/Constants';
 import {useCommonStyles} from '../../common/StyleComman'; 
-
+import BudgetCommentView from './BudgetCommentView';
 
 // API CALL
 import Order from '../../../api/franchise/Order';
@@ -118,6 +118,8 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function EditBudget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, customer_id, isEditable}) {
+  console.log('customer_id',customer_id);
+
   const styleClass = useCommonStyles();  
   const classes = useStyles();
   const [inputs, setInputs] = useState(budgetList);
@@ -128,7 +130,7 @@ export default function EditBudget({ open, handleBudgetClose, setBudgetList, bud
   const [errorDebitedDay, setErrorDebitedDay] = useState('');
   const [errorPaidDay, setErrorPaidDay] = useState('');
   const [errorAfford, setErrorAfford] = useState();
-
+  const [openCommentView, setOpenCommentView]  = useState(false);
 
   function handleInputBlur(e){
     if(e.target.value===''){
@@ -167,10 +169,18 @@ export default function EditBudget({ open, handleBudgetClose, setBudgetList, bud
 
   const updateBudget = async (data) => {
     const result = await Order.updateBudget({customer_id: customer_id, budgetList : data});
-    // console.log('result..',result);
     if(result.isUpdated === 1){
       alert('Budget Updated Successfully');
     }
+  }
+
+  
+  function handleCommentViewOpen(){
+    setOpenCommentView(true);
+  }
+
+  function handleCommentViewClose() {
+    setOpenCommentView(false);
   }
 
   function handleSubmit(e){
@@ -233,6 +243,7 @@ export default function EditBudget({ open, handleBudgetClose, setBudgetList, bud
         pre_order_exp : parseFloat(oldBudget),
         paid_day : inputs.paid_day,
         debited_day : inputs.debited_day,
+        budget_note : inputs.budget_note,
       }
       setBudgetList(data);      
 
@@ -748,7 +759,6 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you get paid</InputLabel>
                     <Select
                         margin="dense"
-                        name="paid_day"
                         onChange = {handleInputChange}
                         value={inputs.paid_day}
                         name = 'paid_day'
@@ -769,10 +779,9 @@ return (
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you want to be debited</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="debited_day">Day you want to be debited</InputLabel>
                     <Select
                         margin="dense"
-                        name="debited_day"
                         onChange = {handleInputChange}
                         value={inputs.debited_day}
                         name = 'debited_day'
@@ -873,7 +882,7 @@ return (
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
                       How much you can afford to pay on weekly basis?
-                  </Typography>
+                    </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
@@ -908,6 +917,29 @@ return (
                     />
                   </Typography>
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Button variant="text" size="small" color="primary" style={{fontSize:'10px'}} onClick={handleCommentViewOpen}>View Existing Notes About Budget</Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="budget_note">Budget Note Box</InputLabel>
+                      <TextField 
+                        multiline
+                        id="budget_note"
+                        name="budget_note"
+                        value={inputs.budget_note}
+                        onChange={handleInputChange}                      
+                        fullWidth
+                        disabled={isEditable === 0}
+                        required
+                        type="text"
+                        margin="dense"
+                        InputProps={{                          
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                      />                    
+                  </Grid>
                   <Grid item xs={12} sm={12}>
                     
                     <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled={isEditable === 0}>
@@ -922,6 +954,8 @@ return (
           </div>
         </form>
       </Dialog>
+
+      {openCommentView ? <BudgetCommentView open={openCommentView} handleViewClose={handleCommentViewClose} customer_id = {customer_id} />: null}
     </div>
   );
 }

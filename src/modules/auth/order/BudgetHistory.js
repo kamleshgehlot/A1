@@ -124,9 +124,7 @@ export default function BudgetHistory({ open, handleClose, handleSnackbarClick, 
     const fetchData = async () => {
       try {
         const budget = await Order.getBudgetHistory({customer_id: customer_id});        
-        // console.log('historyResult',budget);
         setHistoryList(budget);
-
       } catch (error) {
         console.log('error',error)
       }      

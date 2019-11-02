@@ -808,30 +808,23 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
                     />
                   </Grid>
                   <Grid item xs={6} sm={1}>
-                           <Tooltip title="Click to Add Director">
-                                <IconButton color="primary"  className={classes.fab}  onClick={() => { handleDirectorList(); }} >
-                                    <AddIcon  />                                    
-                                </IconButton>
-                              </Tooltip>
-                  {/* <Fab size="small" color="primary" aria-label="Add" onClick={() => handleDirectorList()} className={classes.margin}>
-                    <AddIcon  />
-                  </Fab> */}
+                      <Tooltip title="Click to Add Director">
+                        <IconButton color="primary"  className={classes.fab}  onClick={() => { handleDirectorList(); }} >
+                            <AddIcon  />                                    
+                        </IconButton>
+                      </Tooltip>                
                   </Grid>
                   </Grid>
                   <Table >
-                    
-                          {directorList.length > 0 &&
-                          <TableHead>
-                              <StyledTableCell>#</StyledTableCell>
-                              <StyledTableCell className={classes.textsize}>Name</StyledTableCell>
-                              {/* <StyledTableCell>Email</StyledTableCell> */}
-                              {/* <StyledTableCell>Contact</StyledTableCell> */}
-                              {/* <StyledTableCell>Alt. Contact</StyledTableCell> */}
-                              <StyledTableCell  className={classes.textsize}>User _id</StyledTableCell>
-                              <StyledTableCell  className={classes.textsize}>Password</StyledTableCell>
-                              <StyledTableCell  className={classes.textsize}>Action</StyledTableCell>
-                          </TableHead>
-                          }
+                    {directorList.length > 0 &&
+                      <TableHead>
+                          <StyledTableCell>#</StyledTableCell>
+                          <StyledTableCell className={classes.textsize}>Name</StyledTableCell>
+                          <StyledTableCell  className={classes.textsize}>User _id</StyledTableCell>
+                          <StyledTableCell  className={classes.textsize}>Password</StyledTableCell>
+                          <StyledTableCell  className={classes.textsize}>Action</StyledTableCell>
+                      </TableHead>
+                    }
                       
                       
                       <TableBody>

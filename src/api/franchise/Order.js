@@ -509,4 +509,45 @@ export default {
       throw error;
     }
   },
+
+  
+  getBudgetComments:  async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getBudgetComments`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+  
+  getSalesTypeList: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getSalesTypeList`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+  
+  getRentingForList: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getRentingForList`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
 };

@@ -86,51 +86,51 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Edit({open, handleEditClose, handleSnackbarClick,  inputValues, setFranchiseList, positions}) {
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  // console.log(inputValues)
   
   const [staffList, setStaffList] = React.useState(inputValues);
-  // const [errors, setErrors] = useState({});
-  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const [assignRole, setAssignRole] = React.useState([]);
+  const [assignError, setAssignError] = React.useState();
+
+  function handleChangeMultiple(event) {
+    setAssignRole(event.target.value);
+  }
+
+  console.log('assignRole',assignRole);
+  useEffect(() => {
+    let assignRoleList = [];
+    (inputValues.position.split(',')).map((role,index) =>{
+      assignRoleList.push(role);
+    });
+    setAssignRole(assignRoleList);
+  }, []);
 
   const addStaffMaster = async () => {
-
-    // setIsSubmitting(true);
-    // console.log('st-------',staffList)
-    // setErrors(validate(staffList));
-    //  console.log('errors-------',errors)
-
-  // if (Object.keys(errors).length === 0 && isSubmitting) {
-       
-      const response = await StaffMaster.register({
-          id: inputs.id,
-          first_name: inputs.first_name,
-          last_name:inputs.last_name,
-          location:inputs.location,
-          contact:inputs.contact,
-          email:inputs.email,
-          password: inputs.password,
-          position:inputs.position,
-          created_by: 1,
-        });
-        handleSnackbarClick(true,'Franchise Updated Successfully');
-        setFranchiseList(response.staffList);
-        handleEditClose(false);
-      // }
-  
+    if(assignRole!=''){
+    const response = await StaffMaster.register({
+      id: inputs.id,
+      first_name: inputs.first_name,
+      last_name:inputs.last_name,
+      location:inputs.location,
+      contact:inputs.contact,
+      email:inputs.email,
+      password: inputs.password,
+      position: assignRole.join(),
+      created_by: 1,
+    });
+      handleSnackbarClick(true,'Franchise Updated Successfully');
+      setFranchiseList(response.staffList);
+      handleEditClose(false);
+    } else{
+      setAssignError('Position is required');
+    }
   };
+
   const { inputs, handleInputChange, handleNumberInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+    inputValues != "" ? inputValues : RESET_VALUES,
     addStaffMaster,
     validate
   ); 
-  useEffect(() => {
-    setInputsAll(inputValues);
-  }, []);
-  // console.log(inputs)
-  // const handleInputChange = event => {
-  //   const { name, value } = event.target
-  //   setStaffList({ ...staffList, [name]: value })
-  // }
+  
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -262,23 +262,23 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
                     <Select
-                      value={inputs.position}
-                      onChange={handleInputChange}
+                      multiple
+                      value={assignRole}
+                      onChange={handleChangeMultiple}
                       inputProps={{
                         name: 'position',
                         id: 'position',
                         // label:'position'
                       }}
+                      error={assignError}
+                      helperText={assignError}
                       fullWidth className={classes.textsize}
-                      error={errors.position}
-                      helperText={errors.position}
-                      // label="position"
                       required
                     > 
                       {
                         positions.map(ele =>{
                           return(
-                          <MenuItem className={classes.textsize} value={ele.id}>{ele.position}</MenuItem>
+                          <MenuItem className={classes.textsize} value={ele.id.toString()}>{ele.position}</MenuItem>
                           )
                         })
                       }

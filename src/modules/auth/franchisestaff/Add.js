@@ -215,7 +215,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   }
   else{
     setAssignError('Role is required');
-    console.log('please')
   }
   }
   };
@@ -246,7 +245,6 @@ function close(){
   
   function handleChangeMultiple(event) {
     setAssignRole(event.target.value);
-    // inputs['role']=assignRole;
   }
   
   function handleNameBlurChange(e) {
@@ -645,7 +643,6 @@ return (
                       inputProps={{
                         name: 'assign_role',
                         id: 'assign_role',
-                        // label:'assign_role'
                       }}
                       error={assignError}
                       helperText={assignError}

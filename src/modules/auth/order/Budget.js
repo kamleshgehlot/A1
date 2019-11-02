@@ -32,7 +32,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import {useCommonStyles} from '../../common/StyleComman'; 
-
+import BudgetCommentView from './BudgetCommentView';
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -113,7 +113,8 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList, customer_id}) {
-
+  console.log('customer_id',customer_id);
+  
   const classes = useStyles();
   const styleClass = useCommonStyles();
   const [inputs, setInputs] = useState(budgetList);
@@ -124,6 +125,22 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
   const [errorAfford, setErrorAfford] = useState();
   const [errorDebitedDay, setErrorDebitedDay] = useState('');
   const [errorPaidDay, setErrorPaidDay] = useState('');
+  const [openCommentView, setOpenCommentView]  = useState(false);
+
+  // const [otherIncomeSource, setOtherIncomeSource] = useState([]);
+  // const [incomeSourceName, setIncomeSourceName]  = useState(''); 
+  // const [incomeSourceAmt, setIncomeSourceAmt]  = useState(0); 
+  // const [otherIncomeError, setOtherIncomeError]  = useState();
+
+
+  
+  function handleCommentViewOpen(){
+    setOpenCommentView(true);
+  }
+
+  function handleCommentViewClose() {
+    setOpenCommentView(false);
+  }
 
   function handleInputBlur(e){
     if(e.target.value===''){
@@ -152,13 +169,35 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       });
     }
   }
-
+  
   function handleInputChange(e){
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
     });
   }
+
+  // const handleIncomeSourceAmt = (e) =>{
+  //   const validDecimalNumber = /^\d*\.?\d*$/;
+  //   if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
+  //     setIncomeSourceAmt(e.target.value);
+  //   }
+  // }
+
+  // const handleIncomeSourceName = (e) =>{
+  //   setIncomeSourceName(e.target.value);
+  // }
+
+
+
+  // // const addOtherIncome = () => {
+  // //   setOtherIncomeError
+
+  // //   otherIncomeSource.push({income_source_name : '', income_source_amt: ''});
+  // //   // console.log('oldOtherIncome',oldOtherIncome);
+  // //   // setOtherIncomeSource(oldOtherIncome);
+  // // }
+  
 
   function handleSubmit(e){
     e.preventDefault();
@@ -219,6 +258,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
         pre_order_exp : parseFloat(oldBudget),
         paid_day : inputs.paid_day,
         debited_day : inputs.debited_day,
+        budget_note : inputs.budget_note,
       }
       setBudgetList(data);
       handleBudgetClose(false);
@@ -402,6 +442,64 @@ return (
                       }}
                     />
                   </Grid>
+{/*                   
+                  <Grid item xs={12} sm={12}>
+                    <Typography variant="h6" align="right">                    
+                      <Button variant="text" size="small" color="primary" style={{fontSize:'10px'}} onClick={addOtherIncome} >Add Other Income Source</Button>
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="income_source_name"
+                      name="income_source_name"
+                      label="Other Income Source Name"
+                      value={incomeSourceName}
+                      onChange={handleIncomeSourceName}                      
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="income_source_amt"
+                      name="income_source_amt"
+                      label="Income Amount by Given Source"
+                      value={incomeSourceAmt}
+                      onChange={handleIncomeSourceAmt}                      
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={12}>
+                    <Typography variant="h6" align="right">                    
+                      <Button variant="text" size="small" color="primary" style={{fontSize:'10px'}} onClick={addOtherIncome} >Add Other Income Source</Button>
+                    </Typography>
+                  </Grid> */}
 
                   <Grid item xs={12} sm={12}>
               <Typography variant="h6" className={classes.labelTitle}>
@@ -873,6 +971,28 @@ return (
                     />
                   </Typography>
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Button variant="text" size="small" color="primary" style={{fontSize:'10px'}} onClick={handleCommentViewOpen}>View Existing Notes About Budget</Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="budget_note">Budget Note Box</InputLabel>
+                      <TextField 
+                        multiline
+                        id="budget_note"
+                        name="budget_note"
+                        value={inputs.budget_note}
+                        onChange={handleInputChange}                      
+                        fullWidth
+                        required
+                        type="text"
+                        margin="dense"
+                        InputProps={{                          
+                          classes: {
+                            input: classes.textsize,
+                          },
+                        }}
+                      /> 
+                  </Grid>
                     <Grid item xs={12} sm={12}>
                       
                       <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
@@ -887,6 +1007,8 @@ return (
           </div>
         </form>
       </Dialog>
+      {openCommentView ? <BudgetCommentView open={openCommentView} handleViewClose={handleCommentViewClose} customer_id = {customer_id} />: null}
+        
     </div>
   );
 }

@@ -35,9 +35,9 @@ export default function validate(values) {
   if (!values.password) {
     errors.password = 'Click here to get Password';
   } 
-  if (!values.position) {
-    errors.position = 'Position is required';
-  }
+  // if (!values.position) {
+  //   errors.position = 'Position is required';
+  // }
 
   return errors;
 };

@@ -95,7 +95,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   const classes = useStyles(); 
   const styleClass = useCommonStyles();
   const [ploading, setpLoading] = React.useState(false);
-
+  const [assignRole, setAssignRole] = React.useState([]);
+  const [assignError, setAssignError] = React.useState();
     
   useEffect(() => {
     inputs['password']=='' ? setInput('password', GeneratePassword()) :''
@@ -104,43 +105,35 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
 
 
   const addStaffMaster = async () => {
-    
-    if(inputs.email === chkEmail){
-      alert('Email already registered')
-    }
-    else{
-      setpLoading(true);
-      const response = await StaffMaster.register({
-        id: '',
-        first_name: inputs.first_name,
-        last_name:inputs.last_name,
-        user_id:inputs.user_id,
-        password:inputs.password,
-        location:inputs.location,
-        contact:inputs.contact,
-        email:inputs.email,
-        position:inputs.position,
-        created_by: 1,
-      });
-    
-      handleSnackbarClick(true);
-      setFranchiseList(response.staffList);
-      handleReset(RESET_VALUES);
-      setpLoading(false);
-      handleClose(false);
-    }
-  };
+      if(inputs.email === chkEmail){
+        alert('Email already registered')
+      }else if(assignRole ==''){
+        setAssignError('Role is required');
+      }
+      else{
+        setpLoading(true);
+        const response = await StaffMaster.register({
+          id: '',
+          first_name: inputs.first_name,
+          last_name:inputs.last_name,
+          user_id:inputs.user_id,
+          password:inputs.password,
+          location:inputs.location,
+          contact:inputs.contact,
+          email:inputs.email,
+          position: assignRole.join(),
+          created_by: 1,
+        });
+        assignRole.length = 0;
+        handleSnackbarClick(true);
+        setFranchiseList(response.staffList);
+        handleReset(RESET_VALUES);
+        setpLoading(false);
+        handleClose(false);
+      }        
+  }
  
-  // function handlePasswordBlurChange() {
-  //   inputs['password']=='' ? 
-  //   setInput('password', GeneratePassword())
-  //   :''
-  // }
-
-  // useEffect(() => {
-  //   setInput('user_id', generate(inputs.first_name, inputs.last_name));
-  // },);
-
+  
   function GeneratePassword() {
     return Math.random().toString(36).slice(-8);
   }
@@ -152,7 +145,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   );
 
   function handleEmailVerification(event){
-    // console.log(event.target.value);
     const email = event.target.value;
 
     const checkEmail = async () => {
@@ -170,6 +162,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
   }
 
+  function handleChangeMultiple(event) {
+    setAssignRole(event.target.value);
+  }
   
   function generate(first_name, last_name) {
 
@@ -320,24 +315,21 @@ return (
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="position">Position *</InputLabel>
                     <Select
-                      value={inputs.position}
-                      onChange={handleInputChange}
-                      error={errors.position}
-                      helperText={errors.position}
+                      multiple
+                      value={assignRole}
+                      onChange={handleChangeMultiple}
+                      error={assignError}
+                      helperText={assignError}
                       inputProps={{
                         name: 'position',
                         id: 'position',
-                        // label:'position'
                       }}
                       className={classes.textsize}
                       fullWidth
-                      // label="position"
                       required
                     >
-               
-
                       {
-                          (positions.length>0 ? positions : []).map((ele, index) => {
+                        (positions.length>0 ? positions : []).map((ele, index) => {
                           return(
                           <MenuItem  className={classes.textsize} value={ele.id}>{ele.position}</MenuItem>
                           )
