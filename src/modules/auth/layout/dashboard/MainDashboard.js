@@ -8,6 +8,7 @@ import CSR from './CSR';
 import Finance from './Finance';
 import Delivery from './Delivery';
 import MasterStaff from './MasterStaff';
+import SalesAndMarketing from './SalesAndMarketing';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,6 +28,7 @@ export default function MainDashboard({roleName, roleId, handleLeadClick, handle
        {roleName === "CSR" && <CSR roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick}/>}
        {roleName === "Finance" && <Finance roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick}/>}
        {roleName === "Delivery" && <Delivery roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick}/>}
+       {roleName === "S&M" && <SalesAndMarketing roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick}/>}
        {roleId === 0 && <MasterStaff roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick}/>}
     </div>
   );

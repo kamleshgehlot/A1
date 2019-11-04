@@ -149,6 +149,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [subCategoryList, setSubCategoryList] = useState([]);
   const [salesTypeList, setSalesTypeList] = useState([]);
   const [rentingForList, setRentingForList] = useState([]);
+  const [salesPersonList, setSalesPersonList] = useState([]);
+  
 
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
@@ -224,8 +226,18 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   useEffect(() => {
     fetchSalesTypeList();
     fetchRentingForList();
+    fetchSalesPersonList();
   },[]);
   
+  const fetchSalesPersonList = async () =>{
+    try {
+      const result = await OrderAPI.getSalesPersonList({});
+      setSalesPersonList(result);
+    } catch (error) {
+      console.log('error:',error);
+    }
+  };
+
   const fetchSalesTypeList = async () => {
     try {
       const result = await OrderAPI.getSalesTypeList({});
@@ -418,6 +430,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       converted_name : converted_name,  
       sales_type_id : inputs.sales_type,
       renting_for_id : inputs.renting_for,
+      sales_person_id : inputs.sales_person_id,
      });
     setAssignInterest('');
     // assignInterest = '';
@@ -461,7 +474,7 @@ return (
            {ploading ?  <LinearProgress />: null}
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="order_id">Order#</InputLabel>
                     <TextField 
                       InputProps={{
@@ -482,7 +495,7 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
@@ -502,6 +515,26 @@ return (
                         onChange={handleDateChange}
                       />
                     </MuiPickersUtilsProvider>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel  className={classes.textsize} htmlFor="sales_person_id">Sales Person *</InputLabel>
+                    <Select                      
+                      value={inputs.sales_person_id}
+                      onChange={handleInputChange}
+                      name= 'sales_person_id'
+                      id= 'sales_person_id'
+                      fullWidth
+                      className={classes.textsize}
+                      required                      
+                      error={errors.sales_person_id}
+                      helperText={errors.sales_person_id}
+                    > 
+                    {(salesPersonList.length > 0 ? salesPersonList : []).map((data,index)=>{
+                      return(
+                        <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>  
+                        )
+                     })}
+                    </Select>
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     
@@ -644,7 +677,7 @@ return (
                     </Grid>
                     
                     <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="sales_type">Sales Types *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="sales_type">Sales Type *</InputLabel>
                       <Select
                         value={inputs.sales_type}
                         onChange={handleInputChange}
@@ -665,7 +698,7 @@ return (
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="renting_for">Why would you be renting these product *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="renting_for">Purpose of Rent *</InputLabel>
                       <Select
                         value={inputs.renting_for}
                         onChange={handleInputChange}

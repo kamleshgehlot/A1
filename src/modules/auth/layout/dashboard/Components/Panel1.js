@@ -114,21 +114,14 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
           assign_to_role : roleId,
         });   
         setTaskList(result);
-        console.log('result task',result);
       }
       
       const resultLead = await LeadAPI.fetchLeads();
       setLeadList(resultLead.leadList);
-      console.log('Lead panel',resultLead);
-      
-
     }
     fetchData();
   },[]);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   return (
     <div className={classes.root}  style={{ width: '100%' }}>             

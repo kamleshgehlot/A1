@@ -485,6 +485,8 @@ const postOrder = async function (req, res, next) {
     duration : req.body.duration,
     sales_type_id : req.body.sales_type_id,
     renting_for_id : req.body.renting_for_id,
+    sales_person_id : req.body.sales_person_id,
+    
     converted_to : req.body.converted_to,
   };
   
@@ -571,20 +573,8 @@ const editOrder = async function (req, res, next) {
       updated_by: req.decoded.id,
       sales_type_id : req.body.sales_type_id,
       renting_for_id : req.body.renting_for_id,
+      sales_person_id : req.body.sales_person_id,
     };
-    
-    // if(orderParams.budget_list == null && orderParams.flexOrderType == null && orderParams.fixedOrderType == null){
-
-    // }
-    // else if(orderParams.flexOrderType == null && orderParams.fixedOrderType == null){
-
-    // }
-    // else if(orderParams.flexOrderType == null && orderParams.budget_list == null ){
-
-    // }
-    // else if(orderParams.fixedOrderType == null &&  orderParams.budget_list == null){
-      
-    // }
 
     if(orderParams.user_id!= '' 
     && orderParams.products_id!= '' 
@@ -599,32 +589,10 @@ const editOrder = async function (req, res, next) {
         const result = await newOrder.editOrder();
 
         
-        // if(orderParams.budget_list.budget_note !== ""){
-        //   newOrder.budget_id = result.budget_id;
-        //   newOrder.comment = orderParams.budget_list.budget_note;
-        //   await newOrder.postBudgetComment();
-        // }
-        
-          // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
-          //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].customer_id}).getCustomerDetails().then(function (customerList) {
-          //     new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
         const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-              // if(orderParams.flexOrderType!=null && orderList[0].order_type === 2){
-              //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFlexOrderDetail().then(function (flexPaymentList) {
-              //       res.send({budgetList : budgetList, flexPaymentList: flexPaymentList, orderList: orderList, customerList: customerList, order: order});
-              //   });
-              // }
-              // if(orderParams.fixedOrderType!=null && orderList[0].order_type === 1){
-              //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFixedOrderDetail().then(function (fixedPaymentList) {
-              //       res.send({budgetList : budgetList, fixedPaymentList: fixedPaymentList, orderList: orderList, customerList: customerList, order: order });
-              //   });
-              // }
+        
           res.send({ order: order});
-          // });
-          // });
-          // });
-  
-          // console.log('resultid',lastInsertId);
+        
       }catch(err){
         next(err);
       }
@@ -636,7 +604,6 @@ const editOrder = async function (req, res, next) {
 
   
   const submitDeliveredProduct = async function (req, res, next) {
-    // console.log('req.body',req.body);
     let orderParams = {
       id : req.body.id,
       user_id: req.decoded.user_id,  
@@ -773,6 +740,14 @@ const editOrder = async function (req, res, next) {
       next(error);
     }
   };
+  const getSalesPersonList = async function(req, res, next) {
+    try {
+      const list = await new Order({user_id : req.decoded.user_id}).getSalesPersonList();
+      res.send(list);
+    } catch (error) {
+      next(error);
+    }
+  };  
   
   const getRentingForList = async function(req, res, next) {
     try {
@@ -812,5 +787,6 @@ module.exports = {
   submitDeliveredProduct,
   getRentingForList,
   getSalesTypeList,
+  getSalesPersonList,
   getBudgetComments,
 };

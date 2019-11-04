@@ -627,88 +627,107 @@ export default function ClippedDrawer(props) {
           :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
 
-        {roles.find(role => role === 'CSR' || role === 'Finance' || role === 'Delivery' || role === 'HR')
+        {roles.find(role => role === 'CSR' || role === 'Finance' || role === 'Delivery' || role === 'HR' || role === 'S&M')
         && ( 
           <TreeView
             className={classes.treeRoot}
-            defaultExpanded={["1","2","3"]}
+            defaultExpanded={["1","2","3","4"]}
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
+            {roles.find(role => role === 'S&M')
+            ?  
+            <StyledTreeItem nodeId="1" labelText="Sales &amp; Marketing"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
+                <Tab roleName="S&M" roleId="7" nodeId="5" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/>
+
+                <Tab roleName="S&M" nodeId="6" handleClick={handleEnquiryClick} labelIcon={EnquiryIcon} labelText="Manage Enquiry"/> 
+
+                <Tab roleName="S&M" nodeId="7" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
+                
+                <Tab roleName="S&M" nodeId="8" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
+               
+              </StyledTreeItem>
+            :<StyledTreeItem style={{"display": 'none'}} nodeId="1" labelText="" labelIcon={AccountCircleIcon} /> 
+            }
+
+
             {roles.find(role => role === 'CSR')
             ?  
-              <StyledTreeItem nodeId="1" labelText="CSR"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
-                <Tab roleName="CSR" roleId="3" nodeId="4" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
+              <StyledTreeItem nodeId="2" labelText="CSR"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
+                <Tab roleName="CSR" roleId="3" nodeId="9" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
 
-                <Tab roleName="CSR" nodeId="5" handleClick={handleCustomerClick} labelIcon={CustomerIcon} labelText="Manage Customer"/> 
+                <Tab roleName="CSR" nodeId="10" handleClick={handleCustomerClick} labelIcon={CustomerIcon} labelText="Manage Customer"/> 
                    
-                <Tab roleName="CSR" nodeId="6" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
+                <Tab roleName="CSR" nodeId="11" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
 
-                <Tab roleName="CSR" nodeId="7" handleClick={handleEnquiryClick} labelIcon={EnquiryIcon} labelText="Manage Enquiry"/> 
+                <Tab roleName="CSR" nodeId="12" handleClick={handleEnquiryClick} labelIcon={EnquiryIcon} labelText="Manage Enquiry"/> 
 
-                <Tab roleName="CSR" nodeId="8" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
+                <Tab roleName="CSR" nodeId="13" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
                
-                <Tab roleName="CSR" nodeId="9" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
+                <Tab roleName="CSR" nodeId="14" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
                 
-                <Tab roleName="CSR" nodeId="21" handleClick={handleCsrTaskReportClick} labelIcon={TaskIcon} labelText="Generate Task Report"/>
+                <Tab roleName="CSR" nodeId="15" handleClick={handleCsrTaskReportClick} labelIcon={TaskIcon} labelText="Generate Task Report"/>
 
-                <StyledTreeItem nodeId="22" labelText="Download Doc"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}>  
+                <StyledTreeItem nodeId="16" labelText="Download Doc"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}>  
                   <a href={API_URL + "/api/download?path=ApplicationFiles/CustomerDeclaration.pdf"} download  >
-                    <StyledTreeItem nodeId="23" labelText="Customer Declaration"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon} />
+                    <StyledTreeItem nodeId="17" labelText="Customer Declaration"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon} />
                   </a>
                   <a href={API_URL + "/api/download?path=ApplicationFiles/EasyDebit.pdf"}  download >
-                    <StyledTreeItem nodeId="24" labelText="EasyDebit Form"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                    <StyledTreeItem nodeId="18" labelText="EasyDebit Form"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
                   </a>
                   <a href={API_URL + "/api/download?path=ApplicationFiles/InsuranceForm.pdf"}  download >
-                    <StyledTreeItem nodeId="25" labelText="Insurance Form"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                    <StyledTreeItem nodeId="19" labelText="Insurance Form"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
                   </a>
                   <a href={API_URL + "/api/download?path=ApplicationFiles/NoticeOfCancellation.pdf"}  download >
-                    <StyledTreeItem nodeId="25" labelText="Notice of Cancellation "  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                    <StyledTreeItem nodeId="20" labelText="Notice of Cancellation "  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
                   </a>
                   <a href={API_URL + "/api/download?path=ApplicationFiles/Specification.pdf"}  download >
-                    <StyledTreeItem nodeId="26" labelText="Specification"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
+                    <StyledTreeItem nodeId="21" labelText="Specification"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PDFIcon}/>
                   </a>
 
                 </StyledTreeItem>
              
               </StyledTreeItem>
-            :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
+            :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> 
+            }
 
             {roles.find(role => role === 'Finance')            
               ?
-              <StyledTreeItem nodeId="2" labelText="Finance"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FinanceIcon}>  
+              <StyledTreeItem nodeId="3" labelText="Finance"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FinanceIcon}>  
                  
-                 <Tab roleName="Finance" roleId="4" nodeId="10" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
+                 <Tab roleName="Finance" roleId="4" nodeId="22" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
                  
-                 <Tab roleName="Finance" nodeId="11" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
+                 <Tab roleName="Finance" nodeId="23" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
               
-                 <Tab roleName="Finance" nodeId="12" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
+                 <Tab roleName="Finance" nodeId="24" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
 
-                 <Tab roleName="Finance" nodeId="13" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
+                 <Tab roleName="Finance" nodeId="25" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
 
-                 <Tab roleName="Finance" nodeId="14" handleClick={handleFinanceReportClick} labelIcon={TaskIcon} labelText="Generate Report"/> 
+                 <Tab roleName="Finance" nodeId="26" handleClick={handleFinanceReportClick} labelIcon={TaskIcon} labelText="Generate Report"/> 
 
               </StyledTreeItem>
-            :<StyledTreeItem style={{"display": 'none'}} nodeId="3" labelText="" labelIcon={AccountCircleIcon} /> }
+            :<StyledTreeItem style={{"display": 'none'}} nodeId="3" labelText="" labelIcon={AccountCircleIcon} /> 
+            }
             
 
             {roles.find(role => role === 'Delivery')
             ?
-              <StyledTreeItem nodeId="3" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
+              <StyledTreeItem nodeId="27" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
 
-                <Tab roleName="Delivery" roleId="6" nodeId="15" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
+                <Tab roleName="Delivery" roleId="6" nodeId="28" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
 
-                <Tab roleName="Delivery" nodeId="16" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
+                <Tab roleName="Delivery" nodeId="29" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
 
-                <Tab roleName="Delivery" nodeId="17" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
+                <Tab roleName="Delivery" nodeId="30" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
 
-                <Tab roleName="Delivery" nodeId="18" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
+                <Tab roleName="Delivery" nodeId="31" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
 
-                <Tab roleName="Delivery" nodeId="19" handleClick={handleDeliveryReportClick} labelIcon={TaskIcon} labelText="Generate Report"/> 
+                <Tab roleName="Delivery" nodeId="32" handleClick={handleDeliveryReportClick} labelIcon={TaskIcon} labelText="Generate Report"/> 
 
               </StyledTreeItem>
-            :<StyledTreeItem style={{"display": 'none'}} nodeId="4" labelText="" labelIcon={AccountCircleIcon} /> }
+            :<StyledTreeItem style={{"display": 'none'}} nodeId="4" labelText="" labelIcon={AccountCircleIcon} /> 
+            }
           </TreeView>
          )}  
       </Drawer>  

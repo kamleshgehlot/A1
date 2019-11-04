@@ -28,6 +28,7 @@ var Order = function (params) {
   this.related_to = params.related_to;
   this.renting_for_id = params.renting_for_id,
   this.sales_type_id = params.sales_type_id,
+  this.sales_person_id = params.sales_person_id,
 
   this.lastInsertId = params.lastInsertId; 
   this.budget_id = params.budgetId;
@@ -99,9 +100,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, 1, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, 1, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           // console.log('order inserted', rows.insertId);
                           resolve({order_id: rows.insertId, budget_id : budget_id});
@@ -126,9 +127,9 @@ Order.prototype.postOrder = function () {
                       const lastInsertId = rows.insertId;
                       // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to,  that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date,  flexValues.exp_delivery_date, flexValues.exp_delivery_time, 1, that.is_active, that.created_by]
+                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date,  flexValues.exp_delivery_date, flexValues.exp_delivery_time, 1, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           resolve({order_id: rows.insertId, budget_id : budget_id});
                         } else {
@@ -185,19 +186,12 @@ Order.prototype.editOrder = function () {
             if (!error) {
                 if(that.fixedOrderType!=null){
                   const fixedValues = that.fixedOrderType;
-                  // let fixedOrderValues =[
-                  //   [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_at, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
-                  // ];
+                 
                   connection.query('UPDATE fixed_order set int_unpaid_bal = "'+fixedValues.int_unpaid_bal+'", cash_price = "'+fixedValues.cash_price+'", delivery_fee = "'+fixedValues.delivery_fee+'", ppsr_fee = "'+fixedValues.ppsr_fee+'", liability_wavier_fee = "'+fixedValues.liability_wavier_fee+'", frequency = "'+fixedValues.frequency+'", first_payment = "'+fixedValues.first_payment+'", last_payment = "'+fixedValues.last_payment+'", duration = "'+fixedValues.duration+'", no_of_payment = "'+fixedValues.no_of_payment+'", each_payment_amt = "'+fixedValues.each_payment_amt+'", total_payment_amt = "'+fixedValues.total_payment_amt+'", before_delivery_amt = "'+fixedValues.before_delivery_amt+'", exp_delivery_date = "'+fixedValues.exp_delivery_date+'", exp_delivery_time = "'+fixedValues.exp_delivery_time+'", minimum_payment_amt = "'+fixedValues.minimum_payment_amt+'", interest_rate = "'+fixedValues.interest_rate+'", interest_rate_per = "'+fixedValues.interest_rate_per+'", total_interest = "'+fixedValues.total_interest+'", is_active = "'+that.is_active+'", updated_by ="'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
                     if (!error) {
-                      // const lastInsertId = rows.insertId;
-                      // // console.log('fixed ..id', rows.insertId);
-                      // let orderValues = [
-                      //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
-                      // ];
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+fixedValues.exp_delivery_date+'", delivery_time = "'+fixedValues.exp_delivery_time+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                      
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_person_id = "'+ that.sales_person_id +'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+fixedValues.exp_delivery_date+'", delivery_time = "'+fixedValues.exp_delivery_time+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
                         if (!error) {
-                          // console.log('order inserted', rows.insertId);
                           resolve(rows);
                         } else {
                           console.log("Error...", error);
@@ -212,20 +206,11 @@ Order.prototype.editOrder = function () {
                 } 
                 if(that.flexOrderType!=null){
                   const flexValues = that.flexOrderType;
-                  // let flexOrderValues =[
-                  //   [that.customer_id, flexValues.goods_rent_price, flexValues.ppsr_fee, flexValues.liability_fee, flexValues.weekly_total, flexValues.frequency, flexValues.first_payment, flexValues.no_of_payment, flexValues.each_payment_amt, flexValues.total_payment_amt, flexValues.before_delivery_amt, flexValues.exp_delivery_at, flexValues.bond_amt, that.is_active, that.created_by]
-                  // ];
+                                    
                   connection.query('UPDATE flex_order set goods_rent_price = "'+flexValues.goods_rent_price+'", ppsr_fee = "'+flexValues.ppsr_fee+'", liability_fee = "'+flexValues.liability_fee+'", weekly_total = "'+flexValues.weekly_total+'", frequency = "'+flexValues.frequency+'", first_payment = "'+flexValues.first_payment+'", each_payment_amt = "'+flexValues.each_payment_amt+'", before_delivery_amt = "'+flexValues.before_delivery_amt+'", exp_delivery_date = "'+flexValues.exp_delivery_date+'", exp_delivery_time = "'+flexValues.exp_delivery_time+'", bond_amt = "'+flexValues.bond_amt+'", is_active = "'+that.is_active+'", updated_by = "'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
                     if (!error) {
-                      // const lastInsertId = rows.insertId;
-                      // console.log('fixed ..id', rows.insertId);
-                      // let orderValues = [
-                      //   [that.order_id, that.customer_id, that.products_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, that.is_active, that.created_by]
-                      // ];
-
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+flexValues.exp_delivery_date+'", delivery_time = "'+flexValues.exp_delivery_time+'",  is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
-                        if (!error) {
-                          // console.log('order inserted', rows.insertId);
+                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_person_id = "'+ that.sales_person_id +'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+flexValues.exp_delivery_date+'", delivery_time = "'+flexValues.exp_delivery_time+'",  is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                        if (!error) {                          
                           resolve(rows);
                         } else {
                           console.log("Error...", error);
@@ -812,7 +797,7 @@ Order.prototype.getOrderList = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
-          connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id INNER JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id INNER JOIN sales_type_list as stl ON o.sales_type_id = stl.id ORDER BY o.id DESC',function (error, rows, fields) {
+          connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name, o.sales_person_id, u.name as sales_person_name from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id INNER JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id INNER JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id ORDER BY o.id DESC',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -1458,6 +1443,37 @@ Order.prototype.getRentingForList = function () {
   });
 };
 
+
+
+
+Order.prototype.getSalesPersonList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+           connection.query('select id, name, user_id from user where status = 1 AND role_id LIKE "%7%"',function (error, rows, fields) {
+              if (!error) {              
+                resolve(rows);
+              } else {
+                console.log("Error...", error);
+                reject(error);                      
+              }
+                  });
+        } else {
+          console.log("Error...", error);
+          reject(error);
+        }
+          connection.release();
+          console.log('Order Added for Franchise Staff %d', connection.threadId);
+        });
+  }).catch((error) => {
+    throw error;
+  });
+};
 
 
 

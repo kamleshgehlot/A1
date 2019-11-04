@@ -322,14 +322,14 @@ export default function Enquiry({roleName}) {
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
-                {onGoingList && <OnGoing enquiryList={onGoingList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry} handleClickOrderOpen={handleClickOrderOpen} /> }
+                {onGoingList && <OnGoing enquiryList={onGoingList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry} handleClickOrderOpen={handleClickOrderOpen} roleName={roleName} /> }
               </TabPanel>              
 
               <TabPanel value={value} index={1}>
-                {convertedList && <Converted enquiryList={convertedList} productList={productList} /> }
+                {convertedList && <Converted enquiryList={convertedList} productList={productList}  roleName={roleName} /> }
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {archivedList && <Archived enquiryList={archivedList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry} /> } 
+                {archivedList && <Archived enquiryList={archivedList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry}  roleName={roleName} /> } 
               </TabPanel>
             </Paper>
           </Grid>

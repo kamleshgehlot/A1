@@ -114,7 +114,8 @@ function TabPanel(props) {
   );
 }
 
-export default function Open({enquiryList, productList, handleDeleteEnquiry, handleClickOrderOpen }) {
+export default function Open({enquiryList, productList, handleDeleteEnquiry, handleClickOrderOpen,  roleName}) {
+  console.log('rolens',roleName);
   const styleClass = useCommonStyles();
   const classes = useStyles();
 
@@ -155,12 +156,14 @@ return (
                   })
                 }                                  
             </StyledTableCell>
-            <StyledTableCell>             
+            <StyledTableCell>   
+              {roleName !== 'S&M' &&
               <Tooltip title="Convert into Order">                              
                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickOrderOpen(data); }}>
                   <CachedIcon />
                 </IconButton>
               </Tooltip>     
+              }
               <Tooltip title="Archive Enquiry">                              
                 <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleDeleteEnquiry(data, true); }}>
                   <DeleteIcon />

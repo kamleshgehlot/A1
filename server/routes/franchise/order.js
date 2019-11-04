@@ -75,5 +75,7 @@ orderRouter.route("/submitDeliveredProduct").post(validateToken, Order.submitDel
 orderRouter.route("/getSalesTypeList").get(validateToken, Order.getSalesTypeList);
 orderRouter.route("/getRentingForList").get(validateToken, Order.getRentingForList);
 orderRouter.route("/getBudgetComments").post(validateToken, Order.getBudgetComments);
+orderRouter.route("/getSalesPersonList").get(validateToken, Order.getSalesPersonList);
+
 
 module.exports = orderRouter;

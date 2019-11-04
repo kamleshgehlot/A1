@@ -34,5 +34,9 @@ export default function validate(values) {
   if (!values.customer_type) {
     errors.order_type = 'Order Type is required';
   }
+  if (!values.sales_person_id) {
+    errors.sales_person_id = 'Sales Person is required';
+  }
+  
   return errors;
 };

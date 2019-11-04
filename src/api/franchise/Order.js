@@ -550,4 +550,16 @@ export default {
       throw error;
     }
   },
+
+  getSalesPersonList: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getSalesPersonList`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
 };
