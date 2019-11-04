@@ -53,11 +53,11 @@ export default function FixedOrderForm(data,order) {
 
   // console.log(franchise);
   // console.log("product", products);
-  // // console.log(orderType);
+  // console.log(orderType);
   // console.log(data);
   // console.log(budget);
   // console.log(order);
-  // console.log(user);
+  console.log(order);
 
  
 
@@ -94,7 +94,7 @@ export default function FixedOrderForm(data,order) {
                             { text: 'Date: ' + getCurrentDateDDMMYYYY(), style: styles.Header3Center, bold: true, alignment: screenLeft }, 
                             { text: 'Team Leader: ' + user.director_name, style: styles.Header3Center, bold: true, alignment: screenLeft }, 
                             { text: 'Salesperson: ' + user.name , style: styles.Header3Center, bold: true, alignment: screenLeft }, 
-                            { text: 'Sales Type: ', style: styles.Header3Center, bold: true, alignment: screenLeft }, 
+                            { text: 'Sales Type: ' + order.sales_type_name, style: styles.Header3Center, bold: true, alignment: screenLeft }, 
                           ]
                         ]
                       },                      

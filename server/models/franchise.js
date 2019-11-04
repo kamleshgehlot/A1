@@ -83,7 +83,8 @@ Franchise.prototype.register = function (newUser) {
                   [3, 'CSR', 1, 1],
                   [4, 'Finance', 1, 1],
                   [5, 'Delivery', 1, 1],
-                  [6, 'HR', 1, 1]
+                  [6, 'HR', 1, 1],
+                  [7, 'S&M', 1, 1]
                 ]
 
                 let idTypeData = [

@@ -403,6 +403,7 @@ return (
                       helperText={errors.each_payment_amt}
                       fullWidth
                       type="text"
+                      disabled = {viewOnly}                    
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,

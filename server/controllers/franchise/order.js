@@ -720,36 +720,18 @@ const editOrder = async function (req, res, next) {
       };
       
       if(orderParams.order_id!= '' || orderParams.order_id != null){
-        // console.log('hello.',req.body.data);
         try{
+
           const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id, customer_id: req.body.data.customer_id}).getBudget();
-              // console.log('budget..',budget)
+          const budgetComment = await new Order({user_id : req.decoded.user_id, customer_id: req.body.data.customer_id}).getBudgetComments();
           const flexOrder = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.data.order_type_id}).getFlexOrder();
-              // console.log('flexOrder..',flexOrder)
           const customer = await new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails();
-                    // console.log('customer..',customer)
           const franchise = await new Order({user_id : req.decoded.user_id}).getCompanyDetail();
-                      // console.log('franchise..',franchise)
-                        // console.log('product..',product)
           const product = await new Order({products_id: req.body.data.product_id}).getProductDetail();
-                          // console.log('product..',product)
           const user = await new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail();
-                            // console.log('user..',user)
-          res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product, user: user });
-              // new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
-              // res.send({ order , oldBudget}); 
-            // });
-          
-          // const newOrder = new Order(orderParams);
-          //     newOrder.getFlexOrderDataForPDF().then(function(result){
-          //           console.log('resulut===dd', result);
-          //       //  new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
-          //       //       new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-             
-          //       //         res.send({ order: order});
-          //       //   });
-          //       // });
-          //     });
+
+          res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product, user: user, budgetComment: budgetComment });
+
       }catch(err){
         next(err);
       }
@@ -766,36 +748,16 @@ const editOrder = async function (req, res, next) {
     };
       
     if(orderParams.order_id!= '' || orderParams.order_id != null){
-      // console.log('hello.',orderParams);
       try{
         const budget = await new Order({user_id : req.decoded.user_id, budgetId: req.body.data.budget_id, customer_id: req.body.data.customer_id}).getBudget();
-            // console.log('budget..',budget)
+        const budgetComment = await new Order({user_id : req.decoded.user_id, customer_id: req.body.data.customer_id}).getBudgetComments();
         const fixedOrder = await  new Order({user_id : req.decoded.user_id, fixedOrderId: req.body.data.order_type_id}).getFixedOrder();
-            // console.log('flexOrder..',flexOrder)
         const customer = await new Order({user_id : req.decoded.user_id, lastInsertId : req.body.data.customer_id}).getCustomerDetails();
-                  // console.log('customer..',customer)
         const franchise = await new Order({user_id : req.decoded.user_id}).getCompanyDetail();
-                    // console.log('franchise..',franchise)
-                      // console.log('product..',product)
         const product = await new Order({products_id: req.body.data.product_id}).getProductDetail();
-                        // console.log('product..',product)
         const user = await new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail();
-                          // console.log('user..',user)
-        res.send({ budget: budget, fixedOrder:fixedOrder, customer: customer, franchise: franchise, product:product, user: user });
-            // new Order({user_id : req.decoded.user_id, budgetId: req.body.budgetId, customer_id:  order[0].customer_id}).getOldBudget().then(function (oldBudget) {
-            // res.send({ order , oldBudget}); 
-          // });
-        
-        // const newOrder = new Order(orderParams);
-        //     newOrder.getFlexOrderDataForPDF().then(function(result){
-        //           console.log('resulut===dd', result);
-        //       //  new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
-        //       //       new Order({user_id : req.decoded.user_id}).getOrderList().then(function (order) {
-            
-        //       //         res.send({ order: order});
-        //       //   });
-        //       // });
-        //     });
+        res.send({ budget: budget, fixedOrder:fixedOrder, customer: customer, franchise: franchise, product:product, user: user, budgetComment: budgetComment });
+
       }catch(err){
         next(err);
       }

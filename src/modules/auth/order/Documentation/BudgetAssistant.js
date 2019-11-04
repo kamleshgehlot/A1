@@ -2,6 +2,22 @@ import { logo } from '../../../common/Logo.js';
 import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } from '../../../../utils/datetime';
 import { styles } from './Styles.js';
 
+function budgetComment(comments){
+  var body =[];
+
+  body.push([
+    { text: 'ADDITIONAL COMMENTS', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor:  '#C5C7C0'  }, 
+  ]);
+
+  comments.forEach(function(comment){
+    body.push([
+      { text: comment.comment, style: styles.margins, bold: true, alignment: screenLeft,  fontSize:8 }, 
+    ])
+  })
+  return body;
+}
+
+
 export default function layout(data,order) {
 
   const franchise = data.franchise;
@@ -15,9 +31,8 @@ export default function layout(data,order) {
   // console.log("product", products);
   // console.log(orderType);
   // console.log(customer);
-  console.log('budget==',budget);
   // console.log(order);
-  console.log(data);
+  // console.log(data);
 
   var dd = {
     content: 
@@ -196,12 +211,12 @@ export default function layout(data,order) {
                       body: [
                         [
                           { text: 'Why would you be renting/buying these Product(s)?', style: styles.Header1Center, italics: true, bold: true, alignment: screenLeft, fillColor: '#C5C7C0' }, 
-                          { text: 'Personal Use', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
-                          { text: 'Liesure', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
-                          { text: 'Family', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
-                          { text: 'Gift', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
-                          { text: 'Essential', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
-                          { text: 'Other', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
+                          { text: 'Personal Use', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor: order.renting_for ===  1 ? '#C5C7C0' : '' }, 
+                          { text: 'Liesure', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor: order.renting_for ===  2 ? '#C5C7C0' : ''  }, 
+                          { text: 'Family', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor: order.renting_for ===  3 ? '#C5C7C0' : ''  }, 
+                          { text: 'Gift', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor: order.renting_for ===  4 ? '#C5C7C0' : ''  }, 
+                          { text: 'Essential', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor: order.renting_for ===  5 ? '#C5C7C0' : ''  }, 
+                          { text: 'Other', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor: order.renting_for ===  6 ? '#C5C7C0' : ''  }, 
                         ],                        
                       ]
                     },
@@ -214,13 +229,14 @@ export default function layout(data,order) {
                     border: [true, false, true, false],
                     table: {
                       widths: ['*'], 
-                      body: [
-                        [
-                          { text: 'Additional Comments\n', style: styles.Header1Center, bold: true, alignment: screenLeft }, 
-                        ],
-                        [{}],[{}],[{}],[{}],
+                      body: budgetComment(data.budgetComment),
+                      // [
+                      //   [
+                      //     { text: 'ADDITIONAL COMMENTS', style: styles.Header1Center, bold: true, alignment: screenLeft, fillColor:  '#C5C7C0'  }, 
+                      //   ],
+                      //   [{}],[{}],[{}],[{}],
                         
-                      ]
+                      // ]
                     },
                     layout: {                                           
                       paddingBottom: function(i, node) { return 15; }, 

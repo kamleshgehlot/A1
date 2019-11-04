@@ -4,10 +4,14 @@ export default function validate(values) {
   let errors = {};
   if (values.acc_holder_name=="") {
     errors.acc_holder_name = 'Account Holder Name is required';
+  }else if(!validString.test(values.acc_holder_name)){
+    errors.acc_holder_name = 'Account Holder Name is invalid';
   }
   if (!values.bank_branch) {
     errors.bank_branch = 'Branch Name is required';
-  } 
+  } else if(!validString.test(values.bank_branch)){
+    errors.bank_branch = 'Branch Name is invalid';
+  }
   if (!values.bank_address) {
     errors.bank_address = 'Bank Address is required';
   } 

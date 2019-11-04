@@ -261,6 +261,9 @@ return (
                   required
                   type="text"
                   margin="dense"
+                  onInput={(e)=>{ 
+                    e.target.value =(e.target.value).toString().slice(0,2)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -281,6 +284,9 @@ return (
                   required
                   type="text"
                   margin="dense"
+                  onInput={(e)=>{ 
+                    e.target.value =(e.target.value).toString().slice(0,4)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -301,6 +307,9 @@ return (
                   required
                   type="text"
                   margin="dense"
+                  onInput={(e)=>{ 
+                    e.target.value =(e.target.value).toString().slice(0,7)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -321,6 +330,9 @@ return (
                   required
                   type="text"
                   margin="dense"
+                  onInput={(e)=>{ 
+                    e.target.value =(e.target.value).toString().slice(0,2)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
