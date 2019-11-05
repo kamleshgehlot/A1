@@ -15,37 +15,31 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
 import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import BudgetCommentView from './BudgetCommentView';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip'; 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 
 import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
 
+import validate from '../../common/validation/BudgetValidation';
 import useSignUpForm from '../franchise/CustomHooks';
-import { FormLabel } from '@material-ui/core';
+import { async } from 'q';
 
-const RESET_VALUES = {
-  
-};
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -62,10 +56,6 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(-3),
   },
   labelTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),
     marginTop: 15,
@@ -105,6 +95,9 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     fontSize: theme.typography.pxToRem(12),
   },
+  marginIconBtn: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -113,27 +106,131 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList, customer_id}) {
-  console.log('customer_id',customer_id);
   
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  const [inputs, setInputs] = useState(budgetList);
+  
   const [surplusBool, setSurplusBool] = useState();
   const [oldBudgetList,setOldBudgetList] = useState([]);
-  const [oldBudget, setOldBudget] = useState(0);
-  const [errorSurplus, setErrorSurplus] = useState();
-  const [errorAfford, setErrorAfford] = useState();
-  const [errorDebitedDay, setErrorDebitedDay] = useState('');
-  const [errorPaidDay, setErrorPaidDay] = useState('');
+  const [oldBudget, setOldBudget] = useState(0);  
   const [openCommentView, setOpenCommentView]  = useState(false);
+  const [otherIncome, setOtherIncome] = useState([]);
+  const [otherExpenses, setOtherExpenses] = useState([]);
+ 
+  function handleInputBlur(e){
+    if(e.target.value===''){
+      setInput([e.target.name], 0);
+    }
+  }
 
-  // const [otherIncomeSource, setOtherIncomeSource] = useState([]);
-  // const [incomeSourceName, setIncomeSourceName]  = useState(''); 
-  // const [incomeSourceAmt, setIncomeSourceAmt]  = useState(0); 
-  // const [otherIncomeError, setOtherIncomeError]  = useState();
-
+  function handleInputFocus(e){
+    if(e.target.value==='0'){
+      setInput([e.target.name], '');     
+    }
+  }
 
   
+  const fetchExistingBudget = async () => {
+    try {
+      const order = await Order.getExistingBudget({customer_id: customer_id});   
+      setOldBudgetList(order);
+      if(order.length > 0 && budgetList.length === 0 ){ 
+        handleReset(order[0]);
+        setPrimaryValues(order[0]);
+      }
+    } catch (error) {
+      console.log('Error..',error);
+    }
+  }
+  
+  const { inputs, handleInputChange,  handleRandomInput, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+    budgetList,
+    submit,
+    validate
+  );
+
+  console.log('inputs',inputs)
+
+  useEffect(() => {
+    fetchExistingBudget();
+  },[]);
+
+
+  function setPrimaryValues(dataRow){
+
+    inputs.other_expenses = '';
+    inputs.other_expenses_amt = '';
+    inputs.other_incomes = '';
+    inputs.other_income_amt = '';      
+    
+    if( 
+      dataRow.other_income != "" && 
+      dataRow.other_income != undefined && 
+      dataRow.other_income != null && 
+      dataRow.other_income != []
+      ){        
+        setOtherIncome(JSON.parse(dataRow.other_income));
+      }
+
+    if( 
+        dataRow.other_expenditure != "" && 
+        dataRow.other_expenditure != undefined && 
+        dataRow.other_expenditure != null && 
+        dataRow.other_expenditure != []
+        ){        
+          setOtherExpenses(JSON.parse(dataRow.other_expenditure));
+        }
+  }
+
+
+  const handleOtherIncome = () => {
+    if(inputs.other_incomes != "" && inputs.other_income_amt != ""){
+      const income = [...otherIncome];
+      income.push({
+        'source_name' : inputs.other_incomes, 
+        'source_amt' : inputs.other_income_amt
+      });
+        
+      inputs.other_income_amt = '';
+      inputs.other_incomes = '';
+
+      setOtherIncome(income);
+    }else {      
+      alert('Fill both fields');
+    }
+  }
+
+  const handleRemoveIncome = (index) => {
+    const tempIncome = [...otherIncome];
+    tempIncome.splice(index, 1);
+    setOtherIncome(tempIncome);
+  }
+
+
+  const handleOtherExpenses = () =>{
+    if(inputs.other_expenses != "" && inputs.other_expenses_amt != ""){
+      const expenses = [...otherExpenses];
+      expenses.push({
+        'source_name' : inputs.other_expenses, 
+        'source_amt' : inputs.other_expenses_amt
+      });
+        
+      inputs.other_expenses_amt = '';
+      inputs.other_expenses = '';
+
+      setOtherExpenses(expenses);
+    }else {      
+      alert('Fill both fields');
+    }
+  }
+
+  const handleRemoveExpenses = (index) => {
+    const tempExpenses = [...otherExpenses];
+    tempExpenses.splice(index, 1);
+    setOtherExpenses(tempExpenses);
+  }
+
+
   function handleCommentViewOpen(){
     setOpenCommentView(true);
   }
@@ -142,99 +239,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
     setOpenCommentView(false);
   }
 
-  function handleInputBlur(e){
-    if(e.target.value===''){
-      setInputs({
-        ...inputs,
-        [e.target.name]: 0,
-      });
-    }
-  }
-
-  function handleInputFocus(e){    
-    if(e.target.value==='0'){
-      setInputs({
-        ...inputs,
-        [e.target.name]: '',
-      });
-    }
-  }
-  
-  const handlePriceInput = e => {
-    const validDecimalNumber = /^\d*\.?\d*$/;
-    if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
-      setInputs({
-        ...inputs,
-        [e.target.name]: e.target.value,
-      });
-    }
-  }
-  
-  function handleInputChange(e){
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
-  }
-
-  // const handleIncomeSourceAmt = (e) =>{
-  //   const validDecimalNumber = /^\d*\.?\d*$/;
-  //   if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
-  //     setIncomeSourceAmt(e.target.value);
-  //   }
-  // }
-
-  // const handleIncomeSourceName = (e) =>{
-  //   setIncomeSourceName(e.target.value);
-  // }
-
-
-
-  // // const addOtherIncome = () => {
-  // //   setOtherIncomeError
-
-  // //   otherIncomeSource.push({income_source_name : '', income_source_amt: ''});
-  // //   // console.log('oldOtherIncome',oldOtherIncome);
-  // //   // setOtherIncomeSource(oldOtherIncome);
-  // // }
-  
-
-  function handleSubmit(e){
-    e.preventDefault();
-    let check = false;
-    if(inputs.surplus<=0){
-      setErrorSurplus('Total Surplus/Defict is cannot be zero or less than zero');
-      check=true;
-    }
-    else{
-      setErrorSurplus('');
-    }
-    if(inputs.afford_amt<=0){
-      setErrorAfford('This field is required');
-      check=true;
-    }else if(inputs.afford_amt > inputs.surplus){
-      setErrorAfford('Afford amt. should be less then to surplus');
-      check=true;
-    }else{
-      setErrorAfford('');
-    }
-    if(inputs.paid_day == ""){
-      setErrorPaidDay('Paid Day is required');
-      check=true;
-    }
-    else{
-      setErrorPaidDay('');
-    }
-    if(inputs.debited_day == ""){
-      setErrorDebitedDay('Debited Day is Required');
-      check=true;
-    }
-    else{
-      setErrorDebitedDay('');
-    }
-
-
-    if(check===false){
+  function submit(e){
       const data = {
         work: parseFloat(inputs.work),
         benefits : parseFloat(inputs.benefits),
@@ -250,7 +255,6 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
         food : parseFloat(inputs.food),
         credit_card : parseFloat(inputs.credit_card),
         loan : parseFloat(inputs.loan),
-        other_expenditure : parseFloat(inputs.other_expenditure),
         income  : parseFloat(inputs.income),
         expenditure : parseFloat(inputs.expenditure),
         surplus  : parseFloat(inputs.surplus),
@@ -259,31 +263,14 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
         paid_day : inputs.paid_day,
         debited_day : inputs.debited_day,
         budget_note : inputs.budget_note,
+        other_expenditure : JSON.stringify(otherExpenses),
+        other_income : JSON.stringify(otherIncome),  
       }
       setBudgetList(data);
       handleBudgetClose(false);
-    }
   }
 
 
-  useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const order = await Order.getExistingBudget({customer_id: customer_id});          
-          setOldBudgetList(order);
-          if(order.length > 0 && budgetList.length === 0 ){
-            setInputs(order[0]);
-          }
-        } catch (error) {
-          console.log('Error..',error);
-        }
-      };
-      fetchData();
-  }, []);
-
-  
-  
-  
   useEffect(() => {
     if(inputs.work == 0 &&
       inputs.benefits == 0 &&
@@ -299,7 +286,9 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       inputs.food == 0 &&
       inputs.credit_card == 0 &&
       inputs.loan == 0 &&
-      inputs.other_expenditure == 0)
+      otherExpenses == "" && 
+      otherIncome == "" 
+      )
     {
       setSurplusBool(false);
       
@@ -316,9 +305,25 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
   });
 
   if(surplusBool===true){
-      inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare);
-      inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.vehicle_fuel) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(inputs.other_expenditure) + parseFloat(oldBudget) ;
-      inputs.surplus = inputs.income - inputs.expenditure;
+    let otherIncomeTotal = 0;
+    let otherExpensesTotal = 0;
+
+    if(otherIncome.length > 0 && otherIncome != "" && otherIncome != undefined){
+      otherIncomeTotal = otherIncome.reduce((acc, val) => {
+        return (acc + Number(val.source_amt))
+      }, 0);
+    }    
+
+    if(otherExpenses.length > 0 && otherExpenses != "" && otherExpenses != undefined){
+      otherExpensesTotal = otherExpenses.reduce((acc, val) => {
+        return (acc + Number(val.source_amt))
+      }, 0);
+    }    
+    
+   
+    inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare) + parseFloat(otherIncomeTotal);
+    inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.vehicle_fuel) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(oldBudget) + parseFloat(otherExpensesTotal);
+    inputs.surplus = inputs.income - inputs.expenditure;
   }
 
 
@@ -442,70 +447,95 @@ return (
                       }}
                     />
                   </Grid>
-{/*                   
+                    
                   <Grid item xs={12} sm={12}>
-                    <Typography variant="h6" align="right">                    
-                      <Button variant="text" size="small" color="primary" style={{fontSize:'10px'}} onClick={addOtherIncome} >Add Other Income Source</Button>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                        Other Income Source
                     </Typography>
                   </Grid>
-
                   <Grid item xs={12} sm={6}>
-                    <TextField
+                    <InputLabel htmlFor="other_incomes" style={{fontSize: '11px'}}>Income Source Name </InputLabel>
+                    <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      id="income_source_name"
-                      name="income_source_name"
-                      label="Other Income Source Name"
-                      value={incomeSourceName}
-                      onChange={handleIncomeSourceName}                      
+                      id="other_incomes"
+                      name="other_incomes"
+                      value={inputs.other_incomes}
+                      onChange={handleInputChange}
+                      // onFocus={handleInputFocus}
+                      // onBlur={handleInputBlur}
                       fullWidth
                       type="text"
                       margin="dense"
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      InputProps={{
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}
-                      id="income_source_amt"
-                      name="income_source_amt"
-                      label="Income Amount by Given Source"
-                      value={incomeSourceAmt}
-                      onChange={handleIncomeSourceAmt}                      
-                      fullWidth
-                      type="text"
-                      margin="dense"
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel htmlFor="other_income_amt" style={{fontSize: '11px'}}>Income Amt. </InputLabel>
+                    <TextField 
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         classes: {
                           input: classes.textsize,
                         },
                       }}
+                      id="other_income_amt"
+                      name="other_income_amt"
+                      value={inputs.other_income_amt}
+                      onChange={handlePriceInput}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
+                      fullWidth
+                      type="text"
+                      margin="dense"
                     />
                   </Grid>
-                  
+                  <Grid item xs={12} sm={2}>
+                    <Tooltip title="Click to Add">
+                      <IconButton className={classes.marginIconBtn}  onClick={() => { handleOtherIncome(); }} >
+                          <AddIcon  />                                    
+                      </IconButton>
+                    </Tooltip>   
+                  </Grid>
+                  {otherIncome != "" &&
+                    <Grid item xs={12} sm={12}>
+                      <Paper className={classes.tablePaper} >
+                        <Table size="small">
+                        <TableHead >
+                            <TableRow size="small">
+                              <TableCell className={classes.labelTitle}>Other Income Source Name</TableCell>
+                              <TableCell className={classes.labelTitle}>Amount</TableCell>
+                              <TableCell className={classes.labelTitle}>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody size="small">
+                            {(otherIncome.length > 0 ? otherIncome : []).map((data, index) =>{
+                              return(
+                                <TableRow size="small">
+                                  <TableCell > {data.source_name} </TableCell>
+                                  <TableCell >{data.source_amt}</TableCell>
+                                  <TableCell >
+                                    <Tooltip title="Click to Remove">
+                                      <IconButton className={classes.marginIconBtn} onClick = { () => { handleRemoveIncome(index); }}>
+                                        <DeleteIcon />
+                                      </IconButton>
+                                    </Tooltip>  
+                                  </TableCell>
+                                </TableRow>
+                              )
+                            })}
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                    </Grid>
+                  }
                   <Grid item xs={12} sm={12}>
-                    <Typography variant="h6" align="right">                    
-                      <Button variant="text" size="small" color="primary" style={{fontSize:'10px'}} onClick={addOtherIncome} >Add Other Income Source</Button>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                        Weekly Expenditure (B)
                     </Typography>
-                  </Grid> */}
-
-                  <Grid item xs={12} sm={12}>
-              <Typography variant="h6" className={classes.labelTitle}>
-                  Weekly Expenditure (B)
-              </Typography>
-              </Grid>
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
                     <TextField
@@ -787,33 +817,86 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
-                    <TextField
+                    <Typography variant="h6" className={classes.labelTitle}>
+                        Other Expenses Source
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel htmlFor="other_expenses" style={{fontSize: '11px'}}>Expenses Source Name </InputLabel>
+                    <TextField 
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      id="other_expenditure"
-                      name="other_expenditure"
-                      label="Other"
-                      value={inputs.other_expenditure}
-                      onChange={handlePriceInput}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      id="other_expenses"
+                      name="other_expenses"
+                      value={inputs.other_expenses}
+                      onChange={handleInputChange}                      
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel htmlFor="other_expenses_amt" style={{fontSize: '11px'}}>Expenses Amt. </InputLabel>
+                    <TextField 
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         classes: {
                           input: classes.textsize,
                         },
                       }}
+                      id="other_expenses_amt"
+                      name="other_expenses_amt"
+                      value={inputs.other_expenses_amt}
+                      onChange={handlePriceInput}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
+                      fullWidth
+                      type="text"
+                      margin="dense"
                     />
                   </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <Tooltip title="Click to Add">
+                      <IconButton className={classes.marginIconBtn}  onClick={() => { handleOtherExpenses(); }} >
+                          <AddIcon  />                                    
+                      </IconButton>
+                    </Tooltip>   
+                  </Grid>
+                  {otherExpenses != "" &&
+                    <Grid item xs={12} sm={12}>
+                      <Paper className={classes.tablePaper} >
+                        <Table size="small">
+                        <TableHead >
+                            <TableRow size="small">
+                              <TableCell className={classes.labelTitle}>Other Expenses Source Name</TableCell>
+                              <TableCell className={classes.labelTitle}>Amount</TableCell>
+                              <TableCell className={classes.labelTitle}>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody size="small">
+                            {(otherExpenses.length > 0 ? otherExpenses : []).map((data, index) =>{
+                              return(
+                                <TableRow size="small">
+                                  <TableCell > {data.source_name} </TableCell>
+                                  <TableCell >{data.source_amt}</TableCell>
+                                  <TableCell >
+                                    <Tooltip title="Click to Remove">
+                                      <IconButton className={classes.marginIconBtn} onClick = { () => { handleRemoveExpenses(index); }}>
+                                        <DeleteIcon />
+                                      </IconButton>
+                                    </Tooltip>  
+                                  </TableCell>
+                                </TableRow>
+                              )
+                            })}
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                    </Grid>
+                  }
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you get paid</InputLabel>
                     <Select
@@ -825,8 +908,8 @@ return (
                         id = 'paid_day'
                         className={classes.drpdwn}
                         fullWidth
-                        error={errorPaidDay}
-                        helperText={errorPaidDay}
+                        error={errors.paid_day}
+                        helperText={errors.paid_day}                        
                         label="Day you get paid"
                         required
                       >
@@ -848,8 +931,8 @@ return (
                         id = 'debited_day'
                         className={classes.drpdwn}
                         fullWidth
-                        error={errorDebitedDay}
-                        helperText={errorDebitedDay}
+                        error={errors.debited_day}
+                        helperText={errors.debited_day}                        
                         label="Day you want to be debited"
                         required
                       >
@@ -917,8 +1000,8 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
-                      error={errorSurplus}
-                      helperText={errorSurplus}
+                      error={errors.surplus}
+                      helperText={errors.surplus}
                       disabled = {surplusBool}
                       required
                       type="text"
@@ -954,14 +1037,11 @@ return (
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       fullWidth
-                      // disabled
                       required
-                      error
+                      error={errors.afford_amt}
+                      helperText={errors.afford_amt}
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
-                      error={errorAfford}
-                      helperText={errorAfford}
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         classes: {
