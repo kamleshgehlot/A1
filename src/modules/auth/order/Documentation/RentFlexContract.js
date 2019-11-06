@@ -222,7 +222,7 @@ export default function layout(data,order) {
                         { text: '', border: [true, false, true, false],},                        
                         {style:styles.margins, text: [  
                           { text: 'Expected Delivery Date',   style: styles.paymentHeading},
-                          { text: '\n\n' + getCurrentDateDDMMYYYY(orderType.exp_delivery_date), style: styles.paymentBody,},
+                          { text: '\n\n' + getDateInDDMMYYYY(orderType.exp_delivery_date), style: styles.paymentBody,},
                           { text: '\n\nExpected Time of Delivery', style: styles.paymentHeading},
                           { text: '\n\n' + orderType.exp_delivery_time, style: styles.paymentBody},
                           ],

@@ -106,7 +106,6 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 export default function Budget({ open, handleBudgetClose, budgetList, setBudgetList, customer_id}) {
-  
   const classes = useStyles();
   const styleClass = useCommonStyles();
   
@@ -134,7 +133,8 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
     try {
       const order = await Order.getExistingBudget({customer_id: customer_id});   
       setOldBudgetList(order);
-      if(order.length > 0 && budgetList.length === 0 ){ 
+      if(order.length > 0 && budgetList.length === 0 ){
+        console.log('order[0]',order[0]);
         handleReset(order[0]);
         setPrimaryValues(order[0]);
       }
@@ -149,7 +149,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
     validate
   );
 
-  console.log('inputs',inputs)
+  // console.log('inputs',inputs)
 
   useEffect(() => {
     fetchExistingBudget();

@@ -17,15 +17,25 @@ export default function validate(values) {
   } 
   if (!values.bank_code) {
     errors.bank_code = 'Bank Code is required';
-  } 
+  } else if((values.bank_code).length < 2){
+    errors.bank_code = 'Bank Code is required';
+  }
   if (!values.branch_number) {
     errors.branch_number = 'Branch Nubmer is required';
-  } 
+  } else if((values.branch_number).length < 4){
+    errors.branch_number = 'Branch Nubmer is required';
+  }
   if (!values.acc_number) {
     errors.acc_number = 'Account Number is required';
-  } 
+  } else if((values.acc_number).length < 7){
+    errors.acc_number = 'Account Number is required';
+  }
+
   if (!values.suffix) {
     errors.suffix = 'Suffix is required';
-  } 
+  } else if((values.suffix).length < 2){
+    errors.suffix = 'Suffix is required';
+  }
+
   return errors;
 };

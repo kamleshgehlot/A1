@@ -18,6 +18,177 @@ function budgetComment(comments){
 }
 
 
+function budgetTable(budget){
+  var body =[];
+
+  var incomes = JSON.parse(budget.other_income);
+  var expenses = JSON.parse(budget.other_expenditure);  
+  var incomeColumn = [];
+  var expensesColumn = [];
+
+
+  body.push([
+      {style: styles.margins, text: [
+        { text: 'WEEKLY INCOME', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+        { text: '(after tax)', style: styles.Header1Center,  alignment: screenLeft }, 
+        { text: '\n(A)', style: styles.Header1Center,  alignment: screenLeft }, 
+      ]},
+      {text: '$', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+      {style: styles.margins, text: [
+        { text: 'WEEKLY EXPENDITURE', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+        { text: '\n(B)', style: styles.Header1Center,  alignment: screenLeft }, 
+      ]},
+      {text: '$', style: styles.Header1Center,  bold: true,  alignment: screenLeft },
+    ],
+  );
+
+  incomeColumn.push( [
+      { text: 'Work', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.work, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  incomeColumn.push( [   
+    { text: 'Benefits(s)', style: styles.Header1Center, alignment: screenLeft }, 
+    { text: budget.benefits, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  incomeColumn.push( [
+    { text: 'Accomodation Allowance', style: styles.Header1Center, alignment: screenLeft }, 
+    { text: budget.accomodation, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  incomeColumn.push( [
+    { text: 'Childcare', style: styles.Header1Center, alignment: screenLeft }, 
+    { text: budget.childcare, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+
+  incomes.forEach(function(data){
+    incomeColumn.push([
+      { text: data.source_name, style: styles.Header1Center, alignment: screenLeft }, 
+      { text: data.source_amt, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  });
+
+
+
+
+    
+  expensesColumn.push([
+      { text: 'Rent / Mortgage', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.rent, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  expensesColumn.push([
+      { text: 'Power', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.power, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  expensesColumn.push([
+      { text: 'Landline Phone', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.telephone, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  expensesColumn.push([
+      { text: 'Mobile Phone', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.mobile, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  expensesColumn.push([
+      { text: 'Vehicle Finance', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.vehicle, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  expensesColumn.push([
+      { text: 'Vehicle Fuel', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.vehicle_fuel, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+    
+  expensesColumn.push([
+      { text: 'Public Transport', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.transport, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+  expensesColumn.push([
+      { text: 'Food', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.food, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+    
+  expensesColumn.push([
+      { text: 'Credit / Store Card(s)', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.credit_card, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+    
+  
+  expensesColumn.push([
+      { text: 'Loans / Hire Purchase', style: styles.Header1Center, alignment: screenLeft }, 
+      { text: budget.loan, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  
+
+  expenses.forEach(function(data){
+    expensesColumn.push([
+      { text: data.source_name, style: styles.Header1Center, alignment: screenLeft }, 
+      { text: data.source_amt, style: styles.Header1Center, alignment: screenLeft }, ],
+  );
+  });
+
+  if(incomeColumn.length > expensesColumn.length){
+    let row = [];
+    incomeColumn.forEach((element, index) => {
+      if(expensesColumn.length >= (index+1)){  
+        row.push(element[0])
+        row.push(element[1])      
+        row.push(expensesColumn[index][0])
+        row.push(expensesColumn[index][1])        
+        body.push(row)
+        row = [];        
+      }else{              
+        row.push(element[0])
+        row.push(element[1])
+        row.push({})
+        row.push({}) 
+        body.push(row)
+        row = [];                     
+      }
+    });
+  }else{
+    let row = [];
+    expensesColumn.forEach((element, index) => {            
+      if(incomeColumn.length >= (index+1)){        
+        row.push(incomeColumn[index][0])
+        row.push(incomeColumn[index][1])        
+        row.push(element[0])
+        row.push(element[1])
+        body.push(row)
+        row = [];
+      }else{      
+        row.push({})
+        row.push({})        
+        row.push(element[0])
+        row.push(element[1])
+        body.push(row)
+        row = [];          
+      }
+    });
+  }
+  
+  
+  body.push([
+      { text: 'TOTAL INCOME=', style: styles.alignRight, bold: true, fillColor: '#C5C7C0'}, 
+      { text: budget.income, style: styles.alignRight , bold: true }, 
+      { text: 'TOTAL EXPENDITURE=', style: styles.alignRight, bold: true, fillColor: '#C5C7C0' }, 
+      { text: budget.expenditure, style: styles.alignRight, bold: true },   
+    ],
+  );
+
+  body.push([
+    { text: 'TOTAL SURPLUS / DEFICIT (A-B)', style: styles.alignRight,  colSpan: 3, fillColor: '#C5C7C0', bold: true }, {}, {},
+    { text: budget.surplus, style: styles.alignRight, bold: true },                             
+  ],);
+  
+  // console.log('body..', body)
+  return body;
+}
+
 export default function layout(data,order) {
 
   const franchise = data.franchise;
@@ -55,98 +226,7 @@ export default function layout(data,order) {
                      border: [true, true, true, false],
                       table: {
                         widths: ['*','*','*','*'],
-                        // heights: 40,                           
-                        body: [
-                          [
-                            { style: styles.margins, text: [
-                              { text: 'WEEKLY INCOME', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
-                              { text: '(after tax)', style: styles.Header1Center,  alignment: screenLeft }, 
-                              { text: '\n(A)', style: styles.Header1Center,  alignment: screenLeft }, 
-                            ]},
-                            { text: '$', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
-                            { style: styles.margins, text: [
-                              { text: 'WEEKLY EXPENDITURE', style: styles.Header1Center,  bold: true,  alignment: screenLeft },                               
-                              { text: '\n(B)', style: styles.Header1Center,  alignment: screenLeft }, 
-                            ]},
-                            { text: '$', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
-                          ],
-                          [
-                            { text: 'Work', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.work, style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: 'Rent / Mortgage', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.rent, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            { text: 'Benefits(s)', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.benefits, style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: 'Power', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.power, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            { text: 'Accomodation Allowance', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.accomodation, style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: 'Landline Phone', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.telephone, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            { text: 'Childcare', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.childcare, style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: 'Mobile Phone', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.mobile, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            {},
-                            {},
-                            { text: 'Vehicle Finance', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.vehicle, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            {},
-                            {},
-                            { text: 'Vehicle Fuel', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.vehicle_fuel, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            {},
-                            {},
-                            { text: 'Public Transport', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.transport, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            {},
-                            {},
-                            { text: 'Food', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.food, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            {},
-                            {},
-                            { text: 'Credit / Store Card(s)', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.credit_card, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            {},
-                            {},
-                            { text: 'Loans / Hire Purchase', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.loan, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            {},
-                            {},
-                            { text: 'Other', style: styles.Header1Center, alignment: screenLeft }, 
-                            { text: budget.other_expenditure, style: styles.Header1Center, alignment: screenLeft }, 
-                          ],
-                          [
-                            { text: 'TOTAL INCOME=', style: styles.alignRight, bold: true, fillColor: '#C5C7C0'}, 
-                            { text: budget.income, style: styles.alignRight , bold: true }, 
-                            { text: 'TOTAL EXPENDITURE=', style: styles.alignRight, bold: true, fillColor: '#C5C7C0' }, 
-                            { text: budget.expenditure, style: styles.alignRight, bold: true },   
-                          ],
-                          [
-                            { text: 'TOTAL SURPLUS / DEFICIT (A-B)', style: styles.alignRight,  colSpan: 3, fillColor: '#C5C7C0', bold: true }, {}, {},
-                            { text: budget.surplus, style: styles.alignRight, bold: true },                             
-                          ],
-                        ]
+                        body: budgetTable(budget),
                       },    
                       layout: {                     
                         paddingTop:  function(i, node) { return 5; },

@@ -168,7 +168,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   const [chkEmail, SetChkEmail] = useState();
   const [otherIdTypeValue, setOtherIdTypeValue] = useState();
   const [ploading, setpLoading] = React.useState(false);
-  const [savebtn, setSavebtn] = React.useState(true);
+  const [savebtn, setSavebtn] = React.useState(false);
   const [budgetList,setBudgetList] = useState([]);
   const [bankDetailArray, setBankDetailArray] = useState([]);
   const [budgetOpen, setBudgetOpen] = useState(false);
@@ -287,7 +287,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     }else{
 
     setpLoading(true);
-    setSavebtn(false);
+    setSavebtn(true);
     const data = {
       customer_name : inputs.customer_name,
       address : inputs.address,
@@ -344,7 +344,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     setCustomer(data);
     handleReset(RESET_VALUES);
     setpLoading(false);
-    setSavebtn(true);
+    setSavebtn(false);
     handleClose(false);
     }
   };
@@ -1100,11 +1100,9 @@ return (
               
             <Grid item xs={12} sm={12}>
                     
-              {savebtn? <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit}>
+              <Button variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {savebtn}>
                 save
-              </Button> : <Button  variant="contained"  color="primary" className={classes.button} disabled>
-                save
-              </Button>}
+              </Button> 
               <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                 Close
               </Button> 

@@ -1,4 +1,5 @@
 const Customer = require('../../models/franchise/customer.js');
+const Order = require('../../models/franchise/order.js');
 const { trans } = require("../../lib/mailtransporter");
 const { domainName } = require("../../lib/databaseMySQLNew");
 
@@ -67,14 +68,23 @@ const register = async function (req, res, next) {
       const newCustomer = new Customer(CustomerParams);
 
       const customerResult = await newCustomer.register();
-      newCustomer.customer_id = customerResult;
+      newCustomer.customer_id = customerResult.customer_id;
+      console.log('customerResult',customerResult, customerResult.customer_id, newCustomer.customer_id);
 
-      if (CustomerParams.budgetData != "" && newCustomer.customer_id != '' && newCustomer.customer_id != 0) {
-        CustomerParams.created_by = req.decoded.id;
-        await newCustomer.addBudget();
+      if (CustomerParams.budgetData != "" && customerResult.customer_id != '' && customerResult.customer_id != 0) {
+          CustomerParams.created_by = req.decoded.id;
+          const result = await newCustomer.addBudget();
+
+        const newOrder = new Order({user_id: req.decoded.user_id, customer_id: customerResult.customer_id, created_by : req.decoded.id});
+        if(CustomerParams.budgetData.budget_note != "" && CustomerParams.budgetData.budget_note != undefined){
+          newOrder.budget_id = result.budget_id;          
+          newOrder.order_id = 0;
+          newOrder.comment = CustomerParams.budgetData.budget_note;
+          await newOrder.postBudgetComment();
+        }
       }
 
-      if (CustomerParams.bankDetailData != "" && newCustomer.customer_id != '' && newCustomer.customer_id != 0) {
+      if (CustomerParams.bankDetailData != "" && customerResult.customer_id  != '' && customerResult.customer_id != 0) {
         CustomerParams.created_by = req.decoded.id;
         await newCustomer.addBankDetail();
       }

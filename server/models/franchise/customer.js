@@ -75,16 +75,15 @@ Customer.prototype.register = function () {
               let values = [
                 [that.customer_name, that.address, that.city, that.postcode, that.telephone, that.mobile, that.email, that.gender, that.is_working, that.dob, rows.insertId, that.other_id_type, that.dl_version_number, that.id_number, that.expiry_date, that.is_adult, that.id_proof, that.alt_c1_name, that.alt_c1_address, that.alt_c1_contact, that.alt_c1_relation, that.alt_c2_name, that.alt_c2_address, that.alt_c2_contact, that.alt_c2_relation, that.is_active, that.state, that.created_by]
               ];
-              connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type, dl_version_number, id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,state,created_by) VALUES ?', [values], function (error, rows, fields) {
+              connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type, dl_version_number, id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,state,created_by) VALUES ?', [values], function (error, customerRows, fields) {
 
                 if (!error) {
                   let customerIncomeValues = [
-                    [rows.insertId, that.employer_name, that.employer_address, that.employer_telephone, that.employer_email, that.employer_tenure, that.is_active, that.state, that.created_by]
+                    [customerRows.insertId, that.employer_name, that.employer_address, that.employer_telephone, that.employer_email, that.employer_tenure, that.is_active, that.state, that.created_by]
                   ];
-                  const savedCustomerId = rows.insertId;
                   connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, state, created_by) values ?', [customerIncomeValues], function (error, rows2, fields) {
                     if (!error) {
-                      resolve(rows.insertId);
+                      resolve({customer_id :customerRows.insertId});
                     } else {
                       console.log("Error...", error);
                       reject(error);
@@ -107,16 +106,15 @@ Customer.prototype.register = function () {
           ];
 
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type, dl_version_number, id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,state,created_by,updated_by) VALUES ?', [values], function (error, rows, fields) {
+          connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type, dl_version_number, id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,state,created_by,updated_by) VALUES ?', [values], function (error, customerRows, fields) {
 
             if (!error) {
               let customerIncomeValues = [
-                [rows.insertId, that.employer_name, that.employer_address, that.employer_telephone, that.employer_email, that.employer_tenure, that.is_active, that.state, that.created_by]
+                [customerRows.insertId, that.employer_name, that.employer_address, that.employer_telephone, that.employer_email, that.employer_tenure, that.is_active, that.state, that.created_by]
               ];
-              const savedCustomerId = rows.insertId;
               connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, state, created_by) values ?', [customerIncomeValues], function (error, rows2, fields) {
                 if (!error) {
-                  resolve(rows.insertId);
+                  resolve({customer_id :customerRows.insertId});
                 } else {
                   console.log("Error...", error);
                   reject(error);
@@ -141,107 +139,6 @@ Customer.prototype.register = function () {
     throw error;
   });
 };
-
-
-/// Plz Don't Remove,, 
-// Customer.prototype.register = function () {
-//   const that = this;
-//   return new Promise(function (resolve, reject) {
-
-//     connection.getConnection(function (error, connection) {
-//       if (error) {
-//         throw error;
-//       }
-//       if (!error) {
-
-//         if(that.id_type===0){
-//           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-//           connection.query('INSERT INTO id_type(name, is_active, created_by) VALUES ("'+ that.other_id_type+'", 1, 1)', function (error, rows, fields) {
-//             if(!error){
-//               // console.log("insert id",rows.insertId);
-//               that.id_type = rows.insertId;
-//             }else{
-//               console.log("Error...", error);
-//               reject(error);
-//             }
-//           })
-//         }
-
-//         let values=[
-//             [that.customer_name,that.address,that.city,that.postcode,that.telephone,that.mobile,that.email,that.gender,that.is_working,that.dob,that.id_type,that.other_id_type,that.id_number,that.expiry_date,that.is_adult,that.id_proof,that.alt_c1_name,that.alt_c1_address,that.alt_c1_contact,that.alt_c1_relation,that.alt_c2_name,that.alt_c2_address,that.alt_c2_contact,that.alt_c2_relation,that.is_active,that.created_by]
-//           ];
-//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-//         connection.query('INSERT INTO customer(customer_name,address,city,postcode,telephone,mobile,email,gender,is_working,dob,id_type,other_id_type,id_number,expiry_date,is_adult,id_proof,alt_c1_name,alt_c1_address,alt_c1_contact,alt_c1_relation,alt_c2_name,alt_c2_address,alt_c2_contact,alt_c2_relation,is_active,created_by) VALUES ?', [values], function (error, rows, fields) {
-
-//           if (!error) {
-//                 const savedCustomerId = rows.insertId;
-//                 connection.query('INSERT INTO customer_income(cust_id, employer_name, employer_address, employer_telephone, employer_email, employer_tenure, is_active, created_by) values ("' + savedCustomerId + '","' + that.employer_name + '","' + that.employer_address + '","' + that.employer_telephone + '","' + that.employer_email + '","' + that.employer_tenure + '","' + that.is_active + '","' + that.created_by + '")', function (error, rows, fields) {
-//                   if (!error) {
-//                     resolve(rows);
-//                   } else {
-//                     console.log("Error...", error);
-//                     reject(error);
-//                   }
-//                 });
-//               } else {
-//                 console.log("Error...", error);
-//                 reject(error);
-//               }
-
-//         });
-//       } else {
-//         console.log("Error...", error);
-//         reject(error);
-//       }
-//       connection.release();
-//       console.log('Customer Added for Franchise Staff %d', connection.threadId);
-
-//     });
-
-//   }).catch((error) => {
-//     throw error;
-//   });
-// };
-
-
-// Customer.prototype.update = function () {
-//   const that = this;
-//   return new Promise(function (resolve, reject) {
-
-//     connection.getConnection(function (error, connection) {
-//       if (error) {
-//         throw error;
-//       }
-//       if (!error) {
-
-//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-//           connection.query('UPDATE customer SET customer_name = "' +that.customer_name + '", address = "' + that.address + '", city = "' + that.city + '", postcode = "' + that.postcode + '", telephone = "' + that.telephone + '", mobile = "' + that.mobile + '", email = "' + that.email + '", gender = "' + that.gender + '", is_working = "' + that.is_working + '", dob = "' + that.dob+ '", id_type = "' +that.id_type + '", other_id_type = "'+that.other_id_type+'", id_number = "' +that.id_number + '", expiry_date = "' + that.expiry_date + '", is_adult = "' + that.is_adult + '", id_proof = "' + that.id_proof + '", alt_c1_name = "' + that.alt_c1_name+ '", alt_c1_address = "' + that.alt_c1_address+ '", alt_c1_contact = "' + that.alt_c1_contact+ '", alt_c1_relation = "' + that.alt_c1_relation + '", alt_c2_name = "' + that.alt_c2_name + '", alt_c2_address = "' + that.alt_c2_address+ '", alt_c2_contact = "' + that.alt_c2_contact+ '", alt_c2_relation = "' + that.alt_c2_relation+ '", is_active = "' + that.is_active+ '" WHERE id= "'+that.id+'"', function (error, rows, fields) {
-//           if (!error) {
-//                 connection.query('UPDATE customer_income SET employer_name = "'+that.employer_name+'", employer_address = "'+that.employer_address+'", employer_telephone = "'+that.employer_telephone+'", employer_email = "'+that.employer_email+'", employer_tenure = "'+that.employer_tenure+'", is_active = "'+that.is_active+'" WHERE cust_id = "'+that.id+'"', function (error, rows, fields) {
-//                   if (!error) {
-//                     resolve(rows);
-//                   } else {
-//                     console.log("Error...", error);
-//                     reject(error);
-//                   }
-//                 });
-//               } else {
-//                 console.log("Error...", error);
-//                 reject(error);
-//               }
-
-//         });
-//       } else {
-//         console.log("Error...", error);
-//         reject(error);
-//       }
-//       connection.release();
-//       console.log('Customer Added for Franchise Staff %d', connection.threadId);
-//     });
-//   }).catch((error) => {
-//     throw error;
-//   });
-// };
 
 
 Customer.prototype.update = function () {
@@ -410,13 +307,13 @@ Customer.prototype.addBudget = function () {
 
         const budget_list = that.budgetData;
         let budgetValues = [
-          [that.customer_id, budget_list.work, budget_list.benefits, budget_list.accomodation, budget_list.childcare, budget_list.rent, budget_list.power, budget_list.telephone, budget_list.mobile, budget_list.vehicle, budget_list.vehicle_fuel, budget_list.transport, budget_list.food, budget_list.credit_card, budget_list.loan, budget_list.other_expenditure, budget_list.pre_order_exp, budget_list.income, budget_list.expenditure, budget_list.surplus, budget_list.afford_amt, budget_list.paid_day, budget_list.debited_day, 0, that.created_by]
+          [that.customer_id, budget_list.work, budget_list.benefits, budget_list.accomodation, budget_list.childcare, budget_list.rent, budget_list.power, budget_list.telephone, budget_list.mobile, budget_list.vehicle, budget_list.vehicle_fuel, budget_list.transport, budget_list.food, budget_list.credit_card, budget_list.loan, budget_list.other_income, budget_list.other_expenditure, budget_list.pre_order_exp, budget_list.income, budget_list.expenditure, budget_list.surplus, budget_list.afford_amt, budget_list.paid_day, budget_list.debited_day, 0, that.created_by]
         ];
         console.log('budgetList', budgetValues);
-        connection.query('INSERT INTO budget(customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone, mobile_phone, vehicle_finance, vehicle_fuel, public_transport, food, credit_store_cards, loans_hire_purchase, other_expenditure, pre_order_exp, total_income, total_expenditure, total_surplus, afford_amt, paid_day, debited_day, is_active, created_by) VALUES ?', [budgetValues], function (error, rows, fields) {
+        connection.query('INSERT INTO budget(customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone, mobile_phone, vehicle_finance, vehicle_fuel, public_transport, food, credit_store_cards, loans_hire_purchase, other_income, other_expenditure, pre_order_exp, total_income, total_expenditure, total_surplus, afford_amt, paid_day, debited_day, is_active, created_by) VALUES ?', [budgetValues], function (error, rows, fields) {
           if (!error) {
             // const budget_id = rows.insertId;                
-            resolve(rows);
+            resolve({budget_id : rows.insertId});
           } else {
             console.log("Error...", error);
             reject(error);
