@@ -144,7 +144,6 @@ export default function EditBudget({ open, handleBudgetClose, setBudgetList, bud
     submit,
     validate
   );
-  console.log('inputs.',inputs);
 
   useEffect(()=>{
     inputs.other_expenses = '';

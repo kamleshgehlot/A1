@@ -134,7 +134,6 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       const order = await Order.getExistingBudget({customer_id: customer_id});   
       setOldBudgetList(order);
       if(order.length > 0 && budgetList.length === 0 ){
-        console.log('order[0]',order[0]);
         handleReset(order[0]);
         setPrimaryValues(order[0]);
       }
@@ -148,8 +147,6 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
     submit,
     validate
   );
-
-  // console.log('inputs',inputs)
 
   useEffect(() => {
     fetchExistingBudget();
@@ -861,7 +858,7 @@ return (
                   <Grid item xs={12} sm={2}>
                     <Tooltip title="Click to Add">
                       <IconButton className={classes.marginIconBtn}  onClick={() => { handleOtherExpenses(); }} >
-                          <AddIcon  />                                    
+                          <AddIcon />                                    
                       </IconButton>
                     </Tooltip>   
                   </Grid>
@@ -955,7 +952,6 @@ return (
                   <Grid item xs={12} sm={6}>
                       {
                         (oldBudgetList.length > 0 ? oldBudgetList : []).map(data =>{
-                          // console.log('budgetData',data);
                           return(
                             <Typography variant="h6" className={classes.labelTitle} align="right">
                             {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt * 4) + ')')

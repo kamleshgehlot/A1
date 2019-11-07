@@ -62,7 +62,7 @@ function budgetTable(budget){
     { text: budget.childcare, style: styles.Header1Center, alignment: screenLeft }, ],
   );
 
-  incomes.forEach(function(data){
+  ((incomes !="" && incomes != undefined && incomes != null && incomes.length> 0) ? incomes : []).forEach(function(data){
     incomeColumn.push([
       { text: data.source_name, style: styles.Header1Center, alignment: screenLeft }, 
       { text: data.source_amt, style: styles.Header1Center, alignment: screenLeft }, ],
@@ -124,7 +124,7 @@ function budgetTable(budget){
   );
   
 
-  expenses.forEach(function(data){
+  ((expenses !="" && expenses != undefined && expenses != null && expenses.length> 0) ? expenses : []).forEach(function(data){
     expensesColumn.push([
       { text: data.source_name, style: styles.Header1Center, alignment: screenLeft }, 
       { text: data.source_amt, style: styles.Header1Center, alignment: screenLeft }, ],

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -35,6 +35,7 @@ import { API_URL, APP_TOKEN } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
 import { compareAsc } from 'date-fns';
+import { breakStatement, labeledStatement } from '@babel/types';
 
 
 const drawerWidth = 240;
@@ -140,8 +141,7 @@ const StyledTableCell = withStyles(theme => ({
 
 export default function ViewHistoryList({historyList, roleName}) {
   const classes = useStyles();
-  // console.log('hislist',historyList)
-
+  
   const handleChangeEventTitle = (historyList, index, data) =>{
     return(
       <p>
@@ -160,29 +160,78 @@ export default function ViewHistoryList({historyList, roleName}) {
     )
   }
 
-  const handleModifiedFields = (innerData, data) =>{
-
-    // const oldIncomeList = JSON.parse(data.other_income);
-    // const oldExpensesList = JSON.parse(data.other_expenditure);
-
-    // const newIncomeList = JSON.parse(innerData.other_income);
-    // const newExpensesList = JSON.parse(innerData.other_expenditure);
+  const handleModifiedFields = (innerData, data) =>{    
+    const oldIncomeList = JSON.parse(innerData.other_income);
+    const newIncomeList = JSON.parse(data.other_income);
+    
+    const oldExpensesList = JSON.parse(innerData.other_expenditure);
+    const newExpensesList = JSON.parse(data.other_expenditure);
 
     let incomeString = "";
     let expensesString = "";
     let paidDebitedDaysString = "";
 
-    // console.log('expensesList',oldExpensesList)
-    // console.log('newexpensesList',newExpensesList)
-    
-    
-    // let str = "";
+    const incomeStr = [];
+    const expensesStr = [];
+    let isDeleted;
+ 
+  //loop for diffrentiate income & removed income
+  (oldIncomeList.length > 0 ? oldIncomeList : []).map((oldData, oldIndex) => {
+    isDeleted= true;
+    (newIncomeList.length > 0 ? newIncomeList : []).map((newData, newIndex) => {
+      if(oldData.source_name === newData.source_name){
+        if(Number(oldData.source_amt) !== Number(newData.source_amt)){
+          incomeStr.push((newData.source_name + ': $'+ oldData.source_amt + " => $" + newData.source_amt));          
+        }
+        isDeleted = false;
+      } 
+    })
+    if(isDeleted === true){      
+      incomeStr.push(( "closed existing source of income " + oldData.source_name + ': $'+ oldData.source_amt)); 
+    }
+  });
 
-    // let a = expensesList.filter(data => 
-    //   newExpensesList.some(newData => (data.source_name !==  newData.source_name))
-    // );
-    
-    // console.log('str',a);
+  //loop for new income
+  (newIncomeList.length > 0 ? newIncomeList : []).map((newData, oldIndex) => {
+    isDeleted= true;
+    (oldIncomeList.length > 0 ? oldIncomeList : []).map((oldData, newIndex) => {
+      if(newData.source_name === oldData.source_name){        
+        isDeleted = false;
+      }
+    })
+    if(isDeleted === true){      
+      incomeStr.push(("open new source of income " +newData.source_name + ': $'+ newData.source_amt)); 
+    }
+  });
+
+
+  
+  (oldExpensesList.length > 0 ? oldExpensesList : []).map((oldData, oldIndex) => {
+    isDeleted= true;
+    (newExpensesList.length > 0 ? newExpensesList : []).map((newData, newIndex) => {
+      if(oldData.source_name === newData.source_name){
+        if(Number(oldData.source_amt) !== Number(newData.source_amt)){
+          expensesStr.push((newData.source_name + ': $'+ oldData.source_amt + " => $" + newData.source_amt));          
+        }
+        isDeleted = false;
+      } 
+    })
+    if(isDeleted === true){      
+      expensesStr.push(( "closed existing source of expenses " + oldData.source_name + ': $'+ oldData.source_amt)); 
+    }
+  });
+
+  (newExpensesList.length > 0 ? newExpensesList : []).map((newData, oldIndex) => {
+    isDeleted= true;
+    (oldExpensesList.length > 0 ? oldExpensesList : []).map((oldData, newIndex) => {
+      if(newData.source_name === oldData.source_name){        
+        isDeleted = false;
+      }
+    })
+    if(isDeleted === true){      
+      expensesStr.push(("open new source of expenses " +newData.source_name + ': $'+ newData.source_amt)); 
+    }
+  });
 
 
     incomeString = 
@@ -190,7 +239,8 @@ export default function ViewHistoryList({historyList, roleName}) {
             (data.work !== innerData.work ? " work: $" + innerData.work + " => $" + data.work +", ": '') +
             (data.accomodation !== innerData.accomodation ? "accomodation: $" + innerData.accomodation + " => $" + data.accomodation +", ": '') +
             (data.childcare !== innerData.childcare ? "childcare: $" + innerData.childcare + " => $" + data.childcare +", ": '') +
-            (data.afford_amt !== innerData.afford_amt ? "afford_amt: $" + innerData.afford_amt + " => $" + data.afford_amt +", ": '');
+            (data.afford_amt !== innerData.afford_amt ? "afford_amt: $" + innerData.afford_amt + " => $" + data.afford_amt +", ": '') + 
+            incomeStr.join(', ');
     
     expensesString = 
             (data.rent !== innerData.rent ? "rent: $" + innerData.rent + " => $" + data.rent +", ": '') +
@@ -202,7 +252,8 @@ export default function ViewHistoryList({historyList, roleName}) {
             (data.transport !== innerData.transport ? "transport: $" + innerData.transport + " => $" + data.transport +", ": '') +
             (data.food !== innerData.food ? "food: $" + innerData.food + " => $" + data.food +", ": '') +
             (data.credit_card !== innerData.credit_card ? "credit_card: $" + innerData.credit_card + " => $" + data.credit_card +", ": '') +
-            (data.loan !== innerData.loan ? "loan: $" + innerData.loan + " => $" + data.loan +", ": '');
+            (data.loan !== innerData.loan ? "loan: $" + innerData.loan + " => $" + data.loan +", ": '') + 
+            expensesStr.join(', ');
 
     paidDebitedDaysString = 
             (data.paid_day !== innerData.paid_day ? "Day when get paid: " + innerData.paid_day + " =>  " + data.paid_day +", ": '') +
