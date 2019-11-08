@@ -209,7 +209,7 @@ export default function FixedOrderForm(data, order, reportData, fromDate, toDate
             border: [true, false, true, true],
             table: {
               widths: ['15%','*','*','*'],                
-              body: buildFinancialReportTable(reportData, ['#', 'Actual Payment Date', 'Payment Rec. Date', 'Payment Amt ($)'], ['installment_no','payment_date', 'payment_rec_date', 'payment_amt'], fromDate, toDate),
+              body: buildFinancialReportTable(reportData, ['#', 'Installment Due Date', 'Installment Rec. Date', 'Payment Amt ($)'], ['installment_no','payment_date', 'payment_rec_date', 'payment_amt'], fromDate, toDate),
             },
           },
       ],  
