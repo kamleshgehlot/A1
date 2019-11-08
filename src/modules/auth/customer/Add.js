@@ -54,11 +54,11 @@ const RESET_VALUES = {
   email : '',
   gender : '',
   is_working : '',
-  dob : getCurrentDate(),
+  dob : null,
   id_type : '',
   id_number: '',
-  expiry_date : getCurrentDate(),
-  is_adult :0,
+  expiry_date : null,
+  is_adult : '',
   id_proof : '',
   other_id_type:'',
 
@@ -78,9 +78,6 @@ const RESET_VALUES = {
   employer_tenure:'',
 
   state: '',
-
-  // is_active:1,
-  // created_by: 1,
 };
 
 const useStyles = makeStyles(theme => ({
@@ -602,8 +599,8 @@ return (
                                 }}
                                 required
                                 onChange={handleDate}
-                                // error={errors.dob}
-                                // helperText={errors.dob}  
+                                error={errors.dob}
+                                helperText={errors.dob}  
                               />
                             </MuiPickersUtilsProvider>
                             
@@ -611,7 +608,7 @@ return (
                             :inputs.is_adult === 0 && inputs.dob != ""  ?  <p className={classes.dobMsg} style={{'color':'#F5BB00'}}>Person is not over 18 year</p>
                             : ''}
                   </Grid>
-
+                                {console.log('inputs.',inputs)}
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
                     <Select
@@ -733,8 +730,8 @@ return (
                           },
                         }}                        
                         onChange={handleExpiryDate}
-                        // error={errors.expiry_date}
-                        // helperText={errors.expiry_date}
+                        error={errors.expiry_date}
+                        helperText={errors.expiry_date}
                       />
                     </MuiPickersUtilsProvider>                    
                   </Grid>

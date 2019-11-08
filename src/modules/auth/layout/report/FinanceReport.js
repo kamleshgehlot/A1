@@ -22,11 +22,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
@@ -36,13 +31,13 @@ import {getDate, getCurrentDate } from '../../../../utils/datetime'
 
 import Paper from '@material-ui/core/Paper';
 
-import OrderReportDoc from './OrderReportDoc';
-import AutoSuggestDropdown from '../../lead/AutoSuggestDropdown';
-import Customer from '../../../../api/franchise/Customer';
 import Report from '../../../../api/Report';
 import Product from '../../../../api/Category';
-import SingleOrderReport from './Components/SingleOrderReport';
 
+import SingleOrderReport from './Components/SingleOrderReport';
+import OrderAPI from '../../../../api/franchise/Order';
+import FinanceReportDoc from './Documentation/FinanceReportDoc';
+import { async } from 'q';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -89,11 +84,7 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     width: '100%',
-    // display: 'flexGrow',
-    // alignItems: 'center',
-    // boxSizing: 'border-box',
     tableLayout: "fixed"
-
   },
   labelTitle: {
     fontWeight: theme.typography.fontWeightBold,
@@ -105,18 +96,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),   
     width: "100%",
-    // overflow: hidden,
-  },
-  selectType:{
-    // marginLeft: theme.spacing(1),
-    // marginRight: theme.spacing(1),
-    // fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.pxToRem(12),   
   },
   orderDetail: {
     fontSize: theme.typography.pxToRem(12),
-    // marginTop: 15,
-    // marginBottom: 20,
   },
 }));
 
@@ -137,8 +119,8 @@ export default function FinanceReport({roleName}) {
   const [searchName,setSearchName] = useState('');
   const [order, setOrder] = useState([]);
   const [productList, setProductList] = useState([]);
-  const [toDate, setToDate] = useState(getCurrentDate());
-  const [fromDate, setFromDate] = useState(getCurrentDate());
+  const [toDate, setToDate] = useState(null);
+  const [fromDate, setFromDate] = useState(null);
   const [orderReport, setOrderReport] = useState(false);
   const [reportData,setReportData] = useState([]);
   
@@ -147,12 +129,8 @@ export default function FinanceReport({roleName}) {
     setIsError(false);
     setIsLoading(true);
     try {
-      // const resultCustomer = await Customer.list();        
-      // setCustomerListData(resultCustomer.customerList);
-
       const result = await Product.productlist();
-      setProductList(result.productList);
-      
+      setProductList(result.productList);      
     } catch (error) {
       setIsError(true);
     }
@@ -169,7 +147,7 @@ export default function FinanceReport({roleName}) {
       }
     })}
   }
-
+  
   function handleSearchText(event){    
     setSearchText(event.target.value);
     setSearchName(event.target.name);
@@ -182,47 +160,7 @@ export default function FinanceReport({roleName}) {
   function handleToDate(date){    
     setToDate(date);
   }
-
-  const handleManualReportSubmit = async () => {
-    try{
-      // const result = await Report.getOrderReport({
-      //   order_id : order.id,
-      //   customer_id : order.customer_id,
-      //   from_date : fromDate,
-      //   to_date : toDate,
-      // });
-      // if(result != ""){
-      //   setReportData(result);
-      //   setOrderReport(true);
-      // }else{
-      //   setReportData([]);
-      //   setOrderReport(false);
-      // }
-    }catch (error) {
-      console.log('error',error);
-    }
-  }
   
-  const handleSubmit = async () => {
-    try{
-      const result = await Report.getOrderReport({
-        order_id : order.id,
-        customer_id : order.customer_id,
-        from_date : fromDate,
-        to_date : toDate,
-      });
-      if(result != ""){
-        setReportData(result);
-        setOrderReport(true);
-      }else{
-        setReportData([]);
-        setOrderReport(false);
-        alert('No single Transaction by this person');
-      }
-    }catch (error) {
-      console.log('error',error);
-    }
-  }
 
   const searchHandler = async () => {
     try{
@@ -267,8 +205,96 @@ export default function FinanceReport({roleName}) {
     }
   }
 
-  // console.log('ocdd',orderData, customerData);
+
+  const handleFlexOrderDataForPDF = async (reportData) => {
+    try {
+      const result = await OrderAPI.getFlexOrderDataForPDF({data: order});
+      pdfmake.vfs = pdfFonts.pdfMake.vfs;      
+      let doc = {
+        pageSize: "A4",
+        pageOrientation: "portrait",
+        pageMargins: [30, 30, 30, 30],
+        content: []
+      };
+      let financeReportDoc = FinanceReportDoc(result, order, reportData, fromDate, toDate);
+      
+      if(financeReportDoc.content) {
+        doc.content.push(financeReportDoc.content);
+      }
+      pdfmake.createPdf(doc).open();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleFixedOrderDataForPDF = async (reportData) => {
+    try {
+      const result = await OrderAPI.getFixedOrderDataForPDF({data: order});
+      pdfmake.vfs = pdfFonts.pdfMake.vfs;
+
+      let doc = {
+        pageSize: "A4",
+        pageOrientation: "portrait",
+        pageMargins: [30, 30, 30, 30],
+        content: []
+      };
+      let financeReportDoc = FinanceReportDoc(result, order, reportData, fromDate, toDate);          
+      if(financeReportDoc.content) {
+        doc.content.push(financeReportDoc.content);
+      }     
+      pdfmake.createPdf(doc).open();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   
+  const handleOrderReport = async() => {
+    try{
+      const result = await Report.getOrderReport({
+        order_id : order.id,
+        customer_id : order.customer_id,
+        from_date : fromDate,
+        to_date : toDate,
+      });
+      if(result != ""){
+        setReportData(result);
+        return result;
+      }else{        
+        setReportData([]);
+        alert('No single Transaction by this person');
+        return [];
+      }
+    }catch (error) {
+      console.log('error',error);
+    }
+  }
+
+
+  const createAndDownloadPdf = async() => {
+    const result = await handleOrderReport();
+    if(result != ""){
+      if(order.order_type === 2){
+        handleFlexOrderDataForPDF(result);
+      }
+      if(order.order_type === 1){
+        handleFixedOrderDataForPDF(result);
+      }
+    }
+  }
+  
+
+  const handleSubmit = async () => {
+    const result = await handleOrderReport();
+    if(result != ""){
+      setOrderReport(true);
+    }else{
+      setOrderReport(false);
+    }
+  }
+
+  // console.log('ocdd',reportData, orderData, customerData);
+
   return (
     <div>
       <Paper className={classes.paper} style={{'width':'60%'}}>
@@ -407,7 +433,7 @@ export default function FinanceReport({roleName}) {
                           id="from_date"
                           name="from_date"
                           placeholder="DD-MM-YYYY"
-                          format="MM-dd-yyyy"
+                          format="dd-MM-yyyy"
                           value={fromDate}
                           InputProps={{
                             classes: {
@@ -441,6 +467,11 @@ export default function FinanceReport({roleName}) {
                       Generate Report
                     </Button>
                     </TableCell>
+                    <TableCell>
+                    <Button  variant="contained"  color="primary" className={classes.button} onClick={createAndDownloadPdf}>
+                      Download Report
+                    </Button>
+                    </TableCell>
                 </TableRow>              
             </Table>    
           </Grid>
@@ -452,58 +483,6 @@ export default function FinanceReport({roleName}) {
       </Grid>
     </Paper>
 
-{/* 
-    <Paper className={classes.paper}>
-        <Typography variant="h6" className={classes.labelTitle}>
-            Generate Report
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <Typography>From:</Typography>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    margin="dense"
-                    id="from_date"
-                    name="from_date"
-                    format="MM/dd/yyyy"
-                    value={fromDate}
-                    InputProps={{
-                      classes: {
-                        input: classes.textsize,
-                      },
-                    }}
-                    onChange={handleFromDate}
-                  />
-              </MuiPickersUtilsProvider> 
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Typography>To:</Typography>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                margin="dense"
-                id="to_date"
-                name="to_date"
-                format="MM/dd/yyyy"
-                value={toDate}
-                InputProps={{
-                  classes: {
-                    input: classes.textsize,
-                  },
-                }}
-                onChange={handleToDate}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-              <Button  variant="contained"  color="primary" className={classes.button} onClick={handleManualReportSubmit}>
-                      Generate Report
-              </Button>
-          </Grid>
-        {/* <Grid item xs={12} sm={12}>
-              {orderReport ? <SingleOrderReport data={reportData}/> : '' }
-        </Grid> */}
-      {/* </Grid>
-    </Paper> */}
   </div>
   );
 }
