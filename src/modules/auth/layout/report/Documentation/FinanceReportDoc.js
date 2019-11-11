@@ -50,6 +50,8 @@ function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
     valueKeys.forEach(function(column, columnIndex) {
       if(columnIndex===0){
         dataRow.push({ text: (index + 1), style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
+      }else if(columnIndex===1 || columnIndex===2) {
+        dataRow.push({ text: getDateInDDMMYYYY(row[column]), style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
       }else{
         dataRow.push({ text: row[column.toLowerCase()], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
       }

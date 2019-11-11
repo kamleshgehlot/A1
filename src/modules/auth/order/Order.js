@@ -65,6 +65,7 @@ import RentFixContract from './Documentation/RentFixContract';
 import BudgetAssistant from './Documentation/BudgetAssistant';
 import FixedOrderForm from './Documentation/FixedOrderForm';
 import FlexOrderForm from './Documentation/FlexOrderForm';
+import EezyDebitForm from './Documentation/EezyDebitForm';
 
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
@@ -168,6 +169,7 @@ export default function Order({roleName}) {
   //value is for tabs  
   const [value, setValue] = React.useState(0);  
 
+  
   function createAndDownloadPdf(data) {
     if(data.order_type === 2){
       const fetchData = async () => {
@@ -181,26 +183,32 @@ export default function Order({roleName}) {
             pageMargins: [30, 30, 30, 30],
             content: []
           };
-          let flexOrderForm = FlexOrderForm(result,data);
-          let rentFlexContract = RentFlexContract(result,data);
-          let budgetAssistant =BudgetAssistant(result,data);
+          // let flexOrderForm = FlexOrderForm(result,data);
+          // let rentFlexContract = RentFlexContract(result,data);
+          // let budgetAssistant =BudgetAssistant(result,data);
 
-          if(flexOrderForm.content) {
-            doc.content.push(flexOrderForm.content);
-            doc.content.push({text: '', pageBreak: "after"});
-          }
+          let eezyDebitForm = EezyDebitForm(result, data);
+
+
+          // if(flexOrderForm.content) {
+          //   doc.content.push(flexOrderForm.content);
+          //   doc.content.push({text: '', pageBreak: "after"});
+          // }
          
-          if(rentFlexContract.content) {
-            doc.content.push(rentFlexContract.content);
-            doc.content.push({text: '', pageBreak: "after"});
-          }
+          // if(rentFlexContract.content) {
+          //   doc.content.push(rentFlexContract.content);
+          //   doc.content.push({text: '', pageBreak: "after"});
+          // }
 
-          if(budgetAssistant.content) {
-            doc.content.push(budgetAssistant.content);
+          // if(budgetAssistant.content) {
+          //   doc.content.push(budgetAssistant.content);
+          // }
+
+          if(eezyDebitForm.content) {
+            doc.content.push(eezyDebitForm.content);
           }
 
           pdfmake.createPdf(doc).open();
-
         } catch (error) {
           console.log(error);
         }

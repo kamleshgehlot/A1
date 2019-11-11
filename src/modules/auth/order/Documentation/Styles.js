@@ -64,6 +64,10 @@ export const styles = {
   },
   Common: {
     fontSize: 10,
+  }, 
+  EezyDebitHeader1:{
+    fontSize: 8,
+    alignment :'center',
   }
 }
 
