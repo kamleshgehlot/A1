@@ -183,26 +183,25 @@ export default function Order({roleName}) {
             pageMargins: [30, 30, 30, 30],
             content: []
           };
-          // let flexOrderForm = FlexOrderForm(result,data);
-          // let rentFlexContract = RentFlexContract(result,data);
-          // let budgetAssistant =BudgetAssistant(result,data);
-
+          let flexOrderForm = FlexOrderForm(result,data);
+          let rentFlexContract = RentFlexContract(result,data);
+          let budgetAssistant =BudgetAssistant(result,data);
           let eezyDebitForm = EezyDebitForm(result, data);
 
 
-          // if(flexOrderForm.content) {
-          //   doc.content.push(flexOrderForm.content);
-          //   doc.content.push({text: '', pageBreak: "after"});
-          // }
+          if(flexOrderForm.content) {
+            doc.content.push(flexOrderForm.content);
+            doc.content.push({text: '', pageBreak: "after"});
+          }
          
-          // if(rentFlexContract.content) {
-          //   doc.content.push(rentFlexContract.content);
-          //   doc.content.push({text: '', pageBreak: "after"});
-          // }
+          if(rentFlexContract.content) {
+            doc.content.push(rentFlexContract.content);
+            doc.content.push({text: '', pageBreak: "after"});
+          }
 
-          // if(budgetAssistant.content) {
-          //   doc.content.push(budgetAssistant.content);
-          // }
+          if(budgetAssistant.content) {
+            doc.content.push(budgetAssistant.content);
+          }
 
           if(eezyDebitForm.content) {
             doc.content.push(eezyDebitForm.content);
@@ -230,7 +229,8 @@ export default function Order({roleName}) {
           let fixedOrderForm = FixedOrderForm(result,data);          
           let rentFixContract = RentFixContract(result,data);
           let budgetAssistant =BudgetAssistant(result,data);
-
+          let eezyDebitForm = EezyDebitForm(result, data);
+          
           if(fixedOrderForm.content) {
             doc.content.push(fixedOrderForm.content);
             doc.content.push({text: '', pageBreak: "after"});
@@ -243,6 +243,10 @@ export default function Order({roleName}) {
 
           if(budgetAssistant.content) {
             doc.content.push(budgetAssistant.content);
+          }
+
+          if(eezyDebitForm.content) {
+            doc.content.push(eezyDebitForm.content);
           }
 
           pdfmake.createPdf(doc).open();

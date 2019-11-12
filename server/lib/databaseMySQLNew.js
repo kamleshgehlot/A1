@@ -15,7 +15,6 @@ function getFullName(dbName, userName) {
 if (env === 'uat') {
   DbName = 'rentronic_uat'
   domainName = 'rentronicsuat.saimrc.com'
-
 } else if (env === 'prod') {
   DbName = 'a1ability_rentronic_prod';
   domainName = 'rentronics.a1abilities.co.nz';
@@ -24,9 +23,9 @@ if (env === 'uat') {
 } else if (env === 'dev') {
   DbName = 'rentrodev_test';
   domainName = 'rentronicsdev.saimrc.com'
-} else {
-  DbName = 'rentronicnew'
-  domainName = 'localhost:3000'
+} else {  
+  DbName = 'rentronicsnew'
+  domainName = 'localhost:3000' 
 }
 
 module.exports = { 'prod': DbName, getFullName: getFullName, domainName: domainName, mailPass: mailPass, mailService: mailService, env: env };
