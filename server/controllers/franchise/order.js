@@ -270,6 +270,8 @@ const paymentSubmit = async function(req, res, next) {
     installment_no : Number(req.body.installment_no),
     payment_date: req.body.payment_date,
     payment_amt : Number(req.body.payment_amt),
+    late_fee : Number(req.body.late_fee),
+    interest_amt : Number(req.body.interest_amt),
     total_paid : Number(req.body.total_paid),
     due_installment_amt : Number(req.body.due_installment_amt),
     sub_installment_no : Number(req.body.sub_installment_no),
@@ -315,6 +317,8 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.due_installment_amt = params.each_payment_amt - payAmt;
           newPayment.sub_installment_no = 1;
           newPayment.payment_amt = payAmt;
+          newPayment.late_fee = 0;
+          newPayment.interest_amt = 0;
           newPayment.total_paid = newPayment.total_paid + payAmt;
           newPayment.installment_no = instNo + 1;
           newPayment.payment_date = dateMaker(newPayment.payment_date);
@@ -352,6 +356,8 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.payment_amt = payAmt;
           newPayment.total_paid = newPayment.total_paid + payAmt;
           newPayment.installment_no = instNo + 1;
+          newPayment.late_fee = 0;
+          newPayment.interest_amt = 0;
           newPayment.payment_date = dateMaker(newPayment.payment_date);
           const payment1 = await newPayment.paymentSubmit();
         }
@@ -372,6 +378,8 @@ const paymentSubmit = async function(req, res, next) {
           instNo = instNo + 1;
           payAmt = payAmt - dueAmt;
           newPayment.sub_installment_no = 0;
+          newPayment.late_fee = 0;
+          newPayment.interest_amt = 0;
           newPayment.payment_date =  dateMaker(newPayment.payment_date);
         }
 
@@ -394,6 +402,10 @@ const paymentSubmit = async function(req, res, next) {
             const payment = await newPayment.paymentSubmit();
             payAmt = payAmt - eachPayAmt;
             newPayment.payment_date =  dateMaker(newPayment.payment_date);
+            if(i===2){
+              newPayment.late_fee = 0;
+              newPayment.interest_amt = 0;
+            }
           }
     }
     res.send({});

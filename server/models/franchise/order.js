@@ -66,6 +66,9 @@ var Order = function (params) {
   this.delivery_date = params.delivery_date;
   this.purchase_from = params.purchase_from;
 
+  this.interest_amt = params.interest_amt;
+  this.late_fee = params.late_fee;
+
 };
 
 
@@ -676,7 +679,7 @@ Order.prototype.paymentSubmit = function () {
         // let Values = [
         //   [that.order_id, that.customer_id, that.installment_no, that.payment_date, that.payment_amt, that.total_paid, that.created_by]
         // ];
-        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, sub_installment_no, payment_date, payment_rec_date, payment_amt, total_paid, due_installment_amt, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+ that.sub_installment_no +'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+that.due_installment_amt+'", "'+ that.created_by+'")', function (error, rows, fields) {
+        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, sub_installment_no, payment_date, payment_rec_date, payment_amt, late_fee, interest_amt, total_paid, due_installment_amt, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+ that.sub_installment_no +'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+that.late_fee+'", "'+that.interest_amt+'", "'+ that.total_paid+'", "'+that.due_installment_amt+'", "'+ that.created_by+'")', function (error, rows, fields) {
             if (!error) {
                   if(that.installment_before_delivery === that.installment_no){
                     connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {

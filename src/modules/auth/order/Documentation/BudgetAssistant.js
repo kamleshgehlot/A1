@@ -345,44 +345,8 @@ export default function layout(data,order) {
         ],              
       },
     },
+    { text : '', pageBreak: "after", }, 
   ],
-  //   styles: {
-  //     // Header
-  //     Header1Center: {
-  //       fontSize: 8,
-  //       alignment: 'center',
-  //     },
-  //     Header2Center: {
-  //       fontSize: 13,
-  //       alignment: 'center',
-  //     },
-  //     Header3Center: {
-  //       fontSize: 9,
-  //       alignment: 'center',
-  //     },
-  //     custoemr: {        
-  //       alignment: 'right',
-  //     },
-  //     alignRight: {  
-  //       fontSize: 8,      
-  //       alignment: 'right',
-  //     },
-  //     margins:{
-  //       margin: [10,0,0,0]
-  //     },
-  //     // Customer: {
-  //     //   fontSize: 10,
-  //     //   alignment: 'left',
-  //     //   margin: [40, 5]
-  //     // },
-  //     ItemHeader: {
-  //       fontSize: 10,
-  //       bold: true
-  //     },
-  //     Common: {
-  //       fontSize: 10,
-  //     }
-  //   },
     pageSize: 'A4',
     pageOrientation: 'portrait',
   }
