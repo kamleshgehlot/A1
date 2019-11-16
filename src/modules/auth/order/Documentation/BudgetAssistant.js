@@ -194,7 +194,7 @@ export default function layout(data,order) {
   const franchise = data.franchise;
   const products = data.product;
   const customer = data.customer[0];
-  const orderType = data.flexOrder;
+  const orderType = data.orderType;
   const budget = data.budget[0];
   const user = data.user; 
 

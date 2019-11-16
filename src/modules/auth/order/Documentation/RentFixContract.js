@@ -8,11 +8,11 @@ export default function layout(data,order) {
   const franchise = data.franchise[0];
   const products = data.product;
   const customer = data.customer;
-  const orderType = data.fixedOrder[0];
+  const orderType = data.orderType[0];
   const budget = data.budget; 
   const user = data.user[0]; 
-  console.log('franchise',franchise);
-  console.log('orderTypeuser',orderType);
+  // console.log('franchise',franchise);
+  // console.log('orderTypeuser',orderType);
 
 
   var dd = {

@@ -40,6 +40,12 @@ import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 import BadgeComp  from '../../common/BadgeComp';
 import Snackbar from '@material-ui/core/Snackbar';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 import Add from './Add';
 import Edit from './Edit';
 import PaymentStatus from './PaymentStatus';
@@ -54,6 +60,7 @@ import Cancelled from './OrderComponent/Cancelled';
 
 import OrderCancellationForm from './OrderCancellationForm';
 import ConfirmationDialog from '../ConfirmationDialog.js';
+import YesNoDialog from '../../common/YesNoDialog.js';
 import ProcessDialog from '../ProcessDialog.js';
 import CommentDialog from '../CommentDialog.js';
 import CommentView from './CommentView.js';
@@ -70,6 +77,12 @@ import EezyDebitForm from './Documentation/EezyDebitForm';
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
 
+
+
+  
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -127,7 +140,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function Order({roleName}) {  
+export default function Order({roleName}) {
   const classes = useStyles();
   const userId = APP_TOKEN.get().userId;
 
@@ -166,11 +179,23 @@ export default function Order({roleName}) {
   const [completedTab,setCompletedTab] = useState([]);
   const [cancelledTab,setCancelledTab] = useState([]);
   const [viewOnly, setViewOnly] = useState(false);
-  //value is for tabs  
+  const [openConfirmationPDF, setOpenConfirmationPDF]= useState(false);
+  const [orderDataForPDF, setOrderDataForPDF] = useState([]);
   const [value, setValue] = React.useState(0);  
 
   
-  function createAndDownloadPdf(data) {
+  const handleYesNoClose = (isConfirm) => {    
+    setOpenConfirmationPDF(false);
+    createAndDownloadPdf(orderDataForPDF, isConfirm)
+  }
+
+  const handlePDFGenerateType = (data) => {
+    setOrderDataForPDF(data)
+    setOpenConfirmationPDF(true);
+  }
+  
+
+  function createAndDownloadPdf(data, eziDebitFormType) {
     if(data.order_type === 2){
       const fetchData = async () => {
         try {
@@ -186,7 +211,7 @@ export default function Order({roleName}) {
           let flexOrderForm = FlexOrderForm(result,data);
           let rentFlexContract = RentFlexContract(result,data);
           let budgetAssistant =BudgetAssistant(result,data);
-          let eezyDebitForm = EezyDebitForm(result, data);
+          let eezyDebitForm = EezyDebitForm(result, data, eziDebitFormType);
 
 
           if(flexOrderForm.content) {
@@ -214,7 +239,7 @@ export default function Order({roleName}) {
       };
       fetchData();
     }
-    if(data.order_type === 1){
+    if(data.order_type === 1){      
       const fetchData = async () => {
         try {
           const result = await OrderAPI.getFixedOrderDataForPDF({data: data});
@@ -229,7 +254,7 @@ export default function Order({roleName}) {
           let fixedOrderForm = FixedOrderForm(result,data);          
           let rentFixContract = RentFixContract(result,data);
           let budgetAssistant =BudgetAssistant(result,data);
-          let eezyDebitForm = EezyDebitForm(result, data);
+          let eezyDebitForm = EezyDebitForm(result, data, eziDebitFormType);
           
           if(fixedOrderForm.content) {
             doc.content.push(fixedOrderForm.content);
@@ -662,7 +687,7 @@ export default function Order({roleName}) {
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                  createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
+                  createAndDownloadPdf ={handlePDFGenerateType } handleUploadFile={handleUploadFile} 
                   handleClickViewOpen = {handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
                   handleOrderView={handleOrderView}  /> }
                 </TabPanel>
@@ -689,7 +714,7 @@ export default function Order({roleName}) {
                     handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
                     handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile}
+                    createAndDownloadPdf ={handlePDFGenerateType } handleUploadFile={handleUploadFile}
                     handleClickViewOpen = {handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen} 
                     handleDeliveredProductOpen={handleDeliveredProductOpen}  handleOrderView={handleOrderView}
                     handleViewDeliveredDetailOpen = {handleViewDeliveredDetailOpen} /> }
@@ -714,7 +739,7 @@ export default function Order({roleName}) {
                     handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus} 
                     handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector} 
                     handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                    createAndDownloadPdf ={createAndDownloadPdf } handleUploadFile={handleUploadFile} 
+                    createAndDownloadPdf ={handlePDFGenerateType } handleUploadFile={handleUploadFile} 
                     handleClickViewOpen = {handleClickViewOpen} 
                     handleDeliveredProductOpen={handleDeliveredProductOpen}  handleOrderView={handleOrderView} /> }
                 </TabPanel>                
@@ -753,6 +778,7 @@ export default function Order({roleName}) {
      {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} /> : null}
      {openProductDelivered ? <UpdateDeliveredProduct open={openProductDelivered} handleClose={handleDeliveredProdcutClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
      {openViewDeliveredDetail ? <ViewDeliveredProductDetails open={openViewDeliveredDetail} handleClose={handleViewDeliveredDetail} handleSnackbarClick={handleSnackbarClick} orderData = {orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
+     {openConfirmationPDF ? <YesNoDialog open = {openConfirmationPDF} handleYesNoClose={handleYesNoClose} title={"Ezi Debit Filled or Blank ?"} content={"Select Yes to downlaod auto filled form, No to download empty form."} />: null}
     </div>
   );
 }

@@ -204,7 +204,7 @@ const getCommentList = async function (req, res, next) {
 };
 
 const getCustomerBankDetail = async function (req, res, next) {
-  console.log('req.body', req.body);
+  // console.log('req.body', req.body);
   let CustomerParams = {
     user_id: req.decoded.user_id,
     customer_id: req.body.customer_id,

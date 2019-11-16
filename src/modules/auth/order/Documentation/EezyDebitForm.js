@@ -6,21 +6,30 @@ import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } fr
 import { styles } from './Styles.js';
 
 
-export default function layout(data,order) {
+export default function layout(data, order, eziDebitFormType) {
 
   const franchise = data.franchise;
   const products = data.product;
   const customer = data.customer[0];
-  const orderType = data.flexOrder;
+  const orderType = data.orderType[0];
   const budget = data.budget[0];
   const user = data.user; 
+  const bankDetail = data.bankDetail[0];
+  
+  let eachPay = orderType.each_payment_amt + '.00'
+  const eachPaymentAmt = eachPay.split('.')[0];
+  const decimalEachPaymentAmt = eachPay.split('.')[1];
+  const paymentDate = getDateInDDMMYYYY(orderType.first_payment);
+  const currentDate = getCurrentDateDDMMYYYY().toString();
 
-  // console.log(franchise);
-  // console.log("product", products);
+  console.log('eziDebitFormType',eziDebitFormType);
+  // console.log("data", data);
+
+  // console.log('paymentDate',paymentDate);
+  // console.log("data", data);
   // console.log(orderType);
   // console.log(customer);
   // console.log(order);
-  // console.log(data);
 
   var dd = {
     content: 
@@ -69,44 +78,44 @@ export default function layout(data,order) {
                 [
                   {},
                   { text: '* Surname: ', fontSize: 7, bold: true, }, 
-                  { text: '', fillColor:'#ffffff'},
+                  { text: customer.customer_name.split(' ')[1], fontSize: 7, fillColor:'#ffffff'},
                   { text: '* Given Name: ', fontSize: 7, bold: true, alignment: 'right'}, 
-                  { text: '', fillColor:'#ffffff'},
+                  { text: eziDebitFormType=== 1 ? customer.customer_name.split(' ')[0] : '', fontSize: 7, fillColor:'#ffffff'},
                   {},
                 ],     
                 [
                   {},
                   { text: '* Mobile #: ', fontSize: 7, bold: true, }, 
-                  { text: '', fillColor:'#ffffff'},
+                  { text: eziDebitFormType=== 1 ? customer.mobile : '', fontSize:7,  fillColor:'#ffffff'},
                   { text: '', colSpan:2},                  
                   {},{},
                 ],                  
                 [
                   {},
                   { text: '* Email: ', fontSize: 7, bold: true, },                   
-                  { text: '', colSpan:3, fillColor:'#ffffff'},                  
+                  { text:  eziDebitFormType=== 1 ? customer.email : '', fontSize:7, colSpan:3, fillColor:'#ffffff'}, 
                   {},{},{},
                 ],
                 [
                   {},
                   { text: '* Address: ', fontSize: 7, bold: true, },                   
-                  { text: '', colSpan:3, fillColor:'#ffffff'},                  
+                  { text:  eziDebitFormType=== 1 ? customer.address : '', fontSize:7, colSpan:3, fillColor:'#ffffff'},                  
                   {},{},{},
                 ],
                 [
                   {},
                   { text: '* Suburb: ', fontSize: 7, bold: true, },                   
-                  { text: '', fillColor:'#ffffff'},
+                  { text:  '', fillColor:'#ffffff'},
                   { text: '* Postcode: ', fontSize: 7, bold: true, alignment: 'right'},              
                   {
                     table:{
                       widths: ['10%','10%','10%','10%','*'], 
                       body: [                  
                         [
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? customer.postcode.split('')[0] :'', alignment:'center', fontSize:7, fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? customer.postcode.split('')[1] :'', alignment:'center', fontSize:7, fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? customer.postcode.split('')[2] :'', alignment:'center', fontSize:7, fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? customer.postcode.split('')[3] :'', alignment:'center', fontSize:7, fillColor:'#ffffff'},
                           { text:'', fillColor:'#e5edd9'}
                         ], 
                       ],
@@ -231,8 +240,8 @@ export default function layout(data,order) {
                       widths: ['5%','95%'], 
                       body: [                  
                         [
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'\t\t\t\tRegular Debits', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]}
+                          { text:'', fillColor: eziDebitFormType=== 1 ? '#000000' : '#ffffff', },
+                          { text:'Regular Debits', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]}
                         ],  
                       ],
                     },                     
@@ -243,14 +252,14 @@ export default function layout(data,order) {
                     body: [                  
                       [
                         { text:'Starting On Date: ', fontSize: 7, fillColor:'#e5edd9', bold: true, },
-                        { text:'', fillColor:'#ffffff'}, 
-                        { text:'', fillColor:'#ffffff'},
+                        { text: eziDebitFormType=== 1 ? paymentDate.split('-')[0].split('')[0] :'', fontSize: 7,  alignment:'center', fillColor:'#ffffff'}, 
+                        { text: eziDebitFormType=== 1 ? paymentDate.split('-')[0].split('')[1] :'', fontSize: 7,  alignment:'center', fillColor:'#ffffff'},
+                        { text:'/',  fillColor:'#e5edd9'},
+                        { text: eziDebitFormType=== 1 ? paymentDate.split('-')[1].split('')[0] :'', fontSize: 7,  alignment:'center', fillColor:'#ffffff'},
+                        { text: eziDebitFormType=== 1 ? paymentDate.split('-')[1].split('')[1] :'', fontSize: 7,  alignment:'center', fillColor:'#ffffff'},
                         { text:'/', fillColor:'#e5edd9'},
-                        { text:'', fillColor:'#ffffff'},
-                        { text:'', fillColor:'#ffffff'},
-                        { text:'/', fillColor:'#e5edd9'},
-                        { text:'', fillColor:'#ffffff'},
-                        { text:'', fillColor:'#ffffff'},
+                        { text: eziDebitFormType=== 1 ? paymentDate.split('-')[2].split('')[2] :'', fontSize: 7,  alignment:'center', fillColor:'#ffffff'},
+                        { text: eziDebitFormType=== 1 ? paymentDate.split('-')[2].split('')[3] :'', fontSize: 7,  alignment:'center', fillColor:'#ffffff'},
                       ],  
                       [
                         {},
@@ -273,19 +282,19 @@ export default function layout(data,order) {
                   },
                   {
                     table:{
-                      widths: ['66%','4%','4%','4%','4%','4%','4%','2%','4%','4%'],
+                      widths: ['66%','4%','4%','4%','4%','4%','4%','2%','4%','4%'],                      
                       body: [                  
                         [
                           { text:'Debit this amount: $ ', fontSize: 7, fillColor:'#e5edd9', bold: true, },
-                          { text:'', fillColor:'#ffffff'}, 
-                          { text:'', fillColor:'#ffffff'}, 
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? eachPaymentAmt.split('')[eachPaymentAmt.split('').length - 6] :'', alignment:'center', bold:true, fontSize: 8, fillColor:'#ffffff'}, 
+                          { text: eziDebitFormType=== 1 ? eachPaymentAmt.split('')[eachPaymentAmt.split('').length - 5] :'', alignment:'center', bold:true,  fontSize: 8, fillColor:'#ffffff'}, 
+                          { text: eziDebitFormType=== 1 ? eachPaymentAmt.split('')[eachPaymentAmt.split('').length - 4] :'', alignment:'center', bold:true,  fontSize: 8,fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? eachPaymentAmt.split('')[eachPaymentAmt.split('').length - 3] :'', alignment:'center', bold:true,  fontSize: 8, fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? eachPaymentAmt.split('')[eachPaymentAmt.split('').length - 2] :'', alignment:'center', bold:true,  fontSize: 8, fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? eachPaymentAmt.split('')[eachPaymentAmt.split('').length - 1] :'', alignment:'center', bold:true,  fontSize: 8, fillColor:'#ffffff'},
                           { text:'.', fillColor:'#e5edd9'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? decimalEachPaymentAmt.split('')[0] :'', fontSize: 8, alignment:'center',  bold:true,  fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? decimalEachPaymentAmt.split('')[1] :'', fontSize: 8,alignment:'center',  bold:true,  fillColor:'#ffffff'},
                         ],                          
                       ],
                       },
@@ -306,13 +315,13 @@ export default function layout(data,order) {
                         [
                           { text:'', border: [false, false, false, false]},
                           { text:'Frequency:', fontSize: 8, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor:'#ffffff'},
+                          { text:'', fillColor: '#ffffff'},
                           { text:'Weekly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor:'#ffffff'},
+                          { text:'', fillColor: eziDebitFormType=== 1 ? orderType.frequency === 4 ? '#000000' : '#ffffff' : '#ffffff'},
                           { text:'Fortnightly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor:'#ffffff'},
+                          { text:'', fillColor: eziDebitFormType=== 1 ? orderType.frequency === 2 ? '#000000' : '#ffffff': '#ffffff'},
                           { text:'Monthly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor:'#ffffff'},
+                          { text:'', fillColor: eziDebitFormType=== 1 ? orderType.frequency === 1 ? '#000000' : '#ffffff' :'#ffffff'},
                           { text:'4 Weekly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
                         ],  
                       ],
@@ -331,11 +340,11 @@ export default function layout(data,order) {
                         [
                           { text:'', border: [false, false, false, false]},
                           { text:'Duration:', fontSize: 8, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor:'#ffffff'},
+                          { text:'', fillColor: eziDebitFormType=== 1 ? '#000000' : '#ffffff'},
                           { text:'Continue regular debits until further notice (minimum of ', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor:'#ffffff', },
-                          { text:'', fillColor:'#ffffff', },
-                          { text:'', fillColor:'#ffffff', },
+                          { text: eziDebitFormType=== 1 ? order.order_type === 1 ? orderType.no_of_payment.toString().split('')[0] : '' :'', fillColor:'#ffffff', fontSize: 7, bold:true},
+                          { text: eziDebitFormType=== 1 ? order.order_type === 1 ? orderType.no_of_payment.toString().split('')[1] : '' :'', fillColor:'#ffffff',fontSize: 7, bold:true},
+                          { text: eziDebitFormType=== 1 ? order.order_type === 1 ? orderType.no_of_payment.toString().split('')[2] : '' :'', fillColor:'#ffffff',fontSize: 7,bold:true  },
                           { text:'Debits)', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
                         ],  
                       ],
@@ -515,7 +524,7 @@ export default function layout(data,order) {
                       body: [                  
                         [
                           { text:'', border: [false, false, false, false]},
-                          { text:'', fillColor:'#ffffff',},
+                          { text:'', fillColor: eziDebitFormType=== 1 ?  '#000000' :'#ffffff',},
                           { text:'Details of the Account to be Debited', fontSize: 7, border: [false, false, false, false]},                          
                         ],  
                       ],
@@ -532,7 +541,7 @@ export default function layout(data,order) {
                           { text:'Financial Institution: ', fontSize: 7, },
                           { text:'', fillColor:'#ffffff',},
                           { text:'Branch: ', fontSize: 7, },
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.bank_branch :'',  fontSize: 7, bold: true,fillColor:'#ffffff',},
                         ],  
                       ],
                     },
@@ -549,26 +558,26 @@ export default function layout(data,order) {
                       body: [                  
                         [
                           {},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.bank_code.toString().split('')[0] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.bank_code.toString().split('')[1] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
                           { text:'-', fontSize: 8, alignment: 'center'},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.branch_number.toString().split('')[0] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.branch_number.toString().split('')[1] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.branch_number.toString().split('')[2] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.branch_number.toString().split('')[3] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
                           {},
                           {},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_number.toString().split('')[0] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_number.toString().split('')[1] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_number.toString().split('')[2] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_number.toString().split('')[3] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_number.toString().split('')[4] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_number.toString().split('')[5] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_number.toString().split('')[6] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
                           {},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',}, 
+                          { text: eziDebitFormType=== 1 ? bankDetail.suffix.toString().split('')[0] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.suffix.toString().split('')[1] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? bankDetail.suffix.toString().split('')[2] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff',}, 
                           {},
                         ],  
                         [
@@ -596,34 +605,34 @@ export default function layout(data,order) {
                       body: [                  
                         [
                           {}, { text:'Account Holder Name: ', fontSize: 7},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
-                          { text:'', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[0] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[1] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[2] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[3] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[4] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[5] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[6] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[7] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[8] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[9] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[10] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[11] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[12] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[13] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[14] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[15] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[16] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[17] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[18] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[19] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[20] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[21] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[22] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[23] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[24] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[25] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[26] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
+                          { text: eziDebitFormType=== 1 ? bankDetail.acc_holder_name.toUpperCase().split('')[27] :'', fontSize: 7, bold: true, alignment: 'center', fillColor:'#ffffff'},
                           {},
                         ],                         
                       ],
@@ -736,14 +745,14 @@ export default function layout(data,order) {
                       body: [ 
                         [                           
                           { text:'Date: ', fontSize: 7, alignment: 'right'},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? currentDate.split('')[0] :'', fontSize: 7, bold:true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? currentDate.split('')[1] :'', fontSize: 7, bold:true, alignment: 'center', fillColor:'#ffffff',},
                           { text:'/', fontSize: 7, alignment: 'center'},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? currentDate.split('')[3] :'', fontSize: 7, bold:true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? currentDate.split('')[4] :'', fontSize: 7, bold:true, alignment: 'center', fillColor:'#ffffff',},
                           { text:'/',  fontSize: 7, alignment: 'center'},
-                          { text:'', fillColor:'#ffffff',},
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? currentDate.split('')[8] :'', fontSize: 7, bold:true, alignment: 'center', fillColor:'#ffffff',},
+                          { text: eziDebitFormType=== 1 ? currentDate.split('')[9] :'', fontSize: 7, bold:true, alignment: 'center', fillColor:'#ffffff',},
                           {},
                         ],   
                         [                           

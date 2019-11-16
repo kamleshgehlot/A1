@@ -46,7 +46,7 @@ export default function flexOrderForm(data,order) {
   const franchise = data.franchise;
   const products = data.product;
   const customer = data.customer;
-  const orderType = data.flexOrder;
+  const orderType = data.orderType;
   const budget = data.budget; 
   const user = data.user[0]; 
 

@@ -47,7 +47,7 @@ export default function FixedOrderForm(data,order) {
   const franchise = data.franchise;
   const products = data.product;
   const customer = data.customer;
-  const orderType = data.fixedOrder;
+  const orderType = data.orderType;
   const budget = data.budget; 
   const user = data.user[0]; 
 
@@ -57,7 +57,7 @@ export default function FixedOrderForm(data,order) {
   // console.log(data);
   // console.log(budget);
   // console.log(order);
-  console.log(order);
+  // console.log(order);
 
  
 

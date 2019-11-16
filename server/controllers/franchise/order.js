@@ -1,4 +1,5 @@
 const Order = require('../../models/franchise/order.js');
+const Customer = require('../../models/franchise/customer.js');
 const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 const addSubtractDate = require("add-subtract-date");
 const moment = require('moment');
@@ -791,8 +792,9 @@ const editOrder = async function (req, res, next) {
           const franchise = await new Order({user_id : req.decoded.user_id}).getCompanyDetail();
           const product = await new Order({products_id: req.body.data.product_id}).getProductDetail();
           const user = await new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail();
+          const bankDetail = await new Customer({user_id : req.decoded.user_id, customer_id: req.body.data.customer_id}).getCustomerBankDetail();
 
-          res.send({ budget: budget, flexOrder:flexOrder, customer: customer, franchise: franchise, product:product, user: user, budgetComment: budgetComment });
+          res.send({ budget: budget, orderType:flexOrder, customer: customer, franchise: franchise, product:product, user: user, budgetComment: budgetComment, bankDetail: bankDetail });
 
       }catch(err){
         next(err);
@@ -807,7 +809,8 @@ const editOrder = async function (req, res, next) {
       franchise_id: req.decoded,
       order_id : req.body.data.id,
       customer_id: req.body.data.customer_id,
-    };
+    };  
+  
       
     if(orderParams.order_id!= '' || orderParams.order_id != null){
       try{
@@ -818,7 +821,9 @@ const editOrder = async function (req, res, next) {
         const franchise = await new Order({user_id : req.decoded.user_id}).getCompanyDetail();
         const product = await new Order({products_id: req.body.data.product_id}).getProductDetail();
         const user = await new Order({user_id : req.decoded.user_id, id: req.decoded.id}).getCSRDetail();
-        res.send({ budget: budget, fixedOrder:fixedOrder, customer: customer, franchise: franchise, product:product, user: user, budgetComment: budgetComment });
+        const bankDetail = await new Customer({user_id : req.decoded.user_id, customer_id: req.body.data.customer_id}).getCustomerBankDetail();
+
+        res.send({ budget: budget, orderType:fixedOrder, customer: customer, franchise: franchise, product:product, user: user, budgetComment: budgetComment, bankDetail: bankDetail });
 
       }catch(err){
         next(err);
