@@ -2,6 +2,8 @@ const Order = require('../../models/franchise/order.js');
 const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 const addSubtractDate = require("add-subtract-date");
 const moment = require('moment');
+
+
 const uploadDoc = async function (req, res, next) {
   // console.log('rows data',req.body.data);
 
@@ -63,6 +65,8 @@ const uploadDeliveryDoc = async function (req, res, next) {
     next(error);
 	}
 };
+
+
 
 
 const postComment = async function (req, res, next) {
@@ -231,7 +235,6 @@ const getFixedOrder = async function(req, res, next) {
 const getFlexOrder = async function(req, res, next) {
   try {
     const order = await new Order({user_id : req.decoded.user_id, flexOrderId: req.body.flexOrderId}).getFlexOrder();
-    // console.log('order',order);
     res.send(order);
   } catch (error) {
     next(error);
@@ -242,12 +245,21 @@ const getFlexOrder = async function(req, res, next) {
 const getPaymentHistory = async function(req, res, next) {
   try {
     const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getPaymentHistory();
-    // console.log('payment history',order);
     res.send(order);
   } catch (error) {
     next(error);
   }
 };
+
+const getFullPaymentHistory = async function(req, res, next) {
+  try {
+    const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getFullPaymentHistory();
+    res.send(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 const getRequiredDataToCancel = async function(req, res, next) {
@@ -260,30 +272,65 @@ const getRequiredDataToCancel = async function(req, res, next) {
   }
 };
 
+
 const paymentSubmit = async function(req, res, next) {
   // console.log('req.body  order',req.body)
 
+  const data = JSON.parse(req.body.data);
+  let attachments = '';
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
   let params = {
+    payment_table_id : data.payment_table_id,
     user_id : req.decoded.user_id, 
-    order_id : req.body.order_id,
-    customer_id: req.body.customer_id,
-    installment_no : Number(req.body.installment_no),
-    payment_date: req.body.payment_date,
-    payment_amt : Number(req.body.payment_amt),
-    late_fee : Number(req.body.late_fee),
-    interest_amt : Number(req.body.interest_amt),
-    total_paid : Number(req.body.total_paid),
-    due_installment_amt : Number(req.body.due_installment_amt),
-    sub_installment_no : Number(req.body.sub_installment_no),
+    order_id : data.order_id,
+    customer_id: data.customer_id,
+    transaction_id : data.transaction_id,
+    installment_no : Number(data.installment_no),
+    payment_date: data.payment_date,
+    payment_amt : Number(data.payment_amt),
+    late_fee : Number(data.late_fee),
+    interest_amt : Number(data.interest_amt),
+    total_paid : Number(data.total_paid),
+    due_installment_amt : Number(data.due_installment_amt),
+    sub_installment_no : Number(data.sub_installment_no),
     created_by: req.decoded.id,    
-    installment_before_delivery : Number(req.body.installment_before_delivery),
-    last_installment_no : Number(req.body.last_installment_no),
-    payment_rec_date : req.body.payment_rec_date,
-    each_payment_amt : Number(req.body.each_payment_amt),
-    frequency : req.body.frequency,
+    installment_before_delivery : Number(data.installment_before_delivery),
+    last_installment_no : Number(data.last_installment_no),
+    payment_rec_date : data.payment_rec_date,
+    each_payment_amt : Number(data.each_payment_amt),
+    frequency : data.frequency,
+    transaction_date : data.payment_rec_date,
+    transaction_amt : Number(data.payment_amt),
+    comment : data.comment,
+    document :  attachments,  
   }   
+  console.log('PAYMENT PARAMS',params)
+
   try {
     const newPayment = new Order(params);
+    const newDoc = new UploadDocument(params);
+
+    
+    if(params.transaction_id != "" && params.transaction_id != undefined && params.transaction_id !=0){
+      await newPayment.deadTocurrentInstallment();
+    
+      if(params.document !== "" && params.document != undefined){
+        await newDoc.uploadPaymentDoc();
+      }
+  
+      if(params.comment !== "" && params.comment != undefined){
+        await newPayment.leaveCommentForPayment();
+      }
+    }
+
+    
+    
+    const transaction_result = await newPayment.transactionEntry();
+    newPayment.transaction_id = transaction_result.transaction_id;
+
     let payAmt = params.payment_amt;
     let instNo = params.installment_no;
 
@@ -317,8 +364,6 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.due_installment_amt = params.each_payment_amt - payAmt;
           newPayment.sub_installment_no = 1;
           newPayment.payment_amt = payAmt;
-          newPayment.late_fee = 0;
-          newPayment.interest_amt = 0;
           newPayment.total_paid = newPayment.total_paid + payAmt;
           newPayment.installment_no = instNo + 1;
           newPayment.payment_date = dateMaker(newPayment.payment_date);
@@ -355,9 +400,7 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.sub_installment_no = 1;
           newPayment.payment_amt = payAmt;
           newPayment.total_paid = newPayment.total_paid + payAmt;
-          newPayment.installment_no = instNo + 1;
-          newPayment.late_fee = 0;
-          newPayment.interest_amt = 0;
+          newPayment.installment_no = instNo + 1;          
           newPayment.payment_date = dateMaker(newPayment.payment_date);
           const payment1 = await newPayment.paymentSubmit();
         }
@@ -377,9 +420,7 @@ const paymentSubmit = async function(req, res, next) {
 
           instNo = instNo + 1;
           payAmt = payAmt - dueAmt;
-          newPayment.sub_installment_no = 0;
-          newPayment.late_fee = 0;
-          newPayment.interest_amt = 0;
+          newPayment.sub_installment_no = 0;          
           newPayment.payment_date =  dateMaker(newPayment.payment_date);
         }
 
@@ -401,11 +442,7 @@ const paymentSubmit = async function(req, res, next) {
             }
             const payment = await newPayment.paymentSubmit();
             payAmt = payAmt - eachPayAmt;
-            newPayment.payment_date =  dateMaker(newPayment.payment_date);
-            if(i===2){
-              newPayment.late_fee = 0;
-              newPayment.interest_amt = 0;
-            }
+            newPayment.payment_date =  dateMaker(newPayment.payment_date);            
           }
     }
     res.send({});
@@ -414,6 +451,57 @@ const paymentSubmit = async function(req, res, next) {
     next(error);
   }
 };
+
+
+
+const editInstallment = async function (req, res, next) {
+  const data = JSON.parse(req.body.data);
+  let attachments = '';
+  req.files.map((file) => {
+    attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
+  });
+
+	let orderParams = {
+    document :  attachments,
+    created_by : req.decoded.id,
+    user_id : req.decoded.user_id,
+
+    payment_table_id : data.payment_table_id,
+    order_id : data.order_id,
+    customer_id: data.customer_id,
+    installment_no : Number(data.installment_no),
+    payment_date: data.payment_date,
+    payment_amt : Number(data.payment_amt),
+    late_fee : Number(data.late_fee),
+    interest_amt : Number(data.interest_amt),
+    total_paid : Number(data.total_paid),
+    due_installment_amt : Number(data.due_installment_amt),
+    sub_installment_no : Number(data.sub_installment_no),    
+    payment_rec_date : data.payment_rec_date,
+    comment : data.comment,     
+  };
+
+	try{
+    const newDoc = new UploadDocument(orderParams);
+    const newQuery = new Order(orderParams);
+
+    if(orderParams.document !== "" && orderParams.document != undefined){
+      await newDoc.uploadPaymentDoc();
+    }
+
+    if(orderParams.comment !== "" && orderParams.comment != undefined){
+      await newQuery.leaveCommentForPayment();
+    }
+
+    const result = await newQuery.updateInstallment();
+    await newQuery.deadTocurrentInstallment();
+
+    res.send({isSuccessful : result});
+	}catch(err){
+    next(error);
+	}
+};
+
 
 const assignToFinance = async function(req, res, next) {
   try {
@@ -765,6 +853,22 @@ const editOrder = async function (req, res, next) {
     }
   };
 
+
+  
+const getSingleTransactionDetail = async function(req, res, next) {
+  try {
+    const result = await new Order({user_id: req.decoded.user_id, transaction_id: req.body.transaction_id}).getSingleTransactionDetail();
+    console.log('getSingleTransactionDetail',result);
+
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
 module.exports = { 
   getnewid, 
   uploadDoc, 
@@ -787,6 +891,7 @@ module.exports = {
   assignToFinance, 
   assignToDelivery, 
   getPaymentHistory, 
+  getFullPaymentHistory,
   paymentSubmit, 
   Delivered,
   getDeliveredProductData,
@@ -796,4 +901,6 @@ module.exports = {
   getSalesTypeList,
   getSalesPersonList,
   getBudgetComments,
+  editInstallment,
+  getSingleTransactionDetail,
 };

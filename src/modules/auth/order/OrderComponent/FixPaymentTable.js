@@ -34,6 +34,7 @@ import 'date-fns';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import {getCurrentDate, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY, getTime, setDBDateFormat} from '../../../../utils/datetime.js';
+import { async } from 'q';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -110,7 +111,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment, lateFee, interestAmt, handleInterestAmt, handleLateFee}) {
+export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment, lateFee, interestAmt, handleInterestAmt, handleLateFee, handleEditInstallmentOpen}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [singleInstallment, setSingleInstallment] = useState([]);
@@ -120,14 +121,14 @@ export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentA
 
   let isExpansionExist = false;
   let inc = 0;
-  // let expansionHeader = [];
 
-
-  const handleMissingDateStataus = (lastDueDate) => {
+  const handleMissingDateStataus = async (lastDueDate) => {
     if(setDBDateFormat(lastDueDate) >= getDate(paymentRecDate)){
       setIsDateMissing(false);
+      await handleInterestAmt({target:{value:0}});
+      await handleLateFee({target:{value:0}});
     }else{
-      setIsDateMissing(true);
+      setIsDateMissing(true);      
     }
   }
 
@@ -164,7 +165,6 @@ return (
   <Table>
     <TableHead>
       <TableRow>
-        {/* <StyledTableCell>#</StyledTableCell> */}
         <StyledTableCell align="center" style={{minWidth:150}}>Installment No.</StyledTableCell>
         <StyledTableCell align="center" style={{minWidth:170}}>Payment Due Date</StyledTableCell>
         <StyledTableCell align="center" style={{minWidth:200}}>Payment Rec. Date</StyledTableCell>
@@ -208,7 +208,7 @@ return (
                       <ExpansionPanelDetails>
                         <Table >
                           <TableBody >{
-                          (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
+                          (paymentStatus.length > 0 ? paymentStatus : []).map((data, innerIndex) => {
                               return(
                                 (singleData.installment_no == data.installment_no && data.sub_installment_no != 0) &&
                                   <TableRow  className={data.installment_no === data.installment_before_delivery ? styleClass.highlightRow : null}>
@@ -221,8 +221,13 @@ return (
                                         <StyledTableCell align="center"> {data.interest_amt}   </StyledTableCell>
                                         <StyledTableCell align="center"> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
                                         <StyledTableCell align="center"> {data.status} </StyledTableCell>
+                                        
                                         <StyledTableCell align="center">
-                                          <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                                          { (totalPaidInstallment -1 ) === innerIndex ?
+                                            <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handleEditInstallmentOpen(data); }} >Edit Installment</Button>
+                                            :
+                                            <Button variant="contained" color='primary' className={styleClass.button} disabled >Paid Installment</Button>
+                                          }
                                         </StyledTableCell>
                                   </TableRow>     
                                 )
@@ -327,7 +332,13 @@ return (
                 <StyledTableCell align="center"> {expanseData.total_paid !== "" ? expanseData.total_paid : ''} </StyledTableCell>
                 <StyledTableCell align="center"> {expanseData.status} </StyledTableCell>
                 <StyledTableCell align="center">
-                  <Button variant="contained" color={isDateMissing===false ? 'primary' : 'secondary'} className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                  {
+                    (totalPaidInstallment - 1)=== index ?
+                    <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handleEditInstallmentOpen(expanseData); }}>Edit Installment</Button>
+                    :
+                    <Button variant="contained" color={isDateMissing===false ? 'primary' : 'secondary'} className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData, 1); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                  }
+                  
                 </StyledTableCell>
               </TableRow> 
             )

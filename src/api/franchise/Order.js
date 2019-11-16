@@ -13,7 +13,6 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 
 export default {
   uploadDocument: async (data1) => {
-    // console.log("data1 ",data1);
     const URL = `${c.API_CONSUMER}/api/franchise/order/uploaddoc`;
     try {
       const { data } = await axios(URL, {
@@ -33,7 +32,6 @@ export default {
   
 
   uploadDeliveryDoc: async (data1) => {
-    // console.log("data1 ",data1);
     const URL = `${c.API_CONSUMER}/api/franchise/order/uploadDeliveryDoc`;
     try {
       const { data } = await axios(URL, {
@@ -287,13 +285,31 @@ export default {
       throw error;
     }
   },
-
-  paymentSubmit: async (req) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/order/paymentsubmit`;
+  
+  getFullPaymentHistory: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getFullPaymentHistory`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',
         data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  paymentSubmit: async (params) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/paymentsubmit`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: params.formData,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -561,5 +577,47 @@ export default {
       throw error;
     }
   },
+
+
+  editInstallment: async (params) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/editInstallment`;
+    try {
+      const { data } = await axios(
+        URL,
+        {
+          method: 'POST',
+          data: params.formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
+  getSingleTransactionDetail: async (params) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getSingleTransactionDetail`;
+    try {
+      const { data } = await axios(
+        URL,
+        {
+          method: 'POST',
+          data: params,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
 
 };
