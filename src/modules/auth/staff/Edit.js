@@ -95,10 +95,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     setAssignRole(event.target.value);
   }
 
-  console.log('assignRole',assignRole);
   useEffect(() => {
     let assignRoleList = [];
-    (inputValues.position.split(',')).map((role,index) =>{
+    (inputValues.position.toString().split(',')).map((role,index) =>{
       assignRoleList.push(role);
     });
     setAssignRole(assignRoleList);

@@ -45,11 +45,15 @@ import { fontFamily } from '@material-ui/system';
 import Active from './components/Active';
 import Hold from './components/Hold';
 import FinancialHardship from './components/FinancialHardship';
+import BornToday from './components/BornToday';
 
 import CommentView from './CommentView';
 import BadgeComp from '../../common/BadgeComp';
 
 import BudgetHistory from '../order/BudgetHistory';
+import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDDMMYYYY, getDate} from '../../../utils/datetime';
+
+
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -192,6 +196,8 @@ export default function CustomerList({userId, roleName}) {
   const [activeTab, setActiveTab] = useState([]);
   const [holdTab, setHoldTab] = useState([]);
   const [financialHardshipTab, setFinancialHardshipTab] = useState([]);
+  const [bornTodayTab, setBornTodayTab] = useState([]);
+  
 
 
 
@@ -287,13 +293,8 @@ export default function CustomerList({userId, roleName}) {
     setSnackbarOpen(true);
   }
   
-  function handleFranchiseClick() {
-    setShowFranchise(true);
-    setShowStaff(false);
-  }
 
   function handleCustomerList(response){
-    // console.log(response);
     setCustomerListData(response);
     handleTabsData(response);    
   }
@@ -329,8 +330,13 @@ export default function CustomerList({userId, roleName}) {
     let activeList = [];
     let holdList = [];
     let financialHardshipList = [];
+    let bornToday = [];
 
-    (customerList.length > 0 ? customerList : []).map((data, index) => {        
+    (customerList.length > 0 ? customerList : []).map((data, index) => {
+      
+      if(isBirthDate(data.dob)){
+        bornToday.push(data);
+      }
       if(data.state == 1 ){
         activeList.push(data);
       }
@@ -345,6 +351,7 @@ export default function CustomerList({userId, roleName}) {
     setActiveTab(activeList);
     setHoldTab(holdList);
     setFinancialHardshipTab(financialHardshipList);
+    setBornTodayTab(bornToday);
   }
   
 
@@ -426,6 +433,7 @@ export default function CustomerList({userId, roleName}) {
                   <Tab label={<BadgeComp count={activeTab.length} label="Open" />} /> 
                   <Tab label={<BadgeComp count={holdTab.length} label="Hold" />} /> 
                   <Tab label={<BadgeComp count={financialHardshipTab.length} label="Financial Hardship" />} /> 
+                  <Tab label={<BadgeComp count={bornTodayTab.length} label="Born on Today" />} />
                 </Tabs>
               </AppBar>
               
@@ -440,6 +448,9 @@ export default function CustomerList({userId, roleName}) {
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                   {financialHardshipTab && <FinancialHardship customerList={financialHardshipTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                  {bornTodayTab && <BornToday customerList={bornTodayTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
                 </TabPanel>
               </div>
             </Paper>                            

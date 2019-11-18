@@ -288,14 +288,10 @@ function handleDate(date){
   }
 
   const { inputs, handleInputChange, handleSubmit, handleNumberInput, handlePriceInput, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+    inputValues,
     editCustomer,
     validate
   ); 
-
-  useEffect(() => {
-    setInputsAll(inputValues);
-  }, []);
 
   return (
     <div>
@@ -557,7 +553,6 @@ function handleDate(date){
                         margin="dense"
                         name="id_type"
                         onChange = {handleIdType}
-                        // value={parseInt(inputs.id_type)}
                         value={parseInt(inputs.id_type)}
                         name = 'id_type'
                         id = 'id_type'
@@ -568,16 +563,9 @@ function handleDate(date){
                         label="Select Id Proof"
                         required
                       >
-                        {
-                          
-                          ( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
-                            return(
-                                <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>    
-                            )
-                          })
-                        }
-                          {/* <MenuItem value={0}>{'Other'}</MenuItem>     */}
-                          >    
+                        {( idTypeList.length > 0 ? idTypeList : []).map((ele,index) => {
+                            return( <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem> )
+                        })}
                     </Select>
                     </Grid>
 
@@ -677,37 +665,18 @@ function handleDate(date){
                   </Grid>
                   <Grid item xs={12} sm={12}>
                     <InputLabel className={classes.textsize} htmlFor="state">Customer State</InputLabel>
-                    <RadioGroup 
-                      aria-label="state" 
-                      name="state" 
-                      className={classes.group}
-                      value={parseInt(inputs.state)} 
-                      onChange={handleInputChange} 
-                      row
-                    >
-                      <FormControlLabel value={1} 
-            control={<Radio color="primary" />} label="Active" labelPlacement="start" />
-                      <FormControlLabel value={2} 
-            control={<Radio color="primary" />}
-                     label="Hold" labelPlacement="start" />
-                      <FormControlLabel value={3} 
-            control={<Radio color="primary" />}
-                     label="Financial Hardship" labelPlacement="start" />
+                    <RadioGroup  name="state"  className={classes.group} value={parseInt(inputs.state)}  onChange={handleInputChange} row>
+                      <FormControlLabel value={1} control={<Radio color="primary" />} label="Active" labelPlacement="start" />
+                      <FormControlLabel value={2} control={<Radio color="primary" />} label="Hold" labelPlacement="start" />
+                      <FormControlLabel value={3} control={<Radio color="primary" />} label="Financial Hardship" labelPlacement="start" />
                     </RadioGroup>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel2'}
-              onChange={handleChange('panel2')}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel2a-header"
-              >
+
+            <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}  id="panel2a-header" >
                 <Typography className={(errors.alt_c1_name||errors.alt_c1_address||errors.alt_c1_contact||errors.alt_c1_relation||errors.alt_c2_name||errors.alt_c2_address||errors.alt_c2_contact||errors.alt_c2_relation)?classes.errorHeading :classes.heading}>Alternate Contact Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>

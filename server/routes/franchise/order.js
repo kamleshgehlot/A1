@@ -92,5 +92,6 @@ orderRouter.route("/getSingleTransactionDetail").post(validateToken, Order.getSi
 orderRouter.route("/paymentsubmit").post(validateToken, paymentDoc.array('avatar'), Order.paymentSubmit);
 orderRouter.route("/editInstallment").post(validateToken, paymentDoc.array('avatar'), Order.editInstallment);
 
+orderRouter.route("/getReceivedPaymentsList").get(validateToken, Order.getReceivedPaymentsList);
 
 module.exports = orderRouter;

@@ -863,13 +863,24 @@ const editOrder = async function (req, res, next) {
 const getSingleTransactionDetail = async function(req, res, next) {
   try {
     const result = await new Order({user_id: req.decoded.user_id, transaction_id: req.body.transaction_id}).getSingleTransactionDetail();
-    console.log('getSingleTransactionDetail',result);
+    // console.log('getSingleTransactionDetail',result);
 
     res.send(result);
   } catch (error) {
     next(error);
   }
 };
+
+
+const getReceivedPaymentsList = async function(req, res, next) {
+  try {
+    const result = await new Order({user_id: req.decoded.user_id}).getReceivedPaymentsList();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 
@@ -908,4 +919,5 @@ module.exports = {
   getBudgetComments,
   editInstallment,
   getSingleTransactionDetail,
+  getReceivedPaymentsList,
 };

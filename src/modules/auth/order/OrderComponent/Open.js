@@ -159,7 +159,7 @@ return (
                       <CommentIcon />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Payment Status">
+                  <Tooltip title="Make Payment">
                     <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handlePaymentStatus(data); }} >
                       <PaymentIcon />  
                     </IconButton>

@@ -6,7 +6,7 @@ import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } fr
 import { styles } from './Styles.js';
 
 
-export default function layout(data, order, eziDebitFormType) {
+export default function layout(data, order, formType) {
 
   const franchise = data.franchise;
   const products = data.product;
@@ -14,7 +14,7 @@ export default function layout(data, order, eziDebitFormType) {
   const orderType = data.orderType[0];
   const budget = data.budget[0];
   const user = data.user; 
-  const bankDetail = data.bankDetail[0];
+  const bankDetail = data.bankDetail[0] ? data.bankDetail[0] :[];
   
   let eachPay = orderType.each_payment_amt + '.00'
   const eachPaymentAmt = eachPay.split('.')[0];
@@ -22,9 +22,14 @@ export default function layout(data, order, eziDebitFormType) {
   const paymentDate = getDateInDDMMYYYY(orderType.first_payment);
   const currentDate = getCurrentDateDDMMYYYY().toString();
 
-  console.log('eziDebitFormType',eziDebitFormType);
-  // console.log("data", data);
+  let eziDebitFormType = formType;
 
+
+  if(bankDetail.length ==0 || bankDetail == "" || bankDetail == undefined ||  bankDetail == []){
+    eziDebitFormType = 0;
+  }
+
+  // console.log("data", data);
   // console.log('paymentDate',paymentDate);
   // console.log("data", data);
   // console.log(orderType);

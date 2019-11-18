@@ -46,7 +46,9 @@ import FranchiseDetail from '../setting/FranchiseDetail';
 import MainDashboard from './dashboard/MainDashboard';
 import FinanceReport from './report/FinanceReport';
 import DeliveryReport from './report/DeliveryReport';
-
+import TaskList from '../task/TaskList';
+import TaskReport from './report/TaskReport';
+import Payments from '../order/Payments';
 import Tab from './Tab';
 
 // Helpers
@@ -56,12 +58,10 @@ import { API_URL } from '../../../api/Constants';
 // API CALL
 import RoleAPI from '../../../api/franchise/Role';
 
-import TaskList from '../task/TaskList';
+
 
 import StyledTreeItem from './StyledTreeItem';
-import TaskReport from './report/TaskReport';
-import { fontSize } from '@material-ui/system';
-import { inherits } from 'util';
+
 
 const drawerWidth = 220;
 
@@ -147,6 +147,7 @@ export default function ClippedDrawer(props) {
   const [showFinanceReport, setShowFinanceReport]= useState(false);
   const [showDeliveryReport, setShowDeliveryReport]= useState(false);
   const [showCsrTaskReport, setShowCsrTaskReport]= useState(false);
+  const [showPaymentStatus, setShowPaymentStatus]= useState(false);
   const [roles, setRoles] = useState([]);
   const [roleAs, setRoleAs]= useState('');
   const [role_Id, setRole_Id]= useState('');
@@ -206,6 +207,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(true);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
 
   function handleFranchiseClick(role) {
@@ -227,6 +229,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
 
   function handleCategoryClick(role) {
@@ -249,6 +252,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
 
   function handleMasterStaffClick(role){
@@ -270,6 +274,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
 
   function handleFranchiseStaffClick(role){
@@ -292,6 +297,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
   
   function handleTaskClick(role, data){
@@ -314,6 +320,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
 
   function handleProfileClick(role){
@@ -336,7 +343,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
-
+    setShowPaymentStatus(false);
   }
   function handleChangePasswordClick(role){
     
@@ -358,7 +365,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
-
+    setShowPaymentStatus(false);
   }
 
   function handleFranchiseDetailClick(role){
@@ -381,6 +388,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
 
   }
 
@@ -402,6 +410,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
   
   function handleEnquiryClick(role){
@@ -423,6 +432,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
 
   }
   function handleLeadsClick(role, data){
@@ -444,6 +454,7 @@ export default function ClippedDrawer(props) {
     setShowFinanceReport(false);
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
 
   function handleOrderClick(role){    
@@ -464,6 +475,7 @@ export default function ClippedDrawer(props) {
     setShowFinanceReport(false);
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
 
   function handleFinanceReportClick(role){    
@@ -484,6 +496,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
   
   function handleDeliveryReportClick(role){    
@@ -504,11 +517,34 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowFinanceReport(false);   
     setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
   }
   
   function handleCsrTaskReportClick(role){    
     setRoleAs(role);
     setShowCsrTaskReport(true);
+    setShowFinanceReport(false);
+    setShowOrder(false);
+    setShowLead(false);
+    setShowEnquiry(false);
+    setShowCustomer(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowFranchiseDetail(false);
+    setShowdashboard(false);
+    setShowDeliveryReport(false);
+    setShowPaymentStatus(false);
+  }
+
+  function handlePaymentStatus(role){
+    setRoleAs(role);
+    setShowPaymentStatus(true);
+    setShowCsrTaskReport(false);
     setShowFinanceReport(false);
     setShowOrder(false);
     setShowLead(false);
@@ -530,11 +566,6 @@ export default function ClippedDrawer(props) {
   function handleLogout() {
     APP_TOKEN.remove();
     props.history.push('/login');
-  }
-
-
-  const downloadCustomerDeclaration = () => {
-    // <a href={API_URL + "/api/download?path=customer/" + inputs.id_proof }  download >{inputs.id_proof}</a>
   }
 
   return (
@@ -704,7 +735,9 @@ export default function ClippedDrawer(props) {
 
                  <Tab roleName="Finance" nodeId="25" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
 
-                 <Tab roleName="Finance" nodeId="26" handleClick={handleFinanceReportClick} labelIcon={TaskIcon} labelText="Generate Report"/> 
+                 <Tab roleName="Finance" nodeId="26" handleClick={handlePaymentStatus} labelIcon={TaskIcon} labelText="Payment Status"/> 
+
+                 <Tab roleName="Finance" nodeId="27" handleClick={handleFinanceReportClick} labelIcon={TaskIcon} labelText="Generate Report"/> 
 
               </StyledTreeItem>
             :<StyledTreeItem style={{"display": 'none'}} nodeId="3" labelText="" labelIcon={AccountCircleIcon} /> 
@@ -713,7 +746,7 @@ export default function ClippedDrawer(props) {
 
             {roles.find(role => role === 'Delivery')
             ?
-              <StyledTreeItem nodeId="27" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
+              <StyledTreeItem nodeId="4" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
 
                 <Tab roleName="Delivery" roleId="6" nodeId="28" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
 
@@ -783,6 +816,10 @@ export default function ClippedDrawer(props) {
         {
           showCsrTaskReport ? <TaskReport roleName={roleAs} /> : null
         }
+        {
+          showPaymentStatus ?  <Payments roleName={roleAs} /> : null
+        }
+      
         
         {/* {props.children} */}
       </main>

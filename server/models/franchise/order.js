@@ -1709,4 +1709,30 @@ Order.prototype.getSingleTransactionDetail = function () {
 };
 
 
+Order.prototype.getReceivedPaymentsList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('select * from payments', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      }
+      connection.release();
+      console.log('payment Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
 module.exports = Order;
