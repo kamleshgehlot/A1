@@ -433,7 +433,7 @@ export default function CustomerList({userId, roleName}) {
                   <Tab label={<BadgeComp count={activeTab.length} label="Open" />} /> 
                   <Tab label={<BadgeComp count={holdTab.length} label="Hold" />} /> 
                   <Tab label={<BadgeComp count={financialHardshipTab.length} label="Financial Hardship" />} /> 
-                  <Tab label={<BadgeComp count={bornTodayTab.length} label="Born on Today" />} />
+                  <Tab label={<BadgeComp count={bornTodayTab.length} label="Today's Birthday" />} />
                 </Tabs>
               </AppBar>
               
