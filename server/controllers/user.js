@@ -9,6 +9,62 @@ const Miscellaneious = require('../lib/miscellaneous.js')
 const {domainName} = require("../lib/databaseMySQLNew");
 const { trans } = require("../lib/mailtransporter");
 
+const soap = require('soap');
+const wsdlUrl = 'https://api.demo.ezidebit.com.au/v3-5/nonpci?singleWsdl';
+const custUrl = 'https://api.demo.ezidebit.com.au/v3-5/pci?singleWsdl';
+const Payments = require('../models/Payment.js');
+
+
+const paymentAPI = async function (req, res, next) {
+  try {
+   
+    soap.createClient(wsdlUrl, function (err, soapClient) {      
+     
+      soapClient.GetCustomerList({
+        DigitalKey: '4E6ACAE2-E4A9-4186-ECDD-E0B9F06785B2',
+        CustomerStatus: 'ALL',
+        PageNumber: '1'
+      }, function (err, result) {
+        // console.log("GetCustomerList.....", result.GetCustomerListResult.Data.Customer);        
+      });
+
+      soapClient.GetScheduledPayments({
+        DigitalKey: '4E6ACAE2-E4A9-4186-ECDD-E0B9F06785B2'
+      }, function (err, result) {
+        // console.log("GetScheduledPayments.....", result.GetScheduledPaymentsResult.Data.ScheduledPayment);
+      });
+
+
+      soapClient.GetPayments({
+        DigitalKey: '4E6ACAE2-E4A9-4186-ECDD-E0B9F06785B2',
+        PaymentType: 'ALL',
+        PaymentMethod: 'ALL',
+        PaymentSource: 'ALL'
+      }, function (err, result) {
+				console.log("GetPayments length....", result.GetPaymentsResult.Data.Payment.length);
+
+				if(result != undefined && result != ""){
+					const deleted = new Payments({user_id: req.decoded.user_id, data: result.GetPaymentsResult.Data.Payment[0]}).removeExistingRows();
+					
+					const payments = result.GetPaymentsResult.Data.Payment;
+					(payments.length > 0 ? payments : []).map((data, index) => {
+						const newPayments = new Payments({user_id: req.decoded.user_id, data: data}).addPayments();
+					});   					
+					res.send({isCompleted: 1});
+				}else{
+					console.log('hello');
+					res.send([]);
+				}
+      });
+
+      // we now have a soapClient - we also need to make sure there's no `err` here.
+    });   		
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 const register = async function (req, res, next) {
 	let accountantParam = {
 		id: req.body.accountant_id,
@@ -42,11 +98,6 @@ const register = async function (req, res, next) {
 		abn: req.body.abn,
 		state: req.body.state,
 		created_by: req.decoded.id,
-		// com_id: req.body.company_id,		
-
-		// Company id recieving by Company model
-
-		//franchise id for updation
 		f_id: req.body.id,
 	};
 
@@ -60,16 +111,9 @@ const register = async function (req, res, next) {
 		designation: req.body.designation,
 
 		user_details: req.body.directorList,
-		// mobile_no: req.body.contact,
-		// email: req.body.email,
 		role_id: req.body.role_id,
-		// state: 1,
 		created_by: req.decoded.id,
 		is_active: 1,
-
-		//franchaise id receiving by frachaise model
-		//Update params
-		// f_id: req.body.id,
 	};
 
 
@@ -92,15 +136,12 @@ const register = async function (req, res, next) {
 
 			await newFranchise.update();
 
-					// newCompany.comp_id= result[0].company_id;
 			await newCompany.update();
 
-			// newAccountant.acc_id = result[0].accountant_id;
 			await newAccountant.update(); 
 			const userList = await new Franchise({}).all();   
 			
 			res.send({ userList: userList });
-			// newAccountant.update();
 		} else {
 			const testing_result = await new Testing({city: req.body.city, suburb: req.body.suburb}).testDB();
 			// console.log('testing result',testing_result);
@@ -188,4 +229,4 @@ const verifyEmail = async function (req, res, next) {
 };
 
 
-module.exports = { all: all, register: register, verifyEmail: verifyEmail };
+module.exports = { all: all, register: register, verifyEmail: verifyEmail,  paymentAPI: paymentAPI };

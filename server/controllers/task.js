@@ -63,8 +63,8 @@ const add = async function (req, res, next) {
 
 
 const editTask = async function (req, res, next) {
-  console.log('task editTask body params..',req.body)
-  console.log('task editTask decoded params..',req.decoded)
+  // console.log('task editTask body params..',req.body)
+  // console.log('task editTask decoded params..',req.decoded)
 
   const staffData = JSON.parse(req.body.data);
 

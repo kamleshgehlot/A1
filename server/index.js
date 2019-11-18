@@ -62,6 +62,9 @@ const orderRouter = require('./routes/franchise/order');
 const franchiseuser = require('./routes/franchiseuser');
 const customerRouter = require('./routes/franchise/customer');
 
+//EziDebit
+
+
 const routes = require('./routes');
 
 app.use('/api/user', userRouter);

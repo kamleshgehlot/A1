@@ -29,6 +29,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 // API CALL
 import BadgeComp from '../../common/BadgeComp';
 import OrderAPI from '../../../api/franchise/Order.js';
+import UserAPI from '../../../api/User.js';
 import {getDate, getDateInDDMMYYYY} from '../../../utils/datetime'
 
 
@@ -104,6 +105,17 @@ export default function Payments({roleName}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [paymentList, setPaymentList] = React.useState([]);
+  const [isRefreshDisabled, setIsRefreshDisabled] = React.useState(false);
+  const columns = [
+    { id: 'sr_no',              label: '#',                     minWidth: 170 },
+    { id: 'debitDate',          label: 'Payment Date',          minWidth: 170 },
+    { id: 'paymentAmount',      label: 'Payment Amount',        minWidth: 100 },
+    // { id: 'settlementDate',     label: 'Date Settled',          minWidth: 170,},
+    { id: 'eziDebitCustomerID', label: 'Ezidebit Customer Id',  minWidth: 170,},
+    { id: 'customerName',       label: 'Customer Name',         minWidth: 170,},
+    { id: 'yourSystemReference',label: 'Client Contract Ref',   minWidth: 170,},
+    { id: 'paymentSource',      label: 'Payment Source',        minWidth: 170,},  
+  ];
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -116,74 +128,92 @@ export default function Payments({roleName}) {
 
   const getReceivedPaymentsList = async () => {
     const result = await OrderAPI.getReceivedPaymentsList();
-    setPaymentList(result);
+    if(result.length>0){
+      alert('Payment List Successfully Refreshed')
+      setIsRefreshDisabled(false);
+    }else{
+      alert('Nothing have to refreshing')
+      setIsRefreshDisabled(false);
+    }
+    setPaymentList(result);    
+  }
+  
+  const refreshEziDebitPaymentsList = async () => {
+    const result = await UserAPI.getReceivedPaymentsList();
+  }
+
+  const handleSubmit = async () => {
+    setIsRefreshDisabled(true);
+    await refreshEziDebitPaymentsList();
+    await getReceivedPaymentsList();    
   }
 
   useEffect(() => {
     getReceivedPaymentsList();
   },[]);
 
+  // console.log(paymentList);
+
   
-const columns = [
-  { id: 'sr_no',              label: '#',                     minWidth: 170 },
-  { id: 'debitDate',          label: 'Payment Date',          minWidth: 170 },
-  { id: 'paymentAmount',      label: 'Payment Amount',        minWidth: 100 },
-  // { id: 'settlementDate',     label: 'Date Settled',          minWidth: 170,},
-  { id: 'eziDebitCustomerID', label: 'Ezidebit Customer Id',  minWidth: 170,},
-  { id: 'customerName',       label: 'Customer Name',         minWidth: 170,},
-  { id: 'yourSystemReference',label: 'Client Contract Ref',   minWidth: 170,},
-  { id: 'paymentSource',      label: 'Payment Source',        minWidth: 170,},  
-];
 
   return (
-    <Paper className={classes.root}>
-    <div className={classes.tableWrapper}>
-      <Table stickyHeader aria-label="sticky table">
-        <TableHead>
-          <TableRow>
-            {columns.map(column => (
-              <TableCell
-                key={column.id}
-              >
-                {column.label}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {paymentList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-            return (
-              <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                {columns.map(column => {
-                  const value = row[column.id];
-                  return (
-                    <TableCell key={column.id}>                      
-                      {column.id === "debitDate" ? getDateInDDMMYYYY(value): 
-                       column.id === "sr_no" ? index+1 : value}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
-    <TablePagination
-      rowsPerPageOptions={[10, 25, 100]}
-      component="div"
-      count={paymentList.length}
-      rowsPerPage={rowsPerPage}
-      page={page}
-      backIconButtonProps={{
-        'aria-label': 'previous page',
-      }}
-      nextIconButtonProps={{
-        'aria-label': 'next page',
-      }}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
-    />
-  </Paper>
+      <Paper className={classes.root}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12}>
+            <Button  variant="outlined"  color="primary" onClick={handleSubmit} disabled = {isRefreshDisabled}>
+              Refresh List
+            </Button>
+          </Grid>    
+            <Grid>
+            <div className={classes.tableWrapper}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    {columns.map(column => (
+                      <TableCell
+                        key={column.id}
+                      >
+                        {column.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {paymentList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                        {columns.map(column => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell key={column.id}>                      
+                              {column.id === "debitDate" ? getDateInDDMMYYYY(value): 
+                              column.id === "sr_no" ? index+1 : value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={paymentList.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              backIconButtonProps={{
+                'aria-label': 'previous page',
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'next page',
+              }}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />        
+          </Grid>
+        </Grid>          
+      </Paper>
   );
 }

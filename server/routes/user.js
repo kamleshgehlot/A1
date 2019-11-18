@@ -7,9 +7,7 @@ const userRouter = express.Router();
 
 userRouter.route("/register").post(validateToken, User.register);
 userRouter.route("/verifyemail").post(validateToken, User.verifyEmail);
-// userRouter.route("/update").post(validateToken, User.update);
 userRouter.route("/list").get(validateToken, User.all);
-
-// userRouter.route("/getUniqueNames").get(validateToken, User.getUniqueNames);
+userRouter.route("/paymentAPI").get(validateToken, User.paymentAPI);
 
 module.exports = userRouter;

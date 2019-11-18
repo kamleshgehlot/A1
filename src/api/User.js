@@ -71,4 +71,17 @@ export default {
       throw error;
     }
   },
+
+  
+  getReceivedPaymentsList: async () => {
+    const URL = `${c.API_CONSUMER}/api/user/paymentAPI`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
 };
