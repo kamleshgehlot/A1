@@ -238,7 +238,7 @@ return (
                       <StyledTableCell style={{minWidth:120, paddingLeft: 25}}> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
                       <StyledTableCell style={{minWidth:0, paddingLeft: 80}}> {data.status} </StyledTableCell>
                       <StyledTableCell style={{minWidth:0, paddingLeft: 58}}>
-                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data, 1); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
                       </StyledTableCell>
                       {/* {isExpansionExist === false && setExpansionHeader('')} */}
                     </TableRow>     
@@ -303,7 +303,7 @@ return (
                       <StyledTableCell> {expanseData.total_paid !== "" ? expanseData.total_paid : ''} </StyledTableCell>
                       <StyledTableCell> {expanseData.status} </StyledTableCell>
                       <StyledTableCell>
-                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData, 1); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
                       </StyledTableCell>
                     </TableRow> 
 

@@ -66,12 +66,12 @@ var Order = function (params) {
   this.delivery_date = params.delivery_date;
   this.purchase_from = params.purchase_from;
 
-  this.interest_amt = params.interest_amt;
-  this.late_fee = params.late_fee;
-  this.payment_table_id = params.payment_table_id;
-  this.transaction_date = params.transaction_date;
-  this.transaction_amt = params.transaction_amt;
-  this.transaction_id = params.transaction_id;
+  // this.interest_amt = params.interest_amt;
+  // this.late_fee = params.late_fee;
+  // this.payment_table_id = params.payment_table_id;
+  // this.transaction_date = params.transaction_date;
+  // this.transaction_amt = params.transaction_amt;
+  // this.transaction_id = params.transaction_id;
 };
 
 
@@ -637,35 +637,35 @@ Order.prototype.getPaymentHistory = function () {
 
 
 
-Order.prototype.getFullPaymentHistory = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
+// Order.prototype.getFullPaymentHistory = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
 
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from payment_status where order_id = "'+that.id+'" ORDER BY installment_no, sub_installment_no',function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
-          })
-      } else {
-        console.log("Error...", error);
-        reject(error);
-      }
-      connection.release();
-      console.log('Order Added for Franchise Staff %d', connection.threadId);
-    });
-  }).catch((error) => {
-    throw error;
-  });
-};
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//         connection.query('SELECT * from payment_status where order_id = "'+that.id+'" ORDER BY installment_no, sub_installment_no',function (error, rows, fields) {
+//             if (!error) {
+//                 resolve(rows);
+//                 } else {
+//                   console.log("Error...", error);
+//                   reject(error);
+//                 }
+//           })
+//       } else {
+//         console.log("Error...", error);
+//         reject(error);
+//       }
+//       connection.release();
+//       console.log('Order Added for Franchise Staff %d', connection.threadId);
+//     });
+//   }).catch((error) => {
+//     throw error;
+//   });
+// };
 
 
 Order.prototype.getRequiredDataToCancel = function () {
@@ -700,40 +700,40 @@ Order.prototype.getRequiredDataToCancel = function () {
 
 
 
-Order.prototype.transactionEntry = function () {
-  const that = this;
-  // console.log('that', that);
-  return new Promise(function (resolve, reject) {
+// Order.prototype.transactionEntry = function () {
+//   const that = this;
+//   // console.log('that', that);
+//   return new Promise(function (resolve, reject) {
 
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
         
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        let Values = [
-          [that.customer_id, that.order_id, that.transaction_date, that.transaction_amt, that.late_fee, that.interest_amt, that.status, 1,  that.created_by]
-        ];
-        connection.query('INSERT INTO transaction(customer_id, order_id, transaction_date,	transaction_amt,	late_fee,	interest_amt,	status,	is_active,	created_by) VALUES ?',[Values], function (error, rows, fields) {
-            if (!error) {
-                  resolve({transaction_id : rows.insertId});
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          })
-      } else {
-        console.log("Error...", error);
-        reject(error);
-      }
-      connection.release();
-      console.log('transactionEntry Added for Franchise Staff %d', connection.threadId);
-    });
-  }).catch((error) => {
-    throw error;
-  });
-};
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//         let Values = [
+//           [that.customer_id, that.order_id, that.transaction_date, that.transaction_amt, that.late_fee, that.interest_amt, that.status, 1,  that.created_by]
+//         ];
+//         connection.query('INSERT INTO transaction(customer_id, order_id, transaction_date,	transaction_amt,	late_fee,	interest_amt,	status,	is_active,	created_by) VALUES ?',[Values], function (error, rows, fields) {
+//             if (!error) {
+//                   resolve({transaction_id : rows.insertId});
+//             } else {
+//               console.log("Error...", error);
+//               reject(error);
+//             }
+//           })
+//       } else {
+//         console.log("Error...", error);
+//         reject(error);
+//       }
+//       connection.release();
+//       console.log('transactionEntry Added for Franchise Staff %d', connection.threadId);
+//     });
+//   }).catch((error) => {
+//     throw error;
+//   });
+// };
 
 
 
@@ -753,7 +753,8 @@ Order.prototype.paymentSubmit = function () {
         // let Values = [
         //   [that.order_id, that.customer_id, that.installment_no, that.payment_date, that.payment_amt, that.total_paid, that.created_by]
         // ];
-        connection.query('INSERT INTO payment_status(order_id, customer_id, transaction_id, installment_no, sub_installment_no, payment_date, payment_rec_date, payment_amt, late_fee, interest_amt, total_paid, due_installment_amt, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+ that.transaction_id +'", "'+that.installment_no+'", "'+ that.sub_installment_no +'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+that.late_fee+'", "'+that.interest_amt+'", "'+ that.total_paid+'", "'+that.due_installment_amt+'", "'+ that.created_by+'")', function (error, rows, fields) {
+        // connection.query('INSERT INTO payment_status(order_id, customer_id, transaction_id, installment_no, sub_installment_no, payment_date, payment_rec_date, payment_amt, late_fee, interest_amt, total_paid, due_installment_amt, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+ that.transaction_id +'", "'+that.installment_no+'", "'+ that.sub_installment_no +'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+that.late_fee+'", "'+that.interest_amt+'", "'+ that.total_paid+'", "'+that.due_installment_amt+'", "'+ that.created_by+'")', function (error, rows, fields) {
+        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, sub_installment_no, payment_date, payment_rec_date, payment_amt, total_paid, due_installment_amt, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+ that.sub_installment_no +'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+ that.total_paid+'", "'+that.due_installment_amt+'", "'+ that.created_by+'")', function (error, rows, fields) {
             if (!error) {
                   if(that.installment_before_delivery === that.installment_no){
                     connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {
@@ -1587,126 +1588,127 @@ Order.prototype.getSalesTypeList = function () {
 
 
 
-Order.prototype.leaveCommentForPayment = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
-          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          let queryData = [
-            [that.customer_id, that.order_id, that.installment_no, that.sub_installment_no, that.comment, 1, that.created_by]
-          ];
-            connection.query('INSERT INTO comment_on_payment(customer_id, order_id, installment_no, sub_installment_no, comment, is_active, created_by) VALUES ?',[queryData],function (error, rows, fields) {
-              if (!error) {              
-                  resolve(rows);                  
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }          
-            });       
-      }
-      connection.release();
-      console.log('Comment Added for Payment %d', connection.threadId);
-  }).catch((error) => {
-    throw error;
-  });
-});
-}
+// Order.prototype.leaveCommentForPayment = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
+//           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//           let queryData = [
+//             [that.customer_id, that.order_id, that.installment_no, that.sub_installment_no, that.comment, 1, that.created_by]
+//           ];
+//             connection.query('INSERT INTO comment_on_payment(customer_id, order_id, installment_no, sub_installment_no, comment, is_active, created_by) VALUES ?',[queryData],function (error, rows, fields) {
+//               if (!error) {              
+//                   resolve(rows);                  
+//                 } else {
+//                   console.log("Error...", error);
+//                   reject(error);
+//                 }          
+//             });       
+//       }
+//       connection.release();
+//       console.log('Comment Added for Payment %d', connection.threadId);
+//   }).catch((error) => {
+//     throw error;
+//   });
+// });
+// }
 
 
 
-Order.prototype.deadTocurrentInstallment = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
-          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('UPDATE payment_status SET is_active = 0 WHERE transaction_id = "'+ that.transaction_id +'"',function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);                  
-              } else {
-                console.log("Error...", error);
-                reject(error);
-              }          
-          });       
-      }
-      connection.release();
-      console.log('Dead to old row in Payment %d', connection.threadId);
-  }).catch((error) => {
-    throw error;
-  });
-});
-}
+
+// Order.prototype.deadTocurrentInstallment = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
+//           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//           connection.query('UPDATE payment_status SET is_active = 0 WHERE transaction_id = "'+ that.transaction_id +'"',function (error, rows, fields) {
+//             if (!error) {
+//                 resolve(rows);                  
+//               } else {
+//                 console.log("Error...", error);
+//                 reject(error);
+//               }          
+//           });       
+//       }
+//       connection.release();
+//       console.log('Dead to old row in Payment %d', connection.threadId);
+//   }).catch((error) => {
+//     throw error;
+//   });
+// });
+// }
 
 
 
-Order.prototype.updateInstallment = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
+// Order.prototype.updateInstallment = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
         
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, sub_installment_no, payment_date, payment_rec_date, payment_amt, late_fee, interest_amt, total_paid, due_installment_amt, is_active, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+ that.sub_installment_no +'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+that.late_fee+'", "'+that.interest_amt+'", "'+ that.total_paid+'", "'+that.due_installment_amt+'", 1, "'+ that.created_by+'")', function (error, rows, fields) {
-            if (!error) {
-              if(rows.insertId != 0){
-                resolve(1);
-              }else{
-                resolve(0);
-              }              
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          })
-      }
-      connection.release();
-      console.log('payment Added for Franchise Staff %d', connection.threadId);
-    });
-  }).catch((error) => {
-    throw error;
-  });
-};
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//         connection.query('INSERT INTO payment_status(order_id, customer_id, installment_no, sub_installment_no, payment_date, payment_rec_date, payment_amt, late_fee, interest_amt, total_paid, due_installment_amt, is_active, created_by) VALUES ("'+that.order_id+'", "'+that.customer_id+'", "'+that.installment_no+'", "'+ that.sub_installment_no +'", "'+that.payment_date+'", "'+that.payment_rec_date+'", "'+that.payment_amt+'", "'+that.late_fee+'", "'+that.interest_amt+'", "'+ that.total_paid+'", "'+that.due_installment_amt+'", 1, "'+ that.created_by+'")', function (error, rows, fields) {
+//             if (!error) {
+//               if(rows.insertId != 0){
+//                 resolve(1);
+//               }else{
+//                 resolve(0);
+//               }              
+//             } else {
+//               console.log("Error...", error);
+//               reject(error);
+//             }
+//           })
+//       }
+//       connection.release();
+//       console.log('payment Added for Franchise Staff %d', connection.threadId);
+//     });
+//   }).catch((error) => {
+//     throw error;
+//   });
+// };
 
 
 
 
-Order.prototype.getSingleTransactionDetail = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
+// Order.prototype.getSingleTransactionDetail = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
         
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        // connection.query('select * from transaction where id = "'+that.transaction_id+'"', function (error, rows, fields) {
-          connection.query('select id, customer_id, order_id, DATE_FORMAT(transaction_date, \'%Y-%m-%d\') payment_rec_date, transaction_amt as payment_amt, late_fee, interest_amt, status, is_active, created_by, created_at from transaction where id = "'+that.transaction_id+'"', function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          })
-      }
-      connection.release();
-      console.log('payment Added for Franchise Staff %d', connection.threadId);
-    });
-  }).catch((error) => {
-    throw error;
-  });
-};
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+//         // connection.query('select * from transaction where id = "'+that.transaction_id+'"', function (error, rows, fields) {
+//           connection.query('select id, customer_id, order_id, DATE_FORMAT(transaction_date, \'%Y-%m-%d\') payment_rec_date, transaction_amt as payment_amt, late_fee, interest_amt, status, is_active, created_by, created_at from transaction where id = "'+that.transaction_id+'"', function (error, rows, fields) {
+//             if (!error) {
+//                 resolve(rows);
+//             } else {
+//               console.log("Error...", error);
+//               reject(error);
+//             }
+//           })
+//       }
+//       connection.release();
+//       console.log('payment Added for Franchise Staff %d', connection.threadId);
+//     });
+//   }).catch((error) => {
+//     throw error;
+//   });
+// };
 
 
 Order.prototype.getReceivedPaymentsList = function () {

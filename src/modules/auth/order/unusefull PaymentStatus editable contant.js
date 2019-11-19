@@ -54,6 +54,7 @@ import { FormLabel } from '@material-ui/core';
 
 import FixPaymentTable from './OrderComponent/FixPaymentTable';
 import FlexPaymentTable from './OrderComponent/FlexPaymentTable';
+import EditInstallment from './EditInstallment';
 
 
 const useStyles = makeStyles(theme => ({
@@ -148,12 +149,24 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [confirmation, setConfirmation] = React.useState(false);
   const [payResopnse, setPayResopnse] = React.useState([]);
   const [paymentHistory,setPaymentHistory] = useState([]);
+  const [fullPaymentHistory,setFullPaymentHistory] = useState([]);
+  
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
   const [paymentAmt, setPaymentAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
   const [requesedData, setRequesedData] = useState([]);
   const [totalPaid, setTotalPaid] = useState(0);
+  const [lateFee, setLateFee] = useState(0);
+  const [interestAmt, setInterestAmt] = useState(0);
+  const [totalLateFeeCharged, setTotalLateFeeCharged] = useState(0);
+  const [totalInterestCharged, setTotalInterestCharged] = useState(0);
+  const [editPaymentOpen, setEditPaymentOpen] = React.useState(false);
+  const [editableDataRow, setEditableDataRow] = React.useState([]);
+  const [isNewPayment,setIsNewPayment] = useState('');
+  const [commentForPayment, setCommentForPayment] = useState('');
+  const [documentPath, setDocumentPath] = useState('');
 
+  let formData = new FormData();
 
   function handleDateChange(date){
       setPaymentRecDate(date);    
@@ -166,6 +179,20 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     }
   }
 
+  const handleInterestAmt = e => {
+    const validDecimalNumber = /^\d*\.?\d*$/;
+    if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
+      setInterestAmt(e.target.value);
+    }
+  }
+
+  const handleLateFee = e => {
+    const validDecimalNumber = /^\d*\.?\d*$/;
+    if (e.target.value === '' || validDecimalNumber.test(e.target.value)) {
+      setLateFee(e.target.value);
+    }
+  }
+
   const getPaymentHistory = async () => {
     try {
       const existingPayment = await Order.getPaymentHistory({id: orderData.id});
@@ -174,30 +201,60 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         console.log('Error..',error);
       }
   };
+
+  const getFullPaymentHistory = async () => {
+    try {
+      const existingPayment = await Order.getFullPaymentHistory({id: orderData.id});
+        setFullPaymentHistory(existingPayment);
+      } catch (error) {
+        console.log('Error..',error);
+      }
+  };
+
+
+  const handleEditInstallmentOpen = async (data) => {   
+    setEditableDataRow(data);
+    setEditPaymentOpen(true);
+  };
   
+  const handleEditInstallmentClose = async () => {   
+    setEditPaymentOpen(false);
+  };
   
   const handleFixPaymentStatus = (noOfPayment, fixData, paymentHistory) => {
     let payment_table=[];
     let payDate = new Date(fixData.first_payment);
+    let totalInterestCharged = 0;
+    let totalLateFeeCharged = 0;
 
     for(let i=1; i<= noOfPayment; i++){
+      
       let bool = false;
       let dueInstallAmt = 0;
-        (paymentHistory.length > 0 ? paymentHistory : []).map((historyData, index) => {
+        (paymentHistory.length > 0 ? paymentHistory : []).map((historyData, index) => { 
               if(i === historyData.installment_no){
                 payment_table.push({
+                  id : historyData.id,
+                  transaction_id : historyData.transaction_id,
                   sr_no : i,
                   installment_no:  historyData.installment_no,
                   payment_date: getDateInDDMMYYYY(historyData.payment_date),
                   payment_rec_date: getDateInDDMMYYYY(historyData.payment_rec_date),
                   payment_amt : historyData.payment_amt.toFixed(2),
+                  late_fee : historyData.late_fee.toFixed(2),
+                  interest_amt : historyData.interest_amt.toFixed(2),
                   total_paid : historyData.total_paid.toFixed(2),
                   due_installment_amt : historyData.due_installment_amt,
                   sub_installment_no : historyData.sub_installment_no,
                   installment_before_delivery : fixData.before_delivery_amt,
                   last_installment_no : fixData.no_of_payment,
                   status : "Paid",
-                });  
+                });
+                totalLateFeeCharged = (totalLateFeeCharged + historyData.late_fee);
+                totalInterestCharged = (totalInterestCharged + historyData.interest_amt);
+                setTotalInterestCharged(totalInterestCharged);
+                setTotalLateFeeCharged(totalLateFeeCharged);
+
                 dueInstallAmt = historyData.due_installment_amt;
                 bool = true;
               }
@@ -205,11 +262,15 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         
         if(bool === false || dueInstallAmt != 0){
             payment_table.push({
+              id : 0,
+              transaction_id : 0,
               sr_no : i,
               installment_no: i,
               payment_date: getDateInDDMMYYYY(payDate),
               payment_rec_date: '',
               payment_amt : '',
+              late_fee : '',
+              interest_amt : '',
               total_paid : '',
               due_installment_amt : '',
               sub_installment_no : 0,
@@ -235,7 +296,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         const existingPayment = await Order.getPaymentHistory({id: orderData.id});
         const fixData = fixOrder[0];
         setOrderTypeData(fixOrder[0]);
-
+        setLateFee(0);
+        setInterestAmt(0);
             if(existingPayment.length > 0){
               setTotalPaid(existingPayment[existingPayment.length -1].total_paid);
               if(existingPayment[existingPayment.length -1].due_installment_amt == 0){
@@ -257,6 +319,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     let payment_table=[];
     let payDate = new Date(flexData.first_payment);
     let maxInstallmentNumber = 0;
+    let totalInterestCharged = 0;
+    let totalLateFeeCharged = 0;
 
     if(paymentHistory.length > 0) {
       lastInstallmentNo = paymentHistory[paymentHistory.length -1].installment_no;
@@ -271,32 +335,45 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       let bool = false;
       let dueInstallAmt = 0;
         (paymentHistory.length > 0 ? paymentHistory : []).map((historyData, index) => {
-          if(i === historyData.installment_no){
-            payment_table.push({
-              sr_no : i,
-              installment_no:  historyData.installment_no,
-              payment_date: getDateInDDMMYYYY(historyData.payment_date),
-              payment_rec_date: getDateInDDMMYYYY(historyData.payment_rec_date),
-              payment_amt : historyData.payment_amt.toFixed(2),
-              total_paid : historyData.total_paid.toFixed(2),
-              due_installment_amt : historyData.due_installment_amt,
-              sub_installment_no : historyData.sub_installment_no,
-              installment_before_delivery : flexData.before_delivery_amt,
-              last_installment_no : '',
-              status : "Paid",
-            });
-            bool = true;
-            dueInstallAmt = historyData.due_installment_amt;
-          }
+            if(i === historyData.installment_no){
+              payment_table.push({
+                id : historyData.id,
+                transaction_id : historyData.transaction_id,
+                sr_no : i,
+                installment_no:  historyData.installment_no,
+                payment_date: getDateInDDMMYYYY(historyData.payment_date),
+                payment_rec_date: getDateInDDMMYYYY(historyData.payment_rec_date),
+                payment_amt : historyData.payment_amt.toFixed(2),
+                late_fee : historyData.late_fee.toFixed(2),
+                interest_amt : historyData.interest_amt.toFixed(2),
+                total_paid : historyData.total_paid.toFixed(2),
+                due_installment_amt : historyData.due_installment_amt,
+                sub_installment_no : historyData.sub_installment_no,
+                installment_before_delivery : flexData.before_delivery_amt,
+                last_installment_no : '',
+                status : "Paid",
+              });
+              bool = true;
+              dueInstallAmt = historyData.due_installment_amt;
+
+              totalLateFeeCharged = (totalLateFeeCharged + historyData.late_fee);
+              totalInterestCharged = (totalInterestCharged + historyData.interest_amt);
+              setTotalInterestCharged(totalInterestCharged);
+              setTotalLateFeeCharged(totalLateFeeCharged);
+            }
         });
 
         if(bool === false || dueInstallAmt != 0){
           payment_table.push({
+            id : 0,
+            transaction_id : 0,
             sr_no : i,
             installment_no: i,
             payment_date: getDateInDDMMYYYY(payDate),
             payment_rec_date: '',
             payment_amt : '',
+            late_fee : '',
+            interest_amt : '',
             total_paid : '',
             due_installment_amt : '',
             sub_installment_no : 0,
@@ -324,7 +401,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         const existingPayment = await Order.getPaymentHistory({id: orderData.id});
         const flexData = flexOrder[0];
         setOrderTypeData(flexOrder[0]);
-
+        setLateFee(0);
+        setInterestAmt(0);
             if(existingPayment.length > 0){
               setTotalPaid(existingPayment[existingPayment.length -1].total_paid);
 
@@ -346,6 +424,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     const fetchData = async () => {
       try{
         await getPaymentHistory();     
+        await getFullPaymentHistory();
         await getRequiredData();   
         if(orderData.order_type===1){
           await getFixedPaymentTable();
@@ -371,50 +450,102 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     }
 };
   
-  function handlePaymentSubmit(response){
-    setPayResopnse(response);
+  function handlePaymentSubmit(response, isNew){
+    setIsNewPayment(isNew);
+    setPayResopnse(response);    
     setConfirmation(true);
   }
 
   const handleConfirmationDialog = async (isConfirm) => {
     setConfirmation(false);
     if(isConfirm === 1){
+
+      // setEditPaymentOpen(false);
+
       let totalPaid = 0;
       let dueInstallment = 0;
       let subInstallmentNo = 0;
-      
+      let installmentNo = 0;
+      let paymentDate = '';
+
       if(paymentHistory == "" || paymentHistory == [] || paymentHistory.length == 0){
-        
+        if(isNewPayment === 1){
+          installmentNo = payResopnse.installment_no;
+          paymentDate = setDBDateFormat(payResopnse.payment_date);
+        }
       }else{
-        const lastPayRecord = paymentHistory[paymentHistory.length -1];
-        totalPaid = lastPayRecord.total_paid;        
-        dueInstallment = lastPayRecord.due_installment_amt;
+        let lastPayRecord = [];
+
+        if(isNewPayment === 1){
+          lastPayRecord = paymentHistory[paymentHistory.length -1];
+          installmentNo = payResopnse.installment_no;
+          paymentDate = setDBDateFormat(payResopnse.payment_date);
+        }else if(isNewPayment === 0){
+          let isCatch = true;
+
+          (paymentHistory.length >0 ? paymentHistory : []).map((data) => {
+            if(payResopnse.transaction_id === 1) {
+              lastPayRecord = data;
+            }else if(data.transaction_id === (payResopnse.transaction_id - 1)){
+              lastPayRecord = data;
+            }
+            if(data.transaction_id === payResopnse.transaction_id && isCatch === true){
+              paymentDate = getDate(data.payment_date);
+              installmentNo = data.installment_no;
+              isCatch = false;
+            }
+          })
+        }
+        // console.log('lastPayRecord',lastPayRecord);
+
+        if(payResopnse.transaction_id != 1){
+          dueInstallment = lastPayRecord.due_installment_amt;
+          totalPaid = lastPayRecord.total_paid;
+          
+          if(Number(lastPayRecord.due_installment_amt)===0){
+            subInstallmentNo = 0;
+          }else{
+            subInstallmentNo = lastPayRecord.sub_installment_no;
+          }
+        }
         
-        if(Number(lastPayRecord.due_installment_amt)===0){
-          subInstallmentNo = 0;
-        }else{
-          subInstallmentNo = lastPayRecord.sub_installment_no;
+        if(lateFee != 0 && lateFee != ''){
+          totalPaid = totalPaid + Number(lateFee);
+        }
+        if(interestAmt != 0 && interestAmt != ''){
+          totalPaid = totalPaid + Number(interestAmt);
         }
       }
-   
+      // console.log('totalPaid',totalPaid);
+      
+      const data = {
+        payment_table_id : payResopnse.id,
+        transaction_id : payResopnse.transaction_id,
+        order_id : orderData.id,
+        customer_id: orderData.customer_id,
+        installment_no : installmentNo,
+        payment_date:  paymentDate,
+        payment_rec_date : getDate(paymentRecDate),
+        payment_amt : paymentAmt,
+        late_fee : lateFee,
+        interest_amt : interestAmt,
+        total_paid : totalPaid,
+        due_installment_amt : dueInstallment,
+        sub_installment_no : subInstallmentNo,
+        installment_before_delivery : payResopnse.installment_before_delivery,
+        last_installment_no : payResopnse.last_installment_no,
+        each_payment_amt : orderTypeData.each_payment_amt,
+        frequency : orderTypeData.frequency,          
+        comment : commentForPayment,
+        document : documentPath,
+      };
+
+      formData.append('data', JSON.stringify(data));
 
       try {
-        await Order.paymentSubmit({
-          order_id : orderData.id,
-          customer_id: orderData.customer_id,
-          installment_no : payResopnse.installment_no,
-          payment_date:  setDBDateFormat(payResopnse.payment_date),
-          payment_rec_date : getDate(paymentRecDate),
-          payment_amt : paymentAmt,
-          total_paid : totalPaid,
-          due_installment_amt : dueInstallment,
-          sub_installment_no : subInstallmentNo,
-          installment_before_delivery : payResopnse.installment_before_delivery,
-          last_installment_no : payResopnse.last_installment_no,
-          each_payment_amt : orderTypeData.each_payment_amt,
-          frequency : orderTypeData.frequency,          
-        });
+        await Order.paymentSubmit({ formData : formData });
         await getPaymentHistory();
+        await getFullPaymentHistory();
         if(orderData.order_type===1){
           getFixedPaymentTable();
         }else if(orderData.order_type===2){
@@ -423,6 +554,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       } catch (error) {
         console.log('Error..',error);
       }        
+      setEditPaymentOpen(false);
     }    
   }
 
@@ -466,12 +598,8 @@ return (
               <Typography variant="h6" className={classes.labelTitle}>
                 {"Payment Mode: " + orderData.payment_mode_name }
             </Typography>
-            </Grid>
-            <Grid item xs={12} sm={11}>
-              <Typography variant="h6" className={classes.labelTitle}>
-                {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
-              </Typography>                  
-            </Grid>
+            </Grid>   
+            <Grid item xs={12} sm={12}></Grid>       
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
                   {"Each Installment Amt. " + 
@@ -484,16 +612,33 @@ return (
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
                 {orderData.order_type===1 ?
-                  ("Total Expected:  " + orderTypeData.total_payment_amt) 
+                  ("Total Expected:  " +  "$" +orderTypeData.total_payment_amt) 
                 :orderData.order_type===2 ?
-                  ("Bond Amt:  " + orderTypeData.bond_amt )
+                  ("Bond Amt:  " +  "$" +orderTypeData.bond_amt )
                 :''}
               </Typography>                            
+            </Grid>            
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Total Received Amt.:  " +  "$" +totalPaid.toFixed(2) }
+              </Typography> 
+            </Grid>
+            <Grid item xs={12} sm={12}></Grid>
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                  {"Interest Charged:  " + "$" + totalInterestCharged }
+              </Typography> 
             </Grid>
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
-                  {"Total Received Amt.:  " + totalPaid.toFixed(2) }
-              </Typography>              
+                  {"Late Fee Charged:  " + "$" + totalLateFeeCharged }
+              </Typography> 
+            </Grid>
+            <Grid item xs={12} sm={3}></Grid>
+            <Grid item xs={12} sm={11}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
+              </Typography>                  
             </Grid>
             
             
@@ -507,7 +652,7 @@ return (
             <Grid container spacing={4}>                              
                 <Grid item xs={12} sm={12}>    
                 {orderData.order_type===1 ?
-                  <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />
+                  <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} lateFee={lateFee} interestAmt ={interestAmt} handleInterestAmt= {handleInterestAmt} handleLateFee = {handleLateFee} handleEditInstallmentOpen= {handleEditInstallmentOpen} />
                 :orderData.order_type===2 ?
                   <FlexPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />
                 :''
@@ -524,6 +669,7 @@ return (
         </form>
       </Dialog>
       {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Is this installment paid by customer ?"} />: null }
+      {editPaymentOpen ? <EditInstallment open = {editPaymentOpen} handleClose={handleEditInstallmentClose} editableDataRow= {editableDataRow} paymentHistory={paymentHistory} orderData={orderData} setLateFee= {setLateFee} setInterestAmt = {setInterestAmt} setPaymentAmt = {setPaymentAmt} setPaymentRecDate = {setPaymentRecDate} handlePaymentSubmit={handlePaymentSubmit} setCommentForPayment={setCommentForPayment} formData={formData} setDocumentPath={setDocumentPath} /> : null}
     </div>
   );
 }

@@ -286,30 +286,30 @@ export default {
     }
   },
   
-  getFullPaymentHistory: async (req) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/order/getFullPaymentHistory`;
-    try {
-      const { data } = await axios(URL, {
-        method: 'POST',
-        data: req,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        headers: authHeader()}
-      );
-      return data;
-    } catch (error) {
-      checkError();
-      throw error;
-    }
-  },
+  // getFullPaymentHistory: async (req) => {
+  //   const URL = `${c.API_CONSUMER}/api/franchise/order/getFullPaymentHistory`;
+  //   try {
+  //     const { data } = await axios(URL, {
+  //       method: 'POST',
+  //       data: req,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       headers: authHeader()}
+  //     );
+  //     return data;
+  //   } catch (error) {
+  //     checkError();
+  //     throw error;
+  //   }
+  // },
 
-  paymentSubmit: async (params) => {
+  paymentSubmit: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/paymentsubmit`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',
-        data: params.formData,
+        data: req,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -578,46 +578,46 @@ export default {
     }
   },
 
+  
+  // editInstallment: async (params) => {
+  //   const URL = `${c.API_CONSUMER}/api/franchise/order/editInstallment`;
+  //   try {
+  //     const { data } = await axios(
+  //       URL,
+  //       {
+  //         method: 'POST',
+  //         data: params.formData,
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         headers: authHeader()}
+  //     );
+  //     return data;
+  //   } catch (error) {
+  //     checkError(error);
+  //     throw error;
+  //   }
+  // },
 
-  editInstallment: async (params) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/order/editInstallment`;
-    try {
-      const { data } = await axios(
-        URL,
-        {
-          method: 'POST',
-          data: params.formData,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          headers: authHeader()}
-      );
-      return data;
-    } catch (error) {
-      checkError(error);
-      throw error;
-    }
-  },
-
-  getSingleTransactionDetail: async (params) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/order/getSingleTransactionDetail`;
-    try {
-      const { data } = await axios(
-        URL,
-        {
-          method: 'POST',
-          data: params,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          headers: authHeader()}
-      );
-      return data;
-    } catch (error) {
-      checkError(error);
-      throw error;
-    }
-  },
+  // getSingleTransactionDetail: async (params) => {
+  //   const URL = `${c.API_CONSUMER}/api/franchise/order/getSingleTransactionDetail`;
+  //   try {
+  //     const { data } = await axios(
+  //       URL,
+  //       {
+  //         method: 'POST',
+  //         data: params,
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         headers: authHeader()}
+  //     );
+  //     return data;
+  //   } catch (error) {
+  //     checkError(error);
+  //     throw error;
+  //   }
+  // },
 
   getReceivedPaymentsList: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getReceivedPaymentsList`;

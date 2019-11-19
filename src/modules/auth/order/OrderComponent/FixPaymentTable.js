@@ -33,8 +33,7 @@ import 'date-fns';
 
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
-import {getCurrentDate, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY, getTime, setDBDateFormat} from '../../../../utils/datetime.js';
-import { async } from 'q';
+import PropTypes from 'prop-types';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -111,41 +110,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment, lateFee, interestAmt, handleInterestAmt, handleLateFee, handleEditInstallmentOpen}) {
+export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [singleInstallment, setSingleInstallment] = useState([]);
   const [expansionHeader, setExpansionHeader] = useState([]);
-  const [lastPaymentDueDate, setLastPaymentDueDate] = useState('');
-  const [isDateMissing, setIsDateMissing] = useState(false);
-
   let isExpansionExist = false;
   let inc = 0;
-
-  const handleMissingDateStataus = async (lastDueDate) => {
-    if(setDBDateFormat(lastDueDate) >= getDate(paymentRecDate)){
-      setIsDateMissing(false);
-      await handleInterestAmt({target:{value:0}});
-      await handleLateFee({target:{value:0}});
-    }else{
-      setIsDateMissing(true);      
-    }
-  }
-
-  useEffect(() => {    
-    if(paymentStatus.length > 0 ){
-        setLastPaymentDueDate(paymentStatus[totalPaidInstallment].payment_date);
-        handleMissingDateStataus(paymentStatus[totalPaidInstallment].payment_date);
-      }
-  },[totalPaidInstallment, paymentStatus]);
-
-  useEffect(() => {
-    if(paymentRecDate != 'Invalid Date' && paymentRecDate != null){
-      handleMissingDateStataus(lastPaymentDueDate);
-    }else {
-      setIsDateMissing(false);
-    }    
-  },[paymentRecDate]);
+  // let expansionHeader = [];
 
   useEffect(() => {
     let singleInstallment = [];
@@ -160,193 +132,184 @@ export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentA
     setSingleInstallment(singleInstallment);
   },[paymentStatus]);
 
-  
+  // console.log('ddd',singleInstallment);
 return (  
   <Table>
     <TableHead>
       <TableRow>
-        <StyledTableCell align="center" style={{minWidth:150}}>Installment No.</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:170}}>Payment Due Date</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:200}}>Payment Rec. Date</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:150}}>Amount Paid</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:150}}>Late Fee</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:150}}>Interest Amt.</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:150}}>Total Received</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:100}}>Status</StyledTableCell>
-        <StyledTableCell align="center" style={{minWidth:200}}>Option</StyledTableCell>
+        {/* <StyledTableCell>#</StyledTableCell> */}
+        <StyledTableCell>Installment No.</StyledTableCell>
+        <StyledTableCell>Payment Due Date</StyledTableCell>
+        <StyledTableCell>Payment Rec. Date</StyledTableCell>
+        <StyledTableCell>Amount Paid</StyledTableCell>
+        <StyledTableCell>Total Received</StyledTableCell>
+        <StyledTableCell>Status</StyledTableCell>
+        <StyledTableCell>Option</StyledTableCell>
       </TableRow>
     </TableHead>
     <TableBody >
       {(singleInstallment.length > 0 ? singleInstallment : []).map((singleData, singleIndex) => {
         isExpansionExist = false;
-        return (
-          (paymentStatus.length > 0 ? paymentStatus : []).map((expanseData, index) => { 
+      return (
+        (paymentStatus.length > 0 ? paymentStatus : []).map((expanseData, index) => { 
+          return(
+            (singleData.installment_no == expanseData.installment_no && expanseData.sub_installment_no != 0 && isExpansionExist === false ) ?
+            <TableRow >
+              <TableCell colSpan='8'>
+                <div style={{marginTop: -13, marginBottom: -15, marginLeft: -17,marginRight: -17}}>
+            <ExpansionPanel >
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} id="panel1a-header" style={{marginLeft: -7,marginRight: -15, fontSize: 10}}>
+              { inc = 0,
+                isExpansionExist === false ? 
+                // singleData.installment_no                 
+                <div style={{marginTop: -13, marginBottom: -14, marginLeft: -17, marginRight: -60, width: '100%'}}>
+                  <TableRow  className={singleData.installment_no === singleData.installment_before_delivery ? styleClass.highlightRow : null}>
+                  {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
+                    <StyledTableCell style={{minWidth:182}}>{singleData.installment_no}</StyledTableCell>
+                    <StyledTableCell style={{minWidth:194}}>{singleData.payment_date}</StyledTableCell>
+                    <StyledTableCell style={{minWidth:298, paddingLeft: 26}}> {singleData.payment_rec_date}   </StyledTableCell>
+                    <StyledTableCell style={{minWidth:250, paddingLeft: 35}}> {singleData.payment_amt}   </StyledTableCell>
+                    <StyledTableCell style={{minWidth:175, paddingLeft: 44}}> {singleData.total_paid !== "" ? singleData.total_paid : ''} </StyledTableCell>
+                    <StyledTableCell style={{minWidth:235, paddingLeft: 46}}> {singleData.status} </StyledTableCell>                    
+                  </TableRow>     
+                </div>          
+                :''                
+              }
+            </ExpansionPanelSummary >
+              
+            <ExpansionPanelDetails style={{margin : '-13px 0px -23px -23px', display: 'table-row'}}>
+            <Table style={{width : '100%'}}>
+            <TableBody style={{width : '100%'}}>{
+            (paymentStatus.length > 0 ? paymentStatus : []).map((data, index) => {
+              
+              
             return(
-              (singleData.installment_no == expanseData.installment_no && expanseData.sub_installment_no != 0 && isExpansionExist === false ) ?
-              <TableRow >
-                <TableCell colSpan='8'>
-                  <div>
-                    <ExpansionPanel >
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} id="panel1a-header" style={{marginLeft: -7,marginRight: -15, fontSize: 10}}>
-                        { inc = 0,
-                          isExpansionExist === false ? 
-                          <div>
-                            <TableRow  className={singleData.installment_no === singleData.installment_before_delivery ? styleClass.highlightRow : null}>
-                              <StyledTableCell align="center">  {singleData.installment_no}   </StyledTableCell>
-                              <StyledTableCell align="center">  {singleData.payment_date}     </StyledTableCell>
-                              <StyledTableCell align="center">  {singleData.payment_rec_date} </StyledTableCell>
-                              <StyledTableCell align="center">  {singleData.payment_amt}      </StyledTableCell>
-                              <StyledTableCell align="center">  {singleData.late_fee}      </StyledTableCell>
-                              <StyledTableCell align="center">  {singleData.interest_amt}      </StyledTableCell>
-                              <StyledTableCell align="center">  {singleData.total_paid !== "" ? singleData.total_paid : ''} </StyledTableCell>
-                              <StyledTableCell align="center">  {singleData.status}           </StyledTableCell>                    
-                            </TableRow>     
-                          </div>          
-                          :''                
+
+            (singleData.installment_no == data.installment_no && data.sub_installment_no != 0) &&
+              // <div style={{marginTop: -13, marginBottom: -15, marginLeft: -17, marginRight: -60, width: '100%'}}>
+                <TableRow  style={{width : '100%'}} className={data.installment_no === data.installment_before_delivery ? styleClass.highlightRow : null}>
+                      {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
+                      <p style={{display:'none'}}>{inc = inc + 1}</p>
+                      <StyledTableCell style={{minWidth:188}}>{data.installment_no + '.' + inc}</StyledTableCell>
+                      <StyledTableCell style={{minWidth:175, paddingLeft: 10}}>{data.payment_date}</StyledTableCell>
+                      <StyledTableCell style={{minWidth:316, paddingLeft: 40}}>
+                        {data.payment_rec_date === "" && totalPaidInstallment === index  ?
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="payment_rec_date"
+                                name="payment_rec_date"
+                                format="dd-MM-yyyy"
+                                placeholder="DD-MM-YYYY"
+                                value={paymentRecDate}
+                                fullWidth 
+                                InputProps={{
+                                  classes: {
+                                    input: styleClass.textsize,
+                                  },                                        
+                                }}                                      
+                                disableFuture
+                                onChange={handleDateChange}                    
+                              />
+                            </MuiPickersUtilsProvider>
+                          : data.payment_rec_date
+                        }   
+                      </StyledTableCell>
+                      <StyledTableCell style={{minWidth:265, paddingLeft: 30}}>
+                        {data.payment_amt === "" && totalPaidInstallment === index ?
+                            <TextField 
+                            id="payment_amt"
+                            name="payment_amt"
+                            value={paymentAmt}
+                            onChange={handlePriceInput}
+                            fullWidth
+                            type="text"
+                            margin="dense"
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                              classes: {
+                                input: styleClass.textsize,
+                              },
+                            }}
+                          />
+                          : data.payment_amt              
+                        }   
+                      </StyledTableCell>                            
+                      <StyledTableCell style={{minWidth:120, paddingLeft: 25}}> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
+                      <StyledTableCell style={{minWidth:0, paddingLeft: 80}}> {data.status} </StyledTableCell>
+                      <StyledTableCell style={{minWidth:0, paddingLeft: 58}}>
+                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                      </StyledTableCell>
+                      {/* {isExpansionExist === false && setExpansionHeader('')} */}
+                    </TableRow>     
+            )})}
+            </TableBody>
+            </Table>
+            </ExpansionPanelDetails>
+            </ExpansionPanel>
+            {isExpansionExist = true}
+            </div>
+            </TableCell>
+            </TableRow>:
+           
+           (singleData.installment_no == expanseData.installment_no && expanseData.sub_installment_no == 0) &&
+            <TableRow className={expanseData.installment_no === expanseData.installment_before_delivery ? styleClass.highlightRow : null}>
+                      {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
+                      <StyledTableCell>{expanseData.installment_no}</StyledTableCell>
+                      <StyledTableCell>{expanseData.payment_date}</StyledTableCell>
+                      <StyledTableCell>
+                        {expanseData.payment_rec_date === "" && totalPaidInstallment === index  ?
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                margin="dense"
+                                id="payment_rec_date"
+                                name="payment_rec_date"
+                                format="dd-MM-yyyy"
+                                placeholder="DD-MM-YYYY"
+                                value={paymentRecDate}
+                                fullWidth 
+                                InputProps={{
+                                  classes: {
+                                    input: styleClass.textsize,
+                                  },                                        
+                                }}                                      
+                                disableFuture
+                                onChange={handleDateChange}                    
+                              />
+                            </MuiPickersUtilsProvider>
+                          : expanseData.payment_rec_date
+                        }   
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {expanseData.payment_amt === "" && totalPaidInstallment === index ?
+                            <TextField 
+                            id="payment_amt"
+                            name="payment_amt"
+                            value={paymentAmt}
+                            onChange={handlePriceInput}
+                            fullWidth
+                            type="text"
+                            margin="dense"
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                              classes: {
+                                input: styleClass.textsize,
+                              },
+                            }}
+                          />
+                          : expanseData.payment_amt              
                         }
-                      </ExpansionPanelSummary >
-                      <ExpansionPanelDetails>
-                        <Table >
-                          <TableBody >{
-                          (paymentStatus.length > 0 ? paymentStatus : []).map((data, innerIndex) => {
-                              return(
-                                (singleData.installment_no == data.installment_no && data.sub_installment_no != 0) &&
-                                  <TableRow  className={data.installment_no === data.installment_before_delivery ? styleClass.highlightRow : null}>
-                                        <p style={{display:'none'}}>{inc = inc + 1}</p>
-                                        <StyledTableCell align="center"> {data.installment_no + '.' + inc}</StyledTableCell>
-                                        <StyledTableCell align="center"> {data.payment_date}</StyledTableCell>
-                                        <StyledTableCell align="center"> {data.payment_rec_date}   </StyledTableCell>
-                                        <StyledTableCell align="center"> {data.payment_amt}   </StyledTableCell>
-                                        <StyledTableCell align="center"> {data.late_fee}   </StyledTableCell>
-                                        <StyledTableCell align="center"> {data.interest_amt}   </StyledTableCell>
-                                        <StyledTableCell align="center"> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
-                                        <StyledTableCell align="center"> {data.status} </StyledTableCell>
-                                        
-                                        <StyledTableCell align="center">
-                                          { (totalPaidInstallment -1 ) === innerIndex ?
-                                            <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handleEditInstallmentOpen(data); }} >Edit Installment</Button>
-                                            :
-                                            <Button variant="contained" color='primary' className={styleClass.button} disabled >Paid Installment</Button>
-                                          }
-                                        </StyledTableCell>
-                                  </TableRow>     
-                                )
-                              })
-                            }
-                          </TableBody>
-                        </Table>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel> {isExpansionExist = true}
-                  </div>
-                </TableCell>
-              </TableRow>
-              : (singleData.installment_no == expanseData.installment_no && expanseData.sub_installment_no == 0) &&
-              <TableRow className={expanseData.installment_no === expanseData.installment_before_delivery ? styleClass.highlightRow : null}>
-                <StyledTableCell align="center">{expanseData.installment_no}</StyledTableCell>
-                <StyledTableCell align="center">{expanseData.payment_date}</StyledTableCell>
-                <StyledTableCell align="center">
-                  {expanseData.payment_rec_date === "" && totalPaidInstallment === index  ?
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                          margin="dense"
-                          id="payment_rec_date"
-                          name="payment_rec_date"
-                          format="dd-MM-yyyy"
-                          placeholder="DD-MM-YYYY"
-                          value={paymentRecDate}
-                          fullWidth 
-                          InputProps={{
-                            classes: {
-                              input: styleClass.textsize,
-                            },                                        
-                          }}                                      
-                          // disableFuture
-                          onChange={handleDateChange}                    
-                        />
-                      </MuiPickersUtilsProvider>
-                    : expanseData.payment_rec_date
-                  }   
-                </StyledTableCell >
-                <StyledTableCell align="center">
-                  {expanseData.payment_amt === "" && totalPaidInstallment === index ?
-                      <TextField 
-                      id="payment_amt"
-                      name="payment_amt"
-                      value={paymentAmt}
-                      onChange={handlePriceInput}
-                      fullWidth
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: styleClass.textsize,
-                        },
-                      }}
-                    />
-                    : expanseData.payment_amt              
-                  }
-                </StyledTableCell>  
-                <StyledTableCell align="center">
-                  {expanseData.late_fee === "" && totalPaidInstallment === index ?
-                      <TextField 
-                      id="late_fee"
-                      name="late_fee"
-                      value={lateFee}
-                      onChange={handleLateFee}
-                      fullWidth
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: styleClass.textsize,
-                        },
-                      }}
-                      disabled = {isDateMissing===false}
-                    />
-                    : expanseData.late_fee              
-                  }
-                </StyledTableCell>    
-                <StyledTableCell align="center">
-                  {expanseData.interest_amt === "" && totalPaidInstallment === index ?
-                      <TextField 
-                      id="interest_amt"
-                      name="interest_amt"
-                      value={interestAmt}
-                      onChange={handleInterestAmt}
-                      fullWidth
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: styleClass.textsize,
-                        },
-                      }}
-                      disabled = {isDateMissing===false}
-                    />
-                    : expanseData.interest_amt              
-                  }
-                </StyledTableCell>                              
-                <StyledTableCell align="center"> {expanseData.total_paid !== "" ? expanseData.total_paid : ''} </StyledTableCell>
-                <StyledTableCell align="center"> {expanseData.status} </StyledTableCell>
-                <StyledTableCell align="center">
-                  {
-                    (totalPaidInstallment - 1)=== index ?
-                    <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handleEditInstallmentOpen(expanseData); }}>Edit Installment</Button>
-                    :
-                    <Button variant="contained" color={isDateMissing===false ? 'primary' : 'secondary'} className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData, 1); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
-                  }
-                  
-                </StyledTableCell>
-              </TableRow> 
-            )
-          })
-        )
-        })
-      }
-    </TableBody>
-  </Table>
-  )
+                      </StyledTableCell>                            
+                      <StyledTableCell> {expanseData.total_paid !== "" ? expanseData.total_paid : ''} </StyledTableCell>
+                      <StyledTableCell> {expanseData.status} </StyledTableCell>
+                      <StyledTableCell>
+                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                      </StyledTableCell>
+                    </TableRow> 
+
+        )        
+      }))})}
+  </TableBody>
+</Table>
+)
 }

@@ -100,8 +100,6 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Edit({open, handleEditClose, handleSnackbarClick, inputValues, updateProductList}) {
   const classes = useStyles();
   const styleClass = useCommonStyles();  
-  const [expanded, setExpanded] = React.useState('panel1');
-  const [product, setProduct] = useState(inputValues);
   const [brandList, setBrandList] = useState([]);
   const [colorList, setColorList] = useState([]);
   const [statusList, setStatusList] = useState([]);
@@ -113,9 +111,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
 
   const [colorOpen, setColorOpen] = useState(false);
   const [brandOpen, setBrandOpen] = useState(false);
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  
 
   const handleStateChange = event => {
     const { name, value } = event.target
@@ -126,22 +122,18 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
       try {
         const result = await Brand.list();
         setBrandList(result.brandList);
+        // console.log(result, result.brandList);
         const color_result = await Color.list();
         setColorList(color_result.colorList);
         const status_result = await Status.list();
         setStatusList(status_result.statusList);
       } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
+        console.log('useEffect Error.. ', error)
+      }      
     };
-
     fetchData();
   }, []);
 
@@ -194,24 +186,25 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
     }
   }
   
-  function handleBrandClose() {
-    setBrandOpen(false);
-  } 
-   function updatedBrandData(response){   
-    setBrandList(response);
-     
-  } function updatedData(response){   
-    setColorList(response);
-     
-  }
+    function handleBrandClose() {
+      setBrandOpen(false);
+    } 
+    function updatedBrandData(response){   
+      setBrandList(response);
+    }
+    function updatedData(response){   
+      setColorList(response);     
+    }
+
+  
+
   const { inputs, handleInputChange, handlePriceInput, handleNumberInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+    inputValues,
     handleProductSubmit,
     validate
   ); 
-  useEffect(() => {
-    setInputsAll(inputValues);
-  }, []);
+  // console.log("bran",brandList)
+  
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -297,7 +290,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                       error={errors.color_id}
                       helperText={errors.color_id}
                     >
-                    { colorList.map((data, index)=>{
+                    { (colorList.length > 0 ? colorList : []).map((data, index)=>{
                           return(
                         <MenuItem className={classes.textsize} value={data.id}>{data.color}</MenuItem>
                           )
@@ -309,7 +302,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="brand_id">Choose Brand</InputLabel>
                     <Select
-                         className={classes.textsize}
                         onChange={handleBrandInputChange}
                         value={inputs.brand_id}
                         inputProps={{
@@ -323,13 +315,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                         error={errors.brand_id}
                         helperText={errors.brand_id}
                       >
-                        { brandList.map((data, index)=>{
-                          return(
-                        <MenuItem  className={classes.textsize} className={classes.textsize} value={data.id}>{data.brand_name}</MenuItem>
-                          )
-                      })
-                    }                        <MenuItem className={classes.textsize} value="0" >Others</MenuItem>
-
+                        { (brandList.length > 0 ? brandList : []).map((data, index) => {
+                            return( <MenuItem  className={classes.textsize} value={data.id}> {data.brand_name} </MenuItem> )
+                          })
+                        } 
+                        <MenuItem className={classes.textsize} value={0}> Others  </MenuItem>
                     </Select>
                   </Grid>
                   
@@ -488,37 +478,28 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, inputV
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="status">Choose Status</InputLabel>
                     <Select
-                        
-                        onChange={handleStateChange}
-                        value={inputs.status}
-                        inputProps={{
-                          name: 'status',
-                          id: 'status',
-                        }}
-                        fullWidth
-                        label="Choose Status"
-                        required
-                        className={classes.drpdwn}
-                        error={errors.status}
-                        helperText={errors.status}
-                      >
-                        { statusList.map((datastatus, index)=>{
-                          return(
-                        <MenuItem className={classes.textsize} value={datastatus.id}>{datastatus.status}</MenuItem>
-                          )
+                      onChange={handleStateChange}
+                      value={inputs.status}
+                      inputProps={{
+                        name: 'status',
+                        id: 'status',
+                      }}
+                      fullWidth
+                      label="Choose Status"
+                      required
+                      className={classes.drpdwn}
+                      error={errors.status}
+                      helperText={errors.status}
+                    >
+                    { statusList.map((datastatus, index)=>{
+                      return( <MenuItem className={classes.textsize} value={datastatus.id}>{datastatus.status}</MenuItem> )
                       })
                     }
                     </Select>
                   </Grid>
-                  <Grid item xs={12} sm={12}>
-                  {savebtn? <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button}>
-                    Update
-                  </Button>:  <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} disabled>
-                    Update
-                  </Button>}
-                    <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
-                      Close
-                    </Button> 
+                  <Grid item xs={12} sm={12}>                  
+                    <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.button} disabled = {savebtn===false}> Update </Button>
+                    <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}> Close </Button> 
                   </Grid>
                 </Grid>
                 </Paper>

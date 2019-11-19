@@ -32,23 +32,23 @@ const Delivery = multer.diskStorage({
   }
 });
 
-const paymentDocs = multer.diskStorage({
-  destination: function (req, file, callback) {
-      callback(null, './files/DocsForPayment');
-  },
-  filename: function (req, file, callback) {
+// const paymentDocs = multer.diskStorage({
+//   destination: function (req, file, callback) {
+//       callback(null, './files/DocsForPayment');
+//   },
+//   filename: function (req, file, callback) {
 
-    // if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
+//     // if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
       
-      callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
-    // }
-  }
-});
+//       callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
+//     // }
+//   }
+// });
 
 
 const upload = multer({ storage: storage });
 const DeliveredDoc = multer({ storage: Delivery });
-const paymentDoc = multer({ storage: paymentDocs });
+// const paymentDoc = multer({ storage: paymentDocs });
 
 const validateToken = require('../../utils').validateToken;
 
@@ -67,8 +67,9 @@ orderRouter.route("/updateBudget").post(validateToken, Order.updateBudget);
 orderRouter.route("/getfixedorder").post(validateToken, Order.getFixedOrder);
 orderRouter.route("/getflexorder").post(validateToken, Order.getFlexOrder);
 orderRouter.route("/getpaymenthistory").post(validateToken, Order.getPaymentHistory);
-orderRouter.route("/getFullPaymentHistory").post(validateToken, Order.getFullPaymentHistory);
+// orderRouter.route("/getFullPaymentHistory").post(validateToken, Order.getFullPaymentHistory);
 
+orderRouter.route("/paymentsubmit").post(validateToken, Order.paymentSubmit);
 orderRouter.route("/editorder").post(validateToken, Order.editOrder);
 orderRouter.route("/assigntofinance").post(validateToken, Order.assignToFinance);
 orderRouter.route("/assigntodelivery").post(validateToken, Order.assignToDelivery);
@@ -86,12 +87,13 @@ orderRouter.route("/getSalesTypeList").get(validateToken, Order.getSalesTypeList
 orderRouter.route("/getRentingForList").get(validateToken, Order.getRentingForList);
 orderRouter.route("/getBudgetComments").post(validateToken, Order.getBudgetComments);
 orderRouter.route("/getSalesPersonList").get(validateToken, Order.getSalesPersonList);
-orderRouter.route("/getSingleTransactionDetail").post(validateToken, Order.getSingleTransactionDetail);
+// orderRouter.route("/getSingleTransactionDetail").post(validateToken, Order.getSingleTransactionDetail);
 
 
-orderRouter.route("/paymentsubmit").post(validateToken, paymentDoc.array('avatar'), Order.paymentSubmit);
-orderRouter.route("/editInstallment").post(validateToken, paymentDoc.array('avatar'), Order.editInstallment);
+// orderRouter.route("/paymentsubmit").post(validateToken, paymentDoc.array('avatar'), Order.paymentSubmit);
+// orderRouter.route("/editInstallment").post(validateToken, paymentDoc.array('avatar'), Order.editInstallment);
 
 orderRouter.route("/getReceivedPaymentsList").get(validateToken, Order.getReceivedPaymentsList);
+
 
 module.exports = orderRouter;

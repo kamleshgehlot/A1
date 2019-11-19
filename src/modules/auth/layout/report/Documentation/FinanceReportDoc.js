@@ -3,16 +3,6 @@ import { getDate, getCurrentDate, getDateInDDMMYYYY, getCurrentDateDDMMYYYY } fr
 import { styles } from './Styles.js';
 
 
-
-// customer_id: 2050
-// id: 279
-// installment_no: 1
-// order_id: 65
-// payment_amt: 30
-// payment_date: "2019-12-12"
-// payment_rec_date: "2019-11-08"
-// total_paid: 30
-
 function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
   var body = [];
   body.push([
@@ -73,8 +63,6 @@ function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
 
   return body;
 }
-// { text: 'PRODUCT AND CREDIT DETAILS: ', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 10, colSpan: 3,  fillColor: '#C5C7C0'}, {},{},{}
-
 
 function buildTableBody(data, columns, valueKeys, orderType) {
   var body = [];
@@ -120,14 +108,14 @@ export default function FixedOrderForm(data, order, reportData, fromDate, toDate
   const franchise = data.franchise;
   const products = data.product;
   const customer = data.customer[0];
-  const orderType = data.fixedOrder;
+  const orderType = data.orderType;
   const budget = data.budget; 
   const user = data.user[0]; 
 
   // console.log("product", products);
   // console.log(orderType);
   // console.log(data);
-  console.log('reportData',  reportData);
+  // console.log('reportData',  reportData);
   // console.log(order);
 
  
