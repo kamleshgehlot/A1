@@ -46,12 +46,13 @@ import Active from './components/Active';
 import Hold from './components/Hold';
 import FinancialHardship from './components/FinancialHardship';
 import BornToday from './components/BornToday';
+import MissedPayment from './components/MissedPayment';
 
 import CommentView from './CommentView';
 import BadgeComp from '../../common/BadgeComp';
 
 import BudgetHistory from '../order/BudgetHistory';
-import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDDMMYYYY, getDate} from '../../../utils/datetime';
+import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../../../utils/datetime';
 
 
 
@@ -197,6 +198,8 @@ export default function CustomerList({userId, roleName}) {
   const [holdTab, setHoldTab] = useState([]);
   const [financialHardshipTab, setFinancialHardshipTab] = useState([]);
   const [bornTodayTab, setBornTodayTab] = useState([]);
+  const [missedPaymentTab, setMissedPaymentTab] = useState([]);
+  
   
 
 
@@ -322,15 +325,22 @@ export default function CustomerList({userId, roleName}) {
     }
   }
 
-  
+  const fetchMissedPaymentData = async () =>{
+    const result = await Order.fetchMissedPaymentData({});
+    return result;
+  }
 
 
   
-  function handleTabsData(customerList){ 
+  async function handleTabsData(customerList){ 
+    const paymentData = await fetchMissedPaymentData();
+    const currDate = getCurrentDateDBFormat();
+
     let activeList = [];
     let holdList = [];
     let financialHardshipList = [];
     let bornToday = [];
+    let missedPayment = [];
 
     (customerList.length > 0 ? customerList : []).map((data, index) => {
       
@@ -346,12 +356,22 @@ export default function CustomerList({userId, roleName}) {
       if(data.state == 3 ){
         financialHardshipList.push(data);
       }
+      
+      (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
+        if(data.id == payData.customer_id){
+          if(currDate > getDate(payData.payment_date)){
+            data.payment_date = getDateInDDMMYYYY(payData.payment_date);
+            missedPayment.push(data);
+          }
+        }
+      });
     });
     
     setActiveTab(activeList);
     setHoldTab(holdList);
     setFinancialHardshipTab(financialHardshipList);
     setBornTodayTab(bornToday);
+    setMissedPaymentTab(missedPayment);
   }
   
 
@@ -434,6 +454,7 @@ export default function CustomerList({userId, roleName}) {
                   <Tab label={<BadgeComp count={holdTab.length} label="Hold" />} /> 
                   <Tab label={<BadgeComp count={financialHardshipTab.length} label="Financial Hardship" />} /> 
                   <Tab label={<BadgeComp count={bornTodayTab.length} label="Today's Birthday" />} />
+                  <Tab label={<BadgeComp count={missedPaymentTab.length} label="Missed Payment" />} />
                 </Tabs>
               </AppBar>
               
@@ -451,6 +472,9 @@ export default function CustomerList({userId, roleName}) {
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                   {bornTodayTab && <BornToday customerList={bornTodayTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
+                </TabPanel>
+                <TabPanel value={value} index={4}>
+                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
                 </TabPanel>
               </div>
             </Paper>                            

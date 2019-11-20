@@ -142,7 +142,7 @@ return (
                       </Tooltip>
                     </label>
                   <Tooltip title="Assign to Finance">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data.id); }} disabled= {data.doc_upload_status===0}>
+                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data); }} disabled= {data.doc_upload_status===0}>
                       <SendIcon />
                     </IconButton>
                   </Tooltip>

@@ -3,6 +3,7 @@ const Customer = require('../../models/franchise/customer.js');
 const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 const addSubtractDate = require("add-subtract-date");
 const moment = require('moment');
+const {dateMaker} = require('../../utils/PaymentScheduleDateMaker.js');
 
 
 const uploadDoc = async function (req, res, next) {
@@ -303,11 +304,13 @@ const paymentSubmit = async function(req, res, next) {
     payment_rec_date : req.body.payment_rec_date,
     each_payment_amt : Number(req.body.each_payment_amt),
     frequency : req.body.frequency,
+    schedule_status : 0,
     // transaction_date : data.payment_rec_date,
     // transaction_amt : Number(data.payment_amt),
     // comment : data.comment,
     // document :  attachments,  
   }   
+  console.log('params',params);
   try {
     const newPayment = new Order(params);
     // const newDoc = new UploadDocument(params);
@@ -333,22 +336,13 @@ const paymentSubmit = async function(req, res, next) {
     let payAmt = params.payment_amt;
     let instNo = params.installment_no;
 
-    const dateMaker = (date) =>{
-      const payDate = new Date(date);
-
-      if(params.frequency === 1){    
-        return moment((addSubtractDate.add(payDate, 1, "month"))).format("YYYY-MM-DD");
-      }else if(params.frequency === 2){
-        return moment((addSubtractDate.add(payDate, 15, "days"))).format("YYYY-MM-DD");
-      }else if(params.frequency === 4){
-        return moment((addSubtractDate.add(payDate, 7, "days"))).format("YYYY-MM-DD");
-      }         
-    }
-
     if(params.payment_amt === params.each_payment_amt){
       if(params.due_installment_amt === 0){
         newPayment.total_paid = newPayment.total_paid + params.payment_amt;
-        const payment = await newPayment.paymentSubmit();
+        await newPayment.paymentSubmit();
+
+        newPayment.schedule_status = 1;
+        await newPayment.updateSchedule();
       }else if(params.due_installment_amt > 0){
           
           let due = params.due_installment_amt;
@@ -359,14 +353,20 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.total_paid = newPayment.total_paid + params.due_installment_amt;
           const payment = await newPayment.paymentSubmit();
           
+          newPayment.schedule_status = 1;
+          await newPayment.updateSchedule();
+          
           payAmt = payAmt - due;         
           newPayment.due_installment_amt = params.each_payment_amt - payAmt;
           newPayment.sub_installment_no = 1;
           newPayment.payment_amt = payAmt;
           newPayment.total_paid = newPayment.total_paid + payAmt;
           newPayment.installment_no = instNo + 1;
-          newPayment.payment_date = dateMaker(newPayment.payment_date);
+          newPayment.payment_date = dateMaker(newPayment.payment_date, params.frequency);
           const payment1 = await newPayment.paymentSubmit();
+          
+          newPayment.schedule_status = 2;
+          await newPayment.updateSchedule(); 
         }
     }
 
@@ -379,12 +379,22 @@ const paymentSubmit = async function(req, res, next) {
         newPayment.due_installment_amt = params.each_payment_amt - params.payment_amt;
         newPayment.sub_installment_no = 1;
         const payment = await newPayment.paymentSubmit();
+        
+        newPayment.schedule_status = 2;
+        await newPayment.updateSchedule(); 
       }else if(params.due_installment_amt > 0){
         if(params.due_installment_amt >= params.payment_amt){
           newPayment.total_paid = newPayment.total_paid + params.payment_amt;
           newPayment.due_installment_amt = params.due_installment_amt - params.payment_amt;
           newPayment.sub_installment_no = newPayment.sub_installment_no + 1;
           const payment = await newPayment.paymentSubmit();
+          
+          if(params.due_installment_amt == params.payment_amt){
+            newPayment.schedule_status = 1;
+          }else{
+            newPayment.schedule_status = 2;            
+          }
+          await newPayment.updateSchedule(); 
         }else if(params.due_installment_amt < params.payment_amt){
           let due = params.due_installment_amt;
          
@@ -394,14 +404,19 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.total_paid = newPayment.total_paid + params.due_installment_amt;
           const payment = await newPayment.paymentSubmit();
 
+          newPayment.schedule_status = 1;
+          await newPayment.updateSchedule(); 
+
           payAmt = payAmt - due;         
           newPayment.due_installment_amt = params.each_payment_amt - payAmt;
           newPayment.sub_installment_no = 1;
           newPayment.payment_amt = payAmt;
           newPayment.total_paid = newPayment.total_paid + payAmt;
           newPayment.installment_no = instNo + 1;
-          newPayment.payment_date = dateMaker(newPayment.payment_date);
+          newPayment.payment_date = dateMaker(newPayment.payment_date, params.frequency);
           const payment1 = await newPayment.paymentSubmit();
+          newPayment.schedule_status = 2;
+          await newPayment.updateSchedule(); 
         }
       }
     }
@@ -417,10 +432,13 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.due_installment_amt = 0;
           const payment = await newPayment.paymentSubmit();
 
+          newPayment.schedule_status = 1;
+          await newPayment.updateSchedule(); 
+
           instNo = instNo + 1;
           payAmt = payAmt - dueAmt;
           newPayment.sub_installment_no = 0;
-          newPayment.payment_date =  dateMaker(newPayment.payment_date);
+          newPayment.payment_date =  dateMaker(newPayment.payment_date, params.frequency);
         }
 
         let eachPayAmt =params.each_payment_amt;
@@ -432,16 +450,21 @@ const paymentSubmit = async function(req, res, next) {
               newPayment.total_paid =  newPayment.total_paid + eachPayAmt;
               newPayment.installment_no = instNo;
               instNo = instNo + 1;
+              
+              newPayment.schedule_status = 1;
             }else{
               newPayment.payment_amt = payAmt;
               newPayment.total_paid = newPayment.total_paid + payAmt;
               newPayment.installment_no = instNo;
               newPayment.sub_installment_no = 1;
               newPayment.due_installment_amt = eachPayAmt - payAmt;
+
+              newPayment.schedule_status = 2;              
             }
             const payment = await newPayment.paymentSubmit();
+            await newPayment.updateSchedule(); 
             payAmt = payAmt - eachPayAmt;
-            newPayment.payment_date =  dateMaker(newPayment.payment_date);
+            newPayment.payment_date =  dateMaker(newPayment.payment_date, params.frequency);
           }
     }
     res.send({});
@@ -503,8 +526,49 @@ const paymentSubmit = async function(req, res, next) {
 
 
 const assignToFinance = async function(req, res, next) {
+  let params = {
+    user_id : req.decoded.user_id,
+    assigned_to: req.body.assigned_to, 
+    order_id: req.body.id,
+    customer_id : req.body.customer_id,
+    created_by : req.decoded.id,
+    order_type : req.body.order_type,
+    order_type_id : req.body.order_type_id,
+  };
+
   try {
-    await new Order({user_id : req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id}).assignToFinance();
+    const newActivity = new Order(params);
+    await newActivity.assignToFinance();
+
+    let orderTypeResult = [];
+    let noOfPayment = 0;
+
+    if(params.order_type === 1){
+      newActivity.fixedOrderId = params.order_type_id;
+      orderTypeResult = await newActivity.getFixedOrder();
+      noOfPayment =  orderTypeResult[0].no_of_payment;
+    } else if(params.order_type === 2){
+      newActivity.flexOrderId = params.order_type_id;
+      orderTypeResult = await newActivity.getFlexOrder();
+      noOfPayment =  orderTypeResult[0].before_delivery_amt;
+    }
+    
+
+    let paymentDate = moment(orderTypeResult[0].first_payment).format("YYYY-MM-DD");
+    let paymentScheduleArray = [];
+    
+    for(let i=1; i<= noOfPayment; i++){
+      paymentScheduleArray.push(
+        [params.order_id, params.customer_id, i, paymentDate, 0, 1, params.created_by],
+      );      
+      paymentDate = dateMaker(paymentDate, orderTypeResult[0].frequency);
+    }
+
+    newActivity.paymentScheduleArray = paymentScheduleArray;
+
+    await newActivity.createdPaymentSchedule();    
+
+    
     const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
     res.send({ order: order});
   } catch (error) {
@@ -878,6 +942,17 @@ const editOrder = async function (req, res, next) {
       next(error);
     }
   };
+
+
+  const fetchMissedPaymentData = async function(req, res, next) {
+    try {
+      const result = await new Order({user_id: req.decoded.user_id}).fetchMissedPaymentData();
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  
   
   
   
@@ -918,4 +993,5 @@ module.exports = {
   // editInstallment,
   // getSingleTransactionDetail,
   getReceivedPaymentsList,
+  fetchMissedPaymentData,
 };

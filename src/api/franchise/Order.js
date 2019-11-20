@@ -631,4 +631,16 @@ export default {
     }
   },
 
+  fetchMissedPaymentData: async () => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/fetchMissedPaymentData`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
 };

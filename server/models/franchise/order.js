@@ -66,6 +66,9 @@ var Order = function (params) {
   this.delivery_date = params.delivery_date;
   this.purchase_from = params.purchase_from;
 
+  this.paymentScheduleArray = params.paymentScheduleArray;
+  this.schedule_status = params.schedule_status;
+
   // this.interest_amt = params.interest_amt;
   // this.late_fee = params.late_fee;
   // this.payment_table_id = params.payment_table_id;
@@ -908,7 +911,7 @@ Order.prototype.assignToFinance = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('UPDATE orders SET assigned_to = 4, order_status = 3 WHERE id = "'+that.id+'"',function (error, rows, fields) {
+        connection.query('UPDATE orders SET assigned_to = 4, order_status = 3 WHERE id = "'+that.order_id+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -1737,4 +1740,92 @@ Order.prototype.getReceivedPaymentsList = function () {
     throw error;
   });
 };
+
+
+
+Order.prototype.fetchMissedPaymentData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('SELECT a.* from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a group by a.order_id', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      }
+      connection.release();
+      console.log('payment Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+Order.prototype.createdPaymentSchedule = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('INSERT INTO payment_schedule(order_id, customer_id, installment_no, payment_date, status, is_active, created_by) VALUES ?',[that.paymentScheduleArray], function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      }
+      connection.release();
+      console.log('schedule created for order  %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+Order.prototype.updateSchedule = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('UPDATE payment_schedule SET status = "'+that.schedule_status+'" WHERE order_id = "'+ that.order_id +'" AND customer_id = "'+ that.customer_id +'" AND installment_no = "'+ that.installment_no +'"', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      }
+      connection.release();
+      console.log('schedule updated for order  %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 module.exports = Order;

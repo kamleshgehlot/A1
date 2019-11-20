@@ -407,7 +407,8 @@ export default function Order({roleName}) {
   }
 
   function handleAssignToFinance(data){
-    setOrderId(data);
+    setOrderId(data.id);
+    setOrderData(data);
     setNextStep('Finance');
     setConfirmation(true);
   }
@@ -475,7 +476,14 @@ export default function Order({roleName}) {
         try {  
           if(nextStep === 'Finance')
             {
-              const result = await OrderAPI.assignToFinance({assigned_to: 4, id: orderId});
+              console.log('orderData...',orderData);
+              const result = await OrderAPI.assignToFinance({
+                assigned_to: 4,
+                id: orderId, 
+                customer_id: orderData.customer_id,                
+                order_type : orderData.order_type,
+                order_type_id : orderData.order_type_id,
+              });
               setOrder(result.order);
               setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
               setCommentBoxOpen(true);

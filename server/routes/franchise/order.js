@@ -94,6 +94,9 @@ orderRouter.route("/getSalesPersonList").get(validateToken, Order.getSalesPerson
 // orderRouter.route("/editInstallment").post(validateToken, paymentDoc.array('avatar'), Order.editInstallment);
 
 orderRouter.route("/getReceivedPaymentsList").get(validateToken, Order.getReceivedPaymentsList);
+orderRouter.route("/fetchMissedPaymentData").get(validateToken, Order.fetchMissedPaymentData);
+
+
 
 
 module.exports = orderRouter;
