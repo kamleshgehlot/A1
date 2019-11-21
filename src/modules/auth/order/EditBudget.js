@@ -113,7 +113,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function EditBudget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, customer_id, isEditable}) {
+export default function EditBudget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, customer_id, isEditable, handleOrderViewFromBudget}) {
 
   const styleClass = useCommonStyles();  
   const classes = useStyles();
@@ -988,14 +988,16 @@ return (
                         oldBudgetList.map(data =>{
                           return(
                             <Typography variant="h6" className={classes.labelTitle} align="right">
-                            {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt * 4) + ')')
-                            :''}
-                          </Typography>)
+                              <IconButton size="small" className={classes.labelTitle} style={{color: 'blue', marginTop : -7}} value={data.id} name={data.id} onClick={(event) => { handleOrderViewFromBudget(data); }}>
+                                {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt * 4) + ')') :''}
+                              </IconButton>
+                            </Typography>                           
+                          )
                         })
-                        :
-                          <Typography variant="h6" className={classes.labelTitle}  align="right">
-                             {( "OrderId: " + inputs.order_id + '  ($' +(inputs.pre_order_exp) + ')')}
-                          </Typography>
+                        : null
+                          // <Typography variant="h6" className={classes.labelTitle}  align="right">
+                          //    {( "OrderId: " + inputs.order_id + '  ($' +(inputs.pre_order_exp) + ')')}
+                          // </Typography>
                       }
                       <Typography variant="h6" className={classes.labelTitle}  align="right">
                         {"Total:  $" + oldBudget }

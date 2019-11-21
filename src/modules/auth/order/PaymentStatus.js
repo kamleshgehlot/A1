@@ -448,8 +448,7 @@ return (
               </Typography> 
               <Typography variant="h6" className={classes.labelTitle}>
                   {"Customer Name: " + orderData.customer_name }
-              </Typography>
-              
+              </Typography>              
             </Grid>
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
@@ -461,17 +460,13 @@ return (
             </Grid>
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
-                  {"Order Date:  " + orderData.order_date }
+                  {"Order Date:  " + getDateInDDMMYYYY(orderData.order_date) }
               </Typography>
               <Typography variant="h6" className={classes.labelTitle}>
                 {"Payment Mode: " + orderData.payment_mode_name }
             </Typography>
-            </Grid>
-            <Grid item xs={12} sm={11}>
-              <Typography variant="h6" className={classes.labelTitle}>
-                {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
-              </Typography>                  
-            </Grid>
+            </Grid>         
+            <Grid item xs={12} sm={0}></Grid>  
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
                   {"Each Installment Amt. " + 
@@ -494,6 +489,12 @@ return (
               <Typography variant="h6" className={classes.labelTitle}>
                   {"Total Received Amt.:  " + totalPaid.toFixed(2) }
               </Typography>              
+            </Grid>
+            <Grid item xs={12} sm={0}></Grid>  
+            <Grid item xs={12} sm={11}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
+              </Typography>                  
             </Grid>
             
             

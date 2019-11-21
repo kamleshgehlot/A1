@@ -119,7 +119,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertId, converted_name, conversionData}) {
+export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertId, converted_name, conversionData, handleOrderViewFromBudget}) {
 
   const styleClass = useCommonStyles(); 
   const classes = useStyles();
@@ -769,7 +769,7 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id}/> : null }
+    {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id} handleOrderViewFromBudget={handleOrderViewFromBudget}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData} conversionData={conversionData}/> : null }
     {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} affordAmt={budgetList.afford_amt} product={product}/> : null }
     {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} affordAmt={budgetList.afford_amt} product={product} /> : null }

@@ -578,6 +578,14 @@ export default function Order({roleName}) {
     handleTabsData(order);
   }  
 
+
+
+  
+  async function handleOrderViewFromBudget (data){
+    const result = await OrderAPI.getSingleOrderData({order_id: data.o_id});
+    handleOrderView(result[0]);
+  }
+
   function handleTabsData(order){  
     let open = [];
     let finance = [];
@@ -631,7 +639,7 @@ export default function Order({roleName}) {
         if(data.assigned_to === 5 && data.order_status ===5  && data.is_active ==1){
           open.push(data);
           }
-        if(data.order_status >= 6){
+        if(data.order_status >= 6 && data.order_status != 9 && data.order_status != 10){
           delivered.push(data);
           }
         });
@@ -776,9 +784,9 @@ export default function Order({roleName}) {
         />
       </Snackbar>
 
-     {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData} convertId={0} converstionData={""}/> : null }
+     {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData= {handleOrderRecData} convertId={0} converstionData={""} handleOrderViewFromBudget={handleOrderViewFromBudget}/> : null }
      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData = {orderData}  /> : null }
-     {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} viewOnly={viewOnly} /> : null}
+     {editOpen? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} editableData={editableData} viewOnly={viewOnly} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null}
      {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} />: null }
      {processDialog ? <ProcessDialog open = {processDialog} handleProcessDialogClose={handleProcessDialogClose}/> : null }          
      {commentBoxOpen? <CommentDialog open = {commentBoxOpen} handleCommentBoxClose = {handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null }

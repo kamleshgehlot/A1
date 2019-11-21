@@ -117,7 +117,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData, viewOnly}) {
+export default function Edit({ open, handleEditClose, handleSnackbarClick, handleOrderRecData, editableData, viewOnly, handleOrderViewFromBudget}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [budgetOpen, setBudgetOpen] = useState(false);
@@ -704,7 +704,7 @@ return (
           </div>
         </form>
       </Dialog>
-    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={0} /> : null }
+    {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={0} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
     {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} product={product} viewOnly={viewOnly}/> : null }
     {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} product={product}  viewOnly={viewOnly} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }

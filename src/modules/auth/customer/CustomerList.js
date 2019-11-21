@@ -47,6 +47,7 @@ import Hold from './components/Hold';
 import FinancialHardship from './components/FinancialHardship';
 import BornToday from './components/BornToday';
 import MissedPayment from './components/MissedPayment';
+import ViewOrder from '../order/Edit';
 
 import CommentView from './CommentView';
 import BadgeComp from '../../common/BadgeComp';
@@ -199,8 +200,8 @@ export default function CustomerList({userId, roleName}) {
   const [financialHardshipTab, setFinancialHardshipTab] = useState([]);
   const [bornTodayTab, setBornTodayTab] = useState([]);
   const [missedPaymentTab, setMissedPaymentTab] = useState([]);
-  
-  
+  const [editableData,setEditableData] = useState({});
+  const [viewOrder,setViewOrder] = useState(false);
 
 
 
@@ -305,6 +306,23 @@ export default function CustomerList({userId, roleName}) {
   function handleSearchText(event){
     setSearchText(event.target.value);
   }
+  
+  async function handleOrderView (data){
+    const result = await Order.getSingleOrderData({order_id: data.order_id});
+    setEditableData(result[0]);
+    setViewOrder(true);
+  }
+
+  async function handleOrderViewFromBudget (data){
+    const result = await Order.getSingleOrderData({order_id: data.o_id});
+    setEditableData(result[0]);
+    setViewOrder(true);
+  }
+
+
+  function handleOrderViewClose(){
+    setViewOrder(false);
+  }
 
 
   const searchHandler = async () => {
@@ -361,6 +379,8 @@ export default function CustomerList({userId, roleName}) {
         if(data.id == payData.customer_id){
           if(currDate > getDate(payData.payment_date)){
             data.payment_date = getDateInDDMMYYYY(payData.payment_date);
+            data.order_format_id = payData.order_format_id;
+            data.order_id = payData.order_id;
             missedPayment.push(data);
           }
         }
@@ -474,7 +494,7 @@ export default function CustomerList({userId, roleName}) {
                   {bornTodayTab && <BornToday customerList={bornTodayTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
+                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} /> } 
                 </TabPanel>
               </div>
             </Paper>                            
@@ -483,10 +503,11 @@ export default function CustomerList({userId, roleName}) {
 
       {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
-      {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} /> : null }
+      {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
       {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} customer_id={customerId} roleName={roleName} /> : null }
       {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} customer_id = {customerId}  /> :null}
       {bankDetailOpen ?<CustomerBankDetails open={bankDetailOpen} handleClose={handleBankDetailClose} handleSnackbarClick={handleSnackbarClick} bankDetailArray={bankDetailArray} setBankDetailArray = {setBankDetailArray} customer_id={customerId} isAddingDirect={true} /> : null }
+      {viewOrder ? <ViewOrder open={viewOrder} handleEditClose={handleOrderViewClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {[]} editableData={editableData} viewOnly={ true } /> : null}
     </div>
   );
 }

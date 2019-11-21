@@ -33,7 +33,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
 import Order from '../../../api/franchise/Order';
 import ConfirmationDialog from '../ConfirmationDialog.js';
-import { getDate, getCurrentDate } from '../../../utils/datetime';
+import { getDate, getCurrentDate, getCurrentDateDBFormat } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import validate from '../../common/validation/ProductDeliveryForm';
@@ -126,7 +126,7 @@ const RESET_VALUES  = {
   product_cost : '',
   specification : '',
   invoice_number : '',
-  delivery_date : getCurrentDate(), 
+  delivery_date : getCurrentDateDBFormat(), 
   purchase_from : '',
 }
 
@@ -144,13 +144,18 @@ export default function ViewDeliveredProductDetails({ open, handleClose, handleS
         const result = await Order.getProductAndCategoryName({
           product_id : orderData.product_id,          
         });
-        setRequesedData(result[0]);
+        if(result != undefined && result != ""){
+          setRequesedData(result[0]);
+        }       
 
         const deliveredData = await Order.getDeliveredProductData({
           order_id: orderData.id,          
           customer_id : orderData.customer_id,
         });
-        setInputs(deliveredData[0]);
+        if(deliveredData != undefined && deliveredData != ""){
+          setInputs(deliveredData[0]);
+        }  
+        
       } catch (error) {
         console.log('Error..',error);
       }

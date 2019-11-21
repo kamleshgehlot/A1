@@ -152,6 +152,18 @@ const getAll = async function(req, res, next) {
   }
 };
 
+
+const getSingleOrderData = async function(req, res, next) {
+  try {
+    const order = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id}).getSingleOrderData();
+
+    res.send( order );
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 const getBudget = async function(req, res, next) {
   try {
     // console.log('req--',req.body)
@@ -994,4 +1006,5 @@ module.exports = {
   // getSingleTransactionDetail,
   getReceivedPaymentsList,
   fetchMissedPaymentData,
+  getSingleOrderData,
 };

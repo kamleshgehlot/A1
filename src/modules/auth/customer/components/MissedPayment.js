@@ -35,6 +35,7 @@ import PropTypes from 'prop-types';
 import {TablePaginationActions} from '../../../common/Pagination';
 import {getDate, getDateInDDMMYYYY} from '../../../../utils/datetime';
 
+
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
@@ -83,7 +84,7 @@ const useStyles = makeStyles(theme => ({
   },
   textsize:{
     fontSize: theme.typography.pxToRem(12),
-    color: 'white',
+    color: 'blue',
   }
 }));
 
@@ -99,7 +100,7 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function Active({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen }) {
+export default function MissedPayment({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen, handleOrderView }) {
   // console.log('custome',customerList)
   const styleClass = useCommonStyles();
   const classes = useStyles();
@@ -122,7 +123,8 @@ return (
     <Table stickyHeader  className={classes.table}>
       <TableHead>
         <TableRow>
-          <StyledTableCell>#        </StyledTableCell>
+          <StyledTableCell>#          </StyledTableCell>
+          <StyledTableCell>Order Id   </StyledTableCell>
           <StyledTableCell>Name       </StyledTableCell>
           <StyledTableCell>Contact    </StyledTableCell>
           <StyledTableCell>Email ID   </StyledTableCell>
@@ -133,11 +135,16 @@ return (
         </TableRow>
       </TableHead>
       <TableBody>        
-          {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data,index) => {
+          {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {
           // (customerList.length > 0 ? customerList : []).map((data, index) => {
             return(
               <TableRow key={data.id}>
-                  <StyledTableCell> {data.id}           </StyledTableCell>
+                  <StyledTableCell> {index + 1}           </StyledTableCell>
+                  <StyledTableCell>     
+                    <IconButton  size="small" className={classes.textsize} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOrderView(data); }}>
+                      {data.order_format_id}
+                    </IconButton> 
+                  </StyledTableCell>
                   <StyledTableCell> {data.customer_name}  </StyledTableCell>
                   <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
                   <StyledTableCell> {data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
@@ -181,7 +188,7 @@ return (
         <TableRow>
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
-            colSpan={7}
+            colSpan={8}
             count={customerList.length}
             rowsPerPage={rowsPerPage}
             page={page}

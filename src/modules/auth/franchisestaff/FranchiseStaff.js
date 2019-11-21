@@ -260,18 +260,9 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-
           <Grid item xs={12} sm={8}>
-            <Fab
-              variant="extended"
-              size="small"
-              // color="primary"
-              aria-label="Add"
-              className={classes.fonttransform}
-              onClick={handleClickOpen}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              Franchise Staff
+            <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen} >
+              <AddIcon className={classes.extendedIcon} /> Franchise Staff
             </Fab>
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -306,38 +297,19 @@ export default function FranchiseStaff({franchiseId, roleName}) {
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
-                  
-                {/* <Tab label="All" /> */}
-                <Tab label={<BadgeComp count={staffList.length} label="All" />} /> 
-                <Tab label={<BadgeComp count={totalCSR} label="CSR" />} /> 
-                <Tab label={<BadgeComp count={totalDelivery} label="Delivery" />} /> 
-                <Tab label={<BadgeComp count={totalFinance} label="Finance" />} />                 
-                <Tab label={<BadgeComp count={totalHR} label="HR" />} /> 
-
-                  {/* {
-                    (role.length>0 ? role : []).map((ele, index) => {
-                      // console.log(ele)
-                      return(
-                        <Tab label={<Badge className={classes.padding} color="secondary" 
-                                    badgeContent={
-                                      ele.name == 'CSR' ? CSR :
-                                      ele.name =='Finance' ? Finance : 
-                                      ele.name =='Delivery' ? Delivery :
-                                      ele.name =='HR' ? HR : ''
-                        }> {ele.name} </Badge> }/>
-
-                        // <Tab label={ele.name} />
-                      )
-                    })
-                  } */}
+                  <Tab label={<BadgeComp count={staffList.length} label="All" />} /> 
+                  <Tab label={<BadgeComp count={totalCSR} label="CSR" />} /> 
+                  <Tab label={<BadgeComp count={totalDelivery} label="Delivery" />} /> 
+                  <Tab label={<BadgeComp count={totalFinance} label="Finance" />} />                 
+                  <Tab label={<BadgeComp count={totalHR} label="HR" />} /> 
+                  <Tab label={<BadgeComp count={totalHR} label="S&amp;M" />} /> 
                 </Tabs>
               </AppBar>
               {
                 <FranchiseTabPannel value={value} tabIndex={0} staffList={staffList} currentRole={null} roles={role} handleClickEditOpen={handleClickEditOpen}/>
               }
               {
-              (role.length>0 ? role : []).map((ele, index) => {
-                // console.log(index, ele)
+              (role.length > 0 ? role : []).map((ele, index) => {
                 return(
                   <FranchiseTabPannel value={value} tabIndex={index + 1} staffList={staffList} currentRole={ele} roles={role} handleClickEditOpen={handleClickEditOpen}/>
                 )
