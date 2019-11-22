@@ -139,7 +139,7 @@ return (
           // (customerList.length > 0 ? customerList : []).map((data, index) => {
             return(
               <TableRow key={data.id}>
-                  <StyledTableCell> {index + 1}           </StyledTableCell>
+                  <StyledTableCell> {data.id}           </StyledTableCell>
                   <StyledTableCell>     
                     <IconButton  size="small" className={classes.textsize} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOrderView(data); }}>
                       {data.order_format_id}

@@ -262,7 +262,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
         budget_note : inputs.budget_note,
         other_expenditure : JSON.stringify(otherExpenses),
         other_income : JSON.stringify(otherIncome),  
-      }
+      }      
       setBudgetList(data);
       handleBudgetClose(false);
   }

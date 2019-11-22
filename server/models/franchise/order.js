@@ -69,6 +69,8 @@ var Order = function (params) {
   this.paymentScheduleArray = params.paymentScheduleArray;
   this.schedule_status = params.schedule_status;
 
+  this.ezidebit_uid = params.ezidebit_uid;
+  this.order_status = params.order_status;
   // this.interest_amt = params.interest_amt;
   // this.late_fee = params.late_fee;
   // this.payment_table_id = params.payment_table_id;
@@ -101,19 +103,15 @@ Order.prototype.postOrder = function () {
                   const fixedValues = that.fixedOrderType;
                   let fixedOrderValues =[
                     [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.liability_wavier_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.duration, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
-                  ];
-                  // console.log('fixedValues',fixedOrderValues);
-                  // console.log('fixedValues2', that.fixedOrderType);
+                  ];                  
                   connection.query('INSERT INTO fixed_order(customer_id, int_unpaid_bal, cash_price, delivery_fee, ppsr_fee, liability_wavier_fee, frequency, first_payment, last_payment, duration, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, minimum_payment_amt, interest_rate, interest_rate_per, total_interest, is_active, created_by) VALUES ?',[fixedOrderValues],function (error, rows, fields) {
                     if (!error) {
                       const lastInsertId = rows.insertId;
-                      // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, 1, that.is_active, that.created_by]
+                        [that.order_id, that.ezidebit_uid, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, 1, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, ezidebit_uid, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
-                          // console.log('order inserted', rows.insertId);
                           resolve({order_id: rows.insertId, budget_id : budget_id});
                         } else {
                           console.log("Error...", error);
@@ -134,11 +132,10 @@ Order.prototype.postOrder = function () {
                   connection.query('INSERT INTO flex_order(customer_id, goods_rent_price, ppsr_fee, liability_fee, weekly_total, frequency, first_payment, each_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, bond_amt, is_active, created_by) VALUES ?',[flexOrderValues],function (error, rows, fields) {
                     if (!error) {
                       const lastInsertId = rows.insertId;
-                      // console.log('fixed ..id', rows.insertId);
                       let orderValues = [
-                        [that.order_id, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date,  flexValues.exp_delivery_date, flexValues.exp_delivery_time, 1, that.is_active, that.created_by]
+                        [that.order_id, that.ezidebit_uid, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date,  flexValues.exp_delivery_date, flexValues.exp_delivery_time, 1, that.is_active, that.created_by]
                       ];
-                      connection.query('INSERT INTO orders(order_id, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
+                      connection.query('INSERT INTO orders(order_id, ezidebit_uid, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
                         if (!error) {
                           resolve({order_id: rows.insertId, budget_id : budget_id});
                         } else {
@@ -190,8 +187,10 @@ Order.prototype.editOrder = function () {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
           const budget_list = that.budget_list;
-          
-          connection.query('UPDATE budget set work= "'+budget_list.work+'", benefits= "'+budget_list.benefits+'", accomodation= "'+budget_list.accomodation+'", childcare= "'+budget_list.childcare+'", rent= "'+budget_list.rent+'", power= "'+budget_list.power+'", landline_phone= "'+budget_list.telephone+'", mobile_phone= "'+budget_list.mobile+'", vehicle_finance= "'+budget_list.vehicle+'", vehicle_fuel = "'+budget_list.vehicle_fuel+'", public_transport= "'+budget_list.transport+'", food= "'+budget_list.food+'", credit_store_cards= "'+budget_list.credit_card+'", loans_hire_purchase= "'+budget_list.loan+'", other_income = "'+budget_list.other_income+'", other_expenditure= "'+budget_list.other_expenditure+'", pre_order_exp= "'+budget_list.pre_order_exp+'", total_income= "'+budget_list.income+'", total_expenditure= "'+budget_list.expenditure+'", total_surplus= "'+budget_list.surplus+'", afford_amt= "'+budget_list.afford_amt+'", paid_day = "'+budget_list.paid_day+'", debited_day = "'+budget_list.debited_day+'",  is_active ='+that.is_active+',  updated_by ="'+that.updated_by+'" WHERE id = '+that.budget_id+'',function (error, rows, fields) {
+          let budgetValues =  [budget_list.work, budget_list.benefits, budget_list.accomodation, budget_list.childcare, budget_list.rent, budget_list.power, budget_list.telephone, budget_list.mobile, budget_list.vehicle, budget_list.vehicle_fuel, budget_list.transport, budget_list.food, budget_list.credit_card, budget_list.loan, budget_list.other_income, budget_list.other_expenditure, budget_list.pre_order_exp, budget_list.income, budget_list.expenditure, budget_list.surplus, budget_list.afford_amt,  budget_list.paid_day, budget_list.debited_day,  that.is_active, that.updated_by, that.budget_id];
+
+          // connection.query('UPDATE budget set work= "'+budget_list.work+'", benefits= "'+budget_list.benefits+'", accomodation= "'+budget_list.accomodation+'", childcare= "'+budget_list.childcare+'", rent= "'+budget_list.rent+'", power= "'+budget_list.power+'", landline_phone= "'+budget_list.telephone+'", mobile_phone= "'+budget_list.mobile+'", vehicle_finance= "'+budget_list.vehicle+'", vehicle_fuel = "'+budget_list.vehicle_fuel+'", public_transport= "'+budget_list.transport+'", food= "'+budget_list.food+'", credit_store_cards= "'+budget_list.credit_card+'", loans_hire_purchase= "'+budget_list.loan+'", other_income = "'+budget_list.other_income+'", other_expenditure= "'+budget_list.other_expenditure+'", pre_order_exp= "'+budget_list.pre_order_exp+'", total_income= '+budget_list.income+', total_expenditure= '+budget_list.expenditure+', total_surplus= "'+budget_list.surplus+'", afford_amt= "'+budget_list.afford_amt+'", paid_day = "'+budget_list.paid_day+'", debited_day = "'+budget_list.debited_day+'",  is_active ='+that.is_active+',  updated_by ="'+that.updated_by+'" WHERE id = '+that.budget_id+'',function (error, rows, fields) {
+            connection.query('UPDATE budget set work= ?, benefits= ?, accomodation= ?, childcare= ?, rent= ?, power= ?, landline_phone= ?, mobile_phone= ?, vehicle_finance= ?, vehicle_fuel = ?, public_transport= ?, food= ?, credit_store_cards= ?, loans_hire_purchase= ?, other_income = ?, other_expenditure= ?, pre_order_exp= ?, total_income= ?, total_expenditure= ?, total_surplus= ?, afford_amt= ?, paid_day = ?, debited_day = ?,  is_active = ?,  updated_by = ? WHERE id =  ?', budgetValues, function (error, rows, fields) {
             if (!error) {
                 if(that.fixedOrderType!=null){
                   const fixedValues = that.fixedOrderType;
@@ -199,7 +198,7 @@ Order.prototype.editOrder = function () {
                   connection.query('UPDATE fixed_order set int_unpaid_bal = "'+fixedValues.int_unpaid_bal+'", cash_price = "'+fixedValues.cash_price+'", delivery_fee = "'+fixedValues.delivery_fee+'", ppsr_fee = "'+fixedValues.ppsr_fee+'", liability_wavier_fee = "'+fixedValues.liability_wavier_fee+'", frequency = "'+fixedValues.frequency+'", first_payment = "'+fixedValues.first_payment+'", last_payment = "'+fixedValues.last_payment+'", duration = "'+fixedValues.duration+'", no_of_payment = "'+fixedValues.no_of_payment+'", each_payment_amt = "'+fixedValues.each_payment_amt+'", total_payment_amt = "'+fixedValues.total_payment_amt+'", before_delivery_amt = "'+fixedValues.before_delivery_amt+'", exp_delivery_date = "'+fixedValues.exp_delivery_date+'", exp_delivery_time = "'+fixedValues.exp_delivery_time+'", minimum_payment_amt = "'+fixedValues.minimum_payment_amt+'", interest_rate = "'+fixedValues.interest_rate+'", interest_rate_per = "'+fixedValues.interest_rate_per+'", total_interest = "'+fixedValues.total_interest+'", is_active = "'+that.is_active+'", updated_by ="'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
                     if (!error) {
                       
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_person_id = "'+ that.sales_person_id +'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+fixedValues.exp_delivery_date+'", delivery_time = "'+fixedValues.exp_delivery_time+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                      connection.query('UPDATE orders set ezidebit_uid = "'+ that.ezidebit_uid +'", product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_person_id = "'+ that.sales_person_id +'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+fixedValues.exp_delivery_date+'", delivery_time = "'+fixedValues.exp_delivery_time+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
                         if (!error) {
                           resolve(rows);
                         } else {
@@ -218,7 +217,7 @@ Order.prototype.editOrder = function () {
                                     
                   connection.query('UPDATE flex_order set goods_rent_price = "'+flexValues.goods_rent_price+'", ppsr_fee = "'+flexValues.ppsr_fee+'", liability_fee = "'+flexValues.liability_fee+'", weekly_total = "'+flexValues.weekly_total+'", frequency = "'+flexValues.frequency+'", first_payment = "'+flexValues.first_payment+'", each_payment_amt = "'+flexValues.each_payment_amt+'", before_delivery_amt = "'+flexValues.before_delivery_amt+'", exp_delivery_date = "'+flexValues.exp_delivery_date+'", exp_delivery_time = "'+flexValues.exp_delivery_time+'", bond_amt = "'+flexValues.bond_amt+'", is_active = "'+that.is_active+'", updated_by = "'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
                     if (!error) {
-                      connection.query('UPDATE orders set product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_person_id = "'+ that.sales_person_id +'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+flexValues.exp_delivery_date+'", delivery_time = "'+flexValues.exp_delivery_time+'",  is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
+                      connection.query('UPDATE orders set ezidebit_uid = "'+ that.ezidebit_uid +'", product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_person_id = "'+ that.sales_person_id +'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+flexValues.exp_delivery_date+'", delivery_time = "'+flexValues.exp_delivery_time+'",  is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
                         if (!error) {                          
                           resolve(rows);
                         } else {
@@ -392,7 +391,7 @@ Order.prototype.getExistingBudget = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT  o.order_id, o.id as o_id, b.id, b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.vehicle_fuel, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_income, b.other_expenditure, b.paid_day, b.debited_day,  b.total_income as income, b.total_expenditure as expenditure, b.paid_day, b.debited_day, b.total_surplus as surplus, b.afford_amt,  b.pre_order_exp, b.is_active from budget as b LEFT JOIN orders as o on b.id = o.budget_id where b.customer_id= "'+that.customer_id+'" order by b.id desc',function (error, rows, fields) {
+        connection.query('SELECT  o.order_id, o.id as o_id, b.id, b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.vehicle_fuel, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_income, b.other_expenditure, b.paid_day, b.debited_day,  b.total_income as income, b.total_expenditure as expenditure, b.paid_day, b.debited_day, b.total_surplus as surplus, b.afford_amt,  b.pre_order_exp, b.is_active from budget as b LEFT JOIN orders as o on b.id = o.budget_id where b.customer_id= "'+that.customer_id+'" and o.is_active = 1 order by b.id desc',function (error, rows, fields) {
           // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && b.is_active = 1 order by b.id desc',function (error, rows, fields) {
           // connection.query('SELECT b.customer_id, b.work, b.benefits, b.accomodation, b.childcare, b.rent, b.power, b.landline_phone as telephone, b.mobile_phone as mobile, b.vehicle_finance as vehicle, b.public_transport as transport, b.food, b.credit_store_cards as credit_card, b.loans_hire_purchase as loan, b.other_expenditure, b.total_income as income, b.total_expenditure as expenditure, b.total_surplus as surplus, b.afford_amt, b.is_active, o.created_by, o.assigned_to from budget as b INNER JOIN orders as o on b.id = o.budget_id  where b.customer_id= "'+that.customer_id+'" && o.assigned_to= 4',function (error, rows, fields) {
             if (!error) {
@@ -632,6 +631,37 @@ Order.prototype.getPaymentHistory = function () {
       }
       connection.release();
       console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+Order.prototype.getPaymentSchedule = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('SELECT * from payment_schedule where order_id = "'+that.order_id+'" AND is_active = 1 ORDER BY installment_no',function (error, rows, fields) {
+          if (!error) {
+            resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Payment Schedule fetched %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;
@@ -879,7 +909,7 @@ Order.prototype.getSingleOrderData = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
-          connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name, o.sales_person_id, u.name as sales_person_name from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id INNER JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id INNER JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id where o.id = "'+ that.order_id +'"',function (error, rows, fields) {
+          connection.query('SELECT o.id, o.order_id, o.ezidebit_uid, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name, o.sales_person_id, u.name as sales_person_name from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id INNER JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id INNER JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id where o.id = "'+ that.order_id +'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -913,7 +943,7 @@ Order.prototype.getOrderList = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
-          connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name, o.sales_person_id, u.name as sales_person_name from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id INNER JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id INNER JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id ORDER BY o.id DESC',function (error, rows, fields) {
+          connection.query('SELECT o.id, o.order_id, o.ezidebit_uid, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%T\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%T\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name, o.sales_person_id, u.name as sales_person_name from orders as o inner join customer as c on o.customer_id = c.id INNER JOIN order_status as os on o.order_status = os.id INNER JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id INNER JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id ORDER BY o.id DESC',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -1847,6 +1877,64 @@ Order.prototype.updateSchedule = function () {
         
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query('UPDATE payment_schedule SET status = "'+that.schedule_status+'" WHERE order_id = "'+ that.order_id +'" AND customer_id = "'+ that.customer_id +'" AND installment_no = "'+ that.installment_no +'"', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      }
+      connection.release();
+      console.log('schedule updated for order  %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+
+Order.prototype.archiveOrder = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('UPDATE orders SET order_status = 11, is_active = 0 WHERE id = "'+ that.order_id +'"', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      }
+      connection.release();
+      console.log('schedule updated for order  %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+
+Order.prototype.regenerateOrder = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('UPDATE orders SET order_status = 1, is_active = 1 WHERE id = "'+ that.order_id +'"', function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
             } else {

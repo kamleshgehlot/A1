@@ -285,6 +285,24 @@ export default {
       throw error;
     }
   },
+
+  getPaymentSchedule: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getPaymentSchedule`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
   
   // getFullPaymentHistory: async (req) => {
   //   const URL = `${c.API_CONSUMER}/api/franchise/order/getFullPaymentHistory`;
@@ -661,5 +679,22 @@ export default {
     }
   },
   
+  archiveOrder:  async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/archiveOrder`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
 
 };

@@ -42,3 +42,12 @@ export function isBirthDate(date){
   const currDate = new Date();
   return (custDate.getDate() === currDate.getDate() && custDate.getMonth() === currDate.getMonth());
 }
+
+
+export function addOneDay(date){
+  return moment(date).add(1, 'days').format("YYYY-MM-DD");  
+}
+
+export function subtractOneDay(date){
+  return moment(date).subtract(1, 'days').format("YYYY-MM-DD");  
+}

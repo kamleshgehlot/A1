@@ -37,6 +37,9 @@ export default function validate(values) {
   if (!values.sales_person_id) {
     errors.sales_person_id = 'Sales Person is required';
   }
+  if (!values.ezidebit_uid) {
+    errors.ezidebit_uid = 'EziDebit UID is required';
+  }
   
   return errors;
 };

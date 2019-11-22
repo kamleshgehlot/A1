@@ -19,8 +19,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import {useCommonStyles} from '../../common/StyleComman'; 
-
-
+import Checkbox from '@material-ui/core/Checkbox';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -44,6 +44,8 @@ import validate from '../../common/validation/OrderRuleValidation';
 
 const RESET_VALUES = {
   order_date: getCurrentDate(),  
+  ezidebit_uid_checked : true,  
+  ezidebit_uid : '',
 };
 
 const useStyles = makeStyles(theme => ({
@@ -381,7 +383,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
         const category_list = await Category.mainCategoryList();
         setMainCategoryList(category_list.mainCategoryList);
 
@@ -389,15 +390,17 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         let zero = 0;
         
         let code = uid.split('_')[1].toUpperCase();
-        if(order_id == ""){          
-            setInput('order_id',( code + '0000001'));
+        if(order_id == ""){
+            inputs.ezidebit_uid = ( code + '0000001');
+            setInput('order_id',( code + '0000001'));            
         }else{
           zero = 7 - (order_id[0].id.toString().length); 
           let orderId='';
           for(let i=0; i< zero ; i++){
             orderId += '0';
           }
-            setInput('order_id',(code + orderId + (order_id[0].id+ 1)));
+            inputs.ezidebit_uid = (code + orderId + (order_id[0].id+ 1));
+            setInput('order_id',(code + orderId + (order_id[0].id+ 1)));                        
         }
       } catch (error) {
         console.log(error);
@@ -411,7 +414,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const addOrder = async () => {
     setpLoading(true);
     setSavebtn(true);
-
     const response = await OrderAPI.postOrder({
       order_id :  inputs.order_id,
       customer_id : customer.id,
@@ -431,6 +433,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       sales_type_id : inputs.sales_type,
       renting_for_id : inputs.renting_for,
       sales_person_id : inputs.sales_person_id,
+      ezidebit_uid : inputs.ezidebit_uid,
      });
     setAssignInterest('');
     // assignInterest = '';
@@ -447,14 +450,15 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       }
   };
   
+  
 
-  const { inputs, handleInputChange, handleRandomInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleCheckBoxChange,  handleRandomInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addOrder,
     validate
   );
-  
-return (
+
+  return (
   <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
         <form onSubmit={handleSubmit}> 
@@ -474,7 +478,7 @@ return (
            {ploading ?  <LinearProgress />: null}
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="order_id">Order#</InputLabel>
                     <TextField 
                       InputProps={{
@@ -495,7 +499,7 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
@@ -516,7 +520,31 @@ return (
                       />
                     </MuiPickersUtilsProvider>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>                    
+                    <Typography variant="h6" className={classes.textsize}> EziDebit UID * </Typography>                      
+                        <TextField 
+                          InputProps={{
+                            classes: {
+                              input: classes.textsize,
+                            },
+                            startAdornment: 
+                            <InputAdornment position="start">
+                              <Checkbox color="default" defaultChecked value="ezidebit_uid_checked" onChange={handleCheckBoxChange("ezidebit_uid_checked")}/> 
+                            </InputAdornment>,
+                          }}
+                          id="ezidebit_uid"
+                          name="ezidebit_uid"
+                          value={inputs.ezidebit_uid}
+                          onChange={handleInputChange}                          
+                          type="text"
+                          margin="dense"
+                          fullWidth
+                          disabled = {inputs.ezidebit_uid_checked}
+                          error={errors.ezidebit_uid}
+                          helperText={errors.ezidebit_uid}
+                        />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="sales_person_id">Sales Person *</InputLabel>
                     <Select                      
                       value={inputs.sales_person_id}
@@ -525,7 +553,8 @@ return (
                       id= 'sales_person_id'
                       fullWidth
                       className={classes.textsize}
-                      required                      
+                      required
+                      style={{marginTop : 10}}
                       error={errors.sales_person_id}
                       helperText={errors.sales_person_id}
                     > 
@@ -535,9 +564,8 @@ return (
                         )
                      })}
                     </Select>
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    
+                  </Grid>                  
+                  <Grid item xs={12} sm={12}>                    
                     <Typography variant="h6" className={errors.customer_type ? classes.errorHeading : classes.labelTitle}>
                       Select Customer*
                     </Typography>
@@ -556,19 +584,18 @@ return (
                     {customer  != null && isNewCustomer === 0 ? 
                       <Button variant={customer  != null && budgetList!="" ? "contained" : "outlined" } size="small" color="primary"  onClick={handleBudgetOpen}  className={classes.textField}> Update Budget </Button>                       
                       : ''
-                    }                    
-                    {customer  != null  ? 
-                    <Typography variant="h6" className={classes.labelTitle}>
-                      {customer.customer_name + ", " + customer.address + ", " + customer.city}
-                    </Typography>
+                    }  
+                     {customer  != null  ? 
+                      <Typography variant="h6" className={classes.labelTitle}>
+                        {customer.customer_name + ", " + customer.address + ", " + customer.city}
+                      </Typography>
                     : ''}
 
                     {customer  != null && budgetList!="" ? 
-                        <Typography variant="h6" className={classes.labelTitle}> TOTAL SURPLUS $ {budgetList.surplus} {"  "}AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
-                      : ''
-                    }
-                  </Grid>
-                 
+                      <Typography variant="h6" className={classes.labelTitle}> TOTAL SURPLUS $ {budgetList.surplus} {"  "}AFFORD TO PAY: ${budgetList.afford_amt}</Typography>
+                    : ''}                  
+                  </Grid>                 
+              
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select

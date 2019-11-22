@@ -110,7 +110,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment}) {
+export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment, handleSchduleChangerOpen}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [singleInstallment, setSingleInstallment] = useState([]);
@@ -238,7 +238,7 @@ return (
                       <StyledTableCell style={{minWidth:120, paddingLeft: 25}}> {data.total_paid !== "" ? data.total_paid : ''} </StyledTableCell>
                       <StyledTableCell style={{minWidth:0, paddingLeft: 80}}> {data.status} </StyledTableCell>
                       <StyledTableCell style={{minWidth:0, paddingLeft: 58}}>
-                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                        <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>                        
                       </StyledTableCell>
                       {/* {isExpansionExist === false && setExpansionHeader('')} */}
                     </TableRow>     
@@ -304,6 +304,11 @@ return (
                       <StyledTableCell> {expanseData.status} </StyledTableCell>
                       <StyledTableCell>
                         <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                        <Tooltip title="Click to Change Schedule">
+                          <IconButton  size="small" className={styleClass.fab} onClick={(event) => { handleSchduleChangerOpen(expanseData); }} disabled = { totalPaidInstallment === index ? false : true}>
+                            <EditIcon /> 
+                          </IconButton>
+                        </Tooltip>                        
                       </StyledTableCell>
                     </TableRow> 
 

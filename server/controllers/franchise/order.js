@@ -164,6 +164,21 @@ const getSingleOrderData = async function(req, res, next) {
 };
 
 
+const archiveOrder = async function(req, res, next) {
+  // console.log('req.body',req.body)
+  try {
+    const result = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id}).archiveOrder();
+
+    const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+    res.send({ order: order});
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
 const getBudget = async function(req, res, next) {
   try {
     // console.log('req--',req.body)
@@ -259,6 +274,16 @@ const getFlexOrder = async function(req, res, next) {
 const getPaymentHistory = async function(req, res, next) {
   try {
     const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getPaymentHistory();
+    res.send(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const getPaymentSchedule = async function(req, res, next) {
+  try {
+    const order = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
     res.send(order);
   } catch (error) {
     next(error);
@@ -658,6 +683,7 @@ const postOrder = async function (req, res, next) {
     sales_person_id : req.body.sales_person_id,
     
     converted_to : req.body.converted_to,
+    ezidebit_uid : req.body.ezidebit_uid,
   };
   
   if(orderParams.user_id!= '' 
@@ -690,28 +716,8 @@ const postOrder = async function (req, res, next) {
         await newOrder.postBudgetComment();
       }
         
-        // new Order({user_id : req.decoded.user_id, lastInsertId : result}).selectFromOrder().then(function (orderList) {
-        //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].customer_id}).getCustomerDetails().then(function (customerList) {
-        //     new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].budget_id}).getBudget().then(function (budgetList) {
         const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
-            // if(orderParams.flexOrderType!=null && orderList[0].order_type === 2){
-            //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFlexOrderDetail().then(function (flexPaymentList) {
-            //       res.send({budgetList : budgetList, flexPaymentList: flexPaymentList, orderList: orderList, customerList: customerList, order: order});
-            //   });
-            // }
-            // if(orderParams.fixedOrderType!=null && orderList[0].order_type === 1){
-            //   new Order({user_id : req.decoded.user_id, lastInsertId : orderList[0].order_type_id}).getFixedOrderDetail().then(function (fixedPaymentList) {
-            //       res.send({budgetList : budgetList, fixedPaymentList: fixedPaymentList, orderList: orderList, customerList: customerList, order: order });
-            //   });
-            // }
         res.send({ order: order});
-        // });
-        // });
-
-        // console.log('resultid',lastInsertId);
-        
-      // });
-      
     }catch(err){
       next(err);
     }
@@ -744,6 +750,8 @@ const editOrder = async function (req, res, next) {
       sales_type_id : req.body.sales_type_id,
       renting_for_id : req.body.renting_for_id,
       sales_person_id : req.body.sales_person_id,
+      ezidebit_uid : req.body.ezidebit_uid,
+      order_status : req.body.order_status,
     };
 
     if(orderParams.user_id!= '' 
@@ -754,11 +762,12 @@ const editOrder = async function (req, res, next) {
     && orderParams.assigned_to != null 
     && (orderParams.flexOrderType!=null || orderParams.fixedOrderType!= null)){
       try{
-        const newOrder = new Order(orderParams);
-        
-        const result = await newOrder.editOrder();
+        const newOrder = new Order(orderParams);  
 
-        
+        if(orderParams.order_status === 11 ){
+          await new Order({user_id : req.decoded.user_id, order_id : req.body.o_id}).regenerateOrder();
+        }        
+        const result = await newOrder.editOrder();        
         const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
         
           res.send({ order: order});
@@ -1007,4 +1016,6 @@ module.exports = {
   getReceivedPaymentsList,
   fetchMissedPaymentData,
   getSingleOrderData,
+  archiveOrder,
+  getPaymentSchedule,
 };

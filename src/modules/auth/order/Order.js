@@ -57,6 +57,7 @@ import UnderDelivery from './OrderComponent/UnderDelivery';
 import Delivered from './OrderComponent/Delivered';
 import Completed from './OrderComponent/Completed';
 import Cancelled from './OrderComponent/Cancelled';
+import Archived from './OrderComponent/Archived';
 
 import OrderCancellationForm from './OrderCancellationForm';
 import ConfirmationDialog from '../ConfirmationDialog.js';
@@ -178,6 +179,7 @@ export default function Order({roleName}) {
   const [deliveredTab,setDeliveredTab] = useState([]);
   const [completedTab,setCompletedTab] = useState([]);
   const [cancelledTab,setCancelledTab] = useState([]);
+  const [archivedTab, setArchivedTab] = useState([]);
   const [viewOnly, setViewOnly] = useState(false);
   const [openConfirmationPDF, setOpenConfirmationPDF]= useState(false);
   const [orderDataForPDF, setOrderDataForPDF] = useState([]);
@@ -578,9 +580,13 @@ export default function Order({roleName}) {
     handleTabsData(order);
   }  
 
+  async function handleOrderArchive (data){
+    const result = await OrderAPI.archiveOrder({order_id : data.id});
+    setOrder(result.order);
+    handleTabsData(result.order);
+  }
 
 
-  
   async function handleOrderViewFromBudget (data){
     const result = await OrderAPI.getSingleOrderData({order_id: data.o_id});
     handleOrderView(result[0]);
@@ -593,6 +599,7 @@ export default function Order({roleName}) {
     let delivered = [];
     let completed = [];
     let cancelled = [];
+    let archived = [];
 
     if(roleName === 'CSR'){
       (order.length > 0 ? order : []).map((data, index) => {        
@@ -613,6 +620,9 @@ export default function Order({roleName}) {
           }
         if((data.order_status === 9 || data.order_status === 10) && data.is_active == 0){
           cancelled.push(data);
+          }  
+        if(data.order_status === 11  && data.is_active == 0){
+          archived.push(data);
           }  
         });
 
@@ -650,6 +660,7 @@ export default function Order({roleName}) {
     setDeliveredTab(delivered);
     setCompletedTab(completed);
     setCancelledTab(cancelled);
+    setArchivedTab(archived);
   }
 
   return (
@@ -690,10 +701,11 @@ export default function Order({roleName}) {
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
                                               <Tab label={<BadgeComp count={openTab.length} label="Open" />} />
                   {roleName ==='CSR'      ?   <Tab label={<BadgeComp count={financeTab.length} label="Finance" />} />         : '' }
-                  {roleName !='Delivery'  ?   <Tab label={<BadgeComp count={underDeliveryTab.length} label="Under Delivery" />} />  : ''}
+                  {roleName !='Delivery'  ?   <Tab label={<BadgeComp count={underDeliveryTab.length} label="Before Delivery" />} />  : ''}
                                               <Tab label={<BadgeComp count={deliveredTab.length} label="Delivered" />}  /> 
                   {roleName !=='Delivery' ?   <Tab label={<BadgeComp count={completedTab.length} label="Completed" />} />       : ''}
                   {roleName !=='Delivery' ?   <Tab label={<BadgeComp count={cancelledTab.length} label="Cancelled" />} />       : ''}
+                  {roleName ==='CSR'      ?   <Tab label={<BadgeComp count={archivedTab.length}  label="Archived" />} />       : ''}
                 </Tabs>
               </AppBar> 
               
@@ -705,7 +717,7 @@ export default function Order({roleName}) {
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                   createAndDownloadPdf ={handlePDFGenerateType } handleUploadFile={handleUploadFile} 
                   handleClickViewOpen = {handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
-                  handleOrderView={handleOrderView}  /> }
+                  handleOrderView={handleOrderView} handleOrderArchive = {handleOrderArchive}  /> }
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   {financeTab && <Finance order= {financeTab} roleName={roleName} />}
@@ -721,6 +733,9 @@ export default function Order({roleName}) {
                 </TabPanel>
                 <TabPanel value={value} index={5}>
                   {cancelledTab && <Cancelled order= {cancelledTab} roleName={roleName} />}
+                </TabPanel>
+                <TabPanel value={value} index={6}>
+                  {archivedTab && <Archived order= {archivedTab} roleName={roleName} handleEditOpen={handleEditOpen} />}
                 </TabPanel>
               </div> : ''}
 

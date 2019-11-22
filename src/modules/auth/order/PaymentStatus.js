@@ -47,6 +47,8 @@ import { APP_TOKEN } from '../../../api/Constants';
 import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
 import ConfirmationDialog from '../ConfirmationDialog.js';
+import DateChanger from './PaymentComponent/DateChanger.js';
+
 import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getDateInDDMMYYYY, setDBDateFormat } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
@@ -148,11 +150,13 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [confirmation, setConfirmation] = React.useState(false);
   const [payResopnse, setPayResopnse] = React.useState([]);
   const [paymentHistory,setPaymentHistory] = useState([]);
+  const [paymentSchedule, setPaymentSchedule] = useState([]);
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
   const [paymentAmt, setPaymentAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
   const [requesedData, setRequesedData] = useState([]);
   const [totalPaid, setTotalPaid] = useState(0);
+  const [scheduleChangerOpen, setScheduleChangerOpen] = useState(false);
 
 
   function handleDateChange(date){
@@ -174,21 +178,29 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         console.log('Error..',error);
       }
   };
-  
-  
-  const handleFixPaymentStatus = (noOfPayment, fixData, paymentHistory) => {
-    let payment_table=[];
-    let payDate = new Date(fixData.first_payment);
 
-    for(let i=1; i<= noOfPayment; i++){
+  const getPaymentSchedule = async () => {
+    try {
+        const paymentSchedule = await Order.getPaymentSchedule({order_id: orderData.id});
+        setPaymentSchedule(paymentSchedule);
+        console.log('paymentSchedule', paymentSchedule);
+      } catch (error) {
+        console.log('Error..',error);
+      }
+  };  
+  
+  const handleFixPaymentStatus = (noOfPayment, fixData, paymentHistory, paymentSchedule) => {
+    let payment_table=[];
+
+    (paymentSchedule.length> 0 ? paymentSchedule : []).map((schdeuleData) => {
       let bool = false;
       let dueInstallAmt = 0;
         (paymentHistory.length > 0 ? paymentHistory : []).map((historyData, index) => {
-              if(i === historyData.installment_no){
+              if(schdeuleData.installment_no === historyData.installment_no){
                 payment_table.push({
-                  sr_no : i,
+                  sr_no : schdeuleData.installment_no,
                   installment_no:  historyData.installment_no,
-                  payment_date: getDateInDDMMYYYY(historyData.payment_date),
+                  payment_date: getDateInDDMMYYYY(schdeuleData.payment_date),
                   payment_rec_date: getDateInDDMMYYYY(historyData.payment_rec_date),
                   payment_amt : historyData.payment_amt.toFixed(2),
                   total_paid : historyData.total_paid.toFixed(2),
@@ -205,9 +217,9 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         
         if(bool === false || dueInstallAmt != 0){
             payment_table.push({
-              sr_no : i,
-              installment_no: i,
-              payment_date: getDateInDDMMYYYY(payDate),
+              sr_no : schdeuleData.installment_no,
+              installment_no: schdeuleData.installment_no,
+              payment_date: getDateInDDMMYYYY(schdeuleData.payment_date),
               payment_rec_date: '',
               payment_amt : '',
               total_paid : '',
@@ -217,15 +229,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               last_installment_no : fixData.no_of_payment,
               status : "Pending",
             });
-        }
-          if(fixData.frequency === 1){        
-            payDate.setMonth(payDate.getMonth() + 1);
-          }else if(fixData.frequency === 2){
-            payDate.setDate(payDate.getDate() + 15);
-          }else if(fixData.frequency === 4){
-            payDate.setDate(payDate.getDate() + 7);
-          }             
-      }
+        }          
+      })
     setPaymentStatus(payment_table); 
   }
   
@@ -233,6 +238,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       try {
         const fixOrder = await Order.getCurrespondingFixedOrder({fixedOrderId: orderData.order_type_id});
         const existingPayment = await Order.getPaymentHistory({id: orderData.id});
+        const paymentSchedule = await Order.getPaymentSchedule({order_id: orderData.id});
+        
         const fixData = fixOrder[0];
         setOrderTypeData(fixOrder[0]);
 
@@ -246,13 +253,13 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             }else{
               setPaymentAmt(fixData.each_payment_amt);
             }        
-        handleFixPaymentStatus(fixData.no_of_payment, fixData, existingPayment);
+        handleFixPaymentStatus(fixData.no_of_payment, fixData, existingPayment, paymentSchedule);
       } catch (error) {
         console.log('Error..',error);
       }
   };
 
-  const handleFlexPaymentStatus = (minimumBeforeDelivery, flexData, paymentHistory) => {
+  const handleFlexPaymentStatus = (minimumBeforeDelivery, flexData, paymentHistory, paymentSchedule) => {
     let lastInstallmentNo = 0;
     let payment_table=[];
     let payDate = new Date(flexData.first_payment);
@@ -264,7 +271,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     if(minimumBeforeDelivery > lastInstallmentNo){
       maxInstallmentNumber = Number(minimumBeforeDelivery);
     }else{
-      maxInstallmentNumber = Number( lastInstallmentNo + 1)
+      maxInstallmentNumber = Number( lastInstallmentNo + 1);
     }
 
     for(let i=1; i<= maxInstallmentNumber; i++){
@@ -313,7 +320,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         }else if(flexData.frequency === 4){
           payDate.setDate(payDate.getDate() + 7);
         }
-        
       }
     setPaymentStatus(payment_table); 
   }
@@ -322,6 +328,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       try {
         const flexOrder = await Order.getCurrespondingFlexOrder({flexOrderId: orderData.order_type_id});
         const existingPayment = await Order.getPaymentHistory({id: orderData.id});
+        const paymentSchedule = await Order.getPaymentSchedule({order_id: orderData.id});
         const flexData = flexOrder[0];
         setOrderTypeData(flexOrder[0]);
 
@@ -336,7 +343,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             }else{
               setPaymentAmt(flexData.each_payment_amt);
             }             
-        handleFlexPaymentStatus(flexData.before_delivery_amt, flexData, existingPayment);                   
+        handleFlexPaymentStatus(flexData.before_delivery_amt, flexData, existingPayment, paymentSchedule);                   
     } catch (error) {
       console.log('Error..',error);
     }
@@ -346,6 +353,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     const fetchData = async () => {
       try{
         await getPaymentHistory();     
+        await getPaymentSchedule(); 
         await getRequiredData();   
         if(orderData.order_type===1){
           await getFixedPaymentTable();
@@ -370,7 +378,15 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       console.log('Error..',error);
     }
 };
-  
+  const handleSchduleChangerOpen = (data) => {
+    setPayResopnse(data);
+    setScheduleChangerOpen(true);
+  }
+
+  const handleSchduleChangerClose = () => {
+    setScheduleChangerOpen(false);
+  }
+
   function handlePaymentSubmit(response){
     setPayResopnse(response);
     setConfirmation(true);
@@ -425,6 +441,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
       }        
     }    
   }
+
+  
 
 
 return (
@@ -508,7 +526,7 @@ return (
             <Grid container spacing={4}>                              
                 <Grid item xs={12} sm={12}>    
                 {orderData.order_type===1 ?
-                  <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />
+                  <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} handleSchduleChangerOpen= {handleSchduleChangerOpen} />
                 :orderData.order_type===2 ?
                   <FlexPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />
                 :''
@@ -524,7 +542,9 @@ return (
           </div>
         </form>
       </Dialog>
+      
       {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Is this installment paid by customer ?"} />: null }
+      {scheduleChangerOpen ? <DateChanger open = {scheduleChangerOpen} handleClose = {handleSchduleChangerClose} paymentData = { payResopnse } orderData= {orderData} /> : null }
     </div>
   );
 }

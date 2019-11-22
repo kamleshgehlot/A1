@@ -82,6 +82,13 @@ const useSignUpForm = (state, callback, validate) => {
     setInputs(inputs => e);
   }
 
+  const handleCheckBoxChange = name => event => {
+    setInputs({
+      ...inputs,
+      [name]: event.target.checked,
+    });     
+  };
+
   return {
     handleSubmit,
     handleInputChange,
@@ -96,6 +103,7 @@ const useSignUpForm = (state, callback, validate) => {
     handleNumberInput, 
     handlePriceInput,
     handleRandomInput,
+    handleCheckBoxChange
   };
 };
 

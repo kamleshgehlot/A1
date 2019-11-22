@@ -15,17 +15,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
-import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from '@material-ui/core/RadioGroup';
-import AddIcon from '@material-ui/icons/Add';
-import DoneIcon from '@material-ui/icons/Done';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -195,13 +187,12 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
 
 
   useEffect(() => {
-
+    inputs.ezidebit_uid_checked = true
     let assignRoleList = [];
     (editableData.product_id.split(',')).map((product,index) =>{
       assignRoleList.push(parseInt(product));
     });
-    setAssignInterest(assignRoleList);
-    // console.log(assignInterest)
+    setAssignInterest(assignRoleList);    
     let productCategory = [];
     (editableData.product_related_to.split(',')).map((product,index) =>{
       productCategory.push(parseInt(product));
@@ -411,6 +402,8 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
       sales_type_id : inputs.sales_type,
       renting_for_id : inputs.renting_for,
       sales_person_id : inputs.sales_person_id,
+      ezidebit_uid : inputs.ezidebit_uid,
+      order_status : editableData.order_status,
      });
     if(response!='invalid'){
       handleOrderRecData(response);
@@ -423,9 +416,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
         alert("Invalid or Incomplete Credentials");
       }
   };
-
   
-  const { inputs, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+    
+  const { inputs, handleInputChange, handleCheckBoxChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     editableData != "" ? editableData : RESET_VALUES,
     editOrder,
     validate
@@ -448,7 +441,7 @@ return (
            {ploading ?  <LinearProgress />: null}
           <Paper className={classes.paper}>            
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="first_name">Order #</InputLabel>
                     <TextField
                       InputProps={{
@@ -466,7 +459,7 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
@@ -485,7 +478,29 @@ return (
                       />
                     </MuiPickersUtilsProvider>                                        
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  
+                  <Grid item xs={12} sm={6}>    
+                    <Typography variant="h6" className={classes.textsize}> EziDebit UID * </Typography>                      
+                        <TextField 
+                          InputProps={{
+                            classes: {
+                              input: classes.textsize,
+                            },
+                            startAdornment: <InputAdornment position="start">
+                              <Checkbox color="default" defaultChecked value="ezidebit_uid_checked" onChange={handleCheckBoxChange("ezidebit_uid_checked")}/> 
+                            </InputAdornment>,                            
+                          }}
+                          fullWidth
+                          id="ezidebit_uid"
+                          name="ezidebit_uid"
+                          value={inputs.ezidebit_uid}
+                          onChange={handleInputChange}                          
+                          type="text"
+                          margin="dense"                          
+                          disabled = {inputs.ezidebit_uid_checked}
+                        />                
+                  </Grid>    
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="sales_person_id">Sales Person *</InputLabel>
                     <Select                      
                       value={inputs.sales_person_id}
@@ -498,6 +513,7 @@ return (
                       error={errors.sales_person_id}
                       helperText={errors.sales_person_id}
                       disabled= {viewOnly}
+                      style={{marginTop : 10}}                      
                     > 
                     {(salesPersonList.length > 0 ? salesPersonList : []).map((data,index)=>{
                       return(
@@ -505,8 +521,7 @@ return (
                         )
                      })}
                     </Select>
-                  </Grid>
-                  
+                  </Grid>               
                   <Grid item xs={12} sm={4}>
                    <InputLabel  className={classes.textsize} htmlFor="customer">Customer</InputLabel>
                     <Typography variant="h6" className={classes.labelTitle}>{inputs.customer_name} </Typography>
@@ -514,12 +529,9 @@ return (
                   <Grid item xs={12} sm={4}>
                     <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(inputs.customer_id); }}>View Profile </Button>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    {/* <Fab variant="extended" size="small"  onClick={handleBudgetOpen}>
-                      Update Budget
-                    </Fab> */}
+                  <Grid item xs={12} sm={4}>                    
                     <Button variant="outlined" size="small" color="primary" className={classes.textsize}  onClick={(event) => { handleBudgetOpen(inputs.budget_id, inputs.customer_id); }}>Update Budget </Button>
-                  </Grid>
+                  </Grid>                                                   
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select

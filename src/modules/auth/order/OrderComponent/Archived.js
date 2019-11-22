@@ -15,8 +15,7 @@ import PrintIcon from '@material-ui/icons/Print';
 import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
-import CommentIcon from '@material-ui/icons/Comment';
-import DoneIcon from '@material-ui/icons/Done';
+
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
@@ -55,9 +54,8 @@ function TabPanel(props) {
   );
 }
 
-export default function Completed({order, roleName, handleViewDeliveredDetailOpen}) {
+export default function Archived({order, roleName, handleEditOpen }) {
   const styleClass = useCommonStyles();
-
 return (  
   <Table>
     <TableHead>
@@ -67,7 +65,6 @@ return (
         <StyledTableCell>Customer Name</StyledTableCell>
         <StyledTableCell>Contact</StyledTableCell>
         <StyledTableCell>Order Date</StyledTableCell>
-        <StyledTableCell>Delivery Date</StyledTableCell>        
         <StyledTableCell>Rental Type</StyledTableCell>
         <StyledTableCell>Payment Mode</StyledTableCell>
         <StyledTableCell>Action</StyledTableCell>
@@ -82,9 +79,6 @@ return (
           <StyledTableCell>{data.customer_name}</StyledTableCell>
           <StyledTableCell>{data.mobile}</StyledTableCell>
           <StyledTableCell>{data.order_date}</StyledTableCell>
-          <StyledTableCell>{data.delivered_at}</StyledTableCell>
-          {/* <StyledTableCell>{data.order_status_name}</StyledTableCell> */}
-          {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
           <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
           <StyledTableCell>{
             data.payment_mode == 1 ? 'EasyPay' :  
@@ -93,13 +87,13 @@ return (
             data.payment_mode == 4 ? 'PayPal' : 
             data.payment_mode == 5 ? 'Cash' : ''
             }
-          </StyledTableCell>
+          </StyledTableCell>     
           <StyledTableCell>
-            <Tooltip title="View Delivered Product Detail">
-                  <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleViewDeliveredDetailOpen(data); }} >
-                    <DoneIcon />
-                  </IconButton>
-            </Tooltip>
+            <Tooltip title="Click to Regenerate Order">
+              <IconButton  size="small" value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }}>
+                <SendIcon />
+              </IconButton>
+            </Tooltip>     
           </StyledTableCell>
       </TableRow>
       )      

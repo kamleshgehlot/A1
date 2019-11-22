@@ -23,6 +23,7 @@ import ViewArrayIcon from '@material-ui/icons/ViewArray'
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -60,7 +61,7 @@ function TabPanel(props) {
 
 export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
   uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, 
-  handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen, handleOrderView, handleViewDeliveredDetailOpen }) {
+  handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen, handleOrderView, handleViewDeliveredDetailOpen, handleOrderArchive }) {
   const styleClass = useCommonStyles();
 // console.log('order',order)
 return (  
@@ -146,6 +147,12 @@ return (
                       <SendIcon />
                     </IconButton>
                   </Tooltip>
+                  <Tooltip title="Archive Order">
+                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderArchive(data); }} >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                  
           </StyledTableCell>
         : roleName === 'Finance' ? 
           <StyledTableCell>
