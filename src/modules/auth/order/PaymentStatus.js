@@ -49,7 +49,7 @@ import Order from '../../../api/franchise/Order';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import DateChanger from './PaymentComponent/DateChanger.js';
 
-import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getDateInDDMMYYYY, setDBDateFormat } from '../../../utils/datetime';
+import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getCurrentDateDBFormat, getDateInDDMMYYYY, setDBDateFormat } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
@@ -183,13 +183,12 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     try {
         const paymentSchedule = await Order.getPaymentSchedule({order_id: orderData.id});
         setPaymentSchedule(paymentSchedule);
-        console.log('paymentSchedule', paymentSchedule);
       } catch (error) {
         console.log('Error..',error);
       }
   };  
   
-  const handleFixPaymentStatus = (noOfPayment, fixData, paymentHistory, paymentSchedule) => {
+  const handleFixPaymentStatus = (fixData, paymentHistory, paymentSchedule) => {
     let payment_table=[];
 
     (paymentSchedule.length> 0 ? paymentSchedule : []).map((schdeuleData) => {
@@ -208,7 +207,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
                   sub_installment_no : historyData.sub_installment_no,
                   installment_before_delivery : fixData.before_delivery_amt,
                   last_installment_no : fixData.no_of_payment,
-                  status : "Paid",
+                  status : (historyData.status == 1 ?  "Paid" : historyData.status == 2 ? "Disownered Paid" :''),
                 });  
                 dueInstallAmt = historyData.due_installment_amt;
                 bool = true;
@@ -227,7 +226,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               sub_installment_no : 0,
               installment_before_delivery : fixData.before_delivery_amt,
               last_installment_no : fixData.no_of_payment,
-              status : "Pending",
+              status : ( getDate(schdeuleData.payment_date) > getCurrentDateDBFormat() ? "Pendding" :  "Disownered Pendding"),
             });
         }          
       })
@@ -253,36 +252,38 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             }else{
               setPaymentAmt(fixData.each_payment_amt);
             }        
-        handleFixPaymentStatus(fixData.no_of_payment, fixData, existingPayment, paymentSchedule);
+        handleFixPaymentStatus(fixData, existingPayment, paymentSchedule);
       } catch (error) {
         console.log('Error..',error);
       }
   };
 
-  const handleFlexPaymentStatus = (minimumBeforeDelivery, flexData, paymentHistory, paymentSchedule) => {
-    let lastInstallmentNo = 0;
+  const handleFlexPaymentStatus = (flexData, paymentHistory, paymentSchedule) => {
     let payment_table=[];
-    let payDate = new Date(flexData.first_payment);
-    let maxInstallmentNumber = 0;
 
-    if(paymentHistory.length > 0) {
-      lastInstallmentNo = paymentHistory[paymentHistory.length -1].installment_no;
-    }
-    if(minimumBeforeDelivery > lastInstallmentNo){
-      maxInstallmentNumber = Number(minimumBeforeDelivery);
-    }else{
-      maxInstallmentNumber = Number( lastInstallmentNo + 1);
-    }
+    // let lastInstallmentNo = 0;
+    // let payDate = new Date(flexData.first_payment);
+    // let maxInstallmentNumber = 0;
 
-    for(let i=1; i<= maxInstallmentNumber; i++){
+    // if(paymentHistory.length > 0) {
+    //   lastInstallmentNo = paymentHistory[paymentHistory.length -1].installment_no;
+    // }
+    // if(minimumBeforeDelivery > lastInstallmentNo){
+    //   maxInstallmentNumber = Number(minimumBeforeDelivery);
+    // }else{
+    //   maxInstallmentNumber = Number( lastInstallmentNo + 1);
+    // }
+
+    // for(let i=1; i<= maxInstallmentNumber; i++){
+    (paymentSchedule.length> 0 ? paymentSchedule : []).map((schdeuleData) => {
       let bool = false;
       let dueInstallAmt = 0;
         (paymentHistory.length > 0 ? paymentHistory : []).map((historyData, index) => {
-          if(i === historyData.installment_no){
+          if(schdeuleData.installment_no === historyData.installment_no){
             payment_table.push({
-              sr_no : i,
+              sr_no : schdeuleData.installment_no,
               installment_no:  historyData.installment_no,
-              payment_date: getDateInDDMMYYYY(historyData.payment_date),
+              payment_date: getDateInDDMMYYYY(schdeuleData.payment_date),
               payment_rec_date: getDateInDDMMYYYY(historyData.payment_rec_date),
               payment_amt : historyData.payment_amt.toFixed(2),
               total_paid : historyData.total_paid.toFixed(2),
@@ -290,7 +291,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               sub_installment_no : historyData.sub_installment_no,
               installment_before_delivery : flexData.before_delivery_amt,
               last_installment_no : '',
-              status : "Paid",
+              status : (historyData.status == 1 ?  "Paid" : historyData.status == 2 ? "Disownered Paid" :''),
             });
             bool = true;
             dueInstallAmt = historyData.due_installment_amt;
@@ -299,9 +300,9 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
 
         if(bool === false || dueInstallAmt != 0){
           payment_table.push({
-            sr_no : i,
-            installment_no: i,
-            payment_date: getDateInDDMMYYYY(payDate),
+            sr_no :  schdeuleData.installment_no,
+            installment_no:  schdeuleData.installment_no,
+            payment_date:  getDateInDDMMYYYY(schdeuleData.payment_date),
             payment_rec_date: '',
             payment_amt : '',
             total_paid : '',
@@ -309,18 +310,10 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             sub_installment_no : 0,
             installment_before_delivery : flexData.before_delivery_amt,
             last_installment_no : '',
-            status : "Pending",
+            status : ( getDate(schdeuleData.payment_date) > getCurrentDateDBFormat() ? "Pendding" :  "Disownered Pendding"),
           });
         }
-
-        if(flexData.frequency === 1){
-          payDate.setMonth(payDate.getMonth() + 1);
-        }else if(flexData.frequency === 2){
-          payDate.setDate(payDate.getDate() + 15);
-        }else if(flexData.frequency === 4){
-          payDate.setDate(payDate.getDate() + 7);
-        }
-      }
+      });
     setPaymentStatus(payment_table); 
   }
   
@@ -343,27 +336,28 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             }else{
               setPaymentAmt(flexData.each_payment_amt);
             }             
-        handleFlexPaymentStatus(flexData.before_delivery_amt, flexData, existingPayment, paymentSchedule);                   
+        handleFlexPaymentStatus(flexData, existingPayment, paymentSchedule);                   
     } catch (error) {
       console.log('Error..',error);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try{
-        await getPaymentHistory();     
-        await getPaymentSchedule(); 
-        await getRequiredData();   
-        if(orderData.order_type===1){
-          await getFixedPaymentTable();
-        }else if(orderData.order_type===2){
-          await getFlexPaymentTable();
-        }
-      }catch (error) {
-        console.log('Error..',error);
+  const fetchData = async () => {
+    try{
+      await getPaymentHistory();     
+      await getPaymentSchedule(); 
+      await getRequiredData();
+      if(orderData.order_type===1){
+        await getFixedPaymentTable();
+      }else if(orderData.order_type===2){
+        await getFlexPaymentTable();
       }
-    };
+    }catch (error) {
+      console.log('Error..',error);
+    }
+  };
+
+  useEffect(() => {
     fetchData();   
   }, []);
   
@@ -411,8 +405,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         }else{
           subInstallmentNo = lastPayRecord.sub_installment_no;
         }
-      }
-   
+      }   
 
       try {
         await Order.paymentSubmit({
@@ -428,9 +421,14 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           installment_before_delivery : payResopnse.installment_before_delivery,
           last_installment_no : payResopnse.last_installment_no,
           each_payment_amt : orderTypeData.each_payment_amt,
-          frequency : orderTypeData.frequency,          
+          frequency : orderTypeData.frequency,      
+          status : payResopnse.status,
+          order_type : orderData.order_type,
+          no_of_total_installment : paymentSchedule[paymentSchedule.length - 1].installment_no,
+          last_date_of_payment : paymentSchedule[paymentSchedule.length - 1].payment_date, 
         });
         await getPaymentHistory();
+        await getPaymentSchedule();
         if(orderData.order_type===1){
           getFixedPaymentTable();
         }else if(orderData.order_type===2){
@@ -442,7 +440,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     }    
   }
 
-  
 
 
 return (
@@ -528,7 +525,7 @@ return (
                 {orderData.order_type===1 ?
                   <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} handleSchduleChangerOpen= {handleSchduleChangerOpen} />
                 :orderData.order_type===2 ?
-                  <FlexPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} />
+                  <FlexPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} handleSchduleChangerOpen= {handleSchduleChangerOpen} />
                 :''
                 } 
                 </Grid>
@@ -544,7 +541,7 @@ return (
       </Dialog>
       
       {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Is this installment paid by customer ?"} />: null }
-      {scheduleChangerOpen ? <DateChanger open = {scheduleChangerOpen} handleClose = {handleSchduleChangerClose} paymentData = { payResopnse } orderData= {orderData} /> : null }
+      {scheduleChangerOpen ? <DateChanger open = {scheduleChangerOpen} handleClose = {handleSchduleChangerClose} paymentData = { payResopnse } orderData= {orderData} fetchData= {fetchData} paymentSchedule = {paymentSchedule} /> : null }
     </div>
   );
 }

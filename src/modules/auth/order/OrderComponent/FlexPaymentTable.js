@@ -110,7 +110,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function FlexPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment}) {
+export default function FlexPaymentTable({paymentStatus, paymentRecDate, paymentAmt, handleDateChange, handlePriceInput, handlePaymentSubmit, totalPaidInstallment, handleSchduleChangerOpen}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [singleInstallment, setSingleInstallment] = useState([]);
@@ -208,7 +208,7 @@ return (
                                     input: styleClass.textsize,
                                   },                                        
                                 }}                                      
-                                disableFuture
+                                // disableFuture
                                 onChange={handleDateChange}                    
                               />
                             </MuiPickersUtilsProvider>
@@ -239,6 +239,11 @@ return (
                       <StyledTableCell style={{minWidth:0, paddingLeft: 80}}> {data.status} </StyledTableCell>
                       <StyledTableCell style={{minWidth:0, paddingLeft: 58}}>
                         <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                        <Tooltip title="Click to Change Schedule">
+                          <IconButton  size="small" className={styleClass.fab} onClick={(event) => { handleSchduleChangerOpen(data); }} disabled = { totalPaidInstallment === index ? false : true}>
+                            <EditIcon /> 
+                          </IconButton>
+                        </Tooltip>       
                       </StyledTableCell>
                       {/* {isExpansionExist === false && setExpansionHeader('')} */}
                     </TableRow>     
@@ -273,7 +278,7 @@ return (
                                     input: styleClass.textsize,
                                   },                                        
                                 }}                                      
-                                disableFuture
+                                // disableFuture
                                 onChange={handleDateChange}                    
                               />
                             </MuiPickersUtilsProvider>
@@ -304,6 +309,11 @@ return (
                       <StyledTableCell> {expanseData.status} </StyledTableCell>
                       <StyledTableCell>
                         <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(expanseData); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>
+                        <Tooltip title="Click to Change Schedule">
+                          <IconButton  size="small" className={styleClass.fab} onClick={(event) => { handleSchduleChangerOpen(expanseData); }} disabled = { totalPaidInstallment === index ? false : true}>
+                            <EditIcon /> 
+                          </IconButton>
+                        </Tooltip>       
                       </StyledTableCell>
                     </TableRow> 
 

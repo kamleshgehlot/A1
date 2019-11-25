@@ -35,6 +35,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 export default function SingleOrderReport({data }) {
+  console.log('data',data);
   const styleClass = useCommonStyles();
   let total = 0;
 return (  
@@ -44,10 +45,12 @@ return (
         <StyledTableCell>#</StyledTableCell>
         <StyledTableCell>Actual Payment Date.</StyledTableCell>
         <StyledTableCell>Payment Rec. Date.</StyledTableCell>
+        <StyledTableCell>Status</StyledTableCell>
         <StyledTableCell>Payment Amt.</StyledTableCell>        
       </TableRow>
     </TableHead>
     <TableBody>
+      
     {(data.length > 0 ? data : []).map((data, index) => {  
       total = total + data.payment_amt;          
       return(
@@ -55,6 +58,7 @@ return (
           <StyledTableCell>{index + 1}</StyledTableCell>
           <StyledTableCell>{data.payment_date}</StyledTableCell>
           <StyledTableCell>{data.payment_rec_date}</StyledTableCell>
+          <StyledTableCell>{data.status === 1 ? "Paid" : data.status === 2 ? "Disownered Paid" : ''}</StyledTableCell>
           <StyledTableCell>{data.payment_amt}</StyledTableCell>
         </TableRow>
         )

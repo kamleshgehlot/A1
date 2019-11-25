@@ -208,7 +208,7 @@ return (
                                     input: styleClass.textsize,
                                   },                                        
                                 }}                                      
-                                disableFuture
+                                // disableFuture
                                 onChange={handleDateChange}                    
                               />
                             </MuiPickersUtilsProvider>
@@ -240,6 +240,11 @@ return (
                       <StyledTableCell style={{minWidth:0, paddingLeft: 58}}>
                         <Button variant="contained" color='primary' className={styleClass.button} onClick={(event) => { handlePaymentSubmit(data); }} disabled = { totalPaidInstallment === index ? false : true}>Paid Installment</Button>                        
                       </StyledTableCell>
+                      <Tooltip title="Click to Change Schedule">
+                        <IconButton  size="small" className={styleClass.fab} onClick={(event) => { handleSchduleChangerOpen(data); }} disabled = { totalPaidInstallment === index ? false : true}>
+                          <EditIcon /> 
+                        </IconButton>
+                      </Tooltip>     
                       {/* {isExpansionExist === false && setExpansionHeader('')} */}
                     </TableRow>     
             )})}
@@ -273,7 +278,7 @@ return (
                                     input: styleClass.textsize,
                                   },                                        
                                 }}                                      
-                                disableFuture
+                                // disableFuture
                                 onChange={handleDateChange}                    
                               />
                             </MuiPickersUtilsProvider>
@@ -311,7 +316,6 @@ return (
                         </Tooltip>                        
                       </StyledTableCell>
                     </TableRow> 
-
         )        
       }))})}
   </TableBody>

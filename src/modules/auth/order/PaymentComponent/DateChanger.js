@@ -34,8 +34,7 @@ import {useCommonStyles} from '../../../common/StyleComman';
 import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getDateInDDMMYYYY, setDBDateFormat, subtractOneDay, addOneDay } from '../../../../utils/datetime';
 
 // API CALL
-
-
+import OrderAPI from '../../../../api/franchise/Order';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -92,14 +91,13 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function DateChanger({open, handleClose, paymentData, orderData}) {
+export default function DateChanger({open, handleClose, paymentData, orderData, fetchData, paymentSchedule}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [ploading, setpLoading] = React.useState(false);
   const [errors, setErrors] = useState();
   const [payDate, setPayDate] = useState(setDBDateFormat(paymentData.payment_date));
   const [date, setDate] = useState(paymentData.payment_date);
-  
   
   const submitForm = async () => {
       let check=false;
@@ -111,10 +109,20 @@ export default function DateChanger({open, handleClose, paymentData, orderData})
       }
       if(check===false){
           setpLoading(true);
-          // const response = await Brand.addbrand({ brand_name: inputs.brand_name, });
+          const response = await OrderAPI.paymentReschedule({
+            order_id: orderData.id,
+            customer_id : orderData.customer_id,
+            order_type : orderData.order_type,
+            order_type_id : orderData.order_type_id,
+            rescheduled_date : payDate,
+            installment_no : paymentData.installment_no,          
+            no_of_total_installment : paymentSchedule.length,  
+           });
+          fetchData();
           handleClose(false);
         }
   };
+  
   const handleDateIncrease = () => {
     setPayDate(addOneDay(payDate));
     // setDate(getDateInDDMMYYYY(payDate));

@@ -56,7 +56,7 @@ Report.prototype.getOrderReport = function () {
       }
       if (!error) {
           connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-          connection.query('select p.id, p.order_id, p.customer_id, p.installment_no, DATE_FORMAT(p.payment_date,\'%Y-%m-%d\') payment_date, DATE_FORMAT(p.payment_rec_date,\'%Y-%m-%d\') payment_rec_date, p.payment_amt, p.total_paid from payment_status as p WHERE p.order_id = "'+that.order_id+'" AND p.customer_id = "'+that.customer_id+'" AND DATE_FORMAT(p.payment_rec_date, \'%Y-%m-%d\') BETWEEN  DATE_FORMAT("'+that.from_date+'",\'%Y-%m-%d\') AND DATE_FORMAT("'+that.to_date+'" ,\'%Y-%m-%d\')', function (error, rows, fields) {
+          connection.query('select p.id, p.order_id, p.customer_id, p.installment_no, DATE_FORMAT(p.payment_date,\'%Y-%m-%d\') payment_date, DATE_FORMAT(p.payment_rec_date,\'%Y-%m-%d\') payment_rec_date, p.payment_amt, p.total_paid, p.status, p.is_active, CASE p.status WHEN 1 THEN \'Paid\' ELSE \'Disownered Paid\' END as status_name from payment_status as p WHERE p.order_id = "'+that.order_id+'" AND p.customer_id = "'+that.customer_id+'" AND DATE_FORMAT(p.payment_rec_date, \'%Y-%m-%d\') BETWEEN  DATE_FORMAT("'+that.from_date+'",\'%Y-%m-%d\') AND DATE_FORMAT("'+that.to_date+'" ,\'%Y-%m-%d\')', function (error, rows, fields) {
             if (!error) {
               resolve(rows);
             } else {

@@ -98,6 +98,7 @@ orderRouter.route("/fetchMissedPaymentData").get(validateToken, Order.fetchMisse
 orderRouter.route("/getSingleOrderData").post(validateToken, Order.getSingleOrderData);
 orderRouter.route("/archiveOrder").post(validateToken, Order.archiveOrder);
 orderRouter.route("/getPaymentSchedule").post(validateToken, Order.getPaymentSchedule);
+orderRouter.route("/paymentReschedule").post(validateToken, Order.paymentReschedule);
 
 
 

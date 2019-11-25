@@ -6,12 +6,12 @@ import { styles } from './Styles.js';
 function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
   var body = [];
   body.push([
-      { fillColor: '#C5C7C0', colSpan: 4,
+      { fillColor: '#C5C7C0', colSpan: 5,
         columns: [
           { text: 'FINANCIAL REPORT BETWEEN ' + getDateInDDMMYYYY(fromDate) + ' To ' + getDateInDDMMYYYY(toDate), bold: true, fontSize:10,  },
           // { text: 'From: ' + getDateInDDMMYYYY(fromDate) + '\t\t-\t\tTo: ' + getDateInDDMMYYYY(toDate) , style: styles.Header3Center},
         ]
-      },{},{},{},
+      },{},{},{},{}
   ]);
 
   var headerRow = [];
@@ -27,6 +27,9 @@ function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
   );
   headerRow.push(
     { text: columns[3], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8 }                   
+  );
+  headerRow.push(
+    { text: columns[4], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8 }                   
   );
   body.push(headerRow);
 
@@ -53,7 +56,7 @@ function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
 
   var footerRow = [];
   footerRow.push(
-    { text: 'Total ($) ', style: styles.alignRight, bold: true, fontSize: 10, colSpan: 3 },{},{}
+    { text: 'Total ($) ', style: styles.alignRight, bold: true, fontSize: 10, colSpan: 4 },{},{},{}
   );
   footerRow.push(    
     { text: total.toFixed(2), style: styles.margins, bold: true, alignment: screenLeft, fontSize: 10 }
@@ -198,8 +201,8 @@ export default function FixedOrderForm(data, order, reportData, fromDate, toDate
           {
             border: [true, false, true, true],
             table: {
-              widths: ['15%','*','*','*'],                
-              body: buildFinancialReportTable(reportData, ['#', 'Installment Due Date', 'Installment Rec. Date', 'Payment Amt ($)'], ['installment_no','payment_date', 'payment_rec_date', 'payment_amt'], fromDate, toDate),
+              widths: ['15%','*','*','*','*'],                
+              body: buildFinancialReportTable(reportData, ['#', 'Installment Due Date', 'Installment Rec. Date', 'Status', 'Payment Amt ($)'], ['installment_no', 'payment_date', 'payment_rec_date', 'status_name', 'payment_amt'], fromDate, toDate),
             },
           },
       ],  
