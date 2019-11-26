@@ -134,7 +134,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
   function handleChangeMultiple(event) {
     setAssignRole(event.target.value);
   }
-  console.log('assignRole',assignRole);
+  
   useEffect(() => {
     let assignRoleList = [];
     (inputValues.role.split(',')).map((role,index) =>{
@@ -162,9 +162,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
         pre_company_address: inputs.pre_company_address,
         pre_company_contact: inputs.pre_company_contact,
         pre_position: inputs.pre_position,
-        duration: inputs.duration,
-        // resume:  inputs.resume,
-        // cover_letter: inputs.cover_letter,
+        duration: inputs.duration,        
         employment_doc: inputs.employment_doc,
         
         user_id: inputs.user_id,
@@ -182,10 +180,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
 
       const response = await Staff.register( { formData: formData } );
       handleSnackbarClick(true,'Franchise Updated Successfully');
-      setFranchiseList(response.staffList);
-      console.log('response.staffList----',response)
-      // handleReset(RESET_VALUES);
-      // setSavebtn(false);
+      setFranchiseList(response.staffList);      
       setSavebtn(true);
       handleEditClose(false);
     }

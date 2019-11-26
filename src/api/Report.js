@@ -12,17 +12,6 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 });
 
 export default {
-  // list: async () => {
-  //   const URL = `${c.API_CONSUMER}/api/location/getAll`;
-  //   try {
-  //     const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
-  //     return data;
-  //   } catch (error) {
-  //     checkError(error);
-
-  //     throw error;
-  //   }
-  // },
 
   FinanceOrderReport: async ({ cancelToken, ...payload }) => {
     const URL = `${c.API_CONSUMER}/api/report/financeOrderReport`;

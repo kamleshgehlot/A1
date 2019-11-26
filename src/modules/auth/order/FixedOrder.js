@@ -140,7 +140,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType, affordAmt, product}) {
+export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType, totalOfRental}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -152,7 +152,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
   const [fixedNull,setFixedNull] = useState(true);
   const [bool,setBool]= useState(false);
 
-
+  
   function fixed(e){
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal).toFixed(2),
@@ -175,7 +175,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       intrest_rate_per : parseFloat(inputs.intrest_rate_per).toFixed(2),
       total_intrest : parseFloat(inputs.total_intrest).toFixed(2),
     }
-    // console.log('fixed dta',data);
+    
     setFixedOrderList(data);
     handleOrderType(1);
     handleFixedClose(false)
@@ -301,7 +301,7 @@ function calculateNoOfPayment(value) {
   useEffect(()=>{
       if(frequency != '' && duration != '') {
           if(frequency == 1){
-          let installment = (parseFloat(product.rental) * 4);
+          let installment = (totalOfRental * 4);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: (duration * 1)},
@@ -309,14 +309,14 @@ function calculateNoOfPayment(value) {
           ]);
           // setInputsAll(val);
         }else if(frequency == 2){ 
-          let installment = (parseFloat(product.rental) * 2);
+          let installment = (totalOfRental * 2);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: ((duration * 2) + (duration/12 * 2))},
             {name: 'total_payment_amt', value: (installment * ((duration * 2) + (duration/12 * 2))).toFixed(2)},
           ]);
         }else if(frequency == 4){ 
-          let installment = (parseFloat(product.rental));
+          let installment = (totalOfRental);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: ((duration * 4) + (duration/12 * 4))},

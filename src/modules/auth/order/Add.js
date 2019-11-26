@@ -22,7 +22,14 @@ import {useCommonStyles} from '../../common/StyleComman';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { APP_TOKEN } from '../../../api/Constants';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip'; 
+
 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -34,6 +41,7 @@ import FlexOrder from './FlexOrder';
 import FixedOrder from './FixedOrder';
 
 // API CALL
+import { APP_TOKEN } from '../../../api/Constants';
 import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
@@ -138,7 +146,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [customer, setCustomer] = useState(null);
   const [junkData,setJunkData] = useState({});
   const [productList, setProductList] = useState([]);
-  const [product, setProduct] = useState([]);
   const [isNewCustomer,setIsNewCustomer] = useState(0);
   const [assignInterest, setAssignInterest] = React.useState([]);
     
@@ -151,9 +158,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [subCategoryList, setSubCategoryList] = useState([]);
   const [salesTypeList, setSalesTypeList] = useState([]);
   const [rentingForList, setRentingForList] = useState([]);
-  const [salesPersonList, setSalesPersonList] = useState([]);
-  
-
+  const [salesPersonList, setSalesPersonList]  = useState([]);
+  const [totalProductList, setTotalProductList] = useState([]);
+  const [totalOfRental, setTotalOfRental] = useState(0);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   
@@ -226,9 +233,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   }
 
   useEffect(() => {
+    fetchConversionData();
     fetchSalesTypeList();
     fetchRentingForList();
     fetchSalesPersonList();
+    fetchTotalProductList();
   },[]);
   
   const fetchSalesPersonList = async () =>{
@@ -258,28 +267,36 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     }
   };
 
-  useEffect(()=>{    
+  const fetchTotalProductList = async () => {
+    try {
+      const result = await Category.productlist();
+      setTotalProductList(result.productList);
+    } catch (error) {
+      console.log('error:',error);
+    }
+  }
+
+ const fetchConversionData = async () => {
     if(conversionData !== "" && conversionData !== undefined){
-      async function fetchData() {
-        if(conversionData.customer_id === 0){
-          inputs.customer_type = 1;
-          setIsNewCustomer(1);
-          setBudgetList([]);          
-        }else{          
-          const result = await Customer.getSingleCustomer({customer_id: conversionData.customer_id});
-          setCustomer(result.customer[0]);
-          inputs.customer_type = 2;
-          setIsNewCustomer(0);
-          setBudgetList([]);                   
-        }    
-          handleMainCategory({target:{value:conversionData.main_category}});
-          handleCategory({target:{value:conversionData.category}});
-          handleSubCategory({target:{value:conversionData.sub_category}});
-          handleChangeMultiple({target:{value:conversionData.product_id}});
-      }
-      fetchData();
-    }    
-  },[])
+      if(conversionData.customer_id === 0){
+        inputs.customer_type = 1;
+        setIsNewCustomer(1);
+        setBudgetList([]);          
+      }else{          
+        const result = await Customer.getSingleCustomer({customer_id: conversionData.customer_id});
+        setCustomer(result.customer[0]);
+        inputs.customer_type = 2;
+        setIsNewCustomer(0);
+        setBudgetList([]);                   
+      }    
+        let assignProductList = [];
+
+        (conversionData.product_id.split(',')).map((product) =>{
+          assignProductList.push(parseInt(product));
+        });    
+        setAssignInterest(assignProductList);
+    }
+  }
 
   useEffect(()=>{
       if(productList=="" || assignInterest == ""){
@@ -293,31 +310,27 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       }
   },[productList,categoryList,subCategoryList,mainCategory,category,subCategoryList,assignInterest]);
 
-  useEffect(()=>{
-    if(product!= ""){
-      if(parseFloat(budgetList.afford_amt) < parseFloat(product.rental)){
-        alert("you can't afford payment for this product. kindly update your budget or choose other product")
-      }  
-    }
-  },[budgetList])
+  useEffect(() => {
+    let totalRental = 0;   
+    (totalProductList.length > 0 ? totalProductList : []).map((proData,proIndex)=>{
+      (assignInterest.length > 0 ? assignInterest : []).map((data, index) =>{      
+        if(data === proData.id) { totalRental = (parseFloat(totalRental) + parseFloat(proData.rental)); }
+      })
+    })
+    
+    setTotalOfRental(totalRental);
 
+    if(parseFloat(budgetList.afford_amt) < parseFloat(totalRental)){
+      alert("you can't afford payment for this product. kindly update your budget or choose other product")
+    } 
+  },[assignInterest, budgetList]);
   
-  function handleChangeMultiple(event) {
-    handleRandomInput([ {name: 'product', value:  event.target.value}]);
+  const handleChangeMultiple = async (event) => {
     setAssignInterest(event.target.value);
-
-   (productList.length > 0 ? productList : []).map((data,index)=>{
-      if(event.target.value === data.id) {
-        setProduct(data);        
-        if(parseFloat(budgetList.afford_amt) < parseFloat(data.rental)){
-          alert("you can't afford payment for this product. kindly update your budget or choose other product")
-        }        
-      }
-    });      
   }
  
   
-  function handleMainCategory(event) {
+  const handleMainCategory = async (event) => {
     
     handleRandomInput([ {name: 'main_category', value:  event.target.value}]);
     setMainCategory(event.target.value);
@@ -326,58 +339,41 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     setProductList('');
     setCategory('');
     setSubCategory('');
-    setAssignInterest('');
-    setProduct('');
 
-    const fetchData = async () => {
       try {
         const result = await Category.categoryList({maincategory: event.target.value});
         setCategoryList(result.categoryList);
       } catch (error) {
         console.log('error:',error);
       }
-    };
-    fetchData();
   }
 
-  function handleCategory(event) {
-    console.log('category', event.target.value);    
+  const handleCategory = async (event) => {
     handleRandomInput([ {name: 'category', value:  event.target.value}]);
     setCategory(event.target.value);
     setSubCategoryList('');    
     setProductList('');    
     setSubCategory('');
-    setAssignInterest('');
-    setProduct('');
 
-    const fetchData = async () => {
-      try {
+    try {
         const result = await Category.subCategoryList({category: event.target.value});
         setSubCategoryList(result.subCategoryList);
       } catch (error) {
         console.log('error:',error);
-      }
-    };
-    fetchData();
+      }    
   }
 
-  function handleSubCategory(event) {
-    console.log('sub_category', event.target.value);    
+  const handleSubCategory = async (event) => {
     handleRandomInput([ {name: 'sub_category', value:  event.target.value}]);
     setSubCategory(event.target.value);
-    setProductList('');
-    setAssignInterest('');
-    setProduct('');
+    setProductList('');    
 
-    const fetchData = async () => {
-      try {
+    try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
         setProductList(result.productList);        
       } catch (error) {
         console.log('error:',error);
       }
-    };
-    fetchData();
   }
   
   useEffect(() => {
@@ -410,6 +406,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
 
   }, []);
 
+  
+  const handleRemoveProduct = (index) => {
+    const tempProduct = [...assignInterest];
+    tempProduct.splice(index, 1);
+    setAssignInterest(tempProduct);
+  }
+
 
   const addOrder = async () => {
     setpLoading(true);
@@ -418,7 +421,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       order_id :  inputs.order_id,
       customer_id : customer.id,
       customer_type: inputs.customer_type,
-      products_id :  assignInterest,
+      products_id :  assignInterest.join(),
       order_type : inputs.order_type,
       flexOrderType : flexOrderList,
       fixedOrderType : fixedOrderList,
@@ -435,12 +438,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       sales_person_id : inputs.sales_person_id,
       ezidebit_uid : inputs.ezidebit_uid,
      });
-    setAssignInterest('');
-    // assignInterest = '';
-    // handleSnackbarClick(true);
-    // setFranchiseList(response.staffList);
-    // handleReset(RESET_VALUES);
-    if(response!='invalid'){
+    
+     assignInterest.length = 0;
+
+     if(response!='invalid'){
       handleOrderRecData(response);
       setSavebtn(false);
         handleClose(false);
@@ -449,8 +450,38 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         alert("Invalid or Incomplete Credentials")
       }
   };
-  
-  
+
+  const selectedProductList = () => {
+    return(
+      <Paper style={{width : '100%'}}>
+        <Table size="small">                          
+          <TableBody size="small">
+            {(assignInterest.length > 0 ? assignInterest : []).map((data, index) =>{
+              return(
+                (totalProductList.length > 0 ? totalProductList : []).map((proData,proIndex)=>{                                
+                  return(                                  
+                    proData.id === data ?
+                      <TableRow size="small">
+                        <TableCell  className={classes.textsize}  >{proData.name}</TableCell>
+                        <TableCell  className={classes.textsize}  >{proData.rental}</TableCell>
+                        <TableCell  className={classes.textsize}  style={{maxWidth:70}}>
+                          <Tooltip title="Click to Remove">
+                            <IconButton className={classes.marginIconBtn} onClick = { () => { handleRemoveProduct(index); }}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>  
+                        </TableCell>
+                      </TableRow>
+                    : null
+                  )                                
+                })
+              )
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
+    )
+  }
 
   const { inputs, handleInputChange, handleCheckBoxChange,  handleRandomInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
@@ -679,9 +710,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                   
                   <Grid item xs={12} sm={12}>
                     <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
-                      <Select
-                        // multiple
-                        value={inputs.product}
+                      <Select 
+                        multiple
+                        value={assignInterest}
                         onChange={handleChangeMultiple}
                         name= 'product'
                         id= 'product'
@@ -689,10 +720,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                         fullWidth
                         required
                         className={classes.textsize}
-                        disabled = {subCategory == "" || budgetList == "" ? true : false}
-                        // disabled = {subCategory ==""}
-                        error={errors.product}
-                        helperText={errors.product}
+                        disabled = {subCategory == "" || budgetList == "" ? true : false}                        
                       >    
                         <MenuItem className={classes.textsize} disabled value={""}>Select Product</MenuItem>
                         {(productList.length > 0 ? productList : []).map((data,index)=>{
@@ -702,7 +730,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                         })}
                       </Select>
                     </Grid>
-                    
+                    <Grid item xs={12} sm={12}> 
+                        {selectedProductList()}
+                    </Grid>
                     <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="sales_type">Sales Type *</InputLabel>
                       <Select
@@ -722,8 +752,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                           ) 
                         })}
                       </Select>
-                    </Grid>
-
+                    </Grid>                     
                     <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="renting_for">Purpose of Rent *</InputLabel>
                       <Select
@@ -746,14 +775,13 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                       </Select>
                     </Grid>
 
-
                     <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={errors.order_type? classes.errorHeading : classes.labelTitle}>
                       Order Type*
                     </Typography>                    
                     {/* <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type*</InputLabel> */}
-                    <Button variant= {inputs.order_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleFixedOpen} className={classes.textField} disabled={budgetList == "" || product =="" || (parseFloat(budgetList.afford_amt) < parseFloat(product.rental))}> Fixed Order </Button>
-                    <Button variant= {inputs.order_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleFlexOpen}  className={classes.textField} disabled={budgetList == "" || product =="" ||  (parseFloat(budgetList.afford_amt) < parseFloat(product.rental))}>Flex Order </Button>
+                    <Button variant= {inputs.order_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleFixedOpen} className={classes.textField} disabled={budgetList == "" || assignInterest == "" || (parseFloat(budgetList.afford_amt) < totalOfRental)}> Fixed Order </Button>
+                    <Button variant= {inputs.order_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleFlexOpen}  className={classes.textField} disabled={budgetList == "" || assignInterest == "" ||  (parseFloat(budgetList.afford_amt) < totalOfRental)}>Flex Order </Button>
                     {/* <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>  */}
                     </Grid>
 
@@ -798,8 +826,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id} handleOrderViewFromBudget={handleOrderViewFromBudget}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData} conversionData={conversionData}/> : null }
-    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} affordAmt={budgetList.afford_amt} product={product}/> : null }
-    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} affordAmt={budgetList.afford_amt} product={product} /> : null }
+    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} totalOfRental={totalOfRental}/> : null }
+    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} totalOfRental={totalOfRental} /> : null }
     {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }
     </div>
   );

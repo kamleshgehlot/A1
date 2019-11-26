@@ -105,7 +105,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, fixedOrderId,  product, viewOnly}) {
+export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, fixedOrderId,  totalOfRental, viewOnly}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -271,7 +271,7 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
   useEffect(()=>{
       if(frequency != '' && duration != ''){
         if(frequency == 1){
-          let installment = (parseFloat(product.rental) * 4);
+          let installment = (totalOfRental * 4);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: duration},
@@ -279,14 +279,14 @@ export default function EditFixedOrder({ open, handleFixedClose, setFixedOrderLi
           ]);
           // setInputsAll(val);
         }else if(frequency == 2){ 
-          let installment = (parseFloat(product.rental) * 2);
+          let installment = (totalOfRental * 2);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: ((duration * 2) + (duration/12 * 2))},
             {name: 'total_payment_amt', value: (installment * ((duration * 2) + (duration/12 * 2))).toFixed(2)},
           ]);
         }else if(frequency == 4){ 
-          let installment = (parseFloat(product.rental));
+          let installment = (totalOfRental);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: ((duration * 4) + (duration/12 * 4))},

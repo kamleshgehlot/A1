@@ -23,7 +23,7 @@ const Product = function (params) {
   this.subcategory = params.subcategory;
   this.searchText = params.searchText;
 
-  console.log('params',params)
+  this.product_ids = params.product_ids;
 };
 
 Product.prototype.addProduct = function () {
@@ -195,6 +195,40 @@ Product.prototype.searchData = function () {
       }
       connection.release();
       console.log('Customer Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+Product.prototype.getOrderedProductList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName["prod"] });
+        connection.query('select id, maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where id IN('+ that.product_ids +')', function (error, rows, fields) {        
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+            
+          })
+          
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Product list selected %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;

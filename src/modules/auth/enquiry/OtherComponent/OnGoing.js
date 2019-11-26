@@ -115,7 +115,6 @@ function TabPanel(props) {
 }
 
 export default function Open({enquiryList, productList, handleDeleteEnquiry, handleClickOrderOpen,  roleName}) {
-  console.log('rolens',roleName);
   const styleClass = useCommonStyles();
   const classes = useStyles();
 

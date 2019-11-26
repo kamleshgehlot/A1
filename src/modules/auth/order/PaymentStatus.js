@@ -46,6 +46,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
 import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
+import CategoryAPI from '../../../api/Category';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import DateChanger from './PaymentComponent/DateChanger.js';
 
@@ -155,6 +156,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [paymentAmt, setPaymentAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
   const [requesedData, setRequesedData] = useState([]);
+  const [orderedProductList, setOrderedProductList] = useState([]);
+  
   const [totalPaid, setTotalPaid] = useState(0);
   const [scheduleChangerOpen, setScheduleChangerOpen] = useState(false);
 
@@ -207,7 +210,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
                   sub_installment_no : historyData.sub_installment_no,
                   installment_before_delivery : fixData.before_delivery_amt,
                   last_installment_no : fixData.no_of_payment,
-                  status : (historyData.status == 1 ?  "Paid" : historyData.status == 2 ? "Disownered Paid" :''),
+                  status : (historyData.status == 1 ?  "Paid" : historyData.status == 2 ? "Dishonoured Paid" :''),
                 });  
                 dueInstallAmt = historyData.due_installment_amt;
                 bool = true;
@@ -226,7 +229,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               sub_installment_no : 0,
               installment_before_delivery : fixData.before_delivery_amt,
               last_installment_no : fixData.no_of_payment,
-              status : ( getDate(schdeuleData.payment_date) > getCurrentDateDBFormat() ? "Pendding" :  "Disownered Pendding"),
+              status : ( getDate(schdeuleData.payment_date) > getCurrentDateDBFormat() ? "pending" :  "Dishonoured pending"),
             });
         }          
       })
@@ -260,21 +263,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
 
   const handleFlexPaymentStatus = (flexData, paymentHistory, paymentSchedule) => {
     let payment_table=[];
-
-    // let lastInstallmentNo = 0;
-    // let payDate = new Date(flexData.first_payment);
-    // let maxInstallmentNumber = 0;
-
-    // if(paymentHistory.length > 0) {
-    //   lastInstallmentNo = paymentHistory[paymentHistory.length -1].installment_no;
-    // }
-    // if(minimumBeforeDelivery > lastInstallmentNo){
-    //   maxInstallmentNumber = Number(minimumBeforeDelivery);
-    // }else{
-    //   maxInstallmentNumber = Number( lastInstallmentNo + 1);
-    // }
-
-    // for(let i=1; i<= maxInstallmentNumber; i++){
     (paymentSchedule.length> 0 ? paymentSchedule : []).map((schdeuleData) => {
       let bool = false;
       let dueInstallAmt = 0;
@@ -291,7 +279,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
               sub_installment_no : historyData.sub_installment_no,
               installment_before_delivery : flexData.before_delivery_amt,
               last_installment_no : '',
-              status : (historyData.status == 1 ?  "Paid" : historyData.status == 2 ? "Disownered Paid" :''),
+              status : (historyData.status == 1 ?  "Paid" : historyData.status == 2 ? "Dishonoured Paid" :''),
             });
             bool = true;
             dueInstallAmt = historyData.due_installment_amt;
@@ -310,7 +298,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
             sub_installment_no : 0,
             installment_before_delivery : flexData.before_delivery_amt,
             last_installment_no : '',
-            status : ( getDate(schdeuleData.payment_date) > getCurrentDateDBFormat() ? "Pendding" :  "Disownered Pendding"),
+            status : ( getDate(schdeuleData.payment_date) > getCurrentDateDBFormat() ? "pending" :  "Dishonoured pending"),
           });
         }
       });
@@ -364,14 +352,16 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   
   const getRequiredData = async () => {
     try {
-      const result = await Order.getProductAndCategoryName({
-        product_id : orderData.product_id,
-      });
+      const result = await Order.getProductAndCategoryName({ product_id : orderData.product_id });
       setRequesedData(result[0]);
+      
+      const response = await CategoryAPI.getOrderedProductList({ product_ids : orderData.product_id });
+      setOrderedProductList(response.productList);
     } catch (error) {
       console.log('Error..',error);
     }
-};
+  };
+
   const handleSchduleChangerOpen = (data) => {
     setPayResopnse(data);
     setScheduleChangerOpen(true);
@@ -385,6 +375,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     setPayResopnse(response);
     setConfirmation(true);
   }
+
+  
 
   const handleConfirmationDialog = async (isConfirm) => {
     setConfirmation(false);
@@ -508,7 +500,10 @@ return (
             <Grid item xs={12} sm={0}></Grid>  
             <Grid item xs={12} sm={11}>
               <Typography variant="h6" className={classes.labelTitle}>
-                {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
+                {/* {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name} */}
+                {"Rental Product :  " + (orderedProductList.length > 0 ? orderedProductList :[]).map(data => {
+                  return(data.name + ', ')
+                })}
               </Typography>                  
             </Grid>
             

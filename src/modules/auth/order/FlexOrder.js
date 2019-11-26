@@ -118,7 +118,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType, affordAmt, product}) {
+export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType, totalOfRental}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -195,15 +195,15 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
 
       if(frequency != ''){    
         if(frequency == 1){
-          let installment = (parseFloat(product.rental) * 4);
+          let installment = (totalOfRental * 4);
           handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);
           eachPaymentAmt = installment;          
         }else if(frequency == 2){ 
-          let installment = (parseFloat(product.rental) * 2);
+          let installment = (totalOfRental * 2);
           handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
           eachPaymentAmt = installment; 
         }else if(frequency == 4){ 
-          let installment = (parseFloat(product.rental));
+          let installment = totalOfRental;
           handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
           eachPaymentAmt = installment; 
         }

@@ -29,6 +29,15 @@ import { useCommonStyles } from '../../common/StyleComman';
 import validate from '../../common/validation/EnquiryRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
 import AutoSuggestDropdown from '../lead/AutoSuggestDropdown';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip'; 
+
+
 
 // API CALL
 import Category from '../../../../src/api/Category';
@@ -118,11 +127,11 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
   const [single, setSingle] = React.useState(null);
   const [selectedOption,setSelectedOption] = useState('');
   const [customerId,setCustomerId] = useState('');
- 
+  const [totalProductList, setTotalProductList] = useState([]); 
+
 
 
   useEffect(() => {
-    
     const fetchData = async () => {
       try {
         const enquiry_id = await EnquiryAPI.getnewid();
@@ -162,63 +171,61 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
         {name: 'lead_id', value : 0}
       ]);
     }
+
+    fetchTotalProductList();
   }, []);
 
   
-  
-  
-  function handleMainCategory(event) {
+    
+  const handleMainCategory = async (event) => {
     setInput('main_category', event.target.value)
     setMainCategory(event.target.value);
     setCategoryList('');
     setSubCategoryList('');
     setProductList('');
-    setAssignInterest('');
 
-    const fetchData = async () => {
-      try {
-        const result = await Category.categoryList({ maincategory: event.target.value });
-        setCategoryList(result.categoryList);
-      } catch (error) {
-        console.log('error:', error);
-      }
-    };
-    fetchData();
+    try {
+      const result = await Category.categoryList({ maincategory: event.target.value });
+      setCategoryList(result.categoryList);
+    } catch (error) {
+      console.log('error:', error);
+    }
   }
 
-  function handleCategory(event) {
+  const handleCategory = async(event) => {
     setInput('category', event.target.value)
     setCategory(event.target.value);
     setSubCategoryList('');
     setProductList('');
-    setAssignInterest('');
 
-    const fetchData = async () => {
-      try {
-        const result = await Category.subCategoryList({ category: event.target.value });
-        setSubCategoryList(result.subCategoryList);
-      } catch (error) {
-        console.log('error:', error);
-      }
-    };
-    fetchData();
+    try {
+      const result = await Category.subCategoryList({ category: event.target.value });
+      setSubCategoryList(result.subCategoryList);
+    } catch (error) {
+      console.log('error:', error);
+    }
   }
 
-  function handleSubCategory(event) {
+  const handleSubCategory = async (event) => {
     setInput('sub_category', event.target.value)
     setSubCategory(event.target.value);
     setProductList('');
-    setAssignInterest('');
 
-    const fetchData = async () => {
-      try {
-        const result = await Category.RelatedproductList({subcategory: event.target.value});
-        setProductList(result.productList);
-      } catch (error) {
-        console.log('error:', error);
-      }
-    };
-    fetchData();
+    try {
+      const result = await Category.RelatedproductList({subcategory: event.target.value});
+      setProductList(result.productList);
+    } catch (error) {
+      console.log('error:', error);
+    }
+  }
+
+  const fetchTotalProductList = async () => {
+    try {
+      const result = await Category.productlist();
+      setTotalProductList(result.productList);
+    } catch (error) {
+      console.log('error:',error);
+    }
   }
 
   function handleChangeMultiple(event) {
@@ -235,15 +242,14 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
         customer_id : customerId,
         customer_name: selectedOption,
         contact: inputs.customer_contact,
-        interested_product_id: assignInterest,
+        interested_product_id: assignInterest.join(),
         lead_id : inputs.lead_id,
         is_active: 1,
         converted_to: 0,
         convert_by_lead: convert
       });
 
-      // assignInterest.length = 0;
-      setAssignInterest('');
+      assignInterest.length = 0;
       setCustomerId('');
       handleSnackbarClick(true);
       setEnquiryList(response.enquiryList);
@@ -256,6 +262,44 @@ export default function Add({ leadData, open, handleClose, handleSnackbarClick, 
       setAssignError('error')
     }
   };
+
+  const handleRemoveProduct = (index) => {
+    const tempProduct = [...assignInterest];
+    tempProduct.splice(index, 1);
+    setAssignInterest(tempProduct);
+  }
+
+  const selectedProductList = () => {
+    return(
+      <Paper style={{width : '100%'}}>
+        <Table size="small">                          
+          <TableBody size="small">
+            {(assignInterest.length > 0 ? assignInterest : []).map((data, index) =>{
+              return(
+                (totalProductList.length > 0 ? totalProductList : []).map((proData,proIndex)=>{                                
+                  return(                                  
+                    proData.id === data ?
+                      <TableRow size="small">
+                        <TableCell  className={classes.textsize}  >{proData.name}</TableCell>
+                        <TableCell  className={classes.textsize}  >{proData.rental}</TableCell>
+                        <TableCell  className={classes.textsize}  style={{maxWidth:70}}>
+                          <Tooltip title="Click to Remove">
+                            <IconButton className={classes.marginIconBtn} onClick = { () => { handleRemoveProduct(index); }}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>  
+                        </TableCell>
+                      </TableRow>
+                    : null
+                  )                                
+                })
+              )
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
+    )
+  }
 
 
 
@@ -403,17 +447,14 @@ return (
                     })}
                   </Select>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={12}>
                   <InputLabel className={classes.textsize} htmlFor="assign_interest">Product *</InputLabel>
                   <Select
-                    // multiple
+                    multiple
                     value={assignInterest}
                     onChange={handleChangeMultiple}
-                    inputProps={{
-                      name: 'interested_product_id',
-                      id: 'interested_product_id',
-                      // label:'assign_interest'
-                    }}
+                    name = 'interested_product_id'
+                    id = 'interested_product_id'
                     className={classes.textsize}
                     disabled={subCategory == ""}
                     fullWidth
@@ -426,18 +467,11 @@ return (
                           <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>
                         )
                       })
-
                     }
-                    {/* <MenuItem value={1}>{'Product 1'}</MenuItem>
-                      <MenuItem value={2}>{'Product 2'}</MenuItem>
-                      <MenuItem value={3}>{'Product 3'}</MenuItem> */}
-                    {/* {role.map((ele,index) =>{
-                        return(
-                        <MenuItem value={ele.id}>{ele.name}</MenuItem>
-                        )
-                      })} */}
-
                   </Select>
+                </Grid>
+                <Grid item xs={12} sm={12}> 
+                  {selectedProductList()}
                 </Grid>
                 <Grid item xs={12} sm={12}>
 

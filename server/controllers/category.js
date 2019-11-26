@@ -235,6 +235,22 @@ const searchData = async function (req, res, next) {
 };
 
 
+const getOrderedProductList = async function (req, res, next) {
+  let ProductParams = {
+    user_id: req.decoded.user_id,
+    product_ids : req.body.product_ids,
+  };
+	try{
+    const newProduct = new Product(ProductParams);    
+    const productList = await newProduct.getOrderedProductList();
+    res.send({ productList });
+	}catch(err){
+    next(error);
+	}
+};
+
+
+
 
 module.exports = { 
   add, 
@@ -253,4 +269,5 @@ module.exports = {
   getAllMainCategoryList,
   getAllFromCategoryList,
   getAllFromSubCategoryList,
+  getOrderedProductList,
 };

@@ -9,19 +9,19 @@ export default function validate(values) {
   if (!values.customer_type) {
     errors.customer_type = 'Customer is required';
   } 
-  if (!values.main_category) {
-    errors.main_category = 'Main Category is required';
-  }
+  // if (!values.main_category) {
+  //   errors.main_category = 'Main Category is required';
+  // }
   
-  if (!values.category) {
-    errors.category = 'Category is required';
-  }
-  if (!values.sub_category) {
-    errors.sub_category = 'Sub Category is required';
-  }
-  if (!values.product) {
-    errors.product = 'Product is required';
-  }
+  // if (!values.category) {
+  //   errors.category = 'Category is required';
+  // }
+  // if (!values.sub_category) {
+  //   errors.sub_category = 'Sub Category is required';
+  // }
+  // if (!values.product) {
+  //   errors.product = 'Product is required';
+  // }
   if (!values.sales_type) {
     errors.sales_type = 'Sales Type is required';
   }

@@ -24,5 +24,6 @@ categoryRouter.route('/getallfromsubcategorylist').post(validateToken, Category.
 categoryRouter.route('/relatedproductlist').post(validateToken, Category.relatedProductList);
 
 categoryRouter.route('/archivedList').get(validateToken, Category.archivedList);
+categoryRouter.route('/getOrderedProductList').post(validateToken, Category.getOrderedProductList);
 
 module.exports = categoryRouter;

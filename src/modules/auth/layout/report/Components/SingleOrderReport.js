@@ -35,7 +35,6 @@ const StyledTableCell = withStyles(theme => ({
 
 
 export default function SingleOrderReport({data }) {
-  console.log('data',data);
   const styleClass = useCommonStyles();
   let total = 0;
 return (  

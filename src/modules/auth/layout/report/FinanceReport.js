@@ -293,7 +293,6 @@ export default function FinanceReport({roleName}) {
     }
   }
 
-  // console.log('ocdd',reportData, orderData, customerData);
 
   return (
     <div>
@@ -327,15 +326,10 @@ export default function FinanceReport({roleName}) {
           <Grid item xs={12} sm={3}>
             <InputLabel  className={classes.textHeading}  htmlFor="customer_id">Customer Id</InputLabel>
             <TextField 
-             InputProps={{
-              classes: {
-                input: classes.textsize,
-              },
-              // endAdornment: <InputAdornment position='end'>
-              //                 <Tooltip title="Search">
-              //                   <IconButton onClick = {searchHandler}><SearchIcon /></IconButton>
-              //                 </Tooltip>
-              //               </InputAdornment>,
+              InputProps={{
+                classes: {
+                  input: classes.textsize,
+                },
               }}
               onChange={handleSearchText}
               id="customer_id"
@@ -380,13 +374,7 @@ export default function FinanceReport({roleName}) {
             >
               {orderData.map((ele) =>{
                 return(
-                  productList.map((product)=>{
-                    if(ele.product_id == product.id){
-                      return(
-                        <MenuItem  className={classes.textsize} value={ele.id}>{product.name}</MenuItem>
-                      )
-                    }
-                  })                  
+                  <MenuItem  className={classes.textsize} value={ele.id}>{ele.order_id}</MenuItem>                                   
                 )
               })}
             </Select>

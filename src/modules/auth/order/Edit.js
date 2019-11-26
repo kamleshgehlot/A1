@@ -18,6 +18,15 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip'; 
+
+
 import {useCommonStyles} from '../../common/StyleComman'; 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -142,8 +151,10 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   const [mainCategory, setMainCategory] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
-  const [product, setProduct] = useState([]);
   const [salesPersonList, setSalesPersonList] = useState([]);
+  const [totalProductList, setTotalProductList] = useState([]);
+  const [totalOfRental, setTotalOfRental] = useState(0);
+  
 
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
@@ -155,6 +166,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     fetchSalesTypeList();
     fetchRentingForList();
     fetchSalesPersonList();
+    fetchTotalProductList();
   },[]);
   
   
@@ -184,22 +196,48 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
       console.log('error:',error);
     }
   };
+  
+  const fetchTotalProductList = async () => {
+    try {
+      const result = await Category.productlist();
+      setTotalProductList(result.productList);
+    } catch (error) {
+      console.log('error:',error);
+    }
+  }
+  
+  const handleChangeMultiple = async (event) => {
+    setAssignInterest(event.target.value);
+  }
+
+  
+  const handleRemoveProduct = (index) => {
+    const tempProduct = [...assignInterest];
+    tempProduct.splice(index, 1);
+    setAssignInterest(tempProduct);
+  }
+
 
 
   useEffect(() => {
-    inputs.ezidebit_uid_checked = true
-    let assignRoleList = [];
-    (editableData.product_id.split(',')).map((product,index) =>{
-      assignRoleList.push(parseInt(product));
+    inputs.ezidebit_uid_checked = true;
+    let assignProductList = [];
+
+    (editableData.product_id.split(',')).map((product, index) =>{
+      assignProductList.push(parseInt(product));
     });
-    setAssignInterest(assignRoleList);    
+
+    setAssignInterest(assignProductList);    
+    
     let productCategory = [];
     (editableData.product_related_to.split(',')).map((product,index) =>{
       productCategory.push(parseInt(product));
     });
+
     setMainCategory(productCategory[0]);
     setCategory(productCategory[1]);
     setSubCategory(productCategory[2]);
+
 
     const fetchData = async () => {
       try {
@@ -237,17 +275,26 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   fetchData();
   }, []);
 
-  useEffect(() => {
-    (productList.length > 0 ? productList : []).map((data,index)=>{
-      if(assignInterest[0] == data.id) {
-        setProduct(data);
-        // if(parseFloat(budgetList.afford_amt) < parseFloat(data.rental)){
-        //   alert("you can't afford payment for this product. kindly update your budget or choose other product")
-        // }        
-      }
-      }); 
-  },[]);
+
   
+  useEffect(() => {
+    let totalRental = 0;   
+    (totalProductList.length > 0 ? totalProductList : []).map((proData,proIndex)=>{
+      (assignInterest.length > 0 ? assignInterest : []).map((data, index) =>{      
+        if(data === proData.id) { totalRental = (parseFloat(totalRental) + parseFloat(proData.rental)); }
+      })
+    })
+    
+    setTotalOfRental(totalRental);
+    if(budgetList != null && budgetList != undefined && budgetList != ""){
+      if(parseFloat(budgetList.afford_amt) < parseFloat(totalRental)){
+        alert("you can't afford payment for this product. kindly update your budget or choose other product")
+      } 
+    }
+  },[assignInterest, budgetList]);
+  
+  
+
   function validate(values) {
     let errors = {};    
     return errors;
@@ -270,7 +317,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   function handleFixedOpen(fixedOrderId){    
     setFixedOrderId(fixedOrderId);
     setFlexOrderList(null);
-    selectProduct();
     setFixedOrderOpen(true);
   }
 
@@ -281,7 +327,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   function handleFlexOpen(flexOrderId){
     setFlexOrderId(flexOrderId);
     setFixedOrderList(null);
-    selectProduct();
     setFlexOrderOpen(true);
   }
 
@@ -300,17 +345,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     setSearchCustomerOpen(true);
   }
 
-  const selectProduct = (e) => {
-    (productList.length > 0 ? productList : []).map((data,index)=>{
-      if(assignInterest[0] == data.id) {
-        setProduct(data);
-      }
-    });
-  }
-
-
-
-  function handleMainCategory(event) {
+  const handleMainCategory = async (event) => {
     setMainCategory(event.target.value);
 
     setCategoryList('');
@@ -318,77 +353,50 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     setProductList('');
     setCategory('');
     setSubCategory('');
-    setAssignInterest('');
 
-
-    const fetchData = async () => {
-      try {
-        const result = await Category.categoryList({maincategory: event.target.value});
-        setCategoryList(result.categoryList);
-      } catch (error) {
-        console.log('error:',error);
-      }
-    };
-    fetchData();
+    try {
+      const result = await Category.categoryList({maincategory: event.target.value});
+      setCategoryList(result.categoryList);
+    } catch (error) {
+      console.log('error:',error);
+    }
   }
 
-  function handleCategory(event) {
+  const handleCategory = async (event) => {
     setCategory(event.target.value);
 
     setSubCategoryList('');    
     setProductList('');    
     setSubCategory('');
-    setAssignInterest('');
 
-
-    const fetchData = async () => {
-      try {
-        const result = await Category.subCategoryList({category: event.target.value});
-        setSubCategoryList(result.subCategoryList);
-      } catch (error) {
-        console.log('error:',error);
-      }
-    };
-    fetchData();
+    try {
+      const result = await Category.subCategoryList({category: event.target.value});
+      setSubCategoryList(result.subCategoryList);
+    } catch (error) {
+      console.log('error:',error);
+    }    
   }
 
-  function handleSubCategory(event) {
+  const handleSubCategory = async (event) => {
     setSubCategory(event.target.value);
     setProductList('');
-    setAssignInterest('');
 
-    const fetchData = async () => {
-      try {
+    try {
         const result = await Category.RelatedproductList({subcategory: event.target.value});
         setProductList(result.productList);       
-      } catch (error) {
+    } catch (error) {
         console.log('error:',error);
-      }
-    };
-    fetchData();
-  }
-
-
-  function handleChangeMultiple(event) {
-    setAssignInterest(event.target.value);
-    
-   (productList.length > 0 ? productList : []).map((data,index)=>{
-    if(event.target.value === data.id) {
-      setProduct(data);        
-      if(parseFloat(budgetList.afford_amt) < parseFloat(data.rental)){
-        alert("you can't afford payment for this product. kindly update your budget or choose other product")
-      }        
     }
-    });  
   }
 
-  const editOrder = async (event) => {    
+
+  const editOrder = async (event) => {
 
     setpLoading(true);
     setSavebtn(true);
     const response = await OrderAPI.editPost({ 
       id : inputs.id,
-      products_id :  assignInterest,
+      products_id :  assignInterest.join(),
       budget_list : budgetList,
       flexOrderType : flexOrderList,
       fixedOrderType : fixedOrderList,
@@ -408,8 +416,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     if(response!='invalid'){
       handleOrderRecData(response);
       handleEditClose(false);
-      // assignInterest.length = 0;
-      setAssignInterest('');
+      assignInterest.length = 0;
       }else{
         setpLoading(false);
         setSavebtn(true);
@@ -418,11 +425,47 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   };
   
     
+  
+  const selectedProductList = () => {
+    return(
+      <Paper style={{width : '100%'}}>
+        <Table size="small">                          
+          <TableBody size="small">
+            {(assignInterest.length > 0 ? assignInterest : []).map((data, index) =>{
+              return(
+                (totalProductList.length > 0 ? totalProductList : []).map((proData,proIndex)=>{                                
+                  return(                                  
+                    proData.id === data ?
+                      <TableRow size="small">
+                        <TableCell  className={classes.textsize}  >{proData.name}</TableCell>
+                        <TableCell  className={classes.textsize}  >{proData.rental}</TableCell>
+                        <TableCell  className={classes.textsize}  style={{maxWidth:70}}>
+                          <Tooltip title="Click to Remove">
+                            <IconButton className={classes.marginIconBtn} onClick = { () => { handleRemoveProduct(index); }}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>  
+                        </TableCell>
+                      </TableRow>
+                    : null
+                  )                                
+                })
+              )
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
+    )
+  }
+
+
+
   const { inputs, handleInputChange, handleCheckBoxChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
     editableData != "" ? editableData : RESET_VALUES,
     editOrder,
     validate
   ); 
+
   
 return (
     <div>
@@ -601,7 +644,7 @@ return (
                   <Grid item xs={12} sm={12}>
                     <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
                     <Select
-                      // multiple
+                      multiple
                       value={assignInterest}
                       onChange={handleChangeMultiple}
                       name= 'product'
@@ -619,13 +662,9 @@ return (
                      })}
                     </Select>
                   </Grid>
-                 
-                  {/* <Grid item xs={12} sm={4}> */}
-                    {/* <Typography > TOTAL SURPLUS $ {budgetList.surplus}</Typography>
-                    <Typography > AFFORD TO PAY: ${budgetList.afford_amt}</Typography> */}
-                   {/* </Grid> */}
-
- 
+                    <Grid item xs={12} sm={12}> 
+                      {selectedProductList()}
+                    </Grid>
                    <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="sales_type">Sales Type *</InputLabel>
                       <Select
@@ -717,8 +756,8 @@ return (
         </form>
       </Dialog>
     {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={0} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
-    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} product={product} viewOnly={viewOnly}/> : null }
-    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} product={product}  viewOnly={viewOnly} /> : null }
+    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} totalOfRental={totalOfRental} viewOnly={viewOnly}/> : null }
+    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} totalOfRental={totalOfRental}  viewOnly={viewOnly} /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
     </div>
   );
