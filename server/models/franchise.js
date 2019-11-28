@@ -116,6 +116,9 @@ Franchise.prototype.register = function (newUser) {
                   [3, 'Debit', 1],
                   [4, 'PayPal', 1],
                   [5, 'Cash', 1],
+                  [6, 'Ezidebit', 1],
+                  [7, 'Auto Payment', 1],
+                  [8, 'Direct Deposit', 1],
                 ]
 
                 let order_status_data = [
@@ -155,14 +158,20 @@ Franchise.prototype.register = function (newUser) {
                 ]
                 
                 let sales_type_list_data = [
-                  [1, 'Internet', 1],
+                  [1, 'Website', 1],
                   [2, 'Walk-in', 1],
                   [3, 'Reference', 1],
-                  [4, 'Existing', 1],
-                  [5, 'Phone Sales', 1],
-                  [6, 'Door 2 Door (D2D)', 1],
-                  [7, 'Paid Leads', 1],
+                  [4, 'Advertisement', 1],
+                  [5, 'Existing', 1],
+                  [6, 'Self', 1],
+                  [7, 'Internet', 1], 	
+                  [8, 'Phone Sales', 1],
+                  [9, 'Door 2 Door (D2D)', 1],
+                  [10, 'Paid Leads', 1],
                 ]
+ 
+
+
 
                 let renting_for_list_data = [
                   [1, 'Personal Use', 1],
