@@ -326,20 +326,20 @@ const paymentSubmit = async function(req, res, next) {
     order_id : req.body.order_id,
     customer_id: req.body.customer_id,
     installment_no : Number(req.body.installment_no),
-    payment_date: req.body.payment_date,
-    payment_amt : Number(req.body.payment_amt),
-    total_paid : Number(req.body.total_paid),
-    due_installment_amt : Number(req.body.due_installment_amt),
-    sub_installment_no : Number(req.body.sub_installment_no),
+    payment_date: req.body.payment_date, // first installment date
+    payment_amt : Number(req.body.payment_amt), // sum of total payment amt
+    total_paid : Number(req.body.total_paid), // 0
+    due_installment_amt : Number(req.body.due_installment_amt), // 0
+    sub_installment_no : Number(req.body.sub_installment_no), // 0
     created_by: req.decoded.id,    
-    installment_before_delivery : Number(req.body.installment_before_delivery),
+    installment_before_delivery : Number(req.body.installment_before_delivery), 
     last_installment_no : Number(req.body.last_installment_no),
     payment_rec_date : req.body.payment_rec_date,
     each_payment_amt : Number(req.body.each_payment_amt),
     frequency : req.body.frequency,
     schedule_status : 0,
-    order_type : req.body.order_type,
-    no_of_total_installment : req.body.no_of_total_installment,
+    order_type : req.body.order_type, // 1 = fix & 2 = flex
+    no_of_total_installment : req.body.no_of_total_installment, 
     last_date_of_payment : req.body.last_date_of_payment,
     payment_status : req.body.payment_status,
   }   
