@@ -230,7 +230,7 @@ Category.prototype.categoryList = function () {
           }
         });
       }else{
-        connection.query('select c.* from category as c INNER JOIN product as p on c.id = p.category WHERE c.type = 2 AND p.status =1 AND c.related_to = "'+that.maincategory+'"', function (error, rows, fields) {
+        connection.query('select DISTINCT(c.id) AS duplicate_id, c.* from category as c INNER JOIN product as p on c.id = p.category WHERE c.type = 2 AND p.status =1 AND c.related_to = "'+that.maincategory+'"', function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {
@@ -266,7 +266,7 @@ Category.prototype.subCategoryList = function () {
           }
         });
       }else{
-        connection.query('select c.* from category as c INNER JOIN product as p on c.id = p.subcat WHERE c.type = 3 AND p.status = 1 AND c.related_to = "'+that.category+'"', function (error, rows, fields) {
+        connection.query('select DISTINCT(c.id) AS duplicate_id, c.* from category as c INNER JOIN product as p on c.id = p.subcat WHERE c.type = 3 AND p.status = 1 AND c.related_to = "'+that.category+'"', function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {
