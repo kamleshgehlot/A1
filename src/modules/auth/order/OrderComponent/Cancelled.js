@@ -20,6 +20,12 @@ import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
 
+import TablePagination from '@material-ui/core/TablePagination';
+import TableFooter from '@material-ui/core/TableFooter';
+
+import {TablePaginationActions} from '../../../common/Pagination';
+
+
 const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -57,6 +63,21 @@ function TabPanel(props) {
 export default function Cancelled({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
   uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile }) {
   const styleClass = useCommonStyles();
+  
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };    
+  
+
 return (  
   <Table>
     <TableHead>
@@ -72,7 +93,7 @@ return (
       </TableRow>
     </TableHead>
     <TableBody>
-    {(order.length > 0 ? order : []).map((data, index) => {      
+    {(order.length > 0 ? order : []).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {      
       return(
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
@@ -88,6 +109,25 @@ return (
     })
   }                              
     </TableBody>
+    
+    <TableFooter>
+        <TableRow>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            colSpan={9}
+            count={order.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            SelectProps={{
+              inputProps: { 'aria-label': 'rows per page' },
+              native: true,
+            }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </TableRow>
+      </TableFooter>
   </Table>
   )
 }
