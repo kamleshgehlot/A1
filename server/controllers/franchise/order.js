@@ -622,35 +622,40 @@ const assignToFinance = async function(req, res, next) {
   try {
     const newActivity = new Order(params);
     await newActivity.assignToFinance();
+    const isScheduleExist = await newActivity.isScheduleExist();
 
-    let orderTypeResult = [];
-    let noOfPayment = 0;
+    console.log('isScheduleExist',isScheduleExist);
 
-    if(params.order_type === 1){
-      newActivity.fixedOrderId = params.order_type_id;
-      orderTypeResult = await newActivity.getFixedOrder();
-      noOfPayment =  orderTypeResult[0].no_of_payment;
-    } else if(params.order_type === 2){
-      newActivity.flexOrderId = params.order_type_id;
-      orderTypeResult = await newActivity.getFlexOrder();
-      noOfPayment =  orderTypeResult[0].before_delivery_amt;
+    if(isScheduleExist == null || isScheduleExist.length === 0){
+      console.log('exist')
+      let orderTypeResult = [];
+      let noOfPayment = 0;
+  
+      if(params.order_type === 1){
+        newActivity.fixedOrderId = params.order_type_id;
+        orderTypeResult = await newActivity.getFixedOrder();
+        noOfPayment =  orderTypeResult[0].no_of_payment;
+      } else if(params.order_type === 2){
+        newActivity.flexOrderId = params.order_type_id;
+        orderTypeResult = await newActivity.getFlexOrder();
+        noOfPayment =  orderTypeResult[0].before_delivery_amt;
+      }
+      
+  
+      let paymentDate = moment(orderTypeResult[0].first_payment).format("YYYY-MM-DD");
+      let paymentScheduleArray = [];
+      
+      for(let i=1; i<= noOfPayment; i++){
+        paymentScheduleArray.push(
+          [params.order_id, params.customer_id, i, paymentDate, 0, 1, params.created_by],
+        );      
+        paymentDate = dateMaker(paymentDate, orderTypeResult[0].frequency);
+      }
+  
+      newActivity.paymentScheduleArray = paymentScheduleArray;
+  
+      await newActivity.createdPaymentSchedule();      
     }
-    
-
-    let paymentDate = moment(orderTypeResult[0].first_payment).format("YYYY-MM-DD");
-    let paymentScheduleArray = [];
-    
-    for(let i=1; i<= noOfPayment; i++){
-      paymentScheduleArray.push(
-        [params.order_id, params.customer_id, i, paymentDate, 0, 1, params.created_by],
-      );      
-      paymentDate = dateMaker(paymentDate, orderTypeResult[0].frequency);
-    }
-
-    newActivity.paymentScheduleArray = paymentScheduleArray;
-
-    await newActivity.createdPaymentSchedule();    
-
     
     const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
     res.send({ order: order});

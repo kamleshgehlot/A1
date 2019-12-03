@@ -968,6 +968,35 @@ Order.prototype.getOrderList = function () {
 
 
 
+Order.prototype.isScheduleExist = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('select * from payment_schedule where order_id = "' +that.order_id+ '"',function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+          })
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Checked Payment Schedule Existance %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 
 Order.prototype.assignToFinance = function () {
   const that = this;

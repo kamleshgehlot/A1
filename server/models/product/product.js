@@ -65,7 +65,7 @@ Product.prototype.all = function () {
       }
 
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product order by id desc', function (error, rows, fields) {
+      connection.query('select DISTINCT(p.description) as name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.description, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 
@@ -125,7 +125,7 @@ Product.prototype.archivedList = function () {
         throw error;
       }
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where status=3 order by id desc', function (error, rows, fields) {
+      connection.query('select DISTINCT(p.description) as name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.description, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id where status = 3order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
         } else {
@@ -150,7 +150,8 @@ Product.prototype.relatedProductList = function () {
       }
       if(!error){
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select id,maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where subcat = "'+that.subcategory+'" order by id desc', function (error, rows, fields) {
+      
+      connection.query('select DISTINCT(p.description) as name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.description, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id where subcat =  "'+that.subcategory+'" order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 
@@ -177,8 +178,8 @@ Product.prototype.searchData = function () {
         throw error;
       }
       if (!error) {
-        connection.changeUser({ database: dbName["prod"] });
-        connection.query('select p.id, p.maincat, p.category, p.subcat, p.name, p.color_id, p.brand_id, p.buying_price, p.description, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status from product as p WHERE p.name LIKE "%'+that.searchText+'%" OR p.brought LIKE "%'+that.searchText+'%" OR p.invoice LIKE "%'+that.searchText+'%" OR p.status LIKE "%'+that.searchText+'%" OR p.meta_keywords LIKE "%'+that.searchText+'%" order by p.id desc',
+        connection.changeUser({ database: dbName["prod"] });        
+        connection.query('select DISTINCT(p.description) as name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.description, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id WHERE p.name LIKE "%'+that.searchText+'%" OR p.brought LIKE "%'+that.searchText+'%" OR p.invoice LIKE "%'+that.searchText+'%" OR p.status LIKE "%'+that.searchText+'%" OR p.meta_keywords LIKE "%'+that.searchText+'%" OR p.description LIKE "%'+that.searchText+'%" order by p.id desc',
         function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
@@ -213,7 +214,7 @@ Product.prototype.getOrderedProductList = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName["prod"] });
-        connection.query('select id, maincat, category, subcat, name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by,status from product where id IN('+ that.product_ids +')', function (error, rows, fields) {        
+        connection.query('select id, maincat, category, subcat, description as name, color_id, brand_id, buying_price, description, specification, brought, invoice, rental, meta_keywords, meta_description, created_by, status from product where id IN('+ that.product_ids +')', function (error, rows, fields) {        
             if (!error) {
                 resolve(rows);
                 } else {
