@@ -101,14 +101,7 @@ return (
           <StyledTableCell>{data.mobile}</StyledTableCell>
           <StyledTableCell>{data.order_date}</StyledTableCell>
           <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-          <StyledTableCell>{
-            data.payment_mode == 1 ? 'EasyPay' :  
-            data.payment_mode == 2 ? 'Credit' : 
-            data.payment_mode == 3 ? 'Debit' : 
-            data.payment_mode == 4 ? 'PayPal' : 
-            data.payment_mode == 5 ? 'Cash' : ''
-            }
-          </StyledTableCell>     
+          <StyledTableCell>{data.payment_mode_name} </StyledTableCell>     
           <StyledTableCell>
             <Tooltip title="Click to Regenerate Order">
               <IconButton  size="small" value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }}>

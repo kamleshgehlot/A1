@@ -184,7 +184,7 @@ export default function Order({roleName}) {
   const [openConfirmationPDF, setOpenConfirmationPDF]= useState(false);
   const [orderDataForPDF, setOrderDataForPDF] = useState([]);
   const [value, setValue] = React.useState(0);  
-
+  const [searchText, setSearchText]  = useState('');
   
   const handleYesNoClose = (isConfirm) => {    
     setOpenConfirmationPDF(false);
@@ -592,6 +592,29 @@ export default function Order({roleName}) {
     handleOrderView(result[0]);
   }
 
+  
+  function handleSearchText(event){
+    setSearchText(event.target.value);
+    console.log(searchText)
+  }
+  
+  const searchHandler = async () => {
+    try {
+    if(searchText!=''){
+        const result = await OrderAPI.searchOrder({searchText: searchText});
+        setOrder(result.order);
+        handleTabsData(result.order);         
+    }else{
+      const result = await OrderAPI.getAll();
+      setOrder(result.order);
+      handleTabsData(result.order);          
+    }} catch (error) {
+      console.log('error',error);
+    }
+  }
+
+
+
   function handleTabsData(order){  
     let open = [];
     let finance = [];
@@ -664,9 +687,7 @@ export default function Order({roleName}) {
   }
 
   return (
-    // <div ref={ref}>
     <div>
-
      <Grid container spacing={2}>
           <Grid item xs={12} sm={8}>
             {roleName === 'CSR' ? 
@@ -677,21 +698,29 @@ export default function Order({roleName}) {
           </Grid>
         
           <Grid item xs={12} sm={4}>
-              <TextField
+          <TextField
                 margin="dense"
                 id="search"
                 name="search"
-                label="Search"
-                type="text"               
-                fullWidth
+                label="Search..."
+                type="text"
+                value={searchText} 
+                onKeyPress={(ev) => {
+                  if (ev.key ===  'Enter') {
+                    searchHandler()
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={handleSearchText}
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>
                                   <Tooltip title="Search">
-                                    <IconButton><SearchIcon /></IconButton>
+                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
                                   </Tooltip>
                                 </InputAdornment>,
                 }}
-              />            
+                fullWidth
+              />                
           </Grid>
           
           <Grid item xs={12} sm={12}>

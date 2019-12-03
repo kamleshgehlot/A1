@@ -106,14 +106,7 @@ return (
           {/* <StyledTableCell>{data.order_status_name}</StyledTableCell> */}
           {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
           <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-          <StyledTableCell>{
-            data.payment_mode == 1 ? 'EasyPay' :  
-            data.payment_mode == 2 ? 'Credit' : 
-            data.payment_mode == 3 ? 'Debit' : 
-            data.payment_mode == 4 ? 'PayPal' : 
-            data.payment_mode == 5 ? 'Cash' : ''
-            }
-          </StyledTableCell>
+          <StyledTableCell>{data.payment_mode_name} </StyledTableCell>     
           <StyledTableCell>
             <Tooltip title="View Delivered Product Detail">
                   <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleViewDeliveredDetailOpen(data); }} >

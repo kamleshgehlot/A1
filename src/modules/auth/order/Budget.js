@@ -296,8 +296,8 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
       let sum = oldBudgetList.reduce((acc, val) =>{
         return (val.is_active == 1 ? acc + val.afford_amt : acc )
       }, 0 );
-      setOldBudget(sum * 4);
-      inputs.expenditure = (sum * 4);
+      setOldBudget(sum);
+      inputs.expenditure = (sum);
     }
   });
 
@@ -955,7 +955,7 @@ return (
                           return(
                             <Typography variant="h6" className={classes.labelTitle} align="right">
                               <IconButton size="small" className={classes.labelTitle} style={{color: 'blue', marginTop : -7}} value={data.id} name={data.id} onClick={(event) => { handleOrderViewFromBudget(data); }}>
-                                {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt * 4) + ')') :''}
+                                {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt) + ')') :''}
                               </IconButton>
                             </Typography>   
                           )

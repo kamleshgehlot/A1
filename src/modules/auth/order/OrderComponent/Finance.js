@@ -104,14 +104,7 @@ export default function Finance({order, roleName }) {
                   <StyledTableCell>{data.order_status_name}</StyledTableCell>
                   {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
                   <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
-                  <StyledTableCell>{
-                    data.payment_mode == 1 ? 'EasyPay' :  
-                    data.payment_mode == 2 ? 'Credit' : 
-                    data.payment_mode == 3 ? 'Debit' : 
-                    data.payment_mode == 4 ? 'PayPal' : 
-                    data.payment_mode == 5 ? 'Cash' : ''
-                    }
-                  </StyledTableCell>
+                  <StyledTableCell>{data.payment_mode_name} </StyledTableCell>     
                 </TableRow>
               )}
           )}                  

@@ -1073,6 +1073,20 @@ const editOrder = async function (req, res, next) {
   };
   
   
+  const searchOrder = async function (req, res, next) {
+    let CustomerParams = {
+      user_id: req.decoded.user_id,
+      searchText: req.body.searchText,
+    };
+    try {
+      const newCustomer = new Order(CustomerParams);
+      const result = await newCustomer.searchOrder();
+  
+      res.send({ order: result });
+    } catch (error) {
+      next(error);
+    }
+  };
   
   
   
@@ -1117,4 +1131,5 @@ module.exports = {
   archiveOrder,
   getPaymentSchedule,
   paymentReschedule,
+  searchOrder,
 };

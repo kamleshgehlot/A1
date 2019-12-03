@@ -468,6 +468,7 @@ export default function CustomerList({userId, roleName}) {
               />              
           </Grid>
           <Grid item xs={12} sm={12}>
+            <Paper className={classes.root}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
                   <Tab label={<BadgeComp count={activeTab.length} label="Open" />} /> 
@@ -477,8 +478,6 @@ export default function CustomerList({userId, roleName}) {
                   <Tab label={<BadgeComp count={missedPaymentTab.length} label="Missed Payment" />} />
                 </Tabs>
               </AppBar>
-              
-            <Paper className={classes.root}>
               <div className={classes.tableWrapper}>
                 <TabPanel value={value} index={0}>
                   {activeTab && <Active customerList={activeTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} /> }
