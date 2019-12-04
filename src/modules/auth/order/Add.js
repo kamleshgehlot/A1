@@ -804,11 +804,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                       <MenuItem className={classes.textsize} value={2}>Credit</MenuItem>
                       <MenuItem className={classes.textsize} value={3}>Debit</MenuItem>
                       <MenuItem className={classes.textsize} value={4}>PayPal</MenuItem>
-                      <MenuItem className={classes.textsize} value={5}>Cash</MenuItem>
+                      <MenuItem className={classes.textsize} value={5}>Ezidebit</MenuItem>
+                      <MenuItem className={classes.textsize} value={6}>Debit</MenuItem>
+                      <MenuItem className={classes.textsize} value={7}>Auto Payment</MenuItem>
+                      <MenuItem className={classes.textsize} value={8}>Direct Deposit</MenuItem>
                     </Select>
                    </Grid>
-                      
-           
                     
             {savebtn? <Grid item xs={12} sm={12}> 
                           <Button  variant="contained" color="primary" onClick={handleSubmit} className={classes.button}>save</Button>

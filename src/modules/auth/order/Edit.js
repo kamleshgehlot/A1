@@ -736,6 +736,9 @@ return (
                       <MenuItem className={classes.textsize} value={3}>Debit</MenuItem>
                       <MenuItem className={classes.textsize} value={4}>PayPal</MenuItem>
                       <MenuItem className={classes.textsize} value={5}>Cash</MenuItem>
+                      <MenuItem className={classes.textsize} value={6}>Debit</MenuItem>
+                      <MenuItem className={classes.textsize} value={7}>Auto Payment</MenuItem>
+                      <MenuItem className={classes.textsize} value={8}>Direct Deposit</MenuItem>
                     </Select>
                    </Grid>
                    
