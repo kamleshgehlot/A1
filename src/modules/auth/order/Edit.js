@@ -251,7 +251,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
         setSubCategoryList(sub_category.subCategoryList);
 
         const product = await Category.RelatedproductList({subcategory:productCategory[2]});
-        setProductList(product.productList);              
+        setProductList(product.productList);
        
       
         const budget = await Order.getCurrespondingBudget({customer_id: editableData.customer_id, budgetId: editableData.budget_id});

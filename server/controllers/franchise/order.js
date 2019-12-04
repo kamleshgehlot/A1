@@ -1080,8 +1080,7 @@ const editOrder = async function (req, res, next) {
     };
     try {
       const newCustomer = new Order(CustomerParams);
-      const result = await newCustomer.searchOrder();
-  
+      const result = await newCustomer.searchOrder();  
       res.send({ order: result });
     } catch (error) {
       next(error);
