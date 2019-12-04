@@ -271,7 +271,7 @@ Enquiry.prototype.searchData = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('select id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by from enquiry WHERE converted_to != 1 order by id desc',function (error, rows, fields) {
-          connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by, converted_to, reason_to_delete from enquiry where customer_name LIKE "%'+that.searchText+'%" OR contact LIKE "%'+that.searchText+'%" order by id desc',function (error, rows, fields) {                            
+          connection.query('select id, is_existing_customer, customer_id, enquiry_id, customer_name, contact, interested_product_id, is_active, created_by, converted_to, reason_to_delete from enquiry where customer_name LIKE "%'+that.searchText+'%" OR contact LIKE "%'+that.searchText+'%" OR enquiry_id LIKE "%'+that.searchText+'%" order by id desc',function (error, rows, fields) {                            
             if (!error) {
               // console.log("rows...",rows);
                 resolve(rows);

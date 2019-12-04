@@ -7,6 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Typography } from '@material-ui/core';
+import { isAbsolute } from 'path';
 
 const styles = theme => ({
   container: {
@@ -25,8 +27,14 @@ const styles = theme => ({
   forgotContainer: {
     textAlign: 'right',
     fontSize: theme.typography.pxToRem(12),
-    color:"#20a8d8",
+    color:"#20a8d8",    
     // marginTop: theme.margin * 2,
+  },
+  a1Logo: {
+    width: 200,
+    heading: 200,
+    objectFit: 'cover',
+    // marginBottom: theme.margin * 2,
   },
 });
 
@@ -39,6 +47,7 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
 
 
   return (
+    <div>
     <form className={classes.container} onSubmit={onSubmit}>
       <TextField
         label="Username"
@@ -76,6 +85,11 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
         {isLoading ? <CircularProgress size={20} /> : 'Login'}
       </Button>
     </form>
+      <div style = {{ position : 'fixed', bottom : '10px', right : '217px',  }} > Powered by: </div>
+      <div style={{position:'fixed',bottom:'-5px',right:'10px'}}>
+        <img src="/images/A1AbilitiesLogo.jpeg" alt="A1abilities" className={classes.a1Logo} />
+      </div>
+    </div>
   );
 };
 

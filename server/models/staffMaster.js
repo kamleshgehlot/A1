@@ -18,8 +18,6 @@ const StaffMaster = function (params) {
   this.is_active = params.is_active;
 
   this.searchText = params.searchText;
-  // console.log('params---',params)
-  // console.log('params---',params)
 };
 
 

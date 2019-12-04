@@ -462,7 +462,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                   return(                                  
                     proData.id === data ?
                       <TableRow size="small">
-                        <TableCell  className={classes.textsize}  >{proData.name}</TableCell>
+                        <TableCell  className={classes.textsize}  >{proData.description}</TableCell>
                         <TableCell  className={classes.textsize}  >{proData.rental}</TableCell>
                         <TableCell  className={classes.textsize}  style={{maxWidth:70}}>
                           <Tooltip title="Click to Remove">
@@ -725,7 +725,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                         <MenuItem className={classes.textsize} disabled value={""}>Select Product</MenuItem>
                         {(productList.length > 0 ? productList : []).map((data,index)=>{
                           return(
-                            <MenuItem className={classes.textsize} value={data.id}>{data.name}</MenuItem>
+                            <MenuItem className={classes.textsize} value={data.id}>{data.description}</MenuItem>
                           ) 
                         })}
                       </Select>

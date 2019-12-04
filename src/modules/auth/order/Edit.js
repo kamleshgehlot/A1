@@ -437,7 +437,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
                   return(                                  
                     proData.id === data ?
                       <TableRow size="small">
-                        <TableCell  className={classes.textsize}  >{proData.name}</TableCell>
+                        <TableCell  className={classes.textsize}  >{proData.description}</TableCell>
                         <TableCell  className={classes.textsize}  >{proData.rental}</TableCell>
                         <TableCell  className={classes.textsize}  style={{maxWidth:70}}>
                           <Tooltip title="Click to Remove">
@@ -657,7 +657,7 @@ return (
                     >    
                      {(productList.length > 0 ? productList : []).map((data,index)=>{
                       return(
-                         <MenuItem value={data.id}>{data.name}</MenuItem>
+                         <MenuItem value={data.id}>{data.description}</MenuItem>
                       ) 
                      })}
                     </Select>

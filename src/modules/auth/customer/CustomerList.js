@@ -428,7 +428,7 @@ export default function CustomerList({userId, roleName}) {
   return (
     <div>     
       <Grid container spacing={3}>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={6}>
             <Fab
               variant="extended"
               size="small"
@@ -441,13 +441,12 @@ export default function CustomerList({userId, roleName}) {
               Customers
             </Fab>
           </Grid>   
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 margin="dense"
                 id="search"
                 name="search"
-                label="Search"
-                label="Search..."
+                placeholder ="Type (Id/Name/Address/City/Postcode/Telephone/Mobile/DOB) to Search Customer..."
                 type="text"
                 value={searchText} 
                 onKeyPress={(ev) => {

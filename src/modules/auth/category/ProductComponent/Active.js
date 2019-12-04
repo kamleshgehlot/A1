@@ -74,7 +74,7 @@ return (
         return(
           <TableRow key={data.id} >
             <StyledTableCell component="th" scope="row"> {data.id} </StyledTableCell>
-            <StyledTableCell>{data.name}</StyledTableCell>
+            <StyledTableCell>{data.description}</StyledTableCell>
             <StyledTableCell>{data.colorName}</StyledTableCell>
             <StyledTableCell>{data.brandName}</StyledTableCell>
             <StyledTableCell>{data.invoice}</StyledTableCell>

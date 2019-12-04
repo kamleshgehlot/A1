@@ -274,11 +274,10 @@ export default function Enquiry({roleName}) {
   return (
     <div>      
       <Grid container spacing={3}>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={6}>
               <Fab
                 variant="extended"
                 size="small"
-                // color="primary"
                 aria-label="Add"
                 className={classes.fonttransform}
                 onClick={handleClickOpen}
@@ -287,12 +286,12 @@ export default function Enquiry({roleName}) {
                 Enquiry
               </Fab>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 margin="dense"
                 id="search"
                 name="search"
-                label="Search"
+                placeholder = "Type (Enquiry Id/Customer Name/Contact) to Search Enquiry..."
                 type="text"
                 value={searchText} 
                 onKeyPress={(ev) => {

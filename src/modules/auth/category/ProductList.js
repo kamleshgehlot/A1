@@ -248,18 +248,17 @@ export default function ProductList({roleName}) {
   return (
     <div>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={6}>
           <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen} >
             <AddIcon className={classes.extendedIcon} /> Product
           </Fab>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6}>
             <TextField
               margin="dense"
               id="search"
               name="search"
-              label="Search"
-              label="Search..."
+              placeholder = "Type (Product Name/Bought From/Invoice Number/Meta Keywords/Description) to Search Product..."
               type="text"
               value={searchText} 
               onKeyPress={(ev) => {

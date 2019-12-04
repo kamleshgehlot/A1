@@ -137,7 +137,7 @@ return (
               <TableRow key={data.id}>
                   <StyledTableCell>  {data.id}           </StyledTableCell>
                   <StyledTableCell> {data.customer_name}  </StyledTableCell>
-                  <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
+                  <StyledTableCell> {data.mobile === '' || data.mobile === null || data.mobile === undefined ? data.telephone : data.telephone==='' || data.telephone === null || data.telephone === undefined ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
                   <StyledTableCell> {data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
                   <StyledTableCell> {data.address}  </StyledTableCell>
                   <StyledTableCell> {data.created_by_name}  </StyledTableCell>

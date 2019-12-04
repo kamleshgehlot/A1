@@ -377,64 +377,39 @@ export default function Lead({roleName, showLeadData}) {
 
   return (
     <div>
-      {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-          <Grid item xs={12} sm={8}>
-                <Fab
-                  variant="extended"
-                  size="small"
-                  // color="primary"
-                  aria-label="Add"
-                  className={classes.fonttransform}
-                  onClick={handleClickOpen}
-                >
-                  <AddIcon className={classes.extendedIcon} />
-                  Lead
+          <Grid item xs={12} sm={6}>
+                <Fab variant="extended" size="small"  className={classes.fonttransform} onClick={handleClickOpen} >
+                  <AddIcon className={classes.extendedIcon} /> Lead
                 </Fab>
-              </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="dense"
-                id="search"
-                name="search"
-                label="Search"
-                type="text"
-                value={searchText} 
-                onKeyPress={(ev) => {
-                  if (ev.key ===  'Enter') {
-                    searchHandler()
-                    ev.preventDefault();
-                  }
-                }}
-                onChange={handleSearchText}
-                
-                fullWidth
-                InputProps={{
-                  endAdornment: <InputAdornment position='end'>
-                                  <Tooltip title="Search">
-                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
-                                  </Tooltip>
-                                </InputAdornment>,
-                }}
-              />
-          
           </Grid>
-         
-
-         
-          {/* <Grid item xs={12} sm={2}>
-            <Fab
-              variant="extended"
-              size="small"
-              // color="primary"
-              aria-label="Complete"
-              className={classes.fonttransform}
-              onClick={handleConvertedLeadsClickOpen}
-            >
-              Converted
-            </Fab>
-          </Grid> */}
-
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              id="search"
+              name="search"
+              placeholder = "Type (LeadId/Franchise Name/Customer Name/Contact) to Search Lead..."
+              type="text"
+              value={searchText} 
+              onKeyPress={(ev) => {
+                if (ev.key ===  'Enter') {
+                  searchHandler()
+                  ev.preventDefault();
+                }
+              }}
+              onChange={handleSearchText}
+              
+              fullWidth
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>
+                                <Tooltip title="Search">
+                                  <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                </Tooltip>
+                              </InputAdornment>,
+              }}
+            />
+        
+        </Grid>
 
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>

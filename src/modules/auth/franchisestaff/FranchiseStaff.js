@@ -208,7 +208,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   function handleEditClose() {
     setEditOpen(false);
   }
-  ////////////////////////////////////////
+  
   function setFranchiseListFn(response) {
     setStaffList(response);
     badgeCount(response);
@@ -226,13 +226,9 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     setShowFranchise(true);
     setShowStaff(false);
   }
-  // console.log("data.role......", staffList)
-
-
   
   function handleTabChange(event, newValue) {
-    setValue(newValue);
-    // console.log('setValue...',value)
+    setValue(newValue);    
   }
 
 
@@ -260,18 +256,17 @@ export default function FranchiseStaff({franchiseId, roleName}) {
     <div>
       {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={6}>
             <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen} >
               <AddIcon className={classes.extendedIcon} /> Franchise Staff
             </Fab>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={6}>
               <TextField
                 margin="dense"
                 id="search"
                 name="search"
-                label="Search"
-                label="Search..."
+                placeholder = "Type (UserId/First Name/Last Name/Location/Email/Contact) to Search Staff..."
                 type="text"
                 value={searchText} 
                 onKeyPress={(ev) => {

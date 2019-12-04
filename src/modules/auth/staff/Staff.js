@@ -26,7 +26,6 @@ import TextField from '@material-ui/core/TextField';
 
 // API CALL
 import StaffAPI from '../../../api/StaffMasterAdmin';
-
 import BadgeComp from '../../common/BadgeComp';
 
 const StyledTableCell = withStyles(theme => ({
@@ -40,28 +39,7 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function Staff({roleName}) {
-  const [open, setOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [staffData,setStaffData]= useState();
-  const [staffList, setStaffList] = useState({});
-  const [position, setPosition] = useState({});
-  const [searchText, setSearchText]  = useState('');
-
-  //value is for tabs  
-  const [value, setValue] = React.useState(0);
-
-  let territory = 0;
-  let marketing = 0;
-  let it = 0;
-  let bdm = 0;
-  let accountant = 0;
-  let sales = 0;
-
-  const drawerWidth = 240;
+const drawerWidth = 240;  
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
@@ -70,7 +48,6 @@ export default function Staff({roleName}) {
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      // width: 900
     },
     drawer: {
       width: drawerWidth,
@@ -111,7 +88,29 @@ export default function Staff({roleName}) {
       fontSize: theme.typography.pxToRem(12),
     }
   }));
+
+
+export default function Staff({roleName}) {
+  
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [staffData,setStaffData]= useState();
+  const [staffList, setStaffList] = useState({});
+  const [position, setPosition] = useState({});
+  const [searchText, setSearchText]  = useState('');
+  const [value, setValue] = React.useState(0);
+
+  let territory = 0;
+  let marketing = 0;
+  let it = 0;
+  let bdm = 0;
+  let accountant = 0;
+  let sales = 0;
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -152,7 +151,6 @@ export default function Staff({roleName}) {
   function handleEditClose() {
     setEditOpen(false);
   }
-  ////////////////////////////////////////
   function setFranchiseListFn(response) {
     setStaffList(response);
   }
@@ -166,6 +164,7 @@ export default function Staff({roleName}) {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
   };
+  
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -184,7 +183,6 @@ export default function Staff({roleName}) {
   }
   function handleTabChange(event, newValue) {
     setValue(newValue);
-    // console.log('setValue...',value)
   }
 
 
@@ -193,7 +191,6 @@ export default function Staff({roleName}) {
     if(searchText!=''){
         const result = await StaffAPI.search({searchText: searchText});
         setStaffList(result.staffList);
-        // console.log(result.customerList);
         setSearchText('');     
     }else{
       const result = await StaffAPI.list();
@@ -207,51 +204,39 @@ export default function Staff({roleName}) {
 
   return (
     <div>
-      {/* {showFranchise ?  */}
       <Grid container spacing={3}>
-
-          <Grid item xs={12} sm={8}>
-            <Fab
-              variant="extended"
-              size="small"
-              // color="primary"
-              aria-label="Add"
-              className={classes.fonttransform}
-              onClick={handleClickOpen}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              Staff
+        <Grid item xs={12} sm={6}>
+            <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen} >
+              <AddIcon className={classes.extendedIcon} /> Staff
             </Fab>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-              <TextField
-                margin="dense"
-                id="search"
-                name="search"
-                label="Search"
-                label="Search..."
-                type="text"
-                value={searchText} 
-                onKeyPress={(ev) => {
-                  if (ev.key ===  'Enter') {
-                    searchHandler()
-                    ev.preventDefault();
-                  }
-                }}
-                onChange={handleSearchText}
-                InputProps={{
-                  endAdornment: <InputAdornment position='end'>
-                                  <Tooltip title="Search">
-                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
-                                  </Tooltip>
-                                </InputAdornment>,
-                }}
-                fullWidth
-              />              
-          </Grid>
-          <Grid item xs={12} sm={12}>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              id="search"
+              name="search"
+              placeholder = "Type (UserId/First Name/Last Name/Location/Email/Contact/Position) to Search Staff..."
+              value={searchText} 
+              onKeyPress={(ev) => {
+                if (ev.key ===  'Enter') {
+                  searchHandler()
+                  ev.preventDefault();
+                }
+              }}
+              onChange={handleSearchText}
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>
+                                <Tooltip title="Search">
+                                  <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                </Tooltip>
+                              </InputAdornment>,
+              }}
+              fullWidth
+            />              
+        </Grid>
+        <Grid item xs={12} sm={12}>
           <AppBar position="static"  className={classes.appBar}>
-            <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+            <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
               {
                 (staffList.length > 0 ? staffList : []).map((data, index)=>{
                   data.position === 1 ? territory+=1 : '';
@@ -269,14 +254,6 @@ export default function Staff({roleName}) {
               <Tab label={<BadgeComp count={bdm} label="BDM" />} /> 
               <Tab label={<BadgeComp count={accountant} label="Accountant" />} /> 
               <Tab label={<BadgeComp count={sales} label="Sales Specialist" />} /> 
-
-            {/* {
-                (position.length>0 ? position : []).map((ele, index) => {
-                  return(
-                    <Tab label={ele.position} />
-                  )
-                })
-              } */}
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={value}>
@@ -296,58 +273,36 @@ export default function Staff({roleName}) {
                     <TableBody>
                     { (staffList.length > 0 ? staffList : []).map((data, index)=>{
                       return(
-                        value!=0?data.position===value?    <TableRow key={data.id} >
+                        value != 0 ? data.position===value ?
+                        <TableRow key={data.id} >
                           <StyledTableCell> {index+1}  </StyledTableCell>
                           <StyledTableCell> {data.user_id}  </StyledTableCell>
                           <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
-                            <StyledTableCell>
-                              {data.position_name}
-                            </StyledTableCell>
-                            <StyledTableCell>{data.contact}</StyledTableCell>
-                            <StyledTableCell>{data.email}</StyledTableCell>
-                            <StyledTableCell>
-                              <Tooltip title="Edit">
-                                <IconButton  size="small" value={data.id} name={data.id} onClick={(event) => { handleClickEditOpen(data); }} >
-                                  <EditIcon />  
-                                </IconButton>
-                              </Tooltip>  
-                            </StyledTableCell>
+                          <StyledTableCell> {data.position_name} </StyledTableCell>
+                          <StyledTableCell> {data.contact} </StyledTableCell>
+                          <StyledTableCell> {data.email} </StyledTableCell>
+                          <StyledTableCell>
+                            <Tooltip title="Edit">
+                              <IconButton  size="small" value={data.id} name={data.id} onClick={(event) => { handleClickEditOpen(data); }} >
+                                <EditIcon />  
+                              </IconButton>
+                            </Tooltip>  
+                          </StyledTableCell>
                         </TableRow>:'':
                         <TableRow key={data.id} >
                         <StyledTableCell> {index+1}  </StyledTableCell>
                         <StyledTableCell> {data.user_id}  </StyledTableCell>
                         <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
-                          <StyledTableCell>
-
-                          {data.position_name}
-                          {/* {data.position} */}
-                          {/* {
-                            positions.map(ele =>{
-                              return(
-                              <MenuItem value={ele.id}>{ele.position}</MenuItem>
-                              )
-                            })
-                          } */}
-
-                          {/* {
-                            position.map((pos, index) =>{
-                            if(pos.id===data.position)
-                              return pos.position
-                            }) 
-                          } */}
-                          </StyledTableCell>
-                          <StyledTableCell>{data.contact}</StyledTableCell>
-                          <StyledTableCell>{data.email}</StyledTableCell>
-                          <StyledTableCell>
+                        <StyledTableCell> {data.position_name} </StyledTableCell>
+                        <StyledTableCell>{data.contact}</StyledTableCell>
+                        <StyledTableCell>{data.email}</StyledTableCell>
+                        <StyledTableCell>
                           <Tooltip title="Edit">
                             <IconButton  size="small" value={data.id} name={data.id} onClick={(event) => { handleClickEditOpen(data); }} >
                               <EditIcon />  
                             </IconButton>
-                          </Tooltip>  
-                          {/* <Button variant="contained" color="primary" key={data.id} value={data.id} name={data.id} className={classes.button} onClick={(event) => { handleClickEditOpen(data); }}>
-                            Edit
-                          </Button> */}
-                          </StyledTableCell>
+                          </Tooltip>                          
+                        </StyledTableCell>
                       </TableRow>
                       )
                       })
