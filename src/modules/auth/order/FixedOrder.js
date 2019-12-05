@@ -42,7 +42,7 @@ import Order from '../../../api/franchise/Order';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import {useCommonStyles} from '../../common/StyleComman'; 
-import {getDate, getCurrentDate } from '../../../utils/datetime'
+import {getDate, getCurrentDate, getTimeinDBFormat } from '../../../utils/datetime'
 
 import { FormLabel } from '@material-ui/core';
 import validate from '../../common/validation/FixedOrderValidation';
@@ -169,7 +169,7 @@ export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, 
       total_payment_amt : parseFloat(inputs.total_payment_amt).toFixed(2),
       before_delivery_amt : inputs.before_delivery_amt,
       exp_delivery_date : getDate(inputs.exp_delivery_date),
-      exp_delivery_time : inputs.exp_delivery_time,
+      exp_delivery_time : getTimeinDBFormat(inputs.exp_delivery_time),
       minimum_payment_amt : parseFloat(inputs.minimum_payment_amt).toFixed(2),
       intrest_rate : parseFloat(inputs.intrest_rate).toFixed(2),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per).toFixed(2),
@@ -835,10 +835,7 @@ return (
                               },
                             }}
                             error={errors.exp_delivery_time}
-                            helperText={errors.exp_delivery_time}
-                            // KeyboardButtonProps={{
-                            //   'aria-label': 'change time',
-                            // }}
+                            helperText={errors.exp_delivery_time}                            
                           />
                       </MuiPickersUtilsProvider>                   
                 </Grid>               

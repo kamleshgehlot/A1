@@ -36,7 +36,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
-import {getDate, getCurrentDate } from '../../../utils/datetime'
+import {getDate, getCurrentDate, getTimeinDBFormat } from '../../../utils/datetime'
 import validate from '../../common/validation/FlexOrderValidation';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import useSignUpForm from '../franchise/CustomHooks';
@@ -151,7 +151,7 @@ export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, fle
         before_delivery_amt : inputs.before_delivery_amt,
         bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
         exp_delivery_date : getDate(inputs.exp_delivery_date),
-        exp_delivery_time : inputs.exp_delivery_time,
+        exp_delivery_time : getTimeinDBFormat(inputs.exp_delivery_time),
         first_payment : getDate(inputs.first_payment), 
       }
       setFlexOrderList(data);
@@ -540,9 +540,7 @@ return (
                           <KeyboardTimePicker
                             margin="dense"
                             id="exp_delivery_time"
-                            name="exp_delivery_time"
-                            // label="Time picker" 
-                            defaultValue = {""}
+                            name="exp_delivery_time"                             
                             value={inputs.exp_delivery_time}
                             onChange={handleDeliveryTime}
                             InputProps={{

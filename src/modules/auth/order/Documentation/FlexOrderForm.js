@@ -27,7 +27,7 @@ function buildTableBody(data, columns, valueKeys, orderType) {
     var dataRow = [];
 
     valueKeys.forEach(function(column) {
-      if(column === 'paymentType') {
+      if(column === 'paymentFrequency') {
         dataRow.push({ text: orderType[0].frequency == 1 ? 'MONTHLY PAYMENT' : orderType[0].frequency == 2 ? 'FORTNIGHTLY PAYMENT' : orderType[0].frequency == 4 ? 'WEEKLY PAYMENT': '', style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
 
       } else {
@@ -183,7 +183,7 @@ export default function flexOrderForm(data,order) {
               border: [true, false, true, true],
               table: {
                 widths: ['*','*','*'],
-                body:buildTableBody(products, ['Product', 'Description', 'Payment Type'], ['name', 'description', 'paymentType'], orderType),
+                body:buildTableBody(products, ['Product', 'Description', 'Payment Frequency'], ['name', 'description', 'paymentFrequency'], orderType),
               },
           }],             
         ],              

@@ -26,8 +26,17 @@ export function getCurrentDateDDMMYYYY() {
   return moment().format("DD-MM-YYYY")
 }
 
+export function getTimeinDBFormat(date) {
+  return moment(date).format("HH:mm:ss")
+}
+
 export function getTime(date) {
   return moment(date).format("HH:mm")
+}
+
+export function convertDateInUTC(date) {
+  console.log('utc', moment.utc(date))
+  return moment.utc(date);  
 }
 
 export function setDBDateFormat(date){

@@ -625,7 +625,7 @@ function handleDate(date){
                           margin="dense"
                           id="expiry_date"
                           name="expiry_date"
-                          format="dd/MM/yyyy"
+                          format="dd-MM-yyyy"
                           placeholder="DD-MM-YYYY"
                           disablePast = {true}
                           value={inputs.expiry_date}

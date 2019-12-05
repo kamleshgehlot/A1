@@ -256,8 +256,8 @@ export default function ViewHistoryList({historyList, roleName}) {
             expensesStr.join(', ');
 
     paidDebitedDaysString = 
-            (data.paid_day !== innerData.paid_day ? "Day when get paid: " + innerData.paid_day + " =>  " + data.paid_day +", ": '') +
-            (data.debited_day !== innerData.debited_day ? "Day to be debited: " + innerData.debited_day + " => " + data.debited_day : '');
+            (data.day_paid_name !== innerData.day_paid_name ? "Day when get paid: " + innerData.day_paid_name + " =>  " + data.day_paid_name +", ": '') +
+            (data.day_debited_name !== innerData.day_debited_name ? "Day to be debited: " + innerData.day_debited_name + " => " + data.day_debited_name : '');
 
       return(
         <div>

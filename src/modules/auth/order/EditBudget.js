@@ -937,7 +937,6 @@ return (
                     </Grid>
                   }
                   <Grid item xs={12} sm={6}>
-                    {console.log('inputs',inputs)}
                     <InputLabel  className={classes.textsize} htmlFor="paid_day">Day You Get Paid</InputLabel>
                     <Select
                         margin="dense"

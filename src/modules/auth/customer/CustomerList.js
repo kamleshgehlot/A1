@@ -248,7 +248,7 @@ export default function CustomerList({userId, roleName}) {
   
   const handleOpenEditBudget = async (data) =>{      
     const budget = await Order.getExistingBudget({customer_id: data.id});
-    setBudgetList(budget[0]);    
+    setBudgetList(budget[0]);
     setTotalBudgetList(budget);
     setCustomerId(data.id);
     setBudgetOpen(true);

@@ -35,7 +35,7 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import {useCommonStyles} from '../../common/StyleComman'; 
-import {getDate, getCurrentDate } from '../../../utils/datetime'
+import {getDate, getCurrentDate, getTimeinDBFormat, convertDateInUTC } from '../../../utils/datetime'
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -154,7 +154,7 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
       bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
       before_delivery_amt : parseFloat(inputs.before_delivery_amt),
       exp_delivery_date : getDate(inputs.exp_delivery_date),
-      exp_delivery_time : inputs.exp_delivery_time,      
+      exp_delivery_time : getTimeinDBFormat(inputs.exp_delivery_time),
     }
     setFlexOrderList(data);
     handleFlexClose(false);
@@ -205,52 +205,51 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   //   }
   // },[paymentBeforeDelivery]);
 
-  useEffect(()=>{
-    let eachPaymentAmt = 0;
+//   useEffect(()=>{
+//     let eachPaymentAmt = 0;
 
-    if(frequency != ''){
-      if(frequency == 1){
-        let installment = (totalOfRental * 4);
-        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
-        eachPaymentAmt = installment;          
-      }else if(frequency == 2){ 
-        let installment = (totalOfRental * 2);
-        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
-        eachPaymentAmt = installment;          
-      }else if(frequency == 4){ 
-        let installment = (totalOfRental);
-        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
-        eachPaymentAmt = installment;          
-      }
-    }
-    // if(paymentBeforeDelivery!= ''){
-    //   handleRandomInput([
-    //     {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
-    //   ]);
-    // }else{
-    //   handleRandomInput([
-    //     {name: 'bond_amt', value: ''},
-    //   ]);
-    // }
-},[frequency]);
+//     if(frequency != ''){
+//       if(frequency == 1){
+//         let installment = (totalOfRental * 4);
+//         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
+//         eachPaymentAmt = installment;          
+//       }else if(frequency == 2){ 
+//         let installment = (totalOfRental * 2);
+//         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
+//         eachPaymentAmt = installment;          
+//       }else if(frequency == 4){ 
+//         let installment = (totalOfRental);
+//         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
+//         eachPaymentAmt = installment;          
+//       }
+//     }
+//     // if(paymentBeforeDelivery!= ''){
+//     //   handleRandomInput([
+//     //     {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
+//     //   ]);
+//     // }else{
+//     //   handleRandomInput([
+//     //     {name: 'bond_amt', value: ''},
+//     //   ]);
+//     // }
+// },[frequency]);
 
 
 
   const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    flexOrderList != [] && flexOrderList != "" && flexOrderList != undefined ? flexOrderList : RESET_VALUES,
+    flexOrderList != [] && flexOrderList != "" && flexOrderList != undefined ?  flexOrderList : RESET_VALUES,
     flex,
     validate
   ); 
   
-  useEffect(()=>{    
-      if(paymentBeforeDelivery!= ''){
-        setInput('bond_amt',(paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2))
-      }else{
-        setInput('bond_amt','')
-      }  
-  },[inputs.each_payment_amt]);
+  // useEffect(()=>{    
+  //     if(paymentBeforeDelivery!= ''){
+  //       setInput('bond_amt',(paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2))
+  //     }else{
+  //       setInput('bond_amt','')
+  //     }  
+  // },[inputs.each_payment_amt]);
 
-  console.log('inputs...',inputs);
   
 return (
     <div>
@@ -520,8 +519,7 @@ return (
                           <KeyboardTimePicker
                             margin="dense"
                             id="exp_delivery_time"
-                            name="exp_delivery_time"
-                            defaultValue = {""}
+                            name="exp_delivery_time"                            
                             value={inputs.exp_delivery_time}
                             onChange={handleDeliveryTime}
                             error={errors.exp_delivery_time}
@@ -535,8 +533,7 @@ return (
                           />
                       </MuiPickersUtilsProvider>
                   </Grid>               
-                <Grid item xs={12} sm={12}>
-                    
+                <Grid item xs={12} sm={12}>                    
                     <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {viewOnly}>
                       Save
                     </Button>

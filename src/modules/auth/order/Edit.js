@@ -429,7 +429,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   };
   
     
-  
+  console.log('fixed',fixedOrderList)
+  console.log('flex',flexOrderList)
+
   const selectedProductList = () => {
     return(
       <Paper style={{width : '100%'}}>

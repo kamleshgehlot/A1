@@ -117,10 +117,6 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
   const [otherExpenses, setOtherExpenses] = useState([]);
   const [weekDayList, setWeekDayList] = useState([]);
   
-  useEffect(() => {
-    getWeekDayList();
-  },[]);
-
   const getWeekDayList = async () => {
     const result = await StaticContentAPI.getWeekDayList({});
     setWeekDayList(result.weekDayList);
@@ -160,6 +156,7 @@ export default function Budget({ open, handleBudgetClose, budgetList, setBudgetL
 
   useEffect(() => {
     fetchExistingBudget();
+    getWeekDayList();
   },[]);
 
 
