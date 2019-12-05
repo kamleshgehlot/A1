@@ -24,7 +24,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableFooter from '@material-ui/core/TableFooter';
 
 import {TablePaginationActions} from '../../../common/Pagination';
-
+import {getDateInDDMMYYYY} from '../../../../utils/datetime';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -100,7 +100,7 @@ return (
           <StyledTableCell>{data.order_id}</StyledTableCell>
           <StyledTableCell>{data.customer_name}</StyledTableCell>
           <StyledTableCell>{data.mobile}</StyledTableCell>
-          <StyledTableCell>{data.order_date}</StyledTableCell>
+          <StyledTableCell>{getDateInDDMMYYYY(data.order_date)}</StyledTableCell>
           <StyledTableCell>{data.order_status_name}</StyledTableCell>
           <StyledTableCell>{data.refund_amt}</StyledTableCell>
           <StyledTableCell>{data.cancel_reason}</StyledTableCell>

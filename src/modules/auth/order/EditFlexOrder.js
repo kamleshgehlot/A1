@@ -193,17 +193,17 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   },[]);
 
 
-  useEffect(() => {
-    if(paymentBeforeDelivery!= ''){
-      handleRandomInput([
-        {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
-      ]);
-    }else{
-      handleRandomInput([
-        {name: 'bond_amt', value: ''},
-      ]);
-    }
-  },[paymentBeforeDelivery]);
+  // useEffect(() => {
+  //   if(paymentBeforeDelivery!= ''){
+  //     handleRandomInput([
+  //       {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
+  //     ]);
+  //   }else{
+  //     handleRandomInput([
+  //       {name: 'bond_amt', value: ''},
+  //     ]);
+  //   }
+  // },[paymentBeforeDelivery]);
 
   useEffect(()=>{
     let eachPaymentAmt = 0;
@@ -223,15 +223,15 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
         eachPaymentAmt = installment;          
       }
     }
-    if(paymentBeforeDelivery!= ''){
-      handleRandomInput([
-        {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
-      ]);
-    }else{
-      handleRandomInput([
-        {name: 'bond_amt', value: ''},
-      ]);
-    }              
+    // if(paymentBeforeDelivery!= ''){
+    //   handleRandomInput([
+    //     {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
+    //   ]);
+    // }else{
+    //   handleRandomInput([
+    //     {name: 'bond_amt', value: ''},
+    //   ]);
+    // }
 },[frequency]);
 
 
@@ -242,15 +242,15 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     validate
   ); 
   
-  // useEffect(()=>{
-  //   if(paymentBeforeDelivery!= ''){
-  //     setInput('bond_amt',(paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2))
-  //   }else{
-  //     setInput('bond_amt','')
-  //   }  
-  // },[inputs.each_payment_amt]);
+  useEffect(()=>{    
+      if(paymentBeforeDelivery!= ''){
+        setInput('bond_amt',(paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2))
+      }else{
+        setInput('bond_amt','')
+      }  
+  },[inputs.each_payment_amt]);
 
-  // console.log('inputs...',inputs);
+  console.log('inputs...',inputs);
   
 return (
     <div>

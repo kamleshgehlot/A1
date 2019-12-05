@@ -26,7 +26,7 @@ import PropTypes from 'prop-types';
 import DeleteIcon from '@material-ui/icons/Delete';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableFooter from '@material-ui/core/TableFooter';
-
+import {getDateInDDMMYYYY} from '../../../../utils/datetime';
 import {TablePaginationActions} from '../../../common/Pagination';
 
 
@@ -119,7 +119,7 @@ return (
           <StyledTableCell>{data.customer_name}</StyledTableCell>
           <StyledTableCell>{data.mobile}</StyledTableCell>
           {roleName != 'Delivery' ? 
-            <StyledTableCell>{data.order_date}</StyledTableCell>
+            <StyledTableCell>{getDateInDDMMYYYY(data.order_date)}</StyledTableCell>
           : ''}
           {roleName != 'Delivery' ? 
             <StyledTableCell>{data.order_status_name}</StyledTableCell>

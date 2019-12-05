@@ -46,6 +46,7 @@ import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
 import Customer from '../../../api/franchise/Customer';
+import StaticContentAPI from  '../../../api/StaticContent.js'
 import useSignUpForm from '../franchise/CustomHooks';
 import {getDate, getCurrentDate } from '../../../utils/datetime'
 import validate from '../../common/validation/OrderRuleValidation';
@@ -163,7 +164,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [totalOfRental, setTotalOfRental] = useState(0);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
-  
+  const [paymentModeList, setPaymentModeList] = useState([]);
   
   const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
   
@@ -238,7 +239,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
     fetchRentingForList();
     fetchSalesPersonList();
     fetchTotalProductList();
+    getPaymentModeList();
   },[]);
+
+  const getPaymentModeList = async () => {
+    const result = await StaticContentAPI.getPaymentModeList({});
+    setPaymentModeList(result.paymentModeList);
+  }
+
   
   const fetchSalesPersonList = async () =>{
     try {
@@ -799,15 +807,12 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                       helperText={errors.payment_mode}
                       required
                       disabled = {budgetList ==""}
-                    >    
-                      <MenuItem className={classes.textsize} value={1}>EasyPay</MenuItem>
-                      <MenuItem className={classes.textsize} value={2}>Credit</MenuItem>
-                      <MenuItem className={classes.textsize} value={3}>Debit</MenuItem>
-                      <MenuItem className={classes.textsize} value={4}>PayPal</MenuItem>
-                      <MenuItem className={classes.textsize} value={5}>Ezidebit</MenuItem>
-                      <MenuItem className={classes.textsize} value={6}>Debit</MenuItem>
-                      <MenuItem className={classes.textsize} value={7}>Auto Payment</MenuItem>
-                      <MenuItem className={classes.textsize} value={8}>Direct Deposit</MenuItem>
+                    >  
+                     {(paymentModeList != undefined && (paymentModeList.length > 0 ? paymentModeList : []).map((data,index) => {
+                        return(
+                          <MenuItem className={classes.textsize} value={data.id}>{data.payment_mode}</MenuItem>
+                        )
+                      }))}                       
                     </Select>
                    </Grid>
                     

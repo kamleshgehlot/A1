@@ -223,7 +223,6 @@ const getBudgetHistory = async function(req, res, next) {
 
 
 const updateBudget = async function(req, res, next) {  
-  // console.log('budget list', req.body);
   let orderParams ={
     user_id : req.decoded.user_id,
     customer_id: req.body.customer_id, 
@@ -233,8 +232,6 @@ const updateBudget = async function(req, res, next) {
   try {
     const newOrder = new Order(orderParams);
     const result = await newOrder.updateBudget();
-    // const result = await new Order({user_id : req.decoded.user_id, customer_id: req.body.customer_id, budget_list: req.body.budgetList, created_by: req.decoded.id}).updateBudget();
-    console.log('dasaf',orderParams.budget_list.budget_note);
     if(orderParams.budget_list.budget_note != "" && orderParams.budget_list.budget_note != undefined && result != ""){
       newOrder.budget_id = result.budget_id;
       newOrder.order_id = 0;

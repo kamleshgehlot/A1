@@ -40,8 +40,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function Active({productList, roleName}) {
-  console.log(productList)
+export default function Active({productList, roleName}) { 
   const styleClass = useCommonStyles();
 
   const [page, setPage] = React.useState(0);

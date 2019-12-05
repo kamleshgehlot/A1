@@ -49,6 +49,7 @@ const leadRouter = require('./routes/lead/lead');
 const profileRouter = require('./routes/setting/profile');
 const passwordRouter = require('./routes/setting/password');
 const ReportRouter = require('./routes/Report');
+
 // const PDFRouter = require('./routes/Pdf');
 
 // Franchise
@@ -57,6 +58,7 @@ const franchiseStaff = require('./routes/franchise/staff');
 const roleRouter = require('./routes/franchise/role');
 const enquiryRouter = require('./routes/franchise/enquiry');
 const orderRouter = require('./routes/franchise/order');
+const StaticContentRouter = require('./routes/staticContent');
 
 //Staff
 const franchiseuser = require('./routes/franchiseuser');
@@ -93,6 +95,7 @@ app.use('/api/franchise/role', roleRouter);
 app.use('/api/franchise/enquiry', enquiryRouter);
 app.use('/api/franchise/order', orderRouter);
 app.use('/api/report', ReportRouter);
+app.use('/api/staticcontent',StaticContentRouter)
 
 app.use('/api/download', function (req, res, nex) {
   try {

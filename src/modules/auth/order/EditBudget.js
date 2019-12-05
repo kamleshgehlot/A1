@@ -46,7 +46,7 @@ import BudgetCommentView from './BudgetCommentView';
 
 // API CALL
 import Order from '../../../api/franchise/Order';
-
+import StaticContentAPI from  '../../../api/StaticContent.js'
 import validate from '../../common/validation/BudgetValidation';
 import useSignUpForm from '../franchise/CustomHooks';
 const useStyles = makeStyles(theme => ({
@@ -124,8 +124,16 @@ export default function EditBudget({ open, handleBudgetClose, setBudgetList, bud
   const [openCommentView, setOpenCommentView]  = useState(false);
   const [otherIncome, setOtherIncome] = useState([]);
   const [otherExpenses, setOtherExpenses] = useState([]);
+  const [weekDayList, setWeekDayList] = useState([]);
 
+  useEffect(() => {
+    getWeekDayList();
+  },[]);
 
+  const getWeekDayList = async () => {
+    const result = await StaticContentAPI.getWeekDayList({});
+    setWeekDayList(result.weekDayList);
+  }
 
   function handleInputBlur(e){
     if(e.target.value===''){
@@ -929,7 +937,8 @@ return (
                     </Grid>
                   }
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day you get paid</InputLabel>
+                    {console.log('inputs',inputs)}
+                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day You Get Paid</InputLabel>
                     <Select
                         margin="dense"
                         onChange = {handleInputChange}
@@ -940,19 +949,19 @@ return (
                         fullWidth
                         error={errors.paid_day}
                         helperText={errors.paid_day}
-                        label="Day you get paid"
+                        label="Day You Get Paid"
                         required
                         disabled={isEditable === 0}
                       >
-                        <MenuItem className={classes.textsize} value={'Monday'}>{'Monday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Tuesday'}>{'Tuesday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Wednesday'}>{'Wednesday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Thursday'}>{'Thursday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Friday'}>{'Friday'}</MenuItem>
+                        {(weekDayList != undefined && (weekDayList.length > 0 ? weekDayList : []).map((data,index) => {
+                          return(
+                            <MenuItem className={classes.textsize} value={data.id}>{data.week_day}</MenuItem>
+                          )
+                        }))}
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="debited_day">Day you want to be debited</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="debited_day">Day Payment Debited</InputLabel>
                     <Select
                         margin="dense"
                         onChange = {handleInputChange}
@@ -963,15 +972,15 @@ return (
                         fullWidth
                         error={errors.debited_day}
                         helperText={errors.debited_day}
-                        label="Day you want to be debited"
+                        label="Day Payment Debited"
                         required
                         disabled={isEditable === 0}
                       >
-                        <MenuItem className={classes.textsize} value={'Monday'}>{'Monday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Tuesday'}>{'Tuesday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Wednesday'}>{'Wednesday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Thursday'}>{'Thursday'}</MenuItem>
-                        <MenuItem className={classes.textsize} value={'Friday'}>{'Friday'}</MenuItem>
+                        {(weekDayList != undefined && (weekDayList.length > 0 ? weekDayList : []).map((data,index) => {
+                          return(
+                            <MenuItem className={classes.textsize} value={data.id}>{data.week_day}</MenuItem>
+                          )
+                        }))}
                     </Select>
                   </Grid>
                   { (oldBudgetList.length > 0) ?

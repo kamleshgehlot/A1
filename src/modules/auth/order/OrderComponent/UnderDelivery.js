@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 
 import TablePagination from '@material-ui/core/TablePagination';
 import TableFooter from '@material-ui/core/TableFooter';
-
+import {getDateInDDMMYYYY} from '../../../../utils/datetime';
 import {TablePaginationActions} from '../../../common/Pagination';
 
 
@@ -101,7 +101,7 @@ return (
             <StyledTableCell>{data.order_id}</StyledTableCell>
             <StyledTableCell>{data.customer_name}</StyledTableCell>
             <StyledTableCell>{data.mobile}</StyledTableCell>
-            <StyledTableCell>{data.order_date}</StyledTableCell>
+            <StyledTableCell>{getDateInDDMMYYYY(data.order_date)}</StyledTableCell>
             <StyledTableCell>{data.order_status_name}</StyledTableCell>
             {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
             <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>

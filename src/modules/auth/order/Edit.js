@@ -46,9 +46,7 @@ import Order from '../../../api/franchise/Order';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
 import useSignUpForm from '../franchise/CustomHooks';
-import { FormLabel, InputBase } from '@material-ui/core';
-import { stringify } from 'querystring';
-import { string } from 'prop-types';
+import StaticContentAPI from  '../../../api/StaticContent.js'
 
 const RESET_VALUES = {
     
@@ -154,7 +152,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   const [salesPersonList, setSalesPersonList] = useState([]);
   const [totalProductList, setTotalProductList] = useState([]);
   const [totalOfRental, setTotalOfRental] = useState(0);
-  
+  const [paymentModeList, setPaymentModeList] = useState([]);
 
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
@@ -167,8 +165,14 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
     fetchRentingForList();
     fetchSalesPersonList();
     fetchTotalProductList();
+    getPaymentModeList();
   },[]);
   
+  const getPaymentModeList = async () => {
+    const result = await StaticContentAPI.getPaymentModeList({});
+    setPaymentModeList(result.paymentModeList);
+  }
+
   
   const fetchSalesPersonList = async () =>{
     try {
@@ -730,15 +734,12 @@ return (
                       required
                       className={classes.textsize}
                       disabled= {viewOnly}
-                    >    
-                      <MenuItem className={classes.textsize} value={1}>EasyPay</MenuItem>
-                      <MenuItem className={classes.textsize} value={2}>Credit</MenuItem>
-                      <MenuItem className={classes.textsize} value={3}>Debit</MenuItem>
-                      <MenuItem className={classes.textsize} value={4}>PayPal</MenuItem>
-                      <MenuItem className={classes.textsize} value={5}>Cash</MenuItem>
-                      <MenuItem className={classes.textsize} value={6}>Debit</MenuItem>
-                      <MenuItem className={classes.textsize} value={7}>Auto Payment</MenuItem>
-                      <MenuItem className={classes.textsize} value={8}>Direct Deposit</MenuItem>
+                    > 
+                      {(paymentModeList != undefined && (paymentModeList.length > 0 ? paymentModeList : []).map((data,index) => {
+                        return(
+                          <MenuItem className={classes.textsize} value={data.id}>{data.payment_mode}</MenuItem>
+                        )
+                      }))}
                     </Select>
                    </Grid>
                    
