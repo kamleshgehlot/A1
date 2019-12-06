@@ -308,18 +308,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
  
 
   function handleEmailVerification(event){
-    // console.log(event.target.value);
-    const email = event.target.value;
-    console.log('email--',email)
+    const email = event.target.value;    
     const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!validEmail.test(email)) {
-      errors.demail = 'Email Address is invalid';
+      // errors.demail = 'Email Address is invalid';
     }
     else{
-      
       errors.demail = '';
     }
-    // console.log('email--',errors.demail)
 
     const checkEmail = async () => {
       const response = await UserAPI.verifyEmail({email : email});

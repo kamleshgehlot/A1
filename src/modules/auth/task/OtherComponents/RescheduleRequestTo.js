@@ -23,6 +23,7 @@ import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
 import HistoryIcon from '@material-ui/icons/History';
+import {getDateInDDMMYYYY} from '../../../../utils/datetime.js';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -143,8 +144,8 @@ return (
           <StyledTableCell> {data.task_description}  </StyledTableCell>
           <StyledTableCell>  {data.assign_to_name + " (" + data.assign_to_role_name + ")"} </StyledTableCell>
           <StyledTableCell> {data.message}</StyledTableCell>
-          <StyledTableCell> {data.due_date}</StyledTableCell>
-          <StyledTableCell> {data.start_date}</StyledTableCell>          
+          <StyledTableCell> {getDateInDDMMYYYY(data.due_date)}</StyledTableCell>
+          <StyledTableCell> {getDateInDDMMYYYY(data.start_date)}</StyledTableCell>          
           {/* <StyledTableCell> {data.message}</StyledTableCell>
           <StyledTableCell>
             <a href={API_URL + "/api/download?path=taskFile/" + data.document }  download >{data.document}</a>                          

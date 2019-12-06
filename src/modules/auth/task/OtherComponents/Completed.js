@@ -24,7 +24,7 @@ import HistoryIcon from '@material-ui/icons/History';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
-
+import {getDateInDDMMYYYY} from '../../../../utils/datetime.js';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -147,9 +147,9 @@ export default function AssignedToMe({task, handleClickDelete, handleHistoryOpen
               <StyledTableCell> {data.task_description}  </StyledTableCell>
               <StyledTableCell> {data.assign_to_name + " (" + data.assign_to_role_name + ")"}</StyledTableCell>
               <StyledTableCell> {data.task_status_name}</StyledTableCell>
-              <StyledTableCell> {data.due_date}</StyledTableCell>
-              <StyledTableCell> {data.start_date}</StyledTableCell>
-              <StyledTableCell> {data.completed_date}</StyledTableCell>
+              <StyledTableCell> {getDateInDDMMYYYY(data.due_date)}</StyledTableCell>
+              <StyledTableCell> {getDateInDDMMYYYY(data.start_date)}</StyledTableCell>
+              <StyledTableCell> {getDateInDDMMYYYY(data.completed_date)}</StyledTableCell>
               {/* <StyledTableCell> {data.message}</StyledTableCell>
               <StyledTableCell>
                 <a href={API_URL + "/api/download?path=taskFile/" + data.document } download >{data.document}</a>                          

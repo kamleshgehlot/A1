@@ -20,6 +20,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 
 import Task from '../../../task/TaskList';
 import MainLayout from '../../../layout/MainLayout';
+import { getCurrentDateDBFormat, getDateInDDMMYYYY } from '../../../../../utils/datetime';
 // import useCommonStyles from '../../../../common/StyleComman';
 
 const StyledTableCell = withStyles(theme => ({
@@ -101,7 +102,7 @@ return (
           <StyledTableCell style={{minWidth: 50, align: 'left'}}>{data.task_id}</StyledTableCell>
           <StyledTableCell style={{minWidth: 250, align: 'left'}}>{data.task_description}</StyledTableCell>
           <StyledTableCell style={{minWidth: 200, align: 'left'}}> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
-          <StyledTableCell style={{minWidth: 150, align: 'left'}}>{data.due_date}</StyledTableCell>
+          <StyledTableCell style={{minWidth: 150, align: 'left'}}>{ getDateInDDMMYYYY(data.due_date)}</StyledTableCell>
           <StyledTableCell style={{minWidth: 100, align: 'left'}}> 
             <Button variant="text" size="small" color="primary" onClick={() => handleTaskClick(roleName, data)} style={{fontSize:'10px'}}>View</Button>
         </StyledTableCell>

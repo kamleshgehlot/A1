@@ -162,7 +162,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
         setRole(roleResult.role);
 
         const result = await Task.last();
-        // console.log('en',result);
         let zero = 0;
         if(result[0]!=null){ 
           zero = 6 - (result[0].id.toString().length); 
@@ -225,7 +224,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, setTaskLis
     const response = await FranchiseUsers.staffRoleList({
       selectedRole:selectedRole
     });
-    // console.log('response.staffList====',response.staffList);
     setStaffList(response.staffList);
     setOtherDisable(false);
   };
@@ -248,7 +246,6 @@ function handleDate(date){
     validate
   );
 
-  // console.log('task add',inputs)
 
 return (
     <div>

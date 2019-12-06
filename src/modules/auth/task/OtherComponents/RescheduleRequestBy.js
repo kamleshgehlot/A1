@@ -23,7 +23,7 @@ import HistoryIcon from '@material-ui/icons/History';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
-
+import {getDateInDDMMYYYY} from '../../../../utils/datetime.js';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -142,7 +142,7 @@ return (
           <StyledTableCell> {data.task_description}  </StyledTableCell>
           <StyledTableCell> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
           <StyledTableCell> {data.task_status_name}</StyledTableCell>
-          <StyledTableCell> {data.reschedule_req_date}</StyledTableCell>
+          <StyledTableCell> {getDateInDDMMYYYY(data.reschedule_req_date)}</StyledTableCell>
           {/* <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell> */}
           <StyledTableCell>
             <Tooltip title="View History">                              

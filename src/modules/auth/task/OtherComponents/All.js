@@ -23,7 +23,7 @@ import HistoryIcon from '@material-ui/icons/History';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
 import PropTypes from 'prop-types';
-
+import {getDateInDDMMYYYY} from '../../../../utils/datetime.js';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -144,7 +144,7 @@ export default function All({task, dateToday, handleHistoryOpen }) {
               <StyledTableCell> {data.assign_to_name + " (" + data.assign_to_role_name + ")"}</StyledTableCell>
               <StyledTableCell> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
               <StyledTableCell> {data.task_status_name}</StyledTableCell>
-              <StyledTableCell> <p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>            
+              <StyledTableCell> <p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{getDateInDDMMYYYY(data.due_date)}</p></StyledTableCell>            
               <StyledTableCell>
                 <Tooltip title="View History">                              
                       <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>

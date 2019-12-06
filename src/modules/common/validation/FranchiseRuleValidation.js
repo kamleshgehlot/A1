@@ -26,7 +26,7 @@ export default function validate(values) {
     
     errors.nbzn = 'NZBN is invalid';
   }
-  console.log('errors',errors)
+  
   if (!values.company_location) {
     errors.company_location = 'Company Location is required';
   }
