@@ -750,7 +750,9 @@ return (
                       type="file"
                       value={inputs.id_proof} 
                       onChange={handleInputChange}
-                      // required
+                      error={errors.id_proof}
+                      helperText={errors.id_proof}
+                      required
                       fullWidth
                     />
                   </Grid>

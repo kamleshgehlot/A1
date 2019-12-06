@@ -704,6 +704,7 @@ export default function Order({roleName}) {
                 name="search"
                 placeholder = "Type (OrderId/Ezidebit UId) to Search Order..."
                 type="text"
+                autoComplete='off'
                 value={searchText} 
                 onKeyPress={(ev) => {
                   if (ev.key ===  'Enter') {

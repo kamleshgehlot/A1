@@ -342,9 +342,9 @@ Customer.prototype.addBankDetail = function () {
 
         const detailList = that.bankDetailData;
         let bankDetailValues = [
-           [that.customer_id, detailList.acc_holder_name, detailList.bank_branch, detailList.bank_address, detailList.bank_code, detailList.branch_number, detailList.acc_number, detailList.suffix, 1, that.created_by]
+           [that.customer_id, detailList.acc_holder_name, detailList.institution_name, detailList.bank_branch, detailList.bank_address, detailList.bank_code, detailList.branch_number, detailList.acc_number, detailList.suffix, 1, that.created_by]
         ];
-        connection.query('INSERT INTO customer_bank_detail(customer_id, acc_holder_name, bank_branch, bank_address, bank_code, branch_number, acc_number, suffix, is_active, created_by) VALUES ?', [bankDetailValues], function (error, rows, fields) {
+        connection.query('INSERT INTO customer_bank_detail(customer_id, acc_holder_name, institution_name, bank_branch, bank_address, bank_code, branch_number, acc_number, suffix, is_active, created_by) VALUES ?', [bankDetailValues], function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {
@@ -376,9 +376,9 @@ Customer.prototype.updateBankDetail = function () {
 
         const detailList = that.bankDetailData;
         // let bankDetailValues = [
-        //    [detailList.acc_holder_name, detailList.bank_branch, detailList.bank_address, detailList.bank_code, detailList.branch_number, detailList.acc_number, detailList.suffix, 1, that.created_by]
+        //    [detailList.acc_holder_name, detailList.institution_name, detailList.bank_branch, detailList.bank_address, detailList.bank_code, detailList.branch_number, detailList.acc_number, detailList.suffix, 1, that.created_by]
         // ];
-        connection.query('UPDATE customer_bank_detail SET acc_holder_name = "'+detailList.acc_holder_name+'", bank_branch = "'+detailList.bank_branch+'", bank_address = "'+detailList.bank_address+'", bank_code = "'+detailList.bank_code+'", branch_number = "'+detailList.branch_number+'", acc_number = "'+detailList.acc_number+'", suffix = "'+detailList.suffix+'", is_active = 1, updated_by = "'+that.updated_by+'" where customer_id = "'+ that.customer_id +'"', function (error, rows, fields) {
+        connection.query('UPDATE customer_bank_detail SET acc_holder_name = "'+detailList.acc_holder_name+'", institution_name = "' + detailList.institution_name + '", bank_branch = "'+detailList.bank_branch+'", bank_address = "'+detailList.bank_address+'", bank_code = "'+detailList.bank_code+'", branch_number = "'+detailList.branch_number+'", acc_number = "'+detailList.acc_number+'", suffix = "'+detailList.suffix+'", is_active = 1, updated_by = "'+that.updated_by+'" where customer_id = "'+ that.customer_id +'"', function (error, rows, fields) {
           if (!error) {
             resolve(rows);
           } else {
@@ -509,7 +509,7 @@ Customer.prototype.getCustomerBankDetail = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('select id, customer_id, acc_holder_name, bank_branch, bank_address, bank_code, branch_number, acc_number, suffix, is_active, status, created_by, created_at from customer_bank_detail where customer_id = "' + that.customer_id + '"', function (error, rows, fields) {
+          connection.query('select id, customer_id, acc_holder_name, institution_name, bank_branch, bank_address, bank_code, branch_number, acc_number, suffix, is_active, status, created_by, created_at from customer_bank_detail where customer_id = "' + that.customer_id + '"', function (error, rows, fields) {
             if (!error) {
               resolve(rows);
             } else {

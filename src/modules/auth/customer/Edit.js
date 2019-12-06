@@ -293,6 +293,7 @@ function handleDate(date){
     validate
   ); 
 
+  console.log('inu',inputs)
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -480,7 +481,7 @@ function handleDate(date){
                       error={errors.email}
                       helperText={errors.email}
                       required
-                      disabled
+                      disabled = {inputs.is_verified === 1}
                       fullWidth
                       type="email"
                     />

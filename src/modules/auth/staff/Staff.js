@@ -217,6 +217,7 @@ export default function Staff({roleName}) {
               name="search"
               placeholder = "Type (UserId/First Name/Last Name/Location/Email/Contact/Position) to Search Staff..."
               value={searchText} 
+              autoComplete='off'
               onKeyPress={(ev) => {
                 if (ev.key ===  'Enter') {
                   searchHandler()

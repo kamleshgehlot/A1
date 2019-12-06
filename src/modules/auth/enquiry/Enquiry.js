@@ -294,6 +294,7 @@ export default function Enquiry({roleName}) {
                 placeholder = "Type (Enquiry Id/Customer Name/Contact) to Search Enquiry..."
                 type="text"
                 value={searchText} 
+                autoComplete='off'
                 onKeyPress={(ev) => {
                   if (ev.key ===  'Enter') {
                     searchHandler()

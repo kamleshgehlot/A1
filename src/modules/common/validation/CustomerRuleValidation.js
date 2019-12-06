@@ -162,6 +162,9 @@ export default function validate(values) {
     errors.employer_tenure = 'Tenure of Employer is invalid';
   }
 
-  
+  if (!values.id_proof) {
+    errors.id_proof = 'Identity Document is required';
+  }
+
   return errors;
 };

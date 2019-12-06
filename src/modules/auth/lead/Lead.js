@@ -390,6 +390,7 @@ export default function Lead({roleName, showLeadData}) {
               name="search"
               placeholder = "Type (LeadId/Franchise Name/Customer Name/Contact) to Search Lead..."
               type="text"
+              autoComplete='off'
               value={searchText} 
               onKeyPress={(ev) => {
                 if (ev.key ===  'Enter') {

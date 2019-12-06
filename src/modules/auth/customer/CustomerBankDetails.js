@@ -34,6 +34,7 @@ import {getDate, getCurrentDate} from '../../../utils/datetime';
 
 const RESET_VALUES = {
   acc_holder_name : '',
+  institution_name : '',
   bank_branch : '',
   bank_address : '',  
   bank_code : '',
@@ -129,6 +130,7 @@ export default function CustomerBankDetails({ open, handleClose, handleSnackbarC
     const data = {
       customer_id : customer_id,
       acc_holder_name : inputs.acc_holder_name,
+      institution_name : inputs.institution_name,
       bank_branch : inputs.bank_branch,
       bank_address : inputs.bank_address,  
       bank_code : inputs.bank_code,
@@ -194,6 +196,26 @@ return (
                   onChange={handleInputChange}
                   error={errors.acc_holder_name}
                   helperText={errors.acc_holder_name}
+                  fullWidth
+                  required
+                  type="text"
+                  margin="dense"
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <InputLabel  className={classes.textsize} htmlFor="institution_name">Financial Institution Name *</InputLabel>
+                <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.textsize,
+                    },
+                  }}
+                  id="institution_name"
+                  name="institution_name"
+                  value={inputs.institution_name}
+                  onChange={handleInputChange}
+                  error={errors.institution_name}
+                  helperText={errors.institution_name}
                   fullWidth
                   required
                   type="text"
@@ -331,7 +353,7 @@ return (
                   type="text"
                   margin="dense"
                   onInput={(e)=>{ 
-                    e.target.value =(e.target.value).toString().slice(0,2)
+                    e.target.value =(e.target.value).toString().slice(0,3)
                   }}
                 />
               </Grid>

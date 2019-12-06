@@ -65,7 +65,7 @@ Product.prototype.all = function () {
       }
 
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select DISTINCT(p.description), name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id order by id desc', function (error, rows, fields) {
+      connection.query('select p.name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.description, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id GROUP BY p.description order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 
@@ -125,7 +125,7 @@ Product.prototype.archivedList = function () {
         throw error;
       }
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select DISTINCT(p.description), name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id where status = 3order by id desc', function (error, rows, fields) {
+      connection.query('select p.name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.description, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id where p.status = 3 GROUP BY p.description order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
         } else {
@@ -151,7 +151,7 @@ Product.prototype.relatedProductList = function () {
       if(!error){
       connection.changeUser({ database: dbName["prod"] });
       
-      connection.query('select DISTINCT(p.description), name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id where subcat =  "'+that.subcategory+'" order by id desc', function (error, rows, fields) {
+      connection.query('select p.name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.description, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id where subcat =  "'+that.subcategory+'" GROUP BY p.description order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
 
@@ -179,7 +179,7 @@ Product.prototype.searchData = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName["prod"] });        
-        connection.query('select DISTINCT(p.description), name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id WHERE p.name LIKE "%'+that.searchText+'%" OR p.brought LIKE "%'+that.searchText+'%" OR p.invoice LIKE "%'+that.searchText+'%" OR p.status LIKE "%'+that.searchText+'%" OR p.meta_keywords LIKE "%'+that.searchText+'%" OR p.description LIKE "%'+that.searchText+'%" order by p.id desc',
+        connection.query('select p.name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.description, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id WHERE p.name LIKE "%'+that.searchText+'%" OR p.brought LIKE "%'+that.searchText+'%" OR p.invoice LIKE "%'+that.searchText+'%" OR p.status LIKE "%'+that.searchText+'%" OR p.meta_keywords LIKE "%'+that.searchText+'%" OR p.description LIKE "%'+that.searchText+'%"  GROUP BY p.description order by p.id desc',
         function (error, rows, fields) {
             if (!error) {
                 resolve(rows);

@@ -260,6 +260,7 @@ export default function ProductList({roleName}) {
               name="search"
               placeholder = "Type (Product Name/Bought From/Invoice Number/Meta Keywords/Description) to Search Product..."
               type="text"
+              autoComplete='off'
               value={searchText} 
               onKeyPress={(ev) => {
                 if (ev.key ===  'Enter') {

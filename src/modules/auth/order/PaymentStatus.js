@@ -502,7 +502,7 @@ return (
               <Typography variant="h6" className={classes.labelTitle}>
                 {/* {"Rental Product :  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name} */}
                 {"Rental Product :  " + (orderedProductList.length > 0 ? orderedProductList :[]).map(data => {
-                  return(data.name + ', ')
+                  return(data.name)
                 })}
               </Typography>                  
             </Grid>

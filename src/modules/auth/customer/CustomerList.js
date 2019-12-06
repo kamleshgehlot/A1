@@ -448,6 +448,7 @@ export default function CustomerList({userId, roleName}) {
                 name="search"
                 placeholder ="Type (Id/Name/Address/City/Postcode/Telephone/Mobile/DOB) to Search Customer..."
                 type="text"
+                autoComplete='off'                
                 value={searchText} 
                 onKeyPress={(ev) => {
                   if (ev.key ===  'Enter') {

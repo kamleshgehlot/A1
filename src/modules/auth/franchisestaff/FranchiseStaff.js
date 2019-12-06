@@ -266,6 +266,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
                 margin="dense"
                 id="search"
                 name="search"
+                autoComplete='off'
                 placeholder = "Type (UserId/First Name/Last Name/Location/Email/Contact) to Search Staff..."
                 type="text"
                 value={searchText} 
