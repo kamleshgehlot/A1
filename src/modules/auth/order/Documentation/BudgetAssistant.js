@@ -214,7 +214,7 @@ export default function layout(data,order) {
                [ { image: logo, fit: [150, 150], style: styles.Header2Center},
                  {text: '\nBUDGET ASSISTANT', style: styles.Header2Center, bold: true }, 
                ],
-               { text: '\n\n\n\n\n___________________________', style: styles.Header3Center},
+               { text: [{ text: '\n\n\n\n\n' + order.order_id + '\n', style: styles.Header1Center, bold: true }, { text: '___________________________', style: styles.Header3Center}, ]},
             ]
           },
           '\n',

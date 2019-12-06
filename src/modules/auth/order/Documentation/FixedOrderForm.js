@@ -217,8 +217,8 @@ export default function FixedOrderForm(data,order) {
                   { text: 'PAYMENT METHOD & FREQUENCY: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0', colSpan: 3},{},{}
                 ],
                 [
-                  { text: 'DAY YOU GET PAID [ ' + budget[0].paid_day + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
-                  { text: 'DAY PAYMENT DEBITED [ ' + budget[0].debited_day + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
+                  { text: 'DAY YOU GET PAID [ ' + budget[0].paid_day_name + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
+                  { text: 'DAY PAYMENT DEBITED [ ' + budget[0].debited_day_name + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
                   { text: 'PAYMENT START DATE: ' +  getDateInDDMMYYYY(orderType[0].first_payment),  bold: true, alignment: screenLeft, fontSize: 8 }, 
                 ],
                 [
@@ -280,7 +280,7 @@ export default function FixedOrderForm(data,order) {
                     { text: customer[0].customer_name , alignment: screenLeft,  bold: true, fontSize:9}, 
                     { text: ' agree to RENT-PURCHASE THE GOOD(s) above on the terms and conditions in this RENT-FIX CONTRACT and in the general terms and conditions and confirm to the best of my knowledge that all the above information is true and correct.', alignment: screenLeft,  bold: true, fontSize:8},                    
                     { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
-                    { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDate(), alignment: screenLeft,  bold: true, fontSize:8},
+                    { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDateDDMMYYYY(), alignment: screenLeft,  bold: true, fontSize:8},
                   ]}
                 ],
               ]
@@ -297,7 +297,7 @@ export default function FixedOrderForm(data,order) {
                 [
                   {style:styles.margins, text: [  
                     { text: 'Summary of your right to cancel under section 36F(1) of the Fair Trading Act 1986',italics: true, alignment: screenLeft,  bold: true, fontSize:8},                    
-                    { text: '\\t\t\t\tThe Fair Trading Act 1986 gives you a right to cancel this Rent-Fix Contract: at any time before you take possession of the Goods; and in any way (including oral or written) that shows your intention to cancel or withdraw from this Rent-Fix Contract.', alignment: screenLeft,  fontSize:8},                    
+                    { text: '\t\t\t\tThe Fair Trading Act 1986 gives you a right to cancel this Rent-Fix Contract: at any time before you take possession of the Goods; and in any way (including oral or written) that shows your intention to cancel or withdraw from this Rent-Fix Contract.', alignment: screenLeft,  fontSize:8},                    
                    
 
                     { text: '\nSummary of your right to cancel under Section 36M(1) of the Fair Trading Act 1986:',italics: true, alignment: screenLeft, bold: true,  fontSize:8},

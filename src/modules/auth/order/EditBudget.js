@@ -306,11 +306,14 @@ export default function EditBudget({ open, handleBudgetClose, setBudgetList, bud
     
   if(oldBudgetList!= '' && isEditable === 1){
         let sum = oldBudgetList.reduce((acc, val) =>{
-          return (val.is_active == 1 ? acc + val.afford_amt : acc )
+          return (val.is_active == 1 ? acc + val.each_payment_amt : acc )
         }, 0 );
         setOldBudget(sum);
-    }else{
-      setOldBudget(inputs.pre_order_exp);
+    }else if(oldBudgetList!= '' && isEditable === 0){  
+        let sum = oldBudgetList.reduce((acc, val) =>{
+          return (val.is_active == 1  && budgetList.id > val.id ? acc + val.each_payment_amt : acc )
+        }, 0 );
+      setOldBudget(sum);      
     }
   });
 
@@ -331,9 +334,9 @@ export default function EditBudget({ open, handleBudgetClose, setBudgetList, bud
     }    
     
    
-    inputs.income = parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare) + parseFloat(otherIncomeTotal);
-    inputs.expenditure = parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.vehicle_fuel) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(oldBudget) + parseFloat(otherExpensesTotal);
-    inputs.surplus = inputs.income - inputs.expenditure;      
+    inputs.income = Number(parseFloat(inputs.work) + parseFloat(inputs.benefits) + parseFloat(inputs.accomodation) + parseFloat(inputs.childcare) + parseFloat(otherIncomeTotal)).toFixed(2);
+    inputs.expenditure = Number(parseFloat(inputs.rent) + parseFloat(inputs.power) + parseFloat(inputs.telephone) + parseFloat(inputs.mobile) + parseFloat(inputs.vehicle) + parseFloat(inputs.vehicle_fuel) + parseFloat(inputs.transport) + parseFloat(inputs.food) + parseFloat(inputs.credit_card) + parseFloat(inputs.loan) + parseFloat(oldBudget) + parseFloat(otherExpensesTotal)).toFixed(2);
+    inputs.surplus = Number(inputs.income - inputs.expenditure).toFixed(2);      
   }
 
  
@@ -941,7 +944,7 @@ return (
                     <Select
                         margin="dense"
                         onChange = {handleInputChange}
-                        value={inputs.paid_day}
+                        value={parseInt(inputs.paid_day)}
                         name = 'paid_day'
                         id = 'paid_day'
                         className={classes.drpdwn}
@@ -964,7 +967,7 @@ return (
                     <Select
                         margin="dense"
                         onChange = {handleInputChange}
-                        value={inputs.debited_day}
+                        value={parseInt(inputs.debited_day)}
                         name = 'debited_day'
                         id = 'debited_day'
                         className={classes.drpdwn}
@@ -982,33 +985,41 @@ return (
                         }))}
                     </Select>
                   </Grid>
-                  { (oldBudgetList.length > 0) ?
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="h6" className={classes.labelTitle}>
-                      Total Amt. of Orders Going on Rent:
-                    </Typography>
-                  </Grid>
-                  : null
+                  { (oldBudgetList.length > 0) &&
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant="h6" className={classes.labelTitle}>
+                        Total Amt. of Orders Going on Rent:
+                      </Typography>
+                    </Grid>                  
                   }
                   { (oldBudgetList.length > 0) ?
-                  <Grid item xs={12} sm={6}>
-                      { oldBudgetList.length > 0 && isEditable === 1 ? 
+                    <Grid item xs={12} sm={6}>
+                      { isEditable === 1 &&
                         oldBudgetList.map(data =>{
+                          if(data.is_active == 1)
                           return(
                             <Typography variant="h6" className={classes.labelTitle} align="right">
                               <IconButton size="small" className={classes.labelTitle} style={{color: 'blue', marginTop : -7}} value={data.id} name={data.id} onClick={(event) => { handleOrderViewFromBudget(data); }}>
-                                {data.is_active == 1 ? ( "OrderId: " + data.order_id + '  ($' +(data.afford_amt) + ')') :''}
+                                {( "OrderId: " + data.order_id + '  ($' +(data.each_payment_amt) + ')')}
                               </IconButton>
                             </Typography>                           
                           )
                         })
-                        : null
-                          // <Typography variant="h6" className={classes.labelTitle}  align="right">
-                          //    {( "OrderId: " + inputs.order_id + '  ($' +(inputs.pre_order_exp) + ')')}
-                          // </Typography>
+                      }
+                      { isEditable === 0 &&
+                        oldBudgetList.map(data =>{
+                          if(data.is_active == 1 && budgetList.id > data.id)
+                            return(
+                              <Typography variant="h6" className={classes.labelTitle} align="right">
+                                <IconButton size="small" className={classes.labelTitle} style={{color: 'blue', marginTop : -7}} value={data.id} name={data.id} onClick={(event) => { handleOrderViewFromBudget(data); }}>
+                                  {( "OrderId: " + data.order_id + '  ($' +(data.each_payment_amt) + ')')}
+                                </IconButton>
+                              </Typography>                           
+                            )
+                          })                         
                       }
                       <Typography variant="h6" className={classes.labelTitle}  align="right">
-                        {"Total:  $" + oldBudget }
+                        {"Total:  $" +  Number(oldBudget).toFixed(2) }
                       </Typography>
                   </Grid>
                   : null

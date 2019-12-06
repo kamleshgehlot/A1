@@ -256,10 +256,13 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
 
         const product = await Category.RelatedproductList({subcategory:productCategory[2]});
         setProductList(product.productList);
-       
       
-        const budget = await Order.getCurrespondingBudget({customer_id: editableData.customer_id, budgetId: editableData.budget_id});
-        setBudgetList(budget[0]);
+        const budget = await Order.getExistingBudget({customer_id: editableData.customer_id});
+        (budget != undefined && budget != ""  && budget != [] ? budget : []).map((data) =>{
+          if(data.id === editableData.budget_id){
+            setBudgetList(data);
+          }
+        });        
         setTotalBudgetList(budget);
 
 

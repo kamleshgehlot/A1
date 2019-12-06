@@ -2,7 +2,7 @@ const StaticContent = require('../models/staticContent');
 
 const getWeekDayList = async function(req, res, next) {
   try {
-    const result = await new StaticContent({}).getWeekDayList();
+    const result = await new StaticContent({user_id: req.decoded.user_id}).getWeekDayList();
     res.send({ weekDayList : result });
   } catch (error) {
     next(error);
@@ -11,7 +11,7 @@ const getWeekDayList = async function(req, res, next) {
 
 const getPaymentModeList = async function(req, res, next) {
   try {
-    const result = await new StaticContent({}).getPaymentModeList();
+    const result = await new StaticContent({user_id: req.decoded.user_id}).getPaymentModeList();
     res.send({ paymentModeList : result });
   } catch (error) {
     next(error);

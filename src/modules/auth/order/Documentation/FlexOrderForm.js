@@ -216,8 +216,8 @@ export default function flexOrderForm(data,order) {
                   { text: 'PAYMENT METHOD & FREQUENCY: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0', colSpan: 3},{},{}
                 ],
                 [
-                   { text: 'DAY YOU GET PAID [ ' + budget[0].paid_day + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
-                  { text: 'DAY PAYMENT DEBITED [ ' + budget[0].debited_day + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
+                   { text: 'DAY YOU GET PAID [ ' + budget[0].paid_day_name + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
+                  { text: 'DAY PAYMENT DEBITED [ ' + budget[0].debited_day_name + ' ]',  bold: true, alignment: screenLeft, fontSize: 8 }, 
                   { text: 'PAYMENT START DATE: ' +  getDateInDDMMYYYY(orderType[0].first_payment),  bold: true, alignment: screenLeft, fontSize: 8 }, 
                 ],
                 [

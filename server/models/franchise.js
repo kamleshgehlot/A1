@@ -58,7 +58,7 @@ const budget_comment = "CREATE TABLE IF NOT EXISTS `budget_comment` ( `id` INT(1
 const payments = "CREATE TABLE IF NOT EXISTS `payments` (`id` int(11) NOT NULL AUTO_INCREMENT, `bankFailedReason` text NOT NULL, `bankReceiptID` varchar(50) NOT NULL, `bankReturnCode` varchar(5) NOT NULL, `customerName` varchar(100) NOT NULL, `debitDate` datetime NOT NULL, `eziDebitCustomerID` varchar(10) NOT NULL, `invoiceID` varchar(10) NOT NULL, `paymentAmount` double NOT NULL, `paymentID` varchar(10) NOT NULL, `paymentMethod` varchar(3) NOT NULL, `paymentReference` varchar(50) NOT NULL, `paymentSource` varchar(10) NOT NULL, `paymentStatus` varchar(2) NOT NULL, `settlementDate` datetime NOT NULL, `scheduledAmount` double NOT NULL, `transactionFeeClient` double NOT NULL, `transactionFeeCustomer` double NOT NULL, `transactionTime` time NOT NULL, `yourGeneralReference` varchar(50) NOT NULL, `yourSystemReference` varchar(50) NOT NULL, `status` int(11) DEFAULT NULL, `is_active` int(11) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const paymentstatus = "CREATE TABLE IF NOT EXISTS `paymentstatus` (`id` int(11) NOT NULL AUTO_INCREMENT, `paymentReference` varchar(50) NOT NULL, `data` varchar(2) NOT NULL, `error` varchar(500) NOT NULL, `errorMessage` text NOT NULL, `is_active` int(11) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const payment_schedule = "CREATE TABLE IF NOT EXISTS `payment_schedule` (`id` int(11) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `payment_date` datetime DEFAULT NULL, `status` int(11) DEFAULT NULL, `is_active` int(11) DEFAULT NULL, `remark` TEXT DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
-
+const weekDayList = "CREATE TABLE `week_day_list` (`id` int(11) NOT NULL AUTO_INCREMENT, `week_day` varchar(20) DEFAULT NULL, `is_active` tinyint(1) DEFAULT '1', `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 
 
 
@@ -111,16 +111,16 @@ Franchise.prototype.register = function (newUser) {
 
 
                 let pay_mode = [
-                  [1, 'EasyPay', 1],
-                  [2, 'Credit', 1],
-                  [3, 'Debit', 1],
+                  [1, 'EasyPay', 0],
+                  [2, 'Credit Card', 1],
+                  [3, 'Debit Card', 1],
                   [4, 'PayPal', 1],
                   [5, 'Cash', 1],
                   [6, 'Ezidebit', 1],
                   [7, 'Auto Payment', 1],
                   [8, 'Direct Deposit', 1],
                 ]
-
+                
                 let order_status_data = [
                   [1, 'Created'],
                   [2, 'In Progress'],
@@ -170,9 +170,6 @@ Franchise.prototype.register = function (newUser) {
                   [10, 'Paid Leads', 1],
                 ]
  
-
-
-
                 let renting_for_list_data = [
                   [1, 'Personal Use', 1],
                   [2, 'Liesure', 1],
@@ -180,6 +177,16 @@ Franchise.prototype.register = function (newUser) {
                   [4, 'Gift', 1],
                   [5, 'Essential', 1],
                   [6, 'Other', 1],
+                ]
+
+                let week_day_list = [
+                  [1, 'Monday', 1],
+                  [2, 'Tuesday', 1],
+                  [3, 'Wednesday', 1],
+                  [4, 'Thursday', 1],
+                  [5, 'Friday', 1],
+                  [6, 'Saturday', 0],
+                  [7, 'Sunday', 0],
                 ]
                 
                 
@@ -217,6 +224,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(payments, function (err) { if (err) { console.log('payments Table Create Time Error: ', err) } });
                 connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });
                 connection.query(payment_schedule, function (err) { if (err) { console.log('payment_schedule Table Create Time Error: ', err) } });
+                connection.query(weekDayList, function (err) { if (err) { console.log('weekDayList Table Create Time Error: ', err) } });
                 
                 // connection.query(document_for_payment, function (err) { if (err) { console.log('document_for_payment Table Create Time Error: ', err) } });
                 // connection.query(comment_on_payment, function (err) { if (err) { console.log('comment_on_payment Table Create Time Error: ', err) } });
@@ -231,6 +239,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query('INSERT INTO `task_activity_status`(`id`, `activity`) VALUES ?', [task_activity_status_data], function (error, rows, fields) { if (error) { console.log('Task Activity Status Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `sales_type_list`(`id`, `sales_type_name`, `is_active`) VALUES ?', [sales_type_list_data], function (error, rows, fields) { if (error) { console.log('sales_type_list_data Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `renting_for_list`(`id`, `renting_for_name`, `is_active`) VALUES ?', [renting_for_list_data], function (error, rows, fields) { if (error) { console.log('renting_for_list_data Insert Time Error: ', error) } });
+                connection.query('INSERT INTO `week_day_list`(`id`, `week_day`, `is_active`) VALUES ?', [week_day_list], function (error, rows, fields) { if (error) { console.log('week_day_list Insert Time Error: ', error) } });
 
 
                 connection.changeUser({ database: dbName["prod"] });
