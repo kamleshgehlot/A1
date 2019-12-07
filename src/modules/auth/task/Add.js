@@ -301,8 +301,8 @@ return (
                       value={inputs.due_date}
                       fullWidth 
                       onChange={handleDate}
-                      // error={errors.due_date}
-                      // helperText={errors.due_date}
+                      error={errors.due_date}
+                      helperText={errors.due_date}
                     />
                 </MuiPickersUtilsProvider>              
                 </Grid>
@@ -319,13 +319,10 @@ return (
                       fullWidth
                       error={errors.assign_role}
                       helperText={errors.assign_role}
-                      // required
                     >
-                      {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
-                      {role.map((ele,index) =>{
-                        return(
-                        <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>
-                        )
+                      {roleName === 'Admin' && <MenuItem className={classes.textsize} value={2}>Director</MenuItem>}
+                      {role.map((ele) =>{
+                        return( <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem> )
                       })}
                     </Select>
                 </Grid>
@@ -363,17 +360,14 @@ return (
                         }}
                         id="task_description"
                         name="task_description"
-                        // label="Task Description"
                         value={inputs.task_description}
                         onChange={handleInputChange}
                         error={errors.task_description}
                         helperText={errors.task_description}
                         fullWidth
-                        // required 
                         className={classes.tbrow}
                         type="text"
                         multiline
-                        // placeholder="Franchise Name"
                         margin="dense"
                       />                  
                   </Grid>
@@ -387,17 +381,14 @@ return (
                         }}
                         id="message"
                         name="message"
-                        // label="Task Description"
                         value={inputs.message}
                         onChange={handleInputChange}
                         error={errors.message}
                         helperText={errors.message}
                         fullWidth
-                        // required 
                         className={classes.tbrow}
                         type="text"
                         multiline
-                        // placeholder="Franchise Name"
                         margin="dense"
                       />                  
                   </Grid>
@@ -411,12 +402,10 @@ return (
                     }}
                     id="document"
                     name="document"
-                    // label="Task Id"
                     value={inputs.document}
                     onChange={handleInputChange}
                     fullWidth
                     type="file"
-                    // placeholder="Franchise Name"
                     margin="dense"
                   />                 
                   </Grid>

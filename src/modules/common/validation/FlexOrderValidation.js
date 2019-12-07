@@ -1,4 +1,5 @@
 import { validString, validNumber, validFullLengthDecimalNumber, validEmail, validAlpha } from './Regex';
+import {checkFutureDate, checkPastDate} from '../../../utils/datetime.js';
 
 export default function validate(values) {
   let errors = {};
@@ -63,16 +64,19 @@ export default function validate(values) {
     errors.before_delivery_amt = 'Amount is invalid';
   }
 
-  if(values.first_payment === ""){
+  if(!values.first_payment){
     errors.first_payment = 'First Payment Date is Required';
+  }else if(checkFutureDate(values.first_payment)){
+    errors.first_payment = 'First Payment Date is invalid';
   }
-  if(values.last_payment === ""){
-    errors.last_payment = 'Last Payment Date is Required';
-  }
-  if(values.exp_delivery_date === ""){
+
+  if(!values.exp_delivery_date){
     errors.exp_delivery_date = 'Delivery Date is Required';
+  }else if(checkFutureDate(values.exp_delivery_date)){
+    errors.exp_delivery_date = 'Delivery Date is invalid';
   }
-  if(values.exp_delivery_time === ""){
+  
+  if(!values.exp_delivery_time){
     errors.exp_delivery_time = 'Delivery Time Date is Required';
   }
  

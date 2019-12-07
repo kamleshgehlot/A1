@@ -578,8 +578,8 @@ function handleDate(date){
                                   },
                                 }}
                                 onChange={handleDate}
-                                // error={errors.dob}
-                                // helperText={errors.dob}                               
+                                error={errors.dob}
+                                helperText={errors.dob}                               
                               />
                       </MuiPickersUtilsProvider>
                       {inputs.is_adult === 1 && inputs.dob != "" ?  <p className={classes.dobMsg} style={{'color':'#75C019'}} A2B631>Person is over 18 year</p> 
@@ -675,8 +675,8 @@ function handleDate(date){
                             },
                           }}
                           onChange={handleExpiryDate}
-                          // error={errors.expiry_date}
-                          // helperText={errors.expiry_date}                               
+                          error={errors.expiry_date}
+                          helperText={errors.expiry_date}
                         />
                       </MuiPickersUtilsProvider>
                   </Grid>

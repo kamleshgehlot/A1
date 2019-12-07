@@ -303,8 +303,8 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
                     value={taskList.reschedule_date}
                     fullWidth                                     
                     onChange={handleNewDueDate}
-                    // error={errors.reschedule_date}
-                    // helperText={errors.reschedule_date}                               
+                    error={errors.reschedule_date}
+                    helperText={errors.reschedule_date}                               
                   />
                 </MuiPickersUtilsProvider>
             </Grid>

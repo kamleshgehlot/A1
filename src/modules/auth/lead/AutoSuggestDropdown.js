@@ -105,7 +105,7 @@ export default function AutoSuggestDropdown({customerListData, setSelectedOption
   suggestions = [];
 
   customerListData.map(customer => {
-    suggestions.push({label: customer.customer_name, key: customer.id});
+    suggestions.push({label: customer.first_name + ' ' + customer.last_name, key: customer.id});
   });
   
 

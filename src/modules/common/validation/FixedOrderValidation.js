@@ -1,4 +1,5 @@
 import { validString, validNumber, validDecimalNumber, validFullLengthDecimalNumber, validEmail, validAlpha } from './Regex';
+import {checkFutureDate, checkPastDate} from '../../../utils/datetime.js';
 
 export default function validate(values) {
   let errors = {};
@@ -74,16 +75,27 @@ export default function validate(values) {
   // } else if (!validFullLengthDecimalNumber.test(values.total_intrest)) {
   //   errors.total_intrest = 'Total Interest Charges are invalid';
   // }
-  if(values.first_payment === ""){
+  if(!values.first_payment){
     errors.first_payment = 'First Payment Date is Required';
+  }else if(checkFutureDate(values.first_payment)){
+    errors.first_payment = 'First Payment Date is invalid';
   }
-  if(values.last_payment === ""){
-    errors.last_payment = 'Last Payment Date is Required';
+
+
+  // if(!values.last_payment){
+  //   errors.last_payment = 'Last Payment Date is Required';
+  // }else 
+  if(checkFutureDate(values.last_payment)){
+    errors.last_payment = 'Last Payment Date is invalid';
   }
-  if(values.exp_delivery_date === ""){
+
+  if(!values.exp_delivery_date){
     errors.exp_delivery_date = 'Delivery Date is Required';
+  }else if(checkFutureDate(values.exp_delivery_date)){
+    errors.exp_delivery_date = 'Delivery Date is invalid';
   }
-  if(values.exp_delivery_time === ""){
+
+  if(!values.exp_delivery_time){
     errors.exp_delivery_time = ' Delivery Time is Required';
   }
   return errors;

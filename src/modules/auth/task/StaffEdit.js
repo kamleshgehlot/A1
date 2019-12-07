@@ -138,13 +138,26 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   const [msgList, setMsgList] =  React.useState([]);
   const [message,setMessage] =useState('');
   const taskStatus = inputs.status;
+  const [errors, setErrors] = useState({});
+
+  
+  function validate(values) {
+    let errors = {};    
+    if (!values.due_date) {
+      errors.due_date = 'Due Date is required';
+    } else if(checkFutureDate(values.due_date)){
+      errors.due_date = 'Due Date is invalid';
+    }
+    return errors;
+  };
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  // console.log('tasklist',taskList);
+  
 
   const addTaskMaster = async () => {
+    
     setpLoading(true);
     setSavebtn(false);
 
@@ -179,14 +192,11 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
   };
 
   useEffect(() => {
-    // taskList.message = '';
     const fetchData = async () => {
       try {
         todayDate();
         const result = await Staff.list();
-        setStaffList(result.staffList);        
-        // const msgResult = await Task.getMsgList({id: taskList.id});
-        // setMsgList(msgResult);
+        setStaffList(result.staffList);  
       } catch (error) {
         setIsError(true);
       }
@@ -199,7 +209,7 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
     const { name, value } = event.target
     setTasksList({ ...taskList, [name]: value })
   }
-  console.log('mesasge',message);
+
   const handleMessageChange = event => {
     setMessage(event.target.value)
   }
@@ -257,7 +267,6 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                   fullWidth
                   disabled
                   type="text"
-                  // placeholder="Franchise Name"
                   margin="dense"
                 /> 
               </Grid>
@@ -277,6 +286,8 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                     placeholder="DD-MM-YYYY"
                     disablePast = {true}
                     value={taskList.due_date}
+                    error={errors.due_date}
+                    helperText={errors.due_date}
                     fullWidth 
                     disabled
                     onChange={handleDate}
@@ -293,14 +304,12 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                     }}
                     id="task_description"
                     name="task_description"
-                    // label="Task Description"
                     value={taskList.task_description}
                     onChange={handleInputChange}
                     fullWidth
                     multiline
                     disabled
                     type="text"
-                    // placeholder="Franchise Name"
                     margin="dense"
                   /> 
               </Grid>

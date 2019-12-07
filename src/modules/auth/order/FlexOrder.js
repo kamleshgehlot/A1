@@ -239,8 +239,6 @@ useEffect(()=>{
   }  
 },[inputs.each_payment_amt]);
 
-
-console.log('inputs...',inputs);
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -451,8 +449,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        // error={errors.first_payment}
-                        // helperText={errors.first_payment}  
+                        error={errors.first_payment}
+                        helperText={errors.first_payment}  
                         disabled = {frequency == ""}                             
                       />
                     </MuiPickersUtilsProvider>
@@ -526,8 +524,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          // error={errors.exp_delivery_date}
-                          // helperText={errors.exp_delivery_date}                               
+                          error={errors.exp_delivery_date}
+                          helperText={errors.exp_delivery_date}                               
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>

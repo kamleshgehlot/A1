@@ -149,7 +149,7 @@ return (
               {/* <StyledTableCell> {data.status === 3 ? <p className = {classes.bgtaskoverdue}> Requesting for Rescheduling </p> : data.task_status_name}</StyledTableCell> */}
               <StyledTableCell> {data.task_status_name}</StyledTableCell>
               <StyledTableCell> {getDateInDDMMYYYY(data.due_date)}</StyledTableCell>
-              <StyledTableCell> {getDateInDDMMYYYY(data.start_date)}</StyledTableCell>
+              <StyledTableCell> {data.start_date != undefined && data.start_date != null ? getDateInDDMMYYYY(data.start_date) : ''}</StyledTableCell>
               {/* <StyledTableCell> {data.completed_date}</StyledTableCell> */}
               {/* <StyledTableCell>
                 <a href={"server\\files\\taskFile\\" + data.document }  download >{data.document}</a>                          

@@ -1,7 +1,10 @@
 import { validString, validNumber, validFullLengthDecimalNumber, validEmail, validAlpha } from './Regex';
+import {checkFutureDate, checkPastDate} from '../../../utils/datetime.js';
 
 export default function validate(values) {
   let errors = {};
+
+
   if (!values.first_name) {
     errors.first_name = 'First Name is required';
   } else if (!validString.test(values.first_name)) {
@@ -14,7 +17,6 @@ export default function validate(values) {
     errors.last_name = 'Last Name is invalid';
   }
 
-  
   if (!values.address) {
     errors.address = 'Address is required';
   }
@@ -65,17 +67,19 @@ export default function validate(values) {
   
   if (!values.dob) {
     errors.dob = 'Date Of Birth is required';
+  }else if(checkPastDate(values.dob)){
+    errors.dob = 'Date of Birth is invalid';
   }
   
   if (values.id_type==='' ) {
     errors.id_type = 'ID Proof is required';
   }
-  if(values.id_type===0){
-    // errors.id_type =''
+  if(values.id_type===0){    
     if (!values.other_id_type) {
       errors.other_id_type = 'ID Type is required';
     }
   }
+
   if(values.id_type==2){
     if (!values.dl_version_number) {
       errors.dl_version_number = 'Version number is required';
@@ -83,19 +87,22 @@ export default function validate(values) {
       errors.dl_version_number = 'Version number is invalid';
     }
   }
+
   if (!values.id_number) {
     errors.id_number = 'ID is required';
   }
+
   if (!values.is_working) {
     errors.is_working = 'Required';
   }
+
   if (!values.expiry_date) {
     errors.expiry_date = 'Expiry Date is required';
-  } 
-  // if (!values.is_adult) {
-  //   errors.is_adult = 'Required';
-  // }
-  
+  }else if(checkFutureDate(values.expiry_date)){
+    errors.expiry_date = 'Expiry Date is invalid';
+  }
+
+   
   if (!values.alt_c1_name) {
     errors.alt_c1_name = 'Name is required';
   } else if (!validString.test(values.alt_c1_name)) {

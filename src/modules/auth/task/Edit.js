@@ -31,7 +31,7 @@ import Role from '../../../api/franchise/Role';
 // import Staff from '../../../api/franchise/Staff';
 import FranchiseUsers from '../../../api/FranchiseUsers';
 import {useCommonStyles} from '../../common/StyleComman'; 
-import {getDate, getCurrentDate} from '../../../utils/datetime';
+import {getDate, getCurrentDate, checkFutureDate} from '../../../utils/datetime';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -112,7 +112,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
     } 
     if (!values.due_date) {
       errors.due_date = 'Due Date is required';
-    } 
+    } else if(checkFutureDate(values.due_date)){
+      errors.due_date = 'Due Date is invalid';
+    }
     return errors;
   };
 
@@ -263,8 +265,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   value={taskList.due_date}
                   fullWidth                       
                   onChange={handleDate}
-                  // error={errors.due_date}
-                  // helperText={errors.due_date}     
+                  error={errors.due_date}
+                  helperText={errors.due_date}
                   disabled={taskList.status ===2}                          
                 />
               </MuiPickersUtilsProvider>
@@ -283,8 +285,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   required
                   disabled={taskList.status ===2}
                 >
-                {roleName === 'Admin'?  <MenuItem className={classes.textsize} value={2}>Director</MenuItem>:''}
-                {/* <MenuItem className={classes.textsize} value={2}>Director</MenuItem> */}
+                {roleName === 'Admin' && <MenuItem className={classes.textsize} value={2}>Director</MenuItem>}                
                 {role.map((ele,index) =>{
                   return(
                   <MenuItem className={classes.textsize} value={ele.id}>{ele.name}</MenuItem>

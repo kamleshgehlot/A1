@@ -34,8 +34,7 @@ export function getTime(date) {
   return moment(date).format("HH:mm")
 }
 
-export function convertDateInUTC(date) {
-  console.log('utc', moment.utc(date))
+export function convertDateInUTC(date) {  
   return moment.utc(date);  
 }
 
@@ -59,4 +58,12 @@ export function addOneDay(date){
 
 export function subtractOneDay(date){
   return moment(date).subtract(1, 'days').format("YYYY-MM-DD");  
+}
+
+export function checkPastDate(date) {  
+  return moment(date).format("YYYY-MM-DD") > getDate();
+}
+
+export function checkFutureDate(date) {
+  return moment(date).format("YYYY-MM-DD") < getDate();
 }

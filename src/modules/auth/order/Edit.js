@@ -573,7 +573,7 @@ return (
                   </Grid>               
                   <Grid item xs={12} sm={4}>
                    <InputLabel  className={classes.textsize} htmlFor="customer">Customer</InputLabel>
-                    <Typography variant="h6" className={classes.labelTitle}>{inputs.customer_name} </Typography>
+                    <Typography variant="h6" className={classes.labelTitle}>{inputs.first_name + ' ' + inputs.last_name} </Typography>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <Button variant="outlined" size="small" color="primary" onClick={(event) => { handleCustomerOpen(inputs.customer_id); }}>View Profile </Button>

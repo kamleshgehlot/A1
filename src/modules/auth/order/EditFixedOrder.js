@@ -117,8 +117,7 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   const [fixedNull,setFixedNull] = useState(true);
   const [bool,setBool]= useState(false);
   
-  function fixed(e){
-    
+  function fixed(e){    
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal).toFixed(2),
       cash_price : parseFloat(inputs.cash_price).toFixed(2),
@@ -141,7 +140,7 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
       total_interest : parseFloat(inputs.total_interest).toFixed(2),
     }
     setFixedOrderList(data);
-    handleFixedClose(false)
+    handleFixedClose(false);
   }
 
   function handleDateChange(date){
@@ -388,14 +387,10 @@ return (
                   label="Cash Price"
                   value={inputs.cash_price}
                   onChange={handlePriceInput}
-                  // onFocus={handleInputFocus}
-                  // onBlur={handleInputBlur}
                   error={errors.cash_price}
                   helperText={errors.cash_price}
                   fullWidth
-                  // required
                   type="text"
-                  // placeholder="Franchise Name"
                   margin="dense"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -440,14 +435,10 @@ return (
                   label="Delivery Fee"
                   value={inputs.delivery_fee}
                   onChange={handlePriceInput}
-                  // onFocus={handleInputFocus}
-                  // onBlur={handleInputBlur}
                   error={errors.delivery_fee}
                   helperText={errors.delivery_fee}
                   fullWidth
-                  // required
                   type="text"
-                  // placeholder="Franchise Name"
                   margin="dense"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -580,8 +571,7 @@ return (
                         name="first_payment"
                         format="dd-MM-yyyy"
                         placeholder="DD-MM-YYYY"
-                        disablePast = {true}                        
-                        defaultValue = {""}
+                        disablePast = {true}
                         value={inputs.first_payment}
                         fullWidth 
                         InputProps={{
@@ -590,11 +580,9 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        // error={errors.first_payment}
-                        // helperText={errors.first_payment} 
+                        error={errors.first_payment}
+                        helperText={errors.first_payment} 
                         disabled = {viewOnly}  
-                        // error={errors.first_payment}
-                        // helperText={errors.first_payment}                               
                       />
                     </MuiPickersUtilsProvider>
                     </Grid>
@@ -610,11 +598,11 @@ return (
                             name="last_payment"
                             format="dd-MM-yyyy"
                             placeholder="DD-MM-YYYY"
-                            disablePast = {true}                            
+                            disablePast = {true}
                             value={inputs.last_payment}
                             fullWidth 
-                            // error={errors.last_payment}
-                            // helperText={errors.last_payment} 
+                            error={errors.last_payment}
+                            helperText={errors.last_payment} 
                             InputProps={{
                               classes: {
                                 input: classes.textsize,
@@ -633,18 +621,13 @@ return (
                   <TextField
                       id="no_of_payment"
                       name="no_of_payment"
-                      // label="no_of_payment/Mortgage"
                       value={inputs.no_of_payment}
                       onChange={handleNumberInput}
-                      // onFocus={handleInputFocus}
                       error={errors.no_of_payment}
                       helperText={errors.no_of_payment}
-                      // onBlur={handleInputBlur}
                       fullWidth
                       disabled
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         classes: {
@@ -660,17 +643,12 @@ return (
                   <TextField
                       id="each_payment_amt"
                       name="each_payment_amt"
-                      // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
                       onChange={function(e){handlePriceInput(e); changeBool(true)}}
-                      // onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -688,17 +666,12 @@ return (
                   <TextField
                       id="total_payment_amt"
                       name="total_payment_amt"
-                      // label="total_payment_amt/Mortgage"
                       value={inputs.total_payment_amt}
                       onChange={function(e){handlePriceInput(e); changeBool(false)}}
-                      // onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.total_payment_amt}
                       helperText={errors.total_payment_amt}
                       fullWidth
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -718,24 +691,18 @@ return (
                   <TextField
                       id="before_delivery_amt"
                       name="before_delivery_amt"
-                      // label="before_delivery_amt/Mortgage"
                       value={inputs.before_delivery_amt}
                       onChange={handleNumberOfPaymentBefDelivery}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.before_delivery_amt}
                       helperText={errors.before_delivery_amt}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      
                       disabled = {viewOnly}
                     />
                 </Grid>
@@ -753,8 +720,8 @@ return (
                           placeholder="DD-MM-YYYY"
                           disablePast = {true}
                           value={inputs.exp_delivery_date}
-                          // error={errors.exp_delivery_date}
-                          // helperText={errors.exp_delivery_date}                          
+                          error={errors.exp_delivery_date}
+                          helperText={errors.exp_delivery_date}                          
                           InputProps={{
                             classes: {
                               input: classes.textsize,
@@ -796,18 +763,12 @@ return (
                   <TextField
                       id="minimum_payment_amt"
                       name="minimum_payment_amt"
-                      // label="minimum_payment_amt/Mortgage"
                       value={inputs.minimum_payment_amt}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
                       error={errors.minimum_payment_amt}
                       helperText={errors.minimum_payment_amt}
-                      // onBlur={handleInputBlur}
                       fullWidth
-                      // required
-                      // disabled
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -831,15 +792,10 @@ return (
                   <TextField
                       id="interest_rate"
                       name="interest_rate"
-                      // label="Weeks"
                       value={inputs.interest_rate}
                       onChange={handleNumberInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         classes: {
@@ -847,10 +803,6 @@ return (
                         },
                       }}
                       disabled = {viewOnly}
-                      // InputProps={{
-                      //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                     
-                      // }}
                     />
                     </Grid>
                     <Grid item xs={12} sm={4}>  
@@ -858,26 +810,17 @@ return (
                     <TextField
                       id="interest_rate_per"
                       name="interest_rate_per"
-                      // label="Daily interest rates of (in %)"
                       value={inputs.interest_rate_per}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      disabled = {viewOnly}
-                      // InputProps={{
-                      //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        
-                      // }}
+                      disabled = {viewOnly}                      
                     />
                   </Grid>
                 <Grid item xs={12} sm={4}>

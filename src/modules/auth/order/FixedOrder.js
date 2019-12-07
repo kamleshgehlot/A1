@@ -615,8 +615,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        // error={errors.first_payment}
-                        // helperText={errors.first_payment}        
+                        error={errors.first_payment}
+                        helperText={errors.first_payment}        
                         disabled = {frequency == "" || duration == ""}
                       />
                     </MuiPickersUtilsProvider>
@@ -644,8 +644,8 @@ return (
                           },
                         }}
                         onChange={handleLastDate}
-                        // error={errors.last_payment}
-                        // helperText={errors.last_payment}                               
+                        error={errors.last_payment}
+                        helperText={errors.last_payment}                               
                         // disabled = {frequency == "" || duration == ""}                       
                       />
                     </MuiPickersUtilsProvider>
@@ -811,8 +811,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          // error={errors.exp_delivery_date}
-                          // helperText={errors.exp_delivery_date}                               
+                          error={errors.exp_delivery_date}
+                          helperText={errors.exp_delivery_date}                               
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>

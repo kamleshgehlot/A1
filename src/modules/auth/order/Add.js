@@ -547,7 +547,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                         name="order_date"
                         format="dd-MM-yyyy"
                         placeholder="DD-MM-YYYY"
-                        disablePast = {true}
+                        disabled
+                        // disablePast = {true}
                         value={inputs.order_date}
                         fullWidth 
                         InputProps={{
@@ -626,7 +627,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                     }  
                      {customer  != null  ? 
                       <Typography variant="h6" className={classes.labelTitle}>
-                        {customer.customer_name + ", " + customer.address + ", " + customer.city}
+                        {customer.first_name + ' ' + customer.last_name + ", " + customer.address + ", " + customer.city}
                       </Typography>
                     : ''}
 
