@@ -16,6 +16,7 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import PropTypes from 'prop-types';
+import {getDateInDDMMYYYY} from '../../../../../utils/datetime.js';
 
 
 import {useCommonStyles} from '../../../../common/StyleComman';
@@ -55,8 +56,8 @@ return (
       return(
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
-          <StyledTableCell>{data.payment_date}</StyledTableCell>
-          <StyledTableCell>{data.payment_rec_date}</StyledTableCell>
+          <StyledTableCell>{getDateInDDMMYYYY(data.payment_date)}</StyledTableCell>
+          <StyledTableCell>{getDateInDDMMYYYY(data.payment_rec_date)}</StyledTableCell>
           <StyledTableCell>{data.status === 1 ? "Paid" : data.status === 2 ? "Disownered Paid" : ''}</StyledTableCell>
           <StyledTableCell>{data.payment_amt}</StyledTableCell>
         </TableRow>
@@ -64,7 +65,7 @@ return (
       })
     }
       <TableRow >
-          <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}} colSpan="3" align="right">{"Total   "}</StyledTableCell>
+          <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}} colSpan="4" align="right">{"Total   "}</StyledTableCell>
           <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}}>{total}</StyledTableCell>
       </TableRow>                              
     </TableBody>

@@ -210,7 +210,7 @@ export default function CustomerList({userId, roleName}) {
   }, []);
 
 
-  const fetchCustomerList = async () => {
+  const fetchCustomerList = async () => {   
     setIsError(false);
     setIsLoading(true);
     try {
@@ -285,7 +285,7 @@ export default function CustomerList({userId, roleName}) {
   }
 
   function handleEditClose() {
-    handleTabsData(customerListData);
+    // handleTabsData(customerListData);
     setEditOpen(false);
   }
  
@@ -350,7 +350,7 @@ export default function CustomerList({userId, roleName}) {
 
 
   
-  async function handleTabsData(customerList){ 
+  async function handleTabsData(customerList){
     const paymentData = await fetchMissedPaymentData();
     const currDate = getCurrentDateDBFormat();
 
@@ -429,16 +429,8 @@ export default function CustomerList({userId, roleName}) {
     <div>     
       <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <Fab
-              variant="extended"
-              size="small"
-              // color="primary"
-              aria-label="Add"
-              className={classes.fonttransform}
-              onClick={handleClickOpen}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              Customers
+            <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen}>
+              <AddIcon className={classes.extendedIcon} />Customers
             </Fab>
           </Grid>   
             <Grid item xs={12} sm={6}>

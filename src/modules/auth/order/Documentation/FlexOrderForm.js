@@ -106,7 +106,7 @@ export default function flexOrderForm(data,order) {
                         ],
                         [
                         {style:styles.margins, text: [  
-                          { text: customer[0].customer_name + '\n', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                          { text: customer[0].first_name + ' ' + customer[0].last_name + '\n', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
                           { text: customer[0].address + ',\n', style: styles.Header1Center, alignment: screenLeft }, 
                           { text: customer[0].city + ' - '+ customer[0].postcode + '\n', style: styles.Header1Center, alignment: screenLeft }, 
                           { text: 'PH: ', style: styles.Header1Center, alignment: screenLeft, bold: true }, 
@@ -257,7 +257,7 @@ export default function flexOrderForm(data,order) {
                 [
                   {style:styles.margins, text: [  
                     { text: 'I ', alignment: screenLeft,  bold: true, fontSize:8},                    
-                    { text: customer[0].customer_name , alignment: screenLeft,  bold: true, fontSize:9}, 
+                    { text: customer[0].first_name + ' ' + customer[0].last_name , alignment: screenLeft,  bold: true, fontSize:9}, 
                     { text: ' AGREE TO RENT THE GOOD(S) ABOVE ON THE TERMS AND CONDITIONS IN THIS RENT-FLEX CONTRACT AND IN THE GENERAL TERMS AND CONDITIONS AND CONFIRM TO THE BEST OF MY KNOWLEDGE THAT ALL THE ABOVE INFORMATION IS TRUE AND CORRECT.', alignment: screenLeft,  bold: true, fontSize:8},                    
                     { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
                     { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDateDDMMYYYY(), alignment: screenLeft,  bold: true, fontSize:8},

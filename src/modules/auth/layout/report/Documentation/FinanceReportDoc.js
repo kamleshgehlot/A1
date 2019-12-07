@@ -152,7 +152,7 @@ export default function FixedOrderForm(data, order, reportData, fromDate, toDate
                 ],
                 [                     
                   {style:styles.margins, text: [  
-                    { text: customer.customer_name + '\n', style: styles.fontSize9,  bold: true, fontSize: 10 }, 
+                    { text: customer.first_name + ' ' + customer.last_name + '\n', style: styles.fontSize9,  bold: true, fontSize: 10 }, 
                     { text: customer.address + ', ' + customer.city + ' - '+ customer.postcode + '\n', style: styles.fontSize9,}, 
                     { text: 'PH: ', style: styles.fontSize9, bold: true }, 
                     { text: customer.telephone + '\t\t', style: styles.fontSize9,}, 
@@ -191,7 +191,7 @@ export default function FixedOrderForm(data, order, reportData, fromDate, toDate
                   { text: 'Delivery Date ' + getDateInDDMMYYYY(order.delivery_date), bold: true,  fontSize: 9 },
                 ],
                 [
-                  { text: 'Rentral Type: ' + (order.order_type === 1 ? "Fixed" : 'Flex'),  bold: true, fontSize: 9 },
+                  { text: 'Rentral Type: ' + (order.order_type === 1 ? "Fix" : 'Flex'),  bold: true, fontSize: 9 },
                   { text: 'Status: ' + order.order_status_name,  bold: true, fontSize: 9,},                  
                 ],                
               ]

@@ -432,9 +432,6 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   };
   
     
-  console.log('fixed',fixedOrderList)
-  console.log('flex',flexOrderList)
-
   const selectedProductList = () => {
     return(
       <Paper style={{width : '100%'}}>
@@ -721,7 +718,7 @@ return (
 
                    <Grid item xs={12} sm={6}>
                      {editableData.order_type ===1 ? 
-                      <Button variant="outlined" size="small" color="primary"  onClick={(event) => { handleFixedOpen(inputs.order_type_id); }}>Update Fixed Order Type Details </Button> :
+                      <Button variant="outlined" size="small" color="primary"  onClick={(event) => { handleFixedOpen(inputs.order_type_id); }}>Update Fix Order Type Details </Button> :
                       <Button variant="outlined" size="small" color="primary"    onClick={(event) => { handleFlexOpen(inputs.order_type_id); }}>Update Flex Order Type Details </Button>
                      }
                     </Grid>

@@ -333,7 +333,7 @@ export default function layout(data,order) {
                         [
                           {style:styles.margins, fillColor: '#C5C7C0', text: [  
                             { text: 'I ', alignment: screenLeft,  bold: true, fontSize:8},                    
-                            { text: customer.customer_name , alignment: screenLeft,  bold: true, fontSize:9},
+                            { text: customer.first_name + ' ' + customer.last_name , alignment: screenLeft,  bold: true, fontSize:9},
                             { text: ' understand, that by singing this budget form is to confirm that all of the date provided above is ture and correct as of the date that this declaration was signed and dated', alignment: screenLeft,  bold: true, fontSize:8},
                             { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
                             { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDateDDMMYYYY(), alignment: screenLeft,  bold: true, fontSize:8},

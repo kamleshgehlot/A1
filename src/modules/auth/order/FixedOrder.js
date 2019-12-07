@@ -140,7 +140,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function FixedOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType, totalOfRental}) {
+export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType, totalOfRental}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -399,7 +399,7 @@ return (
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" className={classes.title}>
-                Fixed Order
+                Fix Order
               </Typography>
               <IconButton size="small" onClick={handleFixedClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>

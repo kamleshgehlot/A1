@@ -186,8 +186,10 @@ export default function ViewCustomer({ open, handleClose, handleSnackbarClick, c
       setSavebtn(false);
       const data = {
       id: customerList.id,
-      customer_name : customerList.customer_name,
+      first_name : customerList.first_name,
+      last_name : customerList.last_name,            
       address : customerList.address,
+      suburb : customerList.suburb,
       city : customerList.city,
       postcode : customerList.postcode,
       telephone : customerList.telephone,  
@@ -295,23 +297,40 @@ return (
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="customer_name">Full Name *</InputLabel>
+                <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">First Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      id="customer_name"
-                      name="customer_name"
-                      // label="Full Name"
-                      value={customerList.customer_name}
-                      onChange={handleInputChange}
+                      id="first_name"
+                      name="first_name"
+                      value={customerList.first_name}
+                      onChange={handleInputChange}                      
                       fullWidth
                       required
                       type="text"
-                      // placeholder="Franchise Name"
+                      margin="dense"
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Last Name *</InputLabel>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="last_name"
+                      name="last_name"
+                      value={customerList.last_name}
+                      onChange={handleInputChange}                     
+                      fullWidth
+                      required
+                      type="text"
                       margin="dense"
                       disabled
                     />
@@ -330,6 +349,25 @@ return (
                       // label="Address"
                       type="text"
                       value={customerList.address} 
+                      onChange={handleInputChange}
+                      required
+                      fullWidth
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="suburb">Suburb *</InputLabel>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="suburb"
+                      name="suburb"
+                      type="text"
+                      value={customerList.suburb}                       
                       onChange={handleInputChange}
                       required
                       fullWidth

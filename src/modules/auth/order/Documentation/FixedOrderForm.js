@@ -109,7 +109,7 @@ export default function FixedOrderForm(data,order) {
                         ],
                         [                     
                         {style:styles.margins, text: [  
-                          { text: customer[0].customer_name + '\n', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
+                          { text: customer[0].first_name + ' ' + customer[0].last_name + '\n', style: styles.Header1Center,  bold: true,  alignment: screenLeft }, 
                           { text: customer[0].address + ',\n', style: styles.Header1Center, alignment: screenLeft }, 
                           { text: customer[0].city + ' - '+ customer[0].postcode + '\n', style: styles.Header1Center, alignment: screenLeft }, 
                           { text: 'PH: ', style: styles.Header1Center, alignment: screenLeft, bold: true }, 
@@ -277,7 +277,7 @@ export default function FixedOrderForm(data,order) {
                 [
                   {style:styles.margins, text: [  
                     { text: 'I ', alignment: screenLeft,  bold: true, fontSize:8},                    
-                    { text: customer[0].customer_name , alignment: screenLeft,  bold: true, fontSize:9}, 
+                    { text: customer[0].first_name + ' ' + customer[0].last_name , alignment: screenLeft,  bold: true, fontSize:9}, 
                     { text: ' agree to RENT-PURCHASE THE GOOD(s) above on the terms and conditions in this RENT-FIX CONTRACT and in the general terms and conditions and confirm to the best of my knowledge that all the above information is true and correct.', alignment: screenLeft,  bold: true, fontSize:8},                    
                     { text: '\n\n\nSIGNED_______________________________________________________________', alignment: screenLeft,  bold: true, fontSize:8},
                     { text: '\t\t\t\t\t\t\t\t\tDATE:  ' + getCurrentDateDDMMYYYY(), alignment: screenLeft,  bold: true, fontSize:8},

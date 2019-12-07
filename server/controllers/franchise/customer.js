@@ -14,9 +14,11 @@ const register = async function (req, res, next) {
 
   let CustomerParams = {
     id: customerData.id,
-    customer_name: customerData.customer_name,
+    first_name: customerData.first_name,
+    last_name: customerData.last_name,
     address: customerData.address,
     city: customerData.city,
+    suburb: customerData.suburb,
     postcode: customerData.postcode,
     telephone: customerData.telephone,
     mobile: customerData.mobile,
@@ -53,7 +55,6 @@ const register = async function (req, res, next) {
     bankDetailData : customerData.bankDetailData,
   };
 
-  // console.log('CustomerParams',CustomerParams)
   try {
     if (CustomerParams.id) {
       CustomerParams.updated_by = req.decoded.id;
@@ -69,7 +70,6 @@ const register = async function (req, res, next) {
 
       const customerResult = await newCustomer.register();
       newCustomer.customer_id = customerResult.customer_id;
-      console.log('customerResult',customerResult, customerResult.customer_id, newCustomer.customer_id);
 
       if (CustomerParams.budgetData != "" && customerResult.customer_id != '' && customerResult.customer_id != 0) {
           CustomerParams.created_by = req.decoded.id;
@@ -251,7 +251,6 @@ const updateBankDetail = async function (req, res, next) {
   const newCustomer = new Customer(CustomerParams);
   try {
     const bankDetail = await newCustomer.updateBankDetail();    
-    console.log('bankDetail',bankDetail);
     if(bankDetail.changedRows > 0){
       res.send({isUpdated: 1});
     }else{

@@ -116,7 +116,7 @@ return (
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
           <StyledTableCell>{data.order_id}</StyledTableCell>
-          <StyledTableCell>{data.customer_name}</StyledTableCell>
+          <StyledTableCell>{data.first_name + ' ' + data.last_name}</StyledTableCell>
           <StyledTableCell>{data.mobile}</StyledTableCell>
           {roleName != 'Delivery' ? 
             <StyledTableCell>{getDateInDDMMYYYY(data.order_date)}</StyledTableCell>
@@ -131,7 +131,7 @@ return (
             <StyledTableCell>{data.delivery_time}</StyledTableCell>
           : ''}
           {/* <StyledTableCell>{'In Progress'}</StyledTableCell> */}
-          <StyledTableCell>{data.order_type==1 ? 'Fixed' : 'Flex'}</StyledTableCell>
+          <StyledTableCell>{data.order_type==1 ? 'Fix' : 'Flex'}</StyledTableCell>
           <StyledTableCell>{data.payment_mode_name} </StyledTableCell>     
           {roleName === 'CSR' ? 
               <StyledTableCell>

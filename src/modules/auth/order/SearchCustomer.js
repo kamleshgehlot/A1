@@ -154,8 +154,7 @@ export default function SearchCustomer({ open, handleClose, handleSnackbarClick,
        
       }else{
         const result = await Customer.list();
-        setCustomerListData(result.customerList);
-        // console.log('list---2',result.customerList);
+        setCustomerListData(result.customerList);        
         setSearchText('');
       }} catch (error) {
         console.log('error',error);
@@ -247,7 +246,7 @@ return (
                           return(
                             <TableRow key={data.id} >
                             <StyledTableCell> {index + 1}  </StyledTableCell>
-                            <StyledTableCell> {data.customer_name}  </StyledTableCell>
+                            <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
                             <StyledTableCell> {data.mobile ===''? data.telephone : data.telephone==='' ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
                             <StyledTableCell> {data.address}  </StyledTableCell>
                             <StyledTableCell> {data.created_by_name}  </StyledTableCell>

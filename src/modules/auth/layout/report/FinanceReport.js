@@ -27,7 +27,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import * as pdfmake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import {getDate, getCurrentDate } from '../../../../utils/datetime'
+import {getDate, getCurrentDate, getDateInDDMMYYYY } from '../../../../utils/datetime'
 
 import Paper from '@material-ui/core/Paper';
 
@@ -37,7 +37,7 @@ import Product from '../../../../api/Category';
 import SingleOrderReport from './Components/SingleOrderReport';
 import OrderAPI from '../../../../api/franchise/Order';
 import FinanceReportDoc from './Documentation/FinanceReportDoc';
-import { async } from 'q';
+import StaticContentAPI from  '../../../../api/StaticContent.js'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -123,9 +123,16 @@ export default function FinanceReport({roleName}) {
   const [fromDate, setFromDate] = useState(null);
   const [orderReport, setOrderReport] = useState(false);
   const [reportData,setReportData] = useState([]);
-  
-  useEffect(() => {
-  const fetchData = async () => {
+  const [paymentModeList, setPaymentModeList] = useState([]);
+
+
+
+  useEffect(() => {  
+    fetchproductList();
+    getPaymentModeList();
+  }, []);
+
+  const fetchproductList = async () => {
     setIsError(false);
     setIsLoading(true);
     try {
@@ -136,8 +143,11 @@ export default function FinanceReport({roleName}) {
     }
       setIsLoading(false);
   };
-  fetchData();
-}, []);
+
+  const getPaymentModeList = async () => {
+    const result = await StaticContentAPI.getPaymentModeList({});
+    setPaymentModeList(result.paymentModeList);
+  }
 
 
   function handleChangeOrder(event) {
@@ -387,30 +397,29 @@ export default function FinanceReport({roleName}) {
                       <p className={classes.textsize}>{order.order_id }</p> 
                   </TableCell>
                   <TableCell className={classes.textHeading}>{"Order Date: "}
-                    <p className={classes.textsize}> {order.order_date} </p> 
+                    <p className={classes.textsize}> {getDateInDDMMYYYY(order.order_date)} </p> 
                   </TableCell>
                   <TableCell className={classes.textHeading}>{"Status: "}
                     <p className={classes.textsize}> {order.order_status_name} </p>
                   </TableCell> 
                   <TableCell className={classes.textHeading}>{"Payment Mode: "}
-                    <p className={classes.textsize}> {
-                    order.payment_mode === 1 ? "EasyPay" : 
-                    order.payment_mode === 2 ? "Credit" : 
-                    order.payment_mode === 3 ? "Debit" : 
-                    order.payment_mode === 4 ? "PayPal" : 
-                    order.payment_mode === 5 ? "Cash" : ''
-                    } </p>
+                    <p className={classes.textsize}> 
+                    {(paymentModeList != undefined && (paymentModeList.length > 0 ? paymentModeList : []).map((data,index) => {
+                      if(order.payment_mode === data.id)
+                        return( data.payment_mode)
+                    }))}                       
+                  </p>
                   </TableCell>                
                 </TableRow>
                 <TableRow>                  
                   <TableCell className={classes.textHeading} >{"Rental Type: "}
-                    <p className={classes.textsize}> {order.order_type === 1 ? "Fixed" : order.order_type === 2 ? "Flex" : ''} </p>
+                    <p className={classes.textsize}> {order.order_type === 1 ? "Fix" : order.order_type === 2 ? "Flex" : ''} </p>
                   </TableCell>
                   <TableCell className={classes.textHeading}>{"Delivery Date: "}
-                    <p className={classes.textsize}> {order.delivery_date} </p>
+                    <p className={classes.textsize}> {getDateInDDMMYYYY(order.delivery_date)} </p>
                   </TableCell>
                   <TableCell className={classes.textHeading}>{"Delivered Date: "}
-                    <p className={classes.textsize}> {order.delivered_date} </p>
+                    <p className={classes.textsize}> {getDateInDDMMYYYY(order.delivered_date)} </p>
                   </TableCell>
                 </TableRow>
                 <TableRow>                  

@@ -2,14 +2,27 @@ import { validString, validNumber, validFullLengthDecimalNumber, validEmail, val
 
 export default function validate(values) {
   let errors = {};
-  if (!values.customer_name) {
-    errors.customer_name = 'Full Name is required';
-  } else if (!validString.test(values.customer_name)) {
-    errors.customer_name = 'Full Name is invalid';
+  if (!values.first_name) {
+    errors.first_name = 'First Name is required';
+  } else if (!validString.test(values.first_name)) {
+    errors.first_name = 'First Name is invalid';
   }
 
+  if (!values.last_name) {
+    errors.last_name = 'Last Name is required';
+  } else if (!validString.test(values.last_name)) {
+    errors.last_name = 'Last Name is invalid';
+  }
+
+  
   if (!values.address) {
     errors.address = 'Address is required';
+  }
+
+  if (!values.suburb) {
+    errors.suburb = 'Suburb is required';
+  } else if (!validString.test(values.suburb)) {
+    errors.suburb = 'Suburb is invalid';
   }
   
   if (!values.city) {

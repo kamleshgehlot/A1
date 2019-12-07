@@ -36,7 +36,7 @@ import { getDate, getCurrentDate, getDateInDDMMYYYY } from '../../../utils/datet
 
 import useSignUpForm from '../franchise/CustomHooks';
 import validate from '../../common/validation/ProductDeliveryForm';
-
+import CategoryAPI from '../../../api/Category';
 import { FormLabel } from '@material-ui/core';
 
 
@@ -137,7 +137,7 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
   const [confirmation, setConfirmation] = React.useState(false);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
-
+  const [orderedProductList, setOrderedProductList] = useState([]);
 
   function handleDateChange(date){
     handleInputChange({target:{name: 'delivery_date', value: date}})
@@ -145,11 +145,13 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
   
   const getRequiredData = async () => {
       try {
-        const result = await Order.getProductAndCategoryName({
-          product_id : orderData.product_id,
+          const result = await Order.getProductAndCategoryName({
+          product_id : orderData.product_id,        
         });
         setRequesedData(result[0]);
-        console.log('result...',result);
+
+        const response = await CategoryAPI.getOrderedProductList({ product_ids : orderData.product_id });
+        setOrderedProductList(response.productList);
       } catch (error) {
         console.log('Error..',error);
       }
@@ -219,7 +221,7 @@ return (
                      {"Order Id: " + orderData.order_id }
                   </Typography> 
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"Customer Name: " + orderData.customer_name }
+                     {"Customer Name: " + orderData.first_name + ' ' + orderData.last_name }
                   </Typography>
                 </Grid>               
            
@@ -233,7 +235,10 @@ return (
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"PRODUCT TO DELIVERED:  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
+                     {/* {"PRODUCT TO DELIVERED:  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name} */}
+                      {"PRODUCT TO DELIVERED :  " + (orderedProductList.length > 0 ? orderedProductList :[]).map(data => {
+                        return(data.name)
+                      })}
                   </Typography>                  
                 </Grid>
                 <Grid item xs={12} sm={12}>   

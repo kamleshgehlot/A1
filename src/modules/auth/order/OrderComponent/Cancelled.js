@@ -98,7 +98,7 @@ return (
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
           <StyledTableCell>{data.order_id}</StyledTableCell>
-          <StyledTableCell>{data.customer_name}</StyledTableCell>
+          <StyledTableCell>{data.first_name + ' ' + data.last_name}</StyledTableCell>
           <StyledTableCell>{data.mobile}</StyledTableCell>
           <StyledTableCell>{getDateInDDMMYYYY(data.order_date)}</StyledTableCell>
           <StyledTableCell>{data.order_status_name}</StyledTableCell>

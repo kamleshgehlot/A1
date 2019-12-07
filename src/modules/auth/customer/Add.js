@@ -286,9 +286,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     setpLoading(true);
     setSavebtn(true);
     const data = {
-      customer_name : inputs.customer_name,
+      first_name : inputs.first_name,
+      last_name : inputs.last_name,
       address : inputs.address,
       city : inputs.city,
+      suburb : inputs.suburb,
       postcode : inputs.postcode,
       telephone : inputs.telephone,  
       mobile : inputs.mobile,
@@ -384,34 +386,52 @@ return (
                 aria-controls=""
                 id="panel1a-header"
               >
-                <Typography className={(errors.customer_name||errors.address||errors.city||errors.postcode||errors.telephone||errors.mobile||errors.email||errors.dob||errors.id_type||errors.id_number||errors.expiry_date)?classes.errorHeading : classes.heading}>Personal Details</Typography>
+                <Typography className={(errors.customer_name||errors.address||errors.city||errors.postcode||errors.telephone||errors.mobile||errors.email||errors.dob||errors.id_type||errors.id_number||errors.expiry_date||errors.id_proof)?classes.errorHeading : classes.heading}>Personal Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="first_name">Full Name *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">First Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      id="customer_name"
-                      name="customer_name"
-                      // label="Full Name"
-                      value={inputs.customer_name}
+                      id="first_name"
+                      name="first_name"
+                      value={inputs.first_name}
                       onChange={handleInputChange}
-                      error={errors.customer_name}
-                      helperText={errors.customer_name}
+                      error={errors.first_name}
+                      helperText={errors.first_name}
                       fullWidth
                       required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Last Name *</InputLabel>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="last_name"
+                      name="last_name"
+                      value={inputs.last_name}
+                      onChange={handleInputChange}
+                      error={errors.last_name}
+                      helperText={errors.last_name}
+                      fullWidth
+                      required
+                      type="text"
+                      margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="address">Address</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -432,6 +452,26 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="suburb">Suburb *</InputLabel>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      margin="dense"
+                      id="suburb"
+                      name="suburb"
+                      type="text"
+                      value={inputs.suburb} 
+                      error={errors.suburb}
+                      helperText={errors.suburb}
+                      onChange={handleInputChange}
+                      required
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="last_name">City</InputLabel>
                     <TextField
                       InputProps={{
@@ -442,7 +482,6 @@ return (
                       margin="dense"
                       id="city"
                       name="city"
-                      // label="City"
                       type="text"
                       value={inputs.city} 
                       onChange={handleInputChange}
@@ -608,7 +647,6 @@ return (
                             :inputs.is_adult === 0 && inputs.dob != ""  ?  <p className={classes.dobMsg} style={{'color':'#F5BB00'}}>Person is not over 18 year</p>
                             : ''}
                   </Grid>
-                                {console.log('inputs.',inputs)}
                   <Grid item xs={12} sm={3}>
                     <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
                     <Select

@@ -16,7 +16,7 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import PropTypes from 'prop-types';
-
+import {getDateInDDMMYYYY} from '../../../../../utils/datetime.js';
 
 import {useCommonStyles} from '../../../../common/StyleComman';
 
@@ -74,7 +74,7 @@ return (
           <StyledTableCell> {data.task_description}  </StyledTableCell>
           <StyledTableCell> {data.task_created_by_name + " (" + data.creator_role + ")"}</StyledTableCell>
           <StyledTableCell> {data.task_status_name}</StyledTableCell>
-          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{data.due_date}</p></StyledTableCell>
+          <StyledTableCell><p className={dateToday> data.due_date?classes.bgtaskoverdue:classes.bgtaskpending}>{getDateInDDMMYYYY(data.due_date)}</p></StyledTableCell>
           
         </TableRow>
         )

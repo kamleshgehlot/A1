@@ -33,7 +33,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 // API CALL
 import Order from '../../../api/franchise/Order';
 import ConfirmationDialog from '../ConfirmationDialog.js';
-import { getDate, getCurrentDate } from '../../../utils/datetime';
+import { getDate, getCurrentDate, getDateInDDMMYYYY } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import validate from '../../common/validation/CancelOrderRuleValidation';
@@ -208,19 +208,19 @@ return (
                      {"Order Id: " + orderData.order_id }
                   </Typography> 
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"Customer Name: " + orderData.customer_name }
+                     {"Customer Name: " + orderData.first_name + ' ' + orderData.last_name }
                   </Typography> 
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"Total Received Amt.:  " + paymentStatus.total_rec_amt }
+                     {"Total Received Amt.:  " + (paymentStatus.total_rec_amt != undefined && paymentStatus.total_rec_amt != null ? paymentStatus.total_rec_amt : '') }
                   </Typography>                  
                 </Grid>               
-           
+           {console.log(paymentStatus)}
                 <Grid item xs={12} sm={6}>     
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"Total Installment Paid.:  " + paymentStatus.total_paid_installment }
+                     {"Total Installment Paid.:  " + (paymentStatus.total_paid_installment != undefined && paymentStatus.total_paid_installment != null ? paymentStatus.total_paid_installment : '') }
                   </Typography>
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"Last Installment Paid on.:  " + paymentStatus.last_payment_date }
+                     {"Last Installment Paid on.:  " + (paymentStatus.last_payment_date != undefined && paymentStatus.last_payment_date != null ? getDateInDDMMYYYY(paymentStatus.last_payment_date) : '') }
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={12}>   

@@ -454,7 +454,7 @@ return (
                   {"Order Id: " + orderData.order_id }
               </Typography> 
               <Typography variant="h6" className={classes.labelTitle}>
-                  {"Customer Name: " + orderData.customer_name }
+                  {"Customer Name: " + orderData.first_name + ' ' + orderData.last_name }
               </Typography>              
             </Grid>
             <Grid item xs={12} sm={3}>

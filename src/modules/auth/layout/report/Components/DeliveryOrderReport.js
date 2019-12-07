@@ -16,7 +16,7 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/send';
 import PropTypes from 'prop-types';
-
+import {getDateInDDMMYYYY} from '../../../../../utils/datetime.js';
 
 import {useCommonStyles} from '../../../../common/StyleComman';
 
@@ -56,9 +56,9 @@ return (
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
           <StyledTableCell>{data.order_id}</StyledTableCell>
-          <StyledTableCell>{data.customer_name}</StyledTableCell>
+          <StyledTableCell>{data.first_name + ' ' + data.last_name}</StyledTableCell>
           <StyledTableCell>{data.mobile}</StyledTableCell>
-          <StyledTableCell>{data.delivery_date}</StyledTableCell>
+          <StyledTableCell>{getDateInDDMMYYYY(data.delivery_date)}</StyledTableCell>
           <StyledTableCell>{data.delivery_time}</StyledTableCell>
         </TableRow>
         )

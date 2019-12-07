@@ -788,7 +788,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                       Order Type*
                     </Typography>                    
                     {/* <InputLabel  className={errors.order_type? classes.errorHeading : classes.textsize} htmlFor="order_type">Order Type*</InputLabel> */}
-                    <Button variant= {inputs.order_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleFixedOpen} className={classes.textField} disabled={budgetList == "" || assignInterest == "" || (parseFloat(budgetList.afford_amt) < totalOfRental)}> Fixed Order </Button>
+                    <Button variant= {inputs.order_type === 1 ? "contained" : "outlined" } size="small" color="primary"  value="1"  onClick={handleFixedOpen} className={classes.textField} disabled={budgetList == "" || assignInterest == "" || (parseFloat(budgetList.afford_amt) < totalOfRental)}> Fix Order </Button>
                     <Button variant= {inputs.order_type === 2 ? "contained" : "outlined" } size="small" color="primary"  value="2" onClick={handleFlexOpen}  className={classes.textField} disabled={budgetList == "" || assignInterest == "" ||  (parseFloat(budgetList.afford_amt) < totalOfRental)}>Flex Order </Button>
                     {/* <Typography variant="h6" className={classes.labelTitle}>{fixedOrderList ? 'Fixed Order Method Applied' : flexOrderList ? 'Flex Order Method Applied' : 'Enter Payment Details'}</Typography>  */}
                     </Grid>

@@ -32,6 +32,7 @@ import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
 import Order from '../../../api/franchise/Order';
+import CategoryAPI from '../../../api/Category';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import { getDate, getCurrentDate, getCurrentDateDBFormat } from '../../../utils/datetime';
 
@@ -137,16 +138,14 @@ export default function ViewDeliveredProductDetails({ open, handleClose, handleS
   const [requesedData, setRequesedData] = useState([]);
   const [inputs, setInputs] = useState(RESET_VALUES);
   const [ploading, setpLoading] = React.useState(false);
-  
+  const [orderedProductList, setOrderedProductList] = useState([]);
 
   const getRequiredData = async () => {
       try {
-        const result = await Order.getProductAndCategoryName({
-          product_id : orderData.product_id,          
-        });
+        const result = await Order.getProductAndCategoryName({ product_id : orderData.product_id });
         if(result != undefined && result != ""){
           setRequesedData(result[0]);
-        }       
+        }
 
         const deliveredData = await Order.getDeliveredProductData({
           order_id: orderData.id,          
@@ -155,6 +154,9 @@ export default function ViewDeliveredProductDetails({ open, handleClose, handleS
         if(deliveredData != undefined && deliveredData != ""){
           setInputs(deliveredData[0]);
         }  
+        
+        const response = await CategoryAPI.getOrderedProductList({ product_ids : orderData.product_id });
+        setOrderedProductList(response.productList);
         
       } catch (error) {
         console.log('Error..',error);
@@ -189,7 +191,7 @@ return (
                      {"Order Id: " + orderData.order_id }
                   </Typography> 
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"Customer Name: " + orderData.customer_name }
+                    {"Customer Name: " + orderData.first_name + ' ' + orderData.last_name }
                   </Typography>
                 </Grid>               
            
@@ -203,7 +205,10 @@ return (
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
-                     {"PRODUCT TO DELIVERED:  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name}
+                     {/* {"PRODUCT TO DELIVERED:  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name} */}
+                      {"PRODUCT TO DELIVERED :  " + (orderedProductList.length > 0 ? orderedProductList :[]).map(data => {
+                        return(data.name)
+                      })}
                   </Typography>                  
                 </Grid>
                 <Grid item xs={12} sm={12}>   

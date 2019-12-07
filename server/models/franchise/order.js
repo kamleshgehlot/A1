@@ -799,7 +799,6 @@ Order.prototype.getFixedOrderDetail = function () {
 Order.prototype.getCustomerDetails = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
-console.log('that...', that)
     connection.getConnection(function (error, connection) {
       if (error) {
         throw error;
@@ -876,7 +875,7 @@ Order.prototype.getOrderList = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         // connection.query('SELECT o.id, o.order_id, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type, o.order_date, o.order_status, o.assigned_to, o.order_type, o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.budget_id from orders as o inner join customer as c on o.customer_id = c.id WHERE o.is_active = 1 ORDER BY o.id DESC',function (error, rows, fields) {
-          connection.query('SELECT o.id, o.order_id, o.ezidebit_uid, c.id as customer_id, c.customer_name, c.address, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%h:%i:%p\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%h:%i:%p\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name, o.sales_person_id, u.name as sales_person_name from orders as o INNER join customer as c on o.customer_id = c.id LEFT JOIN order_status as os on o.order_status = os.id LEFT JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id LEFT JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id ORDER BY o.id DESC',function (error, rows, fields) {
+          connection.query('SELECT o.id, o.order_id, o.ezidebit_uid, c.id as customer_id, c.first_name, c.last_name, c.address, c.suburb, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.product_id, o.product_related_to, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, DATE_FORMAT(o.delivered_time, \'%h:%i:%p\') delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, DATE_FORMAT(o.delivery_time, \'%h:%i:%p\') delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\',  stl.sales_type_name, o.sales_person_id, u.name as sales_person_name from orders as o INNER join customer as c on o.customer_id = c.id LEFT JOIN order_status as os on o.order_status = os.id LEFT JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id LEFT JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id ORDER BY o.id DESC',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -1437,7 +1436,7 @@ Order.prototype.getComment = function () {
       }
       if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-           connection.query('select o.id, o.order_id, o.created_by, u.name as created_by_name, o.user_role, o.comment, o.is_active, o.created_at from order_comment as o INNER JOIN user as u on o.created_by = u.id where o.order_id = "'+that.order_id+'" order by o.id DESC',function (error, rows, fields) {
+           connection.query('select o.id, o.order_id, o.created_by, u.name as created_by_name, o.user_role, o.comment, o.is_active, DATE_FORMAT(o.created_at, \'%W %d %M %Y %H:%i:%s\') created_at from order_comment as o INNER JOIN user as u on o.created_by = u.id where o.order_id = "'+that.order_id+'" order by o.id DESC',function (error, rows, fields) {
               if (!error) {              
                       resolve(rows);
                     } else {

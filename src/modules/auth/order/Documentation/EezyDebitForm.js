@@ -25,7 +25,7 @@ export default function layout(data, order, formType) {
   let eziDebitFormType = formType;
 
 
-  if(bankDetail.length ==0 || bankDetail == "" || bankDetail == undefined ||  bankDetail == []){
+  if(bankDetail.length == 0 || bankDetail == "" || bankDetail == undefined ||  bankDetail == []){
     eziDebitFormType = 0;
   }
 
@@ -83,9 +83,9 @@ export default function layout(data, order, formType) {
                 [
                   {},
                   { text: '* Surname: ', fontSize: 7, bold: true, }, 
-                  { text: customer.customer_name.split(' ')[1], fontSize: 7, fillColor:'#ffffff'},
+                  { text: eziDebitFormType === 1 ? customer.last_name : '', fontSize: 7, fillColor:'#ffffff'},
                   { text: '* Given Name: ', fontSize: 7, bold: true, alignment: 'right'}, 
-                  { text: eziDebitFormType=== 1 ? customer.customer_name.split(' ')[0] : '', fontSize: 7, fillColor:'#ffffff'},
+                  { text: eziDebitFormType === 1 ? customer.first_name : '', fontSize: 7, fillColor:'#ffffff'},
                   {},
                 ],     
                 [
