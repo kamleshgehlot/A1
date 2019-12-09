@@ -7,5 +7,6 @@ const StaticContentRouter = express.Router();
 
 StaticContentRouter.route('/getWeekDayList').get(validateToken, StaticContent.getWeekDayList);
 StaticContentRouter.route('/getPaymentModeList').get(validateToken, StaticContent.getPaymentModeList);
+StaticContentRouter.route('/getDiscountRateList').get(validateToken, StaticContent.getDiscountRateList);
 
 module.exports = StaticContentRouter;

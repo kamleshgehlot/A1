@@ -138,6 +138,7 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
       interest_rate : parseFloat(inputs.interest_rate).toFixed(2),
       interest_rate_per : parseFloat(inputs.interest_rate_per).toFixed(2),
       total_interest : parseFloat(inputs.total_interest).toFixed(2),
+      bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
     }
     setFixedOrderList(data);
     handleFixedClose(false);
@@ -767,6 +768,29 @@ return (
                       onChange={handlePriceInput}
                       error={errors.minimum_payment_amt}
                       helperText={errors.minimum_payment_amt}
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      disabled = {viewOnly}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                    Bond Amt
+                  </Typography>
+                  <TextField
+                      id="bond_amt"
+                      name="bond_amt"
+                      value={inputs.bond_amt}
+                      onChange={handlePriceInput}
+                      error={errors.bond_amt}
+                      helperText={errors.bond_amt}
                       fullWidth
                       type="text"
                       margin="dense"

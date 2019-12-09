@@ -55,4 +55,30 @@ StaticContent.prototype.getPaymentModeList = function () {
   });
 };
 
+
+
+StaticContent.prototype.getDiscountRateList = function () {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])}); 
+      connection.query('SELECT `id`, `duration_in_year`, `duration_period`, `weekly_discount_rate`, `fortnightly_discount_rate`, `is_active`, `created_at` FROM `discount_rate_list` WHERE is_active = 1', (error, rows, fields) => {
+        if (!error) {
+          resolve(rows);
+        } else {
+          console.log('Error...', error);
+          reject(error);
+        }
+      });
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
 module.exports = StaticContent;

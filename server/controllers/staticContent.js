@@ -18,4 +18,14 @@ const getPaymentModeList = async function(req, res, next) {
   }
 };
 
-module.exports = { getWeekDayList, getPaymentModeList};
+const getDiscountRateList = async function(req, res, next) {
+  try {
+    const result = await new StaticContent({user_id: req.decoded.user_id}).getDiscountRateList();
+    res.send({ discountRateList : result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+module.exports = { getWeekDayList, getPaymentModeList, getDiscountRateList};

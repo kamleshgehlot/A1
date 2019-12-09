@@ -505,34 +505,37 @@ Task.prototype.getTaskHistory = function () {
         const query2 = 'select t.id, t.task_id, ta.id as activity_id, t.task_description, t.is_active, t.created_by as task_created_by, t.creator_role, DATE_FORMAT(t.created_at, \'%W %d %M %Y %H:%i:%s\')  task_created_at, ta.assign_to, ta.assign_to_role as assign_to_role_id, ta.description as activity_description, ta.activity_status, DATE_FORMAT(ta.due_date,\'%Y-%m-%d\') due_date, DATE_FORMAT(ta.start_date,\'%Y-%m-%d\') start_date, DATE_FORMAT(ta.completed_date,\'%Y-%m-%d\') completed_date, DATE_FORMAT(ta.reschedule_req_date,\'%Y-%m-%d\') reschedule_req_date, DATE_FORMAT(ta.last_due_date,\'%Y-%m-%d\') last_due_date, ta.message_id, ta.document_id, ta.status, ta.created_by as activity_created_by, DATE_FORMAT(ta.created_at, \'%W %d %M %Y %H:%i:%s\') activity_created_at, u.name as task_created_by_name, ua.name as assign_to_name, case r.name when "Admin" then "Director" else r.name END as assign_to_role_name, ts.status as task_status_name,  m.message, d.document  from task as t INNER JOIN task_activity ta on t.id = ta.task_id INNER JOIN user as u on t.created_by = u.id INNER JOIN role as r on ta.assign_to_role = r.id INNER JOIN user as ua on ta.assign_to = ua.id INNER JOIN task_status as ts on ta.status = ts.id LEFT JOIN task_message as m on ta.message_id = m.id LEFT JOIN task_document as d on ta.document_id = d.id WHERE t.id = "'+that.taskInsertId+'" AND ta.assign_to = "'+that.userId+'" AND ta.assign_to_role = "' +that.assign_to_role+ '" ORDER BY ta.id desc';
 
         connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-        connection.query('select creator_role from task where id = "'+that.taskInsertId+'"', function (error, rows, fields) {
-          if (!error) { 
-            if(that.userId === that.task_created_by && that.user_role === rows[0].creator_role){
-              console.log('history query1 is running')
-              connection.query(query1, function (error, rows, fields) {
-                if (!error) {
-                  resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
+        connection.query('SET @@session.time_zone="+12:00";', function (error, rows, fields) {
+          if(error) reject(error);
+            connection.query('select creator_role from task where id = "'+that.taskInsertId+'"', function (error, rows, fields) {
+              if (!error) { 
+                if(that.userId === that.task_created_by && that.user_role === rows[0].creator_role){
+                  console.log('history query1 is running')
+                  connection.query(query1, function (error, rows, fields) {
+                    if (!error) {
+                      resolve(rows);
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
+                }else {
+                  console.log('history query1 is running')
+                  connection.query(query2, function (error, rows, fields) {                
+                    if (!error) {
+                      resolve(rows);
+                    } else {
+                      console.log("Error...", error);
+                      reject(error);
+                    }
+                  });
                 }
-              });
-            }else {
-              console.log('history query1 is running')
-              connection.query(query2, function (error, rows, fields) {                
-                if (!error) {
-                  resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
-              });
-            }
-          } else {
-            console.log("Error...", error);
-            reject(error);
-          }
-        });
+              } else {
+                console.log("Error...", error);
+                reject(error);
+              }
+            });
+          });
           connection.release();
           console.log('Process Complete %d', connection.threadId);
         }

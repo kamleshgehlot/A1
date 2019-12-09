@@ -753,8 +753,7 @@ return (
                     <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
                       Close
                     </Button>
-                  </Grid>
-                  } 
+                  </Grid>                   
                 </Grid>
           </Paper>
             

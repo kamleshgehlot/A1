@@ -61,6 +61,7 @@ import RoleAPI from '../../../api/franchise/Role';
 
 
 import StyledTreeItem from './StyledTreeItem';
+import EMICalculator from './Component/EMICalculator';
 
 
 const drawerWidth = 220;
@@ -151,6 +152,7 @@ export default function ClippedDrawer(props) {
   const [roles, setRoles] = useState([]);
   const [roleAs, setRoleAs]= useState('');
   const [role_Id, setRole_Id]= useState('');
+  const [emiCalculatorOpen, setEmiCalculatorOpen] = useState (false);
 
   useEffect(()=>{
       const fetchData = async () => {
@@ -185,6 +187,14 @@ export default function ClippedDrawer(props) {
 
   function handleSnackbarClose() {
     setSnackbarOpen(false);
+  }
+
+  function handleEmiCalculatorOpen() {
+    setEmiCalculatorOpen(true);
+  }
+
+  function handleEmiCalculatorClose() {
+    setEmiCalculatorOpen(false);
   }
 
   function handleDashboardClick(role, roleId){
@@ -574,31 +584,24 @@ export default function ClippedDrawer(props) {
       <AppBar position="fixed" className={classes.appBar}  elevation={0}>
         <Toolbar>
           <Typography variant="h6" className={classes.title} noWrap>
-          Welcome {userName.split(' ')[0]}
+            Welcome {userName.split(' ')[0]}
           </Typography>
           <Typography variant="h6" className={classes.title} noWrap>
-          Welcome To Rentronics
+            Welcome To Rentronics
           </Typography>
-          {roleName === 'Super Admin' ? <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}>
-          Logout
-          </Button>:
+          {roleName === 'Super Admin' ? 
+            <Button color="inherit" className={classes.fonttransform} onClick={handleLogout}> Logout </Button>:
             <div>
-              <Button aria-controls="simple-menu" aria-haspopup="true" className={classes.menu} onClick={handleMenuClick}>
-              Settings
-              </Button>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem  className={classes.textsize} onClick={handleProfileClick}>Profile</MenuItem>
-                <MenuItem className={classes.textsize} onClick={handleChangePasswordClick}>Change Password</MenuItem>
-                {roleName === 'Admin' && (  <MenuItem  className={classes.textsize} onClick={handleFranchiseDetailClick}>Franchise Details</MenuItem>)}
-                <MenuItem className={classes.textsize} onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </div>}
+              <Button aria-haspopup="true" style={{marginRight : '10px'}} className={classes.menu} onClick={handleEmiCalculatorOpen}> EMI Calculator </Button>
+              <Button aria-controls="simple-menu" aria-haspopup="true" className={classes.menu} onClick={handleMenuClick}> Settings </Button>
+                <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose} >
+                  <MenuItem className={classes.textsize} onClick={handleProfileClick}>Profile</MenuItem>
+                  <MenuItem className={classes.textsize} onClick={handleChangePasswordClick}>Change Password</MenuItem>
+                  {roleName === 'Admin' && (  <MenuItem  className={classes.textsize} onClick={handleFranchiseDetailClick}>Franchise Details</MenuItem>)}
+                  <MenuItem className={classes.textsize} onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+            </div>
+          }
         </Toolbar>
       </AppBar>
 
@@ -818,10 +821,10 @@ export default function ClippedDrawer(props) {
         }
         {
           showPaymentStatus ?  <Payments roleName={roleAs} /> : null
-        }
-      
-        
-        {/* {props.children} */}
+        }    
+        {
+          emiCalculatorOpen ? <EMICalculator open = {emiCalculatorOpen} handleClose = {handleEmiCalculatorClose} /> : null
+        }  
       </main>
 
 

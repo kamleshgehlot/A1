@@ -621,7 +621,7 @@ const assignToFinance = async function(req, res, next) {
     await newActivity.assignToFinance();
     const isScheduleExist = await newActivity.isScheduleExist();
 
-    console.log('isScheduleExist',isScheduleExist);
+    // console.log('isScheduleExist',isScheduleExist);
 
     if(isScheduleExist == null || isScheduleExist.length === 0){
       console.log('exist')

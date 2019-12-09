@@ -174,6 +174,7 @@ export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fi
       intrest_rate : parseFloat(inputs.intrest_rate).toFixed(2),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per).toFixed(2),
       total_intrest : parseFloat(inputs.total_intrest).toFixed(2),
+      bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
     }
     
     setFixedOrderList(data);
@@ -838,7 +839,29 @@ return (
                             helperText={errors.exp_delivery_time}                            
                           />
                       </MuiPickersUtilsProvider>                   
-                </Grid>               
+                </Grid>    
+                <Grid item xs={12} sm={4}>
+                  <Typography  className={classes.subTitle}>
+                    Bond Amt
+                  </Typography>
+                  <TextField
+                      id="bond_amt"
+                      name="bond_amt"
+                      value={inputs.bond_amt}
+                      onChange={handlePriceInput}
+                      error={errors.bond_amt}
+                      helperText={errors.bond_amt}
+                      fullWidth
+                      type="text"
+                      margin="dense"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}                      
+                    />
+                </Grid>           
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
                     Interest
