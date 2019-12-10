@@ -497,6 +497,13 @@ return (
                   {"Total Received Amt.:  " + totalPaid.toFixed(2) }
               </Typography>              
             </Grid>
+            {orderData.order_type===1 &&
+            <Grid item xs={12} sm={11}>
+              <Typography variant="h6" className={classes.labelTitle}>
+                { ("Bond Amt:  " + orderTypeData.bond_amt )}
+              </Typography>                            
+            </Grid>
+            }   
             <Grid item xs={12} sm={0}></Grid>  
             <Grid item xs={12} sm={11}>
               <Typography variant="h6" className={classes.labelTitle}>
@@ -506,8 +513,6 @@ return (
                 })}
               </Typography>                  
             </Grid>
-            
-            
             <Grid item xs={12} sm={11}>   
               <Divider />
               <Typography variant="h6" className={classes.labelTitle}> {'\n'} </Typography> 

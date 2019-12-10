@@ -175,7 +175,7 @@ export default function EMICalculator({ open, handleClose}) {
                     >
                       {(discountList != undefined && discountList != null && discountList.length > 0 ? discountList : []).map(data => {                        
                         return (
-                          <MenuItem className={classes.textsize} value={data.duration_in_year} >{data.duration_period}</MenuItem>
+                          <MenuItem className={classes.textsize} value={data.duration_in_year} >{data.duration_in_year + ' Year'}</MenuItem>
                         );
                       })}
                     </Select>

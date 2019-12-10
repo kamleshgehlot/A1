@@ -100,6 +100,7 @@ orderRouter.route("/archiveOrder").post(validateToken, Order.archiveOrder);
 orderRouter.route("/getPaymentSchedule").post(validateToken, Order.getPaymentSchedule);
 orderRouter.route("/paymentReschedule").post(validateToken, Order.paymentReschedule);
 orderRouter.route("/searchOrder").post(validateToken, Order.searchOrder);
+orderRouter.route("/filterMissedPaymentData").post(validateToken, Order.filterMissedPaymentData);
 
 
 

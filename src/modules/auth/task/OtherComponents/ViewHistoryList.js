@@ -33,8 +33,7 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 
 import { API_URL, APP_TOKEN } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
-import PropTypes from 'prop-types';
-
+import {getDateInDDMMYYYY} from '../../../../utils/datetime.js';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -145,8 +144,7 @@ export default function ViewHistoryList({historyList, roleName}) {
     <List className={classes.root}>
     {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {
       return(
-        <div>
-          {/* { ((data.activity_created_by == userId && data.creator_role == roleName)  || (data.assign_to == userId && data.assign_to_role_name == roleName)) && */}
+        <div>          
           <ListItem alignItems="flex-start">
             <ListItemIcon>
               <PlayArrowIcon />
@@ -161,7 +159,7 @@ export default function ViewHistoryList({historyList, roleName}) {
                     {data.activity_status == 1 ? 
                       'Task created by ' + data.task_created_by_name + " (" + data.creator_role + ")" +
                       ' for ' + data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
-                      ' on ' + data.activity_created_at + ' with due date ' + data.due_date
+                      ' on ' + data.activity_created_at + ' with due date ' + getDateInDDMMYYYY(data.due_date)
                     :''}
                     {data.activity_status == 2 ?
                       'Task Description Changed by ' +  data.task_created_by_name + " (" + data.creator_role + ")" +
@@ -174,7 +172,7 @@ export default function ViewHistoryList({historyList, roleName}) {
                     {data.activity_status == 4  && data.status == 1 ?
                     'Task assigned to ' + data.assign_to_name +  " (" + data.assign_to_role_name + ")" +
                     ' on ' + data.activity_created_at +
-                    ' with due date ' + data.due_date
+                    ' with due date ' + getDateInDDMMYYYY(data.due_date)
                     :''}
                     {data.activity_status == 4  && data.status == 5 ?
                     'Task assigned to other person' +

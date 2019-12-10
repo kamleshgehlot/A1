@@ -1068,7 +1068,16 @@ const editOrder = async function (req, res, next) {
       next(error);
     }
   };
+
   
+  const filterMissedPaymentData = async function(req, res, next) {
+    try {
+      const result = await new Order({user_id: req.decoded.user_id, searchText: req.body.searchText}).filterMissedPaymentData();      
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  };
   
   const searchOrder = async function (req, res, next) {
     let CustomerParams = {
@@ -1128,4 +1137,5 @@ module.exports = {
   getPaymentSchedule,
   paymentReschedule,
   searchOrder,
+  filterMissedPaymentData,
 };

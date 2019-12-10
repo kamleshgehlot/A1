@@ -255,12 +255,14 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //     handleRandomInput([
   //       {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //       {name: 'exp_delivery_date', value:  delivey_date},
+  //       {name: 'bond_amt', value:  (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //     ]);
   //     setFixedNull(false);
   //   }else{
   //     handleRandomInput([
   //       {name: 'minimum_payment_amt', value: ''},
   //       {name: 'exp_delivery_date', value: ''},
+  //       {name: 'bond_amt', value:  ''},
   //     ]);
   //   }
   // },[paymentBeforeDelivery]);
@@ -283,7 +285,7 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //           {name: 'no_of_payment', value: ((duration * 2) + (duration/12 * 2))},
   //           {name: 'total_payment_amt', value: (installment * ((duration * 2) + (duration/12 * 2))).toFixed(2)},
   //         ]);
-  //       }else if(frequency == 4){ 
+  //       }else if(frequency == 4){
   //         let installment = (totalOfRental);
   //         handleRandomInput([
   //           {name: 'each_payment_amt', value: installment.toFixed(2)},
@@ -296,8 +298,9 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //       setPaymentBeforeDelivery('');
   //       handleRandomInput([
   //         {name: 'minimum_payment_amt', value: ''},
-  //         {name: 'before_delivery_amt', value: ''},   
-  //         {name: 'exp_delivery_date', value: ''},     
+  //         {name: 'before_delivery_amt', value: ''},
+  //         {name: 'bond_amt', value:  ''},
+  //         {name: 'exp_delivery_date', value: ''},
   //       ]);
   //       alert('Number of payment before delivery should be less then or equal to total number of payment.');
   //     }
@@ -321,11 +324,13 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //       if(inputs.each_payment_amt != ""){
   //         handleRandomInput([
   //           {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+  //           {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //           {name: 'total_payment_amt', value: (Number(inputs.no_of_payment) * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //         ]);
   //       }else{
   //         handleRandomInput([
   //           {name: 'minimum_payment_amt', value: ''},
+  //           {name: 'bond_amt', value: ''},
   //           {name: 'total_payment_amt', value: ''},
   //         ]);
   //       }
@@ -340,10 +345,11 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //         handleRandomInput([
   //           {name: 'each_payment_amt', value: (parseFloat(inputs.total_payment_amt) / Number(inputs.no_of_payment)).toFixed(2)},
   //           {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+  //           {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //         ]);
   //       }else{
   //         handleRandomInput([
-  //           {name: 'minimum_payment_amt', value: ''},
+  //           {name: 'bond_amt', value: ''},
   //           {name: 'each_payment_amt', value: ''},
   //         ]);
   //       }

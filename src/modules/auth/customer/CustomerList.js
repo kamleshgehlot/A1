@@ -343,6 +343,28 @@ export default function CustomerList({userId, roleName}) {
     }
   }
 
+  const handlePaymentFilter = async (searchText) => {
+    if(searchText!=''){
+      let missedPayment = [];
+      const currDate = getCurrentDateDBFormat();
+
+      const paymentData = await Order.filterMissedPaymentData({searchText : searchText});      
+      (customerListData.length > 0 ? customerListData : []).map((data, index) => {
+        (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
+          if(data.id == payData.customer_id){
+            if(currDate > getDate(payData.payment_date)){
+              data.payment_date = getDateInDDMMYYYY(payData.payment_date);
+              data.order_format_id = payData.order_format_id;
+              data.order_id = payData.order_id;
+              missedPayment.push(data);
+            }
+          }
+        });
+      });
+      setMissedPaymentTab(missedPayment);
+    }
+  }
+
   const fetchMissedPaymentData = async () =>{
     const result = await Order.fetchMissedPaymentData({});
     return result;
@@ -485,7 +507,7 @@ export default function CustomerList({userId, roleName}) {
                   {bornTodayTab && <BornToday customerList={bornTodayTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} /> } 
+                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} /> } 
                 </TabPanel>
               </div>
             </Paper>                            

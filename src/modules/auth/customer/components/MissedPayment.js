@@ -25,15 +25,25 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import TablePagination from '@material-ui/core/TablePagination';
 import CreateIcon from '@material-ui/icons/Create';
 import UpdateIcon from '@material-ui/icons/Update';
+import FilterIcon from '@material-ui/icons/FilterList';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
-
+import Grid from '@material-ui/core/Grid';
+import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
-import PropTypes from 'prop-types';
-
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import Popover from '@material-ui/core/Popover';;
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Fade from '@material-ui/core/Fade';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 import {TablePaginationActions} from '../../../common/Pagination';
 import {getDate, getDateInDDMMYYYY} from '../../../../utils/datetime';
+import { Divider } from '@material-ui/core';
 
 
 const drawerWidth = 240;
@@ -85,7 +95,10 @@ const useStyles = makeStyles(theme => ({
   textsize:{
     fontSize: theme.typography.pxToRem(12),
     color: 'blue',
-  }
+  },
+  typography: {
+    padding: theme.spacing(2),
+  },
 }));
 
 
@@ -100,13 +113,13 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function MissedPayment({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen, handleOrderView }) {
+export default function MissedPayment({customerList, handleOrderView, handlePaymentFilter }) {
   // console.log('custome',customerList)
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
+  const [searchText, setSearchText] = React.useState('');
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, customerList.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -116,92 +129,130 @@ export default function MissedPayment({customerList, handleClickEditOpen, handle
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };    
+  };
+
+  const handleSearchText = async (e) => {
+    setSearchText(e.target.value);
+  }
   
 
-return (  
-    <Table stickyHeader  className={classes.table}>
-      <TableHead>
-        <TableRow>
-          <StyledTableCell>#          </StyledTableCell>
-          <StyledTableCell>Order Id   </StyledTableCell>
-          <StyledTableCell>Name       </StyledTableCell>
-          <StyledTableCell>Contact    </StyledTableCell>
-          <StyledTableCell>Email ID   </StyledTableCell>
-          <StyledTableCell>Address    </StyledTableCell>
-          <StyledTableCell>Payment Due Date</StyledTableCell>
-          <StyledTableCell>Created By </StyledTableCell>
-          {/* <StyledTableCell>Options    </StyledTableCell> */}
-        </TableRow>
-      </TableHead>
-      <TableBody>        
-          {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {
-          // (customerList.length > 0 ? customerList : []).map((data, index) => {
-            return(
-              <TableRow key={data.id}>
-                  <StyledTableCell> {data.id}           </StyledTableCell>
-                  <StyledTableCell>     
-                    <IconButton  size="small" className={classes.textsize} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOrderView(data); }}>
-                      {data.order_format_id}
-                    </IconButton> 
-                  </StyledTableCell>
-                  <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
-                  <StyledTableCell> {data.mobile === '' || data.mobile === null || data.mobile === undefined ? data.telephone : data.telephone==='' || data.telephone === null || data.telephone === undefined ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
-                  <StyledTableCell> {data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
-                  <StyledTableCell> {data.address}  </StyledTableCell>
-                  <StyledTableCell> {data.payment_date}  </StyledTableCell>
-                  <StyledTableCell> {data.created_by_name}  </StyledTableCell>
-                  <StyledTableCell>                 
-                    {/* <Tooltip title="Update Budget">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
-                      <AccountBalanceIcon/>
-                      </IconButton>
-                    </Tooltip> */}
-                    {/* 
-                     <Tooltip title="Update">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
-                      <CreateIcon/>
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Update Bank Detail">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleBankDetailOpen(data); }}>
-                      <DetailsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View">
-                      <IconButton  size="small" className={classes.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickCommentOpen(data); }} >
-                        <CommentIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View Budget History">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
-                        <UpdateIcon />
-                      </IconButton>
-                    </Tooltip>*/}
-               </StyledTableCell> 
-               </TableRow>
-             )
-          })
-        }
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            colSpan={8}
-            count={customerList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            SelectProps={{
-              inputProps: { 'aria-label': 'rows per page' },
-              native: true,
+return (
+    <div>
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={12}> 
+          <TextField
+            margin="dense"
+            id="search"
+            name="search"
+            placeholder ="Type (Order#, Customer Name, Payment Date) to Search Record..."
+            type="text"
+            autoComplete='off'
+            value={searchText}
+            onKeyPress={(ev) => {
+              if (ev.key ===  'Enter') {
+                handlePaymentFilter(searchText);
+                ev.preventDefault();
+              }
             }}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-          />
-        </TableRow>
-      </TableFooter>
-    </Table>    
+            onChange={handleSearchText}
+            InputProps={{
+              endAdornment: 
+              <InputAdornment position='end'>
+                <Tooltip title="Search">
+                {/* onClick={ searchHandler} */}
+                  <IconButton onClick = {()=> {handlePaymentFilter(searchText)}}><SearchIcon /></IconButton>
+                </Tooltip>
+                <Tooltip title="Filter">
+                  <PopupState variant="popover" popupId="demo-popup-popover">
+                    {popupState => (
+                    <div>
+                      <IconButton variant="contained" color="primary" {...bindTrigger(popupState)}>
+                        <FilterIcon />
+                      </IconButton>
+                      <Popover 
+                        {...bindPopover(popupState)}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'right',}}
+                      >
+                         <Paper>
+                          <Typography className={classes.typography} style={{fontWeight:'bold'}}>Payment Type</Typography>
+                          <Divider />
+                          <Button ><Typography className={classes.typography}>Fix</Typography></Button>
+                          <Button ><Typography className={classes.typography}>Flex</Typography></Button>
+                        </Paper>
+                        {/* <Paper>
+                          <Typography className={classes.typography}>The content of the Popper.</Typography>
+                        </Paper> */}
+                      </Popover>
+                    </div>
+                    )}
+                  </PopupState>
+                </Tooltip>
+              </InputAdornment>,
+            }}
+            fullWidth
+          />  
+        </Grid>
+        <Grid item xs={12} sm={12}>
+      <Table stickyHeader  className={classes.table}>
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>#          </StyledTableCell>
+            <StyledTableCell>Order Id   </StyledTableCell>
+            <StyledTableCell>Name       </StyledTableCell>
+            <StyledTableCell>Contact    </StyledTableCell>
+            <StyledTableCell>Email ID   </StyledTableCell>
+            <StyledTableCell>Address    </StyledTableCell>
+            <StyledTableCell>Payment Due Date</StyledTableCell>
+            <StyledTableCell>Created By </StyledTableCell>
+            {/* <StyledTableCell>Options    </StyledTableCell> */}
+          </TableRow>
+        </TableHead>
+        <TableBody>        
+            {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {
+            // (customerList.length > 0 ? customerList : []).map((data, index) => {
+              return(
+                <TableRow key={data.id}>
+                    <StyledTableCell> {data.id}           </StyledTableCell>
+                    <StyledTableCell>     
+                      <IconButton  size="small" className={classes.textsize} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOrderView(data); }}>
+                        {data.order_format_id}
+                      </IconButton> 
+                    </StyledTableCell>
+                    <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
+                    <StyledTableCell> {data.mobile === '' || data.mobile === null || data.mobile === undefined ? data.telephone : data.telephone==='' || data.telephone === null || data.telephone === undefined ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
+                    <StyledTableCell> {data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
+                    <StyledTableCell> {data.address}  </StyledTableCell>
+                    <StyledTableCell> {data.payment_date}  </StyledTableCell>
+                    <StyledTableCell> {data.created_by_name}  </StyledTableCell>
+                    <StyledTableCell>                                   
+                </StyledTableCell> 
+                </TableRow>
+              )
+            })
+          }
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              colSpan={8}
+              count={customerList.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: { 'aria-label': 'rows per page' },
+                native: true,
+              }}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>  
+      </Grid>
+    </Grid> 
+    </div>   
   )
 }

@@ -1768,6 +1768,35 @@ Order.prototype.getReceivedPaymentsList = function () {
 
 
 
+
+Order.prototype.filterMissedPaymentData = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE c.first_name LIKE "%' +that.searchText+ '%" OR c.last_name LIKE "%' +that.searchText+ '%" OR o.order_id LIKE "%' +that.searchText+ '%" OR a.payment_date = "' +that.searchText+ '"  group by a.order_id', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          })
+      }
+      connection.release();
+      console.log('List Fetch for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
 Order.prototype.fetchMissedPaymentData = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
