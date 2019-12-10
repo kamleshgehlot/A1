@@ -32,7 +32,7 @@ export default function layout(data, order, formType) {
   // console.log("data", data);
   // console.log('paymentDate',paymentDate);
   // console.log("data", data);
-  // console.log(orderType);
+  console.log(orderType);
   // console.log(customer);
   // console.log(order);
 
@@ -313,20 +313,20 @@ export default function layout(data, order, formType) {
                 ], 
                 [
                   {},
-                  { 
+                  {
                     table:{
                       widths: ['5%','19%','1%','19%','1%','19%','1%','19%','1%','19%',],
                       body: [                 
                         [
                           { text:'', border: [false, false, false, false]},
-                          { text:'Frequency:', fontSize: 8, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor: '#ffffff'},
+                          { text:'Frequency:', fontSize: 8, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},                          
+                          { text:'', fillColor: eziDebitFormType=== 1 && (orderType.frequency === 4 ? '#000000' : '#ffffff')},
                           { text:'Weekly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor: eziDebitFormType=== 1 ? orderType.frequency === 4 ? '#000000' : '#ffffff' : '#ffffff'},
+                          { text:'', fillColor: eziDebitFormType=== 1 && (orderType.frequency === 2 ? '#000000' : '#ffffff')},
                           { text:'Fortnightly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor: eziDebitFormType=== 1 ? orderType.frequency === 2 ? '#000000' : '#ffffff': '#ffffff'},
+                          { text:'', fillColor: eziDebitFormType=== 1 && (orderType.frequency === 1 ? '#000000' : '#ffffff')},
                           { text:'Monthly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
-                          { text:'', fillColor: eziDebitFormType=== 1 ? orderType.frequency === 1 ? '#000000' : '#ffffff' :'#ffffff'},
+                          { text:'', fillColor: '#ffffff'},
                           { text:'4 Weekly', fontSize: 7, fillColor:'#e5edd9', bold: true, border: [false, false, false, false]},
                         ],  
                       ],
@@ -544,7 +544,7 @@ export default function layout(data, order, formType) {
                         [
                           { text:'', },                          
                           { text:'Financial Institution: ', fontSize: 7, },
-                          { text:'', fillColor:'#ffffff',},
+                          { text: eziDebitFormType === 1 && (bankDetail.institution_name != null ? bankDetail.institution_name :''), fillColor:'#ffffff', fontSize: 7, bold: true,},
                           { text:'Branch: ', fontSize: 7, },
                           { text: eziDebitFormType=== 1 ? bankDetail.bank_branch :'',  fontSize: 7, bold: true,fillColor:'#ffffff',},
                         ],  

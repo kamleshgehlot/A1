@@ -50,11 +50,11 @@ export default function validate(values) {
     errors.total_payment_amt = 'Amount is invalid';
   }
  
-  if (values.bond_amt=== "" || values.bond_amt <0) {
-    errors.bond_amt = 'Bond Amount is required';
-  } else if (!validFullLengthDecimalNumber.test(values.bond_amt)) {
-    errors.bond_amt = 'Bond Amount is invalid';
-  }
+  // if (values.bond_amt=== "" || values.bond_amt <0) {
+  //   errors.bond_amt = 'Bond Amount is required';
+  // } else if (!validFullLengthDecimalNumber.test(values.bond_amt)) {
+  //   errors.bond_amt = 'Bond Amount is invalid';
+  // }
   
   if (values.before_delivery_amt==='0' || values.before_delivery_amt==="" || values.before_delivery_amt<0) {
     errors.before_delivery_amt = 'Amount is required';

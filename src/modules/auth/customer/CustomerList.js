@@ -343,25 +343,33 @@ export default function CustomerList({userId, roleName}) {
     }
   }
 
+  const setFilteredMissedPayment = async (data) => {
+    const paymentData = data;    
+    let missedPayment = [];
+    const currDate = getCurrentDateDBFormat();
+
+    (customerListData.length > 0 ? customerListData : []).map((data, index) => {
+      (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
+        if(data.id == payData.customer_id){
+          if(currDate > getDate(payData.payment_date)){
+            data.payment_date = getDateInDDMMYYYY(payData.payment_date);
+            data.order_format_id = payData.order_format_id;
+            data.order_id = payData.order_id;
+            missedPayment.push(data);
+          }
+        }
+      });
+    });
+    setMissedPaymentTab(missedPayment);
+  }
+
   const handlePaymentFilter = async (searchText) => {
     if(searchText!=''){
-      let missedPayment = [];
-      const currDate = getCurrentDateDBFormat();
-
-      const paymentData = await Order.filterMissedPaymentData({searchText : searchText});      
-      (customerListData.length > 0 ? customerListData : []).map((data, index) => {
-        (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
-          if(data.id == payData.customer_id){
-            if(currDate > getDate(payData.payment_date)){
-              data.payment_date = getDateInDDMMYYYY(payData.payment_date);
-              data.order_format_id = payData.order_format_id;
-              data.order_id = payData.order_id;
-              missedPayment.push(data);
-            }
-          }
-        });
-      });
-      setMissedPaymentTab(missedPayment);
+      const paymentData = await filterMissedPaymentData(searchText);
+      setFilteredMissedPayment(paymentData);
+    }else{
+      const paymentData = await fetchMissedPaymentData();
+      setFilteredMissedPayment(paymentData);
     }
   }
 
@@ -370,6 +378,10 @@ export default function CustomerList({userId, roleName}) {
     return result;
   }
 
+  const filterMissedPaymentData = async (searchText) =>{
+    const result = await Order.filterMissedPaymentData({searchText : searchText});      
+    return result;
+  }
 
   
   async function handleTabsData(customerList){

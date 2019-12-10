@@ -174,7 +174,7 @@ export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fi
       intrest_rate : parseFloat(inputs.intrest_rate).toFixed(2),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per).toFixed(2),
       total_intrest : parseFloat(inputs.total_intrest).toFixed(2),
-      bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
+      // bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
     }
     
     setFixedOrderList(data);
@@ -287,14 +287,14 @@ function calculateNoOfPayment(value) {
       }
       handleRandomInput([
         {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-        {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+        // {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
         {name: 'exp_delivery_date', value:   delivey_date},
       ]);
       setFixedNull(false);
     }else{
       handleRandomInput([
         {name: 'minimum_payment_amt', value: ''},
-        {name: 'bond_amt', value: ''},
+        // {name: 'bond_amt', value: ''},
         {name: 'exp_delivery_date', value: ''},
       ]);
     }
@@ -331,7 +331,7 @@ function calculateNoOfPayment(value) {
         setPaymentBeforeDelivery('');
         handleRandomInput([
           {name: 'minimum_payment_amt', value: ''},
-          {name: 'bond_amt', value: ''},
+          // {name: 'bond_amt', value: ''},
           {name: 'before_delivery_amt', value: ''},   
           {name: 'exp_delivery_date', value: ''},     
         ]);        
@@ -365,13 +365,13 @@ function calculateNoOfPayment(value) {
         if(inputs.each_payment_amt != ""){
           handleRandomInput([
             {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-            {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+            // {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
             {name: 'total_payment_amt', value: (Number(inputs.no_of_payment) * parseFloat(inputs.each_payment_amt)).toFixed(2)},
           ]);
         }else{
           handleRandomInput([
             {name: 'minimum_payment_amt', value: ''},
-            {name: 'bond_amt', value: ''},
+            // {name: 'bond_amt', value: ''},
             {name: 'total_payment_amt', value: ''},
           ]);
         }
@@ -386,12 +386,12 @@ function calculateNoOfPayment(value) {
           handleRandomInput([
             {name: 'each_payment_amt', value: (parseFloat(inputs.total_payment_amt) / Number(inputs.no_of_payment)).toFixed(2)},
             {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-            {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+            // {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
           ]);
         }else{
           handleRandomInput([
             {name: 'minimum_payment_amt', value: ''},
-            {name: 'bond_amt', value: ''},
+            // {name: 'bond_amt', value: ''},
             {name: 'each_payment_amt', value: ''},
           ]);
         }
@@ -847,7 +847,7 @@ return (
                           />
                       </MuiPickersUtilsProvider>                   
                 </Grid>    
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Bond Amt
                   </Typography>
@@ -868,7 +868,7 @@ return (
                         },
                       }}                      
                     />
-                </Grid>           
+                </Grid>            */}
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
                     Interest

@@ -138,7 +138,7 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
       interest_rate : parseFloat(inputs.interest_rate).toFixed(2),
       interest_rate_per : parseFloat(inputs.interest_rate_per).toFixed(2),
       total_interest : parseFloat(inputs.total_interest).toFixed(2),
-      bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
+      // bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
     }
     setFixedOrderList(data);
     handleFixedClose(false);
@@ -255,14 +255,14 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //     handleRandomInput([
   //       {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //       {name: 'exp_delivery_date', value:  delivey_date},
-  //       {name: 'bond_amt', value:  (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+  //      // {name: 'bond_amt', value:  (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //     ]);
   //     setFixedNull(false);
   //   }else{
   //     handleRandomInput([
   //       {name: 'minimum_payment_amt', value: ''},
   //       {name: 'exp_delivery_date', value: ''},
-  //       {name: 'bond_amt', value:  ''},
+  //  //       {name: 'bond_amt', value:  ''},
   //     ]);
   //   }
   // },[paymentBeforeDelivery]);
@@ -299,7 +299,7 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //       handleRandomInput([
   //         {name: 'minimum_payment_amt', value: ''},
   //         {name: 'before_delivery_amt', value: ''},
-  //         {name: 'bond_amt', value:  ''},
+  //  //     {name: 'bond_amt', value:  ''},
   //         {name: 'exp_delivery_date', value: ''},
   //       ]);
   //       alert('Number of payment before delivery should be less then or equal to total number of payment.');
@@ -324,13 +324,13 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //       if(inputs.each_payment_amt != ""){
   //         handleRandomInput([
   //           {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-  //           {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+  //   //        {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //           {name: 'total_payment_amt', value: (Number(inputs.no_of_payment) * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //         ]);
   //       }else{
   //         handleRandomInput([
   //           {name: 'minimum_payment_amt', value: ''},
-  //           {name: 'bond_amt', value: ''},
+  //   //        {name: 'bond_amt', value: ''},
   //           {name: 'total_payment_amt', value: ''},
   //         ]);
   //       }
@@ -345,11 +345,11 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   //         handleRandomInput([
   //           {name: 'each_payment_amt', value: (parseFloat(inputs.total_payment_amt) / Number(inputs.no_of_payment)).toFixed(2)},
   //           {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-  //           {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
+  //  //         {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
   //         ]);
   //       }else{
   //         handleRandomInput([
-  //           {name: 'bond_amt', value: ''},
+  //     //      {name: 'bond_amt', value: ''},
   //           {name: 'each_payment_amt', value: ''},
   //         ]);
   //       }
@@ -786,7 +786,7 @@ return (
                       disabled = {viewOnly}
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
                     Bond Amt
                   </Typography>
@@ -808,7 +808,7 @@ return (
                       }}
                       disabled = {viewOnly}
                     />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
                     Interest

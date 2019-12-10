@@ -29,6 +29,8 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
 import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
@@ -44,7 +46,9 @@ import Button from '@material-ui/core/Button';
 import {TablePaginationActions} from '../../../common/Pagination';
 import {getDate, getDateInDDMMYYYY} from '../../../../utils/datetime';
 import { Divider } from '@material-ui/core';
-
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -120,6 +124,7 @@ export default function MissedPayment({customerList, handleOrderView, handlePaym
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchText, setSearchText] = React.useState('');
+  const [paymentDate, setPaymentDate] = React.useState(null);
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, customerList.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -135,6 +140,12 @@ export default function MissedPayment({customerList, handleOrderView, handlePaym
     setSearchText(e.target.value);
   }
   
+  const handlePaymentDate = (date) =>{
+    setPaymentDate(date);
+    if(date != 'Invalid Date' && date != null){
+      setSearchText(getDateInDDMMYYYY(date));
+    }
+  }
 
 return (
     <div>
@@ -158,8 +169,26 @@ return (
             InputProps={{
               endAdornment: 
               <InputAdornment position='end'>
-                <Tooltip title="Search">
-                {/* onClick={ searchHandler} */}
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="dense"
+                    id="payment_date"
+                    name="payment_date"
+                    format="dd-MM-yyyy"
+                    placeholder="DD-MM-YYYY"
+                    value={paymentDate}
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                      disableUnderline: true,
+                    }}       
+                    onChange={handlePaymentDate}
+                    error = {''}
+                    helperText = {''}
+                  />
+                </MuiPickersUtilsProvider>    
+                <Tooltip title="Search">                
                   <IconButton onClick = {()=> {handlePaymentFilter(searchText)}}><SearchIcon /></IconButton>
                 </Tooltip>
                 <Tooltip title="Filter">
@@ -177,12 +206,11 @@ return (
                          <Paper>
                           <Typography className={classes.typography} style={{fontWeight:'bold'}}>Payment Type</Typography>
                           <Divider />
-                          <Button ><Typography className={classes.typography}>Fix</Typography></Button>
-                          <Button ><Typography className={classes.typography}>Flex</Typography></Button>
-                        </Paper>
-                        {/* <Paper>
-                          <Typography className={classes.typography}>The content of the Popper.</Typography>
-                        </Paper> */}
+                          <List >
+                            <ListItem   button onClick={()=> {handlePaymentFilter('$###_Fix_###$')}}>Fix</ListItem>
+                            <ListItem   button onClick={()=> {handlePaymentFilter('$###_Flex_###$')}}>Flex</ListItem>
+                          </List>                          
+                        </Paper>                        
                       </Popover>
                     </div>
                     )}

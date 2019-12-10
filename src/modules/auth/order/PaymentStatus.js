@@ -500,7 +500,7 @@ return (
             {orderData.order_type===1 &&
             <Grid item xs={12} sm={11}>
               <Typography variant="h6" className={classes.labelTitle}>
-                { ("Bond Amt:  " + orderTypeData.bond_amt )}
+                { ("Bond Amt:  " + orderTypeData.minimum_payment_amt )}
               </Typography>                            
             </Grid>
             }   

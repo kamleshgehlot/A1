@@ -1,6 +1,7 @@
 const connection = require('../../lib/connection.js');
 const dbName = require('../../lib/databaseMySQLNew.js');
 const utils = require("../../utils");
+const {setDBDateFormat} = require('../../utils/datetime.js')
 
 
 var Order = function (params) {
@@ -107,9 +108,9 @@ Order.prototype.postOrder = function () {
                 if(that.fixedOrderType!=null){
                   const fixedValues = that.fixedOrderType;
                   let fixedOrderValues =[
-                    [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.liability_wavier_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.duration, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, fixedValues.minimum_payment_amt, fixedValues.bond_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
+                    [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.liability_wavier_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.duration, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
                   ];                  
-                  connection.query('INSERT INTO fixed_order(customer_id, int_unpaid_bal, cash_price, delivery_fee, ppsr_fee, liability_wavier_fee, frequency, first_payment, last_payment, duration, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, minimum_payment_amt, bond_amt, interest_rate, interest_rate_per, total_interest, is_active, created_by) VALUES ?',[fixedOrderValues],function (error, rows, fields) {
+                  connection.query('INSERT INTO fixed_order(customer_id, int_unpaid_bal, cash_price, delivery_fee, ppsr_fee, liability_wavier_fee, frequency, first_payment, last_payment, duration, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, minimum_payment_amt, interest_rate, interest_rate_per, total_interest, is_active, created_by) VALUES ?',[fixedOrderValues],function (error, rows, fields) {
                     if (!error) {
                       const lastInsertId = rows.insertId;
                       let orderValues = [
@@ -200,7 +201,7 @@ Order.prototype.editOrder = function () {
                 if(that.fixedOrderType!=null){
                   const fixedValues = that.fixedOrderType;
                  
-                  connection.query('UPDATE fixed_order set int_unpaid_bal = "'+fixedValues.int_unpaid_bal+'", cash_price = "'+fixedValues.cash_price+'", delivery_fee = "'+fixedValues.delivery_fee+'", ppsr_fee = "'+fixedValues.ppsr_fee+'", liability_wavier_fee = "'+fixedValues.liability_wavier_fee+'", frequency = "'+fixedValues.frequency+'", first_payment = "'+fixedValues.first_payment+'", last_payment = "'+fixedValues.last_payment+'", duration = "'+fixedValues.duration+'", no_of_payment = "'+fixedValues.no_of_payment+'", each_payment_amt = "'+fixedValues.each_payment_amt+'", total_payment_amt = "'+fixedValues.total_payment_amt+'", before_delivery_amt = "'+fixedValues.before_delivery_amt+'", exp_delivery_date = "'+fixedValues.exp_delivery_date+'", exp_delivery_time = "'+fixedValues.exp_delivery_time+'", minimum_payment_amt = "'+fixedValues.minimum_payment_amt+'", bond_amt = "' + fixedValues.bond_amt + '", interest_rate = "'+fixedValues.interest_rate+'", interest_rate_per = "'+fixedValues.interest_rate_per+'", total_interest = "'+fixedValues.total_interest+'", is_active = "'+that.is_active+'", updated_by ="'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
+                  connection.query('UPDATE fixed_order set int_unpaid_bal = "'+fixedValues.int_unpaid_bal+'", cash_price = "'+fixedValues.cash_price+'", delivery_fee = "'+fixedValues.delivery_fee+'", ppsr_fee = "'+fixedValues.ppsr_fee+'", liability_wavier_fee = "'+fixedValues.liability_wavier_fee+'", frequency = "'+fixedValues.frequency+'", first_payment = "'+fixedValues.first_payment+'", last_payment = "'+fixedValues.last_payment+'", duration = "'+fixedValues.duration+'", no_of_payment = "'+fixedValues.no_of_payment+'", each_payment_amt = "'+fixedValues.each_payment_amt+'", total_payment_amt = "'+fixedValues.total_payment_amt+'", before_delivery_amt = "'+fixedValues.before_delivery_amt+'", exp_delivery_date = "'+fixedValues.exp_delivery_date+'", exp_delivery_time = "'+fixedValues.exp_delivery_time+'", minimum_payment_amt = "'+fixedValues.minimum_payment_amt+'", interest_rate = "'+fixedValues.interest_rate+'", interest_rate_per = "'+fixedValues.interest_rate_per+'", total_interest = "'+fixedValues.total_interest+'", is_active = "'+that.is_active+'", updated_by ="'+that.updated_by+'" WHERE id = "'+that.order_type_id+'"',function (error, rows, fields) {
                     if (!error) {
                       
                       connection.query('UPDATE orders set ezidebit_uid = "'+ that.ezidebit_uid +'", product_id = "'+that.products_id+'", product_related_to = "'+that.related_to+'", sales_person_id = "'+ that.sales_person_id +'", sales_type_id = "'+that.sales_type_id+'", renting_for_id = "'+that.renting_for_id+'", payment_mode = "'+that.payment_mode+'", assigned_to = "'+that.assigned_to+'", delivery_date = "'+fixedValues.exp_delivery_date+'", delivery_time = "'+fixedValues.exp_delivery_time+'", is_active = "'+that.is_active+'", updated_by="'+that.updated_by+'" WHERE id = "'+that.id+'"',function (error, rows, fields) {
@@ -485,7 +486,7 @@ Order.prototype.getFixedOrder = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT `id`, `customer_id`, `int_unpaid_bal`, `cash_price`, `delivery_fee`, `ppsr_fee`, `discount`, `liability_wavier_fee`, `frequency`, DATE_FORMAT(`first_payment`,  \'%Y-%m-%d\') as `first_payment`, DATE_FORMAT(`last_payment`,  \'%Y-%m-%d\') as `last_payment`, `duration`, `no_of_payment`, `each_payment_amt`, `total_payment_amt`, `before_delivery_amt`, DATE_FORMAT(`exp_delivery_date`,  \'%Y-%m-%d\') as `exp_delivery_date`,  DATE_FORMAT(`exp_delivery_time`, \'%h:%i:%p\') as exp_delivery_time, `minimum_payment_amt`, `bond_amt`, `interest_rate`, `interest_rate_per`, `total_interest`, `is_active`, `created_by`, `updated_by`, `created_at`, `updated_at` FROM `fixed_order` where id = "'+that.fixedOrderId+'"',function (error, rows, fields) {
+        connection.query('SELECT `id`, `customer_id`, `int_unpaid_bal`, `cash_price`, `delivery_fee`, `ppsr_fee`, `discount`, `liability_wavier_fee`, `frequency`, DATE_FORMAT(`first_payment`,  \'%Y-%m-%d\') as `first_payment`, DATE_FORMAT(`last_payment`,  \'%Y-%m-%d\') as `last_payment`, `duration`, `no_of_payment`, `each_payment_amt`, `total_payment_amt`, `before_delivery_amt`, DATE_FORMAT(`exp_delivery_date`,  \'%Y-%m-%d\') as `exp_delivery_date`,  DATE_FORMAT(`exp_delivery_time`, \'%h:%i:%p\') as exp_delivery_time, `minimum_payment_amt`, `interest_rate`, `interest_rate_per`, `total_interest`, `is_active`, `created_by`, `updated_by`, `created_at`, `updated_at` FROM `fixed_order` where id = "'+that.fixedOrderId+'"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -1779,14 +1780,49 @@ Order.prototype.filterMissedPaymentData = function () {
       if (!error) {
         
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE c.first_name LIKE "%' +that.searchText+ '%" OR c.last_name LIKE "%' +that.searchText+ '%" OR o.order_id LIKE "%' +that.searchText+ '%" OR a.payment_date = "' +that.searchText+ '"  group by a.order_id', function (error, rows, fields) {
+        let orderType = '';
+        let paymentDate = '';
+        if(that.searchText === '$###_Fix_###$'){
+          orderType = 1;
+        }else if(that.searchText === '$###_Flex_###$'){
+          orderType = 2;
+        }
+        if(that.searchText != '')
+        {
+          if(that.searchText.split('-').length === 3 ){
+            paymentDate = setDBDateFormat(that.searchText);
+            console.log(paymentDate)
+          }
+          // console.log(paymentDate)
+        }
+        if(orderType !== ''){
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE o.order_type = "'+ orderType +'" group by a.order_id', function (error, rows, fields) {
+            if (!error) {
+              resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }else if(paymentDate !== ''){
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date = "' + paymentDate + '"  group by a.order_id', function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
             } else {
               console.log("Error...", error);
               reject(error);
             }
-          })
+          });
+        }else{         
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE (c.first_name LIKE "%' +that.searchText+ '%" OR c.last_name LIKE "%' +that.searchText+ '%" OR o.order_id LIKE "%' +that.searchText+ '%")  group by a.order_id', function (error, rows, fields) {
+            if (!error) {
+                resolve(rows);
+            } else {
+              console.log("Error...", error);
+              reject(error);
+            }
+          });
+        }          
       }
       connection.release();
       console.log('List Fetch for Franchise Staff %d', connection.threadId);

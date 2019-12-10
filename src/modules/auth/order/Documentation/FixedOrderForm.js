@@ -239,7 +239,7 @@ export default function FixedOrderForm(data,order) {
                 ],  
                 [
                   {style:styles.margins, text: [  
-                    { text: 'MINIMUM PAYMENTS:  ' + orderType[0].minimum_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: 'MINIMUM PAYMENTS:  ' + orderType[0].before_delivery_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tTOTAL AMOUNT: $' + orderType[0].total_payment_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDateInDDMMYYYY(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
                   ]}
