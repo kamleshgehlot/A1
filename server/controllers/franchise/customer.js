@@ -263,6 +263,15 @@ const updateBankDetail = async function (req, res, next) {
 };
 
 
+// const isDuplicateEmail = async function (req, res, next) {
+// 	try {
+// 		const isDuplicate = await new Customer({email: req.body.email, user_id: req.decoded.user_id}).isDuplicateEmail();
+// 		res.send({ isDuplicate: isDuplicate });
+// 	}catch (err) {
+// 		next(err);
+// 	}
+// };
+
 module.exports = { 
   register: register, 
   all: all, 
@@ -274,4 +283,5 @@ module.exports = {
   getCustomerBankDetail: getCustomerBankDetail,
   addBankDetail : addBankDetail,
   updateBankDetail : updateBankDetail,
+  // isDuplicateEmail : isDuplicateEmail,
 };

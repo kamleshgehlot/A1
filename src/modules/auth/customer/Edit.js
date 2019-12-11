@@ -36,7 +36,7 @@ import { API_URL } from '../../../api/Constants';
 import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 import {getDate, getCurrentDate} from '../../../utils/datetime';
-
+import UserAPI from '../../../api/User';
 
 const RESET_VALUES = {
   id: '',
@@ -157,7 +157,7 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
   const [otherIdTypeValue, setOtherIdTypeValue] = useState(inputValues.other_id_type);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
-
+  const [chkEmail, SetChkEmail] = useState();
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -181,6 +181,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
 
 
   const editCustomer = async (e) => {
+    if(inputs.email === chkEmail || inputs.employer_email===chkEmail){
+      alert('Email already registered')
+    }else{
       setpLoading(true);
       setSavebtn(false);
       const data = {
@@ -222,23 +225,46 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, input
       is_active: inputs.is_active,
       state : inputs.state,
 
-      other_id_type: otherIdTypeValue,
-      
+      other_id_type: otherIdTypeValue,      
     }
 
-    let formData = new FormData();
-    
-    formData.append('data', JSON.stringify(data));
-    
-    for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
-      formData.append('avatar', document.getElementById('id_proof').files[x])
+      let formData = new FormData();
+      
+      formData.append('data', JSON.stringify(data));
+      
+      for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
+        formData.append('avatar', document.getElementById('id_proof').files[x])
+      }
+      const response = await Customer.register({ formData: formData });
+      setCustomerList(response.customerList);
+      setpLoading(false);
+      setSavebtn(true);
+      handleEditClose(false);
     }
-    const response = await Customer.register({ formData: formData });
-    setCustomerList(response.customerList);
-    setpLoading(false);
-    setSavebtn(true);
-    handleEditClose(false);
   };
+
+  
+  function handleEmailVerification(event){
+    const email = event.target.value;    
+    const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!validEmail.test(email)) {
+      errors[event.target.name] = 'Email Address is invalid';
+    }
+    else{
+      errors[event.target.name] = '';
+    }
+
+    const checkEmail = async () => {
+      const response = await UserAPI.verifyEmail({email : email});
+      
+      if(response.isVerified!=''){
+      SetChkEmail(response.isVerified[0].email);
+      errors[event.target.name]  = 'Email already registered';
+      // alert('Email already registered');
+      }
+    }
+    checkEmail();
+  }
 
 
 
@@ -516,6 +542,7 @@ function handleDate(date){
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
+                      // onBlur={handleEmailVerification}
                       error={errors.email}
                       helperText={errors.email}
                       required
@@ -1000,6 +1027,7 @@ function handleDate(date){
                       // disabled
                       value={inputs.employer_email} 
                       onChange={handleInputChange}
+                      // onBlur={handleEmailVerification}
                       error={errors.employer_email}
                       helperText={errors.employer_email}
                       // required

@@ -44,4 +44,20 @@ export default {
       throw error;
     }
   },
+  updateDiscountRateList: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/staticcontent/updateDiscountRateList`;
+    try {
+      const { data } = await axios(
+        URL,
+        Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
 };

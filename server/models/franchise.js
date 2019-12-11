@@ -59,7 +59,7 @@ const payments = "CREATE TABLE IF NOT EXISTS `payments` (`id` int(11) NOT NULL A
 const paymentstatus = "CREATE TABLE IF NOT EXISTS `paymentstatus` (`id` int(11) NOT NULL AUTO_INCREMENT, `paymentReference` varchar(50) NOT NULL, `data` varchar(2) NOT NULL, `error` varchar(500) NOT NULL, `errorMessage` text NOT NULL, `is_active` int(11) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const payment_schedule = "CREATE TABLE IF NOT EXISTS `payment_schedule` (`id` int(11) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `payment_date` datetime DEFAULT NULL, `status` int(11) DEFAULT NULL, `is_active` int(11) DEFAULT NULL, `remark` TEXT DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const weekDayList = "CREATE TABLE IF NOT EXISTS `week_day_list` (`id` int(11) NOT NULL AUTO_INCREMENT, `week_day` varchar(20) DEFAULT NULL, `is_active` tinyint(1) DEFAULT '1', `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
-const discountRateList = "CREATE TABLE IF NOT EXISTS `discount_rate_list` (`id` int(11) NOT NULL AUTO_INCREMENT, `duration_in_year` int(11) DEFAULT NULL, `duration_period` varchar(100) DEFAULT NULL, `weekly_discount_rate` double DEFAULT NULL, `fortnightly_discount_rate` double DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
+// const discountRateList = "CREATE TABLE IF NOT EXISTS `discount_rate_list` (`id` int(11) NOT NULL AUTO_INCREMENT, `duration_in_year` int(11) DEFAULT NULL, `duration_period` varchar(100) DEFAULT NULL, `weekly_discount_rate` double DEFAULT NULL, `fortnightly_discount_rate` double DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 
 
@@ -237,7 +237,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });
                 connection.query(payment_schedule, function (err) { if (err) { console.log('payment_schedule Table Create Time Error: ', err) } });
                 connection.query(weekDayList, function (err) { if (err) { console.log('weekDayList Table Create Time Error: ', err) } });
-                connection.query(discountRateList, function (err) { if (err) { console.log('discountRateList Table Create Time Error: ', err) } });
+                // connection.query(discountRateList, function (err) { if (err) { console.log('discountRateList Table Create Time Error: ', err) } });
                 
                 // connection.query(document_for_payment, function (err) { if (err) { console.log('document_for_payment Table Create Time Error: ', err) } });
                 // connection.query(comment_on_payment, function (err) { if (err) { console.log('comment_on_payment Table Create Time Error: ', err) } });
@@ -253,7 +253,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query('INSERT INTO `sales_type_list`(`id`, `sales_type_name`, `is_active`) VALUES ?', [sales_type_list_data], function (error, rows, fields) { if (error) { console.log('sales_type_list_data Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `renting_for_list`(`id`, `renting_for_name`, `is_active`) VALUES ?', [renting_for_list_data], function (error, rows, fields) { if (error) { console.log('renting_for_list_data Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `week_day_list`(`id`, `week_day`, `is_active`) VALUES ?', [week_day_list], function (error, rows, fields) { if (error) { console.log('week_day_list Insert Time Error: ', error) } });
-                connection.query('INSERT INTO `discount_rate_list` (`id`, `duration_in_year`, `duration_period`, `weekly_discount_rate`, `fortnightly_discount_rate`, `is_active`, `created_at`) VALUES ?', [discount_rate_list], function (error, rows, fields) { if (error) { console.log('discount_rate_list Insert Time Error: ', error) } });
+                // connection.query('INSERT INTO `discount_rate_list` (`id`, `duration_in_year`, `duration_period`, `weekly_discount_rate`, `fortnightly_discount_rate`, `is_active`, `created_at`) VALUES ?', [discount_rate_list], function (error, rows, fields) { if (error) { console.log('discount_rate_list Insert Time Error: ', error) } });
 
                 connection.changeUser({ database: dbName["prod"] });
                 connection.query('INSERT INTO franchise(name,fdbname,city,city_code,suburb,abn,state,created_by,company_id) VALUES ( "' + that.name + '", "' + frachiseDbName + '", "' + that.city + '", "' + that.city_code + '", "' + that.suburb + '", "' + that.abn + '", "' + that.state + '", "' + that.created_by + '", "' + that.company_id + '")', function (error, rows, fields) {

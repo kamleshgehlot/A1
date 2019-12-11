@@ -37,6 +37,7 @@ customerRouter.route("/getsinglecustomer").post(validateToken, Customer.getSingl
 customerRouter.route("/getCustomerBankDetail").post(validateToken, Customer.getCustomerBankDetail);
 customerRouter.route("/addBankDetail").post(validateToken, Customer.addBankDetail);
 customerRouter.route("/updateBankDetail").post(validateToken, Customer.updateBankDetail);
+// customerRouter.route("/isDuplicateEmail").post(validateToken, Customer.isDuplicateEmail);
 
 // userRouter.route("/getUniqueNames").get(validateToken, User.getUniqueNames);
 

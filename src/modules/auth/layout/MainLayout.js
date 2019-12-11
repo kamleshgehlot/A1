@@ -12,6 +12,8 @@ import TaskIcon from '@material-ui/icons/Assignment';
 import LeadIcon from '@material-ui/icons/TouchApp';
 import OrderIcon from '@material-ui/icons/Store';
 import EnquiryIcon from '@material-ui/icons/DialerSip';
+import MenuIcon from '@material-ui/icons/Menu';
+import UpdateIcon from '@material-ui/icons/Update';
 import FranchiseIcon from '@material-ui/icons/LocationCity';
 import StaffIcon from '@material-ui/icons/PersonPin';
 import ProductIcon from '@material-ui/icons/AddShoppingCart';
@@ -49,6 +51,7 @@ import DeliveryReport from './report/DeliveryReport';
 import TaskList from '../task/TaskList';
 import TaskReport from './report/TaskReport';
 import Payments from '../order/Payments';
+import EditDiscountEMI from './options/admin/EditEMIDiscount.js';
 import Tab from './Tab';
 
 // Helpers
@@ -149,6 +152,7 @@ export default function ClippedDrawer(props) {
   const [showDeliveryReport, setShowDeliveryReport]= useState(false);
   const [showCsrTaskReport, setShowCsrTaskReport]= useState(false);
   const [showPaymentStatus, setShowPaymentStatus]= useState(false);
+  const [editEMIDiscountOpen, setEditEMIDiscountOpen]= useState(false);
   const [roles, setRoles] = useState([]);
   const [roleAs, setRoleAs]= useState('');
   const [role_Id, setRole_Id]= useState('');
@@ -197,6 +201,14 @@ export default function ClippedDrawer(props) {
     setEmiCalculatorOpen(false);
   }
 
+  function handleEditEMIDiscountOpen({roleName, roleId}) {
+    setEditEMIDiscountOpen(true);
+  }
+
+  function handleEditEMIDiscountClose() {
+    setEditEMIDiscountOpen(false);
+  }
+
   function handleDashboardClick(role, roleId){
     setRoleAs(role);
     setRole_Id(roleId);
@@ -215,6 +227,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
     setShowFinanceReport(false);
     setShowDeliveryReport(false);
+    setShowEditEMIDiscount(false);
     setShowdashboard(true);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
@@ -239,6 +252,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowEditEMIDiscount(false);
     setShowPaymentStatus(false);
   }
 
@@ -263,6 +277,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
 
   function handleMasterStaffClick(role){
@@ -285,6 +300,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
 
   function handleFranchiseStaffClick(role){
@@ -308,6 +324,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
   
   function handleTaskClick(role, data){
@@ -331,6 +348,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
 
   function handleProfileClick(role){
@@ -354,6 +372,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
   function handleChangePasswordClick(role){
     
@@ -376,6 +395,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
 
   function handleFranchiseDetailClick(role){
@@ -399,7 +419,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-
+    setShowEditEMIDiscount(false);
   }
 
   function handleCustomerClick(role){
@@ -421,6 +441,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
   
   function handleEnquiryClick(role){
@@ -443,6 +464,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
 
   }
   function handleLeadsClick(role, data){
@@ -465,6 +487,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
 
   function handleOrderClick(role){    
@@ -486,6 +509,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
 
   function handleFinanceReportClick(role){    
@@ -507,6 +531,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
   
   function handleDeliveryReportClick(role){    
@@ -528,6 +553,7 @@ export default function ClippedDrawer(props) {
     setShowFinanceReport(false);   
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
   
   function handleCsrTaskReportClick(role){    
@@ -549,6 +575,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowDeliveryReport(false);
     setShowPaymentStatus(false);
+    setShowEditEMIDiscount(false);
   }
 
   function handlePaymentStatus(role){
@@ -570,8 +597,31 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
     setShowdashboard(false);
     setShowDeliveryReport(false);
+    setShowEditEMIDiscount(false);
   }
   
+  function handleEMIDiscount(role){
+    setRoleAs(role);
+    setShowEditEMIDiscount(true);
+    setShowPaymentStatus(false);
+    setShowCsrTaskReport(false);
+    setShowFinanceReport(false);
+    setShowOrder(false);
+    setShowLead(false);
+    setShowEnquiry(false);
+    setShowCustomer(false);
+    setShowTask(false);
+    setShowFranchiseStaff(false);
+    setShowMasterStaff(false);
+    setShowFranchise(false);
+    setShowCategory(false);
+    setShowProfile(false);
+    setShowPwd(false);
+    setShowFranchiseDetail(false);
+    setShowdashboard(false);
+    setShowDeliveryReport(false);
+  }
+
   handleCsrTaskReportClick
   function handleLogout() {
     APP_TOKEN.remove();
@@ -626,6 +676,9 @@ export default function ClippedDrawer(props) {
             <StyledTreeItem nodeId="3" labelText="Manage Product Catalogue"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={ProductIcon} onClick={(event) => { handleCategoryClick('Super Admin'); }}/>
             <StyledTreeItem nodeId="4" labelText="Manage Staff"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={StaffIcon} onClick={(event) => { handleMasterStaffClick('Super Admin'); }} />
             <StyledTreeItem nodeId="5" labelText="Manage Leads"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Super Admin'); }}/>
+            <StyledTreeItem nodeId="33" labelText="Options"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={MenuIcon}>  
+                <Tab roleName="Super Admin" roleId="1" nodeId="34" handleClick={handleEditEMIDiscountOpen} labelIcon={UpdateIcon} labelText="Update Discount"/>
+            </StyledTreeItem>
           </TreeView>
          :<StyledTreeItem style={{"display": 'none'}} nodeId="2" labelText="" labelIcon={AccountCircleIcon} /> }
 
@@ -825,6 +878,9 @@ export default function ClippedDrawer(props) {
         {
           emiCalculatorOpen ? <EMICalculator open = {emiCalculatorOpen} handleClose = {handleEmiCalculatorClose} /> : null
         }  
+        {
+          editEMIDiscountOpen ? <EditDiscountEMI open = {editEMIDiscountOpen} handleClose = {handleEditEMIDiscountClose}/>: null
+        }
       </main>
 
 

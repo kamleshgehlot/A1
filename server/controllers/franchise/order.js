@@ -362,7 +362,7 @@ const paymentSubmit = async function(req, res, next) {
     // newPayment.transaction_id = transaction_result.transaction_id;
 
     const buildPaymentStatus = (payDate) => {
-      console.log(payDate, params.payment_rec_date)
+      // console.log(payDate, params.payment_rec_date)
       if(payDate >= params.payment_rec_date){
         newPayment.payment_status = 1;
       }else{

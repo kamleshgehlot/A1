@@ -591,4 +591,35 @@ Customer.prototype.updateStatus = function (id, name) {
   });
 };
 
+
+
+// Customer.prototype.isDuplicateEmail = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
+//       if (!error) {
+//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], name.split('_')[1]) });
+//         connection.query('SELECT s.email, c.email, ee.employer_email from customer_income as ee JOIN customer as c JOIN staff as s WHERE s.email = "'+ that.email +'" OR c.email = "'+ that.email +'" OR ee.employer_email = "'+ that.email +'"', function (error, rows, fields) {
+//           if (error) {
+//             console.log("Error...", error);
+//             reject(error);
+//           }
+//           if (!error) {
+//               resolve(rows);
+//           }
+//         });
+//       }
+//       connection.release();
+//       console.log('Process Complete %d', connection.threadId);
+
+//     });
+//   });
+// }
+
+
+
+
 module.exports = Customer;

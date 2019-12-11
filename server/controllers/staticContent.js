@@ -27,5 +27,24 @@ const getDiscountRateList = async function(req, res, next) {
   }
 };
 
+const updateDiscountRateList = async function(req, res, next) {
+  let reqData = {
+    user_id: req.decoded.user_id,
+    discountList : req.body.discountList,
+  }
+  const updateDiscount = await new StaticContent(reqData);
 
-module.exports = { getWeekDayList, getPaymentModeList, getDiscountRateList};
+  try {
+    if(reqData.discountList != undefined && reqData.discountList != null){
+      (reqData.discountList.length > 0 ? reqData.discountList : []).map((data,index) => {
+          updateDiscount.updateDiscountRateList(data.id,  Number(data.weekly_discount_rate),  Number(data.fortnightly_discount_rate));
+      });
+    }
+    res.send({});
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+module.exports = { getWeekDayList, getPaymentModeList, getDiscountRateList, updateDiscountRateList};

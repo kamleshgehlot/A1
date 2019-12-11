@@ -195,15 +195,25 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
   }
 
 
+
+
   function handleEmailVerification(event){
-    const email = event.target.value;
+    const email = event.target.value;    
+    const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!validEmail.test(email)) {
+      errors[event.target.name] = 'Email Address is invalid';
+    }
+    else{
+      errors[event.target.name] = '';
+    }
 
     const checkEmail = async () => {
       const response = await UserAPI.verifyEmail({email : email});
       
       if(response.isVerified!=''){
       SetChkEmail(response.isVerified[0].email);
-      alert('Email already registered');
+      errors[event.target.name]  = 'Email already registered';
+      // alert('Email already registered');
       }
     }
     checkEmail();
