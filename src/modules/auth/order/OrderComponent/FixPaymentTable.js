@@ -16,7 +16,7 @@ import PrintIcon from '@material-ui/icons/Print';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/send';
+import SendIcon from '@material-ui/icons/Send.js';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CommentIcon from '@material-ui/icons/Comment';
