@@ -110,7 +110,7 @@ export default function layout(data, order, formType) {
                 [
                   {},
                   { text: '* Suburb: ', fontSize: 7, bold: true, },                   
-                  { text:  '', fillColor:'#ffffff'},
+                  { text:  eziDebitFormType=== 1 ? (customer.suburb != null&& customer.suburb != undefined ? customer.suburb : '') : '', fillColor:'#ffffff',  fontSize: 7,},
                   { text: '* Postcode: ', fontSize: 7, bold: true, alignment: 'right'},              
                   {
                     table:{

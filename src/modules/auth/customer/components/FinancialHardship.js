@@ -156,7 +156,7 @@ return (
                       <DetailsIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="View">
+                    <Tooltip title="View Comment">
                       <IconButton  size="small" className={classes.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickCommentOpen(data); }} >
                         <CommentIcon />
                       </IconButton>

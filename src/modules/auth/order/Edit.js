@@ -211,7 +211,9 @@ export default function Edit({ open, handleEditClose, handleSnackbarClick, handl
   }
   
   const handleChangeMultiple = async (event) => {
-    setAssignInterest(event.target.value);
+    const product = [...assignInterest];
+    product.push(event.target.value)
+    setAssignInterest(product);
   }
 
   
@@ -650,12 +652,10 @@ return (
                   <Grid item xs={12} sm={12}>
                     <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
                     <Select
-                      multiple
                       value={assignInterest}
                       onChange={handleChangeMultiple}
                       name= 'product'
                       id= 'product'
-                      // label='customer'
                       fullWidth
                       required
                       className={classes.textsize}
