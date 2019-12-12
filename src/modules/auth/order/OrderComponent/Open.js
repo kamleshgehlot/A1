@@ -173,7 +173,7 @@ return (
                       <ViewArrayIcon />  
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="View">
+                  <Tooltip title="View Comment">
                     <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
                       <CommentIcon />
                     </IconButton>
@@ -201,7 +201,7 @@ return (
           </StyledTableCell>
         : roleName === 'Delivery' ? 
           <StyledTableCell>
-                <Tooltip title="View">
+                <Tooltip title="View Comment">
                       <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
                         <CommentIcon />
                       </IconButton>

@@ -334,7 +334,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   },[assignInterest, budgetList]);
   
   const handleChangeMultiple = async (event) => {
-    setAssignInterest(event.target.value);
+    const product = [...assignInterest];
+    product.push(event.target.value)
+    setAssignInterest(product);
   }
  
   
@@ -719,23 +721,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                   
                   <Grid item xs={12} sm={12}>
                     <InputLabel  className={classes.textsize} htmlFor="product">Product*</InputLabel>
-                      <Select 
-                        multiple
+                      <Select                         
                         value={assignInterest}
                         onChange={handleChangeMultiple}
                         name= 'product'
                         id= 'product'
-                        // label='customer'
                         fullWidth
                         required
                         className={classes.textsize}
-                        disabled = {subCategory == "" || budgetList == "" ? true : false}                        
-                      >    
+                        disabled = {subCategory == "" || budgetList == "" ? true : false}
+                      >                          
                         <MenuItem className={classes.textsize} disabled value={""}>Select Product</MenuItem>
                         {(productList.length > 0 ? productList : []).map((data,index)=>{
                           return(
                             <MenuItem className={classes.textsize} value={data.id}>{data.description}</MenuItem>
-                          ) 
+                          )
                         })}
                       </Select>
                     </Grid>
