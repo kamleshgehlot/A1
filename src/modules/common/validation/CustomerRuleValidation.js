@@ -57,7 +57,7 @@ export default function validate(values) {
   
   if (!values.email) {
     errors.email = 'Email Address is required';
-  } else if (!validEmail.test(values.email)) {
+  }  else if (!validEmail.test(values.email)) {
     errors.email = 'Email Address is invalid';
   }
 

@@ -209,8 +209,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
 
     const checkEmail = async () => {
       const response = await UserAPI.verifyEmail({email : email});
-      
-      if(response.isVerified!=''){
+      if(response.isVerified != ''){
       SetChkEmail(response.isVerified[0].email);
       errors[event.target.name]  = 'Email already registered';
       // alert('Email already registered');
@@ -289,9 +288,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     }
 
   const addCustomer = async () => {
-    if(inputs.email === chkEmail || inputs.employer_email===chkEmail){
-      alert('Email already registered')
-    }else{
+    if(inputs.email === chkEmail){
+      alert('Customer email already registered')
+    }else if(inputs.employer_email === chkEmail){
+      alert('Employer email already registered')
+    }else {
 
     setpLoading(true);
     setSavebtn(true);

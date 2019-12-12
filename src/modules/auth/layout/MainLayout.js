@@ -227,7 +227,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
     setShowFinanceReport(false);
     setShowDeliveryReport(false);
-    setShowEditEMIDiscount(false);
+    
     setShowdashboard(true);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
@@ -252,7 +252,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
-    setShowEditEMIDiscount(false);
+    
     setShowPaymentStatus(false);
   }
 
@@ -277,7 +277,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handleMasterStaffClick(role){
@@ -300,7 +300,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handleFranchiseStaffClick(role){
@@ -324,7 +324,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
   
   function handleTaskClick(role, data){
@@ -348,7 +348,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handleProfileClick(role){
@@ -372,7 +372,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
   function handleChangePasswordClick(role){
     
@@ -395,7 +395,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handleFranchiseDetailClick(role){
@@ -419,7 +419,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handleCustomerClick(role){
@@ -441,7 +441,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
   
   function handleEnquiryClick(role){
@@ -464,7 +464,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
 
   }
   function handleLeadsClick(role, data){
@@ -487,7 +487,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handleOrderClick(role){    
@@ -509,7 +509,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handleFinanceReportClick(role){    
@@ -531,7 +531,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
   
   function handleDeliveryReportClick(role){    
@@ -553,7 +553,7 @@ export default function ClippedDrawer(props) {
     setShowFinanceReport(false);   
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
   
   function handleCsrTaskReportClick(role){    
@@ -575,7 +575,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowDeliveryReport(false);
     setShowPaymentStatus(false);
-    setShowEditEMIDiscount(false);
+    
   }
 
   function handlePaymentStatus(role){
@@ -597,12 +597,12 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
     setShowdashboard(false);
     setShowDeliveryReport(false);
-    setShowEditEMIDiscount(false);
+    
   }
   
   function handleEMIDiscount(role){
     setRoleAs(role);
-    setShowEditEMIDiscount(true);
+    
     setShowPaymentStatus(false);
     setShowCsrTaskReport(false);
     setShowFinanceReport(false);
