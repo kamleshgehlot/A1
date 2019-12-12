@@ -89,28 +89,28 @@ const register = async function (req, res, next) {
         await newCustomer.addBankDetail();
       }
 
-      if (CustomerParams.email) {
-        let url = 'http://' + domainName + '/api/auth/verifyEmail?email=' + CustomerParams.email + '&id=' + newCustomer.customer_id + '&createdBy=' + CustomerParams.user_id + '&customer=true';
+      // if (CustomerParams.email) {
+      //   let url = 'http://' + domainName + '/api/auth/verifyEmail?email=' + CustomerParams.email + '&id=' + newCustomer.customer_id + '&createdBy=' + CustomerParams.user_id + '&customer=true';
 
-        const mail = {
-          from: 'admin@' + domainName,
-          //  to: 'mpurohit88@gmail.com',
-          to: CustomerParams.email,
-          subject: 'Please verify your email address',
-          text: 'activate your account ',
-          html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong>'
-        }
+      //   const mail = {
+      //     from: 'admin@' + domainName,
+      //     //  to: 'mpurohit88@gmail.com',
+      //     to: CustomerParams.email,
+      //     subject: 'Please verify your email address',
+      //     text: 'activate your account ',
+      //     html: '<strong><a href=' + url + '> Please click on a link to ativate your account</a></strong>'
+      //   }
 
-        trans.sendMail(mail, (error, info) => {
-          if (error) {
-            console.log(error);
-            throw error;
-          }
-          console.log('Message sent: %s', info.messageId);
-          // Preview only available when sending through an Ethereal account
-          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        });
-      }
+      //   trans.sendMail(mail, (error, info) => {
+      //     if (error) {
+      //       console.log(error);
+      //       throw error;
+      //     }
+      //     console.log('Message sent: %s', info.messageId);
+      //     // Preview only available when sending through an Ethereal account
+      //     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      //   });
+      // }
 
       const customerList = await new Customer({ user_id: req.decoded.user_id }).all();
       res.send({ customerList });

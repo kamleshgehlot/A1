@@ -21,7 +21,7 @@ ExceptionLog.prototype.log = function () {
 
       if (!error) {
         connection.changeUser({ database: dbName["prod"] });
-        connection.query('INSERT INTO exception_log(code, message, franchise_id, stack, created_by) VALUES ("' + that.code + '", "' + that.message + '", "' + that.franchise_id + '","' + that.stack + '", "' + that.created_by + '")', function (error, rows, fields) {
+        connection.query('INSERT INTO exception_log(code, message, franchise_id, stack, created_by) VALUES ("' + that.code + '", "' + that.message + '", "' + that.franchise_id + '","' + that.stack + '", "' + (that.created_by||0) + '")', function (error, rows, fields) {
           if (!error) {
             // console.log(rows.insertId)
           } else {

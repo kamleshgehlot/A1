@@ -12,6 +12,7 @@ package.json
 logs
 *.log
 npm-debug.log*
+server/files
 
 # node-waf configuration
 .lock-wscript
@@ -24,3 +25,4 @@ npm-debug.log*
 
 # Jest Coverage
 coverage
+.vscode/launch.json
