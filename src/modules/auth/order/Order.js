@@ -19,7 +19,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import UnselectedCheckBox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
 import SelectedCheckBox from '@material-ui/icons/CheckBox';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/send';
+import SendIcon from '@material-ui/icons/Send.js';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import PdfIcon from '@material-ui/icons/PictureAsPdf';

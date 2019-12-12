@@ -15,7 +15,7 @@ import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
-import SendIcon from '@material-ui/icons/send';
+import SendIcon from '@material-ui/icons/Send.js';
 import Tooltip from '@material-ui/core/Tooltip';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
