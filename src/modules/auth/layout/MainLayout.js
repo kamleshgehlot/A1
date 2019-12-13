@@ -791,7 +791,7 @@ export default function ClippedDrawer(props) {
 
                  <Tab roleName="Finance" nodeId="25" handleClick={handleOrderClick} labelIcon={OrderIcon} labelText="Manage Order"/> 
 
-                 <Tab roleName="Finance" nodeId="26" handleClick={handlePaymentStatus} labelIcon={TaskIcon} labelText="Payment Status"/> 
+                 <Tab roleName="Finance" nodeId="26" handleClick={handlePaymentStatus} labelIcon={TaskIcon} labelText="Ezidebit Status"/> 
 
                  <Tab roleName="Finance" nodeId="27" handleClick={handleFinanceReportClick} labelIcon={TaskIcon} labelText="Generate Report"/> 
 
