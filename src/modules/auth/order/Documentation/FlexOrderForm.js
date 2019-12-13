@@ -236,12 +236,13 @@ export default function flexOrderForm(data,order) {
                 [
                   { text: 'DELIVERY DETAILS: ', bold: true, alignment: screenLeft, fontSize: 10 , fillColor: '#C5C7C0'}
                 ],  
+                
                 [
                   {style:styles.margins, text: [  
-                    // { text: 'NUMBER OF PAYMENTS:  ' + orderType[0].no_of_payment , alignment: screenLeft,  bold: true, fontSize:8}, 
-                    { text: 'BOND AMOUNT: $' + orderType[0].bond_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: 'MINIMUM PAYMENTS:  ' + orderType[0].before_delivery_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
+                    { text: '\t\t\t\t\t\t\t\tTOTAL AMOUNT: $' + orderType[0].bond_amt , alignment: screenLeft,  bold: true, fontSize:8}, 
                     { text: '\t\t\t\t\t\t\t\tEXPECTED DELIVERY DATE:  ' +  getDateInDDMMYYYY(orderType[0].exp_delivery_date), alignment: screenLeft,  bold: true, fontSize:8}, 
-                  ]}
+                  ]}                  
                 ],
               ]
             },
