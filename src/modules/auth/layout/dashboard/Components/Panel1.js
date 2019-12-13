@@ -16,6 +16,8 @@ import LeadList from './LeadList';
 //API Calls
 import TaskAPI from '../../../../../api/Task';
 import LeadAPI from '../../../../../api/Lead';
+import OrderAPI from '../../../../../api/franchise/Order';
+import { Card,CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -105,6 +107,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [value, setValue] = React.useState(0);
   const [taskList, setTaskList] = React.useState([]);
   const [leadList, setLeadList] = React.useState([]);
+  const [order,setOrder]=useState([]);
 
   useEffect(() => {
 
@@ -118,13 +121,24 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       
       const resultLead = await LeadAPI.fetchLeads();
       setLeadList(resultLead.leadList);
+
+      const test = await OrderAPI.getAll();
+      console.log(test.order);
+      setOrder(test.order);
+
     }
     fetchData();
   },[]);
 
 
   return (
-    <div className={classes.root}  style={{ width: '100%' }}>             
+    <div className={classes.root}  style={{ width: '100%' }}>
+      <Card>
+        <CardContent>
+        <h2 className={classes.labelTitle}>Total Orders Count : {order.length}</h2>
+      {/* {order.map((d,i)=>{return <b>{d.id}</b> })} */}
+      </CardContent>
+      </Card>
     <Paper >             
       <Grid container spacing={4}  style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12} >   
