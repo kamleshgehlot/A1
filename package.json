@@ -7,7 +7,7 @@
   "license": "rentronics",
   "scripts": {
     "start": "webpack-dev-server --mode development --config config/webpack.base.config.js --open --hot --history-api-fallback --env.PLATFORM=local --env.VERSION=stag --env.NODE_ENV=development",
-    "startserver":"cd server && node index.js",
+    "startserver": "cd server && nodemon index.js",
     "prebuild": "webpack --mode production --config config/webpack.prod.config.js --env.PLATFORM=production --env.VERSION=uat --progress",
     "build": "cross-env NODE_ENV=dev node server",
     "lint": "eslint --debug src/",
@@ -105,6 +105,7 @@
     "lint-staged": "^7.3.0",
     "mini-css-extract-plugin": "^0.4.3",
     "node-sass": "^4.8.3",
+    "nodemon": "^2.0.2",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "prettier": "^1.14.3",
     "react-autosuggest": "^9.4.3",

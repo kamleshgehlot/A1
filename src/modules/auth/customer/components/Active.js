@@ -9,7 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CachedIcon from '@material-ui/icons/Cached';
-import DetailsIcon from '@material-ui/icons/Details';
+import AccountBalanceIconBank from '@material-ui/icons/AccountBalance';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -154,7 +154,7 @@ return (
                     </Tooltip>
                     <Tooltip title="Update Bank Detail">                              
                       <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleBankDetailOpen(data); }}>
-                      <DetailsIcon />
+                      <AccountBalanceIconBank />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="View Comment">
