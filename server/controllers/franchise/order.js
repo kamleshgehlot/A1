@@ -280,8 +280,8 @@ const getPaymentHistory = async function(req, res, next) {
 
 const getPaymentSchedule = async function(req, res, next) {
   try {
-    const order = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
-    res.send(order);
+    const schedule = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
+    res.send(schedule);
   } catch (error) {
     next(error);
   }
@@ -621,21 +621,21 @@ const assignToFinance = async function(req, res, next) {
     await newActivity.assignToFinance();
     const isScheduleExist = await newActivity.isScheduleExist();
 
-    // console.log('isScheduleExist',isScheduleExist);
-
-    if(isScheduleExist == null || isScheduleExist.length === 0){
-      console.log('exist')
+    if(isScheduleExist == null || isScheduleExist.length === 0){      
       let orderTypeResult = [];
       let noOfPayment = 0;
+      let payAmt = 0;
   
       if(params.order_type === 1){
         newActivity.fixedOrderId = params.order_type_id;
         orderTypeResult = await newActivity.getFixedOrder();
         noOfPayment =  orderTypeResult[0].no_of_payment;
+        payAmt = orderTypeResult[0].each_payment_amt;
       } else if(params.order_type === 2){
         newActivity.flexOrderId = params.order_type_id;
         orderTypeResult = await newActivity.getFlexOrder();
         noOfPayment =  orderTypeResult[0].before_delivery_amt;
+        payAmt = orderTypeResult[0].each_payment_amt;
       }
       
   
@@ -643,9 +643,9 @@ const assignToFinance = async function(req, res, next) {
       let paymentScheduleArray = [];
       
       for(let i=1; i<= noOfPayment; i++){
-        paymentScheduleArray.push(
-          [params.order_id, params.customer_id, i, paymentDate, 0, 1, params.created_by],
-        );      
+        paymentScheduleArray.push(          
+          [params.order_id, params.customer_id, i, paymentDate, payAmt, 1, 1, params.created_by],
+        );
         paymentDate = dateMaker(paymentDate, orderTypeResult[0].frequency);
       }
   

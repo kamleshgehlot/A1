@@ -581,9 +581,17 @@ Order.prototype.getPaymentSchedule = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from payment_schedule where order_id = "'+that.order_id+'" AND is_active = 1 ORDER BY installment_no',function (error, rows, fields) {
+        // connection.query('SELECT * from payment_schedule where order_id = "'+that.order_id+'" AND is_active = 1 ORDER BY installment_no',function (error, rows, fields) {
+        connection.query('SELECT ps.`id`, ps.`order_id`, ps.`customer_id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date, DATE_FORMAT(ps.`settlement_date`,\'%Y-%m-%d\') settlement_date, ps.`payment_amt`, ps.`total_paid`, ps.`remark`, ps.`status`, ps.`is_active`, ps.`created_by`, ps.`updated_by`, ps.`created_at`, ps.`updated_at`, sp.status as pay_status_name, u.name as accept_by FROM `payment_schedules` as ps LEFT JOIN status_payment as sp ON ps.status = sp.id  LEFT JOIN user as u ON u.id = ps.created_by where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 ORDER BY installment_no, id',function (error, rows, fields) {
           if (!error) {
-            resolve(rows);
+            connection.query('SELECT ps.`id`, ps.`order_id`, ps.`customer_id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date, DATE_FORMAT(ps.`settlement_date`,\'%Y-%m-%d\') settlement_date, ps.`payment_amt`, ps.`total_paid`, ps.`remark`, ps.`status`, ps.`is_active`, ps.`created_by`, ps.`updated_by`, ps.`created_at`, ps.`updated_at`, sp.status as pay_status_name, u.name as accept_by FROM `payment_schedules` as ps LEFT JOIN status_payment as sp ON ps.status = sp.id  LEFT JOIN user as u ON u.id = ps.created_by where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 AND ps.status = 1 ORDER BY installment_no, id LIMIT 1',function (error, nextInst, fields) {
+              if (!error) {
+                resolve({nextInstallmentRow: nextInst, paymentSchedule : rows});
+                } else {
+                  console.log("Error...", error);
+                  reject(error);
+                }
+              })
             } else {
               console.log("Error...", error);
               reject(error);
@@ -1871,8 +1879,8 @@ Order.prototype.createdPaymentSchedule = function () {
       }
       if (!error) {
         
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('INSERT INTO payment_schedule(order_id, customer_id, installment_no, payment_date, status, is_active, created_by) VALUES ?',[that.paymentScheduleArray], function (error, rows, fields) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });        			
+          connection.query('INSERT INTO payment_schedules(order_id, customer_id, installment_no, payment_date, payment_amt, status, is_active, created_by) VALUES ?',[that.paymentScheduleArray], function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
             } else {

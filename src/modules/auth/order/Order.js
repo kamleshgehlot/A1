@@ -475,10 +475,10 @@ export default function Order({roleName}) {
   function handleConfirmationDialog (response){
     if(response === 1){
       const fetchData = async () => {
-        try {  
+        try {
           if(nextStep === 'Finance')
             {
-              console.log('orderData...',orderData);
+              // console.log('orderData...',orderData);
               const result = await OrderAPI.assignToFinance({
                 assigned_to: 4,
                 id: orderId, 
@@ -499,9 +499,7 @@ export default function Order({roleName}) {
             handleTabsData(result.order);
           }else if(nextStep === 'Delivered'){
             const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_date: new Date(), delivered_time: new Date()});
-            setOrder(result.order);
-            // setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
-            // setCommentBoxOpen(true);
+            setOrder(result.order);            
             handleTabsData(result.order);
           }
         } catch (error) {

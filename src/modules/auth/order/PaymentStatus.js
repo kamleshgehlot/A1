@@ -57,7 +57,7 @@ import { FormLabel } from '@material-ui/core';
 
 import FixPaymentTable from './OrderComponent/FixPaymentTable';
 import FlexPaymentTable from './OrderComponent/FlexPaymentTable';
-
+import PaymentStatusTable from './PaymentComponent/PaymentStatusTable.js';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -84,6 +84,11 @@ const useStyles = makeStyles(theme => ({
     // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),
+    marginTop: 15,
+  },  
+  rowHeading: {
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(18),
     marginTop: 15,
   },
   root: {
@@ -152,6 +157,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [payResopnse, setPayResopnse] = React.useState([]);
   const [paymentHistory,setPaymentHistory] = useState([]);
   const [paymentSchedule, setPaymentSchedule] = useState([]);
+  const [nextPayment, setNextPayment] = useState([]);
+  
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
   const [paymentAmt, setPaymentAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
@@ -184,12 +191,15 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
 
   const getPaymentSchedule = async () => {
     try {
-        const paymentSchedule = await Order.getPaymentSchedule({order_id: orderData.id});
-        setPaymentSchedule(paymentSchedule);
+        const result = await Order.getPaymentSchedule({order_id: orderData.id});
+        setPaymentSchedule(result.paymentSchedule);
+        setNextPayment(result.nextInstallmentRow[0]);
+        // setPaymentRecDate(result.nextInstallmentRow.settlement_date)
       } catch (error) {
         console.log('Error..',error);
       }
   };  
+  
   
   const handleFixPaymentStatus = (fixData, paymentHistory, paymentSchedule) => {
     let payment_table=[];
@@ -332,14 +342,14 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
 
   const fetchData = async () => {
     try{
-      await getPaymentHistory();     
+      // await getPaymentHistory();     
       await getPaymentSchedule(); 
       await getRequiredData();
-      if(orderData.order_type===1){
-        await getFixedPaymentTable();
-      }else if(orderData.order_type===2){
-        await getFlexPaymentTable();
-      }
+      // if(orderData.order_type===1){
+      //   await getFixedPaymentTable();
+      // }else if(orderData.order_type===2){
+      //   await getFlexPaymentTable();
+      // }
     }catch (error) {
       console.log('Error..',error);
     }
@@ -447,7 +457,6 @@ return (
 
           <div className={classes.root}>
           <Paper className={classes.paper}> 
-          {/* <p> */}
           <Grid container  justify="space-around">  
             <Grid item xs={12} sm={3}>
               <Typography variant="h6" className={classes.labelTitle}>
@@ -520,25 +529,111 @@ return (
           </Grid>
 
             
-            <Grid container spacing={4}>                              
-                <Grid item xs={12} sm={12}>    
-                {orderData.order_type===1 ?
-                  <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} handleSchduleChangerOpen= {handleSchduleChangerOpen} />
-                :orderData.order_type===2 ?
-                  <FlexPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} handleSchduleChangerOpen= {handleSchduleChangerOpen} />
-                :''
-                } 
-                </Grid>
-                <Grid item xs={12} sm={12}>                      
-                  <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
-                    Close
-                  </Button> 
-                </Grid>
-            </Grid>
-          </Paper>
-          </div>
-        </form>
-      </Dialog>
+            <Grid container  justify="space-around">                              
+              <Grid item xs={12} sm={11}>
+              <Typography variant="h6" className={classes.rowHeading}> Add Payment </Typography>
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <Typography variant="h6" className={classes.labelTitle}> Installment No.: </Typography>
+                  <TextField 
+                    id="installment_no"
+                    name="installment_no"
+                    value={nextPayment.installment_no}
+                    fullWidth
+                    type="text"
+                    margin="dense"
+                    InputProps={{                     
+                      classes: {
+                        input: styleClass.textsize,
+                      },                    
+                    }}
+                    disabled
+                  />
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <Typography variant="h6" className={classes.labelTitle}> Currnet Payment Date:  </Typography>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      margin="dense"
+                      id="payment_date"
+                      name="payment_date"
+                      format="dd-MM-yyyy"
+                      placeholder="DD-MM-YYYY"                      
+                      fullWidth 
+                      value = {nextPayment.payment_date}
+                      InputProps={{
+                        classes: {
+                          input: styleClass.textsize,
+                        },
+                      }} 
+                      disabled
+                    />
+                  </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <Typography variant="h6" className={classes.labelTitle}> Payment Amount </Typography>
+                  <TextField 
+                    id="payment_amt"
+                    name="payment_amt"
+                    value={nextPayment.payment_amt}
+                    onChange={handlePriceInput}
+                    fullWidth
+                    type="text"
+                    margin="dense"
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      classes: {
+                        input: styleClass.textsize,
+                      },
+                    }}
+                  />
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <Typography variant="h6" className={classes.labelTitle}> Payment Rec. Date </Typography>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      margin="dense"
+                      id="payment_rec_date"
+                      name="payment_rec_date"
+                      format="dd-MM-yyyy"
+                      placeholder="DD-MM-YYYY"
+                      value={paymentRecDate}
+                      fullWidth 
+                      InputProps={{
+                        classes: {
+                          input: styleClass.textsize,
+                        },                                        
+                      }}                                      
+                      onChange={handleDateChange}                    
+                    />
+                  </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item xs={12} sm={11} style={{marginTop: '10px', marginBottom : '15px', textAlign: 'right'}}>
+                <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}> Submit</Button> 
+                {/* <Button variant="contained" color="primary" onClick={() => { handleSchduleChangerOpen([]); }} className={classes.button}> Reschedule Remaining</Button>  */}                
+              </Grid>
+
+              <Grid item xs={12} sm={12}>
+                <PaymentStatusTable paymentSchedule ={paymentSchedule} />
+              </Grid>
+              {/* <Grid item xs={12} sm={12}>    
+              {orderData.order_type===1 ?
+                <FixPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} handleSchduleChangerOpen= {handleSchduleChangerOpen} />
+              :orderData.order_type===2 ?
+                <FlexPaymentTable paymentStatus= {paymentStatus} paymentRecDate= {paymentRecDate} paymentAmt= {paymentAmt} handleDateChange= {handleDateChange} handlePriceInput={handlePriceInput} handlePaymentSubmit={handlePaymentSubmit} totalPaidInstallment = {paymentHistory.length} handleSchduleChangerOpen= {handleSchduleChangerOpen} />
+              :''
+              } 
+              </Grid> */}
+              <Grid item xs={12} sm={12} style={{marginTop: '10px', marginBottom : '15px', textAlign: 'right'}}>                      
+                <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
+                  Close
+                </Button> 
+              </Grid>
+          </Grid>
+        </Paper>
+        </div>
+      </form>
+    </Dialog>
       
       {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Is this installment paid by customer ?"} />: null }
       {scheduleChangerOpen ? <DateChanger open = {scheduleChangerOpen} handleClose = {handleSchduleChangerClose} paymentData = { payResopnse } orderData= {orderData} fetchData= {fetchData} paymentSchedule = {paymentSchedule} /> : null }
