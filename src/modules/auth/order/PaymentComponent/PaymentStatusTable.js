@@ -103,7 +103,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function PaymentStatusTable({paymentSchedule}) {
+export default function PaymentStatusTable({paymentSchedule, installmentBeforeDelivery}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
   
@@ -117,6 +117,7 @@ return (
         <StyledTableCell>Payment Amt.</StyledTableCell>
         <StyledTableCell>Total Received</StyledTableCell>
         <StyledTableCell>Status</StyledTableCell>        
+        <StyledTableCell>Remark</StyledTableCell>        
         <StyledTableCell>Accept By</StyledTableCell>
       </TableRow>
     </TableHead>
@@ -124,13 +125,14 @@ return (
       { (paymentSchedule !== null && paymentSchedule !== undefined && paymentSchedule) && 
         (paymentSchedule.length > 0 ? paymentSchedule :[]).map((data, index) => {
           return(
-            <TableRow>
+            <TableRow  className={data.installment_no === installmentBeforeDelivery ? styleClass.highlightRow : null}> 
               <StyledTableCell>{data.installment_no}</StyledTableCell>
               <StyledTableCell>{getDateInDDMMYYYY(data.payment_date)  === 'Invalid date' ? '' : getDateInDDMMYYYY(data.payment_date)}</StyledTableCell>
               <StyledTableCell>{getDateInDDMMYYYY(data.settlement_date) === 'Invalid date' ? '' : getDateInDDMMYYYY(data.settlement_date)}</StyledTableCell>
               <StyledTableCell>{'$' + Number(data.payment_amt).toFixed(2)}</StyledTableCell>
               <StyledTableCell>{'$' + Number(data.total_paid).toFixed(2)}</StyledTableCell>
               <StyledTableCell>{data.pay_status_name}</StyledTableCell>
+              <StyledTableCell>{data.remark}</StyledTableCell>
               <StyledTableCell>{data.accept_by}</StyledTableCell>
             </TableRow>
           )

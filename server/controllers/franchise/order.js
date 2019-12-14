@@ -4,6 +4,7 @@ const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 const addSubtractDate = require("add-subtract-date");
 const moment = require('moment');
 const {dateMaker} = require('../../utils/PaymentScheduleDateMaker.js');
+const {isSameDate, checkOverDue} = require('../../utils/datetime');
 
 
 const uploadDoc = async function (req, res, next) {
@@ -310,86 +311,74 @@ const getRequiredDataToCancel = async function(req, res, next) {
 
 
 const paymentSubmit = async function(req, res, next) {
-  // console.log('req.body  order',req.body)
-
-  // const data = JSON.parse(req.body.data);
-  // let attachments = '';
-  // req.files.map((file) => {
-  //   attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
-  // });
-
   let params = {
     user_id : req.decoded.user_id, 
+    created_by: req.decoded.id,
+
     order_id : req.body.order_id,
     customer_id: req.body.customer_id,
     installment_no : Number(req.body.installment_no),
-    payment_date: req.body.payment_date, // first installment date
-    payment_amt : Number(req.body.payment_amt), // sum of total payment amt
-    total_paid : Number(req.body.total_paid), // 0
-    due_installment_amt : Number(req.body.due_installment_amt), // 0
-    sub_installment_no : Number(req.body.sub_installment_no), // 0
-    created_by: req.decoded.id,    
-    installment_before_delivery : Number(req.body.installment_before_delivery), 
-    last_installment_no : Number(req.body.last_installment_no),
-    payment_rec_date : req.body.payment_rec_date,
-    each_payment_amt : Number(req.body.each_payment_amt),
-    frequency : req.body.frequency,
-    schedule_status : 0,
-    order_type : req.body.order_type, // 1 = fix & 2 = flex
-    no_of_total_installment : req.body.no_of_total_installment, 
-    last_date_of_payment : req.body.last_date_of_payment,
-    payment_status : req.body.payment_status,
+    payment_date: req.body.payment_date, 
+    settlement_date : req.body.settlement_date,
+    each_payment_amt : Number(req.body.payment_amt),
+    payment_amt : Number(req.body.deposit_amt), 
+    total_paid : Number(req.body.total_paid), 
+    remark : req.body.remark,
+    order_type : Number(req.body.order_type),
+    order_type_id : Number(req.body.order_type_id),
+    
+    transaction_date : req.body.settlement_date,
+    transaction_amt : Number(req.body.deposit_amt),
   }   
-
   try {
     const newPayment = new Order(params);
-    // const newDoc = new UploadDocument(params);
 
-    
-    // if(params.transaction_id != "" && params.transaction_id != undefined && params.transaction_id !=0){
-    //   await newPayment.deadTocurrentInstallment();
-    
-    //   if(params.document !== "" && params.document != undefined){
-    //     await newDoc.uploadPaymentDoc();
-    //   }
-  
-    //   if(params.comment !== "" && params.comment != undefined){
-    //     await newPayment.leaveCommentForPayment();
-    //   }
-    // }
-    
-    // const transaction_result = await newPayment.transactionEntry();
-    // newPayment.transaction_id = transaction_result.transaction_id;
+    const transaction_result = await newPayment.transactionEntry();
+    newPayment.transaction_id = transaction_result.transaction_id;
 
-    const buildPaymentStatus = (payDate) => {
-      // console.log(payDate, params.payment_rec_date)
-      if(payDate >= params.payment_rec_date){
-        newPayment.payment_status = 1;
-      }else{
-        newPayment.payment_status = 2;
-      }
+    let orderTypeResult = [];
+    let fixInstallmentAmt = 0;
+    let frequency = 0;
+    if(params.order_type === 1){
+      newPayment.fixedOrderId = params.order_type_id;
+      orderTypeResult = await newPayment.getFixedOrder();
+      fixInstallmentAmt = orderTypeResult[0].each_payment_amt;
+      frequency = orderTypeResult[0].frequency;
+      newPayment.installment_before_delivery = orderTypeResult[0].before_delivery_amt;
+      newPayment.last_installment_no = orderTypeResult[0].no_of_payment;
+    } else if(params.order_type === 2){
+      newPayment.flexOrderId = params.order_type_id;
+      orderTypeResult = await newPayment.getFlexOrder();      
+      fixInstallmentAmt = orderTypeResult[0].each_payment_amt;
+      newPayment.installment_before_delivery = orderTypeResult[0].before_delivery_amt;
+      frequency = orderTypeResult[0].frequency;
     }
-
-    let payAmt = params.payment_amt;
-    let instNo = params.installment_no;
     
     // if order type is flex 
     if(params.order_type === 2){
-      let remainingRowOfSchedule = (params.no_of_total_installment - instNo) + 1;
-      let totalRequiredRowToSubmitPayment = Math.ceil((payAmt - params.due_installment_amt) / params.each_payment_amt);
+      const result = await newPayment.getPaymentSchedule()
+      const lastRow = result.paymentSchedule[result.paymentSchedule.length - 1];
+      let remainingRowOfSchedule = ((lastRow.installment_no - params.installment_no) + 1);
       
-      let diffrent = remainingRowOfSchedule - totalRequiredRowToSubmitPayment;
+      let advPayAmt = params.payment_amt - params.each_payment_amt;
+      let totalRequiredRowToSubmitPayment = 1;
+      let diffrent = remainingRowOfSchedule - 1;
+      if(advPayAmt > 0){
+        totalRequiredRowToSubmitPayment = Math.ceil(advPayAmt / fixInstallmentAmt);
+        diffrent = remainingRowOfSchedule - totalRequiredRowToSubmitPayment;
+      }
+      
       
       let paymentScheduleArray = [];
-      let paymentDate = moment(params.last_date_of_payment).format("YYYY-MM-DD"); 
-      let totalInst = params.no_of_total_installment;
+      let paymentDate = moment(lastRow.payment_date).format("YYYY-MM-DD"); 
+      let totalInst = lastRow.installment_no;
 
       for(i = diffrent; i < 5; i++){        
-        paymentDate = dateMaker(paymentDate, params.frequency);
-        totalInst = totalInst + 1;
-        paymentScheduleArray.push(
-          [params.order_id, params.customer_id, totalInst, paymentDate, 0, 1, params.created_by],
-        );  
+        paymentDate = dateMaker(paymentDate, frequency);
+        totalInst = totalInst + 1;        
+        paymentScheduleArray.push(          
+          [params.order_id, params.customer_id, totalInst, paymentDate, fixInstallmentAmt, 1, 1, params.created_by],
+        );
       }
       if(diffrent < 5 ) {
         newPayment.paymentScheduleArray = paymentScheduleArray;
@@ -399,156 +388,95 @@ const paymentSubmit = async function(req, res, next) {
     
 
     if(params.payment_amt === params.each_payment_amt){
-      
-      if(params.due_installment_amt === 0){
-        newPayment.total_paid = newPayment.total_paid + params.payment_amt;
-        buildPaymentStatus(newPayment.payment_date);
-        await newPayment.paymentSubmit();
-
-        newPayment.schedule_status = 1;
-        await newPayment.updateSchedule();
-      }else if(params.due_installment_amt > 0){
-          
-          let due = params.due_installment_amt;
-
-          newPayment.due_installment_amt = 0;
-          newPayment.sub_installment_no = newPayment.sub_installment_no + 1;
-          newPayment.payment_amt = params.due_installment_amt;
-          newPayment.total_paid = newPayment.total_paid + params.due_installment_amt;
-          
-          buildPaymentStatus(newPayment.payment_date);
-          const payment = await newPayment.paymentSubmit();
-          
-          newPayment.schedule_status = 1;
-          await newPayment.updateSchedule();
-          
-          payAmt = payAmt - due;         
-          newPayment.due_installment_amt = params.each_payment_amt - payAmt;
-          newPayment.sub_installment_no = 1;
-          newPayment.payment_amt = payAmt;
-          newPayment.total_paid = newPayment.total_paid + payAmt;
-          newPayment.installment_no = instNo + 1;
-          newPayment.payment_date = dateMaker(newPayment.payment_date, params.frequency);
-          
-          buildPaymentStatus(newPayment.payment_date);
-          const payment1 = await newPayment.paymentSubmit();
-          
-          newPayment.schedule_status = 2;
-          await newPayment.updateSchedule(); 
+      if(fixInstallmentAmt === params.payment_amt){
+        if(params.payment_date === params.settlement_date){
+          newPayment.payment_status = 2; // Paid
+        }else if (params.payment_date > params.settlement_date){        
+          newPayment.payment_status = 3; // Advance Paid
+        }else if (params.payment_date < params.settlement_date){        
+          newPayment.payment_status = 11; // Late Paid
         }
-    }
-
-
-
-    if(params.payment_amt < params.each_payment_amt){
-      
-      if(params.due_installment_amt === 0){
-        newPayment.total_paid = newPayment.total_paid + params.payment_amt;
-        newPayment.due_installment_amt = params.each_payment_amt - params.payment_amt;
-        newPayment.sub_installment_no = 1;
-
-        buildPaymentStatus(newPayment.payment_date);
-        const payment = await newPayment.paymentSubmit();
-        
-        newPayment.schedule_status = 2;
-        await newPayment.updateSchedule(); 
-      }else if(params.due_installment_amt > 0){
-        if(params.due_installment_amt >= params.payment_amt){
-          newPayment.total_paid = newPayment.total_paid + params.payment_amt;
-          newPayment.due_installment_amt = params.due_installment_amt - params.payment_amt;
-          newPayment.sub_installment_no = newPayment.sub_installment_no + 1;
-
-          buildPaymentStatus(newPayment.payment_date);
-          const payment = await newPayment.paymentSubmit();
-          
-          if(params.due_installment_amt == params.payment_amt){
-            newPayment.schedule_status = 1;
-          }else{
-            newPayment.schedule_status = 2;            
-          }
-          await newPayment.updateSchedule(); 
-        }else if(params.due_installment_amt < params.payment_amt){
-          let due = params.due_installment_amt;
-         
-          newPayment.due_installment_amt = 0;
-          newPayment.sub_installment_no = newPayment.sub_installment_no + 1;
-          newPayment.payment_amt = params.due_installment_amt;
-          newPayment.total_paid = newPayment.total_paid + params.due_installment_amt;
-
-          buildPaymentStatus(newPayment.payment_date);
-          const payment = await newPayment.paymentSubmit();
-
-          newPayment.schedule_status = 1;
-          await newPayment.updateSchedule(); 
-
-          payAmt = payAmt - due;         
-          newPayment.due_installment_amt = params.each_payment_amt - payAmt;
-          newPayment.sub_installment_no = 1;
-          newPayment.payment_amt = payAmt;
-          newPayment.total_paid = newPayment.total_paid + payAmt;
-          newPayment.installment_no = instNo + 1;
-          newPayment.payment_date = dateMaker(newPayment.payment_date, params.frequency);
-
-          buildPaymentStatus(newPayment.payment_date);
-          const payment1 = await newPayment.paymentSubmit();
-          newPayment.schedule_status = 2;
-          await newPayment.updateSchedule(); 
+      }else if (fixInstallmentAmt > params.payment_amt){
+        if(params.payment_date === params.settlement_date){
+          newPayment.payment_status = 13; // Remaining Partial Paid
+        }else if (params.payment_date > params.settlement_date){        
+          newPayment.payment_status = 14; // Remaining Partial Paid in Advance
+        }else if (params.payment_date < params.settlement_date){        
+          newPayment.payment_status = 15; // Remaining Late Paid
         }
       }
+      newPayment.total_paid = params.total_paid + params.payment_amt;
+      const result = await newPayment.paymentSubmit();      
+    }
+    
+    else if(params.payment_amt < params.each_payment_amt){
+      if(params.payment_date === params.settlement_date){
+        newPayment.payment_status = 4; // Partial Paid
+      }else if (params.payment_date > params.settlement_date){        
+        newPayment.payment_status = 5; // Advance Partial Paid
+      }else if (params.payment_date < params.settlement_date){        
+        newPayment.payment_status = 12; // Partial Late Paid
+      }
+      newPayment.total_paid = params.total_paid + params.payment_amt;
+      const result = await newPayment.paymentSubmit();
+      
+      newPayment.payment_status = 1; // Pending
+      newPayment.payment_amt = params.each_payment_amt - newPayment.payment_amt;
+      await newPayment.increaseSchedule();
     }
 
-    if(params.payment_amt > params.each_payment_amt){
-      
-        if(params.due_installment_amt > 0){
-          let dueAmt = params.due_installment_amt;
-          newPayment.payment_amt = dueAmt;
-          newPayment.total_paid = newPayment.total_paid + dueAmt;
-          newPayment.installment_no = instNo;
-          newPayment.sub_installment_no = params.sub_installment_no + 1;
-          newPayment.due_installment_amt = 0;
-
-          buildPaymentStatus(newPayment.payment_date);
-          const payment = await newPayment.paymentSubmit();
-
-          newPayment.schedule_status = 1;
-          await newPayment.updateSchedule(); 
-
-          instNo = instNo + 1;
-          payAmt = payAmt - dueAmt;
-          newPayment.sub_installment_no = 0;
-          newPayment.payment_date =  dateMaker(newPayment.payment_date, params.frequency);
+    else if(params.payment_amt > params.each_payment_amt){
+        if(fixInstallmentAmt === params.each_payment_amt){
+          if(params.payment_date === params.settlement_date){
+            newPayment.payment_status = 2; // Paid
+          }else if (params.payment_date > params.settlement_date){
+            newPayment.payment_status = 3; // Advance Paid
+          }else if (params.payment_date < params.settlement_date){
+            newPayment.payment_status = 11; // Late Paid
+          }
+        }else if (fixInstallmentAmt > params.each_payment_amt){
+          if(params.payment_date === params.settlement_date){
+            newPayment.payment_status = 13; // Remaining Partial Paid
+          }else if (params.payment_date > params.settlement_date){
+            newPayment.payment_status = 14; // Remaining Partial Paid in Advance
+          }else if (params.payment_date < params.settlement_date){        
+            newPayment.payment_status = 15; // Remaining Late Paid
+          }
         }
 
-        let eachPayAmt =params.each_payment_amt;
-        let advanceTime = Math.ceil(payAmt/eachPayAmt);        
+        newPayment.payment_amt = params.each_payment_amt;
+        newPayment.total_paid = params.total_paid + params.each_payment_amt;
+        const result = await newPayment.paymentSubmit();
 
-        for(let i=1; i<= advanceTime; i++){
-            if(payAmt >= eachPayAmt){
-              newPayment.payment_amt = eachPayAmt;
-              newPayment.total_paid =  newPayment.total_paid + eachPayAmt;
-              newPayment.installment_no = instNo;
-              instNo = instNo + 1;
-              
-              newPayment.schedule_status = 1;
-            }else{
+        newPayment.remark = '';
+        let payAmt = params.payment_amt - params.each_payment_amt;
+        let advanceTime = Math.ceil(payAmt/fixInstallmentAmt);
+          for(let i=1; i<= advanceTime; i++){
+            if(payAmt >= fixInstallmentAmt){
+              newPayment.payment_amt = fixInstallmentAmt;
+              newPayment.total_paid =  newPayment.total_paid + fixInstallmentAmt;
+              newPayment.installment_no = newPayment.installment_no + 1;                         
+              newPayment.payment_status = 3; // Advance Paid
+              const result = await newPayment.paymentSubmit();             
+
+              payAmt = payAmt - fixInstallmentAmt;
+            }else if(payAmt !== 0){
               newPayment.payment_amt = payAmt;
-              newPayment.total_paid = newPayment.total_paid + payAmt;
-              newPayment.installment_no = instNo;
-              newPayment.sub_installment_no = 1;
-              newPayment.due_installment_amt = eachPayAmt - payAmt;
+              newPayment.total_paid =  newPayment.total_paid + payAmt;
+              newPayment.installment_no = newPayment.installment_no + 1;              
+              newPayment.payment_status = 5; // Advance Partial Paid
+              const result = await newPayment.paymentSubmit();
 
-              newPayment.schedule_status = 2;              
+              newPayment.payment_date = moment(result[0].payment_date).format('YYYY-MM-DD');
+              newPayment.payment_status = 1; // Pending
+              newPayment.payment_amt = fixInstallmentAmt - payAmt;
+              await newPayment.increaseSchedule();
             }
-
-            buildPaymentStatus(newPayment.payment_date);
-            const payment = await newPayment.paymentSubmit();
-            await newPayment.updateSchedule(); 
-            payAmt = payAmt - eachPayAmt;
-            newPayment.payment_date =  dateMaker(newPayment.payment_date, params.frequency);
           }
     }
-    res.send({});
 
+    const schedule = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
+    res.send(schedule);
   } catch (error) {
     next(error);
   }
