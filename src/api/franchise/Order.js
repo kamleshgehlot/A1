@@ -8,20 +8,21 @@ const PARAMS = ({ methodType = 'GET' }) => ({
   headers: {
     'Content-Type': 'application/json',
   },
-  headers: authHeader(), 
+  headers: authHeader(),
 });
 
 export default {
-  uploadDocument: async (data1) => {
+  uploadDocument: async (inputObj) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/uploaddoc`;
     try {
       const { data } = await axios(URL, {
         method: 'POST',
-        data: data1.formData,
+        data: inputObj,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -29,7 +30,7 @@ export default {
       throw error;
     }
   },
-  
+
 
   uploadDeliveryDoc: async (data1) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/uploadDeliveryDoc`;
@@ -40,7 +41,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -54,7 +56,7 @@ export default {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getnewid`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
-      
+
       return data;
     } catch (error) {
       checkError();
@@ -72,8 +74,8 @@ export default {
       throw error;
     }
   },
-  
-  
+
+
   convertedList: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/convertedList`;
     try {
@@ -85,7 +87,7 @@ export default {
     }
   },
 
-   convert: async (req) => {
+  convert: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/convert`;
     try {
       const { data } = await axios(URL, {
@@ -94,7 +96,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -112,7 +115,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -130,7 +134,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -148,7 +153,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -168,7 +174,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -186,7 +193,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -195,7 +203,7 @@ export default {
     }
   },
 
-  
+
   updateBudget: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/updateBudget`;
     try {
@@ -205,7 +213,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -223,7 +232,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -241,7 +251,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -259,7 +270,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -277,7 +289,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -295,7 +308,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -303,7 +317,7 @@ export default {
       throw error;
     }
   },
-  
+
   // getFullPaymentHistory: async (req) => {
   //   const URL = `${c.API_CONSUMER}/api/franchise/order/getFullPaymentHistory`;
   //   try {
@@ -331,7 +345,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -350,7 +365,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -359,7 +375,7 @@ export default {
     }
   },
 
-  
+
   assignToDelivery: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/assigntodelivery`;
     try {
@@ -369,7 +385,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -378,7 +395,7 @@ export default {
     }
   },
 
-  
+
   delivered: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/delivered`;
     try {
@@ -388,7 +405,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -406,7 +424,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -424,7 +443,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -442,7 +462,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -450,9 +471,9 @@ export default {
       throw error;
     }
   },
-  
 
-  
+
+
   submitDeliveredProduct: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/submitDeliveredProduct`;
     try {
@@ -462,7 +483,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -481,14 +503,15 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
       checkError();
       throw error;
     }
-  },  
+  },
 
   getFixedOrderDataForPDF: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/get-fixed-order-data-for-PDF`;
@@ -499,16 +522,17 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
       checkError();
       throw error;
     }
-  }, 
+  },
 
-  postComment:  async (req) => {
+  postComment: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/postComment`;
     try {
       const { data } = await axios(URL, {
@@ -517,7 +541,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -526,7 +551,7 @@ export default {
     }
   },
 
-  getComment:  async (req) => {
+  getComment: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getcomment`;
     try {
       const { data } = await axios(URL, {
@@ -535,7 +560,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -544,8 +570,8 @@ export default {
     }
   },
 
-  
-  getBudgetComments:  async (req) => {
+
+  getBudgetComments: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getBudgetComments`;
     try {
       const { data } = await axios(URL, {
@@ -554,7 +580,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -562,7 +589,7 @@ export default {
       throw error;
     }
   },
-  
+
   getSalesTypeList: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getSalesTypeList`;
     try {
@@ -573,7 +600,7 @@ export default {
       throw error;
     }
   },
-  
+
   getRentingForList: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getRentingForList`;
     try {
@@ -596,7 +623,7 @@ export default {
     }
   },
 
-  
+
   // editInstallment: async (params) => {
   //   const URL = `${c.API_CONSUMER}/api/franchise/order/editInstallment`;
   //   try {
@@ -641,7 +668,7 @@ export default {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getReceivedPaymentsList`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
-      
+
       return data;
     } catch (error) {
       checkError();
@@ -653,7 +680,7 @@ export default {
     const URL = `${c.API_CONSUMER}/api/franchise/order/fetchMissedPaymentData`;
     try {
       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
-      
+
       return data;
     } catch (error) {
       checkError();
@@ -661,7 +688,7 @@ export default {
     }
   },
 
-  getSingleOrderData:  async (req) => {
+  getSingleOrderData: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getSingleOrderData`;
     try {
       const { data } = await axios(URL, {
@@ -670,25 +697,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
-      );
-      return data;
-    } catch (error) {
-      checkError();
-      throw error;
-    }
-  },
-  
-  archiveOrder:  async (req) => {
-    const URL = `${c.API_CONSUMER}/api/franchise/order/archiveOrder`;
-    try {
-      const { data } = await axios(URL, {
-        method: 'POST',
-        data: req,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -697,7 +707,26 @@ export default {
     }
   },
 
-  paymentReschedule:  async (req) => {
+  archiveOrder: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/archiveOrder`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()
+      }
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+  paymentReschedule: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/paymentReschedule`;
     try {
       const { data } = await axios(URL, {
@@ -706,7 +735,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -714,7 +744,7 @@ export default {
       throw error;
     }
   },
-  
+
   searchOrder: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/searchOrder`;
     try {
@@ -724,7 +754,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
@@ -742,7 +773,8 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        headers: authHeader()}
+        headers: authHeader()
+      }
       );
       return data;
     } catch (error) {
