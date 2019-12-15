@@ -6,6 +6,7 @@ const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const APP_DIR = path.resolve(__dirname, '../src');
 
@@ -34,6 +35,7 @@ module.exports = env => {
           ]
         },
         plugins: [
+          new CleanWebpackPlugin(),
           new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: './index.html'
