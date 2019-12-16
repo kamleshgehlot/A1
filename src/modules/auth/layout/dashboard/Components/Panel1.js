@@ -136,7 +136,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <Card>
         <CardContent>
         <h2 className={classes.labelTitle}>Total Orders Count : {order.length}</h2>
-      {/* {order.map((d,i)=>{return <b>{d.id}</b> })} */}
+      {order.map((d,i)=>{return <p>{d.address}</p> })}
       </CardContent>
       </Card>
     <Paper >             
