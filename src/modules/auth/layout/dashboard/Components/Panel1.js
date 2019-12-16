@@ -16,7 +16,7 @@ import LeadList from './LeadList';
 //API Calls
 import TaskAPI from '../../../../../api/Task';
 import LeadAPI from '../../../../../api/Lead';
-import OrderAPI from '../../../../../api/franchise/Order';
+import {Run} from '../../../../../api/Run';
 import { Card,CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -122,21 +122,20 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       const resultLead = await LeadAPI.fetchLeads();
       setLeadList(resultLead.leadList);
 
-      const test = await OrderAPI.getAll();
-      console.log(test.order);
-      setOrder(test.order);
+        const response = await Run('dashboardorder', {franchise:1});
+        console.log(response.data);
+        setOrder(response.data);
 
     }
     fetchData();
   },[]);
-
 
   return (
     <div className={classes.root}  style={{ width: '100%' }}>
       <Card>
         <CardContent>
         <h2 className={classes.labelTitle}>Total Orders Count : {order.length}</h2>
-      {order.map((d,i)=>{return <p>{d.address}</p> })}
+      {order.map((d,i)=>{return <p>{d.first_name} - {d.total_payment_amt}</p> })}
       </CardContent>
       </Card>
     <Paper >             

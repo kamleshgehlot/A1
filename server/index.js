@@ -96,6 +96,7 @@ app.use('/api/franchise/enquiry', enquiryRouter);
 app.use('/api/franchise/order', orderRouter);
 app.use('/api/report', ReportRouter);
 app.use('/api/staticcontent',StaticContentRouter)
+app.use('/api/run', require('./utils/run'));
 
 app.use('/api/download', function (req, res, nex) {
   try {
