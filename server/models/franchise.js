@@ -36,8 +36,6 @@ const budget = "CREATE TABLE IF NOT EXISTS `budget`(`id` bigint(20) UNSIGNED NOT
 const flex_order = "CREATE TABLE IF NOT EXISTS `flex_order`(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_id` int(11) UNSIGNED NOT NULL, `goods_rent_price` double(10,2) DEFAULT NULL, `ppsr_fee` double(10,2) DEFAULT NULL, `liability_fee` double(10,2) DEFAULT NULL, `weekly_total` double(10,2) DEFAULT NULL, `frequency` int(11) DEFAULT NULL, `first_payment` DATE DEFAULT NULL, `duration` INT(11) DEFAULT NULL, `each_payment_amt` double(10,2) DEFAULT NULL, `before_delivery_amt` double(10,2) DEFAULT NULL, `exp_delivery_date` DATE DEFAULT NULL, `exp_delivery_time` TIME DEFAULT NULL,  `bond_amt` double(10,2) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const fixed_order = "CREATE TABLE IF NOT EXISTS `fixed_order`(`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, `customer_id` int(11) UNSIGNED NOT NULL, `int_unpaid_bal` double(10,2) DEFAULT NULL, `cash_price` double(10,2) DEFAULT NULL, `delivery_fee` double(10,2) DEFAULT NULL, `ppsr_fee` double(10,2) DEFAULT NULL, `discount` double(10,2) DEFAULT NULL, `liability_wavier_fee` double(10, 2) DEFAULT NULL, `frequency` int(11) DEFAULT NULL, `first_payment` DATE DEFAULT NULL, `last_payment` DATE DEFAULT NULL, `duration` INT(11) DEFAULT NULL, `no_of_payment` double(10,2) DEFAULT NULL, `each_payment_amt` double(10,2) DEFAULT NULL, `total_payment_amt` double(10,2) DEFAULT NULL, `before_delivery_amt` double(10,2) DEFAULT NULL, `exp_delivery_date` DATE DEFAULT NULL, `exp_delivery_time` TIME DEFAULT NULL, `minimum_payment_amt` double(10,2) DEFAULT NULL, `bond_amt` DOUBLE(10,2) DEFAULT NULL, `interest_rate` double(10,2) DEFAULT NULL, `interest_rate_per` double(10,2) DEFAULT NULL, `total_interest` double(10,2) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const order_document = "CREATE TABLE IF NOT EXISTS `order_document`(`id` int(11) NOT NULL AUTO_INCREMENT, `order_id` int(11) NOT NULL, `document` varchar(255) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
-// const payment_status = "CREATE TABLE IF NOT EXISTS `payment_status`(`id` bigint(20) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `sub_installment_no` TINYINT(4) NULL DEFAULT '0', `payment_date` varchar(50) DEFAULT NULL, `payment_rec_date` VARCHAR(50) DEFAULT NULL, `payment_amt` double DEFAULT NULL, `late_fee` DOUBLE(10,2) NULL DEFAULT '0', `interest_amt` DOUBLE(10,2) NULL DEFAULT '0', `total_paid` double DEFAULT NULL, `due_installment_amt` DOUBLE(10,2) DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` INT DEFAULT '1', `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
-const payment_status = "CREATE TABLE IF NOT EXISTS `payment_status`(`id` bigint(20) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `sub_installment_no` TINYINT(4) NULL DEFAULT '0', `payment_date` varchar(50) DEFAULT NULL, `payment_rec_date` VARCHAR(50) DEFAULT NULL, `payment_amt` double DEFAULT NULL, `total_paid` double DEFAULT NULL, `due_installment_amt` DOUBLE(10,2) DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` INT DEFAULT '1', `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const order_status = "CREATE TABLE IF NOT EXISTS `order_status`(`id` int(11) NOT NULL AUTO_INCREMENT, `order_status` varchar(50) NOT NULL, PRIMARY KEY(id))";
 const delivery_document = "CREATE TABLE IF NOT EXISTS `delivery_document` (`id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) NOT NULL, `document` VARCHAR(255) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `updated_by` INT(11) DEFAULT NULL, `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const order_comment = "CREATE TABLE IF NOT EXISTS `order_comment` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `order_id` INT(11) DEFAULT NULL, `created_by` INT(11) DEFAULT NULL, `user_role` VARCHAR(50) DEFAULT NULL, `comment` TEXT DEFAULT NULL, `status` INT(11) DEFAULT NULL, `is_active` TINYINT(4) DEFAULT NULL , `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (id))";
@@ -55,28 +53,22 @@ const customer_bank_detail = "CREATE TABLE IF NOT EXISTS  `customer_bank_detail`
 const sales_type_list = "CREATE TABLE IF NOT EXISTS  `sales_type_list` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `sales_type_name` VARCHAR(100) DEFAULT NULL , `is_active` TINYINT(1) DEFAULT NULL , `created_by` INT DEFAULT NULL , `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`));"
 const renting_for_list = "CREATE TABLE IF NOT EXISTS `renting_for_list` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `renting_for_name` VARCHAR(100) DEFAULT NULL , `is_active` TINYINT DEFAULT NULL , `created_by` INT DEFAULT NULL , `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`));"
 const budget_comment = "CREATE TABLE IF NOT EXISTS `budget_comment` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `customer_id` INT DEFAULT NULL, `order_id` INT DEFAULT NULL, `budget_id` INT DEFAULT NULL , `comment` VARCHAR(1000) DEFAULT NULL , `is_active` TINYINT(1) DEFAULT NULL , `created_by` INT DEFAULT NULL , `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`));"
-const payments = "CREATE TABLE IF NOT EXISTS `payments` (`id` int(11) NOT NULL AUTO_INCREMENT, `bankFailedReason` text NOT NULL, `bankReceiptID` varchar(50) NOT NULL, `bankReturnCode` varchar(5) NOT NULL, `customerName` varchar(100) NOT NULL, `debitDate` datetime NOT NULL, `eziDebitCustomerID` varchar(10) NOT NULL, `invoiceID` varchar(10) NOT NULL, `paymentAmount` double NOT NULL, `paymentID` varchar(10) NOT NULL, `paymentMethod` varchar(3) NOT NULL, `paymentReference` varchar(50) NOT NULL, `paymentSource` varchar(10) NOT NULL, `paymentStatus` varchar(2) NOT NULL, `settlementDate` datetime NOT NULL, `scheduledAmount` double NOT NULL, `transactionFeeClient` double NOT NULL, `transactionFeeCustomer` double NOT NULL, `transactionTime` time NOT NULL, `yourGeneralReference` varchar(50) NOT NULL, `yourSystemReference` varchar(50) NOT NULL, `status` int(11) DEFAULT NULL, `is_active` int(11) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
+const payments = "CREATE TABLE IF NOT EXISTS `payments` (`id` int(11) NOT NULL AUTO_INCREMENT, `bankFailedReason` text NOT NULL, `bankReceiptID` varchar(50) NOT NULL, `bankReturnCode` varchar(5) NOT NULL, `customerName` varchar(100) NOT NULL, `debitDate` datetime NOT NULL, `eziDebitCustomerID` varchar(10) NOT NULL, `invoiceID` varchar(10) NOT NULL, `paymentAmount` double NOT NULL, `paymentID` varchar(10) NOT NULL, `paymentMethod` varchar(3) NOT NULL, `paymentReference` varchar(50) NOT NULL, `paymentSource` varchar(10) NOT NULL, `paymentStatus` varchar(2) NOT NULL, `settlementDate` datetime NOT NULL, `scheduledAmount` double NOT NULL, `transactionFeeClient` double NOT NULL, `transactionFeeCustomer` double NOT NULL, `transactionTime` time NOT NULL, `yourGeneralReference` varchar(50) NOT NULL, `yourSystemReference` varchar(50) NOT NULL, `status` int(11) DEFAULT NULL, `is_active` int(11) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const paymentstatus = "CREATE TABLE IF NOT EXISTS `paymentstatus` (`id` int(11) NOT NULL AUTO_INCREMENT, `paymentReference` varchar(50) NOT NULL, `data` varchar(2) NOT NULL, `error` varchar(500) NOT NULL, `errorMessage` text NOT NULL, `is_active` int(11) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
-const payment_schedule = "CREATE TABLE IF NOT EXISTS `payment_schedule` (`id` int(11) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `payment_date` datetime DEFAULT NULL, `status` int(11) DEFAULT NULL, `is_active` int(11) DEFAULT NULL, `remark` TEXT DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 const weekDayList = "CREATE TABLE IF NOT EXISTS `week_day_list` (`id` int(11) NOT NULL AUTO_INCREMENT, `week_day` varchar(20) DEFAULT NULL, `is_active` tinyint(1) DEFAULT '1', `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id))";
 // const discountRateList = "CREATE TABLE IF NOT EXISTS `discount_rate_list` (`id` int(11) NOT NULL AUTO_INCREMENT, `duration_in_year` int(11) DEFAULT NULL, `duration_period` varchar(100) DEFAULT NULL, `weekly_discount_rate` double DEFAULT NULL, `fortnightly_discount_rate` double DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
-
-
-
-
+const statusPayment = "CREATE TABLE IF NOT EXISTS `status_payment` ( `id` int(11) NOT NULL AUTO_INCREMENT, `status` varchar(100) DEFAULT NULL, `is_active` int(11) DEFAULT '1', PRIMARY KEY (id));";
+const payment_schedules = "CREATE TABLE IF NOT EXISTS `payment_schedules` ( `id` bigint(20) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `customer_id` int(11) DEFAULT NULL, `transaction_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `payment_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', `settlement_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', `payment_amt` double DEFAULT NULL, `total_paid` double DEFAULT NULL, `remark` text, `status` int(11) DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
+const payment_transaction = "CREATE TABLE IF NOT EXISTS `payment_transaction` ( `id` int(11) NOT NULL AUTO_INCREMENT, `customer_id` int(11) DEFAULT NULL, `order_id` int(11) DEFAULT NULL, `transaction_date` datetime DEFAULT NULL, `transaction_amt` double DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 // const document_for_payment = "CREATE TABLE IF NOT EXISTS `document_for_payment` ( `id` int(11) NOT NULL AUTO_INCREMENT, `customer_id` int(11) DEFAULT NULL, `order_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `sub_installment_no` int(11) DEFAULT NULL, `document` varchar(500) DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,  PRIMARY KEY (`id`));";
 // const comment_on_payment = "CREATE TABLE IF NOT EXISTS `comment_on_payment` (`id` int(11) NOT NULL, `customer_id` int(11) DEFAULT NULL, `order_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `sub_installment_no` int(11) DEFAULT NULL, `comment` text, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `created_by` int(11) DEFAULT NULL, PRIMARY KEY (`id`));";
-// const transaction = "CREATE TABLE IF NOT EXISTS `transaction` (`id` int(11) NOT NULL, `customer_id` int(11) DEFAULT NULL, `order_id` int(11) DEFAULT NULL, `transaction_date` datetime DEFAULT NULL, `transaction_amt` double(10,2) DEFAULT NULL, `late_fee` double(10,2) DEFAULT NULL, `interest_amt` double(10,2) DEFAULT NULL, `status` int(11) DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  PRIMARY KEY (`id`));";
-
-
 // const leads = "CREATE TABLE  IF NOT EXISTS `leads` (`id` int(10) NOT NULL AUTO_INCREMENT,`lead_id` varchar(255) , `franchise_id` int(10) NOT NULL,  `message` TEXT DEFAULT NULL, `document` TEXT DEFAULT NULL, `converted_to` varchar(255)  DEFAULT NULL,`is_active` tinyint(4) DEFAULT NULL, `created_by` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 
 Franchise.prototype.register = function (newUser) {
   const that = this;
   return new Promise(function (resolve, reject) {
     const frachiseDbName = dbName.getFullName(dbName["prod"], that.city.substring(0, 2).toLowerCase() + that.suburb.substring(0, 2).toLowerCase());
-    // console.log("franchise database name..........", frachiseDbName)
 
     connection.getConnection(function (error, connection) {
       if (error) {
@@ -199,8 +191,25 @@ Franchise.prototype.register = function (newUser) {
                   [5, 5, '49-60 Months', 164.20361, 82.03445, 1, '2019-12-09 04:07:42'],
                 ]
 
-                
-                
+                let payment_status_list = [
+                  [1, 'Pending', 1],
+                  [2, 'Paid', 1],
+                  [3, 'Advance Paid', 1],
+                  [4, 'Partial Paid', 1],
+                  [5, 'Advance Partial Paid', 1],
+                  [6, 'Dishonoured', 1],
+                  [7, 'Past Due', 1],
+                  [8, 'Partial Dishonoured', 1],
+                  [9, 'Failed', 1],
+                  [10, 'Fatal Dishonoured', 1],
+                  [11, 'Late Paid', 1],
+                  [12, 'Partial Late Paid', 1],
+                  [13, 'Remaining Partial Paid', 1],
+                  [14, 'Remaining Partial Paid in Advance', 1],
+                  [15, 'Remaining Late Paid', 1],
+                  [16, 'Partial Pending', 1],
+                  [17, 'Partial Past Due', 1],
+                ]
                 
                 connection.query(role, function (err) { if (err) { console.log('Role Table Create Time Error: ', err) } });
                 connection.query(user, function (err) { if (err) { console.log('user Table Create Time Error: ', err) } });
@@ -216,8 +225,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(payment_mode, function (err) { if (err) { console.log('Payment Mode Table Create Time Error: ', err) } });
                 connection.query(flex_order, function (err) { if (err) { console.log('Flex_order Table Create Time Error: ', err) } });
                 connection.query(fixed_order, function (err) { if (err) { console.log('Fixed Order Table Create Time Error: ', err) } });
-                connection.query(order_document, function (err) { if (err) { console.log('Order Document Table Create Time Error: ', err) } });
-                connection.query(payment_status, function (err) { if (err) { console.log('Payment Status Table Create Time Error: ', err) } });
+                connection.query(order_document, function (err) { if (err) { console.log('Order Document Table Create Time Error: ', err) } });                
                 connection.query(order_status, function (err) { if (err) { console.log('Order Status Table Create Time Error: ', err) } });
                 connection.query(delivery_document, function (err) { if (err) { console.log('Delivery Document Table Create Time Error: ', err) } });
                 connection.query(order_comment, function (err) { if (err) { console.log('Order Comment Table Create Time Error: ', err) } });
@@ -234,14 +242,18 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(renting_for_list, function (err) { if (err) { console.log('renting_for_list Table Create Time Error: ', err) } });
                 connection.query(budget_comment, function (err) { if (err) { console.log('budget_comment Table Create Time Error: ', err) } });
                 connection.query(payments, function (err) { if (err) { console.log('payments Table Create Time Error: ', err) } });
-                connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });
-                connection.query(payment_schedule, function (err) { if (err) { console.log('payment_schedule Table Create Time Error: ', err) } });
+                connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });                
                 connection.query(weekDayList, function (err) { if (err) { console.log('weekDayList Table Create Time Error: ', err) } });
+                
+                connection.query(payment_schedules, function (err) { if (err) { console.log('payment_schedules Table Create Time Error: ', err) } });
+                connection.query(statusPayment, function (err) { if (err) { console.log('statusPayment Table Create Time Error: ', err) } });
+                connection.query(payment_transaction, function (err) { if (err) { console.log('payment_transaction Table Create Time Error: ', err) } });
+
                 // connection.query(discountRateList, function (err) { if (err) { console.log('discountRateList Table Create Time Error: ', err) } });
                 
                 // connection.query(document_for_payment, function (err) { if (err) { console.log('document_for_payment Table Create Time Error: ', err) } });
                 // connection.query(comment_on_payment, function (err) { if (err) { console.log('comment_on_payment Table Create Time Error: ', err) } });
-                // connection.query(transaction, function (err) { if (err) { console.log('transaction Table Create Time Error: ', err) } });
+                
                 
                 connection.query('INSERT INTO `role`(`id`, `name`, `state`, `created_by`) VALUES ?', [values1], function (error, rows, fields) { if (error) { console.log('Role Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `id_type`(`id`, `name`, `is_active`, `created_by`) VALUES ?', [idTypeData], function (error, rows, fields) { if (error) { console.log('IdType Insert Time Error: ', error) } });
@@ -253,6 +265,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query('INSERT INTO `sales_type_list`(`id`, `sales_type_name`, `is_active`) VALUES ?', [sales_type_list_data], function (error, rows, fields) { if (error) { console.log('sales_type_list_data Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `renting_for_list`(`id`, `renting_for_name`, `is_active`) VALUES ?', [renting_for_list_data], function (error, rows, fields) { if (error) { console.log('renting_for_list_data Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `week_day_list`(`id`, `week_day`, `is_active`) VALUES ?', [week_day_list], function (error, rows, fields) { if (error) { console.log('week_day_list Insert Time Error: ', error) } });
+                connection.query('INSERT INTO `status_payment` (`id`, `status`, `is_active`) VALUES ?', [payment_status_list], function (error, rows, fields) { if (error) { console.log('week_day_list Insert Time Error: ', error) } });
                 // connection.query('INSERT INTO `discount_rate_list` (`id`, `duration_in_year`, `duration_period`, `weekly_discount_rate`, `fortnightly_discount_rate`, `is_active`, `created_at`) VALUES ?', [discount_rate_list], function (error, rows, fields) { if (error) { console.log('discount_rate_list Insert Time Error: ', error) } });
 
                 connection.changeUser({ database: dbName["prod"] });

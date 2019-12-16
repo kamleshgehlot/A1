@@ -66,10 +66,9 @@ orderRouter.route("/getBudgetHistory").post(validateToken, Order.getBudgetHistor
 orderRouter.route("/updateBudget").post(validateToken, Order.updateBudget);
 orderRouter.route("/getfixedorder").post(validateToken, Order.getFixedOrder);
 orderRouter.route("/getflexorder").post(validateToken, Order.getFlexOrder);
-orderRouter.route("/getpaymenthistory").post(validateToken, Order.getPaymentHistory);
-// orderRouter.route("/getFullPaymentHistory").post(validateToken, Order.getFullPaymentHistory);
 
 orderRouter.route("/paymentsubmit").post(validateToken, Order.paymentSubmit);
+orderRouter.route("/dishonourToPayment").post(validateToken, Order.dishonourToPayment);
 orderRouter.route("/editorder").post(validateToken, Order.editOrder);
 orderRouter.route("/assigntofinance").post(validateToken, Order.assignToFinance);
 orderRouter.route("/assigntodelivery").post(validateToken, Order.assignToDelivery);
@@ -87,11 +86,6 @@ orderRouter.route("/getSalesTypeList").get(validateToken, Order.getSalesTypeList
 orderRouter.route("/getRentingForList").get(validateToken, Order.getRentingForList);
 orderRouter.route("/getBudgetComments").post(validateToken, Order.getBudgetComments);
 orderRouter.route("/getSalesPersonList").get(validateToken, Order.getSalesPersonList);
-// orderRouter.route("/getSingleTransactionDetail").post(validateToken, Order.getSingleTransactionDetail);
-
-
-// orderRouter.route("/paymentsubmit").post(validateToken, paymentDoc.array('avatar'), Order.paymentSubmit);
-// orderRouter.route("/editInstallment").post(validateToken, paymentDoc.array('avatar'), Order.editInstallment);
 
 orderRouter.route("/getReceivedPaymentsList").get(validateToken, Order.getReceivedPaymentsList);
 orderRouter.route("/fetchMissedPaymentData").get(validateToken, Order.fetchMissedPaymentData);

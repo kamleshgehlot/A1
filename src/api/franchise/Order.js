@@ -714,6 +714,24 @@ export default {
       throw error;
     }
   },
+
+  dishonourToPayment:  async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/dishonourToPayment`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
   
   searchOrder: async (req) => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/searchOrder`;

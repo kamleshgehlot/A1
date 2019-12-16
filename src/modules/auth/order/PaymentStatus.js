@@ -20,12 +20,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TextField from '@material-ui/core/TextField';
 import TableRow from '@material-ui/core/TableRow';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import Paper from '@material-ui/core/Paper';
 import Input from "@material-ui/core/Input";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -37,9 +33,11 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import DateFnsUtils from '@date-io/date-fns';
+import Tooltip from '@material-ui/core/Tooltip';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import 'date-fns';
+
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -48,9 +46,10 @@ import Staff from '../../../api/franchise/Staff';
 import Order from '../../../api/franchise/Order';
 import CategoryAPI from '../../../api/Category';
 import ConfirmationDialog from '../ConfirmationDialog.js';
-import DateChanger from './PaymentComponent/DateChanger.js';
+import ConfirmDialogDishonour from '../ConfirmationDialog.js';
 
-import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getCurrentDateDBFormat, getDateInDDMMYYYY, setDBDateFormat } from '../../../utils/datetime';
+
+import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getCurrentDateDBFormat, getDateInDDMMYYYY, setDBDateFormat, subtractOneDay, addOneDay } from '../../../utils/datetime';
 
 import useSignUpForm from '../franchise/CustomHooks';
 import { FormLabel } from '@material-ui/core';
@@ -115,7 +114,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
   },
   button:{
-    color:"white",
+    // color:"white",
     fontSize: theme.typography.pxToRem(10),
     marginRight: theme.spacing(1),
   },
@@ -127,6 +126,9 @@ const useStyles = makeStyles(theme => ({
   },
   buttonMargin: {
     margin: theme.spacing(1),
+  },
+  centerDate: {
+    textAlignb: 'center'
   },
 }));
 
@@ -154,7 +156,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   
   
   const [confirmation, setConfirmation] = React.useState(false);
-  const [payResopnse, setPayResopnse] = React.useState([]);
+  const [confirmDishonour, setConfirmDishonour] = React.useState(false);
+  
   
   const [paymentSchedule, setPaymentSchedule] = useState([]);
   const [nextPayment, setNextPayment] = useState({installment_no:0});
@@ -167,8 +170,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [remarkField,setRemarkField] = useState('');
   const [totalPaid, setTotalPaid] = useState(0);
   const [scheduleChangerOpen, setScheduleChangerOpen] = useState(false);
-
-
+  const [reschedule, setReschedule] = useState(false);
+  const [dateToReschedule, setDateToReschedule] = useState();
   
   useEffect(() => {
     fetchData();
@@ -208,6 +211,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     if(result.nextInstallmentRow[0] != null && result.nextInstallmentRow[0] != ''){
       setNextPayment(result.nextInstallmentRow[0]);
       setPaymentAmt(result.nextInstallmentRow[0].payment_amt);
+      setPaymentRecDate(result.nextInstallmentRow[0].payment_date);
+      setDateToReschedule(result.nextInstallmentRow[0].payment_date);
     }
   }
   
@@ -250,6 +255,14 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         console.log('Error..',error);
     }
   }
+
+  const handleDateIncrease = () => {    
+    setDateToReschedule(addOneDay(dateToReschedule));
+  }
+
+  const handleDateDecrease = () => {
+    setDateToReschedule(subtractOneDay(dateToReschedule));
+  }
   
   function handlePaymentSubmit(response){
     setConfirmation(true);
@@ -280,16 +293,58 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     }    
   }
 
+  const handleReschedulePayment = async () => {    
+    let diffBetweenSchedule = [];
+    
+    const date1 = new Date(nextPayment.payment_date);
+    const date2 = new Date(dateToReschedule);
+    const diffTime = Math.abs(date2 - date1);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    
+    if(nextPayment.payment_date > dateToReschedule){
+      diffBetweenSchedule.push({'subtract': diffDays, 'add' : 0});
+    }else if(nextPayment.payment_date < dateToReschedule){
+      diffBetweenSchedule.push({'add': diffDays, 'subtract': 0 });
+    }else{
+      diffBetweenSchedule.push({'add': 0, 'subtract': 0 });
+    }
 
-  const handleSchduleChangerOpen = (data) => {
-    setPayResopnse(data);
-    setScheduleChangerOpen(true);
+    try{
+      const response = await Order.paymentReschedule({
+        order_id: orderData.id,
+        customer_id : orderData.customer_id,        
+        diffBetweenSchedule : diffBetweenSchedule,
+       });
+       handleSetScheduledData(response);
+    }catch(e){
+      console.log('error..',e);
+    }
   }
 
-  const handleSchduleChangerClose = () => {
-    setScheduleChangerOpen(false);
+  const handleMakeDishounored = async () =>{
+    setConfirmDishonour(true);
   }
 
+  const handleCloseDishonourConBox = async (isConfirm) => {
+    setConfirmDishonour(false);
+    if(isConfirm === 1){
+      try {
+        const result = await Order.dishonourToPayment({
+          order_id : orderData.id,
+          customer_id: orderData.customer_id,
+          installment_no : nextPayment.installment_no,
+          payment_amt : nextPayment.payment_amt,
+          remark : remarkField,
+          order_type : orderData.order_type,
+          order_type_id : orderData.order_type_id,
+        });
+        handleSetScheduledData(result);
+        setRemarkField('');
+      } catch (error) {
+        console.log('Error..',error);
+      }        
+    }    
+  }
   
 return (
     <div>
@@ -375,9 +430,44 @@ return (
           </Grid>
 
             
-            <Grid container  justify="space-around">                              
+            <Grid container  justify="space-around">         
               <Grid item xs={12} sm={11}>
-              <Typography variant="h6" className={classes.rowHeading}> Add Payment </Typography>
+              {/* <FormControlLabel control={ <Checkbox checked={reschedule} /> } label="Reschedule Remaining Payment" style={{fontWeight: "bold", marginTop: '15px', fontSize: '18px' }} /> */}
+                {/* <Checkbox  color="default" value= {reschedule} /> */}
+                <Typography variant="h6" className={classes.rowHeading} > Reschedule Remaining Payment </Typography>
+              </Grid>
+                <Grid item xs={12} sm={11} disabled>
+                  <Tooltip title="Click to Previous Date">
+                    <IconButton  size="small" onClick={ handleDateDecrease}>
+                      <RemoveIcon />  
+                    </IconButton>
+                  </Tooltip>
+                  <TextField
+                    style= {{fontSize : 15, fontWeight : "bold", marginLeft: '10px', marginRight: '10px'}}
+                    id="date_changer"
+                    name="date_changer"
+                    value={getDateInDDMMYYYY(dateToReschedule)}
+                    margin="dense"                  
+                    disabled
+                    InputProps={{                     
+                      classes: {
+                        input: styleClass.centerDate,
+                      },                    
+                    }}                    
+                    // error={errors}
+                    // helperText = {errors}
+                  />
+                  {/* <Typography variant="h6" className={classes.textsize} style= {{fontWeight : "bold", marginLeft: '10px', marginRight: '10px'}}> {getDateInDDMMYYYY(dateToReschedule)} </Typography> */}
+                  <Tooltip title="Click to Next Date">
+                    <IconButton  size="small" onClick={ handleDateIncrease}>
+                      <AddIcon />  
+                    </IconButton>
+                  </Tooltip>
+                  <Button variant="contained" color="primary" onClick={handleReschedulePayment} className={classes.button} style={{marginLeft : '60px'}}>  Reschedule </Button>
+                </Grid>
+
+              <Grid item xs={12} sm={11}>
+                <Typography variant="h6" className={classes.rowHeading}> Add Payment </Typography>
               </Grid>
               <Grid item xs={12} sm={2}>
                 <Typography variant="h6" className={classes.labelTitle}> Installment No.: </Typography>
@@ -474,7 +564,7 @@ return (
               </Grid>
               <Grid item xs={12} sm={2} style={{marginTop: '30px', textAlign: 'right'}}>
                 <Button variant="contained" color="primary" onClick={handlePaymentSubmit} className={classes.button}> Submit</Button> 
-                {/* <Button variant="contained" color="primary" onClick={() => { handleSchduleChangerOpen([]); }} className={classes.button}> Reschedule Remaining</Button>  */}                
+                <Button variant="contained" color="primary" onClick={handleMakeDishounored} className={classes.button}>Dishonoured</Button>
               </Grid>
 
               <Grid item xs={12} sm={12}  style={{marginTop: '20px', marginBottom : '15px'}}>
@@ -493,7 +583,7 @@ return (
     </Dialog>
       
       {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Is this installment paid by customer ?"} />: null }
-      {scheduleChangerOpen ? <DateChanger open = {scheduleChangerOpen} handleClose = {handleSchduleChangerClose} paymentData = { payResopnse } orderData= {orderData} fetchData= {fetchData} paymentSchedule = {paymentSchedule} /> : null }
+      {confirmDishonour ? <ConfirmDialogDishonour open = {confirmDishonour} lastValue={1} handleConfirmationClose={handleCloseDishonourConBox}  currentState={0} title={""} content={"Click Yes to Make it Dishonored ?"} />: null }
     </div>
   );
 }

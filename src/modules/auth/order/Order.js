@@ -478,7 +478,6 @@ export default function Order({roleName}) {
         try {
           if(nextStep === 'Finance')
             {
-              // console.log('orderData...',orderData);
               const result = await OrderAPI.assignToFinance({
                 assigned_to: 4,
                 id: orderId, 

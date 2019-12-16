@@ -84,6 +84,7 @@ var Order = function (params) {
   this.transaction_amt = params.transaction_amt;
   this.transaction_id = params.transaction_id;
   this.settlement_date = params.settlement_date;
+  this.diffBetweenSchedule = params.diffBetweenSchedule;
   
 };
 
@@ -541,75 +542,31 @@ Order.prototype.getFlexOrder = function () {
 };
 
 
-
-Order.prototype.getPaymentHistory = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
-
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('SELECT * from payment_status where order_id = "'+that.id+'" AND is_active = 1 ORDER BY installment_no, sub_installment_no',function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
-          })
-      } else {
-        console.log("Error...", error);
-        reject(error);
-      }
-      connection.release();
-      console.log('Order Added for Franchise Staff %d', connection.threadId);
-    });
-  }).catch((error) => {
-    throw error;
-  });
-};
-
-
 Order.prototype.getPaymentSchedule = function () {
   const that = this;
-  return new Promise(function (resolve, reject) {
+  let paymentSchedule = [];
+  const nextInst = [];
+  let lastInst = [];
 
+  return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
+      if (error) { throw error; }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        // connection.query('SELECT * from payment_schedule where order_id = "'+that.order_id+'" AND is_active = 1 ORDER BY installment_no',function (error, rows, fields) {
-        connection.query('SELECT ps.`id`, ps.`order_id`, ps.`customer_id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date, DATE_FORMAT(ps.`settlement_date`,\'%Y-%m-%d\') settlement_date, ps.`payment_amt`, ps.`total_paid`, ps.`remark`, ps.`status`, ps.`is_active`, ps.`created_by`, ps.`updated_by`, ps.`created_at`, ps.`updated_at`, sp.status as pay_status_name, u.name as accept_by FROM `payment_schedules` as ps LEFT JOIN status_payment as sp ON ps.status = sp.id  LEFT JOIN user as u ON u.id = ps.created_by where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 ORDER BY installment_no, id',function (error, rows, fields) {
-          if (!error) {
-            connection.query('SELECT ps.`id`, ps.`order_id`, ps.`customer_id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date, DATE_FORMAT(ps.`settlement_date`,\'%Y-%m-%d\') settlement_date, ps.`payment_amt`, ps.`total_paid`, ps.`remark`, ps.`status`, ps.`is_active`, ps.`created_by`, ps.`updated_by`, ps.`created_at`, ps.`updated_at`, sp.status as pay_status_name, u.name as accept_by FROM `payment_schedules` as ps LEFT JOIN status_payment as sp ON ps.status = sp.id  LEFT JOIN user as u ON u.id = ps.created_by where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 AND ps.status = 1 ORDER BY installment_no, id LIMIT 1',function (error, nextInst, fields) {
-              if (!error) {
-                connection.query('SELECT ps.`id`, ps.`total_paid`, ps.`status` FROM `payment_schedules` as ps WHERE  ps.order_id = "'+that.order_id+'" AND  total_paid != \'\' AND status != 1 ORDER BY total_paid DESC LIMIT 1',function (error, lastInst, fields) {
-                  if (!error) {
-                    resolve({nextInstallmentRow: nextInst, paymentSchedule : rows, lastInst : lastInst});
-                    } else {
-                      console.log("Error...", error);
-                      reject(error);
-                    }
-                  })                
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
-              })
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          })
-      } else {
-        console.log("Error...", error);
-        reject(error);
-      }
+        connection.query('UPDATE payment_schedules SET `status` = (CASE status WHEN 1 THEN 7 WHEN 16 THEN 17 END) WHERE order_id = "'+that.order_id+'" AND status IN(1,16) AND (payment_date < CURRENT_DATE)',function (error, updatePastDue, fields) {if (error) {console.log('check past due date:',error)}});
+
+        connection.query('SELECT ps.`id`, ps.`order_id`, ps.`customer_id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date, DATE_FORMAT(ps.`settlement_date`,\'%Y-%m-%d\') settlement_date, ps.`payment_amt`, ps.`total_paid`, ps.`remark`, ps.`status`, ps.`is_active`, ps.`created_by`, ps.`updated_by`, ps.`created_at`, ps.`updated_at`, sp.status as pay_status_name, u.name as accept_by FROM `payment_schedules` as ps LEFT JOIN status_payment as sp ON ps.status = sp.id  LEFT JOIN user as u ON u.id = ps.created_by where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 ORDER BY installment_no, id',function (error, schedule, fields) {
+            if(error){ console.log('Error...', error); reject(error);}
+            connection.query('SELECT ps.`id`, ps.`order_id`, ps.`customer_id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date, DATE_FORMAT(ps.`settlement_date`,\'%Y-%m-%d\') settlement_date, ps.`payment_amt`, ps.`total_paid`, ps.`remark`, ps.`status`, ps.`is_active`, ps.`created_by`, ps.`updated_by`, ps.`created_at`, ps.`updated_at`, sp.status as pay_status_name, u.name as accept_by FROM `payment_schedules` as ps LEFT JOIN status_payment as sp ON ps.status = sp.id  LEFT JOIN user as u ON u.id = ps.created_by where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 AND ps.status IN(1,7,16,17) ORDER BY installment_no, id LIMIT 1',function (error, nextInst, fields) {
+              if(error) { console.log("Error...", error); reject(error);}
+              connection.query('SELECT ps.`id`, ps.`total_paid`, ps.`status` FROM `payment_schedules` as ps WHERE  ps.order_id = "'+that.order_id+'" AND  total_paid != \'\' AND status != 1 ORDER BY total_paid DESC LIMIT 1',function (error, lastInst, fields) {                
+                if(error) { console.log("Error...", error); reject(error);} 
+                resolve({nextInstallmentRow: nextInst, paymentSchedule : schedule, lastInst : lastInst});
+              });
+            });
+          });
+        }
+
       connection.release();
       console.log('Payment Schedule fetched %d', connection.threadId);
     });
@@ -617,38 +574,6 @@ Order.prototype.getPaymentSchedule = function () {
     throw error;
   });
 };
-
-
-
-// Order.prototype.getFullPaymentHistory = function () {
-//   const that = this;
-//   return new Promise(function (resolve, reject) {
-
-//     connection.getConnection(function (error, connection) {
-//       if (error) {
-//         throw error;
-//       }
-//       if (!error) {
-//         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-//         connection.query('SELECT * from payment_status where order_id = "'+that.id+'" ORDER BY installment_no, sub_installment_no',function (error, rows, fields) {
-//             if (!error) {
-//                 resolve(rows);
-//                 } else {
-//                   console.log("Error...", error);
-//                   reject(error);
-//                 }
-//           })
-//       } else {
-//         console.log("Error...", error);
-//         reject(error);
-//       }
-//       connection.release();
-//       console.log('Order Added for Franchise Staff %d', connection.threadId);
-//     });
-//   }).catch((error) => {
-//     throw error;
-//   });
-// };
 
 
 Order.prototype.getRequiredDataToCancel = function () {
@@ -716,6 +641,33 @@ Order.prototype.transactionEntry = function () {
 };
 
 
+Order.prototype.dishonourToPayment = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+
+        let Values = [that.remark, that.payment_status, that.order_id, that.installment_no];
+        connection.query('UPDATE payment_schedules SET remark = ?, status = ? WHERE order_id = ? AND installment_no = ? ORDER BY id DESC LIMIT 1', Values , function (error, rows, fields) { 
+          if (error) { console.log('error..',error)}
+          else {resolve(rows)} 
+        });
+      } else {
+        console.log("Error...", error);
+        reject(error);
+      }
+      connection.release();
+      console.log('Dishonoured payment %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 
 Order.prototype.paymentSubmit = function () {
   const that = this;
@@ -728,44 +680,24 @@ Order.prototype.paymentSubmit = function () {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
         let Values = [that.transaction_id, that.settlement_date, that.payment_amt, that.total_paid, that.remark, that.payment_status, that.order_id, that.installment_no];
-        connection.query('UPDATE payment_schedules SET transaction_id = ?, settlement_date = ?, payment_amt = ?, total_paid = ?, remark = ?, status = ? WHERE order_id = ? AND installment_no = ? ORDER BY id DESC LIMIT 1', Values , function (error, rows, fields) {
-            if (!error) {
-              connection.query('SELECT * FROM payment_schedules WHERE order_id = "'+that.order_id+'" AND installment_no = "' +that.installment_no+ '" ORDER BY id LIMIT 1',function (error, lastUpdated, fields) {
-                if (!error) {
-                  resolve(lastUpdated)
-                  } else {
-                    console.log("Error...", error);
-                    reject(error);
-                  }
-                });
+        connection.query('UPDATE payment_schedules SET transaction_id = ?, settlement_date = ?, payment_amt = ?, total_paid = ?, remark = ?, status = ? WHERE order_id = ? AND installment_no = ? ORDER BY id DESC LIMIT 1', Values , function (error, rows, fields) { if (error) { console.log('error..',error)} });
+        
+        if(that.installment_before_delivery > that.installment_no){
+          connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) { if (error) { console.log("Error...", error); reject(error); } });
+        }
+        if(that.installment_no === that.last_installment_no && that.order_type === 1 && that.payment_amt >= that.each_payment_amt){
+          connection.query('UPDATE orders as o INNER JOIN budget as b ON (o.budget_id = b.id) SET o.order_status = 8, b.is_active = 0 where o.id = "'+that.order_id+'"', function (error, rows, fields) {
+            if (error) { console.log("Error...", error); reject(error); }     
+          });
+        }
 
-                if(that.installment_before_delivery > that.installment_no){
-                  connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) {
-                    if(!error){
-                      resolve(rows);
-                    }else{
-                      console.log("Error...", error);
-                      reject(error);
-                    }
-                  });
-                }
-               
-                if(that.installment_no === that.last_installment_no && that.order_type === 1 && that.payment_amt >= that.each_payment_amt){
-                    connection.query('UPDATE orders as o INNER JOIN budget as b ON (o.budget_id = b.id) SET o.order_status = 8, b.is_active = 0 where o.id = "'+that.order_id+'"', function (error, rows, fields) {
-                  if(!error){
-                          resolve(rows);
-                    }else{
-                      console.log("Error...", error);
-                      reject(error);
-                    }
-                  });
-                }
-
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          })
+        connection.query('SELECT * FROM payment_schedules WHERE order_id = "'+that.order_id+'" AND installment_no = "' +that.installment_no+ '" ORDER BY id LIMIT 1',function (error, lastUpdated, fields) { 
+          if (error) { console.log("Error...", error); reject(error); } 
+            connection.query('SELECT ps.`id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date FROM `payment_schedules` as ps where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 AND ps.status IN(1,7,16,17) ORDER BY ps.installment_no, ps.id LIMIT 1',function (error, nextInst, fields) { 
+            if (error) { console.log("Error...", error); reject(error); }
+              resolve({lastUpdated: lastUpdated, nextInst: nextInst})
+            });
+        });
       } else {
         console.log("Error...", error);
         reject(error);
@@ -1977,18 +1909,22 @@ Order.prototype.paymentReschedule = function () {
       if (error) {
         throw error;
       }
-      if (!error) {
-        
+      if (!error) {  
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('UPDATE payment_schedule SET payment_date = "'+that.payment_schedule_date+'" WHERE order_id = "'+ that.order_id +'" AND customer_id = "'+ that.customer_id +'" AND installment_no = "'+ that.installment_no +'"', function (error, rows, fields) {
-            if (!error) {
-              console.log("paymentSchedule",rows, that.payment_schedule_date, that.order_id, that.customer_id, that.installment_no)
+        const add = that.diffBetweenSchedule.add;
+        const subtract = that.diffBetweenSchedule.subtract;
+        
+        if(add > 0 && subtract === 0){
+          connection.query('UPDATE `payment_schedules` SET payment_date = DATE_ADD(payment_date, INTERVAL "'+ add +'" DAY) WHERE order_id = "' + that.order_id + '" AND status IN(1,7,16,17) ORDER BY installment_no, id', function (error, rows, fields) {
+            if (error) { console.log("Error...", error); reject(error); }
                 resolve(rows);
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          })
+          });
+        }else if(add === 0 && subtract > 0){
+          connection.query('UPDATE `payment_schedules` SET payment_date = DATE_SUB(payment_date, INTERVAL "'+ subtract +'" DAY) WHERE order_id = "' + that.order_id + '" AND status IN(1,7,16,17) ORDER BY installment_no, id', function (error, rows, fields) {
+            if (error) { console.log("Error...", error); reject(error); }
+                resolve(rows);
+          });
+        }
       }
       connection.release();
       console.log('schedule updated for order  %d', connection.threadId);

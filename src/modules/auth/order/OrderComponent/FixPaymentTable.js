@@ -117,7 +117,6 @@ export default function FixPaymentTable({paymentStatus, paymentRecDate, paymentA
   const [expansionHeader, setExpansionHeader] = useState([]);
   let isExpansionExist = false;
   let inc = 0;
-  // let expansionHeader = [];
 
   useEffect(() => {
     let singleInstallment = [];

@@ -268,17 +268,6 @@ const getFlexOrder = async function(req, res, next) {
   }
 };
 
-
-const getPaymentHistory = async function(req, res, next) {
-  try {
-    const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getPaymentHistory();
-    res.send(order);
-  } catch (error) {
-    next(error);
-  }
-};
-
-
 const getPaymentSchedule = async function(req, res, next) {
   try {
     const schedule = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
@@ -287,16 +276,6 @@ const getPaymentSchedule = async function(req, res, next) {
     next(error);
   }
 };
-
-// const getFullPaymentHistory = async function(req, res, next) {
-//   try {
-//     const order = await new Order({user_id : req.decoded.user_id, id: req.body.id}).getFullPaymentHistory();
-//     res.send(order);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 
 
 const getRequiredDataToCancel = async function(req, res, next) {
@@ -308,6 +287,61 @@ const getRequiredDataToCancel = async function(req, res, next) {
     next(error);
   }
 };
+
+
+
+const dishonourToPayment = async function(req, res, next) {
+  let params = {
+    user_id : req.decoded.user_id, 
+    created_by: req.decoded.id,
+
+    order_id : req.body.order_id,
+    customer_id: req.body.customer_id,
+    installment_no : Number(req.body.installment_no),    
+    payment_amt : Number(req.body.payment_amt),
+    remark : req.body.remark,
+    order_type : Number(req.body.order_type),
+    order_type_id : Number(req.body.order_type_id),    
+  } 
+  try{
+    const dishonoured = new Order(params);        
+    dishonoured.payment_status = 6;
+    await dishonoured.dishonourToPayment();
+
+    const result = await dishonoured.getPaymentSchedule();
+    const lastRow = result.paymentSchedule[result.paymentSchedule.length - 1];
+
+    let orderTypeResult = [];  
+    if(params.order_type === 1){
+      dishonoured.fixedOrderId = params.order_type_id;
+      orderTypeResult = await dishonoured.getFixedOrder();      
+    }
+    else if(params.order_type === 2){
+      dishonoured.flexOrderId = params.order_type_id;
+      orderTypeResult = await dishonoured.getFlexOrder();      
+    }
+    
+    console.log('lastRow',lastRow)
+    let instNo = lastRow.installment_no + 1;
+    let paymentDate = moment(lastRow.payment_date).format("YYYY-MM-DD");
+    paymentDate = dateMaker(paymentDate, orderTypeResult[0].frequency);
+    
+    let paymentScheduleArray = [];
+      paymentScheduleArray.push(
+        [params.order_id, params.customer_id, instNo , paymentDate, params.payment_amt, 1, 1, params.created_by],
+      );
+      console.log('paymentScheduleArray',paymentScheduleArray)
+    
+    dishonoured.paymentScheduleArray = paymentScheduleArray;    
+    await dishonoured.createdPaymentSchedule();
+  
+    const schedule = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
+    res.send(schedule);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 const paymentSubmit = async function(req, res, next) {
@@ -405,8 +439,8 @@ const paymentSubmit = async function(req, res, next) {
           newPayment.payment_status = 15; // Remaining Late Paid
         }
       }
-      newPayment.total_paid = params.total_paid + params.payment_amt;
-      const result = await newPayment.paymentSubmit();      
+      newPayment.total_paid = params.total_paid + params.payment_amt;      
+      await newPayment.paymentSubmit();           
     }
     
     else if(params.payment_amt < params.each_payment_amt){
@@ -420,7 +454,7 @@ const paymentSubmit = async function(req, res, next) {
       newPayment.total_paid = params.total_paid + params.payment_amt;
       const result = await newPayment.paymentSubmit();
       
-      newPayment.payment_status = 1; // Pending
+      newPayment.payment_status = 16; // Partial Pending
       newPayment.payment_amt = params.each_payment_amt - newPayment.payment_amt;
       await newPayment.increaseSchedule();
     }
@@ -446,35 +480,50 @@ const paymentSubmit = async function(req, res, next) {
 
         newPayment.payment_amt = params.each_payment_amt;
         newPayment.total_paid = params.total_paid + params.each_payment_amt;
-        const result = await newPayment.paymentSubmit();
-
+        const result = await newPayment.paymentSubmit();        
+        let nextPayDate = result.nextInst[0].payment_date;
+        
         newPayment.remark = '';
         let payAmt = params.payment_amt - params.each_payment_amt;
         let advanceTime = Math.ceil(payAmt/fixInstallmentAmt);
           for(let i=1; i<= advanceTime; i++){
             if(payAmt >= fixInstallmentAmt){
+              if(nextPayDate === params.settlement_date){
+                newPayment.payment_status = 2; // Paid
+              }else if (nextPayDate > params.settlement_date){
+                newPayment.payment_status = 3; // Advance Paid
+              }else if (nextPayDate < params.settlement_date){
+                newPayment.payment_status = 11; // Late Paid
+              }
               newPayment.payment_amt = fixInstallmentAmt;
               newPayment.total_paid =  newPayment.total_paid + fixInstallmentAmt;
-              newPayment.installment_no = newPayment.installment_no + 1;                         
-              newPayment.payment_status = 3; // Advance Paid
-              const result = await newPayment.paymentSubmit();             
+              newPayment.installment_no = newPayment.installment_no + 1;
+
+              const result = await newPayment.paymentSubmit();
+              nextPayDate = result.nextInst[0].payment_date;
 
               payAmt = payAmt - fixInstallmentAmt;
             }else if(payAmt !== 0){
+              if(nextPayDate === params.settlement_date){
+                newPayment.payment_status = 4; // Partial Paid
+              }else if (nextPayDate > params.settlement_date){
+                newPayment.payment_status = 5; // Advance Partial Paid
+              }else if (nextPayDate < params.settlement_date){
+                newPayment.payment_status = 12; // Late Paid
+              }
               newPayment.payment_amt = payAmt;
               newPayment.total_paid =  newPayment.total_paid + payAmt;
-              newPayment.installment_no = newPayment.installment_no + 1;              
-              newPayment.payment_status = 5; // Advance Partial Paid
+              newPayment.installment_no = newPayment.installment_no + 1;
+
               const result = await newPayment.paymentSubmit();
 
-              newPayment.payment_date = moment(result[0].payment_date).format('YYYY-MM-DD');
-              newPayment.payment_status = 1; // Pending
+              newPayment.payment_date = moment(result.lastUpdated[0].payment_date).format('YYYY-MM-DD');
+              newPayment.payment_status = 16; // Partial Pending
               newPayment.payment_amt = fixInstallmentAmt - payAmt;
               await newPayment.increaseSchedule();
             }
           }
-    }
-
+    }    
     const schedule = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
     res.send(schedule);
   } catch (error) {
@@ -593,43 +642,19 @@ const assignToFinance = async function(req, res, next) {
 
 
 const paymentReschedule = async function(req, res, next) {
-  
   let params = {
-    user_id :                 req.decoded.user_id,
-    order_id:                 req.body.order_id,
-    customer_id :             req.body.customer_id,
-    order_type :              req.body.order_type,
-    order_type_id :           req.body.order_type_id,
-    rescheduled_date :        req.body.rescheduled_date,
-    installment_no :          req.body.installment_no,
-    no_of_total_installment : req.body.no_of_total_installment,
+    user_id : req.decoded.user_id,
+    order_id: req.body.order_id,
+    customer_id : req.body.customer_id,
+    diffBetweenSchedule: req.body.diffBetweenSchedule[0],
   };
+  
   try {
     const newActivity = new Order(params);
-    
-    let orderTypeResult = [];
-    let noOfPayment = Number(params.no_of_total_installment);
+    const result = await newActivity.paymentReschedule();
 
-    if(params.order_type === 1){
-      newActivity.fixedOrderId = params.order_type_id;
-      orderTypeResult = await newActivity.getFixedOrder();
-    } else if(params.order_type === 2){
-      newActivity.flexOrderId = params.order_type_id;
-      orderTypeResult = await newActivity.getFlexOrder();
-    }
-    
-
-    let paymentDate = moment(params.rescheduled_date).format("YYYY-MM-DD");
-    // console.log('pdate',paymentDate, noOfPayment, params, orderTypeResult[0]);
-
-    for(let i= params.installment_no; i<= noOfPayment; i++){   
-      newActivity.installment_no = i;  
-      newActivity.payment_schedule_date = paymentDate;
-      const result = await newActivity.paymentReschedule();      
-      paymentDate = dateMaker(paymentDate, orderTypeResult[0].frequency);
-    }
-
-    res.send({});
+    const schedule = await new Order({user_id : req.decoded.user_id, order_id: req.body.order_id }).getPaymentSchedule();
+    res.send(schedule);
   } catch (error) {
     next(error);
   }
@@ -1045,8 +1070,6 @@ module.exports = {
   editOrder, 
   assignToFinance, 
   assignToDelivery, 
-  getPaymentHistory, 
-  // getFullPaymentHistory,
   paymentSubmit, 
   Delivered,
   getDeliveredProductData,
@@ -1066,4 +1089,5 @@ module.exports = {
   paymentReschedule,
   searchOrder,
   filterMissedPaymentData,
+  dishonourToPayment,
 };
