@@ -9,7 +9,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
-import { Chart, ArgumentAxis, ValueAxis, LineSeries, BarSeries } from "@devexpress/dx-react-chart-material-ui";
+
+import { Title, EventTracker } from '@devexpress/dx-react-chart';
+import { Chart, ArgumentAxis, ValueAxis, LineSeries, BarSeries,Tooltip } from "@devexpress/dx-react-chart-material-ui";
+
+import { Card,CardContent } from '@material-ui/core';
 
 // Component Call
 import TaskList from './TaskList';
@@ -18,8 +22,6 @@ import LeadList from './LeadList';
 import TaskAPI from '../../../../../api/Task';
 import LeadAPI from '../../../../../api/Lead';
 import {Run} from '../../../../../api/Run';
-import { Card,CardContent, Tooltip } from '@material-ui/core';
-import { Title, EventTracker } from '@devexpress/dx-react-chart';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -111,7 +113,6 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [leadList, setLeadList] = React.useState([]);
   const [order,setOrder]=useState([]);
   const [staff,setstaff]=useState([]);
-  // const [targetItem,settargetItem]=useState(undefined);
 
   useEffect(() => {
 
@@ -153,7 +154,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
             text="Staff Sales"
           /> */}
           <EventTracker />
-          {/* <Tooltip targetItem={targetItem} onTargetItemChange={settargetItem} /> */}
+          <Tooltip />
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="value" argumentField="argument" />
     </Chart>
