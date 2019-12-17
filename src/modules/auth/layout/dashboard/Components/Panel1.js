@@ -18,7 +18,8 @@ import LeadList from './LeadList';
 import TaskAPI from '../../../../../api/Task';
 import LeadAPI from '../../../../../api/Lead';
 import {Run} from '../../../../../api/Run';
-import { Card,CardContent } from '@material-ui/core';
+import { Card,CardContent, Tooltip } from '@material-ui/core';
+import { Title, EventTracker } from '@devexpress/dx-react-chart';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -110,6 +111,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [leadList, setLeadList] = React.useState([]);
   const [order,setOrder]=useState([]);
   const [staff,setstaff]=useState([]);
+  // const [targetItem,settargetItem]=useState(undefined);
 
   useEffect(() => {
 
@@ -127,7 +129,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
         let {data} = await Run('dashboardorder', {franchise:1});
         let staffdata=[];
         data.forEach(d => {
-          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name,value:0};
+          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name+' '+d.last_name,value:0};
           staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt:d.bond_amt;
         });
         
@@ -143,12 +145,16 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <Card>
         <CardContent>
         <h2 className={classes.labelTitle}>Total Orders Count : {order.length}</h2>
-      {order.map((d,i)=>{return <p>{d.first_name} - {d.order_type==1?d.total_payment_amt:d.bond_amt}</p> })}
-      <Chart
-      data={staff}
-    >
-      <ArgumentAxis />
+      {order.map((d,i)=>{return <p>{d.first_name} {d.last_name} - {d.order_type==1?'Fixed '+d.total_payment_amt:'Flex '+d.bond_amt}</p> })}
+      <Chart data={staff} width={350} height={300}>
+      <ArgumentAxis showGrid />
       <ValueAxis />
+      {/* <Title
+            text="Staff Sales"
+          /> */}
+          <EventTracker />
+          {/* <Tooltip targetItem={targetItem} onTargetItemChange={settargetItem} /> */}
+      {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="value" argumentField="argument" />
     </Chart>
       </CardContent>
