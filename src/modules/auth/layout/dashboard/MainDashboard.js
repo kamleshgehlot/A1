@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 export default function MainDashboard({roleName, roleId, handleLeadClick, handleTaskClick}) {
   const classes = useStyles();
   
-  return (    
+  return (
     <div className={classes.root}>      
        {roleName === "Super Admin" && <MasterAdmin roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick}/>}
        {roleName === "Admin" && <Admin roleName={roleName} roleId={roleId} handleLeadClick={handleLeadClick}  handleTaskClick={handleTaskClick}/>}

@@ -9,6 +9,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
+import { Chart, ArgumentAxis, ValueAxis, LineSeries, BarSeries } from "@devexpress/dx-react-chart-material-ui";
 
 // Component Call
 import TaskList from './TaskList';
@@ -108,6 +109,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [taskList, setTaskList] = React.useState([]);
   const [leadList, setLeadList] = React.useState([]);
   const [order,setOrder]=useState([]);
+  const [staff,setstaff]=useState([]);
 
   useEffect(() => {
 
@@ -122,9 +124,15 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       const resultLead = await LeadAPI.fetchLeads();
       setLeadList(resultLead.leadList);
 
-        const response = await Run('dashboardorder', {franchise:1});
-        console.log(response.data);
-        setOrder(response.data);
+        let {data} = await Run('dashboardorder', {franchise:1});
+        let staffdata=[];
+        data.forEach(d => {
+          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name,value:0};
+          staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt:d.bond_amt;
+        });
+        
+        setstaff(staffdata);
+        setOrder(data);
 
     }
     fetchData();
@@ -135,7 +143,14 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <Card>
         <CardContent>
         <h2 className={classes.labelTitle}>Total Orders Count : {order.length}</h2>
-      {order.map((d,i)=>{return <p>{d.first_name} - {d.total_payment_amt}</p> })}
+      {order.map((d,i)=>{return <p>{d.first_name} - {d.order_type==1?d.total_payment_amt:d.bond_amt}</p> })}
+      <Chart
+      data={staff}
+    >
+      <ArgumentAxis />
+      <ValueAxis />
+      <BarSeries valueField="value" argumentField="argument" />
+    </Chart>
       </CardContent>
       </Card>
     <Paper >             
