@@ -640,7 +640,6 @@ Order.prototype.transactionEntry = function () {
   });
 };
 
-
 Order.prototype.dishonourToPayment = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -651,8 +650,8 @@ Order.prototype.dishonourToPayment = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
 
-        let Values = [that.remark, that.payment_status, that.order_id, that.installment_no];
-        connection.query('UPDATE payment_schedules SET remark = ?, status = ? WHERE order_id = ? AND installment_no = ? ORDER BY id DESC LIMIT 1', Values , function (error, rows, fields) { 
+        let Values = [that.settlement_date, that.remark, that.payment_status, that.order_id, that.installment_no];
+        connection.query('UPDATE payment_schedules SET settlement_date = ?, remark = ?, status = ? WHERE order_id = ? AND installment_no = ? ORDER BY id DESC LIMIT 1', Values , function (error, rows, fields) { 
           if (error) { console.log('error..',error)}
           else {resolve(rows)} 
         });
@@ -888,7 +887,7 @@ Order.prototype.isScheduleExist = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select * from payment_schedule where order_id = "' +that.order_id+ '"',function (error, rows, fields) {
+        connection.query('select * from payment_schedules where order_id = "' +that.order_id+ '"',function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
                 } else {
@@ -1777,8 +1776,9 @@ Order.prototype.filterMissedPaymentData = function () {
           }
           // console.log(paymentDate)
         }
-        if(orderType !== ''){
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE o.order_type = "'+ orderType +'" group by a.order_id', function (error, rows, fields) {
+        if(orderType !== ''){          
+          // connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE o.order_type = "'+ orderType +'" group by a.order_id', function (error, rows, fields) {
+            connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER BY `order_id`, `installment_no`,  `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date < CURRENT_DATE AND o.order_type = "'+ orderType +'"', function (error, rows, fields) {
             if (!error) {
               resolve(rows);
             } else {
@@ -1787,7 +1787,7 @@ Order.prototype.filterMissedPaymentData = function () {
             }
           });
         }else if(paymentDate !== ''){
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date = "' + paymentDate + '"  group by a.order_id', function (error, rows, fields) {
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER BY `order_id`, `installment_no`,  `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date < CURRENT_DATE AND a.payment_date = "' + paymentDate + '"', function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
             } else {
@@ -1796,7 +1796,7 @@ Order.prototype.filterMissedPaymentData = function () {
             }
           });
         }else{         
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE (c.first_name LIKE "%' +that.searchText+ '%" OR c.last_name LIKE "%' +that.searchText+ '%" OR o.order_id LIKE "%' +that.searchText+ '%")  group by a.order_id', function (error, rows, fields) {
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER BY `order_id`, `installment_no`,  `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date < CURRENT_DATE AND (c.first_name LIKE "%' +that.searchText+ '%" OR c.last_name LIKE "%' +that.searchText+ '%" OR o.order_id LIKE "%' +that.searchText+ '%")', function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
             } else {
@@ -1825,7 +1825,7 @@ Order.prototype.fetchMissedPaymentData = function () {
       if (!error) {
         
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id group by a.order_id', function (error, rows, fields) {
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id WHERE a.payment_date < CURRENT_DATE', function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
             } else {

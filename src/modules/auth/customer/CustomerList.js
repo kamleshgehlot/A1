@@ -351,12 +351,10 @@ export default function CustomerList({userId, roleName}) {
     (customerListData.length > 0 ? customerListData : []).map((data, index) => {
       (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
         if(data.id == payData.customer_id){
-          if(currDate > getDate(payData.payment_date)){
-            data.payment_date = getDateInDDMMYYYY(payData.payment_date);
-            data.order_format_id = payData.order_format_id;
-            data.order_id = payData.order_id;
-            missedPayment.push(data);
-          }
+          data.payment_date = getDateInDDMMYYYY(payData.payment_date);
+          data.order_format_id = payData.order_format_id;
+          data.order_id = payData.order_id;
+          missedPayment.push(data);
         }
       });
     });
@@ -411,12 +409,10 @@ export default function CustomerList({userId, roleName}) {
       
       (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
         if(data.id == payData.customer_id){
-          if(currDate > getDate(payData.payment_date)){
             data.payment_date = getDateInDDMMYYYY(payData.payment_date);
             data.order_format_id = payData.order_format_id;
             data.order_id = payData.order_id;
             missedPayment.push(data);
-          }
         }
       });
     });

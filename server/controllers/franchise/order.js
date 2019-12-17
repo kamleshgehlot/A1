@@ -299,29 +299,40 @@ const dishonourToPayment = async function(req, res, next) {
     customer_id: req.body.customer_id,
     installment_no : Number(req.body.installment_no),    
     payment_amt : Number(req.body.payment_amt),
+    payment_date:  req.body.payment_date,
+    settlement_date : req.body.settlement_date,
     remark : req.body.remark,
     order_type : Number(req.body.order_type),
     order_type_id : Number(req.body.order_type_id),    
   } 
   try{
-    const dishonoured = new Order(params);        
-    dishonoured.payment_status = 6;
+    const dishonoured = new Order(params);   
+
+    let orderTypeResult = [];  
+    let fixInstallmentAmt = 0;
+    if(params.order_type === 1){
+      dishonoured.fixedOrderId = params.order_type_id;
+      orderTypeResult = await dishonoured.getFixedOrder();  
+      fixInstallmentAmt = orderTypeResult[0].each_payment_amt;    
+    }
+    else if(params.order_type === 2){
+      dishonoured.flexOrderId = params.order_type_id;
+      orderTypeResult = await dishonoured.getFlexOrder();     
+      fixInstallmentAmt = orderTypeResult[0].each_payment_amt; 
+    }
+
+    if(fixInstallmentAmt === params.payment_amt){
+      dishonoured.payment_status = 6; // 	 Dishonoured
+    }else if(fixInstallmentAmt !== params.payment_amt){
+      dishonoured.payment_status = 8; // 	 Partial Dishonoured
+    }
+    
     await dishonoured.dishonourToPayment();
 
     const result = await dishonoured.getPaymentSchedule();
     const lastRow = result.paymentSchedule[result.paymentSchedule.length - 1];
 
-    let orderTypeResult = [];  
-    if(params.order_type === 1){
-      dishonoured.fixedOrderId = params.order_type_id;
-      orderTypeResult = await dishonoured.getFixedOrder();      
-    }
-    else if(params.order_type === 2){
-      dishonoured.flexOrderId = params.order_type_id;
-      orderTypeResult = await dishonoured.getFlexOrder();      
-    }
-    
-    console.log('lastRow',lastRow)
+
     let instNo = lastRow.installment_no + 1;
     let paymentDate = moment(lastRow.payment_date).format("YYYY-MM-DD");
     paymentDate = dateMaker(paymentDate, orderTypeResult[0].frequency);
@@ -330,7 +341,6 @@ const dishonourToPayment = async function(req, res, next) {
       paymentScheduleArray.push(
         [params.order_id, params.customer_id, instNo , paymentDate, params.payment_amt, 1, 1, params.created_by],
       );
-      console.log('paymentScheduleArray',paymentScheduleArray)
     
     dishonoured.paymentScheduleArray = paymentScheduleArray;    
     await dishonoured.createdPaymentSchedule();
