@@ -204,7 +204,7 @@ return (
                         transformOrigin={{ vertical: 'top', horizontal: 'right',}}
                       >
                          <Paper>
-                          <Typography className={classes.typography} style={{fontWeight:'bold'}}>Payment Type</Typography>
+                          <Typography className={classes.typography} style={{fontWeight:'bold'}}>Order Type</Typography>
                           <Divider />
                           <List >
                             <ListItem   button onClick={()=> {handlePaymentFilter('$###_Fix_###$')}}>Fix</ListItem>
