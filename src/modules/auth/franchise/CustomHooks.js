@@ -67,7 +67,7 @@ const useSignUpForm = (state, callback, validate) => {
     setInputs({
       ...inputs,
       [name]: value,
-    });    
+    });
   };
 
   const handleRandomInput = (newInputArray) => {

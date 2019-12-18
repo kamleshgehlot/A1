@@ -172,7 +172,8 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [scheduleChangerOpen, setScheduleChangerOpen] = useState(false);
   const [reschedule, setReschedule] = useState(false);
   const [dateToReschedule, setDateToReschedule] = useState();
-  
+  const [instNo, setInstNo]  = useState(0);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -189,6 +190,13 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
 
   function handleDateChange(date){
       setPaymentRecDate(date);    
+  }
+
+  const handlePayDateChange = (date) => {
+    setNextPayment({
+      ...nextPayment,
+      'payment_date' : date,
+    });
   }
 
   const handlePriceInput = e => {
@@ -211,6 +219,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     if(result.nextInstallmentRow[0] != null && result.nextInstallmentRow[0] != ''){
       setNextPayment(result.nextInstallmentRow[0]);
       setPaymentAmt(result.nextInstallmentRow[0].payment_amt);
+      setInstNo(result.nextInstallmentRow[0].installment_no)
       setPaymentRecDate(result.nextInstallmentRow[0].payment_date);
       setDateToReschedule(result.nextInstallmentRow[0].payment_date);
     }
@@ -268,6 +277,13 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     setConfirmation(true);
   }
 
+  const handleInstChange = (e) => {
+    const validNumber = /^[0-9]*$/;
+    if (e.target.value === '' || validNumber.test(e.target.value)) {
+      setInstNo(e.target.value);
+    }
+  }
+
   const handleConfirmationDialog = async (isConfirm) => {
     setConfirmation(false);
     if(isConfirm === 1){
@@ -275,7 +291,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         const result = await Order.paymentSubmit({
           order_id : orderData.id,
           customer_id: orderData.customer_id,
-          installment_no : nextPayment.installment_no,
+          installment_no : instNo,
           payment_date:  nextPayment.payment_date,
           settlement_date : getDate(paymentRecDate),
           payment_amt : nextPayment.payment_amt,
@@ -332,7 +348,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         const result = await Order.dishonourToPayment({
           order_id : orderData.id,
           customer_id: orderData.customer_id,
-          installment_no : nextPayment.installment_no,
+          installment_no : instNo,
           payment_amt : nextPayment.payment_amt,
           payment_date:  nextPayment.payment_date,
           settlement_date : getDate(paymentRecDate),
@@ -476,7 +492,7 @@ return (
                   <TextField 
                     id="installment_no"
                     name="installment_no"
-                    value={nextPayment.installment_no}
+                    value={instNo}
                     fullWidth
                     type="text"
                     margin="dense"
@@ -485,7 +501,8 @@ return (
                         input: styleClass.textsize,
                       },                    
                     }}
-                    disabled
+                    onChange = {handleInstChange}
+                    // disabled
                   />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -503,8 +520,9 @@ return (
                         classes: {
                           input: styleClass.textsize,
                         },
-                      }} 
-                      disabled
+                      }}
+                      onChange = {handlePayDateChange}
+                      // disabled
                     />
                   </MuiPickersUtilsProvider>
               </Grid>
