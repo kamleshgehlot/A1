@@ -13,7 +13,7 @@ import Divider from '@material-ui/core/Divider';
 import { Title, EventTracker } from '@devexpress/dx-react-chart';
 import { Chart, ArgumentAxis, ValueAxis, LineSeries, BarSeries,Tooltip } from "@devexpress/dx-react-chart-material-ui";
 
-import { Card,CardContent } from '@material-ui/core';
+import { Card,CardContent, FormControl, Select, MenuItem, FormHelperText } from '@material-ui/core';
 
 // Component Call
 import TaskList from './TaskList';
@@ -113,6 +113,11 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [leadList, setLeadList] = React.useState([]);
   const [order,setOrder]=useState([]);
   const [staff,setstaff]=useState([]);
+  const [duration,setduration]=useState(30);
+
+  const changeDuration=(e)=>{
+    setduration(e.target.value);
+  }
 
   useEffect(() => {
 
@@ -127,11 +132,15 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       const resultLead = await LeadAPI.fetchLeads();
       setLeadList(resultLead.leadList);
 
-        let {data} = await Run('dashboardorder', {franchise:1});
+        let {data} = await Run('dashboardorder', {franchise:1,duration});
         let staffdata=[];
         data.forEach(d => {
-          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name+' '+d.last_name,value:0};
-          staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt:d.bond_amt;
+          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name+' '+d.last_name,value:0,count:0};
+          let ratio=1;
+          if(d.frequency==1)ratio=4;
+          else if(d.frequency==2)ratio=2;
+          staffdata[d.sales_person_id].count++;
+          staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt/ratio:d.bond_amt/ratio;
         });
         
         setstaff(staffdata);
@@ -139,27 +148,57 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
 
     }
     fetchData();
-  },[]);
+  },[duration]);
 
   return (
-    <div className={classes.root}  style={{ width: '100%' }}>
-      <Card>
-        <CardContent>
-        <h2 className={classes.labelTitle}>Total Orders Count : {order.length}</h2>
-      {order.map((d,i)=>{return <p>{d.first_name} {d.last_name} - {d.order_type==1?'Fixed '+d.total_payment_amt:'Flex '+d.bond_amt}</p> })}
-      <Chart data={staff} width={350} height={300}>
+    <div className={classes.root}  style={{ width: '100%',background:'transparent' }}>
+      {/* <h2 className={classes.labelTitle}>Total Orders Count : {order.length}</h2>
+      {order.map((d,i)=>{return <p>{d.first_name} {d.last_name} - {d.order_type==1?'Fixed '+d.total_payment_amt:'Flex '+d.bond_amt}</p> })} */}
+      {roleName === "Admin" && <>
+      <Grid container spacing={4} style={{textAlign:'center'}}>
+
+      <Grid item xs={12} >
+      <FormControl>
+        <Select value={duration} onChange={changeDuration} displayEmpty>
+          <MenuItem value={7}>Last Week</MenuItem>
+          <MenuItem value={30}>Last Month</MenuItem>
+          <MenuItem value={30*12}>Last Year</MenuItem>
+        </Select>
+        <FormHelperText>Report Duration</FormHelperText>
+      </FormControl>
+      </Grid>
+      
+      <Grid item xs={12} sm={12} md={6} >
+      <Card><CardContent>
+      <Chart data={staff} height={300}>
       <ArgumentAxis showGrid />
       <ValueAxis />
-      {/* <Title
-            text="Staff Sales"
-          /> */}
-          <EventTracker />
-          <Tooltip />
+          <EventTracker /><Tooltip />
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="value" argumentField="argument" />
     </Chart>
-      </CardContent>
-      </Card>
+    <h1>Order Amount</h1>
+      </CardContent></Card>
+      </Grid>
+
+      <Grid item xs={12} sm={12} md={6} >
+      <Card><CardContent>
+      <Chart data={staff} height={300}>
+      <ArgumentAxis showGrid />
+      <ValueAxis />
+          <EventTracker /><Tooltip />
+      <LineSeries valueField="count" argumentField="argument" />
+      {/* <BarSeries valueField="value" argumentField="argument" /> */}
+    </Chart>
+    <h1>Order Count</h1>
+      </CardContent></Card>
+      </Grid>
+
+      </Grid>
+      <br />
+      <br />
+      </>
+}
     <Paper >             
       <Grid container spacing={4}  style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12} >   
