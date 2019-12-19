@@ -145,7 +145,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
             staffdata[d.sales_person_id].count++;
           }
           // staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt/ratio:d.bond_amt/ratio;
-          staffdata[d.sales_person_id].value+=d.total_paid/ratio;
+          staffdata[d.sales_person_id].value+=d.total_paid.toFixed(2);
         });
         
         console.log(staffdata);
@@ -194,7 +194,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
-      <LineSeries valueField="count" argumentField="argument" />
+      <BarSeries valueField="count" argumentField="argument" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
     <h1>Order Count</h1>

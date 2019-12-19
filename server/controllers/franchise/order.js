@@ -7,7 +7,8 @@ const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 const addSubtractDate = require("add-subtract-date");
 const moment = require('moment');
 const {dateMaker} = require('../../utils/PaymentScheduleDateMaker.js');
-const {isSameDate, checkOverDue} = require('../../utils/datetime');
+async function main(path, data) {
+  const writeFile = promisify(fs.writeFile);
 
   await writeFile(path, data, { encoding: 'base64' });
   console.info("file uploaded successfully!");
