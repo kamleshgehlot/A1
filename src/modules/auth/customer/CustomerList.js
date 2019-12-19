@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles, fade } from '@material-ui/core/styles';
-// import SearchBar from 'material-ui-search-bar-enhanced';
 import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';

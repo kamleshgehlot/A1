@@ -1720,7 +1720,6 @@ Order.prototype.getSalesTypeList = function () {
 //   });
 // };
 
-
 Order.prototype.getReceivedPaymentsList = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -1747,9 +1746,6 @@ Order.prototype.getReceivedPaymentsList = function () {
     throw error;
   });
 };
-
-
-
 
 Order.prototype.filterMissedPaymentData = function () {
   const that = this;

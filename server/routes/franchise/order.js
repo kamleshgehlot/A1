@@ -6,14 +6,14 @@ const storage = multer.diskStorage({
   destination: function (req, file, callback) {
 
     // if (process.env.NODE_ENV === 'development') {
-      callback(null, './files/order');
+    callback(null, './files/order');
     // } else {
     //   callback(null, './build/');
     // }
   },
   filename: function (req, file, callback) {
     // if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {      
-      callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
+    callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
     // }
   }
 });
@@ -21,13 +21,13 @@ const storage = multer.diskStorage({
 
 const Delivery = multer.diskStorage({
   destination: function (req, file, callback) {
-      callback(null, './files/DeliveredDoc');
+    callback(null, './files/DeliveredDoc');
   },
   filename: function (req, file, callback) {
 
     // if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
-      
-      callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
+
+    callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
     // }
   }
 });
@@ -39,7 +39,7 @@ const Delivery = multer.diskStorage({
 //   filename: function (req, file, callback) {
 
 //     // if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
-      
+
 //       callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
 //     // }
 //   }
@@ -58,7 +58,7 @@ orderRouter.route("/getnewid").get(validateToken, Order.getnewid);
 orderRouter.route("/getall").get(validateToken, Order.getAll);
 orderRouter.route("/getcomment").post(validateToken, Order.getComment);
 orderRouter.route("/postComment").post(validateToken, Order.postComment);
-orderRouter.route("/uploaddoc").post(validateToken, upload.array('avatar'), Order.uploadDoc);
+orderRouter.route("/uploaddoc").post(validateToken, Order.uploadDoc);
 orderRouter.route("/uploadDeliveryDoc").post(validateToken, DeliveredDoc.array('avatar'), Order.uploadDeliveryDoc);
 orderRouter.route("/getbudget").post(validateToken, Order.getBudget);
 orderRouter.route("/getExistingBudget").post(validateToken, Order.getExistingBudget);

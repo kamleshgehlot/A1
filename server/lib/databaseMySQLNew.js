@@ -8,6 +8,9 @@ let mailService = 'rentronics.saimrc.com'
 
 console.log('env db', env);
 
+function getFromName(dbName, userName) {
+  return dbName + "_" + userName.split('_')[1]
+}
 function getFullName(dbName, userName) {
   return dbName + "_" + userName
 }
