@@ -4,7 +4,7 @@ const connection = require('../lib/connection.js');
 const dbName = require('../lib/databaseMySQLNew.js');
 
 router.route("/dashboardorder").post(async (req, res, next) => {
-  return querypromise(`select * from orders left join fixed_order on fixed_order.id=orders.order_type_id left join flex_order on flex_order.id=orders.order_type_id left join staff on staff.franchise_user_id=orders.sales_person_id where orders.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY and orders.order_status!=11 ;`, [] , req,res);
+  return querypromise(`select * from payment_schedules left join orders on orders.id = payment_schedules.order_id left join staff on staff.franchise_user_id=orders.sales_person_id where payment_schedules.status NOT IN (1,6,7,8,9,10,16,17) and  payment_schedules.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY`, [] , req,res);
 });
 
 const querypromise = (mysqlquery, values,req,res) => {

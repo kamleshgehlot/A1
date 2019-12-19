@@ -135,14 +135,21 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
         let {data} = await Run('dashboardorder', {franchise:1,duration});
         let staffdata=[];
         data.forEach(d => {
-          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name+' '+d.last_name,value:0,count:0};
+          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name+' '+d.last_name,value:0,count:0,orders:[]};
           let ratio=1;
           if(d.frequency==1)ratio=4;
           else if(d.frequency==2)ratio=2;
-          staffdata[d.sales_person_id].count++;
-          staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt/ratio:d.bond_amt/ratio;
+
+          if(staffdata[d.sales_person_id].orders.indexOf(d.order_id)==-1){
+            staffdata[d.sales_person_id].orders.push(d.order_id);
+            staffdata[d.sales_person_id].count++;
+          }
+          // staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt/ratio:d.bond_amt/ratio;
+          staffdata[d.sales_person_id].value+=d.total_paid/ratio;
         });
         
+        console.log(staffdata);
+        console.log(data);
         setstaff(staffdata);
         setOrder(data);
 
@@ -162,7 +169,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
         <Select value={duration} onChange={changeDuration} displayEmpty>
           <MenuItem value={7}>Last Week</MenuItem>
           <MenuItem value={30}>Last Month</MenuItem>
-          <MenuItem value={30*12}>Last Year</MenuItem>
+          <MenuItem value={365}>Last Year</MenuItem>
         </Select>
         <FormHelperText>Report Duration</FormHelperText>
       </FormControl>
