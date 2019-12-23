@@ -82,7 +82,6 @@ export default function Open({order, value, roleName, handleAssignToFinance, han
   };    
   
 
-// console.log('order',order)
 return (  
   <Table >
     <TableHead>

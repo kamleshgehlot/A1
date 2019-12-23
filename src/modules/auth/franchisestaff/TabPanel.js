@@ -89,7 +89,6 @@ export default function FranchiseTabPannel({value, tabIndex, staffList, currentR
                           <StyledTableCell> 
                             {
                             ( (data.role && data.role.split(',')) || []).map((a, index) =>{
-                              // console.log("index",index);
                               return(
                                 roles.map((ele)=>{
                                   return(
@@ -107,7 +106,7 @@ export default function FranchiseTabPannel({value, tabIndex, staffList, currentR
                             <StyledTableCell>{data.contact}</StyledTableCell>
                             <StyledTableCell>
                             <Tooltip title="Update">                              
-                              <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                              <IconButton  size="small" value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                               <CreateIcon/>
                               </IconButton>
                             </Tooltip>

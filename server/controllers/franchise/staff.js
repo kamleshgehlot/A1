@@ -111,7 +111,6 @@ const register = async function (req, res, next) {
 
 const all = async function(req, res, next) {
   try {
-    // console.log(req.decoded);
     const staffList = await new Staff({user_id : req.decoded.user_id}).all();
     
     res.send({ staffList });

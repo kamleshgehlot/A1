@@ -123,12 +123,7 @@ export default function Order({ roleName }) {
   const [confirmation, setConfirmation] = React.useState(false);
   const [nextStep, setNextStep] = React.useState('');
   const [uploadType, setUploadType] = useState('');
-  const [orderId, setOrderId] = useState();
-  // const [budgetData, setBudgetData] = useState([]);
-  // const [orderListData, setOrderListData] = useState([]);
-  // const [customerData, setCustomerData] = useState([]);
-  // const [fixedPaymentData, setFixedPaymentData] = useState(null);
-  // const [flexPaymentData, setFlexPaymentData] = useState(null);
+  const [orderId, setOrderId] = useState();  
   const [orderIdForUpload, setOrderIdForUpload] = useState(null);
   const [order, setOrder] = useState([]);
   const [snackbarContent, setSnackbarContent] = useState([]);
@@ -271,16 +266,6 @@ export default function Order({ roleName }) {
   }
 
   function handlePaymentStatusClose() {
-    const fetchData = async () => {
-      try {
-        const result = await OrderAPI.getAll();
-        setOrder(result.order);
-        handleTabsData(result.order);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
     setPaymentStatusOpen(false);
   }
 
@@ -293,8 +278,6 @@ export default function Order({ roleName }) {
 
       if (uploadType === 'Documents') {
         for (var x = 0; x < document.getElementById('upload_document').files.length; x++) {
-          // formData.append('avatar', document.getElementById('upload_document').files[x])
-
           if (document.getElementById('upload_document').files.length != 0) {
 
             const data = {
@@ -503,12 +486,7 @@ export default function Order({ roleName }) {
     //don't remove this function
   }
 
-  function handleOrderRecData(response) {
-    // setBudgetData(response.budgetList);
-    // setOrderListData(response.orderList);
-    // setCustomerData(response.customerList);
-    // setFixedPaymentData(response.fixedPaymentList);
-    // setFlexPaymentData(response.flexPaymentList);
+  function handleOrderRecData(response) {    
     setOrder(response.order);
     handleTabsData(response.order);
   }
@@ -568,7 +546,6 @@ export default function Order({ roleName }) {
 
   function handleSearchText(event) {
     setSearchText(event.target.value);
-    console.log(searchText)
   }
 
   const searchHandler = async () => {
