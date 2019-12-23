@@ -209,6 +209,7 @@ Franchise.prototype.register = function (newUser) {
                   [15, 'Remaining Late Paid', 1],
                   [16, 'Partial Pending', 1],
                   [17, 'Partial Past Due', 1],
+                  [18, 'Refunded', 1],
                 ]
                 
                 connection.query(role, function (err) { if (err) { console.log('Role Table Create Time Error: ', err) } });
