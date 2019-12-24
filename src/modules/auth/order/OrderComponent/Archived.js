@@ -39,47 +39,12 @@ const StyledTableCell = withStyles(theme => ({
 }))(TableCell);
 
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;  
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  );
-}
-
-export default function Archived({order, roleName, handleEditOpen }) {
+export default function Archived({order, roleName, handleEditOpen, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   const styleClass = useCommonStyles();
-  
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };    
-  
+    
 
 return (  
-  <Table>
+  <Table stickyHeader>
     <TableHead>
       <TableRow>
         <StyledTableCell>#</StyledTableCell>
@@ -119,7 +84,7 @@ return (
     <TableFooter>
         <TableRow>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[20, 50, 100]}
             colSpan={9}
             count={order.length}
             rowsPerPage={rowsPerPage}

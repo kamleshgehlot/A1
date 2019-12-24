@@ -111,6 +111,18 @@ export default function ProductList({roleName}) {
   const [searchText, setSearchText]  = useState('');
   const [value, setValue] = React.useState(0);
   
+  
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 20));
+    setPage(0);
+  };    
 
   
 
@@ -242,6 +254,8 @@ export default function ProductList({roleName}) {
 
   function handleTabChange(event, newValue) {
     setValue(newValue);
+    setPage(0);
+    setRowsPerPage(20);
   }
 
 
@@ -283,20 +297,23 @@ export default function ProductList({roleName}) {
         <Grid item xs={12} sm={12} md={12}>
           <Paper style={{ width: '100%' }}> 
             <AppBar position="static"  className={classes.appBar}>
-              <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
+              <Tabs value={value} onChange={handleTabChange} className={classes.textsize}  variant="scrollable" scrollButtons="auto">
                 <Tab label={<BadgeComp count={activeTab.length} label="Active" />} /> 
                 <Tab label={<BadgeComp count={onholdTab.length} label="OnHold" />} /> 
                 <Tab label={<BadgeComp count={discontinuedTab.length} label="Discontinued" />} /> 
               </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-              {activeTab && <Active productList= {activeTab} roleName={roleName} handleClickEditOpen={handleClickEditOpen} />}
+              {activeTab && <Active productList= {activeTab} roleName={roleName} handleClickEditOpen={handleClickEditOpen} 
+              page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
             </TabPanel>
             <TabPanel value={value} index={1}>
-              {onholdTab && <Onhold productList= {onholdTab} roleName={roleName} handleClickEditOpen={handleClickEditOpen} />}
+              {onholdTab && <Onhold productList= {onholdTab} roleName={roleName} handleClickEditOpen={handleClickEditOpen} 
+              page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
             </TabPanel>
             <TabPanel value={value} index={2}>
-              {discontinuedTab && <Discontinued productList= {discontinuedTab} roleName={roleName} />}
+              {discontinuedTab && <Discontinued productList= {discontinuedTab} roleName={roleName}
+              page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
             </TabPanel>
           </Paper>
         </Grid>   

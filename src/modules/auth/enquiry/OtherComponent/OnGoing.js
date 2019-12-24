@@ -19,6 +19,9 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/Send.js';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CommentIcon from '@material-ui/icons/Comment';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableFooter from '@material-ui/core/TableFooter';
+import {TablePaginationActions} from '../../../common/Pagination';
 
 import { API_URL } from '../../../../api/Constants';
 import {useCommonStyles} from '../../../common/StyleComman';
@@ -92,29 +95,8 @@ const StyledTableCell = withStyles(theme => ({
 }))(TableCell);
 
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;  
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  );
-}
-
-export default function Open({enquiryList, productList, handleDeleteEnquiry, handleClickOrderOpen,  roleName}) {
+export default function Open({enquiryList, productList, handleDeleteEnquiry, handleClickOrderOpen,  roleName, 
+  page, rowsPerPage, handleChangePage, handleChangeRowsPerPage}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
 
@@ -174,6 +156,24 @@ return (
       })
     }
   </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TablePagination
+        rowsPerPageOptions={[20, 50, 100]}
+        colSpan={9}
+        count={enquiryList.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        SelectProps={{
+          inputProps: { 'aria-label': 'rows per page' },
+          native: true,
+        }}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+        ActionsComponent={TablePaginationActions}
+      />
+    </TableRow>
+  </TableFooter>
 </Table>
 )
 }

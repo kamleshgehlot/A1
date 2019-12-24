@@ -55,36 +55,17 @@ import BudgetHistory from '../order/BudgetHistory';
 import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../../../utils/datetime';
 
 
-
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
-
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
-  // root: {
-  //   display: 'flex',
-  //   flexGrow: 1,
-  //   backgroundColor: theme.palette.background.paper,
-  // },
   root: {
     width: '100%',
   },
   tableWrapper: {
-    maxHeight: 440,
+    maxHeight: 800,
     overflow: 'auto',
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    // width: 1000
+    zIndex: theme.zIndex.drawer + 1,    
   },
   drawer: {
     width: drawerWidth,
@@ -202,6 +183,18 @@ export default function CustomerList({userId, roleName}) {
   const [editableData,setEditableData] = useState({});
   const [viewOrder,setViewOrder] = useState(false);
 
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 20));
+    setPage(0);
+  };    
 
 
   useEffect(() => {   
@@ -450,6 +443,8 @@ export default function CustomerList({userId, roleName}) {
   }
   function handleTabChange(event, newValue) {
     setValue(newValue);    
+    setPage(0);
+    setRowsPerPage(20);
   }
 
 
@@ -489,9 +484,9 @@ export default function CustomerList({userId, roleName}) {
               />              
           </Grid>
           <Grid item xs={12} sm={12}>
-            <Paper className={classes.root}>
+            <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
-                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
                   <Tab label={<BadgeComp count={activeTab.length} label="Open" />} /> 
                   <Tab label={<BadgeComp count={holdTab.length} label="Hold" />} /> 
                   <Tab label={<BadgeComp count={financialHardshipTab.length} label="Financial Hardship" />} /> 
@@ -499,22 +494,27 @@ export default function CustomerList({userId, roleName}) {
                   <Tab label={<BadgeComp count={missedPaymentTab.length} label="Missed Payment" />} />
                 </Tabs>
               </AppBar>
-              <div className={classes.tableWrapper}>
+              <div >
                 <TabPanel value={value} index={0}>
-                  {activeTab && <Active customerList={activeTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} /> }
+                  {activeTab && <Active customerList={activeTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
+                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> }
                 </TabPanel>              
 
                 <TabPanel value={value} index={1}>
-                  {holdTab && <Hold customerList={holdTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} /> }
+                  {holdTab && <Hold customerList={holdTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
+                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> }
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                  {financialHardshipTab && <FinancialHardship customerList={financialHardshipTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
+                  {financialHardshipTab && <FinancialHardship customerList={financialHardshipTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  
+                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                  {bornTodayTab && <BornToday customerList={bornTodayTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  /> } 
+                  {bornTodayTab && <BornToday customerList={bornTodayTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  
+                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} /> } 
+                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} 
+                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
               </div>
             </Paper>                            

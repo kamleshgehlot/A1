@@ -61,25 +61,11 @@ function TabPanel(props) {
   );
 }
 
-export default function Delivered({order, roleName, handleViewDeliveredDetailOpen}) {
+export default function Delivered({order, roleName, handleViewDeliveredDetailOpen, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage}) {
   const styleClass = useCommonStyles();
 
-  
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };    
-  
 return (  
-    <Table>
+    <Table stickyHeader>
       <TableHead>
         <TableRow>
           <StyledTableCell>#</StyledTableCell>
@@ -126,7 +112,7 @@ return (
     <TableFooter>
         <TableRow>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[20, 50, 100]}
             colSpan={10}
             count={order.length}
             rowsPerPage={rowsPerPage}

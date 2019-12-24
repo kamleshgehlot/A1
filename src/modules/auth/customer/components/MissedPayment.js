@@ -117,24 +117,14 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function MissedPayment({customerList, handleOrderView, handlePaymentFilter }) {
-  // console.log('custome',customerList)
+export default function MissedPayment({customerList, handleOrderView, handlePaymentFilter, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
+  
   const styleClass = useCommonStyles();
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  
   const [searchText, setSearchText] = React.useState('');
   const [paymentDate, setPaymentDate] = React.useState(null);
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, customerList.length - page * rowsPerPage);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  
 
   const handleSearchText = async (e) => {
     setSearchText(e.target.value);
@@ -237,8 +227,7 @@ return (
           </TableRow>
         </TableHead>
         <TableBody>        
-            {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {
-            // (customerList.length > 0 ? customerList : []).map((data, index) => {
+            {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {            
               return(
                 <TableRow key={data.id}>
                     <StyledTableCell> {data.id}           </StyledTableCell>
@@ -263,7 +252,7 @@ return (
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
+              rowsPerPageOptions={[20, 50, 100]}
               colSpan={8}
               count={customerList.length}
               rowsPerPage={rowsPerPage}

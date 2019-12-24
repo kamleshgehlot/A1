@@ -356,31 +356,22 @@ export default function TaskList({roleName, showTaskData}) {
     }
     
    (task.length > 0 ? task : []).map((data, index) => {
-
-      // if((data.task_created_by == userId || data.assign_to== userId) && (data.creator_role == roleName || data.assign_to_role_name == roleName) ){
         if((data.task_created_by == userId && data.creator_role == roleName) || ( data.assign_to == userId && data.assign_to_role_name == roleName)){
-          // console.log('all',data);
           all.push(data);
         }
       if(data.assign_to == userId  && data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.assign_to_role_name == roleName){
-        // && data.created_by == (data.status == 3 ? userId : data.created_by)
-          // console.log('assignedToMe',data);
           assignedToMe.push(data);
         }
       if(data.is_active == 1 && (data.status == 1 || data.status == 2 || data.status == 4) && data.task_created_by == userId && data.creator_role == roleName){
-          // console.log('assignedByMe',data);
           assignedByMe.push(data);
         }
       if(data.is_active == 1 && data.status == 3 && data.task_created_by == userId && data.creator_role == roleName ){
-          // console.log('rescheduleRequestToMe',data);
           rescheduleRequestToMe.push(data);
         }
       if(data.is_active == 1 && data.status == 3 &&  ( data.assign_to == userId && data.assign_to_role_name == roleName)){
-          // console.log('rescheduleRequestByMe',data);
           rescheduleRequestByMe.push(data);
         }
       if(data.status == 6 && data.is_active == 0 && ((data.task_created_by == userId && data.creator_role == roleName) || ( data.assign_to == userId && data.assign_to_role_name == roleName)) ){
-          // console.log('completed',data);
           completed.push(data);
         }
     });
@@ -395,13 +386,6 @@ export default function TaskList({roleName, showTaskData}) {
       setCancelledTab(cancelledTab);
       setOnHoldTab(onHoldTab);       
   }
-
-  // console.log('assignedToMe',assignedToMeTab);
-  // console.log('assignedByMe',assignedByMeTab);
-  // console.log('rescheduleRequestToMe',rescheduleRequestToMeTab);
-  // console.log('rescheduleRequestByMe',rescheduleRequestByMeTab);
-  // console.log('all',allTab);
-  // console.log('completed',completedTab);
   
     return (
       <div>        
@@ -419,18 +403,13 @@ export default function TaskList({roleName, showTaskData}) {
                   value={value} 
                   onChange={handleTabChange} 
                   className={classes.textsize} 
-                  aria-label="simple tabs example"
                   variant="scrollable"
                   scrollButtons="auto"
                 >
                   <Tab label={<BadgeComp count={assignedToMeTab.length} label="Assigned to Me" />} /> 
                   <Tab label={<BadgeComp count={assignedByMeTab.length} label="Assigned by Me" />} /> 
                   <Tab label={<BadgeComp count={rescheduleRequestToMeTab.length} label="Reschedule Request (to Me)" />} /> 
-                  <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Reschedule Request (by Me)" />} /> 
-                  {/* <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Completion Request (To Me)" />} /> 
-                  <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Completion Request (By Me)" />} />  */}
-                  {/* <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Cancelled" />} /> 
-                  <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="On Hold" />} />  */}
+                  <Tab label={<BadgeComp count={rescheduleRequestByMeTab.length} label="Reschedule Request (by Me)" />} />                   
                   <Tab label={<BadgeComp count={completedTab.length} label="Completed" />} />
                   <Tab label={<BadgeComp count={allTab.length} label="All" />} />                   
                 </Tabs>

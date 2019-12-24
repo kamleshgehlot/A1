@@ -98,23 +98,12 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function FinancialHardship({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen }) {
+export default function FinancialHardship({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen,
+  page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
+    
   const styleClass = useCommonStyles();
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, customerList.length - page * rowsPerPage);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };    
-  
+ 
 
 return (  
     <Table stickyHeader  className={classes.table}>
@@ -175,7 +164,7 @@ return (
       <TableFooter>
         <TableRow>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[20, 50, 100]}
             colSpan={7}
             count={customerList.length}
             rowsPerPage={rowsPerPage}

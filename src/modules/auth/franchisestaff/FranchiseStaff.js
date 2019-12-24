@@ -295,7 +295,7 @@ export default function FranchiseStaff({franchiseId, roleName}) {
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
-                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} >
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
                   <Tab label={<BadgeComp count={staffList.length} label="All" />} />
                   <Tab label={<BadgeComp count={csrTab.length} label="CSR" />} />
                   <Tab label={<BadgeComp count={financeTab.length} label="Finance" />} />

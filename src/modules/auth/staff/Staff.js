@@ -237,7 +237,7 @@ export default function Staff({roleName}) {
         </Grid>
         <Grid item xs={12} sm={12}>
           <AppBar position="static"  className={classes.appBar}>
-            <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
+            <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
               {
                 (staffList.length > 0 ? staffList : []).map((data, index)=>{
                   data.position === 1 ? territory+=1 : '';

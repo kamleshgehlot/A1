@@ -39,17 +39,6 @@ import Category from '../../../../src/api/Category';
 import BadgeComp from '../../common/BadgeComp';
 import { async } from 'q';
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,8 +47,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    // width: 1000
+    zIndex: theme.zIndex.drawer + 1,    
   },
   drawer: {
     width: drawerWidth,
@@ -104,6 +92,9 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function Enquiry({roleName}) {
+
+  const classes = useStyles();
+
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [enquiryList, setEnquiryList] = useState([]);
@@ -119,7 +110,18 @@ export default function Enquiry({roleName}) {
   const [convertedList, setConvertedList] = useState([]);
   const [archivedList, setArchivedList] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
-  const classes = useStyles();
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 20));
+    setPage(0);
+  };    
 
   const loadEnquiryList = async () =>{
     const result = await EnquiryAPI.getAll();
@@ -269,6 +271,8 @@ export default function Enquiry({roleName}) {
 
   function handleTabChange(event, newValue) {
     setValue(newValue);
+    setPage(0);
+    setRowsPerPage(20);
   }
 
   return (
@@ -315,21 +319,24 @@ export default function Enquiry({roleName}) {
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
-                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} aria-label="simple tabs example">
+                <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
                   <Tab label={<BadgeComp count={onGoingList.length} label="On-going" />} /> 
                   <Tab label={<BadgeComp count={convertedList.length} label="Converted" />} /> 
                   <Tab label={<BadgeComp count={archivedList.length} label="Archived" />} /> 
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
-                {onGoingList && <OnGoing enquiryList={onGoingList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry} handleClickOrderOpen={handleClickOrderOpen} roleName={roleName} /> }
+                {onGoingList && <OnGoing enquiryList={onGoingList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry} handleClickOrderOpen={handleClickOrderOpen} roleName={roleName} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/> }
               </TabPanel>              
 
               <TabPanel value={value} index={1}>
-                {convertedList && <Converted enquiryList={convertedList} productList={productList}  roleName={roleName} /> }
+                {convertedList && <Converted enquiryList={convertedList} productList={productList}  roleName={roleName} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/> }
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {archivedList && <Archived enquiryList={archivedList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry}  roleName={roleName} /> } 
+                {archivedList && <Archived enquiryList={archivedList} productList={productList} handleDeleteEnquiry={handleDeleteEnquiry}  roleName={roleName} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/> } 
               </TabPanel>
             </Paper>
           </Grid>

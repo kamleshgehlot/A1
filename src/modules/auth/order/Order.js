@@ -150,6 +150,18 @@ export default function Order({ roleName }) {
   const [value, setValue] = React.useState(0);
   const [searchText, setSearchText] = useState('');
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 20));
+    setPage(0);
+  };    
+
   const handleYesNoClose = (isConfirm) => {
     setOpenConfirmationPDF(false);
     createAndDownloadPdf(orderDataForPDF, isConfirm)
@@ -527,6 +539,8 @@ export default function Order({ roleName }) {
   }
 
   function handleTabChange(event, newValue) {
+    setPage(0);
+    setRowsPerPage(20);
     setValue(newValue);
     handleTabsData(order);
   }
@@ -679,7 +693,7 @@ export default function Order({ roleName }) {
           <Paper style={{ width: '100%' }}>
             <AppBar position="static" className={classes.appBar}>
 
-              <Tabs value={value} onChange={handleTabChange} className={classes.textsize}>
+              <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
                 <Tab label={<BadgeComp count={openTab.length} label="Open" />} />
                 {roleName === 'CSR' ? <Tab label={<BadgeComp count={financeTab.length} label="Finance" />} /> : ''}
                 {roleName != 'Delivery' ? <Tab label={<BadgeComp count={underDeliveryTab.length} label="Before Delivery" />} /> : ''}
@@ -698,25 +712,32 @@ export default function Order({ roleName }) {
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                   createAndDownloadPdf={handlePDFGenerateType} handleUploadFile={handleUploadFile}
                   handleClickViewOpen={handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
-                  handleOrderView={handleOrderView} handleOrderArchive={handleOrderArchive} />}
+                  handleOrderView={handleOrderView} handleOrderArchive={handleOrderArchive} 
+                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}
+                  />}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {financeTab && <Finance order={financeTab} roleName={roleName} />}
+                {financeTab && <Finance order={financeTab} roleName={roleName} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {underDeliveryTab && <UnderDelivery order={underDeliveryTab} roleName={roleName} />}
+                {underDeliveryTab && <UnderDelivery order={underDeliveryTab} roleName={roleName} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={3}>
-                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} />}
+                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={4}>
-                {completedTab && <Completed order={completedTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} />}
+                {completedTab && <Completed order={completedTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={5}>
-                {cancelledTab && <Cancelled order={cancelledTab} roleName={roleName} />}
+                {cancelledTab && <Cancelled order={cancelledTab} roleName={roleName} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={6}>
-                {archivedTab && <Archived order={archivedTab} roleName={roleName} handleEditOpen={handleEditOpen} />}
+                {archivedTab && <Archived order={archivedTab} roleName={roleName} handleEditOpen={handleEditOpen} 
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
             </div> : ''}
 
@@ -729,19 +750,24 @@ export default function Order({ roleName }) {
                   createAndDownloadPdf={handlePDFGenerateType} handleUploadFile={handleUploadFile}
                   handleClickViewOpen={handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen}
                   handleDeliveredProductOpen={handleDeliveredProductOpen} handleOrderView={handleOrderView}
-                  handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} />}
+                  handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} page={page} rowsPerPage={rowsPerPage}
+                  handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {underDeliveryTab && <UnderDelivery order={underDeliveryTab} roleName={roleName} />}
+                {underDeliveryTab && <UnderDelivery order={underDeliveryTab} roleName={roleName} 
+                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} />}
+                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={3}>
-                {completedTab && <Completed order={completedTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} />}
+                {completedTab && <Completed order={completedTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={4}>
-                {cancelledTab && <Cancelled order={cancelledTab} roleName={roleName} />}
+                {cancelledTab && <Cancelled order={cancelledTab} roleName={roleName}
+                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
             </div> : ''}
 
@@ -752,11 +778,13 @@ export default function Order({ roleName }) {
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
                   createAndDownloadPdf={handlePDFGenerateType} handleUploadFile={handleUploadFile}
-                  handleClickViewOpen={handleClickViewOpen}
-                  handleDeliveredProductOpen={handleDeliveredProductOpen} handleOrderView={handleOrderView} />}
+                  handleClickViewOpen={handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
+                  handleOrderView={handleOrderView} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} 
+                  handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} />}
+                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen}
+                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
             </div> : ''}
 

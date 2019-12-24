@@ -99,22 +99,11 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function BornToday({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen }) {
+export default function BornToday({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen, 
+  page, rowsPerPage, handleChangePage, handleChangeRowsPerPage}) {
+  
   const styleClass = useCommonStyles();
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, customerList.length - page * rowsPerPage);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };    
   
 
 return (  
@@ -146,28 +135,7 @@ return (
                       <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                       <CreateIcon/>
                       </IconButton>
-                    </Tooltip>
-                    {/* 
-                    <Tooltip title="Update Budget">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
-                      <AccountBalanceIcon/>
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Update Bank Detail">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleBankDetailOpen(data); }}>
-                      <DetailsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View">
-                      <IconButton  size="small" className={classes.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickCommentOpen(data); }} >
-                        <CommentIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View Budget History">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
-                        <UpdateIcon />
-                      </IconButton>
-                    </Tooltip>*/}
+                    </Tooltip>                   
                </StyledTableCell> 
                </TableRow>
              )
@@ -177,7 +145,7 @@ return (
       <TableFooter>
         <TableRow>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[20, 50, 100]}
             colSpan={7}
             count={customerList.length}
             rowsPerPage={rowsPerPage}
