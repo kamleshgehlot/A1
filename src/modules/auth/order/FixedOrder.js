@@ -422,7 +422,7 @@ return (
               </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                <InputLabel className={classes.textsize} htmlFor="cash_price">Cash Price *</InputLabel>
                 <TextField
                   InputProps={{
                     classes: {
@@ -431,7 +431,7 @@ return (
                   }}
                   id="cash_price"
                   name="cash_price"
-                  label="Cash Price"
+                  // label="Cash Price"
                   value={inputs.cash_price}
                   onChange={handlePriceInput}
                   error={errors.cash_price}
@@ -448,6 +448,7 @@ return (
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+              <InputLabel className={classes.textsize} htmlFor="liability_wavier_fee">Liability Wavier Fee *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -456,7 +457,7 @@ return (
                       }}
                       id="liability_wavier_fee"
                       name="liability_wavier_fee"
-                      label="Liability Wavier Fee"
+                      // label="Liability Wavier Fee"
                       value={inputs.liability_wavier_fee}
                       onChange={handlePriceInput}
                       error={errors.liability_wavier_fee}
@@ -473,6 +474,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                  <InputLabel className={classes.textsize} htmlFor="delivery_fee">Delivery Fee *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -481,7 +483,7 @@ return (
                       }}
                       id="delivery_fee"
                       name="delivery_fee"
-                      label="Delivery Fee"
+                      // label="Delivery Fee"
                       value={inputs.delivery_fee}
                       onChange={handlePriceInput}                      
                       error={errors.delivery_fee}
@@ -498,7 +500,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <InputLabel htmlFor="first_name">Franchise Name *</InputLabel> */}
+                    <InputLabel className={classes.textsize} htmlFor="ppsr_fee">PPSR Fee *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -507,7 +509,7 @@ return (
                       }}
                       id="ppsr_fee"
                       name="ppsr_fee"
-                      label="PPSR Fee"
+                      // label="PPSR Fee"
                       value={inputs.ppsr_fee}
                       onChange={handlePriceInput}
                       error={errors.ppsr_fee}
@@ -525,11 +527,11 @@ return (
                   </Grid>                  
                   
                   <Grid item xs={12} sm={12}>
-                    <TextField
-                     
+                    <InputLabel className={classes.textsize} htmlFor="int_unpaid_bal">Intial Unpaid Balance *</InputLabel>
+                    <TextField                     
                       id="int_unpaid_bal"
                       name="int_unpaid_bal"
-                      label="Intial Unpaid Balance"
+                      // label="Intial Unpaid Balance"
                       value={inputs.int_unpaid_bal}
                       onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
@@ -549,16 +551,11 @@ return (
                       }}
                     />
                   </Grid>
-                 
 
                   <Grid item xs={12} sm={12}>
-              <Typography variant="h6" className={classes.labelTitle}>
-                Payments 
-              </Typography>
-                  <Typography  className={classes.subTitle}>
-                    Timing of Payments
-                  </Typography>
-              </Grid>
+                    <Typography variant="h6" className={classes.labelTitle}> Payments  </Typography>
+                    <Typography  className={classes.subTitle}> Timing of Payments </Typography>
+                  </Grid>
                   <Grid item xs={12} sm={4}>    
                 
                   <InputLabel className={classes.textsize} htmlFor="frequency">Frequency *</InputLabel>
@@ -605,7 +602,7 @@ return (
                 </Grid>
                   <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                    First Payment Date
+                    First Payment Date *
                   </Typography>
                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
@@ -633,7 +630,7 @@ return (
                     
                   <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                    Last Payment Date
+                    Last Payment Date *
                   </Typography>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
@@ -661,7 +658,7 @@ return (
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                      Number of Payments 
+                      Number of Payments  *
                   </Typography>
                   <TextField
                       InputProps={{
@@ -683,7 +680,7 @@ return (
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                    Amount of Each Payments
+                    Amount of Each Payments *
                   </Typography>
                   <TextField
                       InputProps={{
@@ -714,7 +711,7 @@ return (
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                      Total Amount of Payments
+                      Total Amount of Payments *
                   </Typography>
                   <TextField
                       InputProps={{
@@ -748,7 +745,7 @@ return (
                 
                 <Grid item xs={12} sm={8}>
                   <Typography  className={classes.subTitle}>
-                      Minimun Number of Payments before delivery
+                      Minimun Number of Payments before delivery *
                   </Typography>
                   <TextField
                       InputProps={{
@@ -773,7 +770,7 @@ return (
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                    Minimum Payment Amt
+                    Minimum Payment Amt *
                   </Typography>
                   <TextField
                       InputProps={{
@@ -802,7 +799,7 @@ return (
                 
                 <Grid item xs={12} sm={4}>
                   <Typography  className={classes.subTitle}>
-                   Expected Delivery Date
+                   Expected Delivery Date *
                   </Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
@@ -828,7 +825,7 @@ return (
                         <Grid item xs={12} sm={4}>
 
                             <Typography  className={classes.subTitle}>
-                              Expected Delivery Time
+                              Expected Delivery Time *
                             </Typography>
                           <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardTimePicker

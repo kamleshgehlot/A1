@@ -382,16 +382,14 @@ return (
           <Paper className={classes.paper}>            
             <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>
-              <Typography variant="h6" className={classes.labelTitle}>
-                Credit Details
-              </Typography>
+              <Typography variant="h6" className={classes.labelTitle}> Credit Details </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
+              <InputLabel className={classes.textsize} htmlFor="cash_price">Cash Price *</InputLabel>
                 <TextField
                   id="cash_price"
                   name="cash_price"
-                  label="Cash Price"
+                  // label="Cash Price"
                   value={inputs.cash_price}
                   onChange={handlePriceInput}
                   error={errors.cash_price}
@@ -409,6 +407,7 @@ return (
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+              <InputLabel className={classes.textsize} htmlFor="liability_wavier_fee">Liability Wavier Fee *</InputLabel>
                 <TextField
                   InputProps={{
                     classes: {
@@ -417,7 +416,7 @@ return (
                   }}
                   id="liability_wavier_fee"
                   name="liability_wavier_fee"
-                  label="Liability Wavier Fee"
+                  // label="Liability Wavier Fee"
                   value={inputs.liability_wavier_fee}
                   onChange={handlePriceInput}
                   error={errors.liability_wavier_fee}
@@ -435,11 +434,11 @@ return (
                 />
               </Grid>   
               <Grid item xs={12} sm={6}>
-                {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
+              <InputLabel className={classes.textsize} htmlFor="delivery_fee">Delivery Fee *</InputLabel>
                 <TextField
                   id="delivery_fee"
                   name="delivery_fee"
-                  label="Delivery Fee"
+                  // label="Delivery Fee"
                   value={inputs.delivery_fee}
                   onChange={handlePriceInput}
                   error={errors.delivery_fee}
@@ -457,11 +456,11 @@ return (
                 />
               </Grid>   
               <Grid item xs={12} sm={6}>
-                    {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
+              <InputLabel className={classes.textsize} htmlFor="ppsr_fee">PPSR Fee *</InputLabel>
                     <TextField
                       id="ppsr_fee"
                       name="ppsr_fee"
-                      label="PPSR Fee"
+                      // label="PPSR Fee"
                       value={inputs.ppsr_fee}
                       onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
@@ -486,11 +485,11 @@ return (
                   
                                 
                   <Grid item xs={12} sm={12}>
-                    {/* <InputLabel  className={classes.textsize}  htmlFor="first_name">Franchise Name *</InputLabel> */}
+                  <InputLabel className={classes.textsize} htmlFor="int_unpaid_bal">Intial Unpaid Balance *</InputLabel>
                     <TextField
                       id="int_unpaid_bal"
                       name="int_unpaid_bal"
-                      label="Intial Unpaid Balance"
+                      // label="Intial Unpaid Balance"
                       value={inputs.int_unpaid_bal}
                       onChange={handlePriceInput}
                       // onFocus={handleInputFocus}
@@ -568,9 +567,7 @@ return (
                 </Grid>
 
                   <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    First Payment Date
-                  </Typography>
+                  <Typography  className={classes.subTitle}>First Payment Date *</Typography>
                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
@@ -595,9 +592,7 @@ return (
                     </Grid>
                     
                   <Grid item xs={12} sm={4}>
-                      <Typography  className={classes.subTitle}>
-                        Last Payment Date
-                      </Typography>
+                      <Typography  className={classes.subTitle}>Last Payment Date *</Typography>
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardDatePicker
                             margin="dense"
@@ -622,9 +617,7 @@ return (
                   </Grid>
                  
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                      Number of Payments 
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Number of Payments  *</Typography>
                   <TextField
                       id="no_of_payment"
                       name="no_of_payment"
@@ -644,9 +637,7 @@ return (
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Amount of Each Payments
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Amount of Each Payments *</Typography>
                   <TextField
                       id="each_payment_amt"
                       name="each_payment_amt"
@@ -667,9 +658,7 @@ return (
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                      Total Amount of Payments
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Total Amount of Payments *</Typography>
                   <TextField
                       id="total_payment_amt"
                       name="total_payment_amt"
@@ -692,9 +681,7 @@ return (
                 </Grid>
                 
                 <Grid item xs={12} sm={8}>
-                  <Typography  className={classes.subTitle}>
-                      Minimun Number of Payments before delivery
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Minimun Number of Payments before delivery *</Typography>
                   <TextField
                       id="before_delivery_amt"
                       name="before_delivery_amt"
@@ -715,9 +702,7 @@ return (
                 </Grid>
                 
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                   Expected Delivery Date
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Expected Delivery Date *</Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
@@ -741,9 +726,7 @@ return (
                         </Grid>
                         
                         <Grid item xs={12} sm={4}>
-                         <Typography  className={classes.subTitle}>
-                            Expected Delivery Time
-                         </Typography>
+                         <Typography  className={classes.subTitle}> Expected Delivery Time * </Typography>
                           <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardTimePicker
                             margin="dense"
@@ -764,9 +747,7 @@ return (
                 </Grid>
                 
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Minimum Payment Amt
-                  </Typography>
+                  <Typography  className={classes.subTitle}> Minimum Payment Amt *</Typography>
                   <TextField
                       id="minimum_payment_amt"
                       name="minimum_payment_amt"
@@ -818,7 +799,7 @@ return (
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={4}>                 
-                  <InputLabel  className={classes.textsize}  htmlFor="interest_rate">Weeks *</InputLabel>
+                  <InputLabel  className={classes.textsize}  htmlFor="interest_rate">Weeks </InputLabel>
                   <TextField
                       id="interest_rate"
                       name="interest_rate"
@@ -836,7 +817,7 @@ return (
                     />
                     </Grid>
                     <Grid item xs={12} sm={4}>  
-                    <InputLabel  className={classes.textsize}  htmlFor="interest_rate_per">Daily interest rates of (in %) *</InputLabel>
+                    <InputLabel  className={classes.textsize}  htmlFor="interest_rate_per">Daily interest rates of (in %) </InputLabel>
                     <TextField
                       id="interest_rate_per"
                       name="interest_rate_per"
@@ -854,10 +835,7 @@ return (
                     />
                   </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Total Interest Charges
-                  </Typography>
-                  
+                  <Typography  className={classes.subTitle}>Total Interest Charges</Typography>                  
                   <TextField
                       id="total_interest"
                       name="total_interest"

@@ -394,7 +394,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="address">Address</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="address">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -435,7 +435,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">City</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">City *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -480,7 +480,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="telephone">Telephone *</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="telephone">Telephone </InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -552,7 +552,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={errors.gender? classes.errorHeading:classes.textsize}  htmlFor="Gender">Gender</InputLabel>
+                    <InputLabel className={errors.gender? classes.errorHeading:classes.textsize}  htmlFor="Gender">Gender *</InputLabel>
                     <RadioGroup
                       aria-label="Gender"
                       name="gender"
@@ -572,7 +572,7 @@ function handleDate(date){
                     
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={errors.is_working? classes.errorHeading:classes.textsize}  htmlFor="is_working">Are you working?</InputLabel>
+                    <InputLabel className={errors.is_working? classes.errorHeading:classes.textsize}  htmlFor="is_working">Are you working? *</InputLabel>
                     <RadioGroup 
                       aria-label="is_working" 
                       name="is_working" 
@@ -588,7 +588,7 @@ function handleDate(date){
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="dob">Date Of Birth</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="dob">Date Of Birth *</InputLabel>
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
@@ -614,7 +614,7 @@ function handleDate(date){
                       : ''}
                   </Grid>
                   <Grid item xs={12} sm={inputs.id_type == 2 ? 3 : 6}>
-                    <InputLabel className={classes.textsize}  htmlFor="id_type">ID Proof</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="id_type">ID Proof *</InputLabel>
                     <Select
                         margin="dense"
                         name="id_type"
@@ -637,7 +637,7 @@ function handleDate(date){
 
                     {inputs.id_type == 2 &&
                     <Grid item xs={12} sm={3}>
-                    <InputLabel  className={classes.textsize} htmlFor="id_type">Version#</InputLabel>                    
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">Version# *</InputLabel>                    
                     <TextField
                       InputProps={{
                         classes: {
@@ -664,7 +664,7 @@ function handleDate(date){
                     }
                    
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">ID#</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">ID# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -685,7 +685,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="expiry_date">Expiry Date</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="expiry_date">Expiry Date *</InputLabel>
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
@@ -709,7 +709,7 @@ function handleDate(date){
                   </Grid>
                  
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="id_proof">Upload Copy of Selected ID *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -750,7 +750,7 @@ function handleDate(date){
                     <Typography className={classes.heading}>Alternate Contact Details #1</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="alt_c1_name">Name</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="alt_c1_name">Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -771,7 +771,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">Address</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -792,7 +792,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="contact">Contact#</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="contact">Contact# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -817,7 +817,7 @@ function handleDate(date){
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">Relationship To You</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">Relationship To You *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -841,7 +841,7 @@ function handleDate(date){
                     <Typography className={classes.heading}>Alternate Contact Details #2</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">Name</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -862,7 +862,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">Address</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -883,7 +883,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="contact">Contact#</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="contact">Contact# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -908,7 +908,7 @@ function handleDate(date){
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="last_name">Relationship To You</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="last_name">Relationship To You *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -967,7 +967,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Employer Address *" : "Beneficiary Address *" }</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Employer Address " : "Beneficiary Address " }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -988,7 +988,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Employer Telephone# *" : "Beneficiary Telephone# *" }</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="user_id">{inputs.is_working == 1 ? "Employer Telephone# " : "Beneficiary Telephone# " }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -998,7 +998,6 @@ function handleDate(date){
                       margin="dense"
                       id="employer_telephone"
                       name="employer_telephone"
-                      // label="Employer Telephone#"
                       type="text"
                       value={inputs.employer_telephone} 
                       onChange={handleNumberInput}

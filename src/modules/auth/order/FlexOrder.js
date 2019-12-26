@@ -261,7 +261,7 @@ return (
               </Typography>
               </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="first_name">Rent Price of Goods</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="first_name">Rent Price of Goods *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -321,7 +321,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="first_name">Liability Waiver Fee*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">Liability Waiver Fee *</InputLabel>
                     <TextField
                      
                       id="liability_fee"
@@ -348,7 +348,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="first_name">TOTAL PER WEEK/ FORTNIGHT*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="first_name">TOTAL PER WEEK/ FORTNIGHT *</InputLabel>
                     <TextField
                      
                       id="weekly_total"
@@ -403,9 +403,7 @@ return (
                     </Select> 
                    </Grid>
                    <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Amount of Each Payment
-                  </Typography>
+                  <Typography  className={classes.subTitle}> Amount of Each Payment *</Typography>
                   <TextField
                       InputProps={{
                         classes: {
@@ -430,9 +428,7 @@ return (
                     />
                 </Grid>
                  <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    First Payment Date
-                  </Typography>
+                  <Typography  className={classes.subTitle}> First Payment Date *</Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
@@ -457,9 +453,7 @@ return (
                 </Grid>
                 
                 <Grid item xs={12} sm={8}>
-                  <Typography  className={classes.subTitle}>
-                      Minimun Number of Payments before delivery
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Minimun Number of Payments before delivery *</Typography>
                   <TextField
                       InputProps={{
                         classes: {
@@ -479,9 +473,7 @@ return (
                 </Grid>
                  
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Bond Amt
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Bond Amt *</Typography>
                   <TextField
                       InputProps={{
                         classes: {
@@ -506,9 +498,7 @@ return (
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                   Expected Delivery Date
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Expected Delivery Date *</Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
@@ -531,9 +521,7 @@ return (
                         </Grid>
                         
                         <Grid item xs={12} sm={4}>
-                          <Typography  className={classes.subTitle}>
-                            Expected Delivery Time
-                          </Typography>
+                          <Typography  className={classes.subTitle}>Expected Delivery Time *</Typography>
                           <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardTimePicker
                             margin="dense"

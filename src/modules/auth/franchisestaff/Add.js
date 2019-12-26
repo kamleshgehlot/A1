@@ -489,8 +489,7 @@ return (
                       }}
                       margin="dense"
                       id="pre_company_contact"
-                      name="pre_company_contact"
-                      // label="Contact of Previous Company"
+                      name="pre_company_contact"                      
                       type="text"
                       value={inputs.pre_company_contact} 
                       onChange={handleNumberInput}
@@ -513,8 +512,7 @@ return (
                       }}
                       margin="dense"
                       id="pre_position"
-                      name="pre_position"
-                      // label="Position/JobRole in Previous Company"
+                      name="pre_position"                      
                       type="text"
                       value={inputs.pre_position} 
                       error={errors.pre_position}
@@ -530,25 +528,22 @@ return (
                       InputProps={{
                         classes: {
                           input: classes.textsize,
-                        },
-                        // startAdornment: <InputAdornment position='start'> 
-                        //  <Typography variant="h6" className={styleClass.adornmentText}>
-                        //     Years 
-                        //   </Typography>                          
-                        // </InputAdornment>,
+                        },                     
                       }}                      
                       margin="dense"
                       id="duration"
-                      name="duration"
-                      // label="Work Experience"
+                      name="duration"                      
                       type="text"
                       value={inputs.duration} 
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       onBlur={handleNameBlurChange}
                       error={errors.duration}
                       helperText={errors.duration}
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value =(e.target.value).toString().slice(0,2)
+                    }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -562,12 +557,10 @@ return (
                       margin="dense"
                       id="employment_docs"
                       name="employment_docs"
-                      // label=""
                       multiple
                       type="file"
                       value={inputs.employment_docs} 
                       onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />

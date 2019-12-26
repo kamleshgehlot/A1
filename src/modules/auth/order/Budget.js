@@ -900,7 +900,7 @@ return (
                     </Grid>
                   }
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day You Get Paid</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day You Get Paid *</InputLabel>
                     <Select
                         margin="dense"
                         name="paid_day"
@@ -923,7 +923,7 @@ return (
                     </Select>
                   </Grid>
                   <Grid item xs={12} sm={6}>                  
-                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day Payment Debited</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="paid_day">Day Payment Debited *</InputLabel>
                     <Select
                         margin="dense"
                         name="debited_day"
@@ -981,7 +981,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                    TOTAL SURPLUS/DEFICT (A-B)
+                    TOTAL SURPLUS/DEFICT (A-B) *
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -1018,7 +1018,7 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" className={classes.labelTitle}>
-                      How much you can afford to pay on weekly basis?
+                      How much you can afford to pay on weekly basis? *
                   </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
