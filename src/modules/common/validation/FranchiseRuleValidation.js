@@ -6,7 +6,7 @@ export default function validate(values) {
   if (!values.franchise_name) {
     errors.franchise_name = 'Franchise Name is required';
   }else if(!validAlpha.test(values.franchise_name)){
-    errors.franchise_name = 'Franchise Name is invalid';
+    errors.franchise_name = 'Special characters are not allowed';
   }
 
   if (!values.city) {
@@ -15,16 +15,17 @@ export default function validate(values) {
   if (!values.suburb) {
     errors.suburb = 'Area is required';
   }
+
   if (!values.company_name) {
     errors.company_name = 'Company Name is required';
   } else if (!validAlpha.test(values.company_name)) {
-    errors.company_name = 'Company Name is invalid';
+    errors.company_name = 'Special characters are not allowed';
   }
+
   if (!values.nbzn ) {
     errors.nbzn = 'NZBN is required';
   } else if((values.nbzn).length <13){
-    
-    errors.nbzn = 'NZBN is invalid';
+    errors.nbzn = 'NZBN should be 13 digits';
   }
   
   if (!values.company_location) {
@@ -34,7 +35,7 @@ export default function validate(values) {
   if (!values.accountant_name) {
     errors.accountant_name = 'Name is required';
   } else if (!validString.test(values.accountant_name)) {
-    errors.accountant_name = 'Name is invalid';
+    errors.accountant_name = 'Special characters & Numbers are not allowed';
   }
   if (!values.accountant_email) {
     errors.accountant_email = 'Email Address is required';

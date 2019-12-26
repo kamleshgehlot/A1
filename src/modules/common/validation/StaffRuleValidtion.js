@@ -5,19 +5,19 @@ export default function validate(values) {
   if (!values.first_name) {
     errors.first_name = 'First Name is required';
   } else if (!validString.test(values.first_name)) {
-    errors.first_name = 'First Name is invalid';
+    errors.first_name = 'Special characters & numbers are not allowed';
   }
 
   if (!values.last_name) {
     errors.last_name = 'Last Name is required';
   } else if (!validString.test(values.last_name)) {
-    errors.last_name = 'Last Name is invalid';
+    errors.last_name = 'Special characters & numbers are not allowed';
   }
   
-  console.log('len----',(values.contact).length)
   if (!values.location) {
     errors.location = 'Location is required';
   } 
+  
   if (!values.contact) {
     errors.contact = 'Contact is required';
   } else if (!validNumber.test(values.contact)) {
