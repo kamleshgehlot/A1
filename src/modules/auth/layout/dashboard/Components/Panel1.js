@@ -145,7 +145,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
             staffdata[d.sales_person_id].count++;
           }
           // staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt/ratio:d.bond_amt/ratio;
-          staffdata[d.sales_person_id].value+=d.total_paid.toFixed(2);
+          staffdata[d.sales_person_id].value+=parseFloat(d.total_paid).toFixed(2);
         });
         
         console.log(staffdata);
