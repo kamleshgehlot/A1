@@ -268,15 +268,14 @@ return (
           <Paper className={classes.paper}>            
             <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>
-              <Typography variant="h6" className={classes.labelTitle}>
-                Consumer Lease Details
-              </Typography>
+              <Typography variant="h6" className={classes.labelTitle}>Consumer Lease Details </Typography>
               </Grid>
                   <Grid item xs={12} sm={6}>
+                  <Typography  className={classes.subTitle}>Rent Price of Goods *</Typography>
                     <TextField
                       id="goods_rent_price"
                       name="goods_rent_price"
-                      label="Rent Price of Goods"
+                      // label="Rent Price of Goods"
                       value={inputs.goods_rent_price}
                       onChange={handlePriceInput}
                       error={errors.goods_rent_price}
@@ -294,10 +293,11 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                  <Typography  className={classes.subTitle}>PPSR Fee (if applicable) *</Typography>
                     <TextField
                       id="ppsr_fee"
                       name="ppsr_fee"
-                      label="PPSR Fee (if applicable)"
+                      // label="PPSR Fee (if applicable)"
                       value={inputs.ppsr_fee}
                       onChange={handlePriceInput}
                       error={errors.ppsr_fee}
@@ -315,10 +315,11 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                  <Typography  className={classes.subTitle}>Liability Waiver Fee *</Typography>
                     <TextField
                       id="liability_fee"
                       name="liability_fee"
-                      label="Liability Waiver Fee "
+                      // label="Liability Waiver Fee "
                       value={inputs.liability_fee}
                       onChange={handlePriceInput}
                       error={errors.liability_fee}
@@ -336,10 +337,11 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                  <Typography  className={classes.subTitle}>TOTAL PER WEEK/ FORTNIGHT *</Typography>
                     <TextField
                       id="weekly_total"
                       name="weekly_total"
-                      label="TOTAL PER WEEK/ FORTNIGHT"
+                      // label="TOTAL PER WEEK/ FORTNIGHT"
                       value={inputs.weekly_total}
                       onChange={handlePriceInput}
                       error={errors.weekly_total}
@@ -388,9 +390,7 @@ return (
                   </Grid>
 
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Amount of Each Payment
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Amount of Each Payment *</Typography>
                   <TextField
                       id="each_payment_amt"
                       name="each_payment_amt"
@@ -413,9 +413,7 @@ return (
                 </Grid>
                 
                 <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    First Payment Date
-                  </Typography>
+                  <Typography  className={classes.subTitle}> First Payment Date *</Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
@@ -439,9 +437,7 @@ return (
                     </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                  <Typography  className={classes.subTitle}>
-                      Minimun Number of Payments before delivery
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Minimun Number of Payments before delivery *</Typography>
                   <TextField
                       id="before_delivery_amt"
                       name="before_delivery_amt"
@@ -462,9 +458,7 @@ return (
                     />
                 </Grid>
                   <Grid item xs={12} sm={4}>
-                    <Typography  className={classes.subTitle}>
-                      Bond Amt
-                    </Typography>
+                    <Typography  className={classes.subTitle}>Bond Amt *</Typography>
                     <TextField
                         id="bond_amt"
                         name="bond_amt"
@@ -486,9 +480,7 @@ return (
                       />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                   Expected Delivery Date
-                  </Typography>
+                  <Typography  className={classes.subTitle}>Expected Delivery Date *</Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
@@ -512,9 +504,7 @@ return (
                         </Grid>
                         
                         <Grid item xs={12} sm={4}>
-                          <Typography  className={classes.subTitle}>
-                            Expected Delivery Time
-                          </Typography>
+                          <Typography  className={classes.subTitle}>Expected Delivery Time *</Typography>
                           <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardTimePicker
                             margin="dense"

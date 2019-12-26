@@ -8,13 +8,13 @@ export default function validate(values) {
   if (!values.first_name) {
     errors.first_name = 'First Name is required';
   } else if (!validString.test(values.first_name)) {
-    errors.first_name = 'First Name is invalid';
+    errors.first_name = 'Special characters & numbers are not allowed';
   }
 
   if (!values.last_name) {
     errors.last_name = 'Last Name is required';
   } else if (!validString.test(values.last_name)) {
-    errors.last_name = 'Last Name is invalid';
+    errors.last_name = 'Special characters & numbers are not allowed';
   }
 
   if (!values.address) {
@@ -24,26 +24,28 @@ export default function validate(values) {
   if (!values.suburb) {
     errors.suburb = 'Suburb is required';
   } else if (!validString.test(values.suburb)) {
-    errors.suburb = 'Suburb is invalid';
+    errors.suburb = 'Special characters & numbers are not allowed';
   }
   
   if (!values.city) {
     errors.city = 'City is required';
   } else if (!validString.test(values.city)) {
-    errors.city = 'City is invalid';
+    errors.city = 'Special characters & numbers are not allowed';
   }
   
   if (!values.postcode) {
     errors.postcode = 'Postcode is required';
   } else if (!validNumber.test(values.postcode)) {
-    errors.postcode = 'Postcode is invalid';
-  }
+    errors.postcode = 'Only digits are allowed';
+  } else if ((values.postcode).length<4) {
+    errors.postcode = 'Postcode should be 4 digits';
+  } 
 
   if (values.telephone) {
     if (!validNumber.test(values.telephone)) {
       errors.telephone = 'Telephone number is invalid';
     } else if ((values.telephone).length<9) {
-      errors.telephone = 'Telephone number is invalid';
+      errors.telephone = 'Telephone number should be 9/10 digits';
     } 
   }
   
@@ -52,7 +54,7 @@ export default function validate(values) {
   } else if (!validNumber.test(values.mobile)) {
     errors.mobile = 'Mobile number is invalid';
   } else if ((values.mobile).length<9) {
-    errors.mobile = 'Mobile number is invalid';
+    errors.mobile = 'Mobile number should be 9/10 digits';
   }
   
   if (!values.email) {
@@ -68,7 +70,7 @@ export default function validate(values) {
   if (!values.dob) {
     errors.dob = 'Date Of Birth is required';
   }else if(checkPastDate(values.dob)){
-    errors.dob = 'Date of Birth is invalid';
+    errors.dob = 'Invalid date format';
   }
   
   if (values.id_type==='' ) {
@@ -84,7 +86,7 @@ export default function validate(values) {
     if (!values.dl_version_number) {
       errors.dl_version_number = 'Version number is required';
     }else if( (values.dl_version_number).length <3 ){
-      errors.dl_version_number = 'Version number is invalid';
+      errors.dl_version_number = 'Version number should be 3 digits';
     }
   }
 
@@ -99,14 +101,14 @@ export default function validate(values) {
   if (!values.expiry_date) {
     errors.expiry_date = 'Expiry Date is required';
   }else if(checkFutureDate(values.expiry_date)){
-    errors.expiry_date = 'Expiry Date is invalid';
+    errors.expiry_date = 'Invalid date format';
   }
 
    
   if (!values.alt_c1_name) {
     errors.alt_c1_name = 'Name is required';
   } else if (!validString.test(values.alt_c1_name)) {
-    errors.alt_c1_name = 'Name is invalid';
+    errors.alt_c1_name = 'Special characters & numbers are not allowed';
   }
 
   if (!values.alt_c1_address) {
@@ -118,19 +120,19 @@ export default function validate(values) {
   } else if (!validNumber.test(values.alt_c1_contact)) {
     errors.alt_c1_contact = 'Contact number is invalid';
   } else if ((values.alt_c1_contact).length<9) {
-    errors.alt_c1_contact = 'Contact number is invalid';
+    errors.alt_c1_contact = 'Contact number should be 9/10 digits';
   }
   
   if (!values.alt_c1_relation) {
     errors.alt_c1_relation = 'Relationship is required';
   } else if (!validString.test(values.alt_c1_relation)) {
-    errors.alt_c1_relation = 'Relationship is invalid';
+    errors.alt_c1_relation = 'Special characters & numbers are not allowed';
   }
   
   if (!values.alt_c2_name) {
     errors.alt_c2_name = 'Name is required';
   } else if (!validString.test(values.alt_c2_name)) {
-    errors.alt_c2_name = 'Name is invalid';
+    errors.alt_c2_name = 'Special characters & numbers are not allowed';
   }
   
   if (!values.alt_c2_address) {
@@ -148,13 +150,13 @@ export default function validate(values) {
   if (!values.alt_c2_relation) {
     errors.alt_c2_relation = 'Relationship is required';
   } else if (!validString.test(values.alt_c2_relation)) {
-    errors.alt_c2_relation = 'Relationship is invalid';
+    errors.alt_c2_relation = 'Special characters & numbers are not allowed';
   }
   
   if (!values.employer_name) {
     errors.employer_name = 'Employer Name is required';
   } else if (!validAlpha.test(values.employer_name)) {
-    errors.employer_name = 'Employer Name is invalid';
+    errors.employer_name = 'Special characters & numbers are not allowed';
   }
 
   
@@ -166,7 +168,7 @@ export default function validate(values) {
     if (!validNumber.test(values.employer_telephone)) {
       errors.employer_telephone = 'Telephone number is invalid';
     } else if ((values.employer_telephone).length<9) {
-      errors.employer_telephone = 'Telephone number is invalid';
+      errors.employer_telephone = 'Telephone number should be 9/10 digits';
     }  
   } 
   

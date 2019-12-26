@@ -196,8 +196,8 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   }
   
   function setFranchiseListFn(response) {
-    setStaffList(response);
-    badgeCount(response);
+    setStaffList(response);    
+    handleTabsData(response);
   }
   function handleSnackbarClose() {
     setSnackbarOpen(false);

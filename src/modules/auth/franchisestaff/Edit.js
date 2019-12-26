@@ -235,16 +235,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                         },
                       }}
                       id="first_name"
-                      name="first_name"
-                      // label="First Name"
+                      name="first_name"                      
                       value={inputs.first_name}
                       onChange={handleInputChange}
                       error={errors.first_name}
                       helperText={errors.first_name}
                       fullWidth
                       required
-                      type="text"
-                      // placeholder="Franchise Name"
+                      type="text"                      
                       margin="dense"
                     />
                   </Grid>
@@ -259,14 +257,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="last_name"
                       name="last_name"
-                      // label="Last Name"
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
                       error={errors.last_name}
-                      helperText={errors.last_name}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
+                      helperText={errors.last_name}                      
                       required
                       fullWidth
                     />
@@ -282,7 +277,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="location"
                       name="location"
-                      // label="Location"
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
@@ -303,7 +297,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="contact"
                       name="contact"
-                      // label="Contact"
                       type="text"
                       value={inputs.contact} 
                       onChange={handleNumberInput}
@@ -327,14 +320,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="email"
                       name="email"
-                      // label="Email Id"
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
                       error={errors.email}
                       helperText={errors.email}
                       required
-                      // disabled
                       fullWidth
                       type="email"
                     />
@@ -367,13 +358,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="pre_company_name"
                       name="pre_company_name"
-                      // label="Name of Previous Company"
                       type="text"
                       value={inputs.pre_company_name} 
                       onChange={handleInputChange}
                       error={errors.pre_company_name}
                       helperText={errors.pre_company_name}
-                      // onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />
@@ -389,7 +378,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="pre_company_address"
                       name="pre_company_address"
-                      // label="Address of Previous Company"
                       type="text"
                       value={inputs.pre_company_address} 
                       onChange={handleInputChange}
@@ -410,7 +398,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="pre_company_contact"
                       name="pre_company_contact"
-                      // label="Contact# of Previous Company"
                       type="text"
                       value={inputs.pre_company_contact} 
                       onChange={handleNumberInput}
@@ -434,7 +421,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="pre_position"
                       name="pre_position"
-                      // label="Position/JobRole in Previous Company"
                       type="text"
                       value={inputs.pre_position} 
                       onChange={handleInputChange}
@@ -450,23 +436,21 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       InputProps={{
                         classes: {
                           input: classes.textsize,
-                        },
-                      //   startAdornment: <InputAdornment position='start'> 
-                      //   <Typography variant="h6" className={styleClass.adornmentText}>
-                      //      Years 
-                      //    </Typography>                          
-                      //  </InputAdornment>,
+                        },                 
                       }}
                       margin="dense"
                       id="duration"
                       name="duration"
                       type="text"
                       value={inputs.duration} 
-                      onChange={handleInputChange}
+                      onChange={handlePriceInput}
                       error={errors.duration}
                       helperText={errors.duration}                      
                       required
                       fullWidth
+                      onInput={(e)=>{ 
+                        e.target.value =(e.target.value).toString().slice(0,2)
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>

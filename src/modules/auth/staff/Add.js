@@ -194,7 +194,7 @@ return (
 
           <div className={classes.root}>
                 <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-            {/* Franchise Details */}
+            
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
@@ -207,7 +207,6 @@ return (
                       }}
                       id="first_name"
                       name="first_name"
-                      // label="First Name"
                       value={inputs.first_name}
                       onChange={handleInputChange}
                       error={errors.first_name}
@@ -215,7 +214,6 @@ return (
                       fullWidth
                       required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                     />
                   </Grid>
@@ -230,14 +228,11 @@ return (
                       margin="dense"
                       id="last_name"
                       name="last_name"
-                      // label="Last Name"
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
                       error={errors.last_name}
                       helperText={errors.last_name}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -254,7 +249,6 @@ return (
                       margin="dense"
                       id="location"
                       name="location"
-                      // label="Location"
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
@@ -276,7 +270,6 @@ return (
                       margin="dense"
                       id="contact"
                       name="contact"
-                      // label="Contact"
                       type="text"
                       value={inputs.contact} 
                       onChange={handleNumberInput}
@@ -300,7 +293,6 @@ return (
                       margin="dense"
                       id="email"
                       name="email"
-                      // label="Email Id"
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
@@ -349,13 +341,8 @@ return (
                       margin="dense"
                       id="user_id"
                       name="user_id"
-                      // label="user_id"
                       type="user_id"
                       value={inputs.user_id} 
-                      // onChange={handleInputChange}
-                      // error={errors.email}
-                      // helperText={errors.email}
-                      // required
                       disabled
                       fullWidth
                     />
@@ -371,7 +358,6 @@ return (
                       margin="dense"
                       id="password"
                       name="password"
-                      // onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
                       error={errors.password}
                       helperText={errors.password}

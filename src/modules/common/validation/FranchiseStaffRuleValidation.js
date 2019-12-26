@@ -5,13 +5,13 @@ export default function validate(values) {
   if (!values.first_name) {
     errors.first_name = 'First Name is required';
   } else if (!validString.test(values.first_name)) {
-    errors.first_name = 'First Name is invalid';
+    errors.first_name = 'Special characters are not allowed';
   }
 
   if (!values.last_name) {
     errors.last_name = 'Last Name is required';
   } else if (!validString.test(values.last_name)) {
-    errors.last_name = 'Last Name is invalid';
+    errors.last_name = 'Special characters are not allowed';
   }
   // else if (!validString.test(values.last_name)) {
   //   errors.last_name = 'Last Name is invalid';
@@ -54,13 +54,13 @@ export default function validate(values) {
   }
   if (!values.pre_position) {
     errors.pre_position = 'Position/JobRole is required';
-  } else if (!validString.test(values.first_name)) {
-    errors.first_name = 'First Name is invalid';
+  } else if (!validString.test(values.pre_position)) {
+    errors.pre_position = 'Special characters & numbers are not allowed';
   }
   if (!values.duration) {
     errors.duration = 'Work Experience is required';
   }  else if (!validDecimalNumber.test(values.duration)) {
-    errors.duration = 'Work Experience is invalid';
+    errors.duration = 'Only digits are allowed';
   }
   if (!values.password) {
     errors.password = 'Click here to get Password';

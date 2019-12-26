@@ -374,18 +374,11 @@ return (
             <Toolbar>
               <Typography variant="h6" className={classes.title}>
                 Add Customer
-              </Typography>
-              {/* 
-              import {useCommonStyles} from '../../common/StyleComman';
-              const styleClass = useCommonStyles();
-              */}
-          <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
-
+              </Typography>              
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
-
           <div className={classes.root}>
-            
           <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
@@ -442,7 +435,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="address">Address</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="address">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -451,8 +444,7 @@ return (
                       }}
                       margin="dense"
                       id="address"
-                      name="address"
-                      // label="Address"
+                      name="address"                      
                       type="text"
                       value={inputs.address} 
                       error={errors.address}
@@ -483,7 +475,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">City</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">City *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -503,7 +495,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="location">Postcode</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="location">Postcode *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -551,7 +543,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="mobile">Mobile</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="mobile">Mobile *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -598,7 +590,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={errors.gender? classes.errorHeading:classes.textsize} htmlFor="Gender">Gender</InputLabel>
+                    <InputLabel  className={errors.gender? classes.errorHeading:classes.textsize} htmlFor="Gender">Gender *</InputLabel>
                     <RadioGroup
                       aria-label="Gender"
                       name="gender"
@@ -616,7 +608,7 @@ return (
                     
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={errors.is_working? classes.errorHeading:classes.textsize} htmlFor="is_working">Are you working?</InputLabel>
+                    <InputLabel  className={errors.is_working? classes.errorHeading:classes.textsize} htmlFor="is_working">Are you working? *</InputLabel>
                     <RadioGroup 
                       aria-label="is_working" 
                       name="is_working" 
@@ -631,7 +623,7 @@ return (
                   </Grid>
                   {/* <Grid item xs={12} sm={inputs.is_adult===1 ? 4 : 6}> */}
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth*</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth *</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
@@ -659,7 +651,7 @@ return (
                             : ''}
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">ID Proof  *</InputLabel>
                     <Select
                         margin="dense"
                         name="id_type"
@@ -688,7 +680,7 @@ return (
                     <Grid item xs={12} sm={3}>
                     
                     {inputs.id_type == 2 &&
-                    <InputLabel  className={classes.textsize} htmlFor="id_type">Version#</InputLabel>}
+                    <InputLabel  className={classes.textsize} htmlFor="id_type">Version#  *</InputLabel>}
                     {inputs.id_type == 2 &&
                     <TextField
                       InputProps={{
@@ -716,7 +708,7 @@ return (
 
 
                     {!otherIdType &&
-                    <InputLabel  className={classes.textsize} htmlFor="other_id_type">Type of ID</InputLabel>}
+                    <InputLabel  className={classes.textsize} htmlFor="other_id_type">Type of ID *</InputLabel>}
                     {!otherIdType &&
                     <TextField
                       InputProps={{
@@ -741,7 +733,7 @@ return (
                     </Grid>
                   
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">ID#</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">ID# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -762,7 +754,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="expiry_date">Expiry Date</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="expiry_date">Expiry Date *</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
@@ -785,7 +777,7 @@ return (
                     </MuiPickersUtilsProvider>                    
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <InputLabel  className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
+                  <InputLabel  className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -827,7 +819,7 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #1</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -848,7 +840,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -869,7 +861,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact#</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -894,7 +886,7 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Relationship To You</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Relationship To You *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -918,7 +910,7 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #2</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -939,7 +931,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -960,7 +952,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact#</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="contact">Contact# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -985,7 +977,7 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Relationship To You</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Relationship To You *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1044,7 +1036,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Employer Address *" : "Beneficiary Address *" }</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Employer Address " : "Beneficiary Address " }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1065,7 +1057,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Employer Telephone# *" : "Beneficiary Telephone# *" }</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Employer Telephone# " : "Beneficiary Telephone# " }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1089,7 +1081,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">Email Id *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">Email Id</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1111,7 +1103,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Tenure of Employer(in Years) *" : "Tenure with Beneficiary(in Years) *" }</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Tenure of Employer(in Years) " : "Tenure with Beneficiary(in Years) " }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -1121,7 +1113,6 @@ return (
                       margin="dense"
                       id="employer_tenure"
                       name="employer_tenure"
-                      // label="Tenure of Employer"
                       type="text"
                       value={inputs.employer_tenure} 
                       onChange={handlePriceInput}
@@ -1130,7 +1121,7 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,2)
                       }}
                     />
                   </Grid>

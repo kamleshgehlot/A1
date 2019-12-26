@@ -321,7 +321,7 @@ return (
             <Paper className={classes.paper}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="lead">Lead ID</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="lead">Lead ID *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -341,7 +341,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Franchise</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name">Franchise *</InputLabel>
                       <BasicSelect
                         value={inputs.franchise_id}
                         onChange = {handleFranchise}
@@ -407,7 +407,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="customerName">Customer Name  *</InputLabel>
                     <AutoSuggestDropdown  customerListData={customerListData} setSelectedOption={setSelectedOption}  setCustomerId={setCustomerId} handleRandomInput={handleRandomInput} />
 
                   </Grid>
