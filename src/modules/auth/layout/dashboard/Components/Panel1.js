@@ -135,7 +135,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
         let {data} = await Run('dashboardorder', {franchise:1,duration});
         let staffdata=[];
         data.forEach(d => {
-          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:d.first_name+' '+d.last_name,value:0,count:0,orders:[]};
+          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:''+(d.first_name||d.last_name),value:0,count:0,orders:[]};
           let ratio=1;
           if(d.frequency==1)ratio=4;
           else if(d.frequency==2)ratio=2;
@@ -145,7 +145,12 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
             staffdata[d.sales_person_id].count++;
           }
           // staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt/ratio:d.bond_amt/ratio;
-          staffdata[d.sales_person_id].value+=parseFloat(d.total_paid).toFixed(2);
+          staffdata[d.sales_person_id].value+=parseFloat(d.total_paid);
+        });
+
+        data.forEach(d => {
+          if(d.sales_person_id && staffdata[d.sales_person_id].value && (typeof staffdata[d.sales_person_id].value == "number") )
+          staffdata[d.sales_person_id].value=staffdata[d.sales_person_id].value.toFixed(2);
         });
         
         console.log(staffdata);
