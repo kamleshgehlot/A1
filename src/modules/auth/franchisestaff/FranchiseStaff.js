@@ -35,6 +35,7 @@ import Finance from './Component/Finance.js';
 import Delivery from './Component/Delivery.js';
 import HR from './Component/HR.js';
 import SNM from './Component/SNM.js';
+import InactiveUser from  './Component/InactiveUser.js';
 
 
 
@@ -140,11 +141,13 @@ export default function FranchiseStaff({franchiseId, roleName}) {
   const [role, setRole] = useState([]);
   const [searchText, setSearchText]  = useState('');
   
+  const [allTab, setAllTab] = useState([]);
   const [csrTab,setCsrTab] = useState([]);
   const [financeTab,setFinanceTab] = useState([]);
   const [deliveryTab,setDeliveryTab] = useState([]);
   const [hrTab,setHrTab] = useState([]);
   const [snmTab,setSnmTab] = useState([]);
+  const [inactiveUserTab, setInactiveUserTab] = useState([]);
 
   const [value, setValue] = React.useState(0);
   
@@ -209,36 +212,46 @@ export default function FranchiseStaff({franchiseId, roleName}) {
 
  
   function handleTabsData(staff){
+    let allActive = [];
     let CSR = [];
     let Finance = [];
     let Delivery = [];
     let HR = [];
     let SNM = [];
+    let InactiveUser = [];
 
     if(staff != undefined && staff != null){
       (staff.length > 0 ? staff : []).map((data, index) =>{
-        if((data.role.split(',')).find(ele => ele === '3') == '3'){
+        if(data.is_active === 1){
+          allActive.push(data);
+        }
+        if((data.role.split(',')).find(ele => ele === '3') == '3' && data.is_active === 1){
           CSR.push(data);
         }
-        if((data.role.split(',')).find(ele => ele === '4') == '4'){
+        if((data.role.split(',')).find(ele => ele === '4') == '4' && data.is_active === 1){
           Finance.push(data);
         }
-        if((data.role.split(',')).find(ele => ele === '5') == '5'){
+        if((data.role.split(',')).find(ele => ele === '5') == '5' && data.is_active === 1){
           Delivery.push(data);
         }
-        if((data.role.split(',')).find(ele => ele === '6') == '6'){
+        if((data.role.split(',')).find(ele => ele === '6') == '6' && data.is_active === 1){
           HR.push(data);
-        }    
-        if((data.role.split(',')).find(ele => ele === '7') == '7'){
+        }
+        if((data.role.split(',')).find(ele => ele === '7') == '7' && data.is_active === 1){
           SNM.push(data);
-        }          
+        }
+        if(data.is_active === 0){
+          InactiveUser.push(data);
+        }
       });
-    }  
+    }
+    setAllTab(allActive);
     setCsrTab(CSR);
     setFinanceTab(Finance);
     setDeliveryTab(Delivery);
     setHrTab(HR);
     setSnmTab(SNM);
+    setInactiveUserTab(InactiveUser);
   }
 
   const searchHandler = async () => {
@@ -296,16 +309,17 @@ export default function FranchiseStaff({franchiseId, roleName}) {
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
-                  <Tab label={<BadgeComp count={staffList.length} label="All" />} />
+                  <Tab label={<BadgeComp count={allTab.length} label="All" />} />
                   <Tab label={<BadgeComp count={csrTab.length} label="CSR" />} />
                   <Tab label={<BadgeComp count={financeTab.length} label="Finance" />} />
                   <Tab label={<BadgeComp count={deliveryTab.length} label="Delivery" />} />                  
                   <Tab label={<BadgeComp count={hrTab.length} label="HR" />} />
                   <Tab label={<BadgeComp count={snmTab.length} label="S&amp;M" />} />
+                  <Tab label={<BadgeComp count={inactiveUserTab.length} label="Inactive Staff" />} />
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
-                {staffList && <All staffList={staffList}  roles={role} handleClickEditOpen={handleClickEditOpen} roleName={roleName} />}
+                {allTab && <All staffList={allTab}  roles={role} handleClickEditOpen={handleClickEditOpen} roleName={roleName} />}
               </TabPanel>
               <TabPanel value={value} index={1}>
                 {csrTab && <CSR staffList={csrTab}  roles={role} handleClickEditOpen={handleClickEditOpen} roleName={roleName} />}
@@ -321,6 +335,9 @@ export default function FranchiseStaff({franchiseId, roleName}) {
               </TabPanel>
               <TabPanel value={value} index={5}>
                 {snmTab && <SNM staffList={snmTab}  roles={role} handleClickEditOpen={handleClickEditOpen} roleName={roleName} />}
+              </TabPanel>
+              <TabPanel value={value} index={6}>
+                {inactiveUserTab && <InactiveUser staffList={inactiveUserTab}  handleClickEditOpen={handleClickEditOpen} roles={role} roleName={roleName} />}
               </TabPanel>
             </Paper>
           </Grid>

@@ -22,7 +22,6 @@ Auth.prototype.login = function () {
 
         connection.changeUser({ database: dbName["prod"] });
         connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, id, franchise_id, name as user_name, user_id, role_id, status from user where user_id=? and is_active = ?', values, function (error, rows, fields) {
-          // connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name, u.status, f.state as franchise_state from user u inner join role r on u.role_id = r.id inner join franchise f on u.franchise_id = f.id where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
           if (!error) {
             console.log(rows)
             if (rows == "") {
@@ -42,17 +41,13 @@ Auth.prototype.login = function () {
       } else if (that.name.split('_').length > 2) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
         connection.query('Select user_id from user where id = 1', function (error, rows, fields) {
-          // console.log('rows....',rows);
 
           connection.changeUser({ database: dbName["prod"] });
           connection.query('Select f.state, u.user_id from franchise f inner join user u on f.id = u.franchise_id where u.user_id=?', rows[0].user_id, function (error, rows, fields) {
             if (!error) {
-              // console.log('dddd',rows)          
               if (rows[0].state === 2) {
                 connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
-                // connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, id, franchise_id, name as user_name, user_id, role_id, status from user where user_id=? and is_active = ?', values, function (error, rows, fields) {
                 connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name, u.role_id, u.status from user u inner join role r on u.role_id = r.id  where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
-                  // connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name, u.status, f.state as franchise_state from user u inner join role r on u.role_id = r.id inner join franchise f on u.franchise_id = f.id where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
                   if (!error) {
                     if (rows != "") {
                       rows[0].franchise_status = 2;
@@ -67,7 +62,6 @@ Auth.prototype.login = function () {
                 });
               }
               else {
-                // console.log('Franchise not active');
                 resolve([{ id: 0, franchise_id: 0, user_name: '', password: ' ', user_id: rows[0].user_id, role_name: '', franchise_status: rows[0].state }]);
               }
             } else {
@@ -76,17 +70,9 @@ Auth.prototype.login = function () {
             }
           });
         });
-      }
-      else {
-        // if (that.name.split('_').length > 2) {
-        //   console.log("inside if condition for validation");
-        //   connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });
-        // } else {
-        //   console.log("inside else condition for validation", values);
+      } else {
         connection.changeUser({ database: dbName["prod"] });
-        // }
         connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name, u.role_id, u.status from user u inner join role r on u.role_id = r.id  where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
-          // connection.query('Select AES_DECRYPT(`password`, \'secret\') AS password, u.id, u.franchise_id, u.name as user_name, u.user_id, r.name as role_name, u.status, f.state as franchise_state from user u inner join role r on u.role_id = r.id inner join franchise f on u.franchise_id = f.id where u.user_id=? and u.is_active = ?', values, function (error, rows, fields) {
           if (!error) {
             if (rows == "") {
               rows.franchise_status = 2;

@@ -29,7 +29,6 @@ const register = async function (req, res, next) {
       duration: staffData.duration,
       resume:  staffData.resume,
       cover_letter: staffData.cover_letter,
-      // employment_docs: staffData.employment_docs,
       employment_docs: attachments,
 
       user_id: staffData.user_id,
@@ -37,7 +36,7 @@ const register = async function (req, res, next) {
       role: staffData.role,
       created_by: req.decoded.id,
       updated_by:req.decoded.id,
-      is_active: 1,
+      is_active: staffData.is_active,
 	};
 
 	try{
@@ -46,6 +45,7 @@ const register = async function (req, res, next) {
       const newStaff = new Staff(staffParams);
 
       await newStaff.update();
+
       const staffList = await new Staff({user_id : req.decoded.user_id}).all();
       res.send({ staffList: staffList });
     } else {
@@ -81,8 +81,7 @@ const register = async function (req, res, next) {
 				console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
       });
       
-      const staffList = await new Staff({user_id : req.decoded.user_id}).all();
-      
+      const staffList = await new Staff({user_id : req.decoded.user_id}).all();      
       res.send({ staffList: staffList });
     }
 	}catch(err){
@@ -92,27 +91,9 @@ const register = async function (req, res, next) {
 
 
 
-// const all = async function(req, res, next) {
-//   let staffParams = {
-//     franchise_id: req.body.franchise_id,
-//   }; 
-//   try {
-//     const newStaff = new Staff(staffParams);
-//     newStaff.all().then(function(result){
-//     new Staff({}).all().then(staffList => {
-//       res.send({ staffList });
-//     });
-//   });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-
 const all = async function(req, res, next) {
   try {
-    const staffList = await new Staff({user_id : req.decoded.user_id}).all();
-    
+    const staffList = await new Staff({user_id : req.decoded.user_id}).all();    
     res.send({ staffList });
   } catch (error) {
     next(error);
@@ -121,7 +102,6 @@ const all = async function(req, res, next) {
 
 
 const searchData = async function (req, res, next) {
-  // console.log('req..,',req.body);
   let staffParams = {
     user_id: req.decoded.user_id,
     searchText: req.body.searchText,

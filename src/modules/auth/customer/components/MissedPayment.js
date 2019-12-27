@@ -43,6 +43,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
 import {TablePaginationActions} from '../../../common/Pagination';
 import {getDate, getDateInDDMMYYYY} from '../../../../utils/datetime';
 import { Divider } from '@material-ui/core';
@@ -123,18 +124,20 @@ export default function MissedPayment({customerList, handleOrderView, handlePaym
   const classes = useStyles();
   
   const [searchText, setSearchText] = React.useState('');
-  const [paymentDate, setPaymentDate] = React.useState(null);
+  const [fromPaymentDate, setFromPaymentDate] = React.useState(null);
+  const [toPaymentDate, setToPaymentDate] = React.useState(null);
   
 
   const handleSearchText = async (e) => {
     setSearchText(e.target.value);
   }
   
-  const handlePaymentDate = (date) =>{
-    setPaymentDate(date);
-    if(date != 'Invalid Date' && date != null){
-      setSearchText(getDateInDDMMYYYY(date));
-    }
+  const handleFromPaymentDate = (date) =>{
+    setFromPaymentDate(date);
+  }
+
+  const handleToPaymentDate = (date) => {
+    setToPaymentDate(date);
   }
 
 return (
@@ -159,27 +162,53 @@ return (
             InputProps={{
               endAdornment: 
               <InputAdornment position='end'>
+                <Typography style={{marginRight : '10px'}}>{"From: "}</Typography>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
+                    fullWidth
                     margin="dense"
-                    id="payment_date"
-                    name="payment_date"
+                    id="from_payment_date"
+                    name="from_payment_date"
                     format="dd-MM-yyyy"
                     placeholder="DD-MM-YYYY"
-                    value={paymentDate}
+                    value={fromPaymentDate}
                     InputProps={{
                       classes: {
                         input: classes.textsize,
                       },
                       disableUnderline: true,
                     }}       
-                    onChange={handlePaymentDate}
+                    onChange={handleFromPaymentDate}
                     error = {''}
                     helperText = {''}
                   />
-                </MuiPickersUtilsProvider>    
+                </MuiPickersUtilsProvider>
+
+                <Typography style={{marginRight : '10px', marginLeft : '20px'}}>{"To: "}</Typography>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    fullWidth
+                    margin="dense"
+                    id="to_payment_date"
+                    name="to_payment_date"
+                    format="dd-MM-yyyy"
+                    placeholder="DD-MM-YYYY"
+                    value={toPaymentDate}
+                    InputProps={{
+                      classes: {
+                        input: classes.textsize,
+                      },
+                      disableUnderline: true,                      
+                    }}       
+                    onChange={handleToPaymentDate}
+                    error = {''}
+                    helperText = {''}
+                  />
+                </MuiPickersUtilsProvider> 
+
+
                 <Tooltip title="Search">                
-                  <IconButton onClick = {()=> {handlePaymentFilter(searchText)}}><SearchIcon /></IconButton>
+                  <IconButton onClick = {()=> {handlePaymentFilter(searchText, fromPaymentDate, toPaymentDate)}}><SearchIcon /></IconButton>
                 </Tooltip>
                 <Tooltip title="Filter">
                   <PopupState variant="popover" popupId="demo-popup-popover">
@@ -221,9 +250,9 @@ return (
             <StyledTableCell>Contact    </StyledTableCell>
             <StyledTableCell>Email ID   </StyledTableCell>
             <StyledTableCell>Address    </StyledTableCell>
-            <StyledTableCell>Payment Due Date</StyledTableCell>
+            <StyledTableCell>Last Due Date</StyledTableCell>
+            <StyledTableCell>Total Due Payments</StyledTableCell>
             <StyledTableCell>Created By </StyledTableCell>
-            {/* <StyledTableCell>Options    </StyledTableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>        
@@ -241,6 +270,7 @@ return (
                     <StyledTableCell> {data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
                     <StyledTableCell> {data.address}  </StyledTableCell>
                     <StyledTableCell> {data.payment_date}  </StyledTableCell>
+                    <StyledTableCell align="center"> {data.total_due_installment}  </StyledTableCell>
                     <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                     <StyledTableCell>                                   
                 </StyledTableCell> 

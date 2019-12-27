@@ -167,8 +167,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
         
         user_id: inputs.user_id,
         password: inputs.password,
-        role: assignRole.join(),
-        created_by: 1,
+        role: assignRole.join(),        
+        is_active : inputs.is_active,
       };
 
       let formData = new FormData();
@@ -195,7 +195,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
     addFranchiseStaff,
     validate
   ); 
-  
+  console.log('inputs',inputs)
+
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -464,13 +465,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="employment_docs"
                       name="employment_docs"
-                      // label=""
                       multiple
                       type="file"
                       value={inputs.employment_doc} 
                       onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -511,12 +509,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="user_id"
                       name="user_id"
-                      // label="User Id"
                       type="text"
                       value={inputs.user_id} 
-                      // onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       disabled
                       fullWidth
@@ -528,8 +522,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       margin="dense"
                       id="password"
                       name="password"
-                      // label="Password"
-                      // onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
                       required
                       fullWidth
@@ -538,23 +530,18 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                           input: classes.textsize,
                         },
                       }}
-                      
-                      // error={errors.password}
-                      // helperText={errors.password ? errors.password : ' '}
                       disabled
                     />
                   </Grid>
-                  
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="assign_role">Assign Role</InputLabel>
-                  <Select
+                    <Select
                       multiple
                       value={assignRole}
                       onChange={handleChangeMultiple}
                       inputProps={{
                         name: 'assign_role',
                         id: 'assign_role',
-                        // label:'assign_role'
                       }}
                       className={classes.textsize}
                       fullWidth
@@ -562,27 +549,33 @@ export default function Edit({open, handleEditClose, handleSnackbarClick, franch
                       helperText={assignError}
                       required
                     >
-                    {role.map((ele,index) =>{
-                        return(
-                        <MenuItem value={ele.id.toString()}>{ele.name}</MenuItem>
-                        )
-                    })}
+                      {role.map((ele,index) =>{ return( <MenuItem value={ele.id.toString()}>{ele.name}</MenuItem> ) })}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <InputLabel  className={classes.textsize} htmlFor="is_active">Status</InputLabel>
+                    <Select
+                      value={inputs.is_active}
+                      onChange={handleInputChange}
+                      inputProps={{
+                        name: 'is_active',
+                        id: 'is_active',
+                      }}
+                      className={classes.textsize}
+                      fullWidth                      
+                      required
+                    >
+                      <MenuItem value={1}>{"Active"}</MenuItem>
+                      <MenuItem value={0}>{"Inactive"}</MenuItem>
                     </Select>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <Grid item xs={12} sm={12}>
-            {savebtn? <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
-                Update
-              </Button>  :
-              <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
-              Update
-            </Button>}
-              <Button  variant="contained"   onClick={handleEditClose} color="primary" className={classes.button} >
-                Close
-              </Button>
-              </Grid>
+              <Button variant="contained" onClick={handleSubmit} color="primary" className={classes.button} disabled = {savebtn === false}> Update </Button>
+              <Button variant="contained" onClick={handleEditClose} color="primary" className={classes.button} > Close </Button>
+            </Grid>
           </div>
         </from>
       </Dialog>

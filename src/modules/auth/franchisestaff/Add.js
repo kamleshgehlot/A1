@@ -192,7 +192,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
       user_id: inputs.user_id,
       password: inputs.password,
       role: assignRole.join(),
-      // created_by: 1,
+      is_active : 1,
     };
 
     let formData = new FormData();
@@ -219,23 +219,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   }
   };
 function close(){
-  
   handleReset(RESET_VALUES);
   handleClose(false);
 }
-  // function validate(values) {
-  //   let errors = {};
 
-  //   return errors;
-  // };
-
-  
-  // useEffect(() => {
-    
-  //   inputs['password']=='' ? 
-  //   setInput('password', GeneratePassword())
-  //   :''
-  // }, []);
  const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
     RESET_VALUES,
     addFranchiseStaff,

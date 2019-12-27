@@ -1054,8 +1054,14 @@ const fetchMissedPaymentData = async function (req, res, next) {
 
 
 const filterMissedPaymentData = async function (req, res, next) {
+  console.log(req.body);
   try {
-    const result = await new Order({ user_id: req.decoded.user_id, searchText: req.body.searchText }).filterMissedPaymentData();
+    const result = await new Order({
+      user_id: req.decoded.user_id, 
+      searchText: req.body.searchText.searchText,
+      fromPaymentDate: req.body.searchText.fromPaymentDate, 
+      toPaymentDate: req.body.searchText.toPaymentDate,
+    }).filterMissedPaymentData();
     res.send(result);
   } catch (error) {
     next(error);

@@ -346,6 +346,7 @@ export default function CustomerList({userId, roleName}) {
           data.payment_date = getDateInDDMMYYYY(payData.payment_date);
           data.order_format_id = payData.order_format_id;
           data.order_id = payData.order_id;
+          data.total_due_installment = payData.total_due_installment;
           missedPayment.push(data);
         }
       });
@@ -353,9 +354,13 @@ export default function CustomerList({userId, roleName}) {
     setMissedPaymentTab(missedPayment);
   }
 
-  const handlePaymentFilter = async (searchText) => {
-    if(searchText!=''){
-      const paymentData = await filterMissedPaymentData(searchText);
+  const handlePaymentFilter = async (searchText,  fromPaymentDate, toPaymentDate) => {
+    
+    if(searchText!='' || (fromPaymentDate !== null && toPaymentDate !== null)){
+      let fromDate = getDate(fromPaymentDate);
+      let toDate = getDate(toPaymentDate);  
+
+      const paymentData = await filterMissedPaymentData({searchText: searchText, fromPaymentDate: fromDate, toPaymentDate: toDate });
       setFilteredMissedPayment(paymentData);
     }else{
       const paymentData = await fetchMissedPaymentData();
@@ -404,6 +409,7 @@ export default function CustomerList({userId, roleName}) {
             data.payment_date = getDateInDDMMYYYY(payData.payment_date);
             data.order_format_id = payData.order_format_id;
             data.order_id = payData.order_id;
+            data.total_due_installment = payData.total_due_installment;
             missedPayment.push(data);
         }
       });

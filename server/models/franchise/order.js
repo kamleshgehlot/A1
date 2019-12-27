@@ -86,6 +86,8 @@ var Order = function (params) {
   this.settlement_date = params.settlement_date;
   this.diffBetweenSchedule = params.diffBetweenSchedule;
   
+  this.fromPaymentDate = params.fromPaymentDate;
+  this.toPaymentDate = params.toPaymentDate;
 };
 
 
@@ -1755,52 +1757,32 @@ Order.prototype.filterMissedPaymentData = function () {
         throw error;
       }
       if (!error) {
-        
+        console.log('that', that);
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         let orderType = '';
-        let paymentDate = '';
-        if(that.searchText === '$###_Fix_###$'){
-          orderType = 1;
-        }else if(that.searchText === '$###_Flex_###$'){
-          orderType = 2;
+        // let toPaymentDate = '';
+        // let fromPaymentDate = '';
+
+        if(that.searchText === '$###_Fix_###$'){ orderType = 1; }
+        else if(that.searchText === '$###_Flex_###$'){ orderType = 2; }
+      
+        if(orderType !== ''){
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select *, COUNT(installment_no) as total_due_installment from payment_schedules where `status` IN(1,8,16,17) AND payment_date < CURRENT_DATE GROUP BY order_id HAVING MIN(installment_no) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE o.order_type = "'+ orderType +'"', function (error, rows, fields) {
+            if (error) {console.log("Error...", error); reject(error); }
+            resolve(rows);
+          });
+        }else if(that.toPaymentDate !== '' && that.fromPaymentDate !== '' && that.searchText === ''){
+          console.log('SELECT a.*, o.order_id as order_format_id from (select *, COUNT(installment_no) as total_due_installment from payment_schedules where `status` IN(1,8,16,17) AND payment_date < CURRENT_DATE GROUP BY order_id HAVING MIN(installment_no) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date BETWEEN "' + that.fromPaymentDate + '" AND "'+ that.toPaymentDate +'"')
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select *, COUNT(installment_no) as total_due_installment from payment_schedules where `status` IN(1,8,16,17) AND payment_date < CURRENT_DATE GROUP BY order_id HAVING MIN(installment_no) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date BETWEEN "' + that.fromPaymentDate + '" AND "'+ that.toPaymentDate +'"', function (error, rows, fields) {
+            if (error) {console.log("Error...", error); reject(error); }
+            resolve(rows);
+          });
+        }else if(that.searchText !== ''){
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select *, COUNT(installment_no) as total_due_installment from payment_schedules where `status` IN(1,8,16,17) AND payment_date < CURRENT_DATE GROUP BY order_id HAVING MIN(installment_no) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE (c.first_name LIKE "%' +that.searchText+ '%" OR c.last_name LIKE "%' +that.searchText+ '%" OR o.order_id LIKE "%' +that.searchText+ '%")', function (error, rows, fields) {
+            if (error) {console.log("Error...", error); reject(error); }
+            resolve(rows);
+          });
         }
-        if(that.searchText != '')
-        {
-          if(that.searchText.split('-').length === 3 ){
-            paymentDate = setDBDateFormat(that.searchText);
-            console.log(paymentDate)
-          }
-          // console.log(paymentDate)
-        }
-        if(orderType !== ''){          
-          // connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedule where `status` IN(0,2) order by `order_id`, `installment_no`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE o.order_type = "'+ orderType +'" group by a.order_id', function (error, rows, fields) {
-            connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER BY `order_id`, `installment_no`,  `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date < CURRENT_DATE AND o.order_type = "'+ orderType +'"', function (error, rows, fields) {
-            if (!error) {
-              resolve(rows);
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          });
-        }else if(paymentDate !== ''){
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER BY `order_id`, `installment_no`,  `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date < CURRENT_DATE AND a.payment_date = "' + paymentDate + '"', function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          });
-        }else{         
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER BY `order_id`, `installment_no`,  `id`) as a INNER JOIN orders as o ON a.order_id = o.id LEFT JOIN customer as c ON a.customer_id = c.id WHERE a.payment_date < CURRENT_DATE AND (c.first_name LIKE "%' +that.searchText+ '%" OR c.last_name LIKE "%' +that.searchText+ '%" OR o.order_id LIKE "%' +that.searchText+ '%")', function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
-          });
-        }          
       }
       connection.release();
       console.log('List Fetch for Franchise Staff %d', connection.threadId);
@@ -1821,7 +1803,7 @@ Order.prototype.fetchMissedPaymentData = function () {
       if (!error) {
         
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          connection.query('SELECT a.*, o.order_id as order_format_id from (select * from payment_schedules where `status` IN(1,8,16,17) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id WHERE a.payment_date < CURRENT_DATE', function (error, rows, fields) {
+          connection.query('SELECT a.*, o.order_id as order_format_id from (select *, COUNT(installment_no) as total_due_installment from payment_schedules where `status` IN(1,8,16,17) AND payment_date < CURRENT_DATE GROUP BY order_id HAVING MIN(installment_no) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id', function (error, rows, fields) {
             if (!error) {
                 resolve(rows);
             } else {

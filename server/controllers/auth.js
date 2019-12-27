@@ -19,19 +19,13 @@ const login = async function (req, res, next) {
   const auth = new Auth(params);
   let result = {};
   let status = 201;
+  
   try {
     const user = await auth.login();
-    // encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
 
     console.log("user....************.", user)
-    // console.log("pass...", user[0].password.toString('utf8'));
-
-    // var decText = encryptionHelper.decryptText(algorithm, user[0].key, user[0].iv, user[0].password, "base64");
-    // console.log("decText....************.", decText)
-
+  
     if (user && user.length > 0) {
-
-      // if (user[0].)
       if (user[0].status === 0) {
         status = 401;
         result.errorCode = status;
@@ -41,15 +35,11 @@ const login = async function (req, res, next) {
         result.errorCode = status;
         result.message = 'Franchise is not active, contact to your administrator.';
       } else if (user[0].password.toString('utf8') === params.password) {
-        // console.log('password',user[0].password.toString('utf8'));
         status = 200;
-        // Create a token
         const payload = { id: user[0].id, user: params.name, user_id: user[0].user_id, franchise_id: user[0].franchise_id, role: user[0].role_id };
         const options = { expiresIn: '12h', issuer: 'https://sargatechnology.com' };
         const secret = process.env.JWT_SECRET || 'secret';
         const token = jwt.sign(payload, secret, options);
-
-
 
         result.token = token;
         result.status = status;
@@ -63,34 +53,17 @@ const login = async function (req, res, next) {
       } else {
         status = 401;
         result.errorCode = status;
-        // result.message = `Authentication error`;
         result.message = `Incorrect Password`;
       }
-
       res.status(status).send(result);
     } else {
       status = 401;
       result.errorCode = status;
-      result.message = 'Given User Name is not valid.';
+      result.message = 'Invalid account.';
       res.status(status).send(result);
     }
-
-    //   // });
-    // }).catch(err => {
-    //   console.log("Error", err)
-    //   status = 500;
-    //   result.errorCode = status;
-    //   result.message = 'Application Error, Please contact the administrator.';
-    //   res.status(status).send(result);
-    // });
-
   } catch (err) {
-    // status = 401;
-    // result.errorCode = status;
-    // result.message = 'Session is expired.';
     next(err);
-
-    // res.status(status).send(result);
   }
 };
 
