@@ -9,5 +9,6 @@ StaticContentRouter.route('/getWeekDayList').get(validateToken, StaticContent.ge
 StaticContentRouter.route('/getPaymentModeList').get(validateToken, StaticContent.getPaymentModeList);
 StaticContentRouter.route('/getDiscountRateList').get(validateToken, StaticContent.getDiscountRateList);
 StaticContentRouter.route('/updateDiscountRateList').post(validateToken, StaticContent.updateDiscountRateList);
+StaticContentRouter.route('/getEzidebitPaymentsParamsList').get(validateToken, StaticContent.getEzidebitPaymentsParamsList);
 
 module.exports = StaticContentRouter;

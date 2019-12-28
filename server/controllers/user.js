@@ -9,61 +9,6 @@ const Miscellaneious = require('../lib/miscellaneous.js')
 const {domainName} = require("../lib/databaseMySQLNew");
 const { trans } = require("../lib/mailtransporter");
 
-const soap = require('soap');
-const wsdlUrl = 'https://api.demo.ezidebit.com.au/v3-5/nonpci?singleWsdl';
-const custUrl = 'https://api.demo.ezidebit.com.au/v3-5/pci?singleWsdl';
-const Payments = require('../models/Payment.js');
-
-
-const paymentAPI = async function (req, res, next) {
-  try {
-   
-    soap.createClient(wsdlUrl, function (err, soapClient) {      
-     
-      soapClient.GetCustomerList({
-        DigitalKey: '4E6ACAE2-E4A9-4186-ECDD-E0B9F06785B2',
-        CustomerStatus: 'ALL',
-        PageNumber: '1'
-      }, function (err, result) {
-        // console.log("GetCustomerList.....", result.GetCustomerListResult.Data.Customer);        
-      });
-
-      soapClient.GetScheduledPayments({
-        DigitalKey: '4E6ACAE2-E4A9-4186-ECDD-E0B9F06785B2'
-      }, function (err, result) {
-        // console.log("GetScheduledPayments.....", result.GetScheduledPaymentsResult.Data.ScheduledPayment);
-      });
-
-
-      soapClient.GetPayments({
-        DigitalKey: '4E6ACAE2-E4A9-4186-ECDD-E0B9F06785B2',
-        PaymentType: 'ALL',
-        PaymentMethod: 'ALL',
-        PaymentSource: 'ALL'
-      }, function (err, result) {
-				console.log("GetPayments length....", result.GetPaymentsResult.Data.Payment.length);
-
-				if(result != undefined && result != ""){
-					const deleted = new Payments({user_id: req.decoded.user_id, data: result.GetPaymentsResult.Data.Payment[0]}).removeExistingRows();
-					
-					const payments = result.GetPaymentsResult.Data.Payment;
-					(payments.length > 0 ? payments : []).map((data, index) => {
-						const newPayments = new Payments({user_id: req.decoded.user_id, data: data}).addPayments();
-					});   					
-					res.send({isCompleted: 1});
-				}else{
-					console.log('hello');
-					res.send([]);
-				}
-      });
-
-      // we now have a soapClient - we also need to make sure there's no `err` here.
-    });   		
-  } catch (err) {
-    next(err);
-  }
-};
-
 
 const register = async function (req, res, next) {
 	let accountantParam = {
@@ -229,4 +174,4 @@ const verifyEmail = async function (req, res, next) {
 };
 
 
-module.exports = { all: all, register: register, verifyEmail: verifyEmail,  paymentAPI: paymentAPI };
+module.exports = { all: all, register: register, verifyEmail: verifyEmail };

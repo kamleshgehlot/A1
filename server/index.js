@@ -49,6 +49,7 @@ const leadRouter = require('./routes/lead/lead');
 const profileRouter = require('./routes/setting/profile');
 const passwordRouter = require('./routes/setting/password');
 const ReportRouter = require('./routes/Report');
+const EzidebitRouter = require('./routes/Ezidebit');
 
 // const PDFRouter = require('./routes/Pdf');
 
@@ -95,8 +96,9 @@ app.use('/api/franchise/role', roleRouter);
 app.use('/api/franchise/enquiry', enquiryRouter);
 app.use('/api/franchise/order', orderRouter);
 app.use('/api/report', ReportRouter);
-app.use('/api/staticcontent', StaticContentRouter)
+app.use('/api/staticcontent', StaticContentRouter);
 app.use('/api/run', require('./utils/run'));
+app.use('/api/ezidebit', EzidebitRouter);
 
 app.use('/api/download', function (req, res, nex) {
   try {

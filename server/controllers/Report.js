@@ -7,15 +7,11 @@ const financeOrderReport = async function(req, res, next) {
     customer_contact :req.body.customer_contact,
     user_id: req.decoded.user_id,
   };
-  // console.log('repost', req.body);
   
   try {
     const newReport = new Report(ReportParams);
-    
     const result = await newReport.getFinanceReport();      
     res.send(result);
-    // console.log('custom',result);
-
   } catch (error) {
     next(error);
   }

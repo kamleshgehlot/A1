@@ -60,4 +60,16 @@ export default {
       throw error;
     }
   },
+
+  getEzidebitPaymentsParamsList: async () => {
+    const URL = `${c.API_CONSUMER}/api/staticcontent/getEzidebitPaymentsParamsList`;
+    try {
+      const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {}));
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
+
 };

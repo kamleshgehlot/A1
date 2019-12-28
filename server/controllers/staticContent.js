@@ -27,6 +27,16 @@ const getDiscountRateList = async function(req, res, next) {
   }
 };
 
+
+const getEzidebitPaymentsParamsList = async function(req, res, next) {
+  try {
+    const result = await new StaticContent({user_id: req.decoded.user_id}).getEzidebitPaymentsParamsList();    
+    res.send({ ezidebitPaymentsParamsList : result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateDiscountRateList = async function(req, res, next) {
   let reqData = {
     user_id: req.decoded.user_id,
@@ -47,4 +57,4 @@ const updateDiscountRateList = async function(req, res, next) {
 };
 
 
-module.exports = { getWeekDayList, getPaymentModeList, getDiscountRateList, updateDiscountRateList};
+module.exports = { getWeekDayList, getPaymentModeList, getDiscountRateList, updateDiscountRateList, getEzidebitPaymentsParamsList};

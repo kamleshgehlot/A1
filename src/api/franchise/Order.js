@@ -624,46 +624,6 @@ export default {
   },
 
 
-  // editInstallment: async (params) => {
-  //   const URL = `${c.API_CONSUMER}/api/franchise/order/editInstallment`;
-  //   try {
-  //     const { data } = await axios(
-  //       URL,
-  //       {
-  //         method: 'POST',
-  //         data: params.formData,
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         headers: authHeader()}
-  //     );
-  //     return data;
-  //   } catch (error) {
-  //     checkError(error);
-  //     throw error;
-  //   }
-  // },
-
-  // getSingleTransactionDetail: async (params) => {
-  //   const URL = `${c.API_CONSUMER}/api/franchise/order/getSingleTransactionDetail`;
-  //   try {
-  //     const { data } = await axios(
-  //       URL,
-  //       {
-  //         method: 'POST',
-  //         data: params,
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         headers: authHeader()}
-  //     );
-  //     return data;
-  //   } catch (error) {
-  //     checkError(error);
-  //     throw error;
-  //   }
-  // },
-
   getReceivedPaymentsList: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getReceivedPaymentsList`;
     try {

@@ -20,6 +20,7 @@ const useSignUpForm = (state, callback, validate) => {
   const cleanInputs = event =>{
     setInputs('');
   }
+  
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitting) {
       callback();
@@ -34,7 +35,6 @@ const useSignUpForm = (state, callback, validate) => {
   }
 
   const handleInputChange = e => {
-    
     setInputs({
     ...inputs,
     [e.target.name]: e.target.value,
@@ -89,6 +89,13 @@ const useSignUpForm = (state, callback, validate) => {
     });     
   };
 
+  const handleDateChange = (name, date) => {
+    setInputs({
+      ...inputs,
+      [name]: date,
+    }); 
+  }
+
   return {
     handleSubmit,
     handleInputChange,
@@ -103,7 +110,8 @@ const useSignUpForm = (state, callback, validate) => {
     handleNumberInput, 
     handlePriceInput,
     handleRandomInput,
-    handleCheckBoxChange
+    handleCheckBoxChange, 
+    handleDateChange
   };
 };
 

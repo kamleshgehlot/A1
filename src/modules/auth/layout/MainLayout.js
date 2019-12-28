@@ -50,7 +50,7 @@ import FinanceReport from './report/FinanceReport';
 import DeliveryReport from './report/DeliveryReport';
 import TaskList from '../task/TaskList';
 import TaskReport from './report/TaskReport';
-import Payments from '../order/Payments';
+import EzidebitStatus from '../order/EzidebitStatus';
 import EditDiscountEMI from './options/admin/EditEMIDiscount.js';
 import Tab from './Tab';
 
@@ -873,7 +873,7 @@ export default function ClippedDrawer(props) {
           showCsrTaskReport ? <TaskReport roleName={roleAs} /> : null
         }
         {
-          showPaymentStatus ?  <Payments roleName={roleAs} /> : null
+          showPaymentStatus ?  <EzidebitStatus roleName={roleAs} /> : null
         }    
         {
           emiCalculatorOpen ? <EMICalculator open = {emiCalculatorOpen} handleClose = {handleEmiCalculatorClose} /> : null

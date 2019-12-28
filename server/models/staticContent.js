@@ -86,6 +86,26 @@ StaticContent.prototype.getDiscountRateList = function () {
 
 
 
+StaticContent.prototype.getEzidebitPaymentsParamsList = function () {
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+      
+      connection.changeUser({ database: dbName["prod"] });
+      connection.query('SELECT * FROM `ezidebit_pay_params`', (error, rows, fields) => {
+        if (error) { console.log('Error...', error); reject(error); }
+        
+        resolve(rows);
+      });
+
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
 StaticContent.prototype.updateDiscountRateList = function (id, weekly_discount_rate, fortnightly_discount_rate) {  
   const that = this;
   return new Promise((resolve, reject) => {
