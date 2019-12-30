@@ -37,7 +37,20 @@ function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
 
   data.forEach(function(row, index) {
     
-    total = total + Number(row.payment_amt);
+    switch (row.status) {
+      case 2: 
+      case 3:
+      case 4:
+      case 5:
+      case 11:
+      case 12:
+      case 13:
+      case 14:
+      case 15:
+        total = total + Number(row.payment_amt);
+      break;
+    }
+    
 
     var dataRow = [];
     valueKeys.forEach(function(column, columnIndex) {
@@ -49,7 +62,6 @@ function buildFinancialReportTable(data, columns, valueKeys, fromDate, toDate){
         dataRow.push({ text: row[column.toLowerCase()], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
       }
     })
-
     body.push(dataRow);
   });
 
@@ -98,7 +110,6 @@ function buildTableBody(data, columns, valueKeys, orderType) {
         dataRow.push({ text: row[column.toLowerCase()], style: styles.margins, bold: true, alignment: screenLeft, fontSize: 8,  },);
       }
     })
-
     body.push(dataRow);
   });
 
@@ -202,7 +213,7 @@ export default function FixedOrderForm(data, order, reportData, fromDate, toDate
             border: [true, false, true, true],
             table: {
               widths: ['15%','*','*','*','*'],                
-              body: buildFinancialReportTable(reportData, ['#', 'Installment Due Date', 'Installment Rec. Date', 'Status', 'Payment Amt ($)'], ['installment_no', 'payment_date', 'payment_rec_date', 'status_name', 'payment_amt'], fromDate, toDate),
+              body: buildFinancialReportTable(reportData, ['#', 'Payment Date', 'Settlement Date', 'Status', 'Payment Amt ($)'], ['installment_no', 'payment_date', 'settlement_date', 'status_name', 'payment_amt'], fromDate, toDate),
             },
           },
       ],  

@@ -43,8 +43,8 @@ return (
     <TableHead>
       <TableRow>
         <StyledTableCell>#</StyledTableCell>
-        <StyledTableCell>Actual Payment Date.</StyledTableCell>
-        <StyledTableCell>Payment Rec. Date.</StyledTableCell>
+        <StyledTableCell>Payment Date.</StyledTableCell>
+        <StyledTableCell>Settlement Date.</StyledTableCell>
         <StyledTableCell>Status</StyledTableCell>
         <StyledTableCell>Payment Amt.</StyledTableCell>        
       </TableRow>
@@ -52,13 +52,25 @@ return (
     <TableBody>
       
     {(data.length > 0 ? data : []).map((data, index) => {  
-      total = total + data.payment_amt;          
+      switch (data.status) {
+        case 2: 
+        case 3:
+        case 4:
+        case 5:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:          
+          total = total + data.payment_amt;
+          break;
+      }
       return(
         <TableRow>
           <StyledTableCell>{index + 1}</StyledTableCell>
           <StyledTableCell>{getDateInDDMMYYYY(data.payment_date)}</StyledTableCell>
-          <StyledTableCell>{getDateInDDMMYYYY(data.payment_rec_date)}</StyledTableCell>
-          <StyledTableCell>{data.status === 1 ? "Paid" : data.status === 2 ? "Disownered Paid" : ''}</StyledTableCell>
+          <StyledTableCell>{getDateInDDMMYYYY(data.settlement_date)}</StyledTableCell>
+          <StyledTableCell>{data.status_name}</StyledTableCell>
           <StyledTableCell>{data.payment_amt}</StyledTableCell>
         </TableRow>
         )

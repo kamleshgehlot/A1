@@ -27,6 +27,9 @@ const RESET_VALUES = {
  unpaid_int_bal : '',
  frequency : '',
  duration : '',
+ installment_amt : 0,
+ total_amt_to_be_paid : 0,
+ total_int_to_be_paid : 0
 };
 
 const useStyles = makeStyles(theme => ({
@@ -114,7 +117,7 @@ export default function EMICalculator({ open, handleClose}) {
     setDiscountList(result.discountRateList);
   }
 // console.log(discountList);
-  const { inputs, handleInputChange, handleNumberInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleRandomInput, handleNumberInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     () => {},
     {}
@@ -122,21 +125,30 @@ export default function EMICalculator({ open, handleClose}) {
 
   useEffect(() => {
     if(inputs.duration != '' && inputs.frequency != '' && inputs.unpaid_int_bal != ''){
-      {(discountList != undefined && discountList != null && discountList.length > 0 ? discountList : []).map(data => {                        
+      {(discountList != undefined && discountList != null && discountList.length > 0 ? discountList : []).map(data => {
         if(inputs.duration === data.duration_in_year){
+          let Emi = 0;
+          let totalPayment = 0;
           if(inputs.frequency === 1){
-            setInstallment(Number(inputs.unpaid_int_bal) / data.weekly_discount_rate);
+              Emi = Number(inputs.unpaid_int_bal) / data.weekly_discount_rate;
+              totalPayment = 52;
           }else if(inputs.frequency === 2){
-            setInstallment(Number(inputs.unpaid_int_bal) / data.fortnightly_discount_rate);
+            Emi = Number(inputs.unpaid_int_bal) / data.fortnightly_discount_rate;
+            totalPayment = 26;
           }
+          handleRandomInput([ 
+            {name: 'installment_amt', value:  Emi},
+            {name: 'total_amt_to_be_paid', value:  (Emi * (data.duration_in_year * totalPayment))},
+            {name: 'total_int_to_be_paid', value:  (Emi * (data.duration_in_year * totalPayment) - inputs.unpaid_int_bal)}
+          ]);
         }
-      })}      
+      })}
     }
   },[inputs.duration, inputs.frequency, inputs.unpaid_int_bal]);
 
   return (
     <div>
-      <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>        
+      <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>        
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" className={classes.title}> EMI Calculator </Typography>
@@ -158,8 +170,6 @@ export default function EMICalculator({ open, handleClose}) {
                       name="unpaid_int_bal"
                       value={inputs.unpaid_int_bal}
                       onChange={handleInputChange}
-                      // error={errors.unpaid_int_bal}
-                      // helperText={errors.unpaid_int_bal}
                       fullWidth
                     />
                 </Grid>
@@ -204,8 +214,37 @@ export default function EMICalculator({ open, handleClose}) {
                       }}
                       id="installment_amt"
                       name="installment_amt"
-                      value={Number(installment).toFixed(2)}
-                      // onChange={handleInputChange}
+                      value={Number(inputs.installment_amt).toFixed(2)}
+                      fullWidth
+                      disabled
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <InputLabel className={classes.textsize} htmlFor="total_amt_to_be_paid">Total Amt. to be paid</InputLabel>
+                    <TextField 
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="total_amt_to_be_paid"
+                      name="total_amt_to_be_paid"
+                      value={Number(inputs.total_amt_to_be_paid).toFixed(2)}
+                      fullWidth
+                      disabled
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <InputLabel className={classes.textsize} htmlFor="total_int_to_be_paid">Total interest to be paid</InputLabel>
+                    <TextField
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="total_int_to_be_paid"
+                      name="total_int_to_be_paid"
+                      value={Number(inputs.total_int_to_be_paid).toFixed(2)}
                       fullWidth
                       disabled
                     />

@@ -26,15 +26,11 @@ const getOrderReport = async function(req, res, next) {
     from_date : req.body.from_date,
     user_id: req.decoded.user_id,
   };
-  // console.log('repost', req.body);
   
   try {
     const newReport = new Report(ReportParams);
-    
     const result = await newReport.getOrderReport();      
     res.send(result);
-    // console.log('custom',result);
-
   } catch (error) {
     next(error);
   }
@@ -69,15 +65,12 @@ const getTaskReport = async function(req, res, next) {
     from_date : req.body.from_date,
     user_id: req.decoded.user_id,
   };
-  // console.log('repost', req.body);
   
   try {
     const newReport = new Report(ReportParams);
     
     const result = await newReport.getTaskReport();      
     res.send(result);
-    // console.log('custom',result);
-
   } catch (error) {
     next(error);
   }
@@ -89,14 +82,11 @@ const getDueTaskReport = async function(req, res, next) {
     today_date : req.body.today_date,
     user_id: req.decoded.user_id,
   };
-  // console.log('repost', req.body);
   
   try {
     const newReport = new Report(ReportParams);
-    
     const result = await newReport.getDueTaskReport();      
     res.send(result);
-    // console.log('custom',result);
 
   } catch (error) {
     next(error);
@@ -107,7 +97,5 @@ module.exports = {
   getOrderReport,
   getDeliveryReport,
   getTaskReport,
-  getDueTaskReport,
-  // getUpcomingDelivery,
-  // getCompletedDelivery,
+  getDueTaskReport,  
 };

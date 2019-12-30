@@ -327,7 +327,7 @@ export default function FinanceReport({roleName}) {
               onChange={handleSearchText}
               value = {searchName === "customer_contact" ? searchText : customerData.mobile}
               id="customer_contact"
-              name="customer_contact"              
+              name="customer_contact"
               fullWidth
               type="text"
               margin="dense"

@@ -502,7 +502,7 @@ return (
                       },                    
                     }}
                     onChange = {handleInstChange}
-                    // disabled
+                    disabled
                   />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -522,7 +522,7 @@ return (
                         },
                       }}
                       onChange = {handlePayDateChange}
-                      // disabled
+                      disabled
                     />
                   </MuiPickersUtilsProvider>
               </Grid>
