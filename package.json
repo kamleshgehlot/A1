@@ -8,7 +8,13 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --config config/webpack.base.config.js --open --hot --history-api-fallback --env.PLATFORM=local --env.VERSION=stag --env.NODE_ENV=development",
     "startserver": "cd server && nodemon index.js",
-    "git": "git add . ;  git commit -m 'Update' ; git push",
+
+    "buildchain": "npm run git && npm run clearold && npm run copynew && cd ..\\rentronics_prod && npm run git",
+    "clearold": "del /Q /S /F \"..\\rentronics_prod\\dist\\*.*\"",
+    "copynew": "xcopy \"./dist\" \"..\\rentronics_prod\\dist\" /s/h/e/k/f/c",
+
+    "git": "git add . &&  git commit -m 'Update' && git push",
+    "ssh":"plink -no-antispoof -ssh root@103.145.50.19 -pw Nwii5UA4jYB9seKP cd /home/rentronics/rentronics_prod;git status",
     "prebuild": "webpack --mode production --config config/webpack.prod.config.js --env.PLATFORM=production --env.VERSION=uat --progress",
     "build": "cross-env NODE_ENV=dev node server",
     "lint": "eslint --debug src/",
