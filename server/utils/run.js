@@ -4,10 +4,13 @@ const connection = require('../lib/connection.js');
 const dbName = require('../lib/databaseMySQLNew.js');
 
 router.route("/dashboardorder").post(async (req, res, next) => {
+    // TODO New Better Query
+    // `select CONCAT(staff.first_name,' ',staff.last_name) as staffname,SUM(payment_schedules.total_paid) as orderamount,COUNT(orders.id) as ordercount from payment_schedules left join orders on orders.id = payment_schedules.order_id left join staff on staff.franchise_user_id=orders.sales_person_id where payment_schedules.status NOT IN (1,6,7,8,9,10,16,17) and  payment_schedules.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by orders.id;`
   return querypromise(`select * from payment_schedules left join orders on orders.id = payment_schedules.order_id left join staff on staff.franchise_user_id=orders.sales_person_id where payment_schedules.status NOT IN (1,6,7,8,9,10,16,17) and  payment_schedules.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY`, [] , req,res);
 });
 
 const querypromise = (mysqlquery, values,req,res) => {
+    console.log(mysqlquery); // TODO remove in PROD
   return new Promise((resolve, reject) => {
       connection.getConnection((error, connection) => {
           if (error || connection === undefined) {

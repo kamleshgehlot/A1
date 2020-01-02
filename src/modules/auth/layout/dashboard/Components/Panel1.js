@@ -111,7 +111,6 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [value, setValue] = React.useState(0);
   const [taskList, setTaskList] = React.useState([]);
   const [leadList, setLeadList] = React.useState([]);
-  const [order,setOrder]=useState([]);
   const [staff,setstaff]=useState([]);
   const [duration,setduration]=useState(30);
 
@@ -148,15 +147,15 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
           staffdata[d.sales_person_id].value+=parseFloat(d.total_paid);
         });
 
-        data.forEach(d => {
-          if(d.sales_person_id && staffdata[d.sales_person_id].value && (typeof staffdata[d.sales_person_id].value == "number") )
-          staffdata[d.sales_person_id].value=staffdata[d.sales_person_id].value.toFixed(2);
+        staffdata.sort(function(a, b) { console.log(a,b); if(a.value&&b.value)return a.value - b.value; else return 0; });
+
+        staffdata.forEach(d => {
+          if(d.value && (typeof d.value == "number") )
+          d.value=d.value.toFixed(2);
         });
         
         console.log(staffdata);
-        console.log(data);
         setstaff(staffdata);
-        setOrder(data);
 
     }
     fetchData();

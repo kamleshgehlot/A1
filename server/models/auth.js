@@ -43,7 +43,7 @@ Auth.prototype.login = function () {
         connection.query('Select user_id from user where id = 1', function (error, rows, fields) {
 
           connection.changeUser({ database: dbName["prod"] });
-          connection.query('Select f.state, u.user_id from franchise f inner join user u on f.id = u.franchise_id where u.user_id=?', rows[0].user_id, function (error, rows, fields) {
+          connection.query('select f.state, u.user_id from franchise f inner join user u on f.id = u.franchise_id where u.user_id=?', rows[0].user_id, function (error, rows, fields) {
             if (!error) {
               if (rows[0].state === 2) {
                 connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.name.split('_')[1]) });

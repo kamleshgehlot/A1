@@ -10,6 +10,9 @@
     "startserver": "cd server && nodemon index.js",
     "uat_ssh":"plink -no-antispoof -ssh root@103.120.178.208 -pw IMT0IsS2XNqdU0ZC",
     "prod_ssh":"plink -no-antispoof -ssh root@103.145.50.19 -pw Nwii5UA4jYB9seKP",
+
+    "lx_uat_ssh":"sshpass -p IMT0IsS2XNqdU0ZC ssh root@103.120.178.208  -o StrictHostKeyChecking=no",
+    "lx_prod_ssh":"sshpass -p Nwii5UA4jYB9seKP ssh root@103.145.50.19  -o StrictHostKeyChecking=no",
     "buildchain": "npm run git && npm run prebuild && npm run clearold && npm run copynew && cd ..\\rentronics_prod && git add . &&  git commit -m 'Update' && git push && plink -no-antispoof -ssh root@103.145.50.19 -pw Nwii5UA4jYB9seKP cd /home/rentronics/rentronics_prod;git pull",
     "clearold": "del /Q /S /F \"..\\rentronics_prod\\dist\\*.*\"",
     "copynew": "xcopy \"./dist\" \"..\\rentronics_prod\\dist\" /s/h/e/k/f/c",
