@@ -111,8 +111,8 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [value, setValue] = React.useState(0);
   const [taskList, setTaskList] = React.useState([]);
   const [leadList, setLeadList] = React.useState([]);
-  const [order,setOrder]=useState([]);
   const [staff,setstaff]=useState([]);
+  const [countdata,setcountdata]=useState([]);
   const [duration,setduration]=useState(30);
 
   const changeDuration=(e)=>{
@@ -133,30 +133,11 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       setLeadList(resultLead.leadList);
 
         let {data} = await Run('dashboardorder', {franchise:1,duration});
-        let staffdata=[];
-        data.forEach(d => {
-          if(!staffdata[d.sales_person_id])staffdata[d.sales_person_id]={argument:''+(d.first_name||d.last_name),value:0,count:0,orders:[]};
-          let ratio=1;
-          if(d.frequency==1)ratio=4;
-          else if(d.frequency==2)ratio=2;
+        setstaff(data);
 
-          if(staffdata[d.sales_person_id].orders.indexOf(d.order_id)==-1){
-            staffdata[d.sales_person_id].orders.push(d.order_id);
-            staffdata[d.sales_person_id].count++;
-          }
-          // staffdata[d.sales_person_id].value+=d.order_type==1?d.total_payment_amt/ratio:d.bond_amt/ratio;
-          staffdata[d.sales_person_id].value+=parseFloat(d.total_paid);
-        });
-
-        data.forEach(d => {
-          if(d.sales_person_id && staffdata[d.sales_person_id].value && (typeof staffdata[d.sales_person_id].value == "number") )
-          staffdata[d.sales_person_id].value=staffdata[d.sales_person_id].value.toFixed(2);
-        });
+        let result = await Run('dashboardcount', {franchise:1,duration});
+        setcountdata(result.data);
         
-        console.log(staffdata);
-        console.log(data);
-        setstaff(staffdata);
-        setOrder(data);
 
     }
     fetchData();
@@ -187,7 +168,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <ValueAxis />
           <EventTracker /><Tooltip />
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
-      <BarSeries valueField="value" argumentField="argument" />
+      <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
     <h1>Order Amount</h1>
       </CardContent></Card>
@@ -195,11 +176,11 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={300}>
+      <Chart data={countdata} height={300}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
-      <BarSeries valueField="count" argumentField="argument" />
+      <BarSeries valueField="totalcount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
     <h1>Order Count</h1>
