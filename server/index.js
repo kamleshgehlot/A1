@@ -35,6 +35,7 @@ if (env === 'dev' || env === 'uat' || env === 'prod') {
 
 const ExceptionLog = require('./controllers/exceptionLog');
 
+const appointmentRouter = require('./routes/appointment');
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
 const staffMaster = require('./routes/staffMaster');
@@ -54,7 +55,7 @@ const EzidebitRouter = require('./routes/Ezidebit');
 // const PDFRouter = require('./routes/Pdf');
 
 // Franchise
-const franchiseUserRouter = require('./routes/franchise/user');
+
 const franchiseStaff = require('./routes/franchise/staff');
 const roleRouter = require('./routes/franchise/role');
 const enquiryRouter = require('./routes/franchise/enquiry');
@@ -89,7 +90,7 @@ app.use('/api/franchiseuser', franchiseuser);
 app.use('/api/profile', profileRouter);
 app.use('/api/changepassword', passwordRouter);
 
-app.use('/api/franchise/user', franchiseUserRouter);
+app.use('/api/appointment', appointmentRouter);
 app.use('/api/franchise/staff', franchiseStaff);
 app.use('/api/franchise/customer', customerRouter);
 app.use('/api/franchise/role', roleRouter);

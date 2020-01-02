@@ -50,6 +50,7 @@ import FinanceReport from './report/FinanceReport';
 import DeliveryReport from './report/DeliveryReport';
 import TaskList from '../task/TaskList';
 import TaskReport from './report/TaskReport';
+import AppointmentSystem from '../appointment/AppointmentHome.js';
 import EzidebitStatus from '../order/EzidebitStatus';
 import EditDiscountEMI from './options/admin/EditEMIDiscount.js';
 import Tab from './Tab';
@@ -152,6 +153,7 @@ export default function ClippedDrawer(props) {
   const [showDeliveryReport, setShowDeliveryReport]= useState(false);
   const [showCsrTaskReport, setShowCsrTaskReport]= useState(false);
   const [showPaymentStatus, setShowPaymentStatus]= useState(false);
+  const [showAppointment, setShowAppointment] = useState(false);
   const [editEMIDiscountOpen, setEditEMIDiscountOpen]= useState(false);
   const [roles, setRoles] = useState([]);
   const [roleAs, setRoleAs]= useState('');
@@ -231,10 +233,33 @@ export default function ClippedDrawer(props) {
     setShowdashboard(true);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
   }
 
-  function handleFranchiseClick(role) {
-    setRoleAs(role);
+  function handleAppointmentClick(){
+    setShowFranchise(false);
+    setShowStaff(false);
+    setShowCategory(false);
+    setShowMasterStaff(false);
+    setShowFranchiseStaff(false);
+    setShowProfile(false);
+    setShowTask(false);
+    setShowPwd(false);
+    setShowCustomer(false);
+    setShowEnquiry(false);
+    setShowLead(false);
+    setShowOrder(false);
+    setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
+    setShowdashboard(false);
+    setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
+    setShowAppointment(true);
+  }
+
+  function handleFranchiseClick(role) {    
+    setRoleAs(role);    
     setShowFranchise(true);
     setShowStaff(false);
     setShowCategory(false);
@@ -252,6 +277,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowAppointment(false);
     
     setShowPaymentStatus(false);
   }
@@ -277,7 +303,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    
+    setShowAppointment(false);
   }
 
   function handleMasterStaffClick(role){
@@ -300,6 +326,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
 
@@ -324,6 +351,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
   
@@ -349,6 +377,7 @@ export default function ClippedDrawer(props) {
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
     
+    setShowAppointment(false);
   }
 
   function handleProfileClick(role){
@@ -372,6 +401,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
   function handleChangePasswordClick(role){
@@ -395,6 +425,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
 
@@ -419,7 +450,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    
+    setShowAppointment(false);
   }
 
   function handleCustomerClick(role){
@@ -441,6 +472,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
   
@@ -464,6 +496,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
 
   }
@@ -487,7 +520,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    
+    setShowAppointment(false);
   }
 
   function handleOrderClick(role){    
@@ -509,6 +542,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
 
@@ -531,7 +565,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
-    
+    setShowAppointment(false);
   }
   
   function handleDeliveryReportClick(role){    
@@ -553,6 +587,7 @@ export default function ClippedDrawer(props) {
     setShowFinanceReport(false);   
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
   
@@ -575,6 +610,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowDeliveryReport(false);
     setShowPaymentStatus(false);
+    setShowAppointment(false);
     
   }
 
@@ -597,30 +633,10 @@ export default function ClippedDrawer(props) {
     setShowFranchiseDetail(false);
     setShowdashboard(false);
     setShowDeliveryReport(false);
+    setShowAppointment(false);
     
   }
   
-  function handleEMIDiscount(role){
-    setRoleAs(role);
-    
-    setShowPaymentStatus(false);
-    setShowCsrTaskReport(false);
-    setShowFinanceReport(false);
-    setShowOrder(false);
-    setShowLead(false);
-    setShowEnquiry(false);
-    setShowCustomer(false);
-    setShowTask(false);
-    setShowFranchiseStaff(false);
-    setShowMasterStaff(false);
-    setShowFranchise(false);
-    setShowCategory(false);
-    setShowProfile(false);
-    setShowPwd(false);
-    setShowFranchiseDetail(false);
-    setShowdashboard(false);
-    setShowDeliveryReport(false);
-  }
 
   handleCsrTaskReportClick
   function handleLogout() {
@@ -671,7 +687,7 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
-            <StyledTreeItem nodeId="1" labelText="Dashboard" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin', 1); }} />
+            <StyledTreeItem nodeId="1" labelText="Dashboard" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin', 1); }} />            
             <StyledTreeItem nodeId="2" labelText="Manage Franchise"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FranchiseIcon} onClick={(event) => { handleFranchiseClick('Super Admin'); }}/>
             <StyledTreeItem nodeId="3" labelText="Manage Product Catalogue"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={ProductIcon} onClick={(event) => { handleCategoryClick('Super Admin'); }}/>
             <StyledTreeItem nodeId="4" labelText="Manage Staff"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={StaffIcon} onClick={(event) => { handleMasterStaffClick('Super Admin'); }} />
@@ -691,7 +707,7 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
-            <StyledTreeItem nodeId="1" labelText="Dashboard"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Admin', 2); }} />
+            <StyledTreeItem nodeId="1" labelText="Dashboard"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Admin', 2); }} />            
             <StyledTreeItem nodeId="2" labelText="Manage Staff"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={StaffIcon} onClick={(event) => { handleFranchiseStaffClick('Admin'); }} />
             <StyledTreeItem nodeId="3" labelText="Manage Task"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={TaskIcon} onClick={(event) => { handleTaskClick('Admin'); }} />
             <StyledTreeItem nodeId="4" labelText="Manage Leads"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Admin'); }}/>
@@ -723,8 +739,9 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
+            <StyledTreeItem nodeId="35" labelText="Manage Appointment" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleAppointmentClick(); }} />
             {roles.find(role => role === 'S&M')
-            ?  
+            ?
             <StyledTreeItem nodeId="1" labelText="Sales &amp; Marketing"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
                 <Tab roleName="S&M" roleId="7" nodeId="5" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/>
 
@@ -880,6 +897,9 @@ export default function ClippedDrawer(props) {
         }  
         {
           editEMIDiscountOpen ? <EditDiscountEMI open = {editEMIDiscountOpen} handleClose = {handleEditEMIDiscountClose}/>: null
+        }
+        {
+          showAppointment ? <AppointmentSystem /> : null
         }
       </main>
 

@@ -40,9 +40,7 @@ User.prototype.register = function () {
       if (!error) {
         connection.changeUser({ database: dbName["prod"] });
         connection.query('select id from company where company_id = "' + that.company_id + '"', function (error, rows, fields) {
-          // console.log("Director id",rows[0].id);
           directors_id = rows;
-
           let userValues = [
           ];
 
