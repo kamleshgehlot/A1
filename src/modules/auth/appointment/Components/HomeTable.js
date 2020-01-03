@@ -51,8 +51,15 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
+const useStyles = makeStyles(theme => ({
+  textsize:{
+    fontSize: theme.typography.pxToRem(12),
+  },
+}));
+
 export default function HomeTable({membersList, roleList, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedUserData, setSelectedUserData] = React.useState({});
   
@@ -118,8 +125,7 @@ export default function HomeTable({membersList, roleList, page, rowsPerPage, han
                               <MoreVertIcon/>
                             </IconButton>
                           </Tooltip>
-                          <Popover
-                            // id={id}
+                          <Popover                            
                             open={Boolean(anchorEl)}
                             anchorEl = {anchorEl}
                             onClose={handleOptionsClose}
@@ -132,15 +138,15 @@ export default function HomeTable({membersList, roleList, page, rowsPerPage, han
                               horizontal: 'left',
                             }}
                           >
-                            <List component="nav">
+                            <List component="nav" >
                               <ListItem button>
-                                <ListItemText primary="Book Appointment" onClick={handleBookAppointment}/>
+                                <ListItemText  primary="Book Appointment" onClick={handleBookAppointment}/>
                               </ListItem>
                               <ListItem button>
-                                <ListItemText primary="View Appointment" onClick = {handleViewAppointment} />
+                                <ListItemText  primary="View Appointment" onClick = {handleViewAppointment} />
                               </ListItem>
                               <ListItem button>
-                                <ListItemText primary="Update Timeslot" onClick = {handleUpdateTimeSlot} />
+                                <ListItemText  primary="Update Timeslot" onClick = {handleUpdateTimeSlot} />
                               </ListItem>
                             </List>
                           </Popover>

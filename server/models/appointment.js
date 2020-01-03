@@ -27,4 +27,25 @@ Appointment.prototype.membersList = function () {
   });
 }
 
+
+Appointment.prototype.inActiveDueDatedTimeslot = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+      connection.query('UPDATE appointment_timeslot SET is_active = 0 where date < CURRENT_DATE', function (error, rows, fields) {        
+        if (error) {  console.log("Error...", error); reject(error);  }
+          
+        resolve(rows);
+        
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      });
+    });
+  });
+}
+
 module.exports = Appointment;
