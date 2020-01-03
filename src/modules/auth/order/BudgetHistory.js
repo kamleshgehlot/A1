@@ -100,17 +100,6 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-// const StyledTableCell = withStyles(theme => ({
-//   head: {
-//     backgroundColor: theme.palette.common.black,
-//     color: theme.palette.common.white,
-//     fontSize: theme.typography.pxToRem(13),
-//   },
-//   body: {
-//     fontSize: 11,
-//   },
-// }))(TableCell);
-
 
 
 export default function BudgetHistory({ open, handleClose, handleSnackbarClick, customer_id, roleName}) {

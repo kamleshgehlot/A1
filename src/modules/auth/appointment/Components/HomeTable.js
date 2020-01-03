@@ -26,6 +26,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import CreateIcon from '@material-ui/icons/Create';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Grid from '@material-ui/core/Grid';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
@@ -55,36 +56,25 @@ const useStyles = makeStyles(theme => ({
   textsize:{
     fontSize: theme.typography.pxToRem(12),
   },
+  labelTitle: {
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(20),
+    color: theme.palette.text.secondary,        
+  },
 }));
 
-export default function HomeTable({membersList, roleList, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
+export default function HomeTable({membersList, roleList, anchorEl, setAnchorEl, handleOptionsOpen, 
+  handleOptionsClose, handleBookAppointment, handleViewAppointment, handleUpdateTimeSlot, 
+  page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedUserData, setSelectedUserData] = React.useState({});
+  const classes = useStyles();    
   
-  const handleOptionsOpen = (event, data) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedUserData(data);
-  };
-
-  const handleOptionsClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleBookAppointment = async () => {
-    setAnchorEl(null);
-  }
-
-  const handleViewAppointment = async () => {
-    setAnchorEl(null);
-  }
-
-  const handleUpdateTimeSlot = async () => {
-    setAnchorEl(null);
-  }
-
     return (  
+    <Grid container spacing={2} alignItems = "center">
+      <Grid item xs={12} sm={12}>
+        <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
+      </Grid>
+      <Grid item xs={12} sm={12}>
         <Table stickyHeader >
           <TableHead>
             <TableRow>
@@ -175,5 +165,7 @@ export default function HomeTable({membersList, roleList, page, rowsPerPage, han
             </TableRow>
           </TableFooter>
         </Table>    
-      )
+      </Grid>
+    </Grid>
+  )
 }

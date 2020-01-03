@@ -52,4 +52,19 @@ export default {
       throw error;
     }
   },
+
+  getCurrentTimeslot:async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/appointment/getCurrentTimeslot`;
+    try {
+      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
 };

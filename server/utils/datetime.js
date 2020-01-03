@@ -79,4 +79,4 @@ function checkOverDue(payment_date, settlement_date) {
   return moment(payment_date).format("YYYY-MM-DD") > moment(settlement_date).format("YYYY-MM-DD");
 }
 
-module.exports = { setDBDateFormat, isSameDate, checkOverDue, addOneDay };
+module.exports = { setDBDateFormat, isSameDate, checkOverDue, addOneDay, getCurrentDateDBFormat };

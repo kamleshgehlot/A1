@@ -67,3 +67,7 @@ export function checkPastDate(date) {
 export function checkFutureDate(date) {
   return moment(date).format("YYYY-MM-DD") < getDate();
 }
+
+export function getDateWithFullMonthNDay(date) {
+  return moment(date).format("DD-MMMM-YYYY, dddd");
+}
