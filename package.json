@@ -20,6 +20,7 @@
     "lx_clearold":"rm -rf \"../rentronics_prod/dist\"",
     "lx_copynew":"cp -a \"./dist\" \"../rentronics_prod\" ; cp -a \"./server/utils\" \"../rentronics_prod\"",
     "git": "git add . ;  git commit -m 'Update' ; git push",
+    "git_prod": "cd ../rentronics_prod; git add . ;  git commit -m 'Update' ; git push",
     "prebuild": "webpack --mode production --config config/webpack.prod.config.js --env.PLATFORM=production --env.VERSION=uat --progress",
     "build": "cross-env NODE_ENV=dev node server",
     "lint": "eslint --debug src/",
