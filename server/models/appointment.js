@@ -4,6 +4,8 @@ const dbName = require('../lib/databaseMySQLNew.js');
 var Appointment = function (params) {
   this.user_id = params.user_id;
   this.userId = params.userId;
+  this.appointmentId = params.appointmentId;
+  this.appointment_status = params.appointment_status;
 };
 
 
@@ -60,7 +62,7 @@ Appointment.prototype.createTimeslot = function (userId, date, meeting_time, sta
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
       const Values = [userId, date, meeting_time, start_time, end_time, status, is_active, userId, date];
       
-      connection.query('INSERT INTO appointment_timeslot(User_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND is_active = 1);', Values, function (error, rows, fields) {        
+      connection.query('INSERT INTO appointment_timeslot(User_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND is_active = 1 );', Values, function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }          
         
         resolve(rows);
@@ -80,8 +82,8 @@ Appointment.prototype.getCurrentTimeslot = function () {
         throw error;
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-      connection.query('SELECT at.id, at.user_id, DATE_FORMAT(at.date,\'%Y-%m-%d\') as date, at.meeting_time, DATE_FORMAT(at.start_time, \'%h:%i:%p\') as start_time, DATE_FORMAT(at.end_time, \'%h:%i:%p\') as end_time,  at.status, at.is_active FROM `appointment_timeslot` AS at where at.user_id = '+ that.userId +' AND at.is_active = 1 ORDER BY at.date, at.id', function (error, rows, fields) {
-        if (error) {  console.log("Error...", error); reject(error);  }
+      connection.query('SELECT at.id, at.user_id, DATE_FORMAT(at.date,\'%Y-%m-%d\') as date, at.meeting_time, DATE_FORMAT(at.start_time, \'%h:%i:%p\') as start_time, DATE_FORMAT(at.end_time, \'%h:%i:%p\') as end_time,  at.status, (CASE at.status WHEN 0 THEN "On Leave" WHEN 1 THEN "Available" END) as status_name, at.is_active FROM `appointment_timeslot` AS at where at.user_id = '+ that.userId +' AND at.is_active = 1 ORDER BY at.date, at.id', function (error, rows, fields) {
+        if (error) {  console.log("Error...", error); reject(error);  }        
         resolve(rows);
         connection.release();
         console.log('Process Complete %d', connection.threadId);
@@ -90,6 +92,24 @@ Appointment.prototype.getCurrentTimeslot = function () {
   });
 }
 
+
+Appointment.prototype.handleLeave = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+      connection.query('UPDATE appointment_timeslot SET status = '+ that.appointment_status +' WHERE user_id = '+ that.userId +' AND id = '+ that.appointmentId +'', function (error, rows, fields) {
+        if (error) {  console.log("Error...", error); reject(error);  }
+        resolve(rows);
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      });
+    });
+  });
+}
 
 
 module.exports = Appointment;

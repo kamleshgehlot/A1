@@ -74,9 +74,12 @@ function isSameDate(payment_date, settlement_date) {
   return payment_date === settlement_date;
 }
 
-function checkOverDue(payment_date, settlement_date) {
-  console.log(moment(payment_date).format("YYYY-MM-DD") > moment(settlement_date).format("YYYY-MM-DD"), payment_date > settlement_date)
+function checkOverDue(payment_date, settlement_date) {  
   return moment(payment_date).format("YYYY-MM-DD") > moment(settlement_date).format("YYYY-MM-DD");
 }
 
-module.exports = { setDBDateFormat, isSameDate, checkOverDue, addOneDay, getCurrentDateDBFormat };
+function escapeSunday(date){
+  return moment(date).format("dddd") == "Sunday";
+}
+
+module.exports = { setDBDateFormat, isSameDate, checkOverDue, addOneDay, getCurrentDateDBFormat, escapeSunday };

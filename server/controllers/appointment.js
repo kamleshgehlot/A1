@@ -1,6 +1,6 @@
 const Appointment = require('../models/appointment.js');
 const Role = require('../models/franchise/role.js');
-const {addOneDay, getCurrentDateDBFormat} = require('../utils/datetime.js');
+const {addOneDay, getCurrentDateDBFormat, escapeSunday} = require('../utils/datetime.js');
 
 const membersList = async function (req, res, next) {
 	const params = {
@@ -23,6 +23,9 @@ const membersList = async function (req, res, next) {
 				for(let i = 0; i< 7; i++){
 					await newActivity.createTimeslot(data.id, date, '15', '09:00', '18:00', 1, 1);
 					date = addOneDay(date);
+					if(escapeSunday(date)){
+						date = addOneDay(date);
+					}
 				}
 			});
 		}
@@ -51,4 +54,24 @@ const getCurrentTimeslot = async function (req, res, next) {
 	}
 }
 
-module.exports = { membersList: membersList, getCurrentTimeslot: getCurrentTimeslot };
+
+const handleLeave = async function (req, res, next) {
+	const params = {
+		user_id: req.decoded.user_id,
+		userId : req.body.userId,
+		appointmentId : req.body.appointmentId,
+		appointment_status : req.body.appointment_status,
+	}
+
+  try {
+		const newActivity = new Appointment(params);		
+		await newActivity.handleLeave();
+		
+		const timeSlot = await newActivity.getCurrentTimeslot();
+
+		res.send({ timeSlot: timeSlot });
+	} catch (err) {
+		next(err);
+	}
+}
+module.exports = { membersList: membersList, getCurrentTimeslot: getCurrentTimeslot, handleLeave: handleLeave };

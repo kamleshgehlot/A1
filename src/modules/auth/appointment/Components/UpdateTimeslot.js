@@ -98,11 +98,27 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
   },[]);
 
   const getCurrentTimeslot = async () => {
-    const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
-    setCurrentTimeslotList(result.timeSlot);
-    console.log('result..', result);
+    try{
+      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
+      setCurrentTimeslotList(result.timeSlot);   
+    }catch(e){
+      console.log('getCurrentTimeslot Error...', e);
+    }
   }
-  
+
+  const handleLeave = async (data) => {
+    try{      
+      let status = data.status === 0 ? 1 : data.status === 1 ? 0 : '';
+      const result = await AppointmentAPI.handleLeave({ 
+        appointmentId : data.id,
+        userId: data.user_id,
+        appointment_status : status,
+      });
+      setCurrentTimeslotList(result.timeSlot);
+    }catch(e){
+      console.log('handleLeave Error...', e);
+    }
+  }
 
   return (  
     <Grid container spacing={2} alignItems = "center">
@@ -130,7 +146,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
                         primary={
                           <Fragment>
                             <Typography className={classes.listPrimaryItem} color="textPrimary" >
-                              {getDateWithFullMonthNDay(data.date)}
+                              {getDateWithFullMonthNDay(data.date) + ' (' + data.status_name + ')'}
                             </Typography>
                           </Fragment>
                         }
@@ -144,7 +160,9 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
                               </Grid>
                               <Grid item xs={12} sm={6}>
                                 <Button variant="text" color="primary" className={classes.button}> Update </Button>
-                                <Button variant="text" color="primary" className={classes.button}> Going On Leave </Button>
+                                <Button variant="text" color="primary" className={classes.button}  onClick = {() => handleLeave(data)}>                                  
+                                  { data.status === 1 ? "Going On Leave" : data.status === 0 ? 'Cancel Leave' : '' }
+                                </Button>
                               </Grid>
                             </Grid>
                           </Fragment>
