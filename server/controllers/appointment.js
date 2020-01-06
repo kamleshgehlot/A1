@@ -74,4 +74,31 @@ const handleLeave = async function (req, res, next) {
 		next(err);
 	}
 }
-module.exports = { membersList: membersList, getCurrentTimeslot: getCurrentTimeslot, handleLeave: handleLeave };
+
+
+const addNewTimeslot = async function (req, res, next) {
+	const params = {
+		user_id: req.decoded.user_id,
+		userId : req.body.userId,
+		date : req.body.date,
+		start_time : req.body.start_time,
+		end_time : req.body.end_time
+	}
+console.log('prams.', params)
+  try {
+		const newActivity = new Appointment(params);				
+		await newActivity.addNewTimeslot(params.userId, params.date, '15', params.start_time, params.end_time, 1, 1);
+
+		const timeSlot = await newActivity.getCurrentTimeslot();
+		res.send({ timeSlot: timeSlot });
+	} catch (err) {
+		next(err);
+	}
+}
+
+module.exports = { 
+	membersList: membersList, 
+	getCurrentTimeslot: getCurrentTimeslot, 
+	handleLeave: handleLeave,
+	addNewTimeslot: addNewTimeslot,
+ };

@@ -119,8 +119,7 @@ export default function CustomerBankDetails({ open, handleClose, handleSnackbarC
   const styleClass = useCommonStyles();
   const classes = useStyles();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
 

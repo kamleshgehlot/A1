@@ -30,6 +30,10 @@ export function getTimeinDBFormat(date) {
   return moment(date).format("HH:mm:ss")
 }
 
+export function get12HourTime(date) {
+  return moment(date).format("hh:mm:A")
+}
+
 export function getTime(date) {
   return moment(date).format("HH:mm")
 }

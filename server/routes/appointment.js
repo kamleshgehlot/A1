@@ -9,5 +9,6 @@ const appointmentRouter = express.Router();
 appointmentRouter.route("/getCurrentTimeslot").post(validateToken, Appointment.getCurrentTimeslot);
 appointmentRouter.route("/handleLeave").post(validateToken, Appointment.handleLeave);
 appointmentRouter.route("/membersList").get(validateToken, Appointment.membersList);
+appointmentRouter.route("/addNewTimeslot").post(validateToken, Appointment.addNewTimeslot);
 
 module.exports = appointmentRouter;

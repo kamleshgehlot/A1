@@ -46,6 +46,7 @@ import {TablePaginationActions} from '../../../common/Pagination';
 
 // Components
 import {getDateWithFullMonthNDay} from '../../../../utils/datetime.js'
+import AddUpdateTimeslot from './AddUpdateTimeslot';
 
 // API Call
 import AppointmentAPI from '../../../../api/Appointment.js';
@@ -92,6 +93,9 @@ const useStyles = makeStyles(theme => ({
 export default function UpdateTimeslot({handleMainPage, userData}) {
   const classes = useStyles();
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
+  const [showTimslotDialog, setShowTimslotDialog] = useState(false);
+  const [selectedTimeslot, setSelectedTimeslot] = useState([]);
+  const [operation, setOperation] = useState('');
 
   useEffect(() => {
     getCurrentTimeslot();
@@ -120,7 +124,23 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
     }
   }
 
+  const handleOpenTimeslotDialog = (data, operation) => {
+    setOperation(operation);
+    if(operation === 'add'){
+      setSelectedTimeslot(currentTimeslotList[0]);
+    }else if(operation === 'update'){
+      setSelectedTimeslot(data);
+    }
+    setShowTimslotDialog(true);
+  }
+
+  const handleCloseTimeslotDialog = async () => {    
+    setShowTimslotDialog(false);
+  }
+
+
   return (  
+  <div>
     <Grid container spacing={2} alignItems = "center">
         <Grid item xs={12} sm={6}>
           <div style = {{display: 'flex'}}>
@@ -131,7 +151,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
           </div>
         </Grid>
         <Grid item xs={12} sm={6} justify = "flex-start">
-          <Fab variant="extended" size="small" color="primary" className={classes.fonttransform}>
+          <Fab variant="extended" size="small" color="primary" className={classes.fonttransform}  onClick = {() => {handleOpenTimeslotDialog([], 'add')}}>
             <AddIcon className={classes.extendedIcon} /> ADD TIMESLOT
           </Fab>
         </Grid>
@@ -159,8 +179,8 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
                                 </Typography>
                               </Grid>
                               <Grid item xs={12} sm={6}>
-                                <Button variant="text" color="primary" className={classes.button}> Update </Button>
-                                <Button variant="text" color="primary" className={classes.button}  onClick = {() => handleLeave(data)}>                                  
+                                <Button variant="text" color="primary" className={classes.button} onClick = {() => handleOpenTimeslotDialog(data, 'update' )}> Update </Button>
+                                <Button variant="text" color="primary" className={classes.button} onClick = {() => handleLeave(data)}>                                  
                                   { data.status === 1 ? "Going On Leave" : data.status === 0 ? 'Cancel Leave' : '' }
                                 </Button>
                               </Grid>
@@ -177,5 +197,8 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
           </List>
         </Grid>
     </Grid>
+    
+    { showTimslotDialog ? <AddUpdateTimeslot open = {showTimslotDialog} handleClose = {handleCloseTimeslotDialog} operation={operation} selectedTimeslot = {selectedTimeslot} setCurrentTimeslotList={setCurrentTimeslotList} /> : null }
+  </div>
   )
 }

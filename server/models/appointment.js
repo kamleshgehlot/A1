@@ -74,6 +74,30 @@ Appointment.prototype.createTimeslot = function (userId, date, meeting_time, sta
 }
 
 
+Appointment.prototype.addNewTimeslot = function (userId, date, meeting_time, start_time, end_time, status, is_active) {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+      const Values = [
+        [userId, date, meeting_time, start_time, end_time, status, is_active]
+      ];
+      
+      connection.query('INSERT INTO appointment_timeslot(user_id, date, meeting_time, start_time, end_time, status, is_active) VALUES ?', [Values], function (error, rows, fields) {
+        if (error) {  console.log("Error...", error); reject(error);  }
+        
+        resolve(rows);
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+      });
+    });
+  });
+}
+
+
 Appointment.prototype.getCurrentTimeslot = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
