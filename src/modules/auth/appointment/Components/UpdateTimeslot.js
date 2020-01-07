@@ -94,6 +94,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
   const classes = useStyles();
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
   const [showTimslotDialog, setShowTimslotDialog] = useState(false);
+  const [uniqueAppointment, setUniqueAppointment] = useState([]);
   const [selectedTimeslot, setSelectedTimeslot] = useState([]);
   const [operation, setOperation] = useState('');
 
@@ -101,103 +102,151 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
     getCurrentTimeslot();
   },[]);
 
+  useEffect(() => {
+    handleDistinctAppointment(currentTimeslotList);
+  },[currentTimeslotList]);
+
   const getCurrentTimeslot = async () => {
     try{
       const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
-      setCurrentTimeslotList(result.timeSlot);   
+      setCurrentTimeslotList(result.timeSlot);      
     }catch(e){
       console.log('getCurrentTimeslot Error...', e);
     }
   }
 
+  const handleDistinctAppointment = (timeSlotList) => {
+    const uniqueAppoint = timeSlotList.filter((value, index, self) => {
+        if(self.length !== (index + 1)){
+          return value.date !== self[index+1].date
+        } else{
+          return value
+        }
+    })
+    setUniqueAppointment(uniqueAppoint);
+  }
+
   const handleLeave = async (data) => {
     try{      
-      let status = data.status === 0 ? 1 : data.status === 1 ? 0 : '';
-      const result = await AppointmentAPI.handleLeave({ 
+      let status = data.status === 2 ? 1 : data.status === 1 ? 2 : '';
+      const result = await AppointmentAPI.handleLeave({
         appointmentId : data.id,
         userId: data.user_id,
         appointment_status : status,
+        date : data.date,
       });
-      setCurrentTimeslotList(result.timeSlot);
+      setCurrentTimeslotList(result.timeSlot);      
     }catch(e){
       console.log('handleLeave Error...', e);
+    }
+  }
+
+  const removeTimeSlot = async (data) => {
+    try{      
+      const result = await AppointmentAPI.removeTimeSlot({ 
+        appointmentId : data.id,
+        userId: data.user_id,        
+      });
+      console.log('result.....0',result.timeSlot)
+      setCurrentTimeslotList(result.timeSlot);      
+    }catch(e){
+      console.log('removeTimeSlot Error...', e);
     }
   }
 
   const handleOpenTimeslotDialog = (data, operation) => {
     setOperation(operation);
     if(operation === 'add'){
-      setSelectedTimeslot(currentTimeslotList[0]);
+      setSelectedTimeslot({user_id : userData.id});
     }else if(operation === 'update'){
       setSelectedTimeslot(data);
     }
     setShowTimslotDialog(true);
   }
 
-  const handleCloseTimeslotDialog = async () => {    
+  const handleCloseTimeslotDialog = async () => {
     setShowTimslotDialog(false);
+  }
+
+  const handleSameDaysTime = (currentRow) => {
+    let gridList =[];
+    currentTimeslotList.map((data, index) => {
+      if(currentRow.date === data.date){
+        gridList.push(
+          <Grid container alignItems = "center">
+            <Grid item xs={12} sm={6}>
+              <Typography className={classes.listSecondaryItem} color="textPrimary" >
+                {data.start_time + '  -  ' + data.end_time}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} align="right">
+              <Button variant="text" color="primary" className={classes.button} onClick = {() => handleOpenTimeslotDialog(data, 'update' )}> Update </Button>                                
+              <Button variant="text" color="primary" className={classes.button} onClick = {() => removeTimeSlot(data)}> Delete Timeslot</Button>
+            </Grid>
+          </Grid>
+        );
+      }
+    })
+    
+    return gridList
   }
 
 
   return (  
   <div>
     <Grid container spacing={2} alignItems = "center">
-        <Grid item xs={12} sm={6}>
-          <div style = {{display: 'flex'}}>
-            <Tooltip title="Back to Home">
-              <IconButton  size="small" component="span" onClick = {handleMainPage}> <BackArrowIcon/> </IconButton>
-            </Tooltip>
-            <Typography variant="h6" className={classes.labelTitle}> UPDATE TIMESLOT </Typography>
-          </div>
-        </Grid>
-        <Grid item xs={12} sm={6} justify = "flex-start">
-          <Fab variant="extended" size="small" color="primary" className={classes.fonttransform}  onClick = {() => {handleOpenTimeslotDialog([], 'add')}}>
-            <AddIcon className={classes.extendedIcon} /> ADD TIMESLOT
-          </Fab>
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <List className={classes.root}>
-            {(currentTimeslotList.length > 0 && currentTimeslotList != "" ? currentTimeslotList : []).map((data, index) => {
-              return(
-                <div>
-                  <Paper>
-                    <ListItem alignItems="flex-start">
-                      <ListItemText
-                        primary={
-                          <Fragment>
-                            <Typography className={classes.listPrimaryItem} color="textPrimary" >
-                              {getDateWithFullMonthNDay(data.date) + ' (' + data.status_name + ')'}
-                            </Typography>
-                          </Fragment>
-                        }
-                        secondary = {
-                          <Fragment>
+      <Grid item xs={12} sm={6}>
+        <div style = {{display: 'flex'}}>
+          <Tooltip title="Back to Home">
+            <IconButton  size="small" component="span" onClick = {handleMainPage}> <BackArrowIcon/> </IconButton>
+          </Tooltip>
+          <Typography variant="h6" className={classes.labelTitle}> UPDATE TIMESLOT </Typography>
+        </div>        
+      </Grid>
+      <Grid item xs={12} sm={6} justify = "flex-start" align="right">
+        <Fab variant="extended" size="small" color="primary" className={classes.fonttransform}  onClick = {() => {handleOpenTimeslotDialog([], 'add')}}>
+          <AddIcon className={classes.extendedIcon} /> ADD TIMESLOT
+        </Fab>        
+      </Grid>      
+      <Grid item xs={12} sm={12}>
+        <List className={classes.root}>
+          {(uniqueAppointment.length > 0 && uniqueAppointment != "" ? uniqueAppointment : []).map((data, index) => {
+            return(
+              <div>
+                <Paper>
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      primary={
+                        <Fragment>
                             <Grid container alignItems = "center">
-                              <Grid item xs={12} sm={6}>
-                                <Typography className={classes.listSecondaryItem} color="textPrimary" >
-                                  {data.start_time + '  -  ' + data.end_time}
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} sm={6}>
-                                <Button variant="text" color="primary" className={classes.button} onClick = {() => handleOpenTimeslotDialog(data, 'update' )}> Update </Button>
-                                <Button variant="text" color="primary" className={classes.button} onClick = {() => handleLeave(data)}>                                  
-                                  { data.status === 1 ? "Going On Leave" : data.status === 0 ? 'Cancel Leave' : '' }
-                                </Button>
-                              </Grid>
+                            <Grid item xs={12} sm={6}>
+                              <Typography className={classes.listPrimaryItem} color="textPrimary" >
+                                {getDateWithFullMonthNDay(data.date) + ' (' + data.status_name + ')'}
+                              </Typography>
                             </Grid>
-                          </Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider variant="fullWidth" component="li" />
-                  </Paper>
-                </div>
-              )
-            })}
-          </List>
-        </Grid>
+                            <Grid item xs={12} sm={6} align="right">
+                              <Button variant="text" color="primary" className={classes.button} onClick = {() => handleLeave(data)}>
+                                { data.status === 1 ? "Going On Leave" : data.status === 2 ? 'Cancel Leave' : '' }
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Fragment>
+                      }
+                      secondary = {
+                        <Fragment>
+                          {handleSameDaysTime(data)}                            
+                        </Fragment>                          
+                      }
+                    />
+                  </ListItem>
+                  <Divider variant="fullWidth" component="li" />
+                </Paper>
+              </div>
+            )
+          })}
+        </List>
+      </Grid>
     </Grid>
-    
     { showTimslotDialog ? <AddUpdateTimeslot open = {showTimslotDialog} handleClose = {handleCloseTimeslotDialog} operation={operation} selectedTimeslot = {selectedTimeslot} setCurrentTimeslotList={setCurrentTimeslotList} /> : null }
   </div>
   )

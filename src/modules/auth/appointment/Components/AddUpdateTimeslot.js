@@ -154,12 +154,14 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
 
   const submitTimeslot = async () => {
     try{     
-      const result = await AppointmentAPI.addNewTimeslot({
+      const result = await AppointmentAPI.addOrUpdateTimeslot({
         userId: selectedTimeslot.user_id,
         date : getDate(inputs.date),
         start_time : getTimeinDBFormat(inputs.start_time),
-        end_time : getTimeinDBFormat(inputs.end_time)
-      });      
+        end_time : getTimeinDBFormat(inputs.end_time), 
+        appointmentId : selectedTimeslot.id,
+        operation : operation,
+      });
       setCurrentTimeslotList(result.timeSlot);
       handleClose();
     }catch(e){

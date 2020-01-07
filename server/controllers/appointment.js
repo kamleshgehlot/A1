@@ -61,8 +61,9 @@ const handleLeave = async function (req, res, next) {
 		userId : req.body.userId,
 		appointmentId : req.body.appointmentId,
 		appointment_status : req.body.appointment_status,
+		date : req.body.date,
 	}
-
+console.log(' params', params);
   try {
 		const newActivity = new Appointment(params);		
 		await newActivity.handleLeave();
@@ -76,18 +77,45 @@ const handleLeave = async function (req, res, next) {
 }
 
 
-const addNewTimeslot = async function (req, res, next) {
+const removeTimeSlot = async function (req, res, next) {
 	const params = {
 		user_id: req.decoded.user_id,
 		userId : req.body.userId,
+		appointmentId : req.body.appointmentId,				
+	}
+
+  try {
+		const newActivity = new Appointment(params);		
+		await newActivity.removeTimeSlot();
+		
+		const timeSlot = await newActivity.getCurrentTimeslot();
+
+		res.send({ timeSlot: timeSlot });
+	} catch (err) {
+		next(err);
+	}
+}
+
+
+const addOrUpdateTimeslot = async function (req, res, next) {
+	const params = {
+		user_id: req.decoded.user_id,
+		userId : req.body.userId,
+		appointmentId : req.body.appointmentId,
 		date : req.body.date,
 		start_time : req.body.start_time,
-		end_time : req.body.end_time
+		end_time : req.body.end_time,
+		operation : req.body.operation,
 	}
-console.log('prams.', params)
+
   try {
-		const newActivity = new Appointment(params);				
-		await newActivity.addNewTimeslot(params.userId, params.date, '15', params.start_time, params.end_time, 1, 1);
+		const newActivity = new Appointment(params);
+		if(params.operation === 'add'){
+			await newActivity.addNewTimeslot();
+		}
+		else if(params.operation === 'update'){
+			await newActivity.updateExistingTimeslot();
+		}
 
 		const timeSlot = await newActivity.getCurrentTimeslot();
 		res.send({ timeSlot: timeSlot });
@@ -100,5 +128,6 @@ module.exports = {
 	membersList: membersList, 
 	getCurrentTimeslot: getCurrentTimeslot, 
 	handleLeave: handleLeave,
-	addNewTimeslot: addNewTimeslot,
+	addOrUpdateTimeslot: addOrUpdateTimeslot,
+	removeTimeSlot : removeTimeSlot,
  };

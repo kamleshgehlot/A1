@@ -84,8 +84,8 @@ export default {
     }
   },
 
-  addNewTimeslot: async ({ cancelToken, ...payload }) => {
-    const URL = `${c.API_CONSUMER}/api/appointment/addNewTimeslot`;
+  addOrUpdateTimeslot: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/appointment/addOrUpdateTimeslot`;
     try {
       const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
           cancelToken,
@@ -99,4 +99,18 @@ export default {
     }
   },
 
+  removeTimeSlot: async ({ cancelToken, ...payload }) => {
+    const URL = `${c.API_CONSUMER}/api/appointment/removeTimeSlot`;
+    try {
+      const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
+          cancelToken,
+          data: payload,
+        }),
+      );
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
 };
