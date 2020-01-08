@@ -175,11 +175,11 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={countdata} height={150}>
+      <Chart data={staff} height={150}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
-      <BarSeries valueField="totalcount" argumentField="staffname" />
+      <BarSeries valueField="ordercount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
     <h1>Order Count</h1>
