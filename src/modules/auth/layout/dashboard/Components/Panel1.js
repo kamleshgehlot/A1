@@ -113,6 +113,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [leadList, setLeadList] = React.useState([]);
   const [staff,setstaff]=useState([]);
   const [countdata,setcountdata]=useState([]);
+  const [newamountdata,setnewamountdata]=useState([]);
   const [duration,setduration]=useState(30);
 
   const changeDuration=(e)=>{
@@ -132,12 +133,9 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       const resultLead = await LeadAPI.fetchLeads();
       setLeadList(resultLead.leadList);
 
-        let {data} = await Run('dashboardorder', {franchise:1,duration});
-        setstaff(data);
-
-        let result = await Run('dashboardcount', {franchise:1,duration});
-        setcountdata(result.data);
-        
+        let {data} = await Run('dashboardorder', {franchise:1,duration});setstaff(data);
+        let result = await Run('dashboardcount', {franchise:1,duration});setcountdata(result.data);
+        result = await Run('dashboardnewamount', {franchise:1,duration});setnewamountdata(result.data);
 
     }
     fetchData();
@@ -163,7 +161,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={300}>
+      <Chart data={staff} height={150}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
@@ -171,12 +169,13 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
     <h1>Order Amount</h1>
+    <small>Sum of Amount successfully received in last period of time</small>
       </CardContent></Card>
       </Grid>
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={countdata} height={300}>
+      <Chart data={countdata} height={150}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
@@ -184,6 +183,35 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
     <h1>Order Count</h1>
+    <small>Orders in which payment was received in last period of time</small>
+      </CardContent></Card>
+      </Grid>
+
+      <Grid item xs={12} sm={12} md={6} >
+      <Card><CardContent>
+      <Chart data={staff} height={150}>
+      <ArgumentAxis showGrid />
+      <ValueAxis />
+          <EventTracker /><Tooltip />
+      {/* <LineSeries valueField="value" argumentField="argument" /> */}
+      <BarSeries valueField="totalreceived" argumentField="staffname" />
+    </Chart>
+    <h1>New Order Amount</h1>
+    <small>In last duration expected amount of orders we received ?</small>
+      </CardContent></Card>
+      </Grid>
+
+      <Grid item xs={12} sm={12} md={6} >
+      <Card><CardContent>
+      <Chart data={countdata} height={150}>
+      <ArgumentAxis showGrid />
+      <ValueAxis />
+          <EventTracker /><Tooltip />
+      <BarSeries valueField="totalcount" argumentField="staffname" />
+      {/* <BarSeries valueField="value" argumentField="argument" /> */}
+    </Chart>
+    <h1>New Order Count</h1>
+    <small>In last duration how many new orders we received ?</small>
       </CardContent></Card>
       </Grid>
 

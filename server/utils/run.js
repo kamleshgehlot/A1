@@ -9,6 +9,9 @@ router.route("/dashboardorder").post(async (req, res, next) => {
 router.route("/dashboardcount").post(async (req, res, next) => {
     return querypromise(`select count(distinct orders.order_id) as totalcount,CONCAT(staff.first_name,' ',staff.last_name) as staffname from orders left join staff on staff.franchise_user_id=orders.sales_person_id where orders.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by orders.sales_person_id;`, [] , req,res);
   });
+router.route("/dashboardnewamount").post(async (req, res, next) => {
+    return querypromise(`select count(distinct orders.order_id) as totalcount,CONCAT(staff.first_name,' ',staff.last_name) as staffname from orders left join staff on staff.franchise_user_id=orders.sales_person_id where orders.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by orders.sales_person_id;`, [] , req,res);
+});
 
 const querypromise = (mysqlquery, values,req,res) => {
     console.log(mysqlquery); // TODO remove in PROD
