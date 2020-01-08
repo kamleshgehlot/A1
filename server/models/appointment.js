@@ -133,7 +133,7 @@ Appointment.prototype.getCurrentTimeslot = function () {
         throw error;
       }
       connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-      connection.query('SELECT at.id, at.user_id, DATE_FORMAT(at.date,\'%Y-%m-%d\') as date, at.meeting_time, DATE_FORMAT(at.start_time, \'%h:%i:%p\') as start_time, DATE_FORMAT(at.end_time, \'%h:%i:%p\') as end_time,  at.status, (CASE at.status WHEN 1 THEN "Available" WHEN 2 THEN "On Leave" END) as status_name, at.is_active FROM `appointment_timeslot` AS at WHERE at.user_id = '+ that.userId +' AND at.is_active = 1 AND at.status IN (1,2) ORDER BY at.date, at.id', function (error, rows, fields) {
+      connection.query('SELECT at.id, at.user_id, DATE_FORMAT(at.date,\'%Y-%m-%d\') as date, at.meeting_time, TIME_FORMAT(at.start_time, \'%H:%i\') as start_time, TIME_FORMAT(at.end_time, \'%H:%i\') as end_time,  at.status, (CASE at.status WHEN 1 THEN "Available" WHEN 2 THEN "On Leave" END) as status_name, at.is_active FROM `appointment_timeslot` AS at WHERE at.user_id = '+ that.userId +' AND at.is_active = 1 AND at.status IN (1,2) ORDER BY at.date, at.id', function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }
         resolve(rows);
         connection.release();
