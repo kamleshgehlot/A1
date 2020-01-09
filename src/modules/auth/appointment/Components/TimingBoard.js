@@ -91,8 +91,7 @@ const useStyles = makeStyles(theme => ({
   },
   timeButton: {
     height : theme.typography.pxToRem(50),
-    width : theme.typography.pxToRem(50),
-    // backgroundColor : 'gray',
+    width : theme.typography.pxToRem(50),    
   },
   timeButtonFont: {
     fontWeight: theme.typography.fontWeightBold,
@@ -101,28 +100,61 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TimingBoard({selectedDate, currentTimeslotList, timingTable}) {
+export default function TimingBoard({selectedDate, currentTimeslotList, timingTable, handleAppointTimeSelection, bookedAppointmentList}) {
   const classes = useStyles();
-
-  const handleTimingBoardLayout = (data, index) => {
+  
+  const handleTimingBoardLayout = (data, index, row) => {
     let isRowInsert = false;
 
-    index === 1 && data.time.split(':')[1] === '00' ? isRowInsert = true :
-    index === 2 && data.time.split(':')[1] === '15' ? isRowInsert = true :
-    index === 3 && data.time.split(':')[1] === '30' ? isRowInsert = true :
-    index === 4 && data.time.split(':')[1] === '45' ? isRowInsert = true : isRowInsert = false
+    row === 1 && data.time.split(':')[1] === '00' ? isRowInsert = true :
+    row === 2 && data.time.split(':')[1] === '15' ? isRowInsert = true :
+    row === 3 && data.time.split(':')[1] === '30' ? isRowInsert = true :
+    row === 4 && data.time.split(':')[1] === '45' ? isRowInsert = true : isRowInsert = false
+
 
     let isAvailable = false;
     const found = (currentTimeslotList !== undefined && currentTimeslotList.length > 0 ? currentTimeslotList : []).find((row, index) => {
       return row.date === selectedDate && row.status === 1 && moment(data.original_time).isBetween(moment(row.start_time,'HH:mm'), moment(row.end_time,'HH:mm'));
     })
-    if(found === undefined){ isAvailable = true; }
 
-    return(      
+    let isAlreadyBooked = false;
+
+      if(found === undefined) { 
+        isAvailable = true;
+        timingTable[index].is_free = false;
+      }else{
+
+          const foundedResult = (bookedAppointmentList !== undefined && bookedAppointmentList.length > 0 ? bookedAppointmentList : []).find((row, index) => {
+            return moment(data.original_time).isBetween(moment(row.start_time,'HH:mm'), moment(row.end_time,'HH:mm'));
+          });
+          if(foundedResult === undefined){
+            isAvailable = false;
+            timingTable[index].is_free = true;
+            isAlreadyBooked = false;
+          }else{
+            isAvailable = true;
+            timingTable[index].is_free = false;
+            isAlreadyBooked = true;
+          }
+      }
+    
+
+    return(
       isRowInsert === false ? '' :
       isRowInsert === true && 
       <TableCell style={{padding : '5px'}}>
-          <Button variant="contained" color="primary" className={classes.timeButton} disabled = {isAvailable}>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            id = {data.time} 
+            className={classes.timeButton} 
+            style =   {
+              isAvailable === false && isAlreadyBooked === false ? {backgroundColor : 'yellowgreen'} : 
+              isAlreadyBooked === true ? {backgroundColor : 'darkseagreen'} : null
+            } 
+            onClick = {()=> {handleAppointTimeSelection(data)}} 
+            disabled = {isAvailable}
+          >
             <Typography variant="body1" className = {classes.timeButtonFont}>
               {data.start_time}
               <Divider />
@@ -131,20 +163,19 @@ export default function TimingBoard({selectedDate, currentTimeslotList, timingTa
           </Button>
       </TableCell>
     )
-  }
-
+  }  
 
   return (  
     <Paper style={{ width: '68%' }}>
       <Table>
         <TableBody>
           {
-            ([1,2,3,4]).map(index => {
+            ([1,2,3,4]).map(row => {
               return(
                 <TableRow>{
-                  (timingTable).map(data => {
+                  (timingTable).map((data, index )=> {
                     return(
-                      handleTimingBoardLayout(data, index)
+                      handleTimingBoardLayout(data, index, row)
                     )
                   })  
                 }</TableRow>

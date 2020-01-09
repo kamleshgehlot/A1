@@ -124,10 +124,68 @@ const addOrUpdateTimeslot = async function (req, res, next) {
 	}
 }
 
+
+
+
+const bookAppointment = async function (req, res, next) {
+	const params = {
+		user_id: req.decoded.user_id,
+		created_by: req.decoded.id,
+
+		userId : req.body.userId,
+		date : req.body.date,
+		meeting_time : req.body.meeting_time,
+		start_time : req.body.start_time,
+		end_time : req.body.end_time,
+		first_name : req.body.first_name,
+		last_name : req.body.last_name,
+		contact : req.body.contact,
+		reference : req.body.reference,
+	}
+
+  try {
+		const newActivity = new Appointment(params);
+		
+		await newActivity.bookAppointment();
+		
+		const timeSlot = await newActivity.getCurrentTimeslot();
+		const bookedList = await newActivity.fetchBookedAppointmentList();
+
+		res.send({ timeSlot: timeSlot, bookedList : bookedList });
+	} catch (err) {
+		next(err);
+	}
+}
+
+
+
+
+
+const fetchBookedAppointmentList = async function (req, res, next) {
+	const params = {
+		user_id: req.decoded.user_id,
+		userId : req.body.userId,
+		date : req.body.date,
+	}
+
+  try {
+		const newActivity = new Appointment(params);
+		
+		const bookedList = await newActivity.fetchBookedAppointmentList();
+		
+		res.send({ bookedList : bookedList  });
+	} catch (err) {
+		next(err);
+	}
+}
+
+
 module.exports = { 
 	membersList: membersList, 
 	getCurrentTimeslot: getCurrentTimeslot, 
 	handleLeave: handleLeave,
 	addOrUpdateTimeslot: addOrUpdateTimeslot,
 	removeTimeSlot : removeTimeSlot,
+	bookAppointment : bookAppointment,
+	fetchBookedAppointmentList : fetchBookedAppointmentList,
  };

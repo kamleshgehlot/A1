@@ -12,5 +12,7 @@ appointmentRouter.route("/getCurrentTimeslot").post(validateToken, Appointment.g
 appointmentRouter.route("/handleLeave").post(validateToken, Appointment.handleLeave);
 appointmentRouter.route("/addOrUpdateTimeslot").post(validateToken, Appointment.addOrUpdateTimeslot);
 appointmentRouter.route("/removeTimeSlot").post(validateToken, Appointment.removeTimeSlot);
+appointmentRouter.route("/bookAppointment").post(validateToken, Appointment.bookAppointment);
+appointmentRouter.route("/fetchBookedAppointmentList").post(validateToken, Appointment.fetchBookedAppointmentList);
 
 module.exports = appointmentRouter;
