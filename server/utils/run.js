@@ -3,14 +3,41 @@ const router = express.Router();
 const connection = require('../lib/connection.js');
 const dbName = require('../lib/databaseMySQLNew.js');
 
-router.route("/dashboardorder").post(async (req, res, next) => {
+router.route("/orderamount").post(async (req, res, next) => {
   return querypromise(`select round(sum(payment_amt),2) as totalreceived,count(payment_amt) as ordercount, staffname from (SELECT sum(payment_amt) as payment_amt, max(total_paid) as total_paid, CONCAT(staff.first_name,' ',staff.last_name) as staffname, staff.id as staff_id FROM payment_schedules left join orders on orders.id = payment_schedules.order_id left join staff on staff.franchise_user_id=orders.sales_person_id where payment_schedules.status NOT IN (1,6,7,8,9,10,16,17) and  payment_schedules.settlement_date >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by payment_schedules.order_id) as t where staffname is not NULL group by t.staff_id`, [] , req,res);
 });
-router.route("/dashboardcount").post(async (req, res, next) => {
+router.route("/ordercount").post(async (req, res, next) => {
     return querypromise(`select count(distinct orders.order_id) as totalcount,CONCAT(staff.first_name,' ',staff.last_name) as staffname from orders left join staff on staff.franchise_user_id=orders.sales_person_id where orders.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by orders.sales_person_id;`, [] , req,res);
   });
-router.route("/dashboardnewamount").post(async (req, res, next) => {
+router.route("/newamount").post(async (req, res, next) => {
     return querypromise(`select count(distinct orders.order_id) as totalcount,CONCAT(staff.first_name,' ',staff.last_name) as staffname from orders left join staff on staff.franchise_user_id=orders.sales_person_id where orders.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by orders.sales_person_id;`, [] , req,res);
+});
+router.route("/productmanager").post(async (req, res, next) => {
+    let orders=await querypromise(`select * from orders;`, [] , req,false);
+    let productlist={};
+    orders.forEach(order => {
+        let list=order.product_id.split(',');
+        list.forEach(item => {
+            if(!productlist[item])productlist[item]={count:1};
+            else productlist[item].count++;
+        });
+    });
+    delete req.body.franchise;
+    let names=await querypromise("select * from product where id in ("+Object.keys(productlist).join(',').replace(/,\s*$/, "")+");",[],req,false);
+    function search(searchValue, arrayName,key){
+        let answer=false;
+        arrayName.forEach(item => {if(item[key]==searchValue)answer=item;});
+        return answer;
+    }
+    Object.keys(productlist).forEach(item => {
+        let result=search(item,names,"id");
+        if(result){
+            productlist[item].productid=result.id;
+            productlist[item].name=result.name;
+            productlist[item].description=result.description;
+        }
+    });
+    res.send({ status: 400, data: productlist });
 });
 
 const querypromise = (mysqlquery, values,req,res) => {
@@ -35,12 +62,12 @@ const querypromise = (mysqlquery, values,req,res) => {
                   (error, result, fields) => {
                       if (error) {
                           console.log('Error: ', error);
-                          // reject(error);
-                          res.send({ status: 400, data: error });
+                          if(res)res.send({ status: 400, data: error });
+                          else reject(error);
                       } else {
-                          // resolve(result);
-                          console.log('Result: ',result);
-                          res.send({ status: 200, data: result });
+                        //   console.log('Result: ',result);
+                          if(res)res.send({ status: 200, data: result });
+                          else resolve(result);
                       }
                   }
               );
