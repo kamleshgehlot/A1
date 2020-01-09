@@ -45,7 +45,7 @@ import Button from '@material-ui/core/Button';
 import {TablePaginationActions} from '../../../common/Pagination';
 
 // Components
-import {getDateWithFullMonthNDay} from '../../../../utils/datetime.js'
+import {getDateWithFullMonthNDay, setTime, get12HourTime} from '../../../../utils/datetime.js'
 import AddUpdateTimeslot from './AddUpdateTimeslot';
 
 // API Call
@@ -176,7 +176,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
           <Grid container alignItems = "center">
             <Grid item xs={12} sm={6}>
               <Typography className={classes.listSecondaryItem} color="textPrimary" >
-                {data.start_time + '  -  ' + data.end_time}
+                { get12HourTime(setTime(data.start_time)) + '  -  ' + get12HourTime(setTime(data.end_time))}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} align="right">

@@ -38,6 +38,12 @@ export function getTime(date) {
   return moment(date).format("HH:mm")
 }
 
+export function setTime(time) {
+  let hour = time.split(':')[0];
+  let minute = time.split(':')[1];
+  return moment().set({'hour': hour, 'minute': minute})
+}
+
 export function convertDateInUTC(date) {  
   return moment.utc(date);  
 }
@@ -75,3 +81,4 @@ export function checkFutureDate(date) {
 export function getDateWithFullMonthNDay(date) {
   return moment(date).format("DD-MMMM-YYYY, dddd");
 }
+

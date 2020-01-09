@@ -56,7 +56,7 @@ import {TablePaginationActions} from '../../../common/Pagination';
 import {useCommonStyles} from '../../../common/StyleComman.js';
 import useSignUpForm from '../../franchise/CustomHooks';
 import validate from '../../../common/validation/AppointmentTimeslotDialog';
-import {getDate, getCurrentDate, getTimeinDBFormat, get12HourTime } from '../../../../utils/datetime'
+import {getDate, setTime, getCurrentDate, getTimeinDBFormat, get12HourTime } from '../../../../utils/datetime'
 
 // API 
 import AppointmentAPI from '../../../../api/Appointment.js';
@@ -146,8 +146,8 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
     if(operation === 'update'){
       handleRandomInput([
         {name: 'date', value:   selectedTimeslot.date},
-        {name: 'start_time', value: selectedTimeslot.start_time},
-        {name: 'end_time', value: selectedTimeslot.end_time}
+        {name: 'start_time', value: setTime(selectedTimeslot.start_time)},
+        {name: 'end_time', value: setTime(selectedTimeslot.end_time)}
       ]);      
     }
   }
