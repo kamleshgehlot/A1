@@ -114,6 +114,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
   const [staff,setstaff]=useState([]);
   const [countdata,setcountdata]=useState([]);
   const [newamountdata,setnewamountdata]=useState([]);
+  const [productmanager,setproductmanager]=useState([]);
   const [duration,setduration]=useState(30);
 
   const changeDuration=(e)=>{
@@ -132,10 +133,11 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       
       const resultLead = await LeadAPI.fetchLeads();
       setLeadList(resultLead.leadList);
-
-        let {data} = await Run('dashboardorder', {franchise:1,duration});setstaff(data);
-        let result = await Run('dashboardcount', {franchise:1,duration});setcountdata(result.data);
-        result = await Run('dashboardnewamount', {franchise:1,duration});setnewamountdata(result.data);
+ 
+        let {data} = await Run('orderamount', {franchise:1,duration});setstaff(data);
+        let result = await Run('ordercount', {franchise:1,duration});setcountdata(result.data);
+        result = await Run('newamount', {franchise:1,duration});setnewamountdata(result.data);
+        result = await Run('productmanager', {franchise:1});console.log(result.data);setproductmanager(result.data);
 
     }
     fetchData();
@@ -220,6 +222,32 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <br />
       </>
 }
+
+{(roleName === "CSR") &&
+  <>
+  <Grid container spacing={4} style={{textAlign:'left'}}>
+
+  <Grid item xs={12} sm={12} md={12} >
+      <Card><CardContent>
+  <h1>Product Manager</h1>
+  <br />
+<ul>
+  {productmanager && <>
+    {Object.keys(productmanager).map((keyName, i) => (
+    <li key={i}>
+        <span className="input-label">{productmanager[keyName].productid || 'id'} : {productmanager[keyName].name || 'Product'} : {productmanager[keyName].description || 'Desc'} : {productmanager[keyName].count}</span>
+    </li>
+))}
+</>}
+</ul>
+</CardContent></Card>
+</Grid>
+      </Grid>
+      <br />
+      <br />
+</>
+}
+
     <Paper >             
       <Grid container spacing={4}  style={{ 'padding': '10px'}}>  
         <Grid item xs={12} sm={12} >   
