@@ -163,57 +163,53 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={150}>
+      <Chart data={staff} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
-    <h1>Order Amount</h1>
-    <small>Sum of Amount successfully received in last period of time</small>
+    <h1>Amount receieved in Active Orders</h1>
       </CardContent></Card>
       </Grid>
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={150}>
+      <Chart data={staff} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
       <BarSeries valueField="ordercount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
-    <h1>Order Count</h1>
-    <small>Orders in which payment was received in last period of time</small>
+    <h1>Active Orders</h1>
       </CardContent></Card>
       </Grid>
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={150}>
+      <Chart data={newamountdata} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
-    <h1>New Order Amount</h1>
-    <small>In last duration expected amount of orders we received ?</small>
+    <h1>Amount recieved in New Orders</h1>
       </CardContent></Card>
       </Grid>
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={countdata} height={150}>
+      <Chart data={countdata} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
       <BarSeries valueField="totalcount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
-    <h1>New Order Count</h1>
-    <small>In last duration how many new orders we received ?</small>
+    <h1>New Orders</h1>
       </CardContent></Card>
       </Grid>
 
