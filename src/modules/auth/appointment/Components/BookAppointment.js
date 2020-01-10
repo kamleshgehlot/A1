@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-
+import ReactDOM from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -52,7 +52,7 @@ import {TablePaginationActions} from '../../../common/Pagination';
 // Component
 import {useCommonStyles} from '../../../common/StyleComman.js';
 import useSignUpForm from '../../franchise/CustomHooks';
-import validate from '../../../common/validation/AppointmentTimeslotDialog';
+import validate from '../../../common/validation/BookingAppointment.js';
 import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
 
 import TimingBoard from './TimingBoard.js';
@@ -61,6 +61,7 @@ import TimingBoard from './TimingBoard.js';
 import AppointmentAPI from '../../../../api/Appointment.js';
 import moment from 'moment';
 import { boolean } from 'yup';
+import { green } from '@material-ui/core/colors';
 
 
 const StyledTableCell = withStyles(theme => ({
@@ -94,6 +95,12 @@ const useStyles = makeStyles(theme => ({
 const RESET_VALUES = {
   appointment_date : null,
   meeting_time : 15,
+  start_time : '',
+  end_time : '',
+  first_name : '',
+  last_name : '',
+  contact : '',
+  reference : ''
 };
 
 
@@ -102,19 +109,34 @@ export default function BookAppointment({handleMainPage, userData}) {
   
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
   const [timingTable, setTimingTable] = useState([]);
+  const [bookedAppointmentList, setBookedAppointmentList] = useState([]);
+
 
   useEffect(() => {
-    getCurrentTimeslot();   
+    getCurrentTimeslot();
     generateTimingTable(); 
   },[]);
 
-    
+
+
+  const fetchBookedAppointmentList = async () => {
+    try{
+      const result = await AppointmentAPI.fetchBookedAppointmentList({
+        userId : userData.id,
+        date : inputs.appointment_date,
+      });
+      setBookedAppointmentList(result.bookedList);      
+    }catch(e){
+      console.log('Error...', e);
+    }
+  }
+
+  
 
   const generateTimingTable = () => {
     let startTime = setTime('08:00');
     let endTime = setTime('20:00');
     let times = [];
-
     do {
       times.push({
         'original_time' : startTime,
@@ -122,24 +144,31 @@ export default function BookAppointment({handleMainPage, userData}) {
         'start_time' : get12HourTime(startTime),
         'end_time' : get12HourTime(moment(startTime).add(15, 'minute')),
       });
-
       startTime = moment(startTime).add(15, 'minute');
     } while (getTime(startTime) !== getTime(endTime));
     setTimingTable(times);
   }
 
+
+
+  const setFirstAvailableDate = (timeSlot) => {
+    const firstDate = (timeSlot.length > 0 ? timeSlot : []).find((data) => {
+      return data.status === 1
+    });
+    setInput('appointment_date', firstDate.date);
+  }
+
+
   const getCurrentTimeslot = async () => {
     try{
       const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
-      setCurrentTimeslotList(result.timeSlot);
-      const firstDate = (result.timeSlot.length > 0 ? result.timeSlot : []).find((data) => {
-        return data.status === 1
-      })
-      setInput('appointment_date', firstDate.date);
+      setCurrentTimeslotList(result.timeSlot);      
+      setFirstAvailableDate(result.timeSlot);
     }catch(e){
       console.log('getCurrentTimeslot Error...', e);
     }
   }
+
 
   const handleDateAvaibility = (date) => {
     const found = (currentTimeslotList.length > 0 ? currentTimeslotList : []).find((data) => {
@@ -148,16 +177,102 @@ export default function BookAppointment({handleMainPage, userData}) {
     return found === undefined;
   }
 
+
+  const resetTiming = () => {
+    // inputs.start_time  = '';
+    // inputs.end_time  =  '';
+
+    handleRandomInput([ 
+      {name: 'start_time', value: '' },
+      {name: 'end_time', value:  ''}
+    ]);
+
+    timingTable.map((row) => {
+      if(row.is_free === true){
+        document.getElementById(row.time).style.backgroundColor =  'yellowgreen';
+      }
+    })
+  }
+
+
+  const handleAppointTimeSelection = (data) => {    
+    let startTime = setTime(data.time);
+    let endTime = moment(startTime).add(inputs.meeting_time, 'minute');
+    
+    let totalNeed = Number(inputs.meeting_time / 15);
+    let available = 0;
+
+    timingTable.map((row) => {
+      console.log(2 + 2);
+      if(row.is_free === true && setTime(row.time).isBetween(startTime, endTime) === true){
+        document.getElementById(row.time).style.backgroundColor =  'slategray';
+        available = available + 1;
+      }else if(row.is_free === true){
+        document.getElementById(row.time).style.backgroundColor =  'yellowgreen';
+      }
+    });
+
+    if(totalNeed !== available){
+      resetTiming();
+    }else{
+      handleRandomInput([ 
+        {name: 'start_time', value: getTime(startTime) },
+        {name: 'end_time', value:  getTime(endTime)}
+      ]);
+      // inputs.start_time  =  getTime(startTime);
+      // inputs.end_time  =  getTime(endTime);      
+    }
+  }
   
-  const { inputs, handleDateChange, handleInputChange, handleSubmit, handleRandomInput, setInput, errors } = useSignUpForm(    
+
+
+  const submitForm = async () => {
+    try{
+      const result = await AppointmentAPI.bookAppointment({
+        userId : userData.id, 
+        date : getDate(inputs.appointment_date),
+        meeting_time : inputs.meeting_time,
+        start_time : inputs.start_time,
+        end_time : inputs.end_time,
+        first_name : inputs.first_name,
+        last_name : inputs.last_name,
+        contact : inputs.contact,
+        reference : inputs.reference,
+      });
+      setCurrentTimeslotList(result.timeSlot);
+      setBookedAppointmentList(result.bookedList);
+    }catch(e){
+      console.log('Error...', e);
+    }
+  }
+
+  const handleRecallTimingBoard = async () => {
+    ReactDOM.render(
+        <TimingBoard
+          selectedDate = {getDate(inputs.appointment_date)} 
+          currentTimeslotList={currentTimeslotList}
+          timingTable = {timingTable}
+          handleAppointTimeSelection = {handleAppointTimeSelection}
+          bookedAppointmentList = {bookedAppointmentList}
+        />, 
+        document.getElementById('timingBoard')
+    );
+    resetTiming();
+  }
+  
+  const { inputs, handleDateChange, handleNumberInput, handleInputChange, handleSubmit, handleReset, handleRandomInput, setInput, errors } = useSignUpForm(    
     RESET_VALUES,
-    () => {},
-    {},
+    submitForm,
+    validate,
   );
-
-  // useEffect(() => {
-
-  // },[inputs.appointment_date]);
+  
+  useEffect(() => {
+    fetchBookedAppointmentList();
+  },[inputs.appointment_date, inputs.meeting_time]);
+  
+  useEffect(() => {
+    handleRecallTimingBoard();
+  },[bookedAppointmentList]);
 
   return (
       <Grid container spacing={2} alignItems = "center">
@@ -178,7 +293,7 @@ export default function BookAppointment({handleMainPage, userData}) {
               onChange={handleInputChange}
               inputProps={{
                 name: 'meeting_time',
-                id: 'meeting_time',                                         
+                id: 'meeting_time',                                           
               }}
               fullWidth
               required
@@ -216,19 +331,17 @@ export default function BookAppointment({handleMainPage, userData}) {
         <Grid item xs={12} sm={12}>
           <Typography  className={classes.textHeading} htmlFor="">TIMING BOARD</Typography>
           <Paper style={{ width: '68%' }}>
-            { inputs.appointment_date && 
-              <TimingBoard selectedDate = {getDate(inputs.appointment_date)} currentTimeslotList={currentTimeslotList} timingTable = {timingTable} /> 
-            }
+            <div id = "timingBoard"></div>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <Typography  className={classes.textHeading} htmlFor="">FILL CLIENT's INFORMATION</Typography>
+          <Typography className={classes.textHeading} htmlFor="">FILL CLIENT's INFORMATION</Typography>
           <Paper style={{ width: '100%' }}>
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell>
-                    <InputLabel  className={classes.textHeading} htmlFor="first_name">First Name</InputLabel>
+                    <InputLabel  className={classes.textHeading} htmlFor="first_name">First Name *</InputLabel>
                     <TextField
                       variant="outlined"
                       InputProps={{
@@ -236,22 +349,19 @@ export default function BookAppointment({handleMainPage, userData}) {
                           input: classes.textsize,
                         },
                       }}
-                      margin="dense"
-                      id="mobile"
-                      name="mobile"
-                      type="text"
-                      // value={inputs.mobile} 
-                      // onChange={handleNumberInput}
-                      // error={errors.mobile}
-                      // helperText={errors.mobile}
                       fullWidth
-                      // onInput={(e)=>{ 
-                      //   e.target.value =(e.target.value).toString().slice(0,10)
-                      // }}
+                      margin="dense"
+                      id="first_name"
+                      name="first_name"
+                      type="text"
+                      value={inputs.first_name} 
+                      onChange={handleInputChange}
+                      error={errors.first_name}
+                      helperText={errors.first_name}
                     />
                   </TableCell>
                   <TableCell>
-                    <InputLabel  className={classes.textHeading} htmlFor="last_name">Last Name</InputLabel>
+                    <InputLabel  className={classes.textHeading} htmlFor="last_name">Last Name *</InputLabel>
                     <TextField
                       variant="outlined"
                       InputProps={{
@@ -263,18 +373,15 @@ export default function BookAppointment({handleMainPage, userData}) {
                       id="last_name"
                       name="last_name"
                       type="text"
-                      // value={inputs.last_name} 
-                      // onChange={handleNumberInput}
-                      // error={errors.last_name}
-                      // helperText={errors.last_name}
+                      value={inputs.last_name} 
+                      onChange={handleInputChange}
                       fullWidth
-                      // onInput={(e)=>{ 
-                      //   e.target.value =(e.target.value).toString().slice(0,10)
-                      // }}
+                      error={errors.last_name}
+                      helperText={errors.last_name}
                     />
                   </TableCell>
                   <TableCell>
-                    <InputLabel  className={classes.textHeading} htmlFor="contact">Contact Number</InputLabel>
+                    <InputLabel  className={classes.textHeading} htmlFor="contact">Contact Number *</InputLabel>
                     <TextField
                       variant="outlined"
                       InputProps={{
@@ -286,14 +393,14 @@ export default function BookAppointment({handleMainPage, userData}) {
                       id="contact"
                       name="contact"
                       type="text"
-                      // value={inputs.contact} 
-                      // onChange={handleNumberInput}
-                      // error={errors.contact}
-                      // helperText={errors.contact}
+                      value={inputs.contact} 
+                      onChange={handleNumberInput}
+                      error={errors.contact}
+                      helperText={errors.contact}
                       fullWidth
-                      // onInput={(e)=>{ 
-                      //   e.target.value =(e.target.value).toString().slice(0,10)
-                      // }}
+                      onInput={(e)=>{ 
+                        e.target.value =(e.target.value).toString().slice(0,10)
+                      }}
                     />
                   </TableCell>
                   <TableCell>
@@ -309,26 +416,23 @@ export default function BookAppointment({handleMainPage, userData}) {
                       id="reference"
                       name="reference"
                       type="text"
-                      // value={inputs.reference} 
-                      // onChange={handleNumberInput}
+                      value={inputs.reference} 
+                      onChange={handleInputChange}
                       // error={errors.reference}
                       // helperText={errors.reference}
                       fullWidth
-                      // onInput={(e)=>{ 
-                      //   e.target.value =(e.target.value).toString().slice(0,10)
-                      // }}
                     />
                   </TableCell>
                   <TableCell>
                     <Typography className={classes.textHeading} htmlFor="reference">Action</Typography>
-                    <Button variant="contained"  color="primary"> SUBMIT </Button> 
+                    <Button variant="contained"  color="primary" onClick = {handleSubmit}> SUBMIT </Button> 
                   </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        {/* <Grid item xs={12} sm={12}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -343,7 +447,7 @@ export default function BookAppointment({handleMainPage, userData}) {
             <TableBody>        
                
             </TableBody>
-            {/* <TableFooter>
+            <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[10, 25, 50]}
@@ -359,9 +463,9 @@ export default function BookAppointment({handleMainPage, userData}) {
                   ActionsComponent={TablePaginationActions}
                 />
               </TableRow>
-            </TableFooter> */}
+            </TableFooter>
           </Table>  
-        </Grid>
+        </Grid> */}
       </Grid>
   )
 }
