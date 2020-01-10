@@ -100,8 +100,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TimingBoard({selectedDate, currentTimeslotList, timingTable, handleAppointTimeSelection, bookedAppointmentList}) {
+export default function TimingBoard({selectedDate, currentTimeslotList, timingTable, handleAppointTimeSelection, submitTime}) {
   const classes = useStyles();
+  const [bookedAppointmentList, setBookedAppointmentList] = useState([]);
+
+  useEffect(() => {
+    fetchBookedAppointmentList();
+  },[selectedDate, submitTime]);
+
+  const fetchBookedAppointmentList = async () => {
+    try{
+      const result = await AppointmentAPI.fetchBookedAppointmentList({
+        userId : currentTimeslotList[0].user_id,
+        date : selectedDate,
+      });
+      setBookedAppointmentList(result.bookedList);      
+    }catch(e){
+      console.log('Error...', e);
+    }
+  }
+
   
   const handleTimingBoardLayout = (data, index, row) => {
     let isRowInsert = false;
