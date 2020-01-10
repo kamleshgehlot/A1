@@ -170,8 +170,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
-    <h1>Order Amount</h1>
-    <small>Sum of Amount successfully received in last period of time</small>
+    <h1>Amount receieved in Active Orders</h1>
       </CardContent></Card>
       </Grid>
 
@@ -184,8 +183,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <BarSeries valueField="ordercount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
-    <h1>Order Count</h1>
-    <small>Orders in which payment was received in last period of time</small>
+    <h1>Active Orders</h1>
       </CardContent></Card>
       </Grid>
 
@@ -198,8 +196,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
-    <h1>New Order Amount</h1>
-    <small>In last duration recieved amount from new orders we received ?</small>
+    <h1>Amount recieved in New Orders</h1>
       </CardContent></Card>
       </Grid>
 
@@ -212,8 +209,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <BarSeries valueField="totalcount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
-    <h1>New Order Count</h1>
-    <small>In last duration how many new orders we received ?</small>
+    <h1>New Orders</h1>
       </CardContent></Card>
       </Grid>
 

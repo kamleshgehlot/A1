@@ -177,7 +177,8 @@ export default function ClippedDrawer(props) {
           console.log(error);
         }
       };
-      fetchData();      
+      fetchData();
+      handleDashboardClick();
   },[]);
   
   const classes = useStyles();
