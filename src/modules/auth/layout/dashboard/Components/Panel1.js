@@ -163,7 +163,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={150}>
+      <Chart data={staff} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
@@ -177,7 +177,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={150}>
+      <Chart data={staff} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
@@ -191,7 +191,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={staff} height={150}>
+      <Chart data={newamountdata} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
@@ -199,13 +199,13 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
     <h1>New Order Amount</h1>
-    <small>In last duration expected amount of orders we received ?</small>
+    <small>In last duration recieved amount from new orders we received ?</small>
       </CardContent></Card>
       </Grid>
 
       <Grid item xs={12} sm={12} md={6} >
       <Card><CardContent>
-      <Chart data={countdata} height={150}>
+      <Chart data={countdata} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
           <EventTracker /><Tooltip />
