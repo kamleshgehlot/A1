@@ -15,14 +15,19 @@ export default function validate(values) {
     errors.payment_source = 'Payment Source is required';
   }
 
-  // if (
-  //   values.date_field === 'NONE' && 
-  //   (values.date_from !== 'Invalid Date' && values.date_from !== null && values.date_from !== '' ) &&
-  //   (values.date_to  !== 'Invalid Date' && values.date_to  !== '' && values.date_to  !== null )
-  // ) {
-  //   errors.date_field = 'Choose a valid Date Field';
-  // }
+  if (values.date_field != 'NONE' &&
+      (values.date_from == 'Invalid Date' || values.date_from == null || values.date_from == '' )
+    ) {
+    errors.date_from = 'Select  a valid date';
+  }
+
+  if (values.date_field != 'NONE' &&
+      (values.date_to == 'Invalid Date' || values.date_to == null || values.date_to == '' )
+    ) {
+    errors.date_to = 'Select  a valid date';
+  }
   
+  // (values.date_to  !== 'Invalid Date' && values.date_to  !== '' && values.date_to  !== null )
   // // if((values.date_from === 'Invalid Date' || values.date_from === null || values.date_from === '' )){
   // //   if(values.date_field !== 'NONE'){
   // //     errors.date_from = 'A valid date is required with non NONE date field';

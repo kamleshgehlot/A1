@@ -71,11 +71,12 @@ const useSignUpForm = (state, callback, validate) => {
   };
 
   const handleRandomInput = (newInputArray) => {
-    let input = inputs;
+    let inputscopy = inputs;
     (newInputArray.length > 0 ? newInputArray : []).map(data => {
-      input[data.name] = data.value;
+      inputscopy[data.name] = data.value;
     })
-    setInputs({...inputs, input});
+    setInputs({...inputs, inputscopy});
+    delete inputs['inputscopy'];
   }
 
   const setInputsAll = e => {

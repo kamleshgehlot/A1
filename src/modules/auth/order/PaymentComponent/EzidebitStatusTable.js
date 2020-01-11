@@ -35,7 +35,7 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
+    fontSize: theme.typography.pxToRem(11),
   },
   body: {
     fontSize: 11,    
@@ -114,18 +114,33 @@ export default function PaymentStatusTable({paymentList, page, rowsPerPage, hand
   const styleClass = useCommonStyles();
   const classes = useStyles();
   
+  const paymentStatusList = [
+    {name : 'S', value : 'successful'},
+    {name : 'P', value : 'pending'},
+    {name : 'D', value : 'dishonoured'},
+    {name : 'F', value : 'fatal dishonour'},
+    {name : 'W', value : 'waiting'},
+  ];  
+
 return (  
     <Table stickyHeader>
-      <TableHead> 
+      <TableHead style = {{}}>
         <TableRow>
           <StyledTableCell>#</StyledTableCell>
-          <StyledTableCell>Payment Date</StyledTableCell>
+          <StyledTableCell>Customer Name</StyledTableCell>
+          <StyledTableCell>Payment Method</StyledTableCell>
+          <StyledTableCell>Payment Status</StyledTableCell>
+          <StyledTableCell>Bank Failed Reason</StyledTableCell>
+          <StyledTableCell>Payment Amount</StyledTableCell>
+          <StyledTableCell>Transaction Fee(Client)</StyledTableCell>
+          <StyledTableCell>Transaction Fee(Customer)</StyledTableCell>
+          <StyledTableCell>Debit Date</StyledTableCell>
           <StyledTableCell>Settlement Date</StyledTableCell>
-          <StyledTableCell>Payment Amount.</StyledTableCell>
+          {/* <StyledTableCell>Payment Amount.</StyledTableCell>
           <StyledTableCell>Ezidebit Customer Id</StyledTableCell>
-          <StyledTableCell>Customer Name</StyledTableCell>        
+            
           <StyledTableCell>Client Contract Ref</StyledTableCell>        
-          <StyledTableCell>Payment Source</StyledTableCell>
+          <StyledTableCell>Payment Source</StyledTableCell> */}
         </TableRow>
       </TableHead>
       <TableBody >
@@ -133,13 +148,23 @@ return (
           return (
             <TableRow> 
               <StyledTableCell>{index + 1}</StyledTableCell>
+              <StyledTableCell>{data.CustomerName}</StyledTableCell>
+              <StyledTableCell>{data.PaymentMethod}</StyledTableCell>
+              <StyledTableCell>
+                {
+                  paymentStatusList.map(status => {
+                    return(
+                      status.name === data.PaymentStatus ? status.value : ''
+                    )
+                  })
+                }
+              </StyledTableCell>
+              <StyledTableCell>{data.BankFailedReason}</StyledTableCell>
+              <StyledTableCell>{data.PaymentAmount}</StyledTableCell>
+              <StyledTableCell>{data.TransactionFeeClient}</StyledTableCell>
+              <StyledTableCell>{data.TransactionFeeCustomer}</StyledTableCell>
               <StyledTableCell>{getDateInDDMMYYYY(data.DebitDate)  === 'Invalid date' ? '' : getDateInDDMMYYYY(data.DebitDate)}</StyledTableCell>
               <StyledTableCell>{getDateInDDMMYYYY(data.SettlementDate) === 'Invalid date' ? '' : getDateInDDMMYYYY(data.SettlementDate)}</StyledTableCell>
-              <StyledTableCell>{data.PaymentAmount}</StyledTableCell>
-              <StyledTableCell>{data.EzidebitCustomerID}</StyledTableCell>
-              <StyledTableCell>{data.CustomerName}</StyledTableCell>
-              <StyledTableCell>{data.YourSystemReference}</StyledTableCell>
-              <StyledTableCell>{data.PaymentSource}</StyledTableCell>
             </TableRow>           
           )
         })}           
