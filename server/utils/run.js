@@ -41,7 +41,7 @@ router.route("/productmanager").post(async (req, res, next) => {
 });
 
 const querypromise = (mysqlquery, values,req,res) => {
-    console.log(mysqlquery); // TODO remove in PROD
+    // console.log(mysqlquery); // TODO remove in PROD
   return new Promise((resolve, reject) => {
       connection.getConnection((error, connection) => {
           if (error || connection === undefined) {

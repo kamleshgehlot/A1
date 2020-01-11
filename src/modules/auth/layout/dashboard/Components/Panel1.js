@@ -137,7 +137,7 @@ export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskCl
         let {data} = await Run('orderamount', {franchise:1,duration});setstaff(data);
         let result = await Run('ordercount', {franchise:1,duration});setcountdata(result.data);
         result = await Run('newamount', {franchise:1,duration});setnewamountdata(result.data);
-        result = await Run('productmanager', {franchise:1});console.log(result.data);setproductmanager(result.data);
+        result = await Run('productmanager', {franchise:1});setproductmanager(result.data);
 
     }
     fetchData();

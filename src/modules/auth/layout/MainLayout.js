@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import BusinessIcon from '@material-ui/icons/Home';
 import FinanceIcon from '@material-ui/icons/Timeline';
 import CustomerIcon from '@material-ui/icons/PersonAdd';
+import DateRangeIcon from '@material-ui/icons/DateRange';
 import TaskIcon from '@material-ui/icons/Assignment';
 import LeadIcon from '@material-ui/icons/TouchApp';
 import OrderIcon from '@material-ui/icons/Store';
@@ -683,7 +684,6 @@ export default function ClippedDrawer(props) {
         ?
           <TreeView
             className={classes.treeRoot}
-            // defaultExpanded={["3"]}            
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
@@ -740,18 +740,19 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
-            <StyledTreeItem nodeId="35" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleAppointmentClick(); }} />
             {roles.find(role => role === 'S&M')
             ?
             <StyledTreeItem nodeId="1" labelText="Sales &amp; Marketing"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
+                <StyledTreeItem nodeId="35" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
+
                 <Tab roleName="S&M" roleId="7" nodeId="5" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/>
 
                 <Tab roleName="S&M" nodeId="6" handleClick={handleEnquiryClick} labelIcon={EnquiryIcon} labelText="Manage Enquiry"/> 
 
                 <Tab roleName="S&M" nodeId="7" handleClick={handleLeadsClick} labelIcon={LeadIcon} labelText="Manage Leads"/> 
-                
+
                 <Tab roleName="S&M" nodeId="8" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
-               
+
               </StyledTreeItem>
             :<StyledTreeItem style={{"display": 'none'}} nodeId="1" labelText="" labelIcon={AccountCircleIcon} /> 
             }
@@ -760,6 +761,7 @@ export default function ClippedDrawer(props) {
             {roles.find(role => role === 'CSR')
             ?  
               <StyledTreeItem nodeId="2" labelText="CSR"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
+                <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
                 <Tab roleName="CSR" roleId="3" nodeId="9" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
 
                 <Tab roleName="CSR" nodeId="10" handleClick={handleCustomerClick} labelIcon={CustomerIcon} labelText="Manage Customer"/> 
@@ -923,3 +925,4 @@ export default function ClippedDrawer(props) {
     </div>
   );
 }
+
