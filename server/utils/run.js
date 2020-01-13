@@ -35,9 +35,23 @@ router.route("/productmanager").post(async (req, res, next) => {
             productlist[item].productid=result.id;
             productlist[item].name=result.name;
             productlist[item].description=result.description;
+            productlist[item].maincat=result.maincat;
+            productlist[item].category=result.category;
+            productlist[item].subcat=result.subcat;
         }
     });
-    res.send({ status: 400, data: productlist });
+
+    let newdata=[];
+    let mainCategory=req.body.mainCategory;
+    let category=req.body.category;
+    let subCategory=req.body.subCategory;
+    Object.keys(productlist).forEach(item => {
+        let data=productlist[item];
+        if((!mainCategory || data.maincat==mainCategory)&&(!category || data.category==category)&&(!subCategory || data.subcat==subCategory))  
+        newdata.push({ ...data });
+        });
+
+    res.send({ status: 400, data: newdata });
 });
 
 const querypromise = (mysqlquery, values,req,res) => {
