@@ -129,6 +129,7 @@ const RESET_VALUES  = {
   invoice_number : '',
   delivery_date : getCurrentDateDBFormat(), 
   purchase_from : '',
+  document : '',
 }
 
 export default function ViewDeliveredProductDetails({ open, handleClose, handleSnackbarClick, orderData, handleOrderList, roleName}) {
@@ -148,7 +149,7 @@ export default function ViewDeliveredProductDetails({ open, handleClose, handleS
         }
 
         const deliveredData = await Order.getDeliveredProductData({
-          order_id: orderData.id,          
+          order_id: orderData.id,
           customer_id : orderData.customer_id,
         });
         if(deliveredData != undefined && deliveredData != ""){
@@ -326,10 +327,15 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>     
-                    {/* <InputLabel className={classes.textsize}  htmlFor="comment">Download Delivered Document</InputLabel> */}
+                  
+                    {console.log(inputs.document)}
+
+                  {(inputs.document != null && inputs.document != undefined && inputs.document != "") &&
+                    <Grid item xs={12} sm={12}>
                       <a href={API_URL + "/api/download?path=DeliveredDoc/" + inputs.document }  download >Click here to download product delivered document</a>
-                  </Grid>
+                    </Grid>
+                  }
+                  
                 <Grid item xs={12} sm={12}>                                     
                   <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                     Close

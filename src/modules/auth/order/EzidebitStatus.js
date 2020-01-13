@@ -178,12 +178,18 @@ export default function EzidebitStatus({roleName}) {
   },[]);
 
 
-  const { inputs, handleInputChange, handleSubmit, handleDateChange, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleReset, handleSubmit, handleRandomInput, handleDateChange, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     fetchPayment,
     validate
   ); 
-
+  
+  useEffect(() => {
+    handleRandomInput([
+      {name: 'date_from', value: null},
+      {name: 'date_to', value: null},
+    ]);
+  },[inputs.date_field === 'NONE']);
 
   return (
     <div>
@@ -261,8 +267,8 @@ export default function EzidebitStatus({roleName}) {
               fullWidth
               className={classes.textsize}
               required
-              error={errors.date_field}
-              helperText={errors.date_field}
+              // error={errors.date_field}
+              // helperText={errors.date_field}
             > 
               <MenuItem className={classes.textsize} value={'NONE'}>NONE</MenuItem>
               {(ezidebitPaymentParamsList.length > 0 ? ezidebitPaymentParamsList : []).map((data, index) => {
@@ -288,6 +294,7 @@ export default function EzidebitStatus({roleName}) {
                       input: classes.textsize,
                     },
                   }}
+                  disabled = {inputs.date_field === 'NONE'}
                   error={errors.date_from}
                   helperText={errors.date_from}
                 />
@@ -309,6 +316,7 @@ export default function EzidebitStatus({roleName}) {
                       input: classes.textsize,
                     },
                   }}
+                  disabled = {inputs.date_field === 'NONE'}
                   error={errors.date_to}
                   helperText={errors.date_to}                  
                 />

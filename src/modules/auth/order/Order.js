@@ -637,7 +637,7 @@ export default function Order({ roleName }) {
         if (data.assigned_to === 5 && data.order_status === 5 && data.is_active == 1) {
           open.push(data);
         }
-        if (data.order_status >= 6 && data.order_status != 9 && data.order_status != 10) {
+        if (data.order_status >= 6 && data.order_status != 9 && data.order_status != 10 && data.order_status != 11) {
           delivered.push(data);
         }
       });

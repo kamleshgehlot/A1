@@ -1481,7 +1481,7 @@ Order.prototype.getDeliveredProductData = function () {
       }
       if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-           connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.related_to, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp INNER JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
+           connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.related_to, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp LEFT JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
               if (!error) {              
                 resolve(rows);
               } else {

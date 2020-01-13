@@ -1,3 +1,4 @@
+const nodemailer = require('nodemailer');
 const Customer = require('../../models/franchise/customer.js');
 const Order = require('../../models/franchise/order.js');
 const { trans } = require("../../lib/mailtransporter");

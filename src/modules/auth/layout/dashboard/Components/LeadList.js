@@ -51,7 +51,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 export default function LeadList({leadList, roleName, handleLeadClick }) {
-  console.log('roleName',roleName);
+  // console.log('roleName',roleName);
   // const styleClass = useCommonStyles();
   const [showTask, setShowTask] = useState(false);
   const [franchiseListd, setFranchiseList] = useState({});
