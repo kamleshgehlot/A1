@@ -8,9 +8,9 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { Title, EventTracker } from '@devexpress/dx-react-chart';
-import { Chart, ArgumentAxis, ValueAxis, LineSeries, BarSeries } from "@devexpress/dx-react-chart-material-ui";
+import { Chart, ArgumentAxis, ValueAxis, LineSeries, BarSeries,Tooltip as ChartTooltip } from "@devexpress/dx-react-chart-material-ui";
 
-import { Card,CardContent, FormControl, Select, MenuItem, FormHelperText,Typography,Tabs,Tab,Box,AppBar,Grid,Paper,Divider,Table,TableBody,TableCell,TableContainer,TableHead,TablePagination,TableRow,TableSortLabel,Toolbar,Checkbox,IconButton,Tooltip,FormControlLabel,Switch, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, InputLabel, Button } from '@material-ui/core';
+import { Card,CardContent, FormControl, Select, MenuItem, FormHelperText,Typography,Tabs,Tab,Box,AppBar,Grid,Paper,Divider,Table,TableBody,TableCell,TableContainer,TableHead,TablePagination,TableRow,TableSortLabel,Toolbar,Checkbox,IconButton,Tooltip as MatTooltip,FormControlLabel,Switch, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, InputLabel, Button } from '@material-ui/core';
 
 // Component Call
 import TaskList from './TaskList';
@@ -269,11 +269,11 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
 <ExpansionPanel style={{boxShadow:'none',width:'100%'}}>
         <ExpansionPanelSummary
         style={{backgroundColor:'transparent',padding:0}}
-          expandIcon={<Tooltip title="Filter list">
+          expandIcon={<MatTooltip title="Filter list">
           <IconButton aria-label="filter list">
             <FilterListIcon />
           </IconButton>
-        </Tooltip>}
+        </MatTooltip>}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -359,17 +359,17 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
       </ExpansionPanel>
 
       {/* {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <MatTooltip title="Delete">
           <IconButton aria-label="delete">
             <DeleteIcon />
           </IconButton>
-        </Tooltip>
+        </MatTooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <MatTooltip title="Filter list">
           <IconButton aria-label="filter list">
             <FilterListIcon />
           </IconButton>
-        </Tooltip>
+        </MatTooltip>
       )} */}
     </Toolbar>
   );
@@ -526,7 +526,7 @@ const [productList, setProductList] = useState([]);
       <Chart data={staff} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
-          <EventTracker /><Tooltip />
+          <EventTracker /><ChartTooltip />
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
@@ -539,7 +539,7 @@ const [productList, setProductList] = useState([]);
       <Chart data={staff} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
-          <EventTracker /><Tooltip />
+          <EventTracker /><ChartTooltip />
       <BarSeries valueField="ordercount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
@@ -552,7 +552,7 @@ const [productList, setProductList] = useState([]);
       <Chart data={newamountdata} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
-          <EventTracker /><Tooltip />
+          <EventTracker /><ChartTooltip />
       {/* <LineSeries valueField="value" argumentField="argument" /> */}
       <BarSeries valueField="totalreceived" argumentField="staffname" />
     </Chart>
@@ -565,7 +565,7 @@ const [productList, setProductList] = useState([]);
       <Chart data={countdata} height={220}>
       <ArgumentAxis showGrid />
       <ValueAxis />
-          <EventTracker /><Tooltip />
+          <EventTracker /><ChartTooltip />
       <BarSeries valueField="totalcount" argumentField="staffname" />
       {/* <BarSeries valueField="value" argumentField="argument" /> */}
     </Chart>
