@@ -18,8 +18,8 @@ router.route("/productmanager").post(async (req, res, next) => {
     orders.forEach(order => {
         let list=order.product_id.split(',');
         list.forEach(item => {
-            if(!productlist[item])productlist[item]={count:1};
-            else productlist[item].count++;
+            if(!productlist[item])productlist[item]={count:1,orders:[order]};
+            else {productlist[item].count++;productlist[item].orders.push(order);}
         });
     });
     delete req.body.franchise;
@@ -35,6 +35,7 @@ router.route("/productmanager").post(async (req, res, next) => {
             productlist[item].productid=result.id;
             productlist[item].name=result.name;
             productlist[item].description=result.description;
+            productlist[item].specification=result.specification;
             productlist[item].maincat=result.maincat;
             productlist[item].category=result.category;
             productlist[item].subcat=result.subcat;
