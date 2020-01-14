@@ -167,7 +167,41 @@ const getAll = async function (req, res, next) {
   try {
     const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
 
+    // let open = [];
+    // let finance = [];
+    // let underDelivery = [];
+    // let delivered = [];
+    // let completed = [];
+    // let cancelled = [];
+    // let archived = [];
+
+    // (order.length > 0 ? order : []).map((data, index) => {
+    //   if (data.assigned_to !== 4 && data.assigned_to !== 5 && data.is_active == 1) {
+    //     open.push(data);
+    //   }
+    //   if (data.assigned_to === 4 && data.is_active == 1) {
+    //     finance.push(data);
+    //   }
+    //   if (data.assigned_to === 5 && data.order_status === 5 && data.is_active == 1) {
+    //     underDelivery.push(data);
+    //   }
+    //   if (data.order_status === 6) {
+    //     delivered.push(data);
+    //   }
+    //   if (data.order_status === 8) {
+    //     completed.push(data);
+    //   }
+    //   if ((data.order_status === 9 || data.order_status === 10) && data.is_active == 0) {
+    //     cancelled.push(data);
+    //   }
+    //   if (data.order_status === 11 && data.is_active == 0) {
+    //     archived.push(data);
+    //   }
+    // });
+    // res.send({ order: order, open : open, finance : finance, underDelivery : underDelivery, delivered : delivered, completed : completed, cancelled : cancelled, archived : archived });
+    
     res.send({ order: order });
+
   } catch (error) {
     next(error);
   }

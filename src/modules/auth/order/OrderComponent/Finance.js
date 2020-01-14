@@ -60,7 +60,7 @@ export default function Finance({order, roleName, page, rowsPerPage, handleChang
         <TableBody>
           {(order.length > 0 ? order : []).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {          
               return(
-                <TableRow>
+                <TableRow key={Math.random()}>
                   <StyledTableCell>{index + 1}</StyledTableCell>
                   <StyledTableCell>{data.order_id}</StyledTableCell>
                   <StyledTableCell>{data.first_name + ' ' + data.last_name}</StyledTableCell>

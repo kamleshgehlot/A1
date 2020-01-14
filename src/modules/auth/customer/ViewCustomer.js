@@ -237,7 +237,7 @@ export default function ViewCustomer({ open, handleClose, handleSnackbarClick, c
     // console.log("formadata", formData);
     const response = await Customer.register({ formData: formData });
     
-    // handleSnackbarClick(true);
+    
     setCustomerList(response.customerList);
     // handleReset(RESET_VALUES);
     setpLoading(false);

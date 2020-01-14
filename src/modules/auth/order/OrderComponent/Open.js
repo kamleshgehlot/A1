@@ -48,9 +48,9 @@ export default function Open({order, value, roleName, handleAssignToFinance, han
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage
 }) {
   const styleClass = useCommonStyles();
-
+  
 return (  
-  <Table stickyHeader>
+  <Table stickyHeader >
     <TableHead>
       <TableRow>
         <StyledTableCell>#</StyledTableCell>
@@ -78,7 +78,7 @@ return (
     <TableBody>
     {(order.length > 0 ? order : []).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {
        return(
-        <TableRow>
+        <TableRow key={Math.random()}>
           <StyledTableCell>{index + 1}</StyledTableCell>
           <StyledTableCell>{data.order_id}</StyledTableCell>
           <StyledTableCell>{data.first_name + ' ' + data.last_name}</StyledTableCell>
@@ -100,98 +100,100 @@ return (
           <StyledTableCell>{data.payment_mode_name} </StyledTableCell>     
           {roleName === 'CSR' ? 
               <StyledTableCell>
+                
                   <Tooltip title="Update">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
+                    <span><IconButton size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleEditOpen(data); }} disabled= {data.assigned_to===4}>
                       <EditIcon />  
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
+
                   <Tooltip title="Download PDF">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
                       <PrintIcon /> 
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   
                   <input multiple accept="image/*" className={styleClass.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
                     <label htmlFor="upload_document">
                       <Tooltip title="Upload Documents">                              
-                        <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
+                        <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
                           <CloudUpload />
-                        </IconButton>
+                        </IconButton></span>
                       </Tooltip>
                     </label>
-                  <Tooltip title="Assign to Finance">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data); }} disabled= {data.doc_upload_status===0}>
+                  <Tooltip title="Assign to Finance"  disabled= {data.doc_upload_status===0}>
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data); }} disabled= {data.doc_upload_status===0}>
                       <SendIcon />
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   <Tooltip title="Archive Order">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderArchive(data); }} >
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderArchive(data); }} >
                       <DeleteIcon />
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   
           </StyledTableCell>
         : roleName === 'Finance' ? 
           <StyledTableCell>
                   <Tooltip title="View Order Detail">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderView(data); }} >
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderView(data); }} >
                       <ViewArrayIcon />  
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   <Tooltip title="View Comment">
-                    <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
+                    <span><IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
                       <CommentIcon />
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   <Tooltip title="Make Payment">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handlePaymentStatus(data); }} >
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handlePaymentStatus(data); }} >
                       <PaymentIcon />  
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   <Tooltip title="Assign to Delivery">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToDelivery(data.id); }} disabled= {data.order_status !==4  || data.assigned_to===5}>
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToDelivery(data.id); }} disabled= {data.order_status !==4  || data.assigned_to===5}>
                       <SendIcon />
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   <Tooltip title="View Delivered Product Detail">
-                    <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleViewDeliveredDetailOpen(data); }} disabled = {data.order_status !== 6}>
+                    <span><IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleViewDeliveredDetailOpen(data); }} disabled = {data.order_status !== 6}>
                       <DoneIcon />
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                   <Tooltip title="Cancel Order">
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderCancellationOpen(data); }} >
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderCancellationOpen(data); }} >
                       <CancelIcon />  
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
           </StyledTableCell>
         : roleName === 'Delivery' ? 
           <StyledTableCell>
                 <Tooltip title="View Comment">
-                      <IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
+                      <span><IconButton  size="small" className={styleClass.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickViewOpen(data.id); }} >
                         <CommentIcon />
-                      </IconButton>
+                      </IconButton></span>
                 </Tooltip>
                 <Tooltip title="Download Form">
                   <a href={API_URL + "/api/download?path=order/" + data.uploaded_doc }  download >
                   {/* <a href={"server\\files\\order\\" + data.uploaded_doc }  download > */}
                   {/* {inputs.id_proof} */}
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} >
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} >
                       <PrintIcon />
-                    </IconButton>
+                    </IconButton></span>
                   </a>
                 </Tooltip>
                 <input multiple accept="image/*" className={styleClass.input} id="upload_delivery_doc" type="file" onChange={uploadFileSelector} disabled  = {data.order_status >=6 ? true : false} />
                 <label htmlFor="upload_delivery_doc">
                   <Tooltip title="Upload">                              
-                    <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleDeliveryDoc(data.id); }} disabled = {data.order_status >=6 ? true : false}>
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleDeliveryDoc(data.id); }} disabled = {data.order_status >=6 ? true : false}>
                       <CloudUpload />
-                    </IconButton>
+                    </IconButton></span>
                   </Tooltip>
                 </label>                                
                 <Tooltip title="proceed to Delivered">
-                  <IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => {  handleDeliveredProductOpen(data); }} disabled={(data.delivery_doc_uploaded !==1 || data.order_status >=6) ? true : false}>                    
+                  <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => {  handleDeliveredProductOpen(data); }} disabled={(data.delivery_doc_uploaded !==1 || data.order_status >=6) ? true : false}>                    
                     <SendIcon />
-                  </IconButton>
+                  </IconButton></span>
                 </Tooltip>                                 
           </StyledTableCell>
           : ''}
@@ -217,7 +219,8 @@ return (
             ActionsComponent={TablePaginationActions}
           />
         </TableRow>
-      </TableFooter>
+      </TableFooter>      
   </Table>
+  
 )
 }
