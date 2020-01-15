@@ -377,7 +377,6 @@ export default function CustomerList({userId, roleName}) {
     const result = await Order.filterMissedPaymentData({searchText : searchText});      
     return result;
   }
-
   
   async function handleTabsData(customerList){
     const paymentData = await fetchMissedPaymentData();
@@ -421,9 +420,6 @@ export default function CustomerList({userId, roleName}) {
     setBornTodayTab(bornToday);
     setMissedPaymentTab(missedPayment);
   }
-  
-
-
 
   TabPanel.propTypes = {
     children: PropTypes.node,
@@ -527,7 +523,7 @@ export default function CustomerList({userId, roleName}) {
           </Grid>
         </Grid>  
 
-      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
+      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList} enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
       {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} customer_id={customerId} roleName={roleName} /> : null }
