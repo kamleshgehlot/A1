@@ -136,14 +136,25 @@ export default function Order({ roleName }) {
   const [openCancelForm, setOpenCancelForm] = useState(false);
   const [openProductDelivered, setOpenProductDelivered] = useState(false);
   const [openViewDeliveredDetail, setOpenViewDeliveredDetail] = useState(false);
+  
   //Tab Data for corresponding role 
-  const [openTab, setOpenTab] = useState([]);
-  const [financeTab, setFinanceTab] = useState([]);
-  const [underDeliveryTab, setUnderDeliveryTab] = useState([]);
-  const [deliveredTab, setDeliveredTab] = useState([]);
-  const [completedTab, setCompletedTab] = useState([]);
-  const [cancelledTab, setCancelledTab] = useState([]);
-  const [archivedTab, setArchivedTab] = useState([]);
+  const [tabRecord, setTabRecord] = useState(
+    { open: [],
+      finance : [], 
+      underDelivery : [],
+      delivered : [], 
+      completed : [], 
+      cancelled : [], 
+      archived : []
+    });
+
+  // const [financeTab, setFinanceTab] = useState([]);
+  // const [underDeliveryTab, setUnderDeliveryTab] = useState([]);
+  // const [deliveredTab, setDeliveredTab] = useState([]);
+  // const [completedTab, setCompletedTab] = useState([]);
+  // const [cancelledTab, setCancelledTab] = useState([]);
+  // const [archivedTab, setArchivedTab] = useState([]);
+
   const [viewOnly, setViewOnly] = useState(false);
   const [openConfirmationPDF, setOpenConfirmationPDF] = useState(false);
   const [orderDataForPDF, setOrderDataForPDF] = useState([]);
@@ -508,7 +519,17 @@ export default function Order({ roleName }) {
       try {
         const result = await OrderAPI.getAll();
         setOrder(result.order);
+        console.log('new Dat.', new Date());
         handleTabsData(result.order);
+        // setOpenTab(result.open);
+        // setFinanceTab(result.finance);
+        // setUnderDeliveryTab(result.underDelivery);
+        // setDeliveredTab(result.delivered);
+        // setCompletedTab(result.completed);
+        // setCancelledTab(result.cancelled);
+        // setArchivedTab(result.archived);
+        
+        // console.log('new Date 2', new Date());
       } catch (error) {
         console.log(error);
       }
@@ -589,6 +610,7 @@ export default function Order({ roleName }) {
     let cancelled = [];
     let archived = [];
 
+
     if (roleName === 'CSR') {
       (order.length > 0 ? order : []).map((data, index) => {
         if (data.assigned_to !== 4 && data.assigned_to !== 5 && data.is_active == 1) {
@@ -612,8 +634,7 @@ export default function Order({ roleName }) {
         if (data.order_status === 11 && data.is_active == 0) {
           archived.push(data);
         }
-      });
-
+      });    
     } else if (roleName === 'Finance') {
       (order.length > 0 ? order : []).map((data, index) => {
         if ((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !== 8 && data.is_active == 1) {
@@ -642,13 +663,25 @@ export default function Order({ roleName }) {
         }
       });
     }
-    setOpenTab(open);
-    setFinanceTab(finance);
-    setUnderDeliveryTab(underDelivery);
-    setDeliveredTab(delivered);
-    setCompletedTab(completed);
-    setCancelledTab(cancelled);
-    setArchivedTab(archived);
+    
+    setTabRecord(
+      { open: open,
+        finance : finance, 
+        underDelivery : underDelivery,
+        delivered : delivered, 
+        completed : completed, 
+        cancelled : cancelled, 
+        archived : archived
+      });
+    
+    // setOpenTab(open);
+    // setFinanceTab(finance);
+    // setUnderDeliveryTab(underDelivery);
+    // setDeliveredTab(delivered);
+    // setCompletedTab(completed);
+    // setCancelledTab(cancelled);
+    // setArchivedTab(archived);
+    
   }
 
   return (
@@ -694,19 +727,19 @@ export default function Order({ roleName }) {
             <AppBar position="static" className={classes.appBar}>
 
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
-                <Tab label={<BadgeComp count={openTab.length} label="Open" />} />
-                {roleName === 'CSR' ? <Tab label={<BadgeComp count={financeTab.length} label="Finance" />} /> : ''}
-                {roleName != 'Delivery' ? <Tab label={<BadgeComp count={underDeliveryTab.length} label="Before Delivery" />} /> : ''}
-                <Tab label={<BadgeComp count={deliveredTab.length} label="Delivered" />} />
-                {roleName !== 'Delivery' ? <Tab label={<BadgeComp count={completedTab.length} label="Completed" />} /> : ''}
-                {roleName !== 'Delivery' ? <Tab label={<BadgeComp count={cancelledTab.length} label="Cancelled" />} /> : ''}
-                {roleName === 'CSR' ? <Tab label={<BadgeComp count={archivedTab.length} label="Archived" />} /> : ''}
+                <Tab label={<BadgeComp count={tabRecord.open.length} label="Open" />} />
+                {roleName === 'CSR' ? <Tab label={<BadgeComp count={tabRecord.finance.length} label="Finance" />} /> : ''}
+                {roleName != 'Delivery' ? <Tab label={<BadgeComp count={tabRecord.underDelivery.length} label="Before Delivery" />} /> : ''}
+                <Tab label={<BadgeComp count={tabRecord.delivered.length} label="Delivered" />} />
+                {roleName !== 'Delivery' ? <Tab label={<BadgeComp count={tabRecord.completed.length} label="Completed" />} /> : ''}
+                {roleName !== 'Delivery' ? <Tab label={<BadgeComp count={tabRecord.cancelled.length} label="Cancelled" />} /> : ''}
+                {roleName === 'CSR' ? <Tab label={<BadgeComp count={tabRecord.archived.length} label="Archived" />} /> : ''}
               </Tabs>
             </AppBar>
 
             {roleName === 'CSR' ? <div>
               <TabPanel value={value} index={0}>
-                {openTab && <Open order={openTab} value={value} roleName={roleName}
+                {tabRecord && <Open order={tabRecord.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
@@ -717,33 +750,33 @@ export default function Order({ roleName }) {
                   />}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {financeTab && <Finance order={financeTab} roleName={roleName} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
+                {tabRecord && <Finance order={tabRecord.finance} roleName={roleName} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {underDeliveryTab && <UnderDelivery order={underDeliveryTab} roleName={roleName} 
+                {tabRecord && <UnderDelivery order={tabRecord.underDelivery} roleName={roleName} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={3}>
-                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {tabRecord && <Delivered order={tabRecord.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={4}>
-                {completedTab && <Completed order={completedTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {tabRecord && <Completed order={tabRecord.completed} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={5}>
-                {cancelledTab && <Cancelled order={cancelledTab} roleName={roleName} 
+                {tabRecord && <Cancelled order={tabRecord.cancelled} roleName={roleName} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={6}>
-                {archivedTab && <Archived order={archivedTab} roleName={roleName} handleEditOpen={handleEditOpen} 
+                {tabRecord && <Archived order={tabRecord.archived} roleName={roleName} handleEditOpen={handleEditOpen} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
             </div> : ''}
 
             {roleName === 'Finance' ? <div>
               <TabPanel value={value} index={0}>
-                {openTab && <Open order={openTab} value={value} roleName={roleName}
+                {tabRecord && <Open order={tabRecord.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
@@ -754,26 +787,26 @@ export default function Order({ roleName }) {
                   handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {underDeliveryTab && <UnderDelivery order={underDeliveryTab} roleName={roleName} 
+                {tabRecord && <UnderDelivery order={tabRecord.underDelivery} roleName={roleName} 
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {tabRecord && <Delivered order={tabRecord.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={3}>
-                {completedTab && <Completed order={completedTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {tabRecord && <Completed order={tabRecord.completed} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={4}>
-                {cancelledTab && <Cancelled order={cancelledTab} roleName={roleName}
+                {tabRecord && <Cancelled order={tabRecord.cancelled} roleName={roleName}
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
             </div> : ''}
 
             {roleName === 'Delivery' ? <div>
               <TabPanel value={value} index={0}>
-                {openTab && <Open order={openTab} value={value} roleName={roleName}
+                {tabRecord && <Open order={tabRecord.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
                   handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
@@ -783,7 +816,7 @@ export default function Order({ roleName }) {
                   handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {deliveredTab && <Delivered order={deliveredTab} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen}
+                {tabRecord && <Delivered order={tabRecord.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen}
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
             </div> : ''}
