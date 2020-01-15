@@ -128,7 +128,7 @@ export default function HomeTable({membersList, roleList,
 
                         <Tooltip title="View Appointment">
                           <span>
-                            <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }} disabled = {userId === data.id} >
+                            <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }} disabled = {userId !== data.id} >
                               <DateRangeIcon /> 
                             </IconButton>
                           </span>
@@ -136,7 +136,7 @@ export default function HomeTable({membersList, roleList,
 
                         <Tooltip title="Update Timeslot">
                           <span>
-                            <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }} disabled = {userId === data.id} >
+                            <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }} disabled = {userId !== data.id} >
                               <EditIcon />
                             </IconButton>
                           </span>
