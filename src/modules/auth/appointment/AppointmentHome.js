@@ -57,7 +57,7 @@ export default function AppointmentHome() {
   
   const [membersList, setMembersList] = React.useState([]);
   const [roleList, setRoleList] = useState([]);  
-  const [anchorEl, setAnchorEl] = React.useState(null);  
+  
   const [selectedUserData, setSelectedUserData] = React.useState({});
 
   const [showMainPage, setShowMainPage] = React.useState(true);
@@ -78,40 +78,34 @@ export default function AppointmentHome() {
   };    
 
   
-  const handleOptionsOpen = (event, data) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedUserData(data);
-  };
-
-  const handleOptionsClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMainPage = async () => {    
+  const handleMainPage = async () => {   
     setShowBookAppointment(false);
     setShowViewAppointment(false);
     setShowUpdateTimeslot(false);
     setShowMainPage(true);
   }
 
-  const handleBookAppointment = async () => {
-    setAnchorEl(null);
+  const handleBookAppointment = async (data) => {
+    setSelectedUserData(data);
+
     setShowMainPage(false);
     setShowViewAppointment(false);
     setShowUpdateTimeslot(false);
     setShowBookAppointment(true);
   }
 
-  const handleViewAppointment = async () => {
-    setAnchorEl(null);
+  const handleViewAppointment = async (data) => {
+    setSelectedUserData(data);
+    
     setShowMainPage(false);    
     setShowUpdateTimeslot(false);
     setShowBookAppointment(false);
     setShowViewAppointment(true);
   }
 
-  const handleUpdateTimeSlot = async () => {
-    setAnchorEl(null);    
+  const handleUpdateTimeSlot = async (data) => {
+    setSelectedUserData(data);
+
     setShowMainPage(false);    
     setShowBookAppointment(false);
     setShowViewAppointment(false);
@@ -128,6 +122,7 @@ export default function AppointmentHome() {
     }
   }
 
+  
   useEffect(() => {   
     fetchMemberList();
   }, []);
@@ -135,19 +130,19 @@ export default function AppointmentHome() {
 
   return (
     <div>     
-      { showMainPage && membersList && <HomeTable membersList = {membersList} roleList = {roleList} anchorEl = {anchorEl} setAnchorEl = {setAnchorEl} 
-        handleOptionsOpen = {handleOptionsOpen} handleOptionsClose = {handleOptionsClose} handleBookAppointment = {handleBookAppointment}
-        handleViewAppointment = {handleViewAppointment} handleUpdateTimeSlot = {handleUpdateTimeSlot}
+      { showMainPage && membersList && <HomeTable membersList = {membersList} roleList = {roleList} 
+        handleBookAppointment = {handleBookAppointment} handleViewAppointment = {handleViewAppointment} 
+        handleUpdateTimeSlot = {handleUpdateTimeSlot}
         page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> 
       }
       {
         showBookAppointment && <BookAppointment handleMainPage = {handleMainPage} userData = {selectedUserData} /> 
       }
       {
-        showViewAppointment && <ViewAppointment handleMainPage = {handleMainPage} userData = {selectedUserData} /> 
+        showViewAppointment && <ViewAppointment handleMainPage = {handleMainPage} userData = {selectedUserData}  /> 
       }
       {
-        showUpdateTimeslot && <UpdateTimeslot handleMainPage = {handleMainPage} userData = {selectedUserData} /> 
+        showUpdateTimeslot && <UpdateTimeslot handleMainPage = {handleMainPage} userData = {selectedUserData}  /> 
       }
     </div>
   );

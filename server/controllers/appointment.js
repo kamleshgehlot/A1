@@ -180,6 +180,28 @@ const fetchBookedAppointmentList = async function (req, res, next) {
 }
 
 
+
+
+const getAppointedClientList = async function (req, res, next) {
+	const params = {
+		user_id: req.decoded.user_id,
+		userId : req.body.userId,
+		date : req.body.date,
+	}
+console.log(params);
+  try {
+		const newActivity = new Appointment(params);
+		
+		const clientList = await newActivity.getAppointedClientList();
+		
+		res.send({ clientList : clientList  });
+	} catch (err) {
+		next(err);
+	}
+}
+
+
+
 module.exports = { 
 	membersList: membersList, 
 	getCurrentTimeslot: getCurrentTimeslot, 
@@ -188,4 +210,5 @@ module.exports = {
 	removeTimeSlot : removeTimeSlot,
 	bookAppointment : bookAppointment,
 	fetchBookedAppointmentList : fetchBookedAppointmentList,
+	getAppointedClientList : getAppointedClientList
  };

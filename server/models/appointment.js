@@ -239,4 +239,24 @@ Appointment.prototype.fetchBookedAppointmentList = function () {
 
 
 
+Appointment.prototype.getAppointedClientList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+      connection.query('SELECT ar.user_id, ar.meeting_time, ar.date as appointment_date, TIME_FORMAT(ar.start_time, \'%H:%i\') as start_time, TIME_FORMAT(ar.end_time, \'%H:%i\') as end_time, ar.is_active, ac.first_name, ac.last_name, ac.contact, ac.reference FROM `appointment_record` as ar INNER JOIN appointed_client as ac ON ar.id = ac.appointment_id WHERE ar.date = "' + that.date + '" AND ar.user_id = "' +that.userId+ '" ORDER BY ar.start_time', function (error, rows, fields) {
+        if (error) {  console.log("Error...", error); reject(error);  }
+        resolve(rows);        
+      });
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+    });
+  });
+}
+
+
+
 module.exports = Appointment;

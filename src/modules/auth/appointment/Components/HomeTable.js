@@ -20,6 +20,8 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/Send.js';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CommentIcon from '@material-ui/icons/Comment';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -34,12 +36,14 @@ import UpdateIcon from '@material-ui/icons/Update';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
 import DetailsIcon from '@material-ui/icons/Details';
-import { API_URL } from '../../../../api/Constants';
+
 import {useCommonStyles} from '../../../common/StyleComman';
 import Popover from '@material-ui/core/Popover';
 import PropTypes from 'prop-types';
 
 import {TablePaginationActions} from '../../../common/Pagination';
+import { APP_TOKEN } from '../../../../api/Constants';
+
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -63,11 +67,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HomeTable({membersList, roleList, anchorEl, setAnchorEl, handleOptionsOpen, 
-  handleOptionsClose, handleBookAppointment, handleViewAppointment, handleUpdateTimeSlot, 
+export default function HomeTable({membersList, roleList,  
+  handleBookAppointment, handleViewAppointment, handleUpdateTimeSlot, 
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
+  const userId = Number(APP_TOKEN.get().userId);
   const classes = useStyles();    
+
+  const handleUserRoles = (data) => {
+    let roles = '';
+
+    ((data.role_id && data.role_id.split(',')) || []).map((a, index) =>{      
+      (roleList != undefined && roleList != null && roleList.length > 0 ? roleList : []).map((ele)=>{
+        if(data.role_id.split(',').length-1 === index && data.role_id.split(',')[index] == ele.id){
+          roles = roles + ele.name
+        }else if(data.role_id.split(',')[index] == ele.id){
+          roles = roles + ele.name + ", "
+        }
+      })
+    })
+    return roles;
+  }
   
     return (  
     <Grid container spacing={2} alignItems = "center">
@@ -78,74 +98,54 @@ export default function HomeTable({membersList, roleList, anchorEl, setAnchorEl,
         <Table stickyHeader >
           <TableHead>
             <TableRow>
-              <StyledTableCell>#        </StyledTableCell>
-              <StyledTableCell>Name       </StyledTableCell>
-              <StyledTableCell>Designation  </StyledTableCell>
-              <StyledTableCell>Contact    </StyledTableCell>
-              <StyledTableCell>Email Id    </StyledTableCell>
-              <StyledTableCell>Options    </StyledTableCell>
+              <StyledTableCell>#</StyledTableCell>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Designation</StyledTableCell>
+              <StyledTableCell>Contact</StyledTableCell>
+              <StyledTableCell>Email Id</StyledTableCell>
+              <StyledTableCell>Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>        
               {membersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data,index) => {
                 return(
-                  <TableRow key={data.id}>
-                      <StyledTableCell>  {index + 1}           </StyledTableCell>
-                      <StyledTableCell> {data.name}  </StyledTableCell>
+                  <TableRow key={Math.random()}>
+                      <StyledTableCell>{index + 1}</StyledTableCell>
+                      <StyledTableCell>{data.name}</StyledTableCell>
                       <StyledTableCell> 
-                        {( (data.role_id && data.role_id.split(',')) || []).map((a, index) =>{
-                          return(
-                            (roleList != undefined && roleList != null && roleList.length > 0 ? roleList : []).map((ele)=>{
-                              return(
-                                (data.role_id.split(',').length-1)===index ?
-                                data.role_id.split(',')[index] == ele.id ? ele.name  :''
-                                :
-                                data.role_id.split(',')[index] == ele.id ? ele.name + ", " :''
-                              )
-                              })
-                            )
-                        })}
+                        {handleUserRoles(data)}
                       </StyledTableCell>
                       <StyledTableCell> {data.contact}</StyledTableCell>
                       <StyledTableCell> {data.email}</StyledTableCell>                  
                       <StyledTableCell>
-                        <div>
-                          <Tooltip title="Options">
-                            <IconButton  size="small" component="span" onClick = {(event)=>handleOptionsOpen(event, data)}>
-                              <MoreVertIcon/>
+                        <Tooltip title="Book Appointment">
+                          <span>
+                            <IconButton  size="small" onClick={(event) => { handleBookAppointment(data); }} >
+                              <ContactPhoneIcon />  
                             </IconButton>
-                          </Tooltip>
-                          <Popover                            
-                            open={Boolean(anchorEl)}
-                            anchorEl = {anchorEl}
-                            onClose={handleOptionsClose}
-                            anchorOrigin={{
-                              vertical: 'top',
-                              horizontal: 'left',
-                            }}
-                            transformOrigin={{
-                              vertical: 'top',
-                              horizontal: 'left',
-                            }}
-                          >
-                            <List component="nav" >
-                              <ListItem button>
-                                <ListItemText  primary="Book Appointment" onClick={handleBookAppointment}/>
-                              </ListItem>
-                              <ListItem button>
-                                <ListItemText  primary="View Appointment" onClick = {handleViewAppointment} />
-                              </ListItem>
-                              <ListItem button>
-                                <ListItemText  primary="Update Timeslot" onClick = {handleUpdateTimeSlot} />
-                              </ListItem>
-                            </List>
-                          </Popover>
-                        </div>
-                  </StyledTableCell>
-                  </TableRow>
-                )
-              })
-            }
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip title="View Appointment">
+                          <span>
+                            <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }} disabled = {userId === data.id} >
+                              <DateRangeIcon /> 
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip title="Update Timeslot">
+                          <span>
+                            <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }} disabled = {userId === data.id} >
+                              <EditIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                      </StyledTableCell>
+                    </TableRow>
+                  )
+                })
+              }
           </TableBody>
           <TableFooter>
             <TableRow>

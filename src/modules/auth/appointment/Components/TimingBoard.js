@@ -100,21 +100,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TimingBoard({selectedDate, currentTimeslotList, timingTable, handleAppointTimeSelection, submitTime}) {
+export default function TimingBoard({selectedDate, currentTimeslotList, timingTable, handleAppointTimeSelection, submitTime, viewOnly}) {
   const classes = useStyles();
   const [bookedAppointmentList, setBookedAppointmentList] = useState([]);
 
   useEffect(() => {
     fetchBookedAppointmentList();
-  },[selectedDate, submitTime]);
+  },[selectedDate, submitTime, currentTimeslotList]);
 
   const fetchBookedAppointmentList = async () => {
     try{
-      const result = await AppointmentAPI.fetchBookedAppointmentList({
-        userId : currentTimeslotList[0].user_id,
-        date : selectedDate,
-      });
-      setBookedAppointmentList(result.bookedList);      
+      if(currentTimeslotList != "" && currentTimeslotList != undefined && currentTimeslotList != null) {
+        const result = await AppointmentAPI.fetchBookedAppointmentList({
+          userId : currentTimeslotList[0].user_id,
+          date : selectedDate,
+        });
+        setBookedAppointmentList(result.bookedList);
+      }
     }catch(e){
       console.log('Error...', e);
     }
@@ -171,7 +173,7 @@ export default function TimingBoard({selectedDate, currentTimeslotList, timingTa
               isAlreadyBooked === true ? {backgroundColor : 'darkseagreen'} : null
             } 
             onClick = {()=> {handleAppointTimeSelection(data)}} 
-            disabled = {isAvailable}
+            disabled = {isAvailable || viewOnly}
           >
             <Typography variant="body1" className = {classes.timeButtonFont}>
               {data.start_time}

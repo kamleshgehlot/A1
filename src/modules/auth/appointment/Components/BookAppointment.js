@@ -54,14 +54,12 @@ import {useCommonStyles} from '../../../common/StyleComman.js';
 import useSignUpForm from '../../franchise/CustomHooks';
 import validate from '../../../common/validation/BookingAppointment.js';
 import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
-
+import {generateTimingTable} from '../lib/TimingTable';
 import TimingBoard from './TimingBoard.js';
 
 // API
 import AppointmentAPI from '../../../../api/Appointment.js';
 import moment from 'moment';
-import { boolean } from 'yup';
-import { green } from '@material-ui/core/colors';
 
 
 const StyledTableCell = withStyles(theme => ({
@@ -108,15 +106,24 @@ export default function BookAppointment({handleMainPage, userData}) {
   const classes = useStyles();
   
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
-  const [timingTable, setTimingTable] = useState([]);
+  const [timingTable, setTimingTable] = useState(generateTimingTable);
   const [submitTime, setSubmitTime] = useState(0);
 
   useEffect(() => {
     getCurrentTimeslot();
-    generateTimingTable(); 
   },[]);
 
-
+  const getCurrentTimeslot = async () => {
+    try{
+      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
+      setCurrentTimeslotList(result.timeSlot);
+      setFirstAvailableDate(result.timeSlot);
+    }catch(e){
+      console.log('getCurrentTimeslot Error...', e);
+    }
+  }
+  
+  
   const setFirstAvailableDate = (timeSlot) => {
     const firstDate = (timeSlot.length > 0 ? timeSlot : []).find((data) => {
       return data.status === 1
@@ -125,34 +132,6 @@ export default function BookAppointment({handleMainPage, userData}) {
   }
 
 
-  const getCurrentTimeslot = async () => {
-    try{
-      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
-      setCurrentTimeslotList(result.timeSlot);      
-      setFirstAvailableDate(result.timeSlot);
-    }catch(e){
-      console.log('getCurrentTimeslot Error...', e);
-    }
-  }
-
-
-  const generateTimingTable = () => {
-    let startTime = setTime('08:00');
-    let endTime = setTime('20:00');
-    let times = [];
-    do {
-      times.push({
-        'original_time' : startTime,
-        'time' : getTime(startTime),
-        'start_time' : get12HourTime(startTime),
-        'end_time' : get12HourTime(moment(startTime).add(15, 'minute')),
-      });
-      startTime = moment(startTime).add(15, 'minute');
-    } while (getTime(startTime) !== getTime(endTime));
-    setTimingTable(times);
-  }
-
-  
   const handleDateAvaibility = (date) => {
     const found = (currentTimeslotList.length > 0 ? currentTimeslotList : []).find((data) => {
       return data.date === getDate(date) && data.status === 1;
@@ -160,11 +139,11 @@ export default function BookAppointment({handleMainPage, userData}) {
     return found === undefined;
   }
 
-
-
   const resetTiming = () => {
-    inputs.start_time  = '';
-    inputs.end_time  =  '';
+    handleRandomInput([
+      {name: 'start_time', value : ''},
+      {name: 'end_time', value : ''}
+    ]);
 
     timingTable.map((row) => {
       if(row.is_free === true){
@@ -194,8 +173,10 @@ export default function BookAppointment({handleMainPage, userData}) {
     if(totalNeed !== available){
       resetTiming();
     }else{
-      inputs.start_time  =  getTime(startTime);
-      inputs.end_time  =  getTime(endTime);      
+      handleRandomInput([
+        {name: 'start_time', value : getTime(startTime)},
+        {name: 'end_time', value : getTime(endTime)}
+      ]);
     }
   }
   
@@ -215,7 +196,13 @@ export default function BookAppointment({handleMainPage, userData}) {
         reference : inputs.reference,
       });
       setCurrentTimeslotList(result.timeSlot);
-      setSubmitTime(submitTime + 1);
+      handleRandomInput([
+        {name : 'first_name', value: ''},
+        {name : 'last_name', value: ''},
+        {name : 'contact', value: ''},
+        {name : 'reference', value: ''},
+      ]);
+      setSubmitTime(submitTime + 1);      
     }catch(e){
       console.log('Error...', e);
     }
@@ -229,6 +216,7 @@ export default function BookAppointment({handleMainPage, userData}) {
           timingTable = {timingTable}
           handleAppointTimeSelection = {handleAppointTimeSelection}      
           submitTime = {submitTime}
+          viewOnly = {false}
         />, 
         document.getElementById('timingBoard')
     );
@@ -403,41 +391,7 @@ export default function BookAppointment({handleMainPage, userData}) {
               </TableBody>
             </Table>
           </Paper>
-        </Grid>
-        {/* <Grid item xs={12} sm={12}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>#        </StyledTableCell>
-                <StyledTableCell>Client Name       </StyledTableCell>
-                <StyledTableCell>Contact    </StyledTableCell>
-                <StyledTableCell>Reference    </StyledTableCell>
-                <StyledTableCell>Appointment Date    </StyledTableCell>
-                <StyledTableCell>Meeting Time    </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>        
-               
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[10, 25, 50]}
-                  colSpan={6}
-                  count={}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    native: true,
-                  }}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>  
-        </Grid> */}
+        </Grid>        
       </Grid>
   )
 }
