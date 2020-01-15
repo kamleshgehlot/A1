@@ -3,14 +3,14 @@ import { lighten,makeStyles, withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
-import DeleteIcon from '@material-ui/icons/Delete';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import { Title, EventTracker } from '@devexpress/dx-react-chart';
 import { Chart, ArgumentAxis, ValueAxis, LineSeries, BarSeries,Tooltip as ChartTooltip } from "@devexpress/dx-react-chart-material-ui";
 
-import { Card,CardContent, FormControl, Select, MenuItem, FormHelperText,Typography,Tabs,Tab,Box,AppBar,Grid,Paper,Divider,Table,TableBody,TableCell,TableContainer,TableHead,TablePagination,TableRow,TableSortLabel,Toolbar,Checkbox,IconButton,Tooltip as MatTooltip,FormControlLabel,Switch, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, InputLabel, Button, TextField } from '@material-ui/core';
+import { Card,CardContent, FormControl, Select, MenuItem, FormHelperText,Typography,Tabs,Tab,Box,AppBar,Grid,Paper,Divider,Table,TableBody,TableCell,TableContainer,TableHead,TablePagination,TableRow,TableSortLabel,Toolbar,Checkbox,IconButton,Tooltip as MatTooltip,FormControlLabel,Switch, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, InputLabel, Button, TextField, Dialog,List,ListItem,ListItemText,ListItemSecondaryAction } from '@material-ui/core';
 
 // Component Call
 import TaskList from './TaskList';
@@ -21,6 +21,9 @@ import Category from '../../../../../../src/api/Category';
 import TaskAPI from '../../../../../api/Task';
 import LeadAPI from '../../../../../api/Lead';
 import {Run} from '../../../../../api/Run';
+import {useCommonStyles} from '../../../../common/StyleComman';
+import ViewOrder from '../../../order/Edit';
+import { API_URL } from '../../../../../api/Constants';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -143,9 +146,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          
-        </TableCell>
+        <TableCell padding="checkbox"></TableCell>
         {headCells.map(headCell => (
           <TableCell
             key={headCell.id}
@@ -281,37 +282,29 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
-          <Tab label="Item Four" {...a11yProps(3)} />
-          <Tab label="Item Five" {...a11yProps(4)} />
-          <Tab label="Item Six" {...a11yProps(5)} />
-          <Tab label="Item Seven" {...a11yProps(6)} />
+          <Tab label="With Customer" {...a11yProps(0)} />
+          <Tab label="Under Repair" {...a11yProps(1)} />
+          <Tab label="Replaced" {...a11yProps(2)} />
+          <Tab label="Faulty / With Customer" {...a11yProps(3)} />
+          <Tab label="Faulty / Under Repair" {...a11yProps(4)} />
         </Tabs>
       </AppBar>
     <div className={classes.root}>
       
       <TabPanel value={value} index={0}>
-        Item One
+        With Customer
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        Under Repair
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        Replaced
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Four
+        Faulty / With Customer
       </TabPanel>
       <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Item Seven
+        Faulty / Under Repair
       </TabPanel>
     </div>
     <Toolbar
@@ -355,7 +348,7 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
                     <MenuItem className={classes.textsize} value={false}>All</MenuItem>
                     {(mainCategoryList.length > 0 ? mainCategoryList : []).map((data, index) => {
                       return (
-                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                        <MenuItem key={Math.random()} className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                       )
                     })}
                   </Select>
@@ -376,7 +369,7 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
                                                           >
                     {(categoryList.length > 0 ? categoryList : []).map((data, index) => {
                       return (
-                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                        <MenuItem key={Math.random()} className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                       )
                     })}
                   </Select>
@@ -397,7 +390,7 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
                                                           >
                     {(subCategoryList.length > 0 ? subCategoryList : []).map((data, index) => {
                       return (
-                        <MenuItem className={classes.textsize} value={data.id}>{data.category}</MenuItem>
+                        <MenuItem key={Math.random()} className={classes.textsize} value={data.id}>{data.category}</MenuItem>
                       )
                     })}
                   </Select>
@@ -453,6 +446,7 @@ TabPanel.propTypes = {
 
 export default function Panel1({roleName, roleId, handleLeadClick,  handleTaskClick}) {
   const classes = useStyles();
+  const styleClass = useCommonStyles();
   const [value, setValue] = React.useState(0);
   const [taskList, setTaskList] = React.useState([]);
   const [leadList, setLeadList] = React.useState([]);
@@ -504,6 +498,13 @@ const [productList, setProductList] = useState([]);
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [orderdialogOpen, setorderdialogOpen] = React.useState(false);
+  const [viewOrder, setViewOrder] = React.useState(false);
+  const [orderdialogdata, setorderdialogdata] = React.useState([]);
+
+  const handleorderDialogClose=(e)=>{
+    setorderdialogOpen(!orderdialogOpen);
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -521,23 +522,37 @@ const [productList, setProductList] = useState([]);
   };
 
   const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+    function search(searchValue, arrayName,key){
+      let answer=false;
+      arrayName.forEach(item => {if(item[key]==searchValue)answer=item;});
+      return answer;
+  }
+    if(!name)return;
+    let orders=search(name,rows,'productid');
+    if(!orders)return;
+    orders=orders.orders;
+    if(!orders)return;
+    console.log(orders);
+    setorderdialogdata(orders);
+    setorderdialogOpen(true);
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
+    // const selectedIndex = selected.indexOf(name);
+    // let newSelected = [];
 
-    setSelected(newSelected);
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, name);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1),
+    //   );
+    // }
+
+    // setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -632,10 +647,9 @@ const [productList, setProductList] = useState([]);
 {(roleName === "CSR") &&
   <>
   <Grid container spacing={4} style={{textAlign:'left'}}>
-
   <Grid item xs={12} sm={12} md={12} >  
   <div className={classes.root}>
-      <Paper className={classes.paper}>
+  <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} inputs={inputs} setInputs={setInputs} mainCategoryList={mainCategoryList} setMainCategoryList={setMainCategoryList} categoryList={categoryList} setCategoryList={setCategoryList} subCategoryList={subCategoryList} setSubCategoryList={setSubCategoryList} mainCategory={mainCategory} setMainCategory={setMainCategory} category={category} setCategory={setCategory} subCategory={subCategory} setSubCategory={setSubCategory} productList={productList} setProductList={setProductList} />
                <Table
        className={classes.table}
@@ -653,8 +667,7 @@ const [productList, setProductList] = useState([]);
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
-            <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
+            <TableBody>{stableSort(rows, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.productid);
@@ -668,7 +681,8 @@ const [productList, setProductList] = useState([]);
                       tabIndex={-1}
                       key={row.productid}
                     >
-                      <TableCell component="th" id={labelId} scope="row" padding="checkbox">{row.name}</TableCell>
+                      <TableCell padding="checkbox"></TableCell>
+                      <TableCell component="th" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                       <TableCell align="left">{row.description && row.description.substring(0, 20)}</TableCell>
                       <TableCell align="left">{row.specification && row.specification!=row.description && row.specification.substring(0, 50)}</TableCell>
                       <TableCell align="right">{row.count}</TableCell>
@@ -730,6 +744,50 @@ const [productList, setProductList] = useState([]);
       </Grid>
     </Paper>
   }
+
+{orderdialogOpen && <Dialog open={orderdialogOpen} fullScreen style={{marginTop:60}}>
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <Typography variant="h6" className={classes.title}>
+                Orders
+              </Typography>              
+              <IconButton size="small" onClick={handleorderDialogClose} className={styleClass.closeIcon}> x </IconButton>
+            </Toolbar>
+          </AppBar>
+          <List>
+{orderdialogdata.map((orderdata,index)=>{return <ListItem button onClick={()=>{setViewOrder(orderdata);}}><ListItemText
+                    primary={orderdata.order_id}
+                    secondary={(orderdata.created_at && new Date(orderdata.created_at).toLocaleString())+(orderdata.delivery_date ? new Date(orderdata.delivery_date).toLocaleString(): '')+(orderdata.product_color ? orderdata.product_color:'')+(orderdata.product_brand ? orderdata.product_brand:'')+(orderdata.specification ? orderdata.specification:'')}/>
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="view" onClick={()=>{setViewOrder(orderdata);}}>
+                      <VisibilityIcon />
+                    </IconButton>
+                    {orderdata.document ? <a href={API_URL + "/api/download?path=DeliveredDoc/" + orderdata.document }  download >
+                    <IconButton edge="end" aria-label="CloudDownload">
+                      <CloudDownloadIcon />
+                    </IconButton>
+                    </a>
+                    :
+                    <IconButton disabled edge="end" aria-label="CloudDownload">
+                      <CloudDownloadIcon />
+                    </IconButton>
+                    }
+                    <FormControl style={{marginLeft:20,marginRight:20}}>
+                    <InputLabel shrink>Status</InputLabel>
+                    <Select value="With Customer" style={{width:150}}>
+                      <MenuItem value="With Customer">With Customer</MenuItem>
+                      <MenuItem value="Under Repair">Under Repair</MenuItem>
+                      <MenuItem value="Replaced">Replaced</MenuItem>
+                      <MenuItem value="Faulty / With Customer">Faulty / With Customer</MenuItem>
+                      <MenuItem value="Faulty / Under Repair">Faulty / Under Repair</MenuItem>
+                    </Select>
+                    </FormControl>
+                  </ListItemSecondaryAction>
+                  </ListItem>;})}
+</List>
+      </Dialog>}
+
+      {viewOrder ? <ViewOrder open={viewOrder} handleEditClose={()=>{setViewOrder(false);}} handleOrderRecData= {[]} editableData={viewOrder} viewOnly={ true } /> : null}
 
     </div>
   );

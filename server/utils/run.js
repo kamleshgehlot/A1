@@ -13,7 +13,7 @@ router.route("/newamount").post(async (req, res, next) => {
     return querypromise(`select round(sum(payment_amt),2) as totalreceived,count(payment_amt) as ordercount, staffname from (SELECT sum(payment_amt) as payment_amt, max(total_paid) as total_paid, CONCAT(staff.first_name,' ',staff.last_name) as staffname, staff.id as staff_id FROM payment_schedules left join orders on orders.id = payment_schedules.order_id left join staff on staff.franchise_user_id=orders.sales_person_id where payment_schedules.status NOT IN (1,6,7,8,9,10,16,17) and  orders.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by payment_schedules.order_id) as t where staffname is not NULL group by t.staff_id`, [] , req,res);
 });
 router.route("/productmanager").post(async (req, res, next) => {
-    let orders=await querypromise(`select * from orders;`, [] , req,false);
+    let orders=await querypromise(`select orders.*,delivery_document.document,delivered_product_detail.product_color,delivered_product_detail.product_brand,delivered_product_detail.specification,delivered_product_detail.delivery_date from orders left join delivery_document on delivery_document.order_id = orders.id left join delivered_product_detail on delivered_product_detail.order_id = orders.id;`, [] , req,false);
     let productlist={};
     orders.forEach(order => {
         let list=order.product_id.split(',');
@@ -33,12 +33,9 @@ router.route("/productmanager").post(async (req, res, next) => {
         let result=search(item,names,"id");
         if(result){
             productlist[item].productid=result.id;
-            productlist[item].name=result.name;
-            productlist[item].description=result.description;
-            productlist[item].specification=result.specification;
-            productlist[item].maincat=result.maincat;
-            productlist[item].category=result.category;
-            productlist[item].subcat=result.subcat;
+            Object.keys(result).forEach(resultkey => {
+            productlist[item][resultkey]=result[resultkey];
+            });
         }
     });
 
