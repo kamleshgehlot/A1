@@ -272,7 +272,7 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
 
   return (
     <>
-    <AppBar position="static" color="default">
+    {/* <AppBar position="static" color="default">
         <Tabs
           value={value}
           onChange={handleChange}
@@ -306,7 +306,7 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
       <TabPanel value={value} index={4}>
         Faulty / Under Repair
       </TabPanel>
-    </div>
+    </div> */}
     <Toolbar
       className={clsx(classes.root, {
         [classes.highlight]: numSelected > 0,

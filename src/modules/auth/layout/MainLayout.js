@@ -54,6 +54,7 @@ import TaskReport from './report/TaskReport';
 import AppointmentSystem from '../appointment/AppointmentHome.js';
 import EzidebitStatus from '../order/EzidebitStatus';
 import EditDiscountEMI from './options/admin/EditEMIDiscount.js';
+import ProductManager from '../productManager/Home.js';
 import Tab from './Tab';
 
 // Helpers
@@ -160,7 +161,8 @@ export default function ClippedDrawer(props) {
   const [roleAs, setRoleAs]= useState('');
   const [role_Id, setRole_Id]= useState('');
   const [emiCalculatorOpen, setEmiCalculatorOpen] = useState (false);
-
+  const [showProductManager, setShowProductManager] = useState (false);
+  
   useEffect(()=>{
       const fetchData = async () => {
         try {
@@ -236,7 +238,35 @@ export default function ClippedDrawer(props) {
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
     setShowAppointment(false);
+    setShowProductManager(false);
   }
+
+  function handleProductManager(role, roleId) {
+    setRoleAs(role);
+    setRole_Id(roleId);
+    setShowFranchise(false);
+    setShowStaff(false);
+    setShowCategory(false);
+    setShowMasterStaff(false);
+    setShowFranchiseStaff(false);
+    setShowProfile(false);
+    setShowTask(false);
+    setShowPwd(false);
+    setShowCustomer(false);
+    setShowEnquiry(false);
+    setShowLead(false);
+    setShowOrder(false);
+    setShowFranchiseDetail(false);
+    setShowFinanceReport(false);
+    setShowDeliveryReport(false);
+    
+    setShowdashboard(false);
+    setShowCsrTaskReport(false); 
+    setShowPaymentStatus(false);
+    setShowAppointment(false);
+    setShowProductManager(true);
+  }
+
 
   function handleAppointmentClick(){
     setShowFranchise(false);
@@ -257,6 +287,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowProductManager(false);
     setShowAppointment(true);
   }
 
@@ -280,6 +311,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowAppointment(false);
+    setShowProductManager(false);
     
     setShowPaymentStatus(false);
   }
@@ -305,6 +337,7 @@ export default function ClippedDrawer(props) {
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
+    setShowProductManager(false);
     setShowAppointment(false);
   }
 
@@ -329,6 +362,7 @@ export default function ClippedDrawer(props) {
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
     setShowAppointment(false);
+    setShowProductManager(false);
     
   }
 
@@ -347,6 +381,7 @@ export default function ClippedDrawer(props) {
     setShowEnquiry(false);
     setShowLead(false);
     setShowOrder(false);
+    setShowProductManager(false);
     setShowFranchiseDetail(false);
     setShowFinanceReport(false);
     setShowDeliveryReport(false);
@@ -365,6 +400,7 @@ export default function ClippedDrawer(props) {
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
     setShowFranchise(false);
+    setShowProductManager(false);
     setShowCategory(false);
     setShowProfile(false);
     setShowCustomer(false);
@@ -402,6 +438,7 @@ export default function ClippedDrawer(props) {
     setShowDeliveryReport(false);
     setShowdashboard(false);
     setShowCsrTaskReport(false); 
+    setShowProductManager(false);
     setShowPaymentStatus(false);
     setShowAppointment(false);
     
@@ -420,6 +457,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowEnquiry(false);
     setShowLead(false);
+    setShowProductManager(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
     setShowFinanceReport(false);
@@ -453,6 +491,7 @@ export default function ClippedDrawer(props) {
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
     setShowAppointment(false);
+    setShowProductManager(false);
   }
 
   function handleCustomerClick(role){
@@ -472,6 +511,7 @@ export default function ClippedDrawer(props) {
     setShowFinanceReport(false);
     setShowDeliveryReport(false);
     setShowdashboard(false);
+    setShowProductManager(false);
     setShowCsrTaskReport(false); 
     setShowPaymentStatus(false);
     setShowAppointment(false);
@@ -490,6 +530,7 @@ export default function ClippedDrawer(props) {
     setShowCategory(false);
     setShowProfile(false);
     setShowPwd(false);
+    setShowProductManager(false);
     setShowLead(false);
     setShowOrder(false);
     setShowFranchiseDetail(false);
@@ -513,6 +554,7 @@ export default function ClippedDrawer(props) {
     setShowMasterStaff(false);
     setShowFranchise(false);
     setShowCategory(false);
+    setShowProductManager(false);
     setShowProfile(false);
     setShowPwd(false);
     setShowOrder(false);
@@ -531,6 +573,7 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowEnquiry(false);
     setShowCustomer(false);
+    setShowProductManager(false);
     setShowTask(false);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
@@ -557,6 +600,7 @@ export default function ClippedDrawer(props) {
     setShowCustomer(false);
     setShowTask(false);
     setShowFranchiseStaff(false);
+    setShowProductManager(false);
     setShowMasterStaff(false);
     setShowFranchise(false);
     setShowCategory(false);
@@ -580,6 +624,7 @@ export default function ClippedDrawer(props) {
     setShowTask(false);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
+    setShowProductManager(false);
     setShowFranchise(false);
     setShowCategory(false);
     setShowProfile(false);
@@ -598,6 +643,7 @@ export default function ClippedDrawer(props) {
     setShowCsrTaskReport(true);
     setShowFinanceReport(false);
     setShowOrder(false);
+    setShowProductManager(false);
     setShowLead(false);
     setShowEnquiry(false);
     setShowCustomer(false);
@@ -625,6 +671,7 @@ export default function ClippedDrawer(props) {
     setShowLead(false);
     setShowEnquiry(false);
     setShowCustomer(false);
+    setShowProductManager(false);
     setShowTask(false);
     setShowFranchiseStaff(false);
     setShowMasterStaff(false);
@@ -763,6 +810,8 @@ export default function ClippedDrawer(props) {
               <StyledTreeItem nodeId="2" labelText="CSR"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
                 <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
                 <Tab roleName="CSR" roleId="3" nodeId="9" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
+                
+                <Tab roleName="CSR" roleId="3" nodeId="38" handleClick={handleProductManager} labelIcon={BusinessIcon} labelText="Product Manager"/> 
 
                 <Tab roleName="CSR" nodeId="10" handleClick={handleCustomerClick} labelIcon={CustomerIcon} labelText="Manage Customer"/> 
                    
@@ -903,6 +952,9 @@ export default function ClippedDrawer(props) {
         }
         {
           showAppointment ? <AppointmentSystem /> : null
+        }
+        {
+          showProductManager ? <ProductManager roleName={roleAs}  /> : null 
         }
       </main>
 

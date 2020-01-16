@@ -218,7 +218,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     }
     if(result.nextInstallmentRow[0] != null && result.nextInstallmentRow[0] != ''){
       setNextPayment(result.nextInstallmentRow[0]);
-      setPaymentAmt(result.nextInstallmentRow[0].payment_amt);
+      setPaymentAmt(result.nextInstallmentRow[0].payment_amt.toFixed(2));
       setInstNo(result.nextInstallmentRow[0].installment_no)
       setPaymentRecDate(result.nextInstallmentRow[0].payment_date);
       setDateToReschedule(result.nextInstallmentRow[0].payment_date);
@@ -506,7 +506,7 @@ return (
                   />
               </Grid>
               <Grid item xs={12} sm={2}>
-                <Typography variant="h6" className={classes.labelTitle}> Currnet Payment Date:  </Typography>
+                <Typography variant="h6" className={classes.labelTitle}> Payment Date:  </Typography>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                       margin="dense"
