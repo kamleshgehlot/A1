@@ -844,28 +844,6 @@ return (
                           />
                       </MuiPickersUtilsProvider>                   
                 </Grid>    
-                {/* <Grid item xs={12} sm={4}>
-                  <Typography  className={classes.subTitle}>
-                    Bond Amt
-                  </Typography>
-                  <TextField
-                      id="bond_amt"
-                      name="bond_amt"
-                      value={inputs.bond_amt}
-                      onChange={handlePriceInput}
-                      error={errors.bond_amt}
-                      helperText={errors.bond_amt}
-                      fullWidth
-                      type="text"
-                      margin="dense"
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        classes: {
-                          input: classes.textsize,
-                        },
-                      }}                      
-                    />
-                </Grid>            */}
                 <Grid item xs={12} sm={12}>
                   <Typography variant="h6" className={classes.labelTitle}>
                     Interest
@@ -887,27 +865,16 @@ return (
                       }}
                       id="intrest_rate"
                       name="intrest_rate"
-                      // label="Weeks"
                       value={inputs.intrest_rate}
                       onChange={handleNumberInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
-                      // error={errors.intrest_rate}
-                      // helperText={errors.intrest_rate}
-                      
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{                        
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      // InputProps={{
-                      //   startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      // }}
                     />
                     </Grid>
                     <Grid item xs={12} sm={4}>       

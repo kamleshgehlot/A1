@@ -35,7 +35,7 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import {useCommonStyles} from '../../common/StyleComman'; 
-import {getDate, getCurrentDate, getTimeinDBFormat, convertDateInUTC } from '../../../utils/datetime'
+import {getDate, setTime, getCurrentDate, getTimeinDBFormat, convertDateInUTC } from '../../../utils/datetime'
 
 import { APP_TOKEN } from '../../../api/Constants';
 
@@ -193,46 +193,46 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
   },[]);
 
 
-  // useEffect(() => {
-  //   if(paymentBeforeDelivery!= ''){
-  //     handleRandomInput([
-  //       {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
-  //     ]);
-  //   }else{
-  //     handleRandomInput([
-  //       {name: 'bond_amt', value: ''},
-  //     ]);
-  //   }
-  // },[paymentBeforeDelivery]);
+  useEffect(() => {
+    if(paymentBeforeDelivery!= ''){
+      handleRandomInput([
+        {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt))},
+      ]);
+    }else{
+      handleRandomInput([
+        {name: 'bond_amt', value: ''},
+      ]);
+    }
+  },[paymentBeforeDelivery]);
 
-//   useEffect(()=>{
-//     let eachPaymentAmt = 0;
+  useEffect(()=>{
+    let eachPaymentAmt = 0;
 
-//     if(frequency != ''){
-//       if(frequency == 1){
-//         let installment = (totalOfRental * 4);
-//         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
-//         eachPaymentAmt = installment;          
-//       }else if(frequency == 2){ 
-//         let installment = (totalOfRental * 2);
-//         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
-//         eachPaymentAmt = installment;          
-//       }else if(frequency == 4){ 
-//         let installment = (totalOfRental);
-//         handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
-//         eachPaymentAmt = installment;          
-//       }
-//     }
-//     // if(paymentBeforeDelivery!= ''){
-//     //   handleRandomInput([
-//     //     {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
-//     //   ]);
-//     // }else{
-//     //   handleRandomInput([
-//     //     {name: 'bond_amt', value: ''},
-//     //   ]);
-//     // }
-// },[frequency]);
+    if(frequency != ''){
+      if(frequency == 1){
+        let installment = (totalOfRental * 4);
+        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)},]);          
+        eachPaymentAmt = installment;          
+      }else if(frequency == 2){ 
+        let installment = (totalOfRental * 2);
+        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);
+        eachPaymentAmt = installment;          
+      }else if(frequency == 4){ 
+        let installment = (totalOfRental);
+        handleRandomInput([ {name: 'each_payment_amt', value: installment.toFixed(2)}, ]);        
+        eachPaymentAmt = installment;          
+      }
+    }
+    // if(paymentBeforeDelivery!= ''){
+    //   handleRandomInput([
+    //     {name: 'bond_amt', value: (paymentBeforeDelivery * eachPaymentAmt).toFixed(2)},
+    //   ]);
+    // }else{
+    //   handleRandomInput([
+    //     {name: 'bond_amt', value: ''},
+    //   ]);
+    // }
+},[frequency]);
 
 
 
@@ -240,15 +240,26 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
     flexOrderList != [] && flexOrderList != "" && flexOrderList != undefined ?  flexOrderList : RESET_VALUES,
     flex,
     validate
-  ); 
+  );
   
-  // useEffect(()=>{    
-  //     if(paymentBeforeDelivery!= ''){
-  //       setInput('bond_amt',(paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2))
-  //     }else{
-  //       setInput('bond_amt','')
-  //     }  
-  // },[inputs.each_payment_amt]);
+  
+  useEffect(() => {    
+    if(flexOrderList != [] && flexOrderList != "" && flexOrderList != undefined){
+      if((Object.values(flexOrderList.exp_delivery_time)).length === 8){
+        handleRandomInput([
+          {name: 'exp_delivery_time', value: setTime(flexOrderList.exp_delivery_time)},
+        ]);
+      }
+    } 
+  },[]);
+
+  useEffect(()=>{    
+      if(paymentBeforeDelivery!= ''){
+        setInput('bond_amt',(paymentBeforeDelivery * inputs.each_payment_amt).toFixed(2))
+      }else{
+        setInput('bond_amt','')
+      }  
+  },[inputs.each_payment_amt]);
 
   
 return (
@@ -430,8 +441,8 @@ return (
                           },
                         }}
                         onChange={handleDateChange}
-                        // onError={errors.first_payment}
-                        // helperText={errors.first_payment} 
+                        error={errors.first_payment} 
+                        helperText={errors.first_payment} 
                         disabled = {viewOnly}
                       />
                     </MuiPickersUtilsProvider>
@@ -496,8 +507,8 @@ return (
                             },
                           }}
                           onChange={handleDeliveryDate}
-                          // error={errors.exp_delivery_date}
-                          // helperText={errors.exp_delivery_date}   
+                          error={errors.exp_delivery_date}
+                          helperText={errors.exp_delivery_date}  
                           disabled = {viewOnly}
                         />
                         </MuiPickersUtilsProvider>
