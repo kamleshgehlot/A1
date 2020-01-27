@@ -143,14 +143,14 @@ export default function MissedPayment({customerList, handleOrderView, handlePaym
 return (
     <div>
       <Grid container spacing={4}>
-        <Grid item xs={12} sm={12}> 
+        <Grid item xs={12} sm={6}>
           <TextField
+            fullWidth            
             margin="dense"
             id="search"
             name="search"
             placeholder ="Type (Order#, Customer Name, Payment Date) to Search Record..."
             type="text"
-            autoComplete='off'
             value={searchText}
             onKeyPress={(ev) => {
               if (ev.key ===  'Enter') {
@@ -159,13 +159,13 @@ return (
               }
             }}
             onChange={handleSearchText}
-            InputProps={{
-              endAdornment: 
-              <InputAdornment position='end'>
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} alignItems = 'center' style = {{ display : 'flex'}}>
                 <Typography style={{marginRight : '10px'}}>{"From: "}</Typography>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
-                    fullWidth
+                    autoOk = {true}
                     margin="dense"
                     id="from_payment_date"
                     name="from_payment_date"
@@ -181,13 +181,14 @@ return (
                     onChange={handleFromPaymentDate}
                     error = {''}
                     helperText = {''}
-                  />
+                  />                  
                 </MuiPickersUtilsProvider>
 
                 <Typography style={{marginRight : '10px', marginLeft : '20px'}}>{"To: "}</Typography>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  
                   <KeyboardDatePicker
-                    fullWidth
+                    autoOk = {true}                    
                     margin="dense"
                     id="to_payment_date"
                     name="to_payment_date"
@@ -234,11 +235,7 @@ return (
                     </div>
                     )}
                   </PopupState>
-                </Tooltip>
-              </InputAdornment>,
-            }}
-            fullWidth
-          />  
+                </Tooltip>            
         </Grid>
         <Grid item xs={12} sm={12}>
       <Table stickyHeader  className={classes.table}>
