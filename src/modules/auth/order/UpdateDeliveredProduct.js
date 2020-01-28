@@ -23,11 +23,20 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DateFnsUtils from '@date-io/date-fns';
 import {useCommonStyles} from '../../common/StyleComman'; 
+import Chip from '@material-ui/core/Chip';
+import TagFacesIcon from '@material-ui/icons/TagFaces';
+
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import 'date-fns';
-import { APP_TOKEN } from '../../../api/Constants';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+
 
 // API CALL
 import Order from '../../../api/franchise/Order';
@@ -46,6 +55,9 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     height: theme.spacing(5),
   },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
   title: {
     display: 'flex',
     alignItems: 'center',
@@ -63,6 +75,10 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),
     marginTop: 15,
+  },
+  listItem: {  
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(12),    
   },
   root: {
     flexGrow: 1,
@@ -138,11 +154,24 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
   const [orderedProductList, setOrderedProductList] = useState([]);
+  const [productDetail, setProductDetail] = useState([]);
+  const [filledProduct, setFilledProduct] = useState([]);
+  const [product, setProduct] = useState('');
+  const [formError, setFormError] = useState({});
 
   function handleDateChange(date){
     handleInputChange({target:{name: 'delivery_date', value: date}})
   }
   
+  const designProArrayLayout = (products) => {
+    let temp = [];
+    (products != undefined && products != null && products != "") && products.map((data, index) => {
+      temp.push({id: data.id, name: data.name});
+    })
+    setProductDetail(temp);
+  }
+
+
   const getRequiredData = async () => {
       try {
           const result = await Order.getProductAndCategoryName({
@@ -152,51 +181,116 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
 
         const response = await CategoryAPI.getOrderedProductList({ product_ids : orderData.product_id });
         setOrderedProductList(response.productList);
+        designProArrayLayout(response.productList);
       } catch (error) {
         console.log('Error..',error);
       }
   };
   
+  // console.log('orderedProductList', orderedProductList)
   useEffect(() => {
      getRequiredData();
   },[]);
 
-  const submit = async () => {
-    setpLoading(true);
-    setSavebtn(true);
 
-    const result = await Order.submitDeliveredProduct({
-      id : orderData.id,
-      product_brand : inputs.product_brand,
-      product_color : inputs.product_color,
-      product_cost : inputs.product_cost,
-      specification : inputs.specification,
-      invoice_number : inputs.invoice_number,
-      delivery_date : getDate(inputs.delivery_date),
-      purchase_from : inputs.purchase_from,
-      
-      product_id : orderData.product_id,
-      customer_id : orderData.customer_id,
-      related_to : orderData.product_related_to,
+  const formSubmit = async () => {
+    // console.log(inputs, formError)
+    if(inputs.comment === '')
+      {setFormError({comment: 'Comment is required'})}
+    else {setFormError({})};
 
-      order_id: orderData.order_id,
-      user_role: roleName,
-      comment: inputs.comment, 
+    // if(Object.keys(formError).length === 0){
+    //   console.log('hello')
+    // }
+    // setpLoading(true);
+    // setSavebtn(true);
+    // const result = await Order.submitDeliveredProduct({
+    //   id : orderData.id,
+    //   customer_id : orderData.customer_id,
+    //   order_id: orderData.order_id,
+    //   user_role: roleName,
+    //   comment: inputs.comment,      
+    //   delivered_date: getDate(inputs.delivery_date),
+    //   delivered_time: new Date(),
 
-      assigned_to: 5,       
-      delivered_date: getDate(inputs.delivery_date),
-      delivered_time: new Date(),
-    });
-    handleOrderList(result);
-    handleClose();
+    //   productDetails : filledProduct,
+    // });
+    // handleOrderList(result);
+    // handleClose();
   }
 
+  // const submit = async () => {
+  //   setpLoading(true);
+  //   setSavebtn(true);
 
-  const { inputs, handleInputChange,  handleNumberInput, handlePriceInput, handleRandomInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  //   const result = await Order.submitDeliveredProduct({
+  //     id : orderData.id,
+  //     product_brand : inputs.product_brand,
+  //     product_color : inputs.product_color,
+  //     product_cost : inputs.product_cost,
+  //     specification : inputs.specification,
+  //     invoice_number : inputs.invoice_number,
+  //     delivery_date : getDate(inputs.delivery_date),
+  //     purchase_from : inputs.purchase_from,
+      
+  //     product_id : orderData.product_id,
+  //     customer_id : orderData.customer_id,
+  //     related_to : orderData.product_related_to,
+
+  //     order_id: orderData.order_id,
+  //     user_role: roleName,
+  //     comment: inputs.comment, 
+
+  //     assigned_to: 5,       
+  //     delivered_date: getDate(inputs.delivery_date),
+  //     delivered_time: new Date(),
+  //   });
+  //   handleOrderList(result);
+  //   handleClose();
+  // }
+
+  const saveProduct = () => {
+    let temp = [...filledProduct];
+    temp.push({
+          product_id : product.id,
+          product_name : product.name,
+          delivery_date : getDate(inputs.delivery_date),
+          product_brand : inputs.product_brand,
+          product_color : inputs.product_color,
+          product_cost : inputs.product_cost,
+          specification : inputs.specification,
+          invoice_number : inputs.invoice_number,          
+          purchase_from : inputs.purchase_from,        
+        });
+      setFilledProduct(temp);
+       
+      const removeProduct = productDetail.find(data => data.id !== product.id);
+      if(removeProduct !== undefined){ 
+        setProductDetail([removeProduct])
+      }else{
+        setProductDetail([]);
+      }
+  }
+
+  const updateProduct = (product) => {
+    handleReset(product);
+    let temp = [...productDetail];
+    temp.push({id: product.product_id, name: product.product_name})
+    setProductDetail(temp);
+    
+    const removeProduct = filledProduct.find(data => data.product_id !== product.product_id);
+    if(removeProduct !== undefined){ 
+      setFilledProduct([removeProduct]);
+    }else{
+      setFilledProduct([]);
+    }
+  }
+
+  const { inputs, handleInputChange, handlePriceInput, handleReset, handleSubmit, errors } = useSignUpForm(
     RESET_VALUES,
-    submit,
+    saveProduct,
     validate
-  ); 
+  );
 
 
 return (
@@ -234,12 +328,20 @@ return (
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                  <Typography variant="h6" className={classes.labelTitle}>
-                     {/* {"PRODUCT TO DELIVERED:  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name} */}
-                      {"PRODUCT TO DELIVERED :  " + (orderedProductList.length > 0 ? orderedProductList :[]).map(data => {
-                        return(data.name)
-                      })}
-                  </Typography>                  
+                  <Typography variant="h6" className={classes.labelTitle}> PRODUCT TO DELIVERED:</Typography>
+                  <List dense = {true}>
+                    {(orderedProductList.length > 0 ? orderedProductList :[]).map(data => {
+                      return(
+                        <ListItem  style = {{marginBottom : '-12px'}}>
+                          <ListItemText
+                            primary= {
+                              <Typography variant="h6" className={classes.listItem}> {data.name} </Typography>
+                            }
+                          />
+                        </ListItem>                        
+                      )
+                    })}
+                  </List>
                 </Grid>
                 <Grid item xs={12} sm={12}>   
                     <Divider />
@@ -372,6 +474,41 @@ return (
                       helperText={errors.specification}
                     />
                   </Grid>
+                  <Grid item xs={12} sm={6} alignItems = "center">     
+                    <Typography className={classes.labelTitle}>Details Save to: </Typography>
+                    {( productDetail !== undefined && productDetail !== null && productDetail.length > 0 ? productDetail :[]).map((data, index) => {
+                      if(data !== undefined && data !== "")
+                      return(
+                        <Chip
+                          clickable
+                          size = "small"
+                          key={data.id}
+                          label={data.name}                          
+                          className={classes.chip}
+                          onClick = {() => {setProduct(data); handleSubmit()}}
+                        />
+                      )
+                    })}
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} alignItems = "center">     
+                    <Typography className={classes.labelTitle}>Saved Products: </Typography>
+                    {(filledProduct.length > 0 ? filledProduct :[]).map((data, index) => {
+                      if(data !== undefined && data !== "")
+                      return(
+                        <Chip
+                          size = "small"
+                          key={data.id}
+                          label={data.product_name}
+                          // onDelete={""}
+                          className={classes.chip}
+                          clickable
+                          onClick = {() => {updateProduct(data)}}
+                        />
+                      )
+                    })}
+                  </Grid>
+
                   <Grid item xs={12} sm={12}>     
                   <InputLabel className={classes.textsize}  htmlFor="comment">Write comment about order *</InputLabel>
                   <TextField                       
@@ -386,12 +523,12 @@ return (
                           input: classes.textsize,
                         },
                       }}
-                      error={errors.comment}
-                      helperText={errors.comment}
+                      error={formError.comment}
+                      helperText={formError.comment}
                     />
                   </Grid>
                 <Grid item xs={12} sm={12}>                                     
-                  <Button variant="contained" color='primary' className={classes.button} onClick={ handleSubmit } disabled = {savebtn} >Submit</Button>
+                  <Button variant="contained" color='primary' className={classes.button} onClick={ formSubmit } disabled = {savebtn} >Submit</Button>
                   <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                     Cancel
                   </Button> 

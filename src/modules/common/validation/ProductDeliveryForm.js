@@ -33,9 +33,9 @@ export default function validate(values) {
   if (!values.purchase_from) {
     errors.purchase_from = 'Purchase from  is required';
   }
-  if (!values.comment) {
-    errors.comment = 'comment is required';
-  }
+  // if (!values.comment) {
+  //   errors.comment = 'comment is required';
+  // }
   
   return errors;
 };
