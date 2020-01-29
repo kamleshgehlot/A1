@@ -1169,7 +1169,7 @@ Order.prototype.getProductAndCategoryName = function () {
 };
 
 
-Order.prototype.submitDeliveredProduct = function () {
+Order.prototype.submitDeliveredProduct = function (product_id, product_brand, product_color, product_cost, specification, invoice_number, delivery_date, purchase_from) {
   const that = this;
   return new Promise(function (resolve, reject) {
 
@@ -1179,11 +1179,11 @@ Order.prototype.submitDeliveredProduct = function () {
       }
       if (!error) {
         const Values = [
-          [that.id, that.customer_id, that.products_id, that.related_to, that.invoice_number, that.purchase_from, that.product_cost, that.product_color, that.product_brand,  that.delivery_date, that.specification, 1, that.created_by]
+          [that.id, that.customer_id, product_id, invoice_number, purchase_from, product_cost, product_color, product_brand,  delivery_date, specification, 1, that.created_by]
         ]
 
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, related_to, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, is_active, created_by) VALUES ?',[Values],function (error, productRows, fields) {
+        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, is_active, created_by) VALUES ?',[Values],function (error, productRows, fields) {
           resolve(productRows);
         });
         } else {
@@ -1385,7 +1385,7 @@ Order.prototype.postComment = function () {
       if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           let queryData = [
-            [that.order_id, that.userid, that.user_role, that.comment, 1]
+            [that.id, that.userid, that.user_role, that.comment, 1]
           ];
             connection.query('INSERT INTO order_comment(order_id, created_by, user_role, comment, is_active) VALUES ?',[queryData],function (error, rows, fields) {
               if (!error) {              
@@ -1481,7 +1481,7 @@ Order.prototype.getDeliveredProductData = function () {
       }
       if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-           connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.related_to, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp LEFT JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
+           connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp LEFT JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
               if (!error) {              
                 resolve(rows);
               } else {

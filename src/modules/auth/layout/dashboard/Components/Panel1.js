@@ -307,8 +307,7 @@ const EnhancedTableToolbar = ({ numSelected,inputs,setInputs,mainCategoryList,se
         Faulty / Under Repair
       </TabPanel>
     </div> */}
-    <Toolbar
-      className={clsx(classes.root, {
+    <Toolbar className={clsx(classes.root, {
         [classes.highlight]: numSelected > 0,
       })}
     >

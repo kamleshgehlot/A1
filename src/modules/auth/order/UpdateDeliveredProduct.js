@@ -25,7 +25,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import Chip from '@material-ui/core/Chip';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
-
+import DoneIcon from '@material-ui/icons/Done';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
@@ -194,29 +194,30 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
 
 
   const formSubmit = async () => {
-    // console.log(inputs, formError)
-    if(inputs.comment === '')
-      {setFormError({comment: 'Comment is required'})}
-    else {setFormError({})};
+    if(productDetail.length > 0){
+      setFormError({product: 'Details is required for all product'})
+      console.log('error product');
+    }else if(inputs.comment === ''){
+      setFormError({comment: 'Comment is required'})
+    }    
+    if(inputs.comment !== '' && productDetail.length === 0){
+      setFormError({});
+      setpLoading(true);
+      setSavebtn(true);
+      const result = await Order.submitDeliveredProduct({
+        id : orderData.id,
+        customer_id : orderData.customer_id,
+        order_id: orderData.order_id,
+        user_role: roleName,
+        comment: inputs.comment,      
+        delivered_date: getDate(inputs.delivery_date),
+        delivered_time: new Date(),
 
-    // if(Object.keys(formError).length === 0){
-    //   console.log('hello')
-    // }
-    // setpLoading(true);
-    // setSavebtn(true);
-    // const result = await Order.submitDeliveredProduct({
-    //   id : orderData.id,
-    //   customer_id : orderData.customer_id,
-    //   order_id: orderData.order_id,
-    //   user_role: roleName,
-    //   comment: inputs.comment,      
-    //   delivered_date: getDate(inputs.delivery_date),
-    //   delivered_time: new Date(),
-
-    //   productDetails : filledProduct,
-    // });
-    // handleOrderList(result);
-    // handleClose();
+        productDetails : filledProduct,
+      });
+      handleOrderList(result);
+      handleClose();
+    };    
   }
 
   // const submit = async () => {
@@ -259,8 +260,8 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
           product_color : inputs.product_color,
           product_cost : inputs.product_cost,
           specification : inputs.specification,
-          invoice_number : inputs.invoice_number,          
-          purchase_from : inputs.purchase_from,        
+          invoice_number : inputs.invoice_number,
+          purchase_from : inputs.purchase_from,
         });
       setFilledProduct(temp);
        
@@ -476,16 +477,22 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6} alignItems = "center">     
                     <Typography className={classes.labelTitle}>Details Save to: </Typography>
-                    {( productDetail !== undefined && productDetail !== null && productDetail.length > 0 ? productDetail :[]).map((data, index) => {
+                    {formError && ( productDetail !== undefined && productDetail !== null && productDetail.length > 0 ? productDetail :[]).map((data, index) => {
+                      console.log('changes')
                       if(data !== undefined && data !== "")
                       return(
                         <Chip
+                          style = {Object.keys(formError)[0] === 'product' ? { backgroundColor : 'red'} : {}}
                           clickable
+                          icon={<TagFacesIcon />}
+                          deleteIcon = {<DoneIcon />}
+                          onDelete = {""}
+                          variant="default"
                           size = "small"
                           key={data.id}
-                          label={data.name}                          
+                          label={data.name}
                           className={classes.chip}
-                          onClick = {() => {setProduct(data); handleSubmit()}}
+                          onClick = {() => {setProduct(data); handleSubmit()}}                          
                         />
                       )
                     })}

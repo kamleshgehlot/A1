@@ -32,13 +32,14 @@ import TablePagination from '@material-ui/core/TablePagination';
 
 
 // API CALL
-import Customer from '../../../api/franchise/Customer';
+import ProductManagerAPI from '../../../api/ProductManager.js';
 import Order from '../../../api/franchise/Order';
 
 
 // Components
 import BadgeComp from '../../common/BadgeComp';
 import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../../../utils/datetime';
+import TableRecord from './Components/RecordTable.js';
 
 
 const drawerWidth = 240;
@@ -182,7 +183,6 @@ export default function ProductManager({roleName}) {
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
-  
     return (
       <Typography
         component="div"
@@ -196,12 +196,22 @@ export default function ProductManager({roleName}) {
       </Typography>
     );
   }
+
   function handleTabChange(event, newValue) {
     setTabValue(newValue);
     setPage(0);
     setRowsPerPage(20);
+    handleTabData(newValue)
   }
 
+  const handleTabData = async (tabValue = 0) => {
+    console.log(tabValue);
+    const result = await ProductManagerAPI.getTabRelatedRecord({tabValue: tabValue});
+  }
+
+  useEffect(() => {
+    handleTabData()
+  },[])
 
 
   return (
@@ -210,28 +220,36 @@ export default function ProductManager({roleName}) {
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={tabValue} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
-                  <Tab label={<BadgeComp count={0} label="With Customer" />} /> 
-                  <Tab label={<BadgeComp count={0} label="Under Repair" />} /> 
-                  <Tab label={<BadgeComp count={0} label="Replaced" />} /> 
+                  <Tab label={<BadgeComp count={0} label="All" />} />
+                  <Tab label={<BadgeComp count={0} label="Delivered" />} />
+                  <Tab label={<BadgeComp count={0} label="With Customer" />} />
+                  <Tab label={<BadgeComp count={0} label="Under Repair" />} />
+                  <Tab label={<BadgeComp count={0} label="Replaced" />} />
                   <Tab label={<BadgeComp count={0} label="Faulty/With Customer" />} />
                   <Tab label={<BadgeComp count={0} label="Faulty/Under Repair" />} />
                 </Tabs>
               </AppBar>
               <Fragment>
                 <TabPanel value={tabValue} index={0}>
-                  
+                  <TableRecord /> 
                 </TabPanel>
-
                 <TabPanel value={tabValue} index={1}>
                   
                 </TabPanel>
                 <TabPanel value={tabValue} index={2}>
-               
+                  
                 </TabPanel>
+
                 <TabPanel value={tabValue} index={3}>
-               
+                  
                 </TabPanel>
                 <TabPanel value={tabValue} index={4}>
+               
+                </TabPanel>
+                <TabPanel value={tabValue} index={5}>
+               
+                </TabPanel>
+                <TabPanel value={tabValue} index={6}>
                 
                 </TabPanel>
               </Fragment>

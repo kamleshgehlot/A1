@@ -898,41 +898,52 @@ const submitDeliveredProduct = async function (req, res, next) {
   let orderParams = {
     id: req.body.id,
     user_id: req.decoded.user_id,
-    userid: req.decoded.userId,
-    product_brand: req.body.product_brand,
-    product_color: req.body.product_color,
-    product_cost: req.body.product_cost,
-    specification: req.body.specification,
-    invoice_number: req.body.invoice_number,
-    delivery_date: req.body.delivery_date,
-    purchase_from: req.body.purchase_from,
-
-    products_id: req.body.product_id,
+    userid: req.decoded.id,
     customer_id: req.body.customer_id,
-    related_to: req.body.related_to,
-
     order_id: req.body.order_id,
     user_role: req.body.user_role,
     comment: req.body.comment,
-
-    assigned_to: req.body.assigned_to,
+    assigned_to: 5,
     delivered_date: req.body.delivered_date,
     delivered_time: req.body.delivered_time,
-
     created_by: req.decoded.id,
+    productDetails : req.body.productDetails,
+
+    // product_brand: req.body.product_brand,
+    // product_color: req.body.product_color,
+    // product_cost: req.body.product_cost,
+    // specification: req.body.specification,
+    // invoice_number: req.body.invoice_number,
+    // delivery_date: req.body.delivery_date,
+    // purchase_from: req.body.purchase_from,
+    // products_id: req.body.product_id,    
+    // related_to: req.body.related_to,
+
   };
-  // console.log('req.',orderParams);
+  console.log('req.',orderParams, req.decoded);
 
   try {
     const newOrder = new Order(orderParams);
-
     const postComment = await newOrder.postComment();
     const delivered = await newOrder.Delivered();
-    const postProductDetail = await newOrder.submitDeliveredProduct();
 
+    orderParams.productDetails.map(async (data, index) => {
+
+        // newOrder.products_id = data.product_id;
+        // newOrder.product_brand = data.product_brand,
+        // newOrder.product_color = data.product_color,
+        // newOrder.product_cost = data.product_cost,
+        // newOrder.specification = data.specification,
+        // newOrder.invoice_number = data.invoice_number,
+        // newOrder.delivery_date = data.delivery_date,
+        // newOrder.purchase_from = data.purchase_from,
+      
+        await newOrder.submitDeliveredProduct(data.product_id, data.product_brand, data.product_color, data.product_cost, data.specification, data.invoice_number, data.delivery_date, data.purchase_from );
+    })
+    // const postProductDetail = await newOrder.submitDeliveredProduct();
+    
     const order = await newOrder.getOrderList();
     res.send({ order: order });
-
   } catch (error) {
     next(error);
   }
