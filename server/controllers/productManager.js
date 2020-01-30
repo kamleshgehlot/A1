@@ -5,43 +5,68 @@ const getTabRelatedRecord = async function(req, res, next) {
     user_id: req.decoded.user_id,
     tabValue: req.body.tabValue,
   };
-  
-  try {    
-    console.log(params)
+  // console.log('product manager...', params);
+  try {
+    
     const activity = new ProductManager(params);
 
     if(req.body.tabValue === 0){
-      const result = await activity.getTabRelatedRecord();      
-      // console.log('result....',result)
-      // console.log('....',Object.values(result))
+      const result = await activity.getAllRelatedRecord();
+      let productList = result.productList;
+      const orderedProduct = result.orderedProduct;
+      let combineResult = [];
+      
+      if(productList !== "" && productList !== null && productList !== undefined && orderedProduct !== "" && orderedProduct !== null && orderedProduct !== undefined){
+        (productList.length > 0 ? productList : []).map((product, index) => {
+          (orderedProduct.length > 0 ? orderedProduct : []).map(count => {
+            if(product.id === count.product_id){
+              product.total_rented = count.total_rented;
+              combineResult.push(product);
+            }
+          })
+        })       
+      }
+      res.send({productList: combineResult});
+    }else if(req.body.tabValue === 1){
+      const result = await activity.getDeliveredRelatedRecord();
+      let productList = result.productList;
+      const orderedProduct = result.orderedProduct;
+      let combineResult = [];
+      
+      if(productList !== "" && productList !== null && productList !== undefined && orderedProduct !== "" && orderedProduct !== null && orderedProduct !== undefined){
+        (productList.length > 0 ? productList : []).map((product, index) => {
+          (orderedProduct.length > 0 ? orderedProduct : []).map(count => {
+            if(product.id === count.product_id){
+              product.total_rented = count.total_rented;
+              combineResult.push(product);
+            }
+          })
+        })
+        // console.log('combineResult', combineResult)
+      }
+      res.send({productList: combineResult});      
     }
-    
-
-    // const result = await newReport.getTabRelatedRecord();      
-    res.send([]);
   } catch (error) {
     next(error);
   }
 };
 
 
-// const getOrderReport = async function(req, res, next) {
-//   const ReportParams = {
-//     customer_id : req.body.customer_id,
-//     order_id : req.body.order_id,
-//     to_date : req.body.to_date,
-//     from_date : req.body.from_date,
-//     user_id: req.decoded.user_id,
-//   };
+const getRentedOrder = async function(req, res, next) {
+  const params = {
+    user_id: req.decoded.user_id,
+    productId: req.body.productId,
+    product_state: req.body.product_state,
+  };
   
-//   try {
-//     const newReport = new Report(ReportParams);
-//     const result = await newReport.getOrderReport();      
-//     res.send(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+  try {
+    const activity = new ProductManager(params);
+    const result = await activity.getRentedOrder();      
+    res.send({orderList: result});
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 // const getDeliveryReport = async function(req, res, next) {
@@ -101,4 +126,5 @@ const getTabRelatedRecord = async function(req, res, next) {
 // };
 module.exports = {
   getTabRelatedRecord,  
+  getRentedOrder
 };

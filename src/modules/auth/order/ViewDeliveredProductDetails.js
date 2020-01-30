@@ -328,8 +328,6 @@ return (
                     />
                   </Grid>
                   
-                    {console.log(inputs.document)}
-
                   {(inputs.document != null && inputs.document != undefined && inputs.document != "") &&
                     <Grid item xs={12} sm={12}>
                       <a href={API_URL + "/api/download?path=DeliveredDoc/" + inputs.document }  download >Click here to download product delivered document</a>

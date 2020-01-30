@@ -39,7 +39,10 @@ import Order from '../../../api/franchise/Order';
 // Components
 import BadgeComp from '../../common/BadgeComp';
 import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../../../utils/datetime';
+import ViewOrder from '../order/Edit.js';
 import TableRecord from './Components/RecordTable.js';
+import OrderRecord from './Components/OrderRecord.js';
+
 
 
 const drawerWidth = 240;
@@ -127,43 +130,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ProductManager({roleName}) {
-
+export default function ProductManager({roleName}) {  
   const classes = useStyles();
-
-  const [open, setOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [customerListData, setCustomerListData] = useState([]);
-  const [customerData, setCustomerData] = useState([]);
-  const [searchText, setSearchText]  = useState('');
-  const [customer, setCustomer] = useState({});
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
 
 
-
-  const [budgetOpen, setBudgetOpen] = useState(false);
-  const [budgetList,setBudgetList] = useState(null);
-  const [totalBudgetList,setTotalBudgetList] = useState(null);  
-  const [customerId, setCustomerId] = useState();
-  const [budgetHistoryOpen,setBudgetHistoryOpen] = useState(false);
-  const [openCommentView, setOpenCommentView]  = useState(false);
   const [tabValue, setTabValue] = React.useState(0);
-  const [bankDetailOpen, setBankDetailOpen] = useState(false);
-  const [bankDetailArray, setBankDetailArray] = useState([]);
-
-  const [activeTab, setActiveTab] = useState([]);
-  const [holdTab, setHoldTab] = useState([]);
-  const [financialHardshipTab, setFinancialHardshipTab] = useState([]);
-  const [bornTodayTab, setBornTodayTab] = useState([]);
-  const [missedPaymentTab, setMissedPaymentTab] = useState([]);
-  const [editableData,setEditableData] = useState({});
-  const [viewOrder,setViewOrder] = useState(false);
-
+  const [rentedProductList,setRentedProductList] = useState([]);
+  const [rentedOrderList,setRentedOrderList] = useState([]);
+  const [showOrderDialog, setShowOrderDialog] = useState(false);
+  const [showOrder, setShowOrder] = useState(false);
+  const [orderData, setOrderData] = useState([]);
+  const [viewOnly, setViewOnly] = useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -172,15 +159,8 @@ export default function ProductManager({roleName}) {
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 20));
     setPage(0);
-  };    
-
-
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-
+  };      
+  
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -204,17 +184,48 @@ export default function ProductManager({roleName}) {
     handleTabData(newValue)
   }
 
-  const handleTabData = async (tabValue = 0) => {
-    console.log(tabValue);
-    const result = await ProductManagerAPI.getTabRelatedRecord({tabValue: tabValue});
-  }
-
   useEffect(() => {
     handleTabData()
   },[])
 
+  const handleTabData = async (tabValue = 0) => {
+    try{
+      const result = await ProductManagerAPI.getTabRelatedRecord({tabValue: tabValue});
+      setRentedProductList(result.productList)
+    }catch(error){
+      console.log('error...',error);
+    }    
+  }
+
+  const handleOrderRecord = async (data) => {
+    try{
+      const result = await ProductManagerAPI.getRentedOrder({productId: data.id, product_state: 1});
+      setRentedOrderList(result.orderList)
+      setShowOrderDialog(true);
+    }catch(error){
+      console.log('error...',error);
+    }
+  }  
+  
+  const handleCloseOrderDialog = () => {
+    setShowOrderDialog(false);
+  }
+
+  function handleOrderView(data) {
+    setOrderData(data);
+    setShowOrder(true);
+    setViewOnly(true);
+  }
+
+  function handleCloseViewOrder (){
+    setShowOrder(false);
+    setViewOnly(false);
+  }
+
+  
 
   return (
+    <div>
       <Grid container spacing={3}>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
@@ -231,10 +242,10 @@ export default function ProductManager({roleName}) {
               </AppBar>
               <Fragment>
                 <TabPanel value={tabValue} index={0}>
-                  <TableRecord /> 
+                  <TableRecord productList = {rentedProductList} tabValue={tabValue} handleOrderRecord = {handleOrderRecord} /> 
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>
-                  
+                  <TableRecord productList = {rentedProductList} tabValue={tabValue} handleOrderRecord = {handleOrderRecord} /> 
                 </TabPanel>
                 <TabPanel value={tabValue} index={2}>
                   
@@ -256,5 +267,8 @@ export default function ProductManager({roleName}) {
             </Paper>                            
           </Grid>
         </Grid>
+      {showOrderDialog ? <OrderRecord open = {showOrderDialog} handleClose = {handleCloseOrderDialog} tabValue = {tabValue} orderList = {rentedOrderList} handleOrderView= {handleOrderView} /> : null }
+      {showOrder ? <ViewOrder open={showOrder} handleEditClose={handleCloseViewOrder} editableData={orderData} viewOnly={viewOnly} /> : null}
+    </div>
   );
 }

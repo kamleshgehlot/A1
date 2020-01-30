@@ -187,7 +187,6 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
       }
   };
   
-  // console.log('orderedProductList', orderedProductList)
   useEffect(() => {
      getRequiredData();
   },[]);
@@ -196,7 +195,6 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
   const formSubmit = async () => {
     if(productDetail.length > 0){
       setFormError({product: 'Details is required for all product'})
-      console.log('error product');
     }else if(inputs.comment === ''){
       setFormError({comment: 'Comment is required'})
     }    
@@ -220,36 +218,6 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
     };    
   }
 
-  // const submit = async () => {
-  //   setpLoading(true);
-  //   setSavebtn(true);
-
-  //   const result = await Order.submitDeliveredProduct({
-  //     id : orderData.id,
-  //     product_brand : inputs.product_brand,
-  //     product_color : inputs.product_color,
-  //     product_cost : inputs.product_cost,
-  //     specification : inputs.specification,
-  //     invoice_number : inputs.invoice_number,
-  //     delivery_date : getDate(inputs.delivery_date),
-  //     purchase_from : inputs.purchase_from,
-      
-  //     product_id : orderData.product_id,
-  //     customer_id : orderData.customer_id,
-  //     related_to : orderData.product_related_to,
-
-  //     order_id: orderData.order_id,
-  //     user_role: roleName,
-  //     comment: inputs.comment, 
-
-  //     assigned_to: 5,       
-  //     delivered_date: getDate(inputs.delivery_date),
-  //     delivered_time: new Date(),
-  //   });
-  //   handleOrderList(result);
-  //   handleClose();
-  // }
-
   const saveProduct = () => {
     let temp = [...filledProduct];
     temp.push({
@@ -264,10 +232,14 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
           purchase_from : inputs.purchase_from,
         });
       setFilledProduct(temp);
-       
-      const removeProduct = productDetail.find(data => data.id !== product.id);
-      if(removeProduct !== undefined){ 
-        setProductDetail([removeProduct])
+
+      let removeProduct = [];
+      productDetail.find(data => {
+        if(data.id !== product.id) {removeProduct.push(data)}
+      });
+      
+      if(removeProduct !== undefined){
+        setProductDetail(removeProduct)
       }else{
         setProductDetail([]);
       }
@@ -279,12 +251,17 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
     temp.push({id: product.product_id, name: product.product_name})
     setProductDetail(temp);
     
-    const removeProduct = filledProduct.find(data => data.product_id !== product.product_id);
-    if(removeProduct !== undefined){ 
-      setFilledProduct([removeProduct]);
-    }else{
-      setFilledProduct([]);
-    }
+
+    let removeProduct = [];
+      filledProduct.find(data => {
+        if(data.product_id !== product.product_id) {removeProduct.push(data)}
+      });
+      
+      if(removeProduct !== undefined){ 
+        setFilledProduct(removeProduct);
+      }else{
+        setFilledProduct([]);
+      }
   }
 
   const { inputs, handleInputChange, handlePriceInput, handleReset, handleSubmit, errors } = useSignUpForm(
@@ -478,7 +455,6 @@ return (
                   <Grid item xs={12} sm={6} alignItems = "center">     
                     <Typography className={classes.labelTitle}>Details Save to: </Typography>
                     {formError && ( productDetail !== undefined && productDetail !== null && productDetail.length > 0 ? productDetail :[]).map((data, index) => {
-                      console.log('changes')
                       if(data !== undefined && data !== "")
                       return(
                         <Chip

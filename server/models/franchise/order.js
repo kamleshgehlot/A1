@@ -683,7 +683,7 @@ Order.prototype.paymentSubmit = function () {
         let Values = [that.transaction_id, that.settlement_date, that.payment_amt, that.total_paid, that.remark, that.payment_status, that.order_id, that.installment_no];
         connection.query('UPDATE payment_schedules SET transaction_id = ?, settlement_date = ?, payment_amt = ?, total_paid = ?, remark = ?, status = ? WHERE order_id = ? AND installment_no = ? ORDER BY id DESC LIMIT 1', Values , function (error, rows, fields) { if (error) { console.log('error..',error)} });
         
-        if(that.installment_before_delivery > that.installment_no){
+        if(that.installment_before_delivery === that.installment_no){
           connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) { if (error) { console.log("Error...", error); reject(error); } });
         }
         if(that.installment_no === that.last_installment_no && that.order_type === 1 && that.payment_amt >= that.each_payment_amt){

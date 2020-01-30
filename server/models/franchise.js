@@ -247,8 +247,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(sales_type_list, function (err) { if (err) { console.log('sales_type_list Table Create Time Error: ', err) } });
                 connection.query(renting_for_list, function (err) { if (err) { console.log('renting_for_list Table Create Time Error: ', err) } });
                 connection.query(budget_comment, function (err) { if (err) { console.log('budget_comment Table Create Time Error: ', err) } });
-                connection.query(payments, function (err) { if (err) { console.log('payments Table Create Time Error: ', err) } });
-                connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });                
+                connection.query(payments, function (err) { if (err) { console.log('payments Table Create Time Error: ', err) } });                
                 connection.query(weekDayList, function (err) { if (err) { console.log('weekDayList Table Create Time Error: ', err) } });
                 
                 connection.query(appointed_client, function (err) { if (err) { console.log('appointed_client Table Create Time Error: ', err) } });
@@ -260,6 +259,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(payment_transaction, function (err) { if (err) { console.log('payment_transaction Table Create Time Error: ', err) } });
                 connection.query(scheduler, function (err) { if (err) { console.log('scheduler Table Create Time Error: ', err) } });
 
+                // connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });                
                 // connection.query(discountRateList, function (err) { if (err) { console.log('discountRateList Table Create Time Error: ', err) } });
                 
                 // connection.query(document_for_payment, function (err) { if (err) { console.log('document_for_payment Table Create Time Error: ', err) } });

@@ -137,7 +137,7 @@ return (
           <StyledTableCell>
                   <Tooltip title="View Order Detail">
                     <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderView(data); }} >
-                      <ViewArrayIcon />  
+                      <ViewArrayIcon />
                     </IconButton></span>
                   </Tooltip>
                   <Tooltip title="View Comment">
@@ -147,7 +147,7 @@ return (
                   </Tooltip>
                   <Tooltip title="Make Payment">
                     <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handlePaymentStatus(data); }} >
-                      <PaymentIcon />  
+                      <PaymentIcon />
                     </IconButton></span>
                   </Tooltip>
                   <Tooltip title="Assign to Delivery">
@@ -162,7 +162,7 @@ return (
                   </Tooltip>
                   <Tooltip title="Cancel Order">
                     <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleOrderCancellationOpen(data); }} >
-                      <CancelIcon />  
+                      <CancelIcon />
                     </IconButton></span>
                   </Tooltip>
           </StyledTableCell>
