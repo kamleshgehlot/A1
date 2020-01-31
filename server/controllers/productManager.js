@@ -1,51 +1,39 @@
 const ProductManager = require('../models/ProductManager');
 
+const combineResult = (params) => {
+  let productList = params.productList;
+  const orderedProduct = params.orderedProduct;
+  let combineResult = [];
+  
+  if(productList !== "" && productList !== null && productList !== undefined && orderedProduct !== "" && orderedProduct !== null && orderedProduct !== undefined){
+    (productList.length > 0 ? productList : []).map((product, index) => {
+      (orderedProduct.length > 0 ? orderedProduct : []).map(count => {
+        if(product.id === count.product_id){
+          product.total_rented = count.total_rented;
+          combineResult.push(product);
+        }
+      })
+    })       
+  }
+  return combineResult;
+}
+
 const getTabRelatedRecord = async function(req, res, next) {
   const params = {        
     user_id: req.decoded.user_id,
     tabValue: req.body.tabValue,
   };
-  // console.log('product manager...', params);
   try {
-    
     const activity = new ProductManager(params);
+    let result = [];
+      if(req.body.tabValue === 0){
+        result = await activity.getAllRelatedRecord();
+      }else if(req.body.tabValue !== 0){
+        result = await activity.getStateRelatedRecord();
+      }
+    const finalResult = await combineResult(result);
 
-    if(req.body.tabValue === 0){
-      const result = await activity.getAllRelatedRecord();
-      let productList = result.productList;
-      const orderedProduct = result.orderedProduct;
-      let combineResult = [];
-      
-      if(productList !== "" && productList !== null && productList !== undefined && orderedProduct !== "" && orderedProduct !== null && orderedProduct !== undefined){
-        (productList.length > 0 ? productList : []).map((product, index) => {
-          (orderedProduct.length > 0 ? orderedProduct : []).map(count => {
-            if(product.id === count.product_id){
-              product.total_rented = count.total_rented;
-              combineResult.push(product);
-            }
-          })
-        })       
-      }
-      res.send({productList: combineResult});
-    }else if(req.body.tabValue === 1){
-      const result = await activity.getDeliveredRelatedRecord();
-      let productList = result.productList;
-      const orderedProduct = result.orderedProduct;
-      let combineResult = [];
-      
-      if(productList !== "" && productList !== null && productList !== undefined && orderedProduct !== "" && orderedProduct !== null && orderedProduct !== undefined){
-        (productList.length > 0 ? productList : []).map((product, index) => {
-          (orderedProduct.length > 0 ? orderedProduct : []).map(count => {
-            if(product.id === count.product_id){
-              product.total_rented = count.total_rented;
-              combineResult.push(product);
-            }
-          })
-        })
-        // console.log('combineResult', combineResult)
-      }
-      res.send({productList: combineResult});      
-    }
+    res.send({productList: finalResult});
   } catch (error) {
     next(error);
   }
@@ -56,7 +44,7 @@ const getRentedOrder = async function(req, res, next) {
   const params = {
     user_id: req.decoded.user_id,
     productId: req.body.productId,
-    product_state: req.body.product_state,
+    tabValue: req.body.tabValue,
   };
   
   try {
@@ -69,62 +57,53 @@ const getRentedOrder = async function(req, res, next) {
 };
 
 
-// const getDeliveryReport = async function(req, res, next) {
-//   const ReportParams = {
-//     required_type : req.body.required_type,
-//     to_date : req.body.to_date,
-//     from_date : req.body.from_date,
-//     user_id: req.decoded.user_id,
-//   };
+const getProductState = async function(req, res, next) {
+  const params = {    
+    user_id: req.decoded.user_id,
+  };
+  console.log(params)
+  try {
+    const activity = new ProductManager(params);
+    const result = await activity.getProductState();      
+    res.send({stateList: result});    
+  } catch (error) {
+    next(error);
+  }
+};
 
-  
-//   try {
-//     const newReport = new Report(ReportParams);
+
+
+const changeProductState = async function(req, res, next) {
+  const params = {    
+    user_id: req.decoded.user_id,
+    productId : req.body.productId,
+    orderId : req.body.orderId,
+    customerId: req.body.customerId,
+    tabValue: req.body.tabValue,
+    newState: req.body.newState,
+  };
+  console.log(params)
+  try {
+    const activity = new ProductManager(params);
+    await activity.changeProductState();
     
-//     const result = await newReport.getDeliveryReport();      
-//     res.send(result);
+    let result = [];
+    if(req.body.tabValue !== 0){
+      result = await activity.getStateRelatedRecord();
+    }
     
+    const finalResult = await combineResult(result);
+    const orderList = await activity.getRentedOrder();
 
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.send({productList: finalResult, orderList: orderList});    
+  } catch (error) {
+    next(error);
+  }
+};
 
-
-// const getTaskReport = async function(req, res, next) {
-//   const ReportParams = {
-//     to_date : req.body.to_date,
-//     from_date : req.body.from_date,
-//     user_id: req.decoded.user_id,
-//   };
-  
-//   try {
-//     const newReport = new Report(ReportParams);
-    
-//     const result = await newReport.getTaskReport();      
-//     res.send(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-
-// const getDueTaskReport = async function(req, res, next) {
-//   const ReportParams = {
-//     today_date : req.body.today_date,
-//     user_id: req.decoded.user_id,
-//   };
-  
-//   try {
-//     const newReport = new Report(ReportParams);
-//     const result = await newReport.getDueTaskReport();      
-//     res.send(result);
-
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 module.exports = {
   getTabRelatedRecord,  
-  getRentedOrder
+  getRentedOrder,
+  getProductState,
+  changeProductState
 };

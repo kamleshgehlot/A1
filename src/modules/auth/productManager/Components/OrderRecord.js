@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useState, useEffect} from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,22 +15,17 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import EditIcon from '@material-ui/icons/Edit';
 import ViewArrayIcon from '@material-ui/icons/ViewArray'
 import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
+import EditIcon from '@material-ui/icons/Edit';
 
 
-import TablePagination from '@material-ui/core/TablePagination';
-import TableFooter from '@material-ui/core/TableFooter';
 import {getDateInDDMMYYYY} from '../../../../utils/datetime';
-import {TablePaginationActions} from '../../../common/Pagination';
 
 // Component
 import { API_URL } from '../../../../api/Constants';
+import ViewOrder from '../../order/Edit.js';
+import UpdateProductState from '../Components/UpdateProductState.js'
 
 
 const useStyles = makeStyles(theme => ({
@@ -75,6 +70,11 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
     marginRight:theme.spacing(-1),
+  },  
+  button:{
+    color:"white",
+    fontSize: theme.typography.pxToRem(10),
+    margin: theme.spacing(1),
   },
 }));
 
@@ -94,10 +94,34 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function OrderRecord({open, handleClose, tabValue, orderList, handleOrderView, handleDownloadDocument}) {
+export default function OrderRecord({open, handleClose, tabValue, productId, orderList, setRentedProductList, setRentedOrderList, roleName}) {
   const classes = useStyles();
 
+  const [orderData, setOrderData] = useState([]);
+  const [showOrder, setShowOrder] = useState(false);  
+  const [showUpdateStateScreen, setShowUpdateStateScreen] = useState(false);
+
+  function handleOrderView(data) {
+    setOrderData(data);
+    setShowOrder(true);
+  }
+
+  function handleCloseViewOrder (){
+    setShowOrder(false);    
+  }
+
+  const handleViewUpdateScreen = (data) => {
+    setOrderData(data)
+    setShowUpdateStateScreen(true);
+  }
+
+  const handleCloseUpdateScreen = () => {
+    setShowUpdateStateScreen(false);
+  }
+
+
   return (
+    <div>
     <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
@@ -156,11 +180,13 @@ export default function OrderRecord({open, handleClose, tabValue, orderList, han
                                   </IconButton></span>
                                 }
                               </Tooltip>
-                              <Tooltip title="Update Product Status">
+                          { roleName === 'Finance' &&
+                              <Tooltip title="Update Product Status" onClick={(event) => { handleViewUpdateScreen(data); }}>
                                 <IconButton  size="small" >
-                                  <PrintIcon/>
+                                  <EditIcon/>
                                 </IconButton>
-                              </Tooltip>        
+                              </Tooltip>
+                          }
                             </Fragment>
                             }
                           </TableCell>                                                  
@@ -171,10 +197,13 @@ export default function OrderRecord({open, handleClose, tabValue, orderList, han
             </Table>
           </Grid>
         <Grid item xs={12} sm={12}>
-          <Button variant="contained" color="primary" onClick={handleClose}> Close </Button> 
+          <Button variant="contained" color="primary" className = {classes.button} onClick={handleClose}> Close </Button> 
         </Grid>
       </Grid>
     </Paper>
   </Dialog>
+    {showOrder ? <ViewOrder open={showOrder} handleEditClose={handleCloseViewOrder} editableData={orderData} viewOnly={true} /> : null}
+    {showUpdateStateScreen ? <UpdateProductState open = {showUpdateStateScreen} handleClose = {handleCloseUpdateScreen} orderData = {orderData} productId={productId} tabValue = {tabValue} setRentedProductList= {setRentedProductList} setRentedOrderList = {setRentedOrderList} /> : null}
+    </div>
   ) 
 }

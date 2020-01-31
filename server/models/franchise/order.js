@@ -1179,11 +1179,11 @@ Order.prototype.submitDeliveredProduct = function (product_id, product_brand, pr
       }
       if (!error) {
         const Values = [
-          [that.id, that.customer_id, product_id, invoice_number, purchase_from, product_cost, product_color, product_brand,  delivery_date, specification, 1, that.created_by]
+          [that.id, that.customer_id, product_id, invoice_number, purchase_from, product_cost, product_color, product_brand,  delivery_date, specification, 1, 1, that.created_by]
         ]
 
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, is_active, created_by) VALUES ?',[Values],function (error, productRows, fields) {
+        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, status, is_active, created_by) VALUES ?',[Values],function (error, productRows, fields) {
           resolve(productRows);
         });
         } else {

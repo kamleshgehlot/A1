@@ -33,16 +33,11 @@ import TablePagination from '@material-ui/core/TablePagination';
 
 // API CALL
 import ProductManagerAPI from '../../../api/ProductManager.js';
-import Order from '../../../api/franchise/Order';
-
 
 // Components
 import BadgeComp from '../../common/BadgeComp';
-import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../../../utils/datetime';
-import ViewOrder from '../order/Edit.js';
 import TableRecord from './Components/RecordTable.js';
 import OrderRecord from './Components/OrderRecord.js';
-
 
 
 const drawerWidth = 240;
@@ -130,36 +125,21 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ProductManager({roleName}) {  
-  const classes = useStyles();
+export default function ProductManager({roleName}) {
+  
+  const classes = useStyles();  
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
   };
 
-
   const [tabValue, setTabValue] = React.useState(0);
   const [rentedProductList,setRentedProductList] = useState([]);
   const [rentedOrderList,setRentedOrderList] = useState([]);
   const [showOrderDialog, setShowOrderDialog] = useState(false);
-  const [showOrder, setShowOrder] = useState(false);
-  const [orderData, setOrderData] = useState([]);
-  const [viewOnly, setViewOnly] = useState(false);
-
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [productId, setProductId] = useState();
   
-
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 20));
-    setPage(0);
-  };      
   
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -178,9 +158,7 @@ export default function ProductManager({roleName}) {
   }
 
   function handleTabChange(event, newValue) {
-    setTabValue(newValue);
-    setPage(0);
-    setRowsPerPage(20);
+    setTabValue(newValue); 
     handleTabData(newValue)
   }
 
@@ -191,7 +169,7 @@ export default function ProductManager({roleName}) {
   const handleTabData = async (tabValue = 0) => {
     try{
       const result = await ProductManagerAPI.getTabRelatedRecord({tabValue: tabValue});
-      setRentedProductList(result.productList)
+      setRentedProductList(result.productList);      
     }catch(error){
       console.log('error...',error);
     }    
@@ -199,30 +177,18 @@ export default function ProductManager({roleName}) {
 
   const handleOrderRecord = async (data) => {
     try{
-      const result = await ProductManagerAPI.getRentedOrder({productId: data.id, product_state: 1});
+      const result = await ProductManagerAPI.getRentedOrder({productId: data.id, tabValue: tabValue});
       setRentedOrderList(result.orderList)
       setShowOrderDialog(true);
+      setProductId(data.id);
     }catch(error){
       console.log('error...',error);
     }
-  }  
+  }
   
   const handleCloseOrderDialog = () => {
     setShowOrderDialog(false);
   }
-
-  function handleOrderView(data) {
-    setOrderData(data);
-    setShowOrder(true);
-    setViewOnly(true);
-  }
-
-  function handleCloseViewOrder (){
-    setShowOrder(false);
-    setViewOnly(false);
-  }
-
-  
 
   return (
     <div>
@@ -241,34 +207,26 @@ export default function ProductManager({roleName}) {
                 </Tabs>
               </AppBar>
               <Fragment>
-                <TabPanel value={tabValue} index={0}>
+                <TabPanel value={tabValue} index={tabValue}>
                   <TableRecord productList = {rentedProductList} tabValue={tabValue} handleOrderRecord = {handleOrderRecord} /> 
-                </TabPanel>
-                <TabPanel value={tabValue} index={1}>
-                  <TableRecord productList = {rentedProductList} tabValue={tabValue} handleOrderRecord = {handleOrderRecord} /> 
-                </TabPanel>
-                <TabPanel value={tabValue} index={2}>
-                  
-                </TabPanel>
-
-                <TabPanel value={tabValue} index={3}>
-                  
-                </TabPanel>
-                <TabPanel value={tabValue} index={4}>
-               
-                </TabPanel>
-                <TabPanel value={tabValue} index={5}>
-               
-                </TabPanel>
-                <TabPanel value={tabValue} index={6}>
-                
-                </TabPanel>
+                </TabPanel>               
               </Fragment>
             </Paper>                            
           </Grid>
         </Grid>
-      {showOrderDialog ? <OrderRecord open = {showOrderDialog} handleClose = {handleCloseOrderDialog} tabValue = {tabValue} orderList = {rentedOrderList} handleOrderView= {handleOrderView} /> : null }
-      {showOrder ? <ViewOrder open={showOrder} handleEditClose={handleCloseViewOrder} editableData={orderData} viewOnly={viewOnly} /> : null}
+      { showOrderDialog ?
+        <OrderRecord 
+          open = {showOrderDialog} 
+          handleClose = {handleCloseOrderDialog} 
+          tabValue = {tabValue} 
+          productId = {productId} 
+          orderList = {rentedOrderList}  
+          setRentedProductList = {setRentedProductList} 
+          setRentedOrderList = {setRentedOrderList} 
+          roleName = {roleName}
+        />  
+        : null 
+      }      
     </div>
   );
 }

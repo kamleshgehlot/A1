@@ -65,6 +65,9 @@ const appointment_timeslot = "CREATE TABLE IF NOT EXISTS `appointment_timeslot` 
 const appointment_record = "CREATE TABLE IF NOT EXISTS `appointment_record` ( `id` int(11) NOT NULL AUTO_INCREMENT, `user_id` int(11) DEFAULT NULL, `date` date DEFAULT NULL, `meeting_time` int(11) DEFAULT NULL COMMENT 'in minutes', `start_time` time DEFAULT NULL, `end_time` time DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const appointed_client = "CREATE TABLE IF NOT EXISTS `appointed_client` ( `id` int(11) NOT NULL AUTO_INCREMENT, `appointment_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `first_name` varchar(50) DEFAULT NULL, `last_name` varchar(50) DEFAULT NULL, `contact` varchar(20) DEFAULT NULL, `reference` varchar(100) DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `updated_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id));";
 const scheduler = "CREATE TABLE IF NOT EXISTS `scheduler` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `type` INT(11) DEFAULT NULL, `customer_id` INT(11) DEFAULT NULL, `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`));";
+const product_state = "CREATE TABLE IF NOT EXISTS `product_state` ( `id` int(11) NOT NULL AUTO_INCREMENT, `state_name` varchar(50) DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`));";
+
+
 
 // const document_for_payment = "CREATE TABLE IF NOT EXISTS `document_for_payment` ( `id` int(11) NOT NULL AUTO_INCREMENT, `customer_id` int(11) DEFAULT NULL, `order_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `sub_installment_no` int(11) DEFAULT NULL, `document` varchar(500) DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,  PRIMARY KEY (`id`));";
 // const comment_on_payment = "CREATE TABLE IF NOT EXISTS `comment_on_payment` (`id` int(11) NOT NULL, `customer_id` int(11) DEFAULT NULL, `order_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `sub_installment_no` int(11) DEFAULT NULL, `comment` text, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP, `created_by` int(11) DEFAULT NULL, PRIMARY KEY (`id`));";
@@ -216,6 +219,15 @@ Franchise.prototype.register = function (newUser) {
                   [17, 'Partial Past Due', 1],
                   [18, 'Refunded', 1],
                 ]
+
+                let product_state_list = [
+                  [1, 'Delivered', 1],
+                  [2, 'With Customer', 1],
+                  [3, 'Under Repair', 1],
+                  [4, 'Replaced', 1],
+                  [5, 'Faulty/With Customer', 1],
+                  [6, 'Faulty/Under Repair', 1],
+                ]
                 
                 connection.query(role, function (err) { if (err) { console.log('Role Table Create Time Error: ', err) } });
                 connection.query(user, function (err) { if (err) { console.log('user Table Create Time Error: ', err) } });
@@ -258,7 +270,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(statusPayment, function (err) { if (err) { console.log('statusPayment Table Create Time Error: ', err) } });
                 connection.query(payment_transaction, function (err) { if (err) { console.log('payment_transaction Table Create Time Error: ', err) } });
                 connection.query(scheduler, function (err) { if (err) { console.log('scheduler Table Create Time Error: ', err) } });
-
+                connection.query(product_state, function (err) { if (err) { console.log('product_state Table Create Time Error: ', err) } });
                 // connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });                
                 // connection.query(discountRateList, function (err) { if (err) { console.log('discountRateList Table Create Time Error: ', err) } });
                 
@@ -277,6 +289,9 @@ Franchise.prototype.register = function (newUser) {
                 connection.query('INSERT INTO `renting_for_list`(`id`, `renting_for_name`, `is_active`) VALUES ?', [renting_for_list_data], function (error, rows, fields) { if (error) { console.log('renting_for_list_data Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `week_day_list`(`id`, `week_day`, `is_active`) VALUES ?', [week_day_list], function (error, rows, fields) { if (error) { console.log('week_day_list Insert Time Error: ', error) } });
                 connection.query('INSERT INTO `status_payment` (`id`, `status`, `is_active`) VALUES ?', [payment_status_list], function (error, rows, fields) { if (error) { console.log('week_day_list Insert Time Error: ', error) } });
+                connection.query('INSERT INTO `product_state` (`id`, `state_name`, `is_active`) VALUES ?', [product_state_list], function (error, rows, fields) { if (error) { console.log('week_day_list Insert Time Error: ', error) } });
+
+
                 // connection.query('INSERT INTO `discount_rate_list` (`id`, `duration_in_year`, `duration_period`, `weekly_discount_rate`, `fortnightly_discount_rate`, `is_active`, `created_at`) VALUES ?', [discount_rate_list], function (error, rows, fields) { if (error) { console.log('discount_rate_list Insert Time Error: ', error) } });
 
                 connection.changeUser({ database: dbName["prod"] });

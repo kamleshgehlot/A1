@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import EditIcon from '@material-ui/icons/Edit';
 import Dialog from '@material-ui/core/Dialog';
 import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/Close';
@@ -193,7 +194,9 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
 
 
   const formSubmit = async () => {
-    if(productDetail.length > 0){
+    if(productDetail.length > 0 && inputs.comment === ''){
+      setFormError({product: 'Details is required for all product', comment: 'Comment is required'});
+    }else if(productDetail.length > 0){
       setFormError({product: 'Details is required for all product'})
     }else if(inputs.comment === ''){
       setFormError({comment: 'Comment is required'})
@@ -460,10 +463,8 @@ return (
                         <Chip
                           style = {Object.keys(formError)[0] === 'product' ? { backgroundColor : 'red'} : {}}
                           clickable
-                          icon={<TagFacesIcon />}
-                          deleteIcon = {<DoneIcon />}
-                          onDelete = {""}
-                          variant="default"
+                          icon={<DoneIcon />}
+                          deleteIcon = {<DoneIcon />}                          
                           size = "small"
                           key={data.id}
                           label={data.name}
@@ -483,9 +484,9 @@ return (
                           size = "small"
                           key={data.id}
                           label={data.product_name}
-                          // onDelete={""}
                           className={classes.chip}
                           clickable
+                          icon={<EditIcon />}
                           onClick = {() => {updateProduct(data)}}
                         />
                       )
