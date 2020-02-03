@@ -115,8 +115,9 @@ const Transition = React.forwardRef((props, ref) => {
 
 export default function EditBudget({ open, handleBudgetClose, setBudgetList, budgetList, totalBudgetList, customer_id, isEditable, handleOrderViewFromBudget}) {
 
-  const styleClass = useCommonStyles();  
+  const styleClass = useCommonStyles();
   const classes = useStyles();
+  console.log(budgetList)
   
   const [surplusBool, setSurplusBool] = useState();
   const [oldBudget, setOldBudget] = useState(0);

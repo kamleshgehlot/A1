@@ -7,24 +7,164 @@ const UploadDocument = require('../../models/franchise/orderDocumentUpload.js');
 const addSubtractDate = require("add-subtract-date");
 const moment = require('moment');
 const {dateMaker} = require('../../utils/PaymentScheduleDateMaker.js');
+
 async function main(path, data) {
   const writeFile = promisify(fs.writeFile);
-
   await writeFile(path, data, { encoding: 'base64' });
   console.info("file uploaded successfully!");
 }
 
-const uploadDoc = async function (req, res, next) {
-  // console.log('rows data',req.body.data);
 
+
+const postOrder = async function (req, res, next) {
+  // console.log('req.order',req.body, req.decoded);
+  let params = {
+    user_id: req.decoded.user_id,
+    userid: req.decoded.id,
+
+    order_id: req.body.order_id,
+    customer_id: req.body.customer_id,
+    customer_type: req.body.customer_type,
+    products_id: req.body.products_id,
+    order_type: req.body.order_type,
+    flexOrderType: req.body.flexOrderType,
+    fixedOrderType: req.body.fixedOrderType,
+    payment_mode: req.body.payment_mode,
+    order_date: req.body.order_date,
+    budget_list: req.body.budget_list,
+    related_to: req.body.related_to,
+    assigned_to: req.body.assigned_to,
+    is_active: req.body.is_active,
+    created_by: req.decoded.id,
+    duration: req.body.duration,
+    sales_type_id: req.body.sales_type_id,
+    renting_for_id: req.body.renting_for_id,
+    sales_person_id: req.body.sales_person_id,
+
+    converted_to: req.body.converted_to,
+    ezidebit_uid: req.body.ezidebit_uid,
+  };
+    try {
+      const newOrder = new Order(params);
+
+      let orderTypeResult = [];
+        if(params.fixedOrderType!== null){
+          orderTypeResult = await newOrder.postFixedOrder();
+          newOrder.exp_delivery_date = params.fixedOrderType.exp_delivery_date;
+          newOrder.exp_delivery_time = params.fixedOrderType.exp_delivery_time;          
+        }else if(params.flexOrderType !== null){
+          orderTypeResult = await newOrder.postFlexOrder();
+          newOrder.exp_delivery_date = params.flexOrderType.exp_delivery_date;
+          newOrder.exp_delivery_time = params.flexOrderType.exp_delivery_time;
+        }
+
+      const budgetResult = await newOrder.postBudget();
+      newOrder.budget_id = budgetResult.budget_id;
+      newOrder.order_type_id = orderTypeResult.order_type_id;
+    
+      const orderResult = await newOrder.postOrder();
+      newOrder.order_id = orderResult.order_id;
+
+      let productRows = [];
+      Object.values(params.products_id.split(',')).map(proId => {
+        let proCode = params.ezidebit_uid;
+        productRows.push([orderResult.order_id, proId, proCode, 1 , 1, params.created_by]);
+      });
+
+      newOrder.orderedProductValue = productRows;
+      const productResult = await newOrder.postOrderedProduct();
+
+
+
+      if (req.body.converted_to !== 0) {
+        if (req.body.converted_name === 'lead') {
+          newOrder.convertedLead(function (res) { });
+        } else if (req.body.converted_name === 'enquiry') {
+          newOrder.convertedEnquiry(function (res) { });
+        }
+      }
+
+      if (params.budget_list.budget_note != "" && params.budget_list.budget_note != undefined) {        
+        newOrder.comment = params.budget_list.budget_note;
+        await newOrder.postBudgetComment();
+      }
+
+      const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
+      res.send({ order: order });
+    } catch (err) {
+      next(err);
+    }
+};
+
+const editOrder = async function (req, res, next) {
+  // console.log('req.order',req.body);
+  let params = {
+    order_id: req.body.id,
+    user_id: req.decoded.user_id,
+    products_id: req.body.products_id,
+    order_type: req.body.order_type,
+    flexOrderType: req.body.flexOrderType,
+    fixedOrderType: req.body.fixedOrderType,
+    duration: req.body.duration,
+    payment_mode: req.body.payment_mode,
+    order_date: req.body.order_date,
+    budget_list: req.body.budget_list,
+    budgetId: req.body.budget_id,
+    order_type_id: req.body.order_type_id,
+    assigned_to: req.body.assigned_to,
+    related_to: req.body.related_to,
+    is_active: req.body.is_active,
+    updated_by: req.decoded.id,
+    sales_type_id: req.body.sales_type_id,
+    renting_for_id: req.body.renting_for_id,
+    sales_person_id: req.body.sales_person_id,
+    ezidebit_uid: req.body.ezidebit_uid,
+    order_status: req.body.order_status,
+};
+    try {
+      const newOrder = new Order(params);
+
+      if (params.order_status === 11) {
+        await new Order({ user_id: req.decoded.user_id, order_id: req.body.id }).regenerateOrder();
+      }
+
+
+      if(params.fixedOrderType!== null){
+        await newOrder.editOrderFix();
+        newOrder.exp_delivery_date = params.fixedOrderType.exp_delivery_date;
+        newOrder.exp_delivery_time = params.fixedOrderType.exp_delivery_time;          
+      }else if(params.flexOrderType !== null){
+        await newOrder.editOrderFlex();
+        newOrder.exp_delivery_date = params.flexOrderType.exp_delivery_date;
+        newOrder.exp_delivery_time = params.flexOrderType.exp_delivery_time;
+      }
+
+      await newOrder.editOrderBudget();
+      await newOrder.editOrder();
+      await newOrder.dismissAllProduct();
+
+        let productRows = [];
+        Object.values(params.products_id.split(',')).map(proId => {
+          let proCode = params.ezidebit_uid;
+          productRows.push([params.order_id, proId, proCode, 1 , 1, params.created_by]);
+        });
+      newOrder.orderedProductValue = productRows;
+      await newOrder.postOrderedProduct();
+      
+      const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
+      res.send({ order: order });
+
+    } catch (err) {
+      next(err);
+    } 
+};
+
+
+
+const uploadDoc = async function (req, res, next) {
   const OrderData = req.body.data;
 
   let attachments = '';
-
-  // req.files.map((file) => {
-  //   attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
-  // });
-
 
   const base64Data = req.body.file.data.split(';base64,').pop();
   const name = req.body.file.name.split('.')[0] + "_" + Date.now() + '.' + req.body.file.name.split('.')[1];
@@ -33,9 +173,6 @@ const uploadDoc = async function (req, res, next) {
     console.error(error);
     throw (error);
   });
-
-  // fs.writeFile(`./files/order/${name}`, base64Data, { encoding: 'base64' }, function (err) {
-  //   console.log('File uploaded');
 
   const orderParams = {
     order_id: OrderData,
@@ -47,7 +184,6 @@ const uploadDoc = async function (req, res, next) {
     const newDoc = new UploadDocument(orderParams);
 
     const result = await newDoc.uploadDoc();
-    // console.log('rows model',result);
     const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
     if (result) {
       res.send({ order: order, isUploaded: result.isUploaded });
@@ -57,7 +193,6 @@ const uploadDoc = async function (req, res, next) {
   } catch (err) {
     next(err);
   }
-  // });
 };
 
 
@@ -597,53 +732,6 @@ const paymentSubmit = async function(req, res, next) {
 
 
 
-// const editInstallment = async function (req, res, next) {
-//   const data = JSON.parse(req.body.data);
-//   let attachments = '';
-//   req.files.map((file) => {
-//     attachments = attachments === '' ? file.filename : (attachments + ',' + file.filename);
-//   });
-
-// 	let orderParams = {
-//     document :  attachments,
-//     created_by : req.decoded.id,
-//     user_id : req.decoded.user_id,
-
-//     payment_table_id : data.payment_table_id,
-//     order_id : data.order_id,
-//     customer_id: data.customer_id,
-//     installment_no : Number(data.installment_no),
-//     payment_date: data.payment_date,
-//     payment_amt : Number(data.payment_amt),
-//     late_fee : Number(data.late_fee),
-//     interest_amt : Number(data.interest_amt),
-//     total_paid : Number(data.total_paid),
-//     due_installment_amt : Number(data.due_installment_amt),
-//     sub_installment_no : Number(data.sub_installment_no),    
-//     payment_rec_date : data.payment_rec_date,
-//     comment : data.comment,     
-//   };
-
-// 	try{
-//     const newDoc = new UploadDocument(orderParams);
-//     const newQuery = new Order(orderParams);
-
-//     if(orderParams.document !== "" && orderParams.document != undefined){
-//       await newDoc.uploadPaymentDoc();
-//     }
-
-//     if(orderParams.comment !== "" && orderParams.comment != undefined){
-//       await newQuery.leaveCommentForPayment();
-//     }
-
-//     const result = await newQuery.updateInstallment();
-//     await newQuery.deadTocurrentInstallment();
-
-//     res.send({isSuccessful : result});
-// 	}catch(err){
-//     next(error);
-// 	}
-// };
 
 
 const assignToFinance = async function (req, res, next) {
@@ -769,133 +857,9 @@ const submitCancel = async function (req, res, next) {
 };
 
 
-const postOrder = async function (req, res, next) {
-  // console.log('req.oerder',req.body);
-  let orderParams = {
-    user_id: req.decoded.user_id,
-    userid: req.decoded.id,
-
-    order_id: req.body.order_id,
-    customer_id: req.body.customer_id,
-    customer_type: req.body.customer_type,
-    products_id: req.body.products_id,
-    order_type: req.body.order_type,
-    flexOrderType: req.body.flexOrderType,
-    fixedOrderType: req.body.fixedOrderType,
-    payment_mode: req.body.payment_mode,
-    order_date: req.body.order_date,
-    budget_list: req.body.budget_list,
-    related_to: req.body.related_to,
-    assigned_to: req.body.assigned_to,
-    is_active: req.body.is_active,
-    created_by: req.decoded.id,
-    duration: req.body.duration,
-    sales_type_id: req.body.sales_type_id,
-    renting_for_id: req.body.renting_for_id,
-    sales_person_id: req.body.sales_person_id,
-
-    converted_to: req.body.converted_to,
-    ezidebit_uid: req.body.ezidebit_uid,
-  };
-
-  if (orderParams.user_id != ''
-    && orderParams.order_id != null
-    && orderParams.customer_id != null
-    && orderParams.products_id != ''
-    && orderParams.order_type != null
-    && orderParams.budget_list != ""
-    && orderParams.order_date != ''
-    && orderParams.payment_mode != null
-    && orderParams.assigned_to != null
-    && (orderParams.flexOrderType != null || orderParams.fixedOrderType != null)) {
-    try {
-      const newOrder = new Order(orderParams);
-
-      const result = await newOrder.postOrder();
-
-      if (req.body.converted_to !== 0) {
-        if (req.body.converted_name === 'lead') {
-          newOrder.convertedLead(function (res) { });
-        } else if (req.body.converted_name === 'enquiry') {
-          newOrder.convertedEnquiry(function (res) { });
-        }
-      }
-
-      if (orderParams.budget_list.budget_note != "" && orderParams.budget_list.budget_note != undefined) {
-        newOrder.budget_id = result.budget_id;
-        newOrder.order_id = result.order_id;
-        newOrder.comment = orderParams.budget_list.budget_note;
-        await newOrder.postBudgetComment();
-      }
-
-      const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-      res.send({ order: order });
-    } catch (err) {
-      next(err);
-    }
-  } else {
-    console.log('Invalid or Incomplete Credentials');
-    res.send('invalid');
-  }
-};
-
-const editOrder = async function (req, res, next) {
-  // console.log('req.order',req.body);
-
-  let orderParams = {
-    id: req.body.id,
-    user_id: req.decoded.user_id,
-    products_id: req.body.products_id,
-    order_type: req.body.order_type,
-    flexOrderType: req.body.flexOrderType,
-    fixedOrderType: req.body.fixedOrderType,
-    duration: req.body.duration,
-    payment_mode: req.body.payment_mode,
-    order_date: req.body.order_date,
-    budget_list: req.body.budget_list,
-    budgetId: req.body.budget_id,
-    order_type_id: req.body.order_type_id,
-    assigned_to: req.body.assigned_to,
-    related_to: req.body.related_to,
-    is_active: req.body.is_active,
-    updated_by: req.decoded.id,
-    sales_type_id: req.body.sales_type_id,
-    renting_for_id: req.body.renting_for_id,
-    sales_person_id: req.body.sales_person_id,
-    ezidebit_uid: req.body.ezidebit_uid,
-    order_status: req.body.order_status,
-  };
-
-  if (orderParams.user_id != ''
-    && orderParams.products_id != ''
-    && orderParams.order_type != null
-    && orderParams.budget_list != null
-    && orderParams.payment_mode != null
-    && orderParams.assigned_to != null
-    && (orderParams.flexOrderType != null || orderParams.fixedOrderType != null)) {
-    try {
-      const newOrder = new Order(orderParams);
-
-      if (orderParams.order_status === 11) {
-        await new Order({ user_id: req.decoded.user_id, order_id: req.body.o_id }).regenerateOrder();
-      }
-      const result = await newOrder.editOrder();
-      const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-
-      res.send({ order: order });
-
-    } catch (err) {
-      next(err);
-    }
-  } else {
-    console.log('Invalid or Incomplete Credentials');
-    res.send('invalid');
-  }
-};
-
 
 const submitDeliveredProduct = async function (req, res, next) {
-  let orderParams = {
+  let params = {
     id: req.body.id,
     user_id: req.decoded.user_id,
     userid: req.decoded.id,
@@ -908,39 +872,24 @@ const submitDeliveredProduct = async function (req, res, next) {
     delivered_time: req.body.delivered_time,
     created_by: req.decoded.id,
     productDetails : req.body.productDetails,
-
-    // product_brand: req.body.product_brand,
-    // product_color: req.body.product_color,
-    // product_cost: req.body.product_cost,
-    // specification: req.body.specification,
-    // invoice_number: req.body.invoice_number,
-    // delivery_date: req.body.delivery_date,
-    // purchase_from: req.body.purchase_from,
-    // products_id: req.body.product_id,    
-    // related_to: req.body.related_to,
-
   };
-  console.log('req.',orderParams, req.decoded);
 
   try {
-    const newOrder = new Order(orderParams);
-    const postComment = await newOrder.postComment();
-    const delivered = await newOrder.Delivered();
+    const newOrder = new Order(params);
+    if(req.body.comment !== ''){
+      await newOrder.postComment();
+    }
+      await newOrder.Delivered();
 
-    orderParams.productDetails.map(async (data, index) => {
+    let productDataRows = [];
+    params.productDetails.map(async (data, index) => {
+      productDataRows.push([
+        params.id, params.customer_id, data.product_id, data.invoice_number, data.purchase_from, data.product_cost, data.product_color, data.product_brand, data.delivery_date,  data.specification, 2, 1, params.created_by
+      ]);
+    });
 
-        // newOrder.products_id = data.product_id;
-        // newOrder.product_brand = data.product_brand,
-        // newOrder.product_color = data.product_color,
-        // newOrder.product_cost = data.product_cost,
-        // newOrder.specification = data.specification,
-        // newOrder.invoice_number = data.invoice_number,
-        // newOrder.delivery_date = data.delivery_date,
-        // newOrder.purchase_from = data.purchase_from,
-      
-        await newOrder.submitDeliveredProduct(data.product_id, data.product_brand, data.product_color, data.product_cost, data.specification, data.invoice_number, data.delivery_date, data.purchase_from );
-    })
-    // const postProductDetail = await newOrder.submitDeliveredProduct();
+    newOrder.orderedProductValue = productDataRows;
+    await newOrder.submitDeliveredProduct( );
     
     const order = await newOrder.getOrderList();
     res.send({ order: order });

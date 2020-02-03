@@ -166,8 +166,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [savebtn, setSavebtn] = React.useState(true);
   const [paymentModeList, setPaymentModeList] = useState([]);
   
-  const related_to = mainCategory.toString() + ',' + category.toString() + ',' + subCategory.toString();
-  
   function handleBudgetClose(){
     setBudgetOpen(false);
   }
@@ -439,7 +437,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       order_date  : getDate(inputs.order_date),
       assigned_to :  3,
       budget_list : budgetList,
-      related_to : related_to,
       is_active : 1,
       converted_to : convertId,
       converted_name : converted_name,  

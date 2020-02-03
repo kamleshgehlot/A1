@@ -171,7 +171,7 @@ export default function Order({ roleName }) {
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 20));
     setPage(0);
-  };    
+  };
 
   const handleYesNoClose = (isConfirm) => {
     setOpenConfirmationPDF(false);
@@ -519,7 +519,6 @@ export default function Order({ roleName }) {
       try {
         const result = await OrderAPI.getAll();
         setOrder(result.order);
-        console.log('new Dat.', new Date());
         handleTabsData(result.order);
         // setOpenTab(result.open);
         // setFinanceTab(result.finance);
@@ -689,12 +688,11 @@ export default function Order({ roleName }) {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           {roleName === 'CSR' ?
-            <Fab variant="extended" size="small" aria-label="Add" className={classes.fonttransform} onClick={handleClickOpen}>
+            <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen}>
               <AddIcon className={classes.extendedIcon} />  Order
             </Fab>
             : ''}
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <TextField
             margin="dense"
@@ -725,15 +723,19 @@ export default function Order({ roleName }) {
         <Grid item xs={12} sm={12}>
           <Paper style={{ width: '100%' }}>
             <AppBar position="static" className={classes.appBar}>
-
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
                 <Tab label={<BadgeComp count={tabRecord.open.length} label="Open" />} />
-                {roleName === 'CSR' ? <Tab label={<BadgeComp count={tabRecord.finance.length} label="Finance" />} /> : ''}
-                {roleName != 'Delivery' ? <Tab label={<BadgeComp count={tabRecord.underDelivery.length} label="Before Delivery" />} /> : ''}
+                {roleName === 'CSR' ? 
+                <Tab label={<BadgeComp count={tabRecord.finance.length} label="Finance" />} /> : ''}
+                {roleName != 'Delivery' ?
+                <Tab label={<BadgeComp count={tabRecord.underDelivery.length} label="Before Delivery" />} /> : ''}
                 <Tab label={<BadgeComp count={tabRecord.delivered.length} label="Delivered" />} />
-                {roleName !== 'Delivery' ? <Tab label={<BadgeComp count={tabRecord.completed.length} label="Completed" />} /> : ''}
-                {roleName !== 'Delivery' ? <Tab label={<BadgeComp count={tabRecord.cancelled.length} label="Cancelled" />} /> : ''}
-                {roleName === 'CSR' ? <Tab label={<BadgeComp count={tabRecord.archived.length} label="Archived" />} /> : ''}
+                {roleName !== 'Delivery' ? 
+                <Tab label={<BadgeComp count={tabRecord.completed.length} label="Completed" />} /> : ''}
+                {roleName !== 'Delivery' ? 
+                <Tab label={<BadgeComp count={tabRecord.cancelled.length} label="Cancelled" />} /> : ''}
+                {roleName === 'CSR' ? 
+                <Tab label={<BadgeComp count={tabRecord.archived.length} label="Archived" />} /> : ''}
               </Tabs>
             </AppBar>
 
