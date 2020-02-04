@@ -120,6 +120,7 @@ const editOrder = async function (req, res, next) {
     sales_person_id: req.body.sales_person_id,
     ezidebit_uid: req.body.ezidebit_uid,
     order_status: req.body.order_status,
+    created_by: req.decoded.id,
 };
     try {
       const newOrder = new Order(params);
@@ -886,10 +887,14 @@ const submitDeliveredProduct = async function (req, res, next) {
       productDataRows.push([
         params.id, params.customer_id, data.product_id, data.invoice_number, data.purchase_from, data.product_cost, data.product_color, data.product_brand, data.delivery_date,  data.specification, 2, 1, params.created_by
       ]);
+      
+      await newOrder.updateProductStatus(2, params.id, data.product_id);
     });
 
     newOrder.orderedProductValue = productDataRows;
-    await newOrder.submitDeliveredProduct( );
+    await newOrder.submitDeliveredProduct();
+    
+    
     
     const order = await newOrder.getOrderList();
     res.send({ order: order });
@@ -1015,18 +1020,6 @@ const getRentingForList = async function (req, res, next) {
 
 
 
-// const getSingleTransactionDetail = async function(req, res, next) {
-//   try {
-//     const result = await new Order({user_id: req.decoded.user_id, transaction_id: req.body.transaction_id}).getSingleTransactionDetail();
-//     // console.log('getSingleTransactionDetail',result);
-
-//     res.send(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-
 const getReceivedPaymentsList = async function (req, res, next) {
   try {
     const result = await new Order({ user_id: req.decoded.user_id }).getReceivedPaymentsList();
@@ -1109,8 +1102,6 @@ module.exports = {
   getSalesTypeList,
   getSalesPersonList,
   getBudgetComments,
-  // editInstallment,
-  // getSingleTransactionDetail,
   getReceivedPaymentsList,
   fetchMissedPaymentData,
   getSingleOrderData,

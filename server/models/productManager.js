@@ -12,6 +12,7 @@ const ProductManager = function (params) {
   this.newState = params.newState;
 };
 
+
 ProductManager.prototype.getAllRelatedRecord = function () {
   const that = this;
   return new Promise((resolve, reject) => {
@@ -21,8 +22,9 @@ ProductManager.prototype.getAllRelatedRecord = function () {
       }
       if (!error) {
           connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
-          // select id, is_active, GROUP_CONCAT(id) as rented_order,  CAST(product_id AS UNSIGNED) as product_id, COUNT(product_id) total_rented from (select o.id, o.is_active, SUBSTRING_INDEX(SUBSTRING_INDEX(o.product_id, ',', numbers.id), ',', -1) product_id from status_payment as numbers inner join orders as o on CHAR_LENGTH(o.product_id) - CHAR_LENGTH(REPLACE(o.product_id, ',', \'\')) >= numbers.id-1 ) as t WHERE is_active = 1 GROUP BY product_id ORDER BY product_id
-          connection.query('select id, GROUP_CONCAT(id) as rented_order,  is_active, CAST(product_id AS UNSIGNED) as product_id, COUNT(product_id) total_rented from (select o.id, o.is_active, SUBSTRING_INDEX(SUBSTRING_INDEX(o.product_id, \',\', numbers.id), \',\', -1) product_id from status_payment as numbers inner join orders as o on CHAR_LENGTH(o.product_id) - CHAR_LENGTH(REPLACE(o.product_id, \',\', \'\')) >= numbers.id-1 ) as t WHERE is_active = 1 GROUP BY product_id ORDER BY product_id', function (error, rows, fields) {
+          // SELECT o.id, o.is_active, op.product_id, GROUP_CONCAT(op.order_id) as rented_order, COUNT(op.product_id) as total_rented FROM orders as o INNER JOIN ordered_product as op ON op.order_id = o.id AND op.is_active = 1 AND o.is_active = 1  GROUP BY op.product_id
+          // connection.query('select id, GROUP_CONCAT(id) as rented_order,  is_active, CAST(product_id AS UNSIGNED) as product_id, COUNT(product_id) total_rented from (select o.id, o.is_active, SUBSTRING_INDEX(SUBSTRING_INDEX(o.product_id, \',\', numbers.id), \',\', -1) product_id from status_payment as numbers inner join orders as o on CHAR_LENGTH(o.product_id) - CHAR_LENGTH(REPLACE(o.product_id, \',\', \'\')) >= numbers.id-1 ) as t WHERE is_active = 1 GROUP BY product_id ORDER BY product_id', function (error, rows, fields) {
+            connection.query('SELECT op.product_id, GROUP_CONCAT(op.order_id) as rented_order, COUNT(op.product_id) as total_rented FROM orders as o INNER JOIN ordered_product as op ON op.order_id = o.id AND op.is_active = 1 AND o.is_active = 1  GROUP BY op.product_id', function (error, rows, fields) {
             if(error) {  console.log('Error...', error); reject(error); }
                 if(!error){
                   
@@ -56,7 +58,8 @@ ProductManager.prototype.getStateRelatedRecord = function () {
           connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
           
                         // select p.product_id, COUNT(p.product_id) as total_rented, p.is_active from (select CAST(t.product_id AS UNSIGNED) as product_id, t.is_active from (select o.id, o.is_active, o.order_status, SUBSTRING_INDEX(SUBSTRING_INDEX(o.product_id, ',', numbers.id), ',', -1) product_id from status_payment as numbers inner join orders as o on (CHAR_LENGTH(o.product_id) - CHAR_LENGTH(REPLACE(o.product_id, ',', '')) >= numbers.id-1)) as t WHERE t.order_status IN(6,7) GROUP BY t.product_id) as p INNER JOIN delivered_product_detail dpd ON dpd.product_id = p.product_id AND dpd.status = 1 WHERE p.is_active = 1 GROUP BY p.product_id ORDER BY p.product_id
-          connection.query('select p.product_id, COUNT(p.product_id) as total_rented, p.is_active from (select CAST(t.product_id AS UNSIGNED) as product_id, t.is_active from (select o.id, o.is_active, o.order_status, SUBSTRING_INDEX(SUBSTRING_INDEX(o.product_id, \',\', numbers.id), \',\', -1) product_id from status_payment as numbers inner join orders as o on (CHAR_LENGTH(o.product_id) - CHAR_LENGTH(REPLACE(o.product_id, \',\', \'\')) >= numbers.id-1)) as t WHERE t.order_status IN(6,7) GROUP BY t.product_id) as p INNER JOIN delivered_product_detail dpd ON dpd.product_id = p.product_id AND dpd.status = "'+that.tabValue+'" WHERE p.is_active = 1  GROUP BY p.product_id ORDER BY p.product_id', function (error, rows, fields) {
+          // connection.query('select p.product_id, COUNT(p.product_id) as total_rented, p.is_active from (select CAST(t.product_id AS UNSIGNED) as product_id, t.is_active from (select o.id, o.is_active, o.order_status, SUBSTRING_INDEX(SUBSTRING_INDEX(o.product_id, \',\', numbers.id), \',\', -1) product_id from status_payment as numbers inner join orders as o on (CHAR_LENGTH(o.product_id) - CHAR_LENGTH(REPLACE(o.product_id, \',\', \'\')) >= numbers.id-1)) as t WHERE t.order_status IN(6,7) GROUP BY t.product_id) as p INNER JOIN delivered_product_detail dpd ON dpd.product_id = p.product_id AND dpd.status = "'+that.tabValue+'" WHERE p.is_active = 1  GROUP BY p.product_id ORDER BY p.product_id', function (error, rows, fields) {
+            connection.query('SELECT op.product_id, GROUP_CONCAT(op.order_id) as rented_order, COUNT(op.product_id) as total_rented FROM orders as o LEFT JOIN ordered_product as op ON op.order_id = o.id AND op.is_active = 1 AND o.is_active = 1 WHERE o.order_status IN(6,7) AND op.status = "'+that.tabValue+'" GROUP BY op.product_id', function (error, rows, fields) {
             if(error) {  console.log('Error...', error); reject(error); }
                 if(!error){
                   

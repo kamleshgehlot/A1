@@ -14,6 +14,7 @@ var Order = function (params) {
   this.customer_id = params.customer_id;
   this.customer_type = params.customer_type;
   this.products_id = params.products_id;
+  this.product_status = params.product_status;
   this.order_type = params.order_type;
   this.order_type_id = params.order_type_id;
   this.flexOrderType = params.flexOrderType;
@@ -93,94 +94,6 @@ var Order = function (params) {
   this.fromPaymentDate = params.fromPaymentDate;
   this.toPaymentDate = params.toPaymentDate;
 };
-
-
-
-// Order.prototype.postOrder = function () {
-//   const that = this;
-//   return new Promise(function (resolve, reject) {
-
-//     connection.getConnection(function (error, connection) {
-//       if (error) {
-//         throw error;
-//       }
-//       if (!error) {
-//           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-
-//           const budget_list = that.budget_list;
-//           let budgetValues = [
-//             [that.customer_id, budget_list.work, budget_list.benefits, budget_list.accomodation, budget_list.childcare, budget_list.rent, budget_list.power, budget_list.telephone, budget_list.mobile, budget_list.vehicle, budget_list.vehicle_fuel, budget_list.transport, budget_list.food, budget_list.credit_card, budget_list.loan, budget_list.other_income, budget_list.other_expenditure, budget_list.pre_order_exp, budget_list.income, budget_list.expenditure, budget_list.surplus, budget_list.afford_amt,  budget_list.paid_day, budget_list.debited_day,  1, that.created_by]
-//           ];
-//           connection.query('INSERT INTO budget(customer_id, work, benefits, accomodation, childcare, rent, power, landline_phone, mobile_phone, vehicle_finance, vehicle_fuel, public_transport, food, credit_store_cards, loans_hire_purchase, other_income, other_expenditure, pre_order_exp, total_income, total_expenditure, total_surplus, afford_amt, paid_day, debited_day,  is_active, created_by) VALUES ?',[budgetValues],function (error, rows, fields) {
-//             if (!error) {
-//                 const budget_id = rows.insertId;                
-//                 if(that.fixedOrderType!=null){
-//                   const fixedValues = that.fixedOrderType;
-//                   let fixedOrderValues =[
-//                     [that.customer_id, fixedValues.int_unpaid_bal, fixedValues.cash_price, fixedValues.delivery_fee, fixedValues.ppsr_fee, fixedValues.liability_wavier_fee, fixedValues.frequency, fixedValues.first_payment, fixedValues.last_payment, fixedValues.duration, fixedValues.no_of_payment, fixedValues.each_payment_amt, fixedValues.total_payment_amt, fixedValues.before_delivery_amt, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, fixedValues.minimum_payment_amt, fixedValues.intrest_rate, fixedValues.intrest_rate_per, fixedValues.total_intrest, that.is_active, that.created_by]
-//                   ];                  
-//                   connection.query('INSERT INTO fixed_order(customer_id, int_unpaid_bal, cash_price, delivery_fee, ppsr_fee, liability_wavier_fee, frequency, first_payment, last_payment, duration, no_of_payment, each_payment_amt, total_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, minimum_payment_amt, interest_rate, interest_rate_per, total_interest, is_active, created_by) VALUES ?',[fixedOrderValues],function (error, rows, fields) {
-//                     if (!error) {
-//                       const lastInsertId = rows.insertId;
-//                       let orderValues = [
-//                         [that.order_id, that.ezidebit_uid, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date, fixedValues.exp_delivery_date, fixedValues.exp_delivery_time, 1, that.is_active, that.created_by]
-//                       ];
-//                       connection.query('INSERT INTO orders(order_id, ezidebit_uid, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
-//                         if (!error) {
-//                           resolve({order_id: rows.insertId, budget_id : budget_id});
-//                         } else {
-//                           console.log("Error...", error);
-//                           reject(error);
-//                         }
-//                       });
-//                     } else {
-//                       console.log("Error...", error);
-//                       reject(error);
-//                     }
-//                   });
-//                 } 
-//                 if(that.flexOrderType!=null){
-//                   const flexValues = that.flexOrderType;
-//                   let flexOrderValues =[
-//                     [that.customer_id, flexValues.goods_rent_price, flexValues.ppsr_fee, flexValues.liability_fee, flexValues.weekly_total, flexValues.frequency, flexValues.first_payment,  flexValues.each_payment_amt, flexValues.before_delivery_amt, flexValues.exp_delivery_date, flexValues.exp_delivery_time, flexValues.bond_amt, that.is_active, that.created_by]
-//                   ];
-//                   connection.query('INSERT INTO flex_order(customer_id, goods_rent_price, ppsr_fee, liability_fee, weekly_total, frequency, first_payment, each_payment_amt, before_delivery_amt, exp_delivery_date, exp_delivery_time, bond_amt, is_active, created_by) VALUES ?',[flexOrderValues],function (error, rows, fields) {
-//                     if (!error) {
-//                       const lastInsertId = rows.insertId;
-//                       let orderValues = [
-//                         [that.order_id, that.ezidebit_uid, that.customer_id, that.customer_type, that.products_id, that.related_to, that.sales_person_id, that.sales_type_id, that.renting_for_id, that.order_type, lastInsertId, budget_id, that.payment_mode, that.assigned_to, that.order_date,  flexValues.exp_delivery_date, flexValues.exp_delivery_time, 1, that.is_active, that.created_by]
-//                       ];
-//                       connection.query('INSERT INTO orders(order_id, ezidebit_uid, customer_id, customer_type, product_id, product_related_to, sales_person_id, sales_type_id, renting_for_id, order_type, order_type_id, budget_id, payment_mode, assigned_to, order_date, delivery_date, delivery_time, order_status, is_active, created_by) VALUES ?',[orderValues],function (error, rows, fields) {
-//                         if (!error) {
-//                           resolve({order_id: rows.insertId, budget_id : budget_id});
-//                         } else {
-//                           console.log("Error...", error);
-//                           reject(error);
-//                         }
-//                       });
-//                     } else {
-//                       console.log("Error...", error);
-//                       reject(error);
-//                     }
-//                   });
-//                 }
-//             } else {
-//                     console.log("Error...", error);
-//                     reject(error);
-//                   }
-//             });
-//       } else {
-//         console.log("Error...", error);
-//         reject(error);
-//       }
-//       connection.release();
-//       console.log('Order Added for Franchise Staff %d', connection.threadId);
-//     });
-//   }).catch((error) => {
-//     throw error;
-//   });
-// };
-
 
 
 Order.prototype.postBudget = function () {
@@ -405,6 +318,26 @@ Order.prototype.dismissAllProduct = function () {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         const Values = [0, that.order_id];
         connection.query('UPDATE ordered_product set is_active = ? WHERE order_id = ?', Values, function (error, rows, fields) {
+          if (error) { console.log("Error...", error); reject(error); }
+          resolve(rows);
+        });
+      }
+      connection.release();
+      console.log('Dismiss existing product %d', connection.threadId);
+    });
+  });
+}
+
+Order.prototype.updateProductStatus = function (product_status, order_id, product_id) {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) { throw error; }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        const Values = [product_status, order_id, product_id, 1];
+        const Query = `UPDATE ordered_product SET status = ? WHERE order_id = ? AND product_id = ? AND is_active = ?`;
+        connection.query(Query, Values, function (error, rows, fields) {
           if (error) { console.log("Error...", error); reject(error); }
           resolve(rows);
         });
