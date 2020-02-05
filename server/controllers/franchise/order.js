@@ -72,7 +72,7 @@ const postOrder = async function (req, res, next) {
       });
 
       newOrder.orderedProductValue = productRows;
-      const productResult = await newOrder.postOrderedProduct();
+      await newOrder.postOrderedProduct();
 
 
 
@@ -299,6 +299,7 @@ const getnewid = async function (req, res, next) {
   }
 };
 
+
 const getAll = async function (req, res, next) {
   try {
     const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
@@ -343,6 +344,14 @@ const getAll = async function (req, res, next) {
   }
 };
 
+// const getOrderDataByID = async function (req, res, next) {
+//   try {
+//     const order = await new Order({ user_id: req.decoded.user_id, order_id: req.body.order_id }).getOrderDataByID();    
+//     res.send(order);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const getSingleOrderData = async function (req, res, next) {
   try {
@@ -1111,4 +1120,5 @@ module.exports = {
   searchOrder,
   filterMissedPaymentData,
   dishonourToPayment,
+  // getOrderDataByID,
 };

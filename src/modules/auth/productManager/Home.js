@@ -198,7 +198,7 @@ export default function ProductManager({roleName}) {
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={tabValue} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
                   <Tab label={<BadgeComp count={0} label="All" />} />
-                  <Tab label={<BadgeComp count={0} label="Delivered" />} />
+                  <Tab label={<BadgeComp count={0} label="Ordered" />} />
                   <Tab label={<BadgeComp count={0} label="With Customer" />} />
                   <Tab label={<BadgeComp count={0} label="Under Repair" />} />
                   <Tab label={<BadgeComp count={0} label="Replaced" />} />

@@ -157,7 +157,7 @@ export default function OrderRecord({open, handleClose, tabValue, productId, ord
                         <TableCell>{data.first_name + ' ' + data.last_name}</TableCell>
                         <TableCell>{data.mobile}</TableCell>
                         <TableCell>{getDateInDDMMYYYY(data.order_date)}</TableCell>
-                        <TableCell>{data.product_state}</TableCell>
+                        <TableCell>{data.product_status_name}</TableCell>
                         <TableCell>{data.order_type==1 ? 'Fix' : 'Flex'}</TableCell>
                         <TableCell>{data.payment_mode_name} </TableCell>     
                         <TableCell>
