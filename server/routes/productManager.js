@@ -4,7 +4,7 @@ const Product = require('../controllers/productManager');
 const validateToken = require('../utils').validateToken;
 
 const ProductRouter = express.Router();
-ProductRouter.route('/getProductState').get(validateToken, Product.getProductState);
+
 ProductRouter.route('/getTabRelatedRecord').post(validateToken, Product.getTabRelatedRecord);
 ProductRouter.route('/getRentedOrder').post(validateToken, Product.getRentedOrder);
 ProductRouter.route('/changeProductState').post(validateToken, Product.changeProductState);

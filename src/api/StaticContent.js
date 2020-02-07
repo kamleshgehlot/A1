@@ -72,4 +72,15 @@ export default {
     }
   },
 
+  
+  getProductState: async ({}) => {
+    const URL = `${c.API_CONSUMER}/api/staticcontent/getProductState`;
+    try {
+      const { data } = await axios(URL, Object.assign(PARAMS('GET')));
+      return data;
+    } catch (error) {
+      checkError(error);
+      throw error;
+    }
+  },
 };

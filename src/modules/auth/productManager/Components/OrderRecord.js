@@ -94,7 +94,7 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function OrderRecord({open, handleClose, tabValue, productId, orderList, setRentedProductList, setRentedOrderList, roleName}) {
+export default function OrderRecord({open, handleClose, tabValue, productId, orderList, setRentedProductList, setRentedOrderList, setTabCounts, roleName}) {
   const classes = useStyles();
 
   const [orderData, setOrderData] = useState([]);
@@ -143,6 +143,7 @@ export default function OrderRecord({open, handleClose, tabValue, productId, ord
                   <StyledTableCell>Contact</StyledTableCell>
                   <StyledTableCell>Order Date</StyledTableCell>                  
                   <StyledTableCell>Product Status</StyledTableCell>
+                  <StyledTableCell>Product Quantity</StyledTableCell>
                   <StyledTableCell>Rental Type</StyledTableCell>
                   <StyledTableCell>Payment Mode</StyledTableCell>
                   <StyledTableCell>Action</StyledTableCell>
@@ -158,12 +159,13 @@ export default function OrderRecord({open, handleClose, tabValue, productId, ord
                         <TableCell>{data.mobile}</TableCell>
                         <TableCell>{getDateInDDMMYYYY(data.order_date)}</TableCell>
                         <TableCell>{data.product_status_name}</TableCell>
+                        <TableCell>{data.product_quantity}</TableCell>
                         <TableCell>{data.order_type==1 ? 'Fix' : 'Flex'}</TableCell>
                         <TableCell>{data.payment_mode_name} </TableCell>     
                         <TableCell>
                           <Tooltip title="View Order Detail">
                             <span><IconButton  size="small" onClick={(event) => { handleOrderView(data); }} >
-                              <ViewArrayIcon />  
+                              <ViewArrayIcon />
                             </IconButton></span>
                           </Tooltip>
                           {tabValue !== 0 &&
@@ -203,7 +205,7 @@ export default function OrderRecord({open, handleClose, tabValue, productId, ord
     </Paper>
   </Dialog>
     {showOrder ? <ViewOrder open={showOrder} handleEditClose={handleCloseViewOrder} editableData={orderData} viewOnly={true} /> : null}
-    {showUpdateStateScreen ? <UpdateProductState open = {showUpdateStateScreen} handleClose = {handleCloseUpdateScreen} orderData = {orderData} productId={productId} tabValue = {tabValue} setRentedProductList= {setRentedProductList} setRentedOrderList = {setRentedOrderList} /> : null}
+    {showUpdateStateScreen ? <UpdateProductState open = {showUpdateStateScreen} handleClose = {handleCloseUpdateScreen} orderData = {orderData} productId={productId} tabValue = {tabValue} setRentedProductList= {setRentedProductList} setRentedOrderList = {setRentedOrderList} setTabCounts = {setTabCounts} /> : null}
     </div>
   ) 
 }

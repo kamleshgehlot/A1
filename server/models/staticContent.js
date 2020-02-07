@@ -130,4 +130,32 @@ StaticContent.prototype.updateDiscountRateList = function (id, weekly_discount_r
 };
 
 
+StaticContent.prototype.getProductState = function () {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          connection.query('SELECT * FROM status_record WHERE is_active = 1 AND status_role = \'product_state\'', function (error, stateList, fields) {
+            if(error) {  console.log('Error...', error); reject(error); }
+            if(!error){
+              resolve(stateList);
+              // connection.query('SELECT * FROM product_state WHERE is_active = 1', function (error, currentState, fields) {
+              //   if(error) {  console.log('Error...', error); reject(error); }
+              //   if(!error){
+              //     resolve({currentState: currentState, stateList: stateList})
+              //   }
+              // });
+            }
+          });
+        }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
 module.exports = StaticContent;

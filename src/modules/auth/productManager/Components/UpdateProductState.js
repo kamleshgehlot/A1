@@ -16,6 +16,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 // API CALL
 import ProductManagerAPI from '../../../../api/ProductManager.js';
+import StaticContentAPI from '../../../../api/StaticContent.js';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -91,7 +92,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function CustomerBankDetails({ open, handleClose, orderData, productId, tabValue, setRentedProductList, setRentedOrderList }) {  
+export default function CustomerBankDetails({ open, handleClose, orderData, productId, tabValue, setRentedProductList, setRentedOrderList, setTabCounts }) {  
   const classes = useStyles();
 
   const [ploading, setpLoading] = useState(false);
@@ -106,7 +107,7 @@ export default function CustomerBankDetails({ open, handleClose, orderData, prod
 
   const getProductState = async () => {
     try{
-      const result = await ProductManagerAPI.getProductState({});
+      const result = await StaticContentAPI.getProductState({});
       setProductStateList(result.stateList);
     }catch(error){
       console.log('Error...', error);
@@ -126,6 +127,7 @@ export default function CustomerBankDetails({ open, handleClose, orderData, prod
       });
       setRentedProductList(result.productList);
       setRentedOrderList(result.orderList);
+      setTabCounts(result.tabCounts[0]);
       setpLoading(false);
       setSavebtn(false);
       handleClose(false);
@@ -165,7 +167,7 @@ return (
                   > 
                     {(productStateList.length > 0 ? productStateList : []).map((data)=>{
                     return(
-                      <MenuItem className={classes.textsize} value={data.id}>{data.state_name}</MenuItem>  
+                      <MenuItem className={classes.textsize} value={data.id}>{data.status_name}</MenuItem>
                       )
                     })}
                   </Select>

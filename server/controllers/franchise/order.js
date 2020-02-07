@@ -881,30 +881,24 @@ const submitDeliveredProduct = async function (req, res, next) {
     delivered_date: req.body.delivered_date,
     delivered_time: req.body.delivered_time,
     created_by: req.decoded.id,
-    productDetails : req.body.productDetails,
+    productDetails : req.body.productDetails,    
   };
-
+  
   try {
-    const newOrder = new Order(params);
-    if(req.body.comment !== ''){
-      await newOrder.postComment();
-    }
-      await newOrder.Delivered();
+      const newOrder = new Order(params);
+      if(req.body.comment !== ''){
+        await newOrder.postComment();
+      }
+        await newOrder.Delivered();
 
-    let productDataRows = [];
-    params.productDetails.map(async (data, index) => {
-      productDataRows.push([
-        params.id, params.customer_id, data.product_id, data.invoice_number, data.purchase_from, data.product_cost, data.product_color, data.product_brand, data.delivery_date,  data.specification, 2, 1, params.created_by
-      ]);
+
+      Object.values(params.productDetails).map(async (data) => {
+        const result = await newOrder.updateProductStatus(2, params.id, data.product_id);
+        await newOrder.submitDeliveredProduct(
+          [[result[0].id, data.invoice_number, data.purchase_from, data.product_cost, data.product_color, data.product_brand, data.delivery_date,  data.specification, 1, params.created_by]]
+        );
+      });
       
-      await newOrder.updateProductStatus(2, params.id, data.product_id);
-    });
-
-    newOrder.orderedProductValue = productDataRows;
-    await newOrder.submitDeliveredProduct();
-    
-    
-    
     const order = await newOrder.getOrderList();
     res.send({ order: order });
   } catch (error) {

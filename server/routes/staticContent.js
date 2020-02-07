@@ -10,5 +10,6 @@ StaticContentRouter.route('/getPaymentModeList').get(validateToken, StaticConten
 StaticContentRouter.route('/getDiscountRateList').get(validateToken, StaticContent.getDiscountRateList);
 StaticContentRouter.route('/updateDiscountRateList').post(validateToken, StaticContent.updateDiscountRateList);
 StaticContentRouter.route('/getEzidebitPaymentsParamsList').get(validateToken, StaticContent.getEzidebitPaymentsParamsList);
+StaticContentRouter.route('/getProductState').get(validateToken, StaticContent.getProductState);
 
 module.exports = StaticContentRouter;

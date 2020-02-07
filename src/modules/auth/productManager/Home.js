@@ -137,9 +137,9 @@ export default function ProductManager({roleName}) {
   const [tabValue, setTabValue] = React.useState(0);
   const [rentedProductList,setRentedProductList] = useState([]);
   const [rentedOrderList,setRentedOrderList] = useState([]);
+  const [tabCounts, setTabCounts] = useState([]);
   const [showOrderDialog, setShowOrderDialog] = useState(false);
   const [productId, setProductId] = useState();
-  
   
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -169,7 +169,8 @@ export default function ProductManager({roleName}) {
   const handleTabData = async (tabValue = 0) => {
     try{
       const result = await ProductManagerAPI.getTabRelatedRecord({tabValue: tabValue});
-      setRentedProductList(result.productList);      
+      setRentedProductList(result.productList);
+      setTabCounts(result.tabCounts[0]);
     }catch(error){
       console.log('error...',error);
     }    
@@ -197,13 +198,13 @@ export default function ProductManager({roleName}) {
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={tabValue} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
-                  <Tab label={<BadgeComp count={0} label="All" />} />
-                  <Tab label={<BadgeComp count={0} label="Ordered" />} />
-                  <Tab label={<BadgeComp count={0} label="With Customer" />} />
-                  <Tab label={<BadgeComp count={0} label="Under Repair" />} />
-                  <Tab label={<BadgeComp count={0} label="Replaced" />} />
-                  <Tab label={<BadgeComp count={0} label="Faulty/With Customer" />} />
-                  <Tab label={<BadgeComp count={0} label="Faulty/Under Repair" />} />
+                  <Tab label={<BadgeComp count={tabCounts.all} label="All" />} />
+                  <Tab label={<BadgeComp count={tabCounts.ordered} label="Ordered" />} />
+                  <Tab label={<BadgeComp count={tabCounts.with_customer} label="With Customer" />} />
+                  <Tab label={<BadgeComp count={tabCounts.under_repair} label="Under Repair" />} />
+                  <Tab label={<BadgeComp count={tabCounts.replaced} label="Replaced" />} />
+                  <Tab label={<BadgeComp count={tabCounts.faulty_with_customer} label="Faulty/With Customer" />} />
+                  <Tab label={<BadgeComp count={tabCounts.faulty_under_repair} label="Faulty/Under Repair" />} />
                 </Tabs>
               </AppBar>
               <Fragment>
@@ -215,7 +216,7 @@ export default function ProductManager({roleName}) {
           </Grid>
         </Grid>
       { showOrderDialog ?
-        <OrderRecord 
+        <OrderRecord
           open = {showOrderDialog} 
           handleClose = {handleCloseOrderDialog} 
           tabValue = {tabValue} 
@@ -223,6 +224,7 @@ export default function ProductManager({roleName}) {
           orderList = {rentedOrderList}  
           setRentedProductList = {setRentedProductList} 
           setRentedOrderList = {setRentedOrderList} 
+          setTabCounts = {setTabCounts}
           roleName = {roleName}
         />  
         : null 

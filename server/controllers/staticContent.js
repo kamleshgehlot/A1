@@ -57,4 +57,26 @@ const updateDiscountRateList = async function(req, res, next) {
 };
 
 
-module.exports = { getWeekDayList, getPaymentModeList, getDiscountRateList, updateDiscountRateList, getEzidebitPaymentsParamsList};
+
+
+const getProductState = async function(req, res, next) {
+  const params = {    
+    user_id: req.decoded.user_id,
+  };
+  try {
+    const activity = new StaticContent(params);
+    const result = await activity.getProductState();
+    res.send({stateList: result});    
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { 
+  getWeekDayList, 
+  getPaymentModeList, 
+  getDiscountRateList, 
+  updateDiscountRateList, 
+  getEzidebitPaymentsParamsList,
+  getProductState
+};

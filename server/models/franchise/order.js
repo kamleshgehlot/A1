@@ -316,8 +316,8 @@ Order.prototype.dismissAllProduct = function () {
       if (error) { throw error; }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        const Values = [0, that.order_id];
-        connection.query('UPDATE ordered_product set is_active = ? WHERE order_id = ?', Values, function (error, rows, fields) {
+        const Values = [0, 0, that.order_id];
+        connection.query('UPDATE ordered_product set is_active = ?, status = ? WHERE order_id = ?', Values, function (error, rows, fields) {
           if (error) { console.log("Error...", error); reject(error); }
           resolve(rows);
         });
@@ -336,14 +336,20 @@ Order.prototype.updateProductStatus = function (product_status, order_id, produc
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         const Values = [product_status, order_id, product_id, 1];
-        const Query = `UPDATE ordered_product SET status = ? WHERE order_id = ? AND product_id = ? AND is_active = ?`;
+        const Query = `UPDATE ordered_product SET status = ? WHERE order_id = ? AND product_id = ? AND is_active = ?`;        
         connection.query(Query, Values, function (error, rows, fields) {
+          if (error) { console.log("Error...", error); reject(error); }            
+        });
+        
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        const Query2 = `Select id FROM ordered_product WHERE status = ? AND order_id = ? AND product_id = ? AND is_active = ?`;        
+        connection.query(Query2, Values, function (error, rows, fields) {
           if (error) { console.log("Error...", error); reject(error); }
           resolve(rows);
-        });
+        });        
       }
       connection.release();
-      console.log('Dismiss existing product %d', connection.threadId);
+      console.log('status updated for existing product %d', connection.threadId);
     });
   });
 }
@@ -1201,15 +1207,16 @@ Order.prototype.getProductAndCategoryName = function () {
 };
 
 
-Order.prototype.submitDeliveredProduct = function () {
+Order.prototype.submitDeliveredProduct = function (orderedProductValue) {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
       if (error) { throw error; }
-      if (!error) {        
-
+      if (!error) {
+        // console.log('that.orderedProductValue',orderedProductValue)
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('INSERT INTO delivered_product_detail(order_id, customer_id, product_id, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, status, is_active, created_by) VALUES ?',[that.orderedProductValue],function (error, productRows, fields) {
+        connection.query('INSERT INTO delivered_product_detail(ordered_product_id, invoice_number, purchase_from, product_cost, product_color, product_brand, delivery_date, specification, is_active, created_by) VALUES ?',[orderedProductValue],function (error, productRows, fields) {
+
           if(error){console.log("Error...", error); reject(error);}
           resolve(productRows);
         });
@@ -1495,14 +1502,15 @@ Order.prototype.getDeliveredProductData = function () {
       }
       if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-           connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp LEFT JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
-              if (!error) {              
-                resolve(rows);
-              } else {
-                console.log("Error...", error);
-                reject(error);                      
-              }
-                  });
+          //  connection.query('select dp.id, dp.order_id, dp.customer_id, dp.product_id, dp.invoice_number, dp.purchase_from, dp.product_cost, dp.product_color, dp.product_brand, dp.delivery_date, dp.specification, dp.is_active, dp.created_by, dp.created_at, dd.document from delivered_product_detail as dp LEFT JOIN delivery_document as dd on dp.order_id = dd.order_id where dp.order_id = "'+that.id+'"',function (error, rows, fields) {
+          //     if (!error) {              
+          //       resolve(rows);
+          //     } else {
+          //       console.log("Error...", error);
+          //       reject(error);                      
+          //     }
+          //   });
+          resolve([]);
         } else {
           console.log("Error...", error);
           reject(error);

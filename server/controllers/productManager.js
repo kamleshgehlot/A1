@@ -33,8 +33,9 @@ const getTabRelatedRecord = async function(req, res, next) {
         result = await activity.getStateRelatedRecord();
       }
     const finalResult = await combineResult(result);
-
-    res.send({productList: finalResult});
+    
+    const countResult = await activity.countStateRecord();    
+    res.send({productList: finalResult, tabCounts: countResult});
   } catch (error) {
     next(error);
   }
@@ -62,27 +63,13 @@ const getRentedOrder = async function(req, res, next) {
     //     }
     //   }
     // });
-    
-    res.send({orderList: result});
+    const countResult = await activity.countStateRecord();
+    res.send({orderList: result, tabCounts: countResult});
   } catch (error) {
     next(error);
   }
 };
 
-
-const getProductState = async function(req, res, next) {
-  const params = {    
-    user_id: req.decoded.user_id,
-  };
-  console.log(params)
-  try {
-    const activity = new ProductManager(params);
-    const result = await activity.getProductState();      
-    res.send({stateList: result});    
-  } catch (error) {
-    next(error);
-  }
-};
 
 
 
@@ -107,16 +94,15 @@ const changeProductState = async function(req, res, next) {
     
     const finalResult = await combineResult(result);
     const orderList = await activity.getRentedOrder();
-
-    res.send({productList: finalResult, orderList: orderList});    
+    const countResult = await activity.countStateRecord();    
+    res.send({productList: finalResult, orderList: orderList, tabCounts: countResult});
   } catch (error) {
     next(error);
   }
 };
 
 module.exports = {
-  getTabRelatedRecord,  
+  getTabRelatedRecord,
   getRentedOrder,
-  getProductState,
   changeProductState
 };
