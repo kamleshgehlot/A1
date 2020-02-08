@@ -67,7 +67,7 @@ const postOrder = async function (req, res, next) {
 
       let productRows = [];
       Object.values(params.products_id.split(',')).map(proId => {
-        let proCode = params.ezidebit_uid;
+        let proCode =  (Math.random().toString().substring(6,9)) + (Date.now().toString().substring(11, 13)) + (Math.random().toString().substring(6,9));
         productRows.push([orderResult.order_id, proId, proCode, 1 , 1, params.created_by]);
       });
 
@@ -146,7 +146,7 @@ const editOrder = async function (req, res, next) {
 
         let productRows = [];
         Object.values(params.products_id.split(',')).map(proId => {
-          let proCode = params.ezidebit_uid;
+          let proCode = (Math.random().toString().substring(6,9)) + (Date.now().toString().substring(11, 13)) + (Math.random().toString().substring(6,9));
           productRows.push([params.order_id, proId, proCode, 1 , 1, params.created_by]);
         });
       newOrder.orderedProductValue = productRows;
@@ -163,13 +163,9 @@ const editOrder = async function (req, res, next) {
 
 
 const uploadDoc = async function (req, res, next) {
-  const OrderData = req.body.data;
-
-  let attachments = '';
-
+  const OrderData = req.body.data; 
   const base64Data = req.body.file.data.split(';base64,').pop();
   const name = req.body.file.name.split('.')[0] + "_" + Date.now() + '.' + req.body.file.name.split('.')[1];
-
   await main(`./files/order/${name}`, base64Data).catch(error => {
     console.error(error);
     throw (error);
@@ -177,7 +173,7 @@ const uploadDoc = async function (req, res, next) {
 
   const orderParams = {
     order_id: OrderData,
-    document: req.body.file.name,
+    document: name,
     created_by: req.decoded.id,
     user_id: req.decoded.user_id,
   };

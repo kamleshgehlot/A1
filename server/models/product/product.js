@@ -65,10 +65,9 @@ Product.prototype.all = function () {
       }
 
       connection.changeUser({ database: dbName["prod"] });
-      connection.query('select p.name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.description, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id GROUP BY p.description order by id desc', function (error, rows, fields) {
+      connection.query('select p.name, p.id, p.maincat, p.category, p.subcat, p.color_id, p.brand_id, p.buying_price, p.specification, p.brought, p.invoice, p.rental, p.description, p.meta_keywords, p.meta_description, p.created_by, p.status, b.brand_name as brandName, c.color as colorName, ps.status as statusName from product as p LEFT JOIN product_status as ps on p.status = ps.id LEFT JOIN color as c ON p.color_id = c.id LEFT JOIN brand as b ON p.brand_id = b.id order by id desc', function (error, rows, fields) {
         if (!error) {
           resolve(rows);
-
         } else {
           console.log("Error...", error);
           reject(error);

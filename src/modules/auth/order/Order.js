@@ -289,6 +289,7 @@ export default function Order({ roleName }) {
   }
 
   function handlePaymentStatusClose() {
+    fetchOrderDataList();
     setPaymentStatusOpen(false);
   }
 
@@ -473,14 +474,14 @@ export default function Order({ roleName }) {
               handleTabsData(result.order);              
             }
           else if(nextStep === 'Delivery'){
-            const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});
+            const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});            
             setOrder(result.order);
             setCommentData({ order_id: orderId, user_id: userId, roleName: roleName });
             setCommentBoxOpen(true);
             handleTabsData(result.order);
           }else if(nextStep === 'Delivered'){
             const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_date: new Date(), delivered_time: new Date()});
-            setOrder(result.order);            
+            setOrder(result.order);
             handleTabsData(result.order);
           }
         } catch (error) {
@@ -514,26 +515,27 @@ export default function Order({ roleName }) {
     handleTabsData(response.order);
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await OrderAPI.getAll();
-        setOrder(result.order);
-        handleTabsData(result.order);
-        // setOpenTab(result.open);
-        // setFinanceTab(result.finance);
-        // setUnderDeliveryTab(result.underDelivery);
-        // setDeliveredTab(result.delivered);
-        // setCompletedTab(result.completed);
-        // setCancelledTab(result.cancelled);
-        // setArchivedTab(result.archived);
-        
-        // console.log('new Date 2', new Date());
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+  const fetchOrderDataList = async () => {
+    try {
+      const result = await OrderAPI.getAll();
+      setOrder(result.order);
+      handleTabsData(result.order);
+      // setOpenTab(result.open);
+      // setFinanceTab(result.finance);
+      // setUnderDeliveryTab(result.underDelivery);
+      // setDeliveredTab(result.delivered);
+      // setCompletedTab(result.completed);
+      // setCancelledTab(result.cancelled);
+      // setArchivedTab(result.archived);
+      
+      // console.log('new Date 2', new Date());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {    
+    fetchOrderDataList();
   }, [roleName]);
 
   TabPanel.propTypes = {

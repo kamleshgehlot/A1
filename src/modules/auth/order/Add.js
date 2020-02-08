@@ -396,9 +396,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         let code = uid.split('_')[1].toUpperCase();
         if(order_id == ""){
             inputs.ezidebit_uid = ( code + '0000001');
-            setInput('order_id',( code + '0000001'));            
+            setInput('order_id',( code + '0000001'));
         }else{
-          zero = 7 - (order_id[0].id.toString().length); 
+          zero = 7 - (order_id[0].id.toString().length);
           let orderId='';
           for(let i=0; i< zero ; i++){
             orderId += '0';

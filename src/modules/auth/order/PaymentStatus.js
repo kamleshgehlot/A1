@@ -311,7 +311,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
     }    
   }
 
-  const handleReschedulePayment = async () => {    
+  const handleReschedulePayment = async () => {
     let diffBetweenSchedule = [];
     
     const date1 = new Date(nextPayment.payment_date);

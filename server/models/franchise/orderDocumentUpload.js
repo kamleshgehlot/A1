@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 
 var UploadDocument = function (params) {
-  console.log("params", params);
+  // console.log("params", params);
   
   this.order_id = params.order_id;
   this.created_by =  params.created_by;
