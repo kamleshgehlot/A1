@@ -6,6 +6,9 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
+import Chip from '@material-ui/core/Chip';
+import TagFacesIcon from '@material-ui/icons/TagFaces';
+import DoneIcon from '@material-ui/icons/Done';
 import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,6 +25,12 @@ import TextField from '@material-ui/core/TextField';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DateFnsUtils from '@date-io/date-fns';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -82,6 +91,9 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     width: 100,
   },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
   heading: {
     fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
@@ -132,33 +144,25 @@ const RESET_VALUES  = {
   document : '',
 }
 
-export default function ViewDeliveredProductDetails({ open, handleClose, handleSnackbarClick, orderData, handleOrderList, roleName}) {
+export default function ViewDeliveredProductDetails({ open, handleClose, orderData, handleOrderList, roleName}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  const [requesedData, setRequesedData] = useState([]);
   const [inputs, setInputs] = useState(RESET_VALUES);
-  const [ploading, setpLoading] = React.useState(false);
   const [orderedProductList, setOrderedProductList] = useState([]);
+  const [deliveredData, setDeliveredData]  = useState([]);
+  const [productId, setProductId] = useState();
 
   const getRequiredData = async () => {
       try {
-        const result = await Order.getProductAndCategoryName({ product_id : orderData.product_id });
-        if(result != undefined && result != ""){
-          setRequesedData(result[0]);
-        }
-
-        const deliveredData = await Order.getDeliveredProductData({
-          order_id: orderData.id,
-          customer_id : orderData.customer_id,
-        });
-        if(deliveredData != undefined && deliveredData != ""){
+        const deliveredData = await Order.getDeliveredProductData({ order_id: orderData.id});
+        if(deliveredData != undefined && deliveredData != ""  && deliveredData != null){
+          setDeliveredData(deliveredData);
           setInputs(deliveredData[0]);
-        }  
-        
+          setProductId(deliveredData[0].product_id);
+        }        
         const response = await CategoryAPI.getOrderedProductList({ product_ids : orderData.product_id });
         setOrderedProductList(response.productList);
-        
       } catch (error) {
         console.log('Error..',error);
       }
@@ -168,7 +172,10 @@ export default function ViewDeliveredProductDetails({ open, handleClose, handleS
     getRequiredData();
   },[]);
 
-
+  const viewProduct = (data) => {
+    setProductId(data.product_id);
+    setInputs(data);
+  }
 
 return (
     <div>
@@ -184,7 +191,6 @@ return (
           </AppBar>
           
           <div className={classes.root}>
-          {ploading ?  <LinearProgress />: null}
           <Paper className={classes.paper}>            
             <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
@@ -203,14 +209,29 @@ return (
                   <Typography variant="h6" className={classes.labelTitle}>
                      {"Customer Add.:  " + orderData.address }
                   </Typography>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  <Typography variant="h6" className={classes.labelTitle}>
-                     {/* {"PRODUCT TO DELIVERED:  " + requesedData.main_category + '/' + requesedData.category +'/'  + requesedData.sub_category + '/' + requesedData.product_name} */}
-                      {"PRODUCT TO DELIVERED :  " + (orderedProductList.length > 0 ? orderedProductList :[]).map(data => {
-                        return(data.name)
-                      })}
-                  </Typography>                  
+                </Grid>                
+                <Grid item xs={12} sm={12} alignItems = "center">
+                  <Typography variant="h6" className={classes.labelTitle}>DELIVERED PRODUCT:</Typography>
+                    {productId && (orderedProductList.length > 0 ? orderedProductList :[]).map((data) => {
+                      return(
+                        (deliveredData !== undefined && deliveredData !== null && deliveredData.length > 0 ? deliveredData :[]).map((product) => {
+                          if(data.id === product.product_id){
+                            return(
+                              <Chip
+                                size = "small"
+                                key={data.id}
+                                label={data.name}
+                                className={classes.chip}
+                                clickable
+                                icon={<DoneIcon />}
+                                onClick = {() => {viewProduct(product)}}
+                                style = {productId === product.product_id ? {backgroundColor : 'red', color: 'white'} : {}}
+                              />
+                            )
+                          }
+                        })
+                      )
+                    })}
                 </Grid>
                 <Grid item xs={12} sm={12}>   
                     <Divider />
@@ -311,7 +332,23 @@ return (
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>     
+                  <Grid item xs={12} sm={6}>     
+                  <InputLabel className={classes.textsize}  htmlFor="specification">Current state of product *</InputLabel>
+                  <TextField                       
+                      id="product_state"
+                      name="product_state"
+                      value={inputs.product_state}
+                      fullWidth
+                      multiline
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>     
                   <InputLabel className={classes.textsize}  htmlFor="specification">Product Specification *</InputLabel>
                   <TextField                       
                       id="specification"

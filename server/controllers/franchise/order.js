@@ -925,7 +925,6 @@ const getDeliveredProductData = async function (req, res, next) {
   let orderParams = {
     id: req.body.order_id,
     user_id: req.decoded.user_id,
-    customer_id: req.body.customer_id,
   };
   try {
     const newOrder = new Order(orderParams);

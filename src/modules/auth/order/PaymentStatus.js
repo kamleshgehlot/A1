@@ -165,7 +165,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [paymentRecDate, setPaymentRecDate] = useState(new Date());
   const [paymentAmt, setPaymentAmt] = useState('');
   const [orderTypeData, setOrderTypeData] = useState([]);
-  const [requesedData, setRequesedData] = useState([]);
   const [orderedProductList, setOrderedProductList] = useState([]);
   const [remarkField,setRemarkField] = useState('');
   const [totalPaid, setTotalPaid] = useState(0);
@@ -173,6 +172,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   const [reschedule, setReschedule] = useState(false);
   const [dateToReschedule, setDateToReschedule] = useState();
   const [instNo, setInstNo]  = useState(0);
+  const [errors, setErrors] = useState({payment_amt : ''});
 
   useEffect(() => {
     fetchData();
@@ -237,9 +237,6 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   
   const getRequiredData = async () => {
     try {
-      const result = await Order.getProductAndCategoryName({ product_id : orderData.product_id });
-      setRequesedData(result[0]);
-
       const response = await CategoryAPI.getOrderedProductList({ product_ids : orderData.product_id });
       setOrderedProductList(response.productList);
     } catch (error) {
@@ -274,7 +271,12 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   }
   
   function handlePaymentSubmit(response){
-    setConfirmation(true);
+    if(Number(paymentAmt) === 0){
+      setErrors({payment_amt: 'Amount should be greater then $0'});
+    }else{
+      setErrors({payment_amt:''})
+      setConfirmation(true);
+    }    
   }
 
   const handleInstChange = (e) => {
@@ -542,6 +544,8 @@ return (
                         input: styleClass.textsize,
                       },
                     }}
+                    error = {errors.payment_amt}
+                    helperText = {errors.payment_amt}
                   />
               </Grid>
               <Grid item xs={12} sm={2}>

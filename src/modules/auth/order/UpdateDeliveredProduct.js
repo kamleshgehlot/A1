@@ -175,11 +175,6 @@ export default function UpdateDeliveredProduct({ open, handleClose, handleSnackb
 
   const getRequiredData = async () => {
       try {
-          const result = await Order.getProductAndCategoryName({
-          product_id : orderData.product_id,        
-        });
-        setRequesedData(result[0]);
-
         const response = await CategoryAPI.getOrderedProductList({ product_ids : orderData.product_id });
         setOrderedProductList(response.productList);
         designProArrayLayout(response.productList);
