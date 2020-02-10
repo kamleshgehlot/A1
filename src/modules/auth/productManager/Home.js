@@ -141,6 +141,18 @@ export default function ProductManager({roleName}) {
   const [showOrderDialog, setShowOrderDialog] = useState(false);
   const [productId, setProductId] = useState();
   
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -158,6 +170,8 @@ export default function ProductManager({roleName}) {
   }
 
   function handleTabChange(event, newValue) {
+    setPage(0);
+    setRowsPerPage(10);
     setTabValue(newValue); 
     handleTabData(newValue)
   }
@@ -209,7 +223,10 @@ export default function ProductManager({roleName}) {
               </AppBar>
               <Fragment>
                 <TabPanel value={tabValue} index={tabValue}>
-                  <TableRecord productList = {rentedProductList} tabValue={tabValue} handleOrderRecord = {handleOrderRecord} /> 
+                  <TableRecord  productList = {rentedProductList} tabValue={tabValue} handleOrderRecord = {handleOrderRecord} 
+                                page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} 
+                                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                  /> 
                 </TabPanel>               
               </Fragment>
             </Paper>                            

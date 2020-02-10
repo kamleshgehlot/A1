@@ -16,12 +16,9 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import TextField from '@material-ui/core/TextField';
 
 // Components
-import useSignUpForm from '../../franchise/CustomHooks.js';
-import validate from '../../../common/validation/productManagerUpdateState';
 
 // API CALL
-import ProductManagerAPI from '../../../../api/ProductManager.js';
-import StaticContentAPI from '../../../../api/StaticContent.js';
+import ProductManagerAPI from '../../../../../api/ProductManager.js';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -96,34 +93,18 @@ const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const RESET_VALUES = {
-  product_code : '',
-  product_state : '',
-  comment : ''
-}
 
-export default function UpdateProductState({ open, handleClose, orderData, productId, tabValue, setRentedProductList, setRentedOrderList, setTabCounts }) {  
+export default function ProductSelection({ open, handleClose, orderData, productId, tabValue, setRentedProductList, setRentedOrderList, setTabCounts }) {  
   const classes = useStyles();
 
-  const [ploading, setpLoading] = useState(false);
-  const [savebtn, setSavebtn] = useState(false);
-
-  const [productStateList, setProductStateList] = useState([]);
   const [commonProducts, setCommonProducts] = useState([]);
-
+  const [productCode, setProductCode] = useState('');
+  const [errors, setErrors] = useState({product_code: ''});
+  
   useEffect(() => {
-    getProductState();
     getCommonProductForOrder();
   },[]);
 
-  const getProductState = async () => {
-    try{
-      const result = await StaticContentAPI.getProductState({});
-      setProductStateList(result.stateList);
-    }catch(error){
-      console.log('Error...', error);
-    }
-  }
 
   const getCommonProductForOrder = async () => {
     try{
@@ -137,38 +118,15 @@ export default function UpdateProductState({ open, handleClose, orderData, produ
       console.log('Error...', error);
     }
   }
-  
-  const SubmitForm= async () =>{
-    setpLoading(true);
-    setSavebtn(true);
-    try{
-      const result = await ProductManagerAPI.changeProductState({
-        orderId : orderData.id,
-        customerId: orderData.customer_id,
-        productId : productId,
-        productCode : inputs.product_code,
-        tabValue: tabValue,
-        newState: inputs.product_state,
-        comment: inputs.comment,
-      });
-      setRentedProductList(result.productList);
-      setRentedOrderList(result.orderList);
-      setTabCounts(result.tabCounts[0]);
-      setpLoading(false);
-      setSavebtn(false);
+   
+  const handleSubmit = () => {
+    if(productCode === ''){
+      setErrors({product_code: 'Field is required'})
+    }else{
+      setErrors({product_code: ''})
       handleClose(false);
-    }catch(error){
-      console.log('Error...', error)
     }
   }
-
-
-const { inputs, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
-  RESET_VALUES,
-  SubmitForm,
-  validate
-);
-
 
 return (
     <div>
@@ -176,21 +134,20 @@ return (
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" className={classes.title}>
-                Update Product State
+                Select Product
               </Typography>
             <IconButton size="small" onClick={handleClose} className={classes.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
 
           <div className={classes.root}>
-          <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
           <Paper className={classes.paper}>            
             <Grid container spacing={4}>
               <Grid item xs={12} sm={12}>
                 <InputLabel  className={classes.textsize} htmlFor="product_code">Select Product (using product code)*</InputLabel>
-                  <Select                      
-                    value={inputs.product_code}
-                    onChange={handleInputChange}
+                  <Select
+                    value={productCode.product_code}
+                    onChange={(e)=> {setProductCode(e.target.value)}}
                     name= 'product_code'
                     id= 'product_code'
                     fullWidth
@@ -201,56 +158,14 @@ return (
                   > 
                     {(commonProducts.length > 0 ? commonProducts : []).map((data)=>{
                     return(
-                      <MenuItem className={classes.textsize} value={data.product_code}>{data.product_code}</MenuItem>
+                      <MenuItem className={classes.textsize} key = {data.id} value={data}>{data.product_code}</MenuItem>
                       )
                     })}
                   </Select>
               </Grid>  
-              <Grid item xs={12} sm={12}>
-                <InputLabel  className={classes.textsize} htmlFor="product_state">Select State *</InputLabel>
-                  <Select
-                    value={inputs.product_state}
-                    onChange={handleInputChange}
-                    name= 'product_state'
-                    id= 'product_state'
-                    fullWidth
-                    className={classes.textsize}
-                    required
-                    error={errors.product_state}
-                    helperText={errors.product_state}
-                  > 
-                    {(productStateList.length > 0 ? productStateList : []).map((data)=>{
-                    return(
-                      <MenuItem className={classes.textsize} value={data.id}>{data.status_name}</MenuItem>
-                      )
-                    })}
-                  </Select>
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <InputLabel  className={classes.textsize} htmlFor="comment">Comment *</InputLabel>
-                  <TextField
-                    multiline
-                    InputProps={{
-                      classes: {
-                        input: classes.textsize,
-                      },
-                    }}
-                    id="comment"
-                    name="comment"
-                    value={inputs.comment}
-                    onChange={handleInputChange}                    
-                    fullWidth
-                    type="text"                    
-                    margin="dense"
-                    error={errors.comment}
-                    helperText={errors.comment}
-                  />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <Button variant="contained" color="primary" className={classes.button} onClick = {handleSubmit} disabled= {savebtn == true}> Submit </Button> 
+                <Button variant="contained" color="primary" className={classes.button} onClick = {handleSubmit} > View </Button> 
                 <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}> Close </Button> 
             </Grid>
-          </Grid>
           </Paper>
         </div>
       </Dialog>

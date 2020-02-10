@@ -1,4 +1,6 @@
 const ProductManager = require('../models/productManager');
+const History = require('../models/history.js');
+
 
 const combineResult = (params) => {
   let productList = params.productList;
@@ -74,18 +76,36 @@ const getRentedOrder = async function(req, res, next) {
 
 
 const changeProductState = async function(req, res, next) {
-  const params = {    
+  const params = {
     user_id: req.decoded.user_id,
     productId : req.body.productId,
     orderId : req.body.orderId,
+    productCode : req.body.productCode,
     customerId: req.body.customerId,
     tabValue: req.body.tabValue,
     newState: req.body.newState,
   };
-  console.log(params)
+  
+  const auditLog = {
+    user_id: req.decoded.user_id,
+    tableName : `ordered_product`,
+    whereClause: `order_id = ${params.orderId} AND product_id = ${params.productId} AND product_code = '${params.productCode}' AND is_active = 1`,
+    modifiedBy: req.decoded.id,
+    reason: req.body.comment,
+  }
+
   try {
+    const history = new History(auditLog);
     const activity = new ProductManager(params);
+    
+    const previousValues = await history.getValues();
     await activity.changeProductState();
+    const newValues = await history.getValues();
+    
+    history.previousValues = previousValues;
+    history.newValues = newValues;
+    await history.saveChanges();
+    console.log('length',previousValues.length, newValues.length)
     
     let result = [];
     if(req.body.tabValue !== 0){
@@ -94,15 +114,37 @@ const changeProductState = async function(req, res, next) {
     
     const finalResult = await combineResult(result);
     const orderList = await activity.getRentedOrder();
-    const countResult = await activity.countStateRecord();    
+    const countResult = await activity.countStateRecord();
     res.send({productList: finalResult, orderList: orderList, tabCounts: countResult});
   } catch (error) {
     next(error);
   }
 };
 
+
+
+
+const getCommonProductForOrder = async function(req, res, next) {
+  const params = {    
+    user_id: req.decoded.user_id,
+    productId : req.body.productId,
+    orderId : req.body.orderId,  
+    tabValue: req.body.tabValue,
+  };
+  
+  try {
+    const activity = new ProductManager(params);
+    const result = await activity.getCommonProductForOrder();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 module.exports = {
   getTabRelatedRecord,
   getRentedOrder,
-  changeProductState
+  changeProductState,
+  getCommonProductForOrder
 };

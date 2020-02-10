@@ -8,10 +8,6 @@ const ProductRouter = express.Router();
 ProductRouter.route('/getTabRelatedRecord').post(validateToken, Product.getTabRelatedRecord);
 ProductRouter.route('/getRentedOrder').post(validateToken, Product.getRentedOrder);
 ProductRouter.route('/changeProductState').post(validateToken, Product.changeProductState);
+ProductRouter.route('/getCommonProductForOrder').post(validateToken, Product.getCommonProductForOrder);
 
-// ProductRouter.route('/getOrderReport').post(validateToken, Report.getOrderReport);
-// ProductRouter.route('/getDeliveryReport').post(validateToken, Report.getDeliveryReport);
-// //task report
-// ProductRouter.route('/getTaskReport').post(validateToken, Report.getTaskReport);
-// ProductRouter.route('/getDueTaskReport').post(validateToken, Report.getDueTaskReport);
 module.exports = ProductRouter;

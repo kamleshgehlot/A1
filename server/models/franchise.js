@@ -71,8 +71,7 @@ const payment_transaction = "CREATE TABLE IF NOT EXISTS `payment_transaction` ( 
 const scheduler = "CREATE TABLE IF NOT EXISTS `scheduler` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `type` INT(11) DEFAULT NULL, `customer_id` INT(11) DEFAULT NULL, `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`));";
 const ordered_product = "CREATE TABLE IF NOT EXISTS `ordered_product` ( `id` int(11) NOT NULL AUTO_INCREMENT, `order_id` int(11) DEFAULT NULL, `product_id` int(11) DEFAULT NULL, `product_code` varchar(50) DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`))";
 const status_record = "CREATE TABLE IF NOT EXISTS `status_record` ( `id` int(11) NOT NULL AUTO_INCREMENT, `status_role` varchar(255) DEFAULT NULL, `status_id` int(11) DEFAULT NULL, `status_name` varchar(255) DEFAULT NULL, `is_active` tinyint(1) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`))";
-
-
+const history = "CREATE TABLE IF NOT EXISTS `history` (`id` bigint(20) NOT NULL AUTO_INCREMENT, `transaction_id` int(11) DEFAULT NULL, `table_name` varchar(255) DEFAULT NULL, `row_id` int(11) DEFAULT NULL, `previous_value` text, `new_value` text, `reason` text NOT NULL, `modified_by` int(11) DEFAULT NULL, `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`));";
 
 
 // const document_for_payment = "CREATE TABLE IF NOT EXISTS `document_for_payment` ( `id` int(11) NOT NULL AUTO_INCREMENT, `customer_id` int(11) DEFAULT NULL, `order_id` int(11) DEFAULT NULL, `installment_no` int(11) DEFAULT NULL, `sub_installment_no` int(11) DEFAULT NULL, `document` varchar(500) DEFAULT NULL, `status` tinyint(4) DEFAULT NULL, `is_active` tinyint(4) DEFAULT NULL, `created_by` int(11) DEFAULT NULL, `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,  PRIMARY KEY (`id`));";
@@ -281,6 +280,7 @@ Franchise.prototype.register = function (newUser) {
                 connection.query(scheduler, function (err) { if (err) { console.log('scheduler Table Create Time Error: ', err) } });
                 connection.query(status_record, function (err) { if (err) { console.log('status_record Table Create Time Error: ', err) } });
                 connection.query(ordered_product, function (err) { if (err) { console.log('ordered_product Table Create Time Error: ', err) } });
+                connection.query(history, function (err) { if (err) { console.log('history Table Create Time Error: ', err) } });
                 // connection.query(paymentstatus, function (err) { if (err) { console.log('paymentStatus Table Create Time Error: ', err) } });                
                 // connection.query(discountRateList, function (err) { if (err) { console.log('discountRateList Table Create Time Error: ', err) } });
                 
