@@ -56,17 +56,17 @@ const getRentedOrder = async function(req, res, next) {
     const activity = new ProductManager(params);
     const result = await activity.getRentedOrder();
 
-    // let finalResult = [];
-    // Object.values(result).map(data => {
-    //   if(data.product_id !== '' && data.product_id !== undefined){        
-    //     let filterList =  Object.values(data.product_id.split(',')).filter(id => id == params.productId);
-    //     if(filterList !== "" && filterList.length > 0){
-    //       finalResult.push(data);
-    //     }
-    //   }
-    // });
+    let finalResult = [];
+    Object.values(result).map(data => {
+      if(data.product_id !== '' && data.product_id !== undefined){        
+        let filterList =  Object.values(data.product_id.split(',')).filter(id => id == params.productId);
+        if(filterList !== "" && filterList.length > 0){
+          finalResult.push(data);
+        }
+      }
+    });
     const countResult = await activity.countStateRecord();
-    res.send({orderList: result, tabCounts: countResult});
+    res.send({orderList: finalResult, tabCounts: countResult});
   } catch (error) {
     next(error);
   }
