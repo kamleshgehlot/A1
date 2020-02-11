@@ -12,45 +12,7 @@ router.route("/ordercount").post(async (req, res, next) => {
 router.route("/newamount").post(async (req, res, next) => {
     return querypromise(`select round(sum(payment_amt),2) as totalreceived,count(payment_amt) as ordercount, staffname from (SELECT sum(payment_amt) as payment_amt, max(total_paid) as total_paid, CONCAT(staff.first_name,' ',staff.last_name) as staffname, staff.id as staff_id FROM payment_schedules left join orders on orders.id = payment_schedules.order_id left join staff on staff.franchise_user_id=orders.sales_person_id where payment_schedules.status NOT IN (1,6,7,8,9,10,16,17) and  orders.created_at >= DATE(NOW()) - INTERVAL `+(req.body.duration || 7)+` DAY group by payment_schedules.order_id) as t where staffname is not NULL group by t.staff_id`, [] , req,res);
 });
-router.route("/productmanager").post(async (req, res, next) => {
-    let orders=await querypromise(`select orders.*,delivery_document.document,delivered_product_detail.product_color,delivered_product_detail.product_brand,delivered_product_detail.specification,delivered_product_detail.delivery_date from orders left join delivery_document on delivery_document.order_id = orders.id left join delivered_product_detail on delivered_product_detail.order_id = orders.id;`, [] , req,false);
-    let productlist={};
-    orders.forEach(order => {
-        let list=order.product_id.split(',');
-        list.forEach(item => {
-            if(!productlist[item])productlist[item]={count:1,orders:[order]};
-            else {productlist[item].count++;productlist[item].orders.push(order);}
-        });
-    });
-    delete req.body.franchise;
-    let names=await querypromise("select * from product where id in ("+Object.keys(productlist).join(',').replace(/,\s*$/, "")+");",[],req,false);
-    function search(searchValue, arrayName,key){
-        let answer=false;
-        arrayName.forEach(item => {if(item[key]==searchValue)answer=item;});
-        return answer;
-    }
-    Object.keys(productlist).forEach(item => {
-        let result=search(item,names,"id");
-        if(result){
-            productlist[item].productid=result.id;
-            Object.keys(result).forEach(resultkey => {
-            productlist[item][resultkey]=result[resultkey];
-            });
-        }
-    });
 
-    let newdata=[];
-    let mainCategory=req.body.mainCategory;
-    let category=req.body.category;
-    let subCategory=req.body.subCategory;
-    Object.keys(productlist).forEach(item => {
-        let data=productlist[item];
-        if((!mainCategory || data.maincat==mainCategory)&&(!category || data.category==category)&&(!subCategory || data.subcat==subCategory))  
-        newdata.push({ ...data });
-        });
-
-    res.send({ status: 400, data: newdata });
-});
 
 const querypromise = (mysqlquery, values,req,res) => {
     // console.log(mysqlquery); // TODO remove in PROD

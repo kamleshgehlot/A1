@@ -18,10 +18,9 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/Send.js';
 import TablePagination from '@material-ui/core/TablePagination';
 
-import Task from '../../../task/TaskList';
-import MainLayout from '../../../layout/MainLayout';
-import { getCurrentDateDBFormat, getDateInDDMMYYYY } from '../../../../../utils/datetime';
-// import useCommonStyles from '../../../../common/StyleComman';
+import Task from '../../../../task/TaskList';
+import MainLayout from '../../../MainLayout';
+import { getCurrentDateDBFormat, getDateInDDMMYYYY } from '../../../../../../utils/datetime';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -52,7 +51,6 @@ const useStyles = makeStyles({
 
 
 export default function TaskList({taskList, roleName, handleTaskClick}) {
-  // const styleClass = useCommonStyles();
   const [showTask, setShowTask] = useState(false);
   
 const columns = [
