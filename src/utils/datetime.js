@@ -82,3 +82,7 @@ export function getDateWithFullMonthNDay(date) {
   return moment(date).format("DD-MMMM-YYYY, dddd");
 }
 
+export function getFullDateTime(date) {
+  return moment(date).format("dddd, DD MMMM YYYY hh:mm:A");
+}
+

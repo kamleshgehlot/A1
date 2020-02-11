@@ -28,6 +28,7 @@ import { API_URL } from '../../../../api/Constants';
 import ViewOrder from '../../order/Edit.js';
 import UpdateProductState from '../Components/UpdateProductState.js'
 import ProductSelection from '../Components/SubComponents/ProductSelection.js';
+import ProductTracker from './ProductTracker.js';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -99,10 +100,11 @@ export default function OrderRecord({open, handleClose, tabValue, productId, ord
   const classes = useStyles();
 
   const [orderData, setOrderData] = useState([]);
-  const [showOrder, setShowOrder] = useState(false);  
+  const [showOrder, setShowOrder] = useState(false);
   const [showUpdateStateScreen, setShowUpdateStateScreen] = useState(false);
   const [showProductSelection, setShowProductSelection] = useState(false);
-  
+  const [showProductTracker, setShowProductTracker] = useState(false);
+  const [rowIdInHistory, setRowIdInHistory] = useState();
 
   function handleOrderView(data) {
     setOrderData(data);
@@ -129,6 +131,15 @@ export default function OrderRecord({open, handleClose, tabValue, productId, ord
 
   const handleCloseProductSelection = () =>{
     setShowProductSelection(false);
+  }
+
+  const openHistoryDialog = (data) => {
+    setRowIdInHistory(data.id);
+    setShowProductTracker(true);
+  }
+
+  const handleCloseProductTrancker = () => {
+    setShowProductTracker(false);
   }
 
 
@@ -223,7 +234,8 @@ export default function OrderRecord({open, handleClose, tabValue, productId, ord
   </Dialog>
     {showOrder ? <ViewOrder open={showOrder} handleEditClose={handleCloseViewOrder} editableData={orderData} viewOnly={true} /> : null}
     {showUpdateStateScreen ? <UpdateProductState open = {showUpdateStateScreen} handleClose = {handleCloseUpdateScreen} orderData = {orderData} productId={productId} tabValue = {tabValue} setRentedProductList= {setRentedProductList} setRentedOrderList = {setRentedOrderList} setTabCounts = {setTabCounts} /> : null}
-    {showProductSelection ? <ProductSelection open = {showProductSelection} handleClose = {handleCloseProductSelection} orderData = {orderData} productId={productId} tabValue = {tabValue} setRentedProductList= {setRentedProductList} setRentedOrderList = {setRentedOrderList} setTabCounts = {setTabCounts} /> : null}
+    {showProductSelection ? <ProductSelection open = {showProductSelection} handleClose = {handleCloseProductSelection} orderData = {orderData} productId={productId} tabValue = {tabValue} openHistoryDialog = {openHistoryDialog} /> : null}
+    {showProductTracker ? <ProductTracker open = {showProductTracker} handleClose = {handleCloseProductTrancker} rowIdInHistory = {rowIdInHistory} /> : null}
     </div>
   ) 
 }

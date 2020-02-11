@@ -11,6 +11,7 @@ const ProductManager = function (params) {
   this.orderId  = params.orderId;
   this.customerId = params.customerId;
   this.newState = params.newState;
+  this.rowIdInHistory = params.rowIdInHistory;
 };
 
 

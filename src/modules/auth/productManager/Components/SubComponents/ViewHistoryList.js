@@ -1,10 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,28 +10,12 @@ import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import FolderIcon from '@material-ui/icons/Folder';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-
-
-import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
-import ArchiveIcon from '@material-ui/icons/Archive';
 
-import { API_URL, APP_TOKEN } from '../../../../api/Constants';
-import {useCommonStyles} from '../../../common/StyleComman';
-import PropTypes from 'prop-types';
-import { compareAsc } from 'date-fns';
-import { breakStatement, labeledStatement } from '@babel/types';
+
+// Other Components
+import {getFullDateTime} from '../../../../../utils/datetime.js';
 
 
 const drawerWidth = 240;
@@ -126,189 +106,64 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
-
-
-export default function ViewHistoryList({historyList, roleName}) {
+export default function ViewHistoryList({historyList}) {
   const classes = useStyles();
-  
-  const handleChangeEventTitle = (historyList, index, data) =>{
-    return(
-      <p>
-        {(historyList.length === index + 1) && data.is_active == 1 ? 
-          'Budget added when placing a new order (' + data.order_id + ') on ' + 
-          data.created_at + ' by ' + data.created_by_name
-        : (historyList.length === index + 1) && data.is_active == 0 ?
-          'Budget added on ' + data.created_at + ' by ' + data.created_by_name
-        : data.is_active == 1 ? 
-          'Budget updated when placing a new order (' + data.order_id + ') on ' + 
-          data.created_at + ' by ' + data.created_by_name
-        : data.is_active == 0 ? 
-          'Budget updated on ' + data.created_at + ' by ' + data.created_by_name
-        :''} 
-      </p>      
-    )
+
+  const checkConditions = (data, isFirst) => {
+    const conditions = [
+      { id: 1, condition: (data.updated_status !== 1 && data.updated_status !== 2 && isFirst === true)},
+      { id: 2, condition: (data.updated_status !== 1 && data.updated_status !== 2 && isFirst === false)},
+      { id: 3, condition: (data.updated_status === 2 && isFirst === false)},
+      { id: 4, condition: (data.updated_status === 2 && isFirst === true)},
+      { id: 5, condition: (data.status === 1 && isFirst === true)},
+    ];
+    return conditions;
   }
-
-  const handleModifiedFields = (innerData, data) =>{    
-    const oldIncomeList = JSON.parse(innerData.other_income);
-    const newIncomeList = JSON.parse(data.other_income);
-    
-    const oldExpensesList = JSON.parse(innerData.other_expenditure);
-    const newExpensesList = JSON.parse(data.other_expenditure);
-
-    let incomeString = "";
-    let expensesString = "";
-    let paidDebitedDaysString = "";
-
-    const incomeStr = [];
-    const expensesStr = [];
-    let isDeleted;
- 
-  //loop for diffrentiate income & removed income
-  (oldIncomeList.length > 0 ? oldIncomeList : []).map((oldData, oldIndex) => {
-    isDeleted= true;
-    (newIncomeList.length > 0 ? newIncomeList : []).map((newData, newIndex) => {
-      if(oldData.source_name === newData.source_name){
-        if(Number(oldData.source_amt) !== Number(newData.source_amt)){
-          incomeStr.push((newData.source_name + ': $'+ oldData.source_amt + " => $" + newData.source_amt));          
-        }
-        isDeleted = false;
-      } 
-    })
-    if(isDeleted === true){      
-      incomeStr.push(( "closed existing source of income " + oldData.source_name + ': $'+ oldData.source_amt)); 
-    }
-  });
-
-  //loop for new income
-  (newIncomeList.length > 0 ? newIncomeList : []).map((newData, oldIndex) => {
-    isDeleted= true;
-    (oldIncomeList.length > 0 ? oldIncomeList : []).map((oldData, newIndex) => {
-      if(newData.source_name === oldData.source_name){        
-        isDeleted = false;
-      }
-    })
-    if(isDeleted === true){      
-      incomeStr.push(("open new source of income " +newData.source_name + ': $'+ newData.source_amt)); 
-    }
-  });
-
-
   
-  (oldExpensesList.length > 0 ? oldExpensesList : []).map((oldData, oldIndex) => {
-    isDeleted= true;
-    (newExpensesList.length > 0 ? newExpensesList : []).map((newData, newIndex) => {
-      if(oldData.source_name === newData.source_name){
-        if(Number(oldData.source_amt) !== Number(newData.source_amt)){
-          expensesStr.push((newData.source_name + ': $'+ oldData.source_amt + " => $" + newData.source_amt));          
-        }
-        isDeleted = false;
-      } 
-    })
-    if(isDeleted === true){      
-      expensesStr.push(( "closed existing source of expenses " + oldData.source_name + ': $'+ oldData.source_amt)); 
-    }
-  });
-
-  (newExpensesList.length > 0 ? newExpensesList : []).map((newData, oldIndex) => {
-    isDeleted= true;
-    (oldExpensesList.length > 0 ? oldExpensesList : []).map((oldData, newIndex) => {
-      if(newData.source_name === oldData.source_name){        
-        isDeleted = false;
-      }
-    })
-    if(isDeleted === true){      
-      expensesStr.push(("open new source of expenses " +newData.source_name + ': $'+ newData.source_amt)); 
-    }
-  });
-
-
-    incomeString = 
-            (data.benefits !== innerData.benefits ? "benefits: $" + innerData.benefits + " => $" + data.benefits +", ": '') +
-            (data.work !== innerData.work ? " work: $" + innerData.work + " => $" + data.work +", ": '') +
-            (data.accomodation !== innerData.accomodation ? "accomodation: $" + innerData.accomodation + " => $" + data.accomodation +", ": '') +
-            (data.childcare !== innerData.childcare ? "childcare: $" + innerData.childcare + " => $" + data.childcare +", ": '') +
-            (data.afford_amt !== innerData.afford_amt ? "afford_amt: $" + innerData.afford_amt + " => $" + data.afford_amt +", ": '') + 
-            incomeStr.join(', ');
-    
-    expensesString = 
-            (data.rent !== innerData.rent ? "rent: $" + innerData.rent + " => $" + data.rent +", ": '') +
-            (data.power !== innerData.power ? " power: $" + innerData.power + " => $" + data.power +", ": '') +
-            (data.telephone !== innerData.telephone ? "telephone: $" + innerData.telephone + " => $" + data.telephone +", ": '') +
-            (data.mobile !== innerData.mobile ? "mobile: $" + innerData.mobile + " => $" + data.mobile +", ": '') +
-            (data.vehicle !== innerData.vehicle ? "vehicle: $" + innerData.vehicle + " => $" + data.vehicle +", ": '') +
-            (data.vehicle_fuel !== innerData.vehicle_fuel ? "vehicle fuel: $" + innerData.vehicle_fuel + " => $" + data.vehicle_fuel +", ": '') +
-            (data.transport !== innerData.transport ? "transport: $" + innerData.transport + " => $" + data.transport +", ": '') +
-            (data.food !== innerData.food ? "food: $" + innerData.food + " => $" + data.food +", ": '') +
-            (data.credit_card !== innerData.credit_card ? "credit_card: $" + innerData.credit_card + " => $" + data.credit_card +", ": '') +
-            (data.loan !== innerData.loan ? "loan: $" + innerData.loan + " => $" + data.loan +", ": '') + 
-            expensesStr.join(', ');
-
-    paidDebitedDaysString = 
-            (data.paid_day_name !== innerData.paid_day_name ? "Day when get paid: " + innerData.paid_day_name + " =>  " + data.paid_day_name +", ": '') +
-            (data.debited_day_name !== innerData.debited_day_name ? "Day to be debited: " + innerData.debited_day_name + " => " + data.debited_day_name : '');
-
+  const handleChangeEventTitle = (data, condition) =>{
+    if(condition.condition === true){
       return(
-        <div>
-          { incomeString != "" ? <p> {"Modification in Income: " + incomeString} </p> : ''}
-          { expensesString != "" ? <p> {"Modification in Expenditure: " + expensesString} </p> : ''}
-          { paidDebitedDaysString != "" ? <p> {"Days to get & debited: " + paidDebitedDaysString} </p> : ''}
-        </div>
+        <p>{
+              condition.id === 5 ? 'Product ordered on ' + getFullDateTime(data.created_at)
+            : (condition.id === 4 || condition.id === 3) ? 'Product delivered to customer on ' + getFullDateTime(data.record_modified_at)
+            : (condition.id === 2 || condition.id === 1) ? 'Product is ' + (data.updated_status === 3 ? 'under repair' : data.updated_status === 4 ? 'replaced'  :
+              data.updated_status === 5 ? 'faulty/with customer' : data.updated_status === 6 ? 'faulty/under repair' :'')
+              + ' on ' + getFullDateTime(data.record_modified_at)
+            : ''
+        }</p>
       )
+    }
   }
 
-  return (  
+
+  return (
     <List className={classes.root}>
-    {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {            
-
-      return(
-        <div>                    
-          <ListItem alignItems="flex-start">
-            <ListItemIcon>
-              <PlayArrowIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <React.Fragment>
-                  <Typography
-                    className={classes.msg}
-                    color="textPrimary"
-                  >
-                    {handleChangeEventTitle(historyList, index, data)}                                       
-                  </Typography>                 
-                </React.Fragment>
-              }
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    component="header"
-                    variant="body2"
-                    className={classes.inline}
-                    color="textPrimary"
-                  >
-                    { historyList.length !== (index + 1) && 
-                        handleModifiedFields(historyList[index+1], data)
-                    }
-                    </Typography>
-                </React.Fragment>
-              }
-            />
-          </ListItem>     
-        <Divider variant="inset" component="li" />  
-      </div>           
-      )
-    })}
+      {(historyList.length > 0 && historyList != "" ? historyList : []).map((data, index) => {
+        let conditions = checkConditions(data, (historyList.length === index + 1) ? true : false);
+        return(        
+          conditions.map(condition => {
+            if(condition.condition === true){
+              return(
+                <div>
+                  <ListItem alignItems="flex-start">
+                    <ListItemIcon> <PlayArrowIcon /> </ListItemIcon>           
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <Typography className={classes.msg} color="textPrimary" >
+                            { handleChangeEventTitle(data, condition) }
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                </div>
+              )
+            }
+          })
+        )
+      })}
     </List>
   )
 }

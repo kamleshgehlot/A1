@@ -80,4 +80,29 @@ History.prototype.saveChanges = function () {
   });
 }
 
+
+
+History.prototype.getModifiedRecord = function () {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    connection.getConnection((error, connection) => {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+          connection.changeUser({database : dbName.getFullName(dbName["prod"], that.user_id.split('_')[1])});
+          connection.query('SELECT * FROM `history` WHERE table_name = "'+that.tableName+'" AND row_id = "'+that.rowId+'" ORDER BY id DESC', function (error, rows, fields) {
+            if(error) {  console.log('Error...', error); reject(error); }
+                if(!error){
+                  resolve(rows)
+                }
+          });
+        }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
+
 module.exports = History;

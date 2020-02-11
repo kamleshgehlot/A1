@@ -140,11 +140,12 @@ const getCommonProductForOrder = async function(req, res, next) {
     next(error);
   }
 };
+ 
 
 
 module.exports = {
   getTabRelatedRecord,
   getRentedOrder,
   changeProductState,
-  getCommonProductForOrder
+  getCommonProductForOrder,
 };

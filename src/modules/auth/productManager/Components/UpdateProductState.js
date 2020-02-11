@@ -221,6 +221,7 @@ return (
                   > 
                     {(productStateList.length > 0 ? productStateList : []).map((data)=>{
                     return(
+                      (data.id !== 1) &&
                       <MenuItem className={classes.textsize} value={data.id}>{data.status_name}</MenuItem>
                       )
                     })}

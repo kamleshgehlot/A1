@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,14 +12,26 @@ import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import Order from '../../../api/franchise/Order';
-import ViewHistoryList from './OrderComponent/ViewHistoryList';
-import {useCommonStyles } from '../../common/StyleComman';
+// Components
+import ViewHistoryList from './SubComponents/ViewHistoryList.js';
+
+
+// API CALL
+import HistoryAPI from '../../../../api/History.js';
+
 
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
     height: theme.spacing(5),
+  },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white', 
+    fontSize: theme.typography.pxToRem(14),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    marginRight:theme.spacing(-1),
   },
   title: {
     display: 'flex',
@@ -39,10 +47,6 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.common.white,
   },
   labelTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),
     marginTop: 15,
@@ -91,25 +95,26 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-
-export default function ProductTracker({ open, handleClose}) {
+export default function ProductTracker({ open, handleClose, rowIdInHistory}) {
 
   const classes = useStyles();
-  const styleClass = useCommonStyles();
   const [historyList, setHistoryList] =  React.useState([]);
 
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const budget = await Order.getBudgetHistory({customer_id: customer_id});        
-  //       setHistoryList(budget);        
-  //     } catch (error) {
-  //       console.log('error',error)
-  //     }      
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await HistoryAPI.getModifiedRecord({
+          tableName: 'ordered_product',
+          rowIdInHistory: rowIdInHistory
+        });
+        setHistoryList(result);     
+      } catch (error) {
+        console.log('error',error)
+      }      
+    };
+    fetchData();
+  }, []);
   
 
 return (
@@ -118,9 +123,9 @@ return (
         <AppBar className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
-              Budget History
+              Product Tracker
             </Typography>
-            <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+            <IconButton size="small" onClick={handleClose} className={classes.closeIcon}> x </IconButton>
           </Toolbar>
         </AppBar>
 
@@ -128,7 +133,7 @@ return (
         <Paper className={classes.paper}>            
           <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>
-              <ViewHistoryList historyList={historyList} roleName={roleName} />
+              <ViewHistoryList historyList={historyList}  />
             </Grid>
             <Grid item xs={12} sm={12}>                      
               <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>

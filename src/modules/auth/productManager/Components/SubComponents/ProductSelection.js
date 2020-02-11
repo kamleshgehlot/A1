@@ -94,7 +94,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function ProductSelection({ open, handleClose, orderData, productId, tabValue, setRentedProductList, setRentedOrderList, setTabCounts }) {  
+export default function ProductSelection({ open, handleClose, orderData, productId, tabValue, openHistoryDialog }) {  
   const classes = useStyles();
 
   const [commonProducts, setCommonProducts] = useState([]);
@@ -124,6 +124,7 @@ export default function ProductSelection({ open, handleClose, orderData, product
       setErrors({product_code: 'Field is required'})
     }else{
       setErrors({product_code: ''})
+      openHistoryDialog(productCode);
       handleClose(false);
     }
   }
