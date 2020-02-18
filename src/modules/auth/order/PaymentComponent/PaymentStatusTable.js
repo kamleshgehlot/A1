@@ -118,7 +118,7 @@ return (
         <StyledTableCell>Total Received</StyledTableCell>
         <StyledTableCell>Status</StyledTableCell>        
         <StyledTableCell>Remark</StyledTableCell>        
-        <StyledTableCell>Accept By</StyledTableCell>
+        {/* <StyledTableCell>Accept By</StyledTableCell> */}
       </TableRow>
     </TableHead>
     <TableBody >
@@ -133,7 +133,7 @@ return (
               <StyledTableCell>{'$' + Number(data.total_paid).toFixed(2)}</StyledTableCell>
               <StyledTableCell>{data.pay_status_name}</StyledTableCell>
               <StyledTableCell>{data.remark}</StyledTableCell>
-              <StyledTableCell>{data.accept_by}</StyledTableCell>
+              {/* <StyledTableCell>{data.accept_by}</StyledTableCell> */}
             </TableRow>
           )
         })

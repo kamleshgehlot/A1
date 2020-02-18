@@ -44,7 +44,6 @@ var Order = function (params) {
   this.converted_to = params.converted_to;
 
   this.installment_no = params.installment_no;
-  this.last_installment_no = params.last_installment_no;
   this.payment_date= params.payment_date;
   this.payment_amt = params.payment_amt;
   this.each_payment_amt = params.each_payment_amt;
@@ -647,7 +646,7 @@ Order.prototype.getPaymentSchedule = function () {
             if(error){ console.log('Error...', error); reject(error);}
             connection.query('SELECT ps.`id`, ps.`order_id`, ps.`customer_id`, ps.`installment_no`, DATE_FORMAT(ps.`payment_date`, \'%Y-%m-%d\') payment_date, DATE_FORMAT(ps.`settlement_date`,\'%Y-%m-%d\') settlement_date, ps.`payment_amt`, ps.`total_paid`, ps.`remark`, ps.`status`, ps.`is_active`, ps.`created_by`, ps.`updated_by`, ps.`created_at`, ps.`updated_at`, sp.status as pay_status_name, u.name as accept_by FROM `payment_schedules` as ps LEFT JOIN status_payment as sp ON ps.status = sp.id  LEFT JOIN user as u ON u.id = ps.created_by where ps.order_id = "'+that.order_id+'" AND ps.is_active = 1 AND ps.status IN(1,7,16,17) ORDER BY installment_no, id LIMIT 1',function (error, nextInst, fields) {
               if(error) { console.log("Error...", error); reject(error);}
-              connection.query('SELECT ps.`id`, ps.`total_paid`, ps.`status` FROM `payment_schedules` as ps WHERE  ps.order_id = "'+that.order_id+'" AND  total_paid != \'\' AND status != 1 ORDER BY total_paid DESC LIMIT 1',function (error, lastInst, fields) {                
+              connection.query('SELECT ps.`id`, ps.`total_paid`, ps.`status` FROM `payment_schedules` as ps WHERE  ps.order_id = "'+that.order_id+'" AND  total_paid != \'\' AND status != 1 ORDER BY total_paid DESC LIMIT 1',function (error, lastInst, fields) {
                 if(error) { console.log("Error...", error); reject(error);} 
                 resolve({nextInstallmentRow: nextInst, paymentSchedule : schedule, lastInst : lastInst});
               });
@@ -771,12 +770,7 @@ Order.prototype.paymentSubmit = function () {
         
         if(that.installment_before_delivery === that.installment_no){
           connection.query('UPDATE orders SET order_status = 4 where id = "'+that.order_id+'"', function (error, rows, fields) { if (error) { console.log("Error...", error); reject(error); } });
-        }
-        if(that.installment_no === that.last_installment_no && that.order_type === 1 && that.payment_amt >= that.each_payment_amt){
-          connection.query('UPDATE orders as o INNER JOIN budget as b ON (o.budget_id = b.id) SET o.order_status = 8, b.is_active = 0 where o.id = "'+that.order_id+'"', function (error, rows, fields) {
-            if (error) { console.log("Error...", error); reject(error); }     
-          });
-        }
+        }    
 
         connection.query('SELECT * FROM payment_schedules WHERE order_id = "'+that.order_id+'" AND installment_no = "' +that.installment_no+ '" ORDER BY id LIMIT 1',function (error, lastUpdated, fields) { 
           if (error) { console.log("Error...", error); reject(error); } 
@@ -796,6 +790,30 @@ Order.prototype.paymentSubmit = function () {
     throw error;
   });
 };
+
+
+Order.prototype.completeNCloseContract = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        connection.query('UPDATE orders as o INNER JOIN budget as b ON (o.budget_id = b.id) SET o.order_status = 8, o.is_active = 0, b.is_active = 0 where o.id = "'+that.order_id+'"', function (error, rows, fields) {
+          if (error) { console.log("Error...", error); reject(error); }   
+          resolve(rows)  
+        });
+      } 
+      connection.release();
+      console.log('Order Added for Franchise Staff %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
 
 
 Order.prototype.increaseSchedule = function () {

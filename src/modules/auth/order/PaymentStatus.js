@@ -47,6 +47,7 @@ import Order from '../../../api/franchise/Order';
 import CategoryAPI from '../../../api/Category';
 import ConfirmationDialog from '../ConfirmationDialog.js';
 import ConfirmDialogDishonour from '../ConfirmationDialog.js';
+import ConfirmDialogCompleted from '../ConfirmationDialog.js';
 
 
 import { getDate, getCurrentDate, getCurrentDateDDMMYYYY, getCurrentDateDBFormat, getDateInDDMMYYYY, setDBDateFormat, subtractOneDay, addOneDay } from '../../../utils/datetime';
@@ -157,7 +158,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
   
   const [confirmation, setConfirmation] = React.useState(false);
   const [confirmDishonour, setConfirmDishonour] = React.useState(false);
-  
+  const [confirmCompleted, setConfirmCompleted] = React.useState(false);
   
   const [paymentSchedule, setPaymentSchedule] = useState([]);
   const [nextPayment, setNextPayment] = useState({installment_no:0});
@@ -297,7 +298,7 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
           payment_date:  nextPayment.payment_date,
           settlement_date : getDate(paymentRecDate),
           payment_amt : nextPayment.payment_amt,
-          deposit_amt : paymentAmt,
+          deposit_amt : Number(paymentAmt).toFixed(2),
           total_paid : totalPaid,
           remark : remarkField,
           order_type : orderData.order_type,
@@ -360,6 +361,26 @@ export default function paymentStatus({ open, handleClose, handleSnackbarClick, 
         });
         handleSetScheduledData(result);
         setRemarkField('');
+      } catch (error) {
+        console.log('Error..',error);
+      }        
+    }    
+  }
+
+  
+  const handleContractCompleted = async () =>{
+    setConfirmCompleted(true);
+  }
+
+  const handleCloseCompleted = async (isConfirm) => {
+    setConfirmCompleted(false);
+    if(isConfirm === 1){
+      try {
+        const result = await Order.completeNCloseContract({
+          order_id : orderData.id,
+          customer_id: orderData.customer_id,          
+        });
+        handleClose();
       } catch (error) {
         console.log('Error..',error);
       }        
@@ -446,45 +467,39 @@ return (
             <Grid item xs={12} sm={11}>   
               <Divider />
               <Typography variant="h6" className={classes.labelTitle}> {'\n'} </Typography> 
-            </Grid> 
-          </Grid>
-
-            
+            </Grid>
+            </Grid>
             <Grid container  justify="space-around">         
               <Grid item xs={12} sm={11}>
-              {/* <FormControlLabel control={ <Checkbox checked={reschedule} /> } label="Reschedule Remaining Payment" style={{fontWeight: "bold", marginTop: '15px', fontSize: '18px' }} /> */}
-                {/* <Checkbox  color="default" value= {reschedule} /> */}
                 <Typography variant="h6" className={classes.rowHeading} > Reschedule Remaining Payment </Typography>
               </Grid>
-                <Grid item xs={12} sm={11} disabled>
-                  <Tooltip title="Click to Previous Date">
-                    <IconButton  size="small" onClick={ handleDateDecrease}>
-                      <RemoveIcon />  
-                    </IconButton>
-                  </Tooltip>
-                  <TextField
-                    style= {{fontSize : 15, fontWeight : "bold", marginLeft: '10px', marginRight: '10px'}}
-                    id="date_changer"
-                    name="date_changer"
-                    value={getDateInDDMMYYYY(dateToReschedule)}
-                    margin="dense"                  
-                    disabled
-                    InputProps={{                     
-                      classes: {
-                        input: styleClass.centerDate,
-                      },                    
-                    }}                    
-                    // error={errors}
-                    // helperText = {errors}
-                  />
-                  {/* <Typography variant="h6" className={classes.textsize} style= {{fontWeight : "bold", marginLeft: '10px', marginRight: '10px'}}> {getDateInDDMMYYYY(dateToReschedule)} </Typography> */}
-                  <Tooltip title="Click to Next Date">
-                    <IconButton  size="small" onClick={ handleDateIncrease}>
-                      <AddIcon />  
-                    </IconButton>
-                  </Tooltip>
-                  <Button variant="contained" color="primary" onClick={handleReschedulePayment} className={classes.button} style={{marginLeft : '60px'}}>  Reschedule </Button>
-                </Grid>
+              <Grid item xs={12} sm={11} disabled>
+                <Tooltip title="Click to Previous Date">
+                  <IconButton  size="small" onClick={ handleDateDecrease}>
+                    <RemoveIcon />  
+                  </IconButton>
+                </Tooltip>
+                <TextField
+                  style= {{fontSize : 15, fontWeight : "bold", marginLeft: '10px', marginRight: '10px'}}
+                  id="date_changer"
+                  name="date_changer"
+                  value={getDateInDDMMYYYY(dateToReschedule)}
+                  margin="dense"                  
+                  disabled
+                  InputProps={{                     
+                    classes: {
+                      input: styleClass.centerDate,
+                    },                    
+                  }}                    
+                />
+                <Tooltip title="Click to Next Date">
+                  <IconButton  size="small" onClick={ handleDateIncrease}>
+                    <AddIcon />  
+                  </IconButton>
+                </Tooltip>
+                <Button variant="contained" color="primary" onClick={handleReschedulePayment} className={classes.button} style={{marginLeft : '60px'}}>  Reschedule </Button>
+                <Button variant="contained" color="primary" onClick={handleContractCompleted} className={classes.button}>Click to Complete Contract</Button>
+              </Grid>
 
               <Grid item xs={12} sm={11}>
                 <Typography variant="h6" className={classes.rowHeading}> Add Payment </Typography>
@@ -588,7 +603,7 @@ return (
               </Grid>
               <Grid item xs={12} sm={2} style={{marginTop: '30px', textAlign: 'right'}}>
                 <Button variant="contained" color="primary" onClick={handlePaymentSubmit} className={classes.button}> Submit</Button> 
-                <Button variant="contained" color="primary" onClick={handleMakeDishounored} className={classes.button}>Dishonoured</Button>
+                <Button variant="contained" color="primary" onClick={handleMakeDishounored} className={classes.button}>Dishonoured</Button>                
               </Grid>
 
               <Grid item xs={12} sm={12}  style={{marginTop: '20px', marginBottom : '15px'}}>
@@ -607,7 +622,8 @@ return (
     </Dialog>
       
       {confirmation ? <ConfirmationDialog open = {confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog}  currentState={0} title={""} content={"Is this installment paid by customer ?"} />: null }
-      {confirmDishonour ? <ConfirmDialogDishonour open = {confirmDishonour} lastValue={1} handleConfirmationClose={handleCloseDishonourConBox}  currentState={0} title={""} content={"Click Yes to Make it Dishonored ?"} />: null }
+      {confirmDishonour ? <ConfirmDialogDishonour open = {confirmDishonour} lastValue={1} handleConfirmationClose={handleCloseDishonourConBox}  currentState={0} title={""} content={"Click Yes to Make it Dishonored!"} />: null }
+      {confirmCompleted ? <ConfirmDialogCompleted open = {confirmCompleted} lastValue={1} handleConfirmationClose={handleCloseCompleted}  currentState={0} title={""} content={"Click Yes to complete & close contract!"} />: null }
     </div>
   );
 }

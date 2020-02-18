@@ -812,7 +812,7 @@ export default function ClippedDrawer(props) {
                 {/* <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} /> */}
                 <Tab roleName="CSR" roleId="3" nodeId="9" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
                 
-                <Tab roleName="CSR" roleId="3" nodeId="38" handleClick={handleProductManager} labelIcon={ShoppingCartIcon} labelText="Product Manager"/> 
+                {/* <Tab roleName="CSR" roleId="3" nodeId="38" handleClick={handleProductManager} labelIcon={ShoppingCartIcon} labelText="Product Manager"/>  */}
 
                 <Tab roleName="CSR" nodeId="10" handleClick={handleCustomerClick} labelIcon={CustomerIcon} labelText="Manage Customer"/> 
                    
@@ -855,7 +855,7 @@ export default function ClippedDrawer(props) {
                  
                  <Tab roleName="Finance" roleId="4" nodeId="22" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
                  
-                 <Tab roleName="Finance" roleId="4" nodeId="39" handleClick={handleProductManager} labelIcon={ShoppingCartIcon} labelText="Product Manager"/> 
+                 {/* <Tab roleName="Finance" roleId="4" nodeId="39" handleClick={handleProductManager} labelIcon={ShoppingCartIcon} labelText="Product Manager"/>  */}
 
                  <Tab roleName="Finance" nodeId="23" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
               

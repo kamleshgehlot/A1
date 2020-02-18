@@ -761,6 +761,25 @@ export default {
     }
   },
 
+  completeNCloseContract: async (req) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/completeNCloseContract`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: req,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()
+      }
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
   // getOrderDataByID: async (req) => {
   //   const URL = `${c.API_CONSUMER}/api/franchise/order/getOrderDataByID`;
   //   try {

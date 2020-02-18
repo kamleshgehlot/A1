@@ -486,6 +486,23 @@ const getRequiredDataToCancel = async function(req, res, next) {
 
 
 
+const completeNCloseContract = async function(req, res, next) {
+  let params = {
+    user_id : req.decoded.user_id, 
+    updated_by: req.decoded.id,
+    order_id : req.body.order_id,
+    customer_id: req.body.customer_id,
+  }
+  const activity = new Order(params);
+  try {
+    const result = await activity.completeNCloseContract();
+    console.log('is completed...',result)
+    res.send();
+  } catch (error) {
+    next(error);
+  }
+};
+
 const dishonourToPayment = async function(req, res, next) {
   let params = {
     user_id : req.decoded.user_id, 
@@ -585,7 +602,6 @@ const paymentSubmit = async function(req, res, next) {
       fixInstallmentAmt = orderTypeResult[0].each_payment_amt;
       frequency = orderTypeResult[0].frequency;
       newPayment.installment_before_delivery = orderTypeResult[0].before_delivery_amt;
-      newPayment.last_installment_no = orderTypeResult[0].no_of_payment;
     } else if(params.order_type === 2){
       newPayment.flexOrderId = params.order_type_id;
       orderTypeResult = await newPayment.getFlexOrder();      
@@ -593,37 +609,34 @@ const paymentSubmit = async function(req, res, next) {
       newPayment.installment_before_delivery = orderTypeResult[0].before_delivery_amt;
       frequency = orderTypeResult[0].frequency;
     }
+  
+    const result = await newPayment.getPaymentSchedule()
+    const lastRow = result.paymentSchedule[result.paymentSchedule.length - 1];
+    let remainingRowOfSchedule = ((lastRow.installment_no - params.installment_no) + 1);
     
-    // if order type is flex 
-    if(params.order_type === 2){
-      const result = await newPayment.getPaymentSchedule()
-      const lastRow = result.paymentSchedule[result.paymentSchedule.length - 1];
-      let remainingRowOfSchedule = ((lastRow.installment_no - params.installment_no) + 1);
-      
-      let advPayAmt = params.payment_amt - params.each_payment_amt;
-      let totalRequiredRowToSubmitPayment = 1;
-      let diffrent = remainingRowOfSchedule - 1;
-      if(advPayAmt > 0){
-        totalRequiredRowToSubmitPayment = Math.ceil(advPayAmt / fixInstallmentAmt);
-        diffrent = remainingRowOfSchedule - totalRequiredRowToSubmitPayment;
-      }
-      
-      
-      let paymentScheduleArray = [];
-      let paymentDate = moment(lastRow.payment_date).format("YYYY-MM-DD"); 
-      let totalInst = lastRow.installment_no;
+    let advPayAmt = params.payment_amt - params.each_payment_amt;
+    let totalRequiredRowToSubmitPayment = 1;
+    let diffrent = remainingRowOfSchedule - 1;
+    if(advPayAmt > 0){
+      totalRequiredRowToSubmitPayment = Math.ceil(advPayAmt / fixInstallmentAmt);
+      diffrent = remainingRowOfSchedule - totalRequiredRowToSubmitPayment;
+    }
+    
+    
+    let paymentScheduleArray = [];
+    let paymentDate = moment(lastRow.payment_date).format("YYYY-MM-DD"); 
+    let totalInst = lastRow.installment_no;
 
-      for(i = diffrent; i < 5; i++){        
-        paymentDate = dateMaker(paymentDate, frequency);
-        totalInst = totalInst + 1;        
-        paymentScheduleArray.push(          
-          [params.order_id, params.customer_id, totalInst, paymentDate, fixInstallmentAmt, 1, 1, params.created_by],
-        );
-      }
-      if (diffrent < 5) {
-        newPayment.paymentScheduleArray = paymentScheduleArray;
-        await newPayment.createdPaymentSchedule();
-      }
+    for(i = diffrent; i < 5; i++){        
+      paymentDate = dateMaker(paymentDate, frequency);
+      totalInst = totalInst + 1;        
+      paymentScheduleArray.push(          
+        [params.order_id, params.customer_id, totalInst, paymentDate, fixInstallmentAmt, 1, 1, params.created_by],
+      );
+    }
+    if (diffrent < 5) {
+      newPayment.paymentScheduleArray = paymentScheduleArray;
+      await newPayment.createdPaymentSchedule();
     }
 
     if(params.payment_amt === params.each_payment_amt){
@@ -645,7 +658,7 @@ const paymentSubmit = async function(req, res, next) {
         }
       }
       newPayment.total_paid = params.total_paid + params.payment_amt;      
-      await newPayment.paymentSubmit();           
+      await newPayment.paymentSubmit();
     }
     
     else if(params.payment_amt < params.each_payment_amt){
@@ -1109,5 +1122,6 @@ module.exports = {
   searchOrder,
   filterMissedPaymentData,
   dishonourToPayment,
+  completeNCloseContract,
   // getOrderDataByID,
 };

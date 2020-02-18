@@ -95,6 +95,8 @@ orderRouter.route("/getPaymentSchedule").post(validateToken, Order.getPaymentSch
 orderRouter.route("/paymentReschedule").post(validateToken, Order.paymentReschedule);
 orderRouter.route("/searchOrder").post(validateToken, Order.searchOrder);
 orderRouter.route("/filterMissedPaymentData").post(validateToken, Order.filterMissedPaymentData);
+orderRouter.route("/completeNCloseContract").post(validateToken, Order.completeNCloseContract);
+
 // orderRouter.route("/getOrderDataByID").post(validateToken, Order.getOrderDataByID);
 
 
