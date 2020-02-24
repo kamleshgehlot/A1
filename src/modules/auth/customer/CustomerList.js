@@ -335,36 +335,18 @@ export default function CustomerList({userId, roleName}) {
     }
   }
 
-  const setFilteredMissedPayment = async (data) => {
-    const paymentData = data;    
-    let missedPayment = [];
-    const currDate = getCurrentDateDBFormat();
-
-    (customerListData.length > 0 ? customerListData : []).map((data, index) => {
-      (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
-        if(data.id == payData.customer_id){
-          data.payment_date = getDateInDDMMYYYY(payData.payment_date);
-          data.order_format_id = payData.order_format_id;
-          data.order_id = payData.order_id;
-          data.total_due_installment = payData.total_due_installment;
-          missedPayment.push(data);
-        }
-      });
-    });
-    setMissedPaymentTab(missedPayment);
-  }
 
   const handlePaymentFilter = async (searchText,  fromPaymentDate, toPaymentDate) => {
     
     if(searchText!='' || (fromPaymentDate !== null && toPaymentDate !== null)){
       let fromDate = getDate(fromPaymentDate);
-      let toDate = getDate(toPaymentDate);  
+      let toDate = getDate(toPaymentDate);
 
       const paymentData = await filterMissedPaymentData({searchText: searchText, fromPaymentDate: fromDate, toPaymentDate: toDate });
-      setFilteredMissedPayment(paymentData);
+      setMissedPaymentTab(paymentData);
     }else{
       const paymentData = await fetchMissedPaymentData();
-      setFilteredMissedPayment(paymentData);
+      setMissedPaymentTab(paymentData);
     }
   }
 
@@ -380,13 +362,11 @@ export default function CustomerList({userId, roleName}) {
   
   async function handleTabsData(customerList){
     const paymentData = await fetchMissedPaymentData();
-    const currDate = getCurrentDateDBFormat();
 
     let activeList = [];
     let holdList = [];
     let financialHardshipList = [];
     let bornToday = [];
-    let missedPayment = [];
 
     (customerList.length > 0 ? customerList : []).map((data, index) => {
       
@@ -401,24 +381,14 @@ export default function CustomerList({userId, roleName}) {
       }
       if(data.state == 3 ){
         financialHardshipList.push(data);
-      }
-      
-      (paymentData.length > 0 ? paymentData : []).map((payData, index) => {
-        if(data.id == payData.customer_id){
-            data.payment_date = getDateInDDMMYYYY(payData.payment_date);
-            data.order_format_id = payData.order_format_id;
-            data.order_id = payData.order_id;
-            data.total_due_installment = payData.total_due_installment;
-            missedPayment.push(data);
-        }
-      });
+      } 
     });
     
     setActiveTab(activeList);
     setHoldTab(holdList);
     setFinancialHardshipTab(financialHardshipList);
     setBornTodayTab(bornToday);
-    setMissedPaymentTab(missedPayment);
+    setMissedPaymentTab(paymentData);
   }
 
   TabPanel.propTypes = {
@@ -515,7 +485,7 @@ export default function CustomerList({userId, roleName}) {
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  {missedPaymentTab && <MissedPayment customerList={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} 
+                  {missedPaymentTab && <MissedPayment missedPaymentData={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} 
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
               </div>

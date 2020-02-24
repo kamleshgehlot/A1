@@ -118,9 +118,7 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function MissedPayment({customerList, handleOrderView, handlePaymentFilter, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
-  
-  const styleClass = useCommonStyles();
+export default function MissedPayment({missedPaymentData, handleOrderView, handlePaymentFilter, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   const classes = useStyles();
   
   const [searchText, setSearchText] = React.useState('');
@@ -241,36 +239,32 @@ return (
       <Table stickyHeader  className={classes.table}>
         <TableHead>
           <TableRow>
-            <StyledTableCell>#          </StyledTableCell>
-            <StyledTableCell>Order Id   </StyledTableCell>
-            <StyledTableCell>Name       </StyledTableCell>
-            <StyledTableCell>Contact    </StyledTableCell>
-            <StyledTableCell>Email ID   </StyledTableCell>
-            <StyledTableCell>Address    </StyledTableCell>
-            <StyledTableCell>Last Due Date</StyledTableCell>
-            <StyledTableCell>Total Due Payments</StyledTableCell>
-            <StyledTableCell>Created By </StyledTableCell>
+            <StyledTableCell>#</StyledTableCell>
+            <StyledTableCell>Order Id</StyledTableCell>
+            <StyledTableCell>Name</StyledTableCell>
+            <StyledTableCell>Payment Mode</StyledTableCell>
+            <StyledTableCell>Intallment No </StyledTableCell>
+            <StyledTableCell>Payment Amount</StyledTableCell>            
+            <StyledTableCell>Payment Status</StyledTableCell>
+            <StyledTableCell>Debit Date  </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>        
-            {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {            
+            {missedPaymentData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {            
               return(
                 <TableRow key={data.id}>
-                    <StyledTableCell> {data.id}           </StyledTableCell>
-                    <StyledTableCell>     
+                    <StyledTableCell> {data.id}</StyledTableCell>
+                    <StyledTableCell>
                       <IconButton  size="small" className={classes.textsize} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOrderView(data); }}>
                         {data.order_format_id}
                       </IconButton> 
                     </StyledTableCell>
                     <StyledTableCell> {data.first_name + ' ' + data.last_name}  </StyledTableCell>
-                    <StyledTableCell> {data.mobile === '' || data.mobile === null || data.mobile === undefined ? data.telephone : data.telephone==='' || data.telephone === null || data.telephone === undefined ? data.mobile : data.mobile + ', ' + data.telephone}  </StyledTableCell>
-                    <StyledTableCell> {data.email} { data.is_verified ? <CheckCircleIcon style={{ fill: '#008000' }}/> : <CancelIcon  color="error"/>}</StyledTableCell>
-                    <StyledTableCell> {data.address}  </StyledTableCell>
-                    <StyledTableCell> {data.payment_date}  </StyledTableCell>
-                    <StyledTableCell align="center"> {data.total_due_installment}  </StyledTableCell>
-                    <StyledTableCell> {data.created_by_name}  </StyledTableCell>
-                    <StyledTableCell>                                   
-                </StyledTableCell> 
+                    <StyledTableCell>{data.payment_mode_name}   </StyledTableCell>
+                    <StyledTableCell>{data.installment_no}</StyledTableCell>
+                    <StyledTableCell>{data.payment_amt}</StyledTableCell>            
+                    <StyledTableCell>{data.payment_status}</StyledTableCell>
+                    <StyledTableCell>{getDateInDDMMYYYY(data.payment_date)}</StyledTableCell>
                 </TableRow>
               )
             })
@@ -281,7 +275,7 @@ return (
             <TablePagination
               rowsPerPageOptions={[20, 50, 100]}
               colSpan={8}
-              count={customerList.length}
+              count={missedPaymentData.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
