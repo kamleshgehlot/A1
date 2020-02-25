@@ -196,6 +196,8 @@ return (
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
+                                autoOk = {true}                    
+                                variant = "inline"
                                 id="payment_rec_date"
                                 name="payment_rec_date"
                                 format="dd-MM-yyyy"
@@ -266,6 +268,8 @@ return (
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 margin="dense"
+                                autoOk = {true}                    
+                                variant = "inline"
                                 id="payment_rec_date"
                                 name="payment_rec_date"
                                 format="dd-MM-yyyy"

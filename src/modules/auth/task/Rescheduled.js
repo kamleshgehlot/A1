@@ -266,6 +266,8 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
               <InputLabel  className={classes.textsize} htmlFor="due_date">Due Date</InputLabel>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
+                  autoOk = {true}                    
+                  variant = "inline"
                    InputProps={{
                     classes: {
                       input: classes.textsize,
@@ -289,6 +291,8 @@ export default function Rescheduled({open, handleRescheduledClose, handleSnackba
                 <InputLabel  className={classes.textsize} htmlFor="reschedule_date">Reissue Due Date</InputLabel>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
+                    autoOk = {true}                    
+                    variant = "inline"
                      InputProps={{
                       classes: {
                         input: classes.textsize,

@@ -361,7 +361,7 @@ export default function FinanceReport({roleName}) {
                 }}
                 id="customer_name"
                 name="customer_name"  
-                value = {customerData.customer_name}
+                value = {customerData.first_name+ ' ' + customerData.last_name}
                 fullWidth
                 type="text"
                 margin="dense"
@@ -416,10 +416,10 @@ export default function FinanceReport({roleName}) {
                     <p className={classes.textsize}> {order.order_type === 1 ? "Fix" : order.order_type === 2 ? "Flex" : ''} </p>
                   </TableCell>
                   <TableCell className={classes.textHeading}>{"Delivery Date: "}
-                    <p className={classes.textsize}> {getDateInDDMMYYYY(order.delivery_date)} </p>
+                    <p className={classes.textsize}> {getDateInDDMMYYYY(order.delivery_date)  === 'Invalid date' ? '' : getDateInDDMMYYYY(order.delivery_date)} </p>
                   </TableCell>
                   <TableCell className={classes.textHeading}>{"Delivered Date: "}
-                    <p className={classes.textsize}> {getDateInDDMMYYYY(order.delivered_date)} </p>
+                    <p className={classes.textsize}> {getDateInDDMMYYYY(order.delivered_date) === 'Invalid date' ? '' : getDateInDDMMYYYY(order.delivered_date) } </p>
                   </TableCell>
                 </TableRow>
                 <TableRow>                  
@@ -428,6 +428,8 @@ export default function FinanceReport({roleName}) {
                         <KeyboardDatePicker
                           margin="dense"
                           id="from_date"
+                          autoOk = {true}                    
+                          variant = "inline"
                           name="from_date"
                           placeholder="DD-MM-YYYY"
                           format="dd-MM-yyyy"
@@ -445,6 +447,8 @@ export default function FinanceReport({roleName}) {
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
+                          autoOk = {true}                    
+                          variant = "inline"
                           id="to_date"
                           name="to_date"
                           format="dd-MM-yyyy"

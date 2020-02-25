@@ -286,6 +286,8 @@ export default function DeliveryReport({roleName}) {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="dense"
+                  autoOk = {true}                    
+                  variant = "inline"
                   id="from_date"
                   name="from_date"
                   placeholder="DD-MM-YYYY"
@@ -305,6 +307,8 @@ export default function DeliveryReport({roleName}) {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="dense"
+                  autoOk = {true}                    
+                  variant = "inline"
                   id="to_date"
                   name="to_date"
                   placeholder="DD-MM-YYYY"

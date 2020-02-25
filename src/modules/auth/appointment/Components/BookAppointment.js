@@ -269,6 +269,7 @@ export default function BookAppointment({handleMainPage, userData}) {
           <Typography  className={classes.textHeading} htmlFor="appointment_date">Appointment Date</Typography>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
+              autoOk
               variant = "inline"              
               margin="dense"
               id="appointment_date"

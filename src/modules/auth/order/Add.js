@@ -148,8 +148,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
   const [junkData,setJunkData] = useState({});
   const [productList, setProductList] = useState([]);
   const [isNewCustomer,setIsNewCustomer] = useState(0);
-  const [assignInterest, setAssignInterest] = React.useState([]);
-    
+  const [assignInterest, setAssignInterest] = React.useState([]);    
   const [mainCategory, setMainCategory] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [subCategory, setSubCategory] = React.useState('');
@@ -541,6 +540,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
                     <InputLabel  className={classes.textsize} htmlFor="order_date">Date*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
+                        autoOk = {true}                    
+                        variant = "inline"
                         margin="dense"
                         id="order_date"
                         name="order_date"
@@ -830,8 +831,8 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id} handleOrderViewFromBudget={handleOrderViewFromBudget}/> : null }
     {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData} conversionData={conversionData}/> : null }
-    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} totalOfRental={totalOfRental}/> : null }
-    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} totalOfRental={totalOfRental} /> : null }
+    {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} totalOfRental={totalOfRental} productQuantity = {assignInterest.length} /> : null }
+    {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} totalOfRental={totalOfRental} productQuantity = {assignInterest.length}/> : null }
     {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }
     </div>
   );

@@ -163,7 +163,8 @@ return (
                 <Typography style={{marginRight : '10px'}}>{"From: "}</Typography>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
-                    autoOk = {true}
+                    autoOk = {true}                    
+                    variant = "inline"
                     margin="dense"
                     id="from_payment_date"
                     name="from_payment_date"
@@ -187,6 +188,7 @@ return (
                   
                   <KeyboardDatePicker
                     autoOk = {true}                    
+                    variant = "inline"
                     margin="dense"
                     id="to_payment_date"
                     name="to_payment_date"

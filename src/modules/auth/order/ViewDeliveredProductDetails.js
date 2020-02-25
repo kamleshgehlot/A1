@@ -242,6 +242,8 @@ return (
                       <KeyboardDatePicker
                         margin="dense"
                         id="delivery_date"
+                        autoOk = {true}                    
+                        variant = "inline"
                         name="delivery_date"
                         format="dd-MM-yyyy"
                         placeholder="DD-MM-YYYY"

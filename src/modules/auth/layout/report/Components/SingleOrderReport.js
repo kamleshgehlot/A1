@@ -36,7 +36,6 @@ const StyledTableCell = withStyles(theme => ({
 
 
 export default function SingleOrderReport({data }) {
-  const styleClass = useCommonStyles();
   let total = 0;
 return (  
   <Table >
@@ -78,7 +77,7 @@ return (
     }
       <TableRow >
           <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}} colSpan="4" align="right">{"Total   "}</StyledTableCell>
-          <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}}>{total}</StyledTableCell>
+          <StyledTableCell style={{'fontWeight':'bold', 'fontSize':'15px'}}>{total.toFixed(2)}</StyledTableCell>
       </TableRow>                              
     </TableBody>
   </Table>

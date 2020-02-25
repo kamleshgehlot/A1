@@ -216,7 +216,6 @@ export default function Franchise({roleName}) {
   }, []);
 
   function handleCount(franchiseIdTemp) {
-    console.log('dfasf',franchiseIdTemp);
     let open = 0;
     let active = 0;
     let inactive = 0;
@@ -235,8 +234,6 @@ export default function Franchise({roleName}) {
       setCloseFranchise(close);
   }
 
-
-  // console.log('franchiseList',franchiseId)
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -272,7 +269,7 @@ export default function Franchise({roleName}) {
   function handleEditClose() {
     setEditOpen(false);
   }
-  ////////////////////////////////////////
+
   function setFranchiseListFn(response) {
     setFranchiseList(response);
     
@@ -300,7 +297,6 @@ export default function Franchise({roleName}) {
 
   return (
     <div>
-      {/* {showFranchise ?  */}
       <Grid container spacing={3}>
           <Grid item xs={12} sm={8}>
             <Fab
@@ -324,9 +320,7 @@ export default function Franchise({roleName}) {
           </AppBar>
           <TabPanel value={value} index={value}>
                     { (franchiseId.length > 0 ? franchiseId : []).map((data, index)=>{
-                      // data.franchise_id !== totalFranchise ? console.log("hello ") : console.log("bye")
-
-                      return(
+                     return(
                        data.status===value+1? <ExpansionPanel
                           className={classes.expansionTitle}
                           expanded={expanded === data.director_id}

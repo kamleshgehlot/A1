@@ -626,6 +626,8 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="dob">Date Of Birth *</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
+                                autoOk
+                                variant = "inline"
                                 margin="dense"
                                 id="dob"
                                 name="dob"
@@ -757,6 +759,8 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="expiry_date">Expiry Date *</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
+                        autoOk
+                        variant = "inline"
                         margin="dense"
                         id="expiry_date"
                         name="expiry_date"

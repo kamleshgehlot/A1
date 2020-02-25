@@ -120,7 +120,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId,  affordAmt, totalOfRental, viewOnly}) {
+export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, flexOrderId,  affordAmt, totalOfRental, viewOnly, productQuantity}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -250,8 +250,18 @@ export default function EditFlexOrder({ open, handleFlexClose, setFlexOrderList,
           {name: 'exp_delivery_time', value: setTime(flexOrderList.exp_delivery_time)},
         ]);
       }
+      handleRandomInput([
+        {name: 'liability', value: Number(inputs.liability_fee) / productQuantity},          
+      ]);
     } 
   },[]);
+
+  
+  useEffect(() => {
+    handleRandomInput([      
+      {name: 'liability_fee', value:  Number(inputs.liability * productQuantity).toFixed(2)},
+    ]);
+  },[inputs.liability]);  
 
   useEffect(()=>{    
       if(paymentBeforeDelivery!= ''){
@@ -328,10 +338,10 @@ return (
                   <Grid item xs={12} sm={6}>
                   <Typography  className={classes.subTitle}>Liability Waiver Fee *</Typography>
                     <TextField
-                      id="liability_fee"
-                      name="liability_fee"
+                      id="liability"
+                      name="liability"
                       // label="Liability Waiver Fee "
-                      value={inputs.liability_fee}
+                      value={inputs.liability}
                       onChange={handlePriceInput}
                       error={errors.liability_fee}
                       helperText={errors.liability_fee}
@@ -346,6 +356,7 @@ return (
                       }}
                       disabled = {viewOnly}
                     />
+                    <Typography style = {{textAlign : 'right'}} className={classes.textsize}>{"x " + productQuantity +" = " + inputs.liability_fee}</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                   <Typography  className={classes.subTitle}>TOTAL PER WEEK/ FORTNIGHT *</Typography>
@@ -428,6 +439,8 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
+                        autoOk = {true}                    
+                        variant = "inline"
                         id="first_payment"
                         name="first_payment"
                         format="dd-MM-yyyy"
@@ -495,6 +508,8 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
+                          autoOk = {true}                    
+                          variant = "inline"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
                           format="dd-MM-yyyy"

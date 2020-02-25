@@ -283,6 +283,8 @@ export default function EzidebitStatus({roleName}) {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="dense"
+                  autoOk = {true}                    
+                  variant = "inline"
                   id="date_from"
                   name="date_from"
                   format="dd-MM-yyyy"
@@ -305,6 +307,8 @@ export default function EzidebitStatus({roleName}) {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="dense"
+                  autoOk = {true}                    
+                  variant = "inline"
                   id="date_to"
                   name="date_to"
                   format="dd-MM-yyyy"

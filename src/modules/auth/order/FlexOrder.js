@@ -45,6 +45,7 @@ const RESET_VALUES = {
   goods_rent_price : '',
   ppsr_fee : '',
   liability_fee : '',
+  liability : '',
   weekly_total : '',
   frequency : '',
   first_payment : getCurrentDate(),
@@ -118,7 +119,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType, totalOfRental}) {
+export default function FlexOrder({ open, handleFlexClose, setFlexOrderList, flexOrderList, handleOrderType, totalOfRental, productQuantity}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -239,6 +240,13 @@ useEffect(()=>{
   }  
 },[inputs.each_payment_amt]);
 
+  useEffect(() => {
+    handleRandomInput([      
+      {name: 'liability_fee', value:  Number(inputs.liability * productQuantity).toFixed(2)},
+    ]);
+  },[inputs.liability]);
+
+
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -320,23 +328,22 @@ return (
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="first_name">Liability Waiver Fee *</InputLabel>
+                  <Grid item xs={12} sm={6} >
+                    <InputLabel className={classes.textsize} htmlFor="liability_fee">Liability Wavier Fee *</InputLabel>
                     <TextField
-                     
-                      id="liability_fee"
-                      name="liability_fee"
-                      // label="Liability Waiver Fee "
-                      value={inputs.liability_fee}
+                      InputProps={{
+                        classes: {
+                          input: classes.textsize,
+                        },
+                      }}
+                      id="liability"
+                      name="liability"                      
+                      value={inputs.liability}
                       onChange={handlePriceInput}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.liability_fee}
                       helperText={errors.liability_fee}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -344,13 +351,12 @@ return (
                           input: classes.textsize,
                         },
                       }}
-                      
                     />
-                  </Grid>
+                    <Typography style = {{textAlign : 'right'}} className={classes.textsize}>{"x " + productQuantity +" = " + inputs.liability_fee}</Typography>
+                  </Grid>                  
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="first_name">TOTAL PER WEEK/ FORTNIGHT *</InputLabel>
-                    <TextField
-                     
+                    <TextField                     
                       id="weekly_total"
                       name="weekly_total"
                       // label="TOTAL PER WEEK/ FORTNIGHT"
@@ -432,6 +438,8 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
+                        autoOk = {true}                    
+                        variant = "inline"
                         id="first_payment"
                         name="first_payment"
                         format="dd-MM-yyyy"
@@ -502,6 +510,8 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
+                          autoOk = {true}                    
+                          variant = "inline"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
                           format="dd-MM-yyyy"

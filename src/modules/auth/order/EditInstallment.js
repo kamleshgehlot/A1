@@ -197,6 +197,8 @@ return (
                 <InputLabel  className={classes.textsize} htmlFor="payment_date">Payment Date</InputLabel>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
+                    autoOk = {true}                    
+                    variant = "inline"
                     margin="dense"
                     id="payment_date"
                     name="payment_date"
@@ -218,6 +220,8 @@ return (
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     margin="dense"
+                    autoOk = {true}                    
+                    variant = "inline"
                     id="payment_rec_date"
                     name="payment_rec_date"
                     format="dd-MM-yyyy"

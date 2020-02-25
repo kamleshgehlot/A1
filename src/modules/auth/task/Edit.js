@@ -256,6 +256,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       input: classes.textsize,
                     },
                   }}
+                  autoOk = {true}                    
+                  variant = "inline"
                   margin="dense"
                   id="due_date"
                   name="due_date"

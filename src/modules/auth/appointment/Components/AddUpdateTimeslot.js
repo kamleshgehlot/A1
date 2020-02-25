@@ -194,6 +194,8 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
                 <InputLabel  className={classes.textsize} htmlFor="date">Date *</InputLabel>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
+                      autoOk
+                      variant = "inline"
                       margin="dense"
                       id="date"
                       name="date"

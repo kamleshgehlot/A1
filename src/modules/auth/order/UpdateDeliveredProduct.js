@@ -326,6 +326,8 @@ return (
                     <InputLabel  className={classes.textsize} htmlFor="delivery_date">Delivery Date*</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
+                        autoOk = {true}                    
+                        variant = "inline"
                         margin="dense"
                         id="delivery_date"
                         name="delivery_date"

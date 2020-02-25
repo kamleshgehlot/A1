@@ -105,7 +105,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, fixedOrderId,  totalOfRental, viewOnly}) {
+export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, fixedOrderId,  totalOfRental, viewOnly, productQuantity}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -117,7 +117,7 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
   const [fixedNull,setFixedNull] = useState(true);
   const [bool,setBool]= useState(false);
   
-  function fixed(e){    
+  function fixed(e){
     const data = {
       int_unpaid_bal  : parseFloat(inputs.int_unpaid_bal).toFixed(2),
       cash_price : parseFloat(inputs.cash_price).toFixed(2),
@@ -185,7 +185,6 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
       let temp = paymentBeforeDelivery;
       setPaymentBeforeDelivery(value);
       setInput( 'before_delivery_amt' , value);
-      // console.log('value > inputs.no_of_payment', value , inputs.no_of_payment);
       if(Number(value) > Number(inputs.no_of_payment)){
         alert('Number of payment before delivery should be less then or equal to total number of payment.');
         setPaymentBeforeDelivery(temp);
@@ -317,11 +316,21 @@ export default function EditFixOrder({ open, handleFixedClose, setFixedOrderList
     if(fixedOrderList != [] && fixedOrderList != "" && fixedOrderList != undefined){
       if((Object.values(fixedOrderList.exp_delivery_time)).length === 8){
         handleRandomInput([
-          {name: 'exp_delivery_time', value: setTime(fixedOrderList.exp_delivery_time)},
+          {name: 'exp_delivery_time', value: setTime(fixedOrderList.exp_delivery_time)},          
         ]);
-      }
+      }      
+      handleRandomInput([
+        {name: 'liability', value: Number(inputs.liability_wavier_fee) / productQuantity},          
+      ]);
     } 
   },[]);
+
+  useEffect(() => {
+    handleRandomInput([      
+      {name: 'liability_wavier_fee', value:  Number(inputs.liability * productQuantity).toFixed(2)},
+    ]);
+  },[inputs.liability]);  
+
 
   useEffect(() => {
     if(bool === true){
@@ -419,9 +428,9 @@ return (
                       input: classes.textsize,
                     },
                   }}
-                  id="liability_wavier_fee"
-                  name="liability_wavier_fee"
-                  value={inputs.liability_wavier_fee}
+                  id="liability"
+                  name="liability"
+                  value={inputs.liability}
                   onChange={handlePriceInput}
                   error={errors.liability_wavier_fee}
                   helperText={errors.liability_wavier_fee}
@@ -436,6 +445,7 @@ return (
                   }}
                   disabled = {viewOnly}
                 />
+                <Typography style = {{textAlign : 'right'}} className={classes.textsize}>{"x " + productQuantity +" = " + inputs.liability_wavier_fee}</Typography>
               </Grid>   
               <Grid item xs={12} sm={6}>
               <InputLabel className={classes.textsize} htmlFor="delivery_fee">Delivery Fee *</InputLabel>
@@ -572,6 +582,8 @@ return (
                   <Typography  className={classes.subTitle}>First Payment Date *</Typography>
                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
+                        autoOk = {true}                    
+                        variant = "inline"
                         margin="dense"
                         id="first_payment"
                         name="first_payment"
@@ -598,6 +610,8 @@ return (
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardDatePicker
                             margin="dense"
+                            autoOk = {true}                    
+                            variant = "inline"
                             id="last_payment"
                             name="last_payment"
                             format="dd-MM-yyyy"
@@ -708,6 +722,8 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
+                          autoOk = {true}                    
+                          variant = "inline"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
                           format="dd-MM-yyyy"

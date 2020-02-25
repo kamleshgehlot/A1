@@ -274,6 +274,8 @@ export default function StaffEdit({open, handleStaffEditClose, handleSnackbarCli
                 <InputLabel  className={classes.textsize} htmlFor="due_date">Due Date</InputLabel>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
+                    autoOk = {true}                    
+                    variant = "inline"
                     InputProps={{
                       classes: {
                         input: classes.textsize,

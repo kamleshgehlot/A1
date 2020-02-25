@@ -120,8 +120,6 @@ export default function Edit({ open, handleEditClose, handleOrderRecData, editab
   const styleClass = useCommonStyles();
   const classes = useStyles();
 
-  console.log("editableData", editableData)
-
   const [budgetOpen, setBudgetOpen] = useState(false);
   const [customerOpen, setCustomerOpen] = useState(false);
   const [fixedOrderOpen, setFixedOrderOpen] = useState(false);
@@ -226,7 +224,6 @@ export default function Edit({ open, handleEditClose, handleOrderRecData, editab
 
   
   const fetchData = async () => {
-    console.log('fetchData')
     try {
       const category_list = await Category.mainCategoryList();
       setMainCategoryList(category_list.mainCategoryList);
@@ -237,20 +234,17 @@ export default function Edit({ open, handleEditClose, handleOrderRecData, editab
           setBudgetList(data);
         }
       });        
-      console.log('budget', budget)
       setTotalBudgetList(budget);
 
 
       if(editableData.order_type==2){
         const order = await Order.getCurrespondingFlexOrder({flexOrderId: editableData.order_type_id});
         setFlexOrderList(order[0]);
-        console.log('orderType', order)
       }
       
       if(editableData.order_type==1){
         const order = await Order.getCurrespondingFixedOrder({fixedOrderId: editableData.order_type_id});
         setFixedOrderList(order[0]);
-        console.log('orderType', order)
       }
     } catch (error) {
       console.log(error);
@@ -502,6 +496,8 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
+                        autoOk = {true}                    
+                        variant = "inline"
                         id="order_date"
                         name="order_date"
                         format="dd-MM-yyyy"
@@ -748,8 +744,8 @@ return (
         </form>
       </Dialog>
     {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList} totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={0} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
-    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} totalOfRental={totalOfRental} viewOnly={viewOnly}/> : null }
-    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} totalOfRental={totalOfRental}  viewOnly={viewOnly} /> : null }
+    {fixedOrderOpen ?<EditFixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList={fixedOrderList} fixedOrderId ={fixedOrderId} totalOfRental={totalOfRental} viewOnly={viewOnly} productQuantity = {assignInterest.length} /> : null }
+    {flexOrderOpen ?<EditFlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} flexOrderId={flexOrderId} totalOfRental={totalOfRental}  viewOnly={viewOnly} productQuantity = {assignInterest.length}  /> : null }
     {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} customerId={customerId}/> : null }
     </div>
   );

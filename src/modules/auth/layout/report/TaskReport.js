@@ -251,6 +251,8 @@ export default function TaskReport({roleName}) {
                   <TableCell className={classes.textHeading}> From:
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
+                          autoOk = {true}                    
+                          variant = "inline"
                           margin="dense"
                           id="from_date"
                           name="from_date"
@@ -270,6 +272,8 @@ export default function TaskReport({roleName}) {
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
+                          autoOk = {true}                    
+                          variant = "inline"
                           id="to_date"
                           name="to_date"
                           format="dd-MM-yyyy"

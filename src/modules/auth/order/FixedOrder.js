@@ -56,6 +56,7 @@ const RESET_VALUES = {
 
   int_unpaid_bal : 0,
   liability_wavier_fee : 0,
+  liability : 0,
   cash_price  : 0,
   delivery_fee : 0,
   ppsr_fee : 0,
@@ -68,8 +69,7 @@ const RESET_VALUES = {
   minimum_payment_amt : '',
   intrest_rate : '',
   intrest_rate_per : '',
-  total_intrest : '',
-  
+  total_intrest : '',  
 };
 
 
@@ -140,7 +140,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType, totalOfRental}) {
+export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fixedOrderList, handleOrderType, totalOfRental, productQuantity }) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -150,7 +150,7 @@ export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fi
   const [firstPaymentDate,setFirstPaymentDate] = useState(fixedOrderList === null ? getCurrentDate() : fixedOrderList.first_payment);
   const [dateArray,setDateArray] = useState([]);
   const [fixedNull,setFixedNull] = useState(true);
-  const [bool,setBool]= useState(false);
+  const [bool, setBool]= useState(false);
 
   
   function fixed(e){
@@ -213,6 +213,7 @@ export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fi
   const handleNumberOfPaymentBefDelivery = (e) =>{
     calculateNoOfPayment(e.target.value);
   }
+  
 
 function calculateNoOfPayment(value) {
   const validNumber = /^[0-9]*$/;    
@@ -220,7 +221,6 @@ function calculateNoOfPayment(value) {
     let temp = paymentBeforeDelivery;
     setPaymentBeforeDelivery(value);
     setInput( 'before_delivery_amt' , value);
-    // console.log('value > inputs.no_of_payment', value , inputs.no_of_payment);
     if(Number(value) > Number(inputs.no_of_payment)){
       alert('Number of payment before delivery should be less then or equal to total number of payment.');
       setPaymentBeforeDelivery(temp);
@@ -345,7 +345,6 @@ function calculateNoOfPayment(value) {
     validate
   );
 
-  
   useEffect(() => {
     let unpaidBal = (parseFloat(inputs.ppsr_fee) + parseFloat(inputs.liability_wavier_fee) + parseFloat(inputs.delivery_fee) + parseFloat(inputs.cash_price) );
     
@@ -353,6 +352,12 @@ function calculateNoOfPayment(value) {
       {name: 'int_unpaid_bal', value:  unpaidBal.toFixed(2)},
     ]);
   },[inputs.ppsr_fee, inputs.liability_wavier_fee,inputs.delivery_fee, inputs.cash_price]);
+
+  useEffect(() => {
+    handleRandomInput([      
+      {name: 'liability_wavier_fee', value:  Number(inputs.liability * productQuantity).toFixed(2)},
+    ]);
+  },[inputs.liability]);
   
 
   const changeBool = (bool) =>{
@@ -447,18 +452,17 @@ return (
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-              <InputLabel className={classes.textsize} htmlFor="liability_wavier_fee">Liability Wavier Fee *</InputLabel>
+              <Grid item xs={12} sm={6} >
+              <InputLabel className={classes.textsize} htmlFor="liability">Liability Wavier Fee *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
                           input: classes.textsize,
                         },
                       }}
-                      id="liability_wavier_fee"
-                      name="liability_wavier_fee"
-                      // label="Liability Wavier Fee"
-                      value={inputs.liability_wavier_fee}
+                      id="liability"
+                      name="liability"                      
+                      value={inputs.liability}
                       onChange={handlePriceInput}
                       error={errors.liability_wavier_fee}
                       helperText={errors.liability_wavier_fee}
@@ -472,7 +476,8 @@ return (
                         },
                       }}
                     />
-                  </Grid>
+                    <Typography style = {{textAlign : 'right'}} className={classes.textsize}>{"x " + productQuantity +" = " + inputs.liability_wavier_fee}</Typography>
+                  </Grid>                  
                   <Grid item xs={12} sm={6}>
                   <InputLabel className={classes.textsize} htmlFor="delivery_fee">Delivery Fee *</InputLabel>
                     <TextField
@@ -607,6 +612,8 @@ return (
                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
+                        autoOk = {true}                    
+                        variant = "inline"
                         id="first_payment"
                         name="first_payment"
                         format="dd-MM-yyyy"
@@ -635,6 +642,8 @@ return (
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         margin="dense"
+                        autoOk = {true}                    
+                        variant = "inline"
                         id="last_payment"
                         name="last_payment"
                         format="dd-MM-yyyy"
@@ -804,6 +813,8 @@ return (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           margin="dense"
+                          autoOk = {true}                    
+                          variant = "inline"
                           id="exp_delivery_date"
                           name="exp_delivery_date"
                           format="dd-MM-yyyy"

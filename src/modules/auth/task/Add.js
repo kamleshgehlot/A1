@@ -292,6 +292,8 @@ return (
                           input: classes.textsize,
                         },
                       }}
+                      autoOk
+                      variant = "inline"
                       margin="dense"
                       id="due_date"
                       name="due_date"
