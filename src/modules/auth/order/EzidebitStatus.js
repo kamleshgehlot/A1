@@ -133,18 +133,19 @@ export default function EzidebitStatus({roleName}) {
   const [paymentList, setPaymentList] = React.useState([]);
   const [isSubmit, setIsSubmit] = React.useState(false);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 20));
     setPage(0);
   };
 
   const getEzidebitPaymentsList = async () => {
+    setPaymentList([]);
     try{
       const result = await EzidebitAPI.getPayments({
         payment_type : inputs.payment_type,
@@ -154,7 +155,7 @@ export default function EzidebitStatus({roleName}) {
         date_from : getDate(inputs.date_from),
         date_to: getDate(inputs.date_to),
       });
-      console.log(result);
+      // console.log('res',result);
       setIsSubmit(false);
       setPaymentList(result);
     }catch(e){
@@ -211,8 +212,8 @@ export default function EzidebitStatus({roleName}) {
               helperText={errors.payment_type}
             >
               {(ezidebitPaymentParamsList.length > 0 ? ezidebitPaymentParamsList : []).map((data, index) => {
-                if(data.payment_type_is_active === 1){
-                  return( <MenuItem className={classes.textsize} value={data.payment_type}>{data.payment_type}</MenuItem> )
+                if(data.is_active === 1 && data.type === 'paymentType'){
+                  return( <MenuItem className={classes.textsize} value={data.value}>{data.value}</MenuItem> )
                 }
               })}
             </Select>
@@ -231,8 +232,8 @@ export default function EzidebitStatus({roleName}) {
               helperText={errors.payment_method}
             > 
               {(ezidebitPaymentParamsList.length > 0 ? ezidebitPaymentParamsList : []).map((data, index) => {
-                if(data.payment_method_is_active === 1){
-                  return( <MenuItem className={classes.textsize} value={data.payment_method}>{data.payment_method}</MenuItem> )
+                if(data.is_active === 1 && data.type === 'paymentMethod'){
+                  return( <MenuItem className={classes.textsize} value={data.value}>{data.value}</MenuItem> )
                 }
               })}
             </Select>
@@ -251,8 +252,8 @@ export default function EzidebitStatus({roleName}) {
               helperText={errors.payment_source}
             > 
               {(ezidebitPaymentParamsList.length > 0 ? ezidebitPaymentParamsList : []).map((data, index) => {
-                if(data.payment_source_is_active === 1){
-                  return( <MenuItem className={classes.textsize} value={data.payment_source}>{data.payment_source}</MenuItem> )
+                if(data.is_active === 1 && data.type === 'paymentSource'){
+                  return( <MenuItem className={classes.textsize} value={data.value}>{data.value}</MenuItem> )
                 }
               })}
             </Select>
@@ -272,8 +273,8 @@ export default function EzidebitStatus({roleName}) {
             > 
               <MenuItem className={classes.textsize} value={'NONE'}>NONE</MenuItem>
               {(ezidebitPaymentParamsList.length > 0 ? ezidebitPaymentParamsList : []).map((data, index) => {
-                if(data.date_field_is_active === 1){
-                  return( <MenuItem className={classes.textsize} value={data.date_field}>{data.date_field}</MenuItem> )
+                if(data.is_active === 1 && data.type === 'dateField'){
+                  return( <MenuItem className={classes.textsize} value={data.value}>{data.value}</MenuItem> )
                 }
               })}
             </Select>

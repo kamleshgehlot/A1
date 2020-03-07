@@ -27,7 +27,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import 'date-fns';
 
-import {useCommonStyles} from '../../../common/StyleComman';
 import {getDateInDDMMYYYY} from '../../../../utils/datetime';
 import {TablePaginationActions} from '../../../common/Pagination';
 
@@ -111,15 +110,14 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function PaymentStatusTable({paymentList, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage}) {
-  const styleClass = useCommonStyles();
   const classes = useStyles();
   
   const paymentStatusList = [
-    {name : 'S', value : 'successful'},
-    {name : 'P', value : 'pending'},
-    {name : 'D', value : 'dishonoured'},
-    {name : 'F', value : 'fatal dishonour'},
-    {name : 'W', value : 'waiting'},
+    {name : 'S', value : 'Successful'},
+    {name : 'P', value : 'Pending'},
+    {name : 'D', value : 'Dishonoured'},
+    {name : 'F', value : 'Fatal Dishonour'},
+    {name : 'W', value : 'Waiting'},
   ];  
 
 return (  
@@ -148,23 +146,23 @@ return (
           return (
             <TableRow> 
               <StyledTableCell>{index + 1}</StyledTableCell>
-              <StyledTableCell>{data.CustomerName}</StyledTableCell>
-              <StyledTableCell>{data.PaymentMethod}</StyledTableCell>
+              <StyledTableCell>{data.customerName}</StyledTableCell>
+              <StyledTableCell>{data.paymentMethod==='CR' ? 'Credit Card' : data.paymentMethod==='DR' ? 'Bank Account' : '' }</StyledTableCell>
               <StyledTableCell>
                 {
                   paymentStatusList.map(status => {
                     return(
-                      status.name === data.PaymentStatus ? status.value : ''
+                      status.name === data.paymentStatus ? status.value : ''
                     )
                   })
                 }
               </StyledTableCell>
-              <StyledTableCell>{data.BankFailedReason}</StyledTableCell>
-              <StyledTableCell>{data.PaymentAmount}</StyledTableCell>
-              <StyledTableCell>{data.TransactionFeeClient}</StyledTableCell>
-              <StyledTableCell>{data.TransactionFeeCustomer}</StyledTableCell>
-              <StyledTableCell>{getDateInDDMMYYYY(data.DebitDate)  === 'Invalid date' ? '' : getDateInDDMMYYYY(data.DebitDate)}</StyledTableCell>
-              <StyledTableCell>{getDateInDDMMYYYY(data.SettlementDate) === 'Invalid date' ? '' : getDateInDDMMYYYY(data.SettlementDate)}</StyledTableCell>
+              <StyledTableCell>{data.bankFailedReason}</StyledTableCell>
+              <StyledTableCell>{data.paymentAmount}</StyledTableCell>
+              <StyledTableCell>{data.transactionFeeClient}</StyledTableCell>
+              <StyledTableCell>{data.transactionFeeCustomer}</StyledTableCell>
+              <StyledTableCell>{getDateInDDMMYYYY(data.debitDate)  === 'Invalid date' ? '' : getDateInDDMMYYYY(data.debitDate)}</StyledTableCell>
+              <StyledTableCell>{getDateInDDMMYYYY(data.settlementDate) === 'Invalid date' ? '' : getDateInDDMMYYYY(data.settlementDate)}</StyledTableCell>
             </TableRow>           
           )
         })}           
@@ -172,7 +170,7 @@ return (
       <TableFooter>
         <TableRow>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[20,50,100]}
             colSpan={8}
             count={paymentList.length}
             rowsPerPage={rowsPerPage}
