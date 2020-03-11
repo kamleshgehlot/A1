@@ -39,7 +39,6 @@ import CustomerBankDetails from './CustomerBankDetails';
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 import Order from '../../../api/franchise/Order';
-import { fontFamily } from '@material-ui/system';
 
 import Active from './components/Active';
 import Hold from './components/Hold';
@@ -48,11 +47,12 @@ import BornToday from './components/BornToday';
 import MissedPayment from './components/MissedPayment';
 import ViewOrder from '../order/Edit';
 
+import Loader from '../../common/Loader.js';
 import CommentView from './CommentView';
 import BadgeComp from '../../common/BadgeComp';
 
 import BudgetHistory from '../order/BudgetHistory';
-import {getCurrentDate, isBirthDate, getCurrentDateInYYYYMMDD, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../../../utils/datetime';
+import { getDate} from '../../../utils/datetime';
 
 
 const drawerWidth = 240;
@@ -155,9 +155,7 @@ export default function CustomerList({userId, roleName}) {
 
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [customerListData, setCustomerListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [searchText, setSearchText]  = useState('');
@@ -175,6 +173,7 @@ export default function CustomerList({userId, roleName}) {
   const [bankDetailOpen, setBankDetailOpen] = useState(false);
   const [bankDetailArray, setBankDetailArray] = useState([]);
 
+  const [tabsCount, setTabsCount] = useState({});
   const [activeTab, setActiveTab] = useState([]);
   const [holdTab, setHoldTab] = useState([]);
   const [financialHardshipTab, setFinancialHardshipTab] = useState([]);
@@ -182,7 +181,6 @@ export default function CustomerList({userId, roleName}) {
   const [missedPaymentTab, setMissedPaymentTab] = useState([]);
   const [editableData,setEditableData] = useState({});
   const [viewOrder,setViewOrder] = useState(false);
-
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
@@ -192,25 +190,36 @@ export default function CustomerList({userId, roleName}) {
   };
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 20));
+    setRowsPerPage(parseInt(event.target.value));
     setPage(0);
-  };    
-
-
+  };
+      
   useEffect(() => {   
-    fetchCustomerList();    
-  }, []);
+    fetchCustomerList();
+  }, [page, rowsPerPage, value]);
 
 
-  const fetchCustomerList = async () => {   
-    setIsError(false);
+  const fetchCustomerList = async () => {
     setIsLoading(true);
+
+    let type = '';
+    switch(value){
+      case 0 : type = 'active'; break;
+      case 1 : type = 'hold'; break;
+      case 2 : type = 'financialHardship'; break;
+      case 3 : type = 'todaysBirthday'; break;
+      case 4 : type = 'missedPayment'; break;
+    }    
     try {
-      const result = await Customer.list();
+      const result = await Customer.customerList({
+        dataType : type,
+        rowsPerPage : rowsPerPage,
+        pageNo : page,
+      });
       setCustomerListData(result.customerList);
-      handleTabsData(result.customerList);
+      setTabsCount(result.tabCounts[0]);
     } catch (error) {
-      setIsError(true);
+      console.log('Error...', error);
     }
     setIsLoading(false);
   };
@@ -277,19 +286,9 @@ export default function CustomerList({userId, roleName}) {
   }
 
   function handleEditClose() {
-    // handleTabsData(customerListData);
     setEditOpen(false);
   }
  
-  function handleSnackbarClose() {
-    setSnackbarOpen(false);
-  }
-
-  function handleSnackbarClick() {
-    setSnackbarOpen(true);
-  }
-  
-
   function handleCustomerList(response){
     setCustomerListData(response);
     handleTabsData(response);    
@@ -337,17 +336,17 @@ export default function CustomerList({userId, roleName}) {
 
 
   const handlePaymentFilter = async (searchText,  fromPaymentDate, toPaymentDate) => {
-    
+    let paymentData = [];
+
     if(searchText!='' || (fromPaymentDate !== null && toPaymentDate !== null)){
       let fromDate = getDate(fromPaymentDate);
       let toDate = getDate(toPaymentDate);
-
-      const paymentData = await filterMissedPaymentData({searchText: searchText, fromPaymentDate: fromDate, toPaymentDate: toDate });
-      setMissedPaymentTab(paymentData);
+      paymentData = await filterMissedPaymentData({searchText: searchText, fromPaymentDate: fromDate, toPaymentDate: toDate });
     }else{
-      const paymentData = await fetchMissedPaymentData();
-      setMissedPaymentTab(paymentData);
+      paymentData = await fetchMissedPaymentData();            
     }
+      setCustomerListData(paymentData.customerList);
+      setTabsCount(paymentData.tabCounts[0]);
   }
 
   const fetchMissedPaymentData = async () =>{
@@ -360,36 +359,36 @@ export default function CustomerList({userId, roleName}) {
     return result;
   }
   
-  async function handleTabsData(customerList){
-    const paymentData = await fetchMissedPaymentData();
+  // async function handleTabsData(customerList){
+  //   const paymentData = await fetchMissedPaymentData();
 
-    let activeList = [];
-    let holdList = [];
-    let financialHardshipList = [];
-    let bornToday = [];
+  //   let activeList = [];
+  //   let holdList = [];
+  //   let financialHardshipList = [];
+  //   let bornToday = [];
 
-    (customerList.length > 0 ? customerList : []).map((data, index) => {
+  //   (customerList.length > 0 ? customerList : []).map((data, index) => {
       
-      if(isBirthDate(data.dob)){
-        bornToday.push(data);
-      }
-      if(data.state == 1 ){
-        activeList.push(data);
-      }
-      if(data.state == 2 ){
-        holdList.push(data);
-      }
-      if(data.state == 3 ){
-        financialHardshipList.push(data);
-      } 
-    });
+  //     if(isBirthDate(data.dob)){
+  //       bornToday.push(data);
+  //     }
+  //     if(data.state == 1 ){
+  //       activeList.push(data);
+  //     }
+  //     if(data.state == 2 ){
+  //       holdList.push(data);
+  //     }
+  //     if(data.state == 3 ){
+  //       financialHardshipList.push(data);
+  //     } 
+  //   });
     
-    setActiveTab(activeList);
-    setHoldTab(holdList);
-    setFinancialHardshipTab(financialHardshipList);
-    setBornTodayTab(bornToday);
-    setMissedPaymentTab(paymentData);
-  }
+  //   setActiveTab(activeList);
+  //   setHoldTab(holdList);
+  //   setFinancialHardshipTab(financialHardshipList);
+  //   setBornTodayTab(bornToday);
+  //   setMissedPaymentTab(paymentData);
+  // }
 
   TabPanel.propTypes = {
     children: PropTypes.node,
@@ -399,7 +398,6 @@ export default function CustomerList({userId, roleName}) {
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
-  
     return (
       <Typography
         component="div"
@@ -413,6 +411,7 @@ export default function CustomerList({userId, roleName}) {
       </Typography>
     );
   }
+
   function handleTabChange(event, newValue) {
     setValue(newValue);    
     setPage(0);
@@ -459,33 +458,33 @@ export default function CustomerList({userId, roleName}) {
             <Paper style={{ width: '100%' }}>
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
-                  <Tab label={<BadgeComp count={activeTab.length} label="Open" />} /> 
-                  <Tab label={<BadgeComp count={holdTab.length} label="Hold" />} /> 
-                  <Tab label={<BadgeComp count={financialHardshipTab.length} label="Financial Hardship" />} /> 
-                  <Tab label={<BadgeComp count={bornTodayTab.length} label="Today's Birthday" />} />
-                  <Tab label={<BadgeComp count={missedPaymentTab.length} label="Missed Payment" />} />
+                  <Tab label={<BadgeComp count={tabsCount.active} label="Open" />} /> 
+                  <Tab label={<BadgeComp count={tabsCount.hold} label="Hold" />} /> 
+                  <Tab label={<BadgeComp count={tabsCount.financial_hardship} label="Financial Hardship" />} /> 
+                  <Tab label={<BadgeComp count={tabsCount.todays_birthday} label="Today's Birthday" />} />
+                  <Tab label={<BadgeComp count={tabsCount.todays_birthday} label="Missed Payment" />} />
                 </Tabs>
               </AppBar>
               <div >
                 <TabPanel value={value} index={0}>
-                  {activeTab && <Active customerList={activeTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
+                  {value === 0 && <Active customerList={customerListData} count={tabsCount.active} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> }
                 </TabPanel>              
 
                 <TabPanel value={value} index={1}>
-                  {holdTab && <Hold customerList={holdTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
+                  {value === 1 && <Hold customerList={customerListData} count={tabsCount.hold} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> }
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                  {financialHardshipTab && <FinancialHardship customerList={financialHardshipTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  
+                  {value === 2 && <FinancialHardship customerList={customerListData} count={tabsCount.financial_hardship} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                  {bornTodayTab && <BornToday customerList={bornTodayTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  
+                  {value === 3 && <BornToday customerList={customerListData} count={tabsCount.todays_birthday} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen}  
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  {missedPaymentTab && <MissedPayment missedPaymentData={missedPaymentTab} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} 
+                  {value === 4 && <MissedPayment missedPaymentData={customerListData} count={tabsCount.todays_birthday} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} 
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
               </div>
@@ -493,13 +492,14 @@ export default function CustomerList({userId, roleName}) {
           </Grid>
         </Grid>  
 
-      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} userId={userId} setCustomerList={handleCustomerList} enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
+      {open ? <Add open={open} handleClose={handleClose} userId={userId} setCustomerList={handleCustomerList} enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
-      {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} handleSnackbarClick={handleSnackbarClick} customer_id={customerId} roleName={roleName} /> : null }
+      {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} customer_id={customerId} roleName={roleName} /> : null }
       {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} customer_id = {customerId}  /> :null}
-      {bankDetailOpen ?<CustomerBankDetails open={bankDetailOpen} handleClose={handleBankDetailClose} handleSnackbarClick={handleSnackbarClick} bankDetailArray={bankDetailArray} setBankDetailArray = {setBankDetailArray} customer_id={customerId} isAddingDirect={true} /> : null }
-      {viewOrder ? <ViewOrder open={viewOrder} handleEditClose={handleOrderViewClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {[]} editableData={editableData} viewOnly={ true } /> : null}
+      {bankDetailOpen ?<CustomerBankDetails open={bankDetailOpen} handleClose={handleBankDetailClose} bankDetailArray={bankDetailArray} setBankDetailArray = {setBankDetailArray} customer_id={customerId} isAddingDirect={true} /> : null }
+      {viewOrder ? <ViewOrder open={viewOrder} handleEditClose={handleOrderViewClose} handleOrderRecData= {[]} editableData={editableData} viewOnly={ true } /> : null}
+      {isLoading ? <Loader /> : null}
     </div>
   );
 }

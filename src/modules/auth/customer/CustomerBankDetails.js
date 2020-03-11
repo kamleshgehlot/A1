@@ -115,7 +115,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function CustomerBankDetails({ open, handleClose, handleSnackbarClick, bankDetailArray, setBankDetailArray, customer_id, isAddingDirect }) {
+export default function CustomerBankDetails({ open, handleClose, bankDetailArray, setBankDetailArray, customer_id, isAddingDirect }) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
 

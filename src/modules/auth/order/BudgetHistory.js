@@ -102,7 +102,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 
 
-export default function BudgetHistory({ open, handleClose, handleSnackbarClick, customer_id, roleName}) {
+export default function BudgetHistory({ open, handleClose, customer_id, roleName}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();

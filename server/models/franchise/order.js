@@ -1834,8 +1834,7 @@ Order.prototype.fetchMissedPaymentData = function () {
       }
       if (!error) {
         
-        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-          // connection.query('SELECT a.*, o.order_id as order_format_id from (select *, COUNT(installment_no) as total_due_installment from payment_schedules where `status` IN(1,8,16,17) AND payment_date < CURRENT_DATE GROUP BY order_id HAVING MIN(installment_no) ORDER by `order_id`, `installment_no`, `id`) as a INNER JOIN orders as o ON a.order_id = o.id', function (error, rows, fields) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });          
             connection.query('SELECT ps.id, ps.order_id, ps.customer_id, ps.installment_no, ps.payment_date, ps.payment_amt, ps.status, ps.is_active, sp.status as payment_status, o.order_id AS `order_format_id`, pm.payment_mode as payment_mode_name, c.first_name, c.last_name FROM payment_schedules as ps INNER JOIN orders as o ON ps.order_id = o.id INNER JOIN customer as c ON c.id = o.customer_id LEFT JOIN payment_mode as pm ON pm.id = o.payment_mode LEFT JOIN status_payment as sp ON ps.status = sp.id WHERE ps.is_active = 1 AND ps.`status` IN(1,8,16,17) AND ps.payment_date < CURRENT_DATE  AND ps.payment_date  > (NOW() - INTERVAL 7 DAY) ORDER BY `order_id`, `installment_no`, `id`', function (error, rows, fields) {
             
             if (!error) {

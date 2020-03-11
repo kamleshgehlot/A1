@@ -15,7 +15,7 @@ const styles = theme => ({
   },
 });
 
-const PageLoader = ({ classes }) => {
+const PageLoader = ({ classes }) => {  
   return (
     <div className={classes.progress}>
       <CircularProgress />

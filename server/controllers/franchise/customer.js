@@ -130,6 +130,37 @@ const all = async function (req, res, next) {
   }
 };
 
+
+
+const customerList = async function (req, res, next) {
+  let params = {
+    user_id: req.decoded.user_id,
+    dataType : req.body.dataType,
+    rowsPerPage : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage)),
+    pageOffset : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage) - req.body.rowsPerPage),
+  }
+  console.log(params)
+
+  try {
+    const fetchData = new Customer(params);
+    const fetchFromOrder = new Order(params);
+
+    let customerList = [];
+
+    if(params.dataType !== 'missedPayment'){
+      customerList = await fetchData.customerList();
+    }else{
+      customerList = await fetchFromOrder.fetchMissedPaymentData();
+    }
+    
+    const tabCounts = await fetchData.countTabRecord();
+
+    res.send({ customerList:customerList, tabCounts: tabCounts });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getidtypelist = async function (req, res, next) {
   try {
     const idTypeList = await new Customer({ user_id: req.decoded.user_id }).getidtypelist();
@@ -283,5 +314,6 @@ module.exports = {
   getCustomerBankDetail: getCustomerBankDetail,
   addBankDetail : addBankDetail,
   updateBankDetail : updateBankDetail,
+  customerList, customerList,
   // isDuplicateEmail : isDuplicateEmail,
 };

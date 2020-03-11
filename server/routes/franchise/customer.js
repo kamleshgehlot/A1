@@ -29,6 +29,7 @@ const customerRouter = express.Router();
 
 customerRouter.route("/register").post(validateToken, upload.array('avatar'), Customer.register);
 customerRouter.route("/list").get(validateToken, Customer.all);
+customerRouter.route("/customerList").post(validateToken, Customer.customerList);
 customerRouter.route("/idtype/list").get(validateToken, Customer.getidtypelist);
 customerRouter.route("/search").post(validateToken, Customer.searchData);
 customerRouter.route("/postComment").post(validateToken, Customer.postComment);

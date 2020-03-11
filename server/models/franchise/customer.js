@@ -54,6 +54,10 @@ var Customer = function (params) {
   this.budgetData = params.budgetData;
   this.bankDetailData = params.bankDetailData;
   this.comment = params.comment;
+
+  this.dataType = params.dataType;
+  this.rowsPerPage = params.rowsPerPage;
+  this.pageOffset = params.pageOffset;
 };
 
 Customer.prototype.register = function () {
@@ -71,8 +75,6 @@ Customer.prototype.register = function () {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query('INSERT INTO id_type(name, is_active, created_by) VALUES ("' + that.other_id_type + '", 1, 1)', function (error, rows, fields) {
             if (!error) {
-              console.log("insert id", rows.insertId);
-              // newIdType = rows.insertId;
               let values = [
                 [that.first_name, that.last_name, that.address, that.city, that.suburb, that.postcode, that.telephone, that.mobile, that.email, that.gender, that.is_working, that.dob, rows.insertId, that.other_id_type, that.dl_version_number, that.id_number, that.expiry_date, that.is_adult, that.id_proof, that.alt_c1_name, that.alt_c1_address, that.alt_c1_contact, that.alt_c1_relation, that.alt_c2_name, that.alt_c2_address, that.alt_c2_contact, that.alt_c2_relation, that.is_active, that.state, that.created_by]
               ];
@@ -199,6 +201,7 @@ Customer.prototype.update = function () {
   });
 };
 
+
 Customer.prototype.all = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
@@ -224,6 +227,62 @@ Customer.prototype.all = function () {
       else {
         console.log("Error...", error);
         reject(error);
+      }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
+
+Customer.prototype.countTabRecord = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        let Query = `SELECT COUNT(CASE WHEN (locate('1', c.state) > 0) THEN 1 ELSE NULL END) as active, COUNT(CASE WHEN (locate('2', c.state) > 0) THEN 1 ELSE NULL END) as hold, COUNT(CASE WHEN (locate('3', c.state) > 0) THEN 1 ELSE NULL END) as financial_hardship, COUNT(CASE WHEN (DATE_FORMAT(DATE(c.dob),'%m-%d') = DATE_FORMAT(NOW(),'%m-%d')) THEN 1 ELSE NULL END) as todays_birthday FROM customer as c`;
+        connection.query(Query, function (error, rows, fields) {
+            if (error) {console.log("Error...", error); reject(error);}
+            resolve(rows);
+          });
+      }
+      connection.release();
+      console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
+Customer.prototype.customerList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        let Query = `select c.id, c.first_name, c.last_name, c.address, c.city, c.suburb, c.postcode, c.telephone, c.mobile, c.email, c.gender, c.is_working, c.dob, c.id_type, c.other_id_type, c.dl_version_number, c.id_number, c.expiry_date, c.is_adult, c.id_proof, c.alt_c1_name, c.alt_c1_address, c.alt_c1_contact, c.alt_c1_relation, c.alt_c2_name, c.alt_c2_address, c.alt_c2_contact, c.alt_c2_relation, c.is_verified, c.is_active, c.state, c.created_by, u.name AS created_by_name, ci.employer_name, ci.employer_address, ci.employer_telephone, ci.employer_email, ci.employer_tenure from customer as c left join customer_income as ci on c.id = ci.cust_id INNER JOIN user as u on c.created_by = u.id `;
+        if(that.dataType === 'active'){
+          Query = Query + ` WHERE c.state = 1 `;
+          // 
+        }else if(that.dataType === 'hold'){
+          Query = Query + ` WHERE c.state = 2 `;
+        }else if(that.dataType === 'financialHardship'){
+          Query = Query + ` WHERE c.state = 3 `;
+        }else if(that.dataType === 'todaysBirthday'){
+          Query = Query + ` WHERE  DATE_FORMAT(DATE(c.dob),'%m-%d') = DATE_FORMAT(NOW(),'%m-%d')`;
+        }
+          Query = Query + ` ORDER BY c.id desc LIMIT ${that.pageOffset}, ${that.rowsPerPage};`;
+
+          // console.log(Query);
+        connection.query(Query, function (error, rows, fields) {
+            if (error) {console.log("Error...", error); reject(error);}
+            resolve(rows);
+          });
       }
       connection.release();
       console.log('Process Complete %d', connection.threadId);

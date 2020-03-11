@@ -145,7 +145,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleEditClose, handleSnackbarClick, inputValues, setCustomerList}) {
+export default function Edit({ open, handleEditClose, inputValues, setCustomerList}) {
   
   const styleClass = useCommonStyles();
   const classes = useStyles();

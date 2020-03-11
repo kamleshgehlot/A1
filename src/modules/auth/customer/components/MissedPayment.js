@@ -118,7 +118,7 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function MissedPayment({missedPaymentData, handleOrderView, handlePaymentFilter, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
+export default function MissedPayment({missedPaymentData, count, handleOrderView, handlePaymentFilter, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   const classes = useStyles();
   
   const [searchText, setSearchText] = React.useState('');
@@ -277,13 +277,9 @@ return (
             <TablePagination
               rowsPerPageOptions={[20, 50, 100]}
               colSpan={8}
-              count={missedPaymentData.length}
+              count={count}
               rowsPerPage={rowsPerPage}
               page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
               onChangePage={handleChangePage}
               onChangeRowsPerPage={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}

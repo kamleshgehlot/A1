@@ -152,7 +152,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, setCustomerList, enquiryData, setCustomer, conversionData}) {
+export default function Add({ open, handleClose, setCustomerList, enquiryData, setCustomer, conversionData}) {
 
   
   const styleClass = useCommonStyles();
@@ -349,7 +349,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setCustome
     const response = await Customer.register({ formData: formData });
     
     
-    handleSnackbarClick(true);
+    
     setCustomerList(response.customerList);
     setCustomer(data);
     handleReset(RESET_VALUES);
@@ -1155,7 +1155,7 @@ return (
         </form>
       </Dialog>
       {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {''}/> : null }
-      {bankDetailOpen ?<CustomerBankDetails open={bankDetailOpen} handleClose={handleBankDetailClose} handleSnackbarClick={handleSnackbarClick} bankDetailArray={bankDetailArray} setBankDetailArray = {setBankDetailArray} customer_id={''} isAddingDirect={false} /> : null }
+      {bankDetailOpen ?<CustomerBankDetails open={bankDetailOpen} handleClose={handleBankDetailClose} bankDetailArray={bankDetailArray} setBankDetailArray = {setBankDetailArray} customer_id={''} isAddingDirect={false} /> : null }
       
     </div>
   );

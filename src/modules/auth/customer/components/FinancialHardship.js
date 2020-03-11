@@ -98,7 +98,7 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-export default function FinancialHardship({customerList, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen,
+export default function FinancialHardship({customerList, count, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
     
   const styleClass = useCommonStyles();
@@ -166,13 +166,9 @@ return (
           <TablePagination
             rowsPerPageOptions={[20, 50, 100]}
             colSpan={7}
-            count={customerList.length}
+            count={count}
             rowsPerPage={rowsPerPage}
             page={page}
-            SelectProps={{
-              inputProps: { 'aria-label': 'rows per page' },
-              native: true,
-            }}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             ActionsComponent={TablePaginationActions}

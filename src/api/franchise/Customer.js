@@ -83,7 +83,27 @@ export default {
       throw error;
     }
   },
-  
+
+
+  customerList: async (params) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/customer/customerList`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: params,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
+
+
   idtypelist: async (franchisedata) => {
     const URL = `${c.API_CONSUMER}/api/franchise/customer/idtype/list`;
     try {
