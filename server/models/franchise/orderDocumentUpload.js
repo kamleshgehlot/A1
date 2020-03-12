@@ -20,6 +20,7 @@ var UploadDocument = function (params) {
 
 UploadDocument.prototype.uploadDoc = function () {
   const that = this;
+  console.log('that.')
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
       if (error) {
@@ -32,20 +33,16 @@ UploadDocument.prototype.uploadDoc = function () {
           ];
             connection.query('INSERT INTO order_document(order_id, document, created_by) VALUES ?',[queryData],function (error, rows, fields) {
               if (!error) {
-                  // console.log("INSERT...", rows.insertId);
                   connection.query('UPDATE orders SET doc_upload_status = 1, order_status = 2 where id = "'+that.order_id+'"',function (error, rows, fields) {
                     if (!error) {
-                      // console.log("rows...", rows);
                           resolve({rows, isUploaded: 1});
                         } else {
                           console.log("Error...", error);
-                          // reject(error);
                           resolve();
                         }
                       });
                     } else {
                       console.log("Error...", error);
-                      // reject(error);
                       resolve();
                     }
                   });

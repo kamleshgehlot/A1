@@ -130,7 +130,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, handleOrderRecData, convertId, converted_name, conversionData, handleOrderViewFromBudget}) {
+export default function Add({ open, handleClose, convertId, converted_name, conversionData, handleOrderViewFromBudget}) {
 
   const styleClass = useCommonStyles(); 
   const classes = useStyles();
@@ -445,16 +445,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
       ezidebit_uid : inputs.ezidebit_uid,
      });
     
-     assignInterest.length = 0;
-
-     if(response!='invalid'){
-      handleOrderRecData(response);
+      assignInterest.length = 0;
       setSavebtn(false);
-        handleClose(false);
-      }else{
-        setSavebtn(false);
-        alert("Invalid or Incomplete Credentials")
-      }
+      handleClose(true);
   };
 
   const selectedProductList = () => {
@@ -830,10 +823,10 @@ export default function Add({ open, handleClose, handleSnackbarClick, handleOrde
         </form>
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id} handleOrderViewFromBudget={handleOrderViewFromBudget}/> : null }
-    {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData} conversionData={conversionData}/> : null }
+    {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData} conversionData={conversionData}/> : null }
     {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} totalOfRental={totalOfRental} productQuantity = {assignInterest.length} /> : null }
     {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} totalOfRental={totalOfRental} productQuantity = {assignInterest.length}/> : null }
-    {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} handleSnackbarClick={handleSnackbarClick}  setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }
+    {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }
     </div>
   );
 }

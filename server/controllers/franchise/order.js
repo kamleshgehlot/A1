@@ -17,7 +17,6 @@ async function main(path, data) {
 
 
 const postOrder = async function (req, res, next) {
-  // console.log('req.order',req.body, req.decoded);
   let params = {
     user_id: req.decoded.user_id,
     userid: req.decoded.id,
@@ -89,8 +88,9 @@ const postOrder = async function (req, res, next) {
         await newOrder.postBudgetComment();
       }
 
-      const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-      res.send({ order: order });
+      // const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
+      // res.send({ order: order });
+      res.send({});
     } catch (err) {
       next(err);
     }
@@ -152,8 +152,9 @@ const editOrder = async function (req, res, next) {
       newOrder.orderedProductValue = productRows;
       await newOrder.postOrderedProduct();
       
-      const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-      res.send({ order: order });
+      // const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
+      // res.send({ order: order });  
+      res.send({});
 
     } catch (err) {
       next(err);
@@ -181,12 +182,13 @@ const uploadDoc = async function (req, res, next) {
     const newDoc = new UploadDocument(orderParams);
 
     const result = await newDoc.uploadDoc();
-    const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-    if (result) {
-      res.send({ order: order, isUploaded: result.isUploaded });
-    } else {
-      res.send({ order: order, isUploaded: 0 });
-    }
+    res.send({});
+    // const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
+    // if (result) {
+    //   res.send({ order: order, isUploaded: result.isUploaded });
+    // } else {
+    //   res.send({ order: order, isUploaded: 0 });
+    // }
   } catch (err) {
     next(err);
   }
@@ -210,12 +212,35 @@ const uploadDeliveryDoc = async function (req, res, next) {
     const newDoc = new UploadDocument(orderParams);
 
     const result = await newDoc.uploadDeliveryDoc();
-    const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-    if (result) {
-      res.send({ order: order, isUploaded: result.isUploaded });
-    } else {
-      res.send({ order: order, isUploaded: 0 });
-    }
+    res.send({});
+    // const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
+    // if (result) {
+    //   res.send({ order: order, isUploaded: result.isUploaded });
+    // } else {
+    //   res.send({ order: order, isUploaded: 0 });
+    // }
+  } catch (err) {
+    next(error);
+  }
+};
+
+
+const getRequeredOrderList = async function (req, res, next) {
+  let params = {
+    user_role: req.body.user_role,
+    tabValue : req.body.tabValue,
+    rowsPerPage : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage)),
+    pageOffset : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage) - req.body.rowsPerPage),
+    user_id: req.decoded.user_id,
+  };
+
+  try {
+    const models = new Order(params);
+
+    const orderList = await models.getRequeredOrderList();    
+    const tabCounts = await models.countTabRecord();
+
+    res.send({ orderList: orderList, tabCounts: tabCounts });
   } catch (err) {
     next(error);
   }
@@ -223,9 +248,7 @@ const uploadDeliveryDoc = async function (req, res, next) {
 
 
 
-
 const postComment = async function (req, res, next) {
-
   let commentParams = {
     order_id: req.body.order_id,
     userid: req.body.user_id,
@@ -299,55 +322,13 @@ const getnewid = async function (req, res, next) {
 const getAll = async function (req, res, next) {
   try {
     const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-
-    // let open = [];
-    // let finance = [];
-    // let underDelivery = [];
-    // let delivered = [];
-    // let completed = [];
-    // let cancelled = [];
-    // let archived = [];
-
-    // (order.length > 0 ? order : []).map((data, index) => {
-    //   if (data.assigned_to !== 4 && data.assigned_to !== 5 && data.is_active == 1) {
-    //     open.push(data);
-    //   }
-    //   if (data.assigned_to === 4 && data.is_active == 1) {
-    //     finance.push(data);
-    //   }
-    //   if (data.assigned_to === 5 && data.order_status === 5 && data.is_active == 1) {
-    //     underDelivery.push(data);
-    //   }
-    //   if (data.order_status === 6) {
-    //     delivered.push(data);
-    //   }
-    //   if (data.order_status === 8) {
-    //     completed.push(data);
-    //   }
-    //   if ((data.order_status === 9 || data.order_status === 10) && data.is_active == 0) {
-    //     cancelled.push(data);
-    //   }
-    //   if (data.order_status === 11 && data.is_active == 0) {
-    //     archived.push(data);
-    //   }
-    // });
-    // res.send({ order: order, open : open, finance : finance, underDelivery : underDelivery, delivered : delivered, completed : completed, cancelled : cancelled, archived : archived });
-    
     res.send({ order: order });
-
   } catch (error) {
     next(error);
   }
 };
 
-// const getOrderDataByID = async function (req, res, next) {
-//   try {
-//     const order = await new Order({ user_id: req.decoded.user_id, order_id: req.body.order_id }).getOrderDataByID();    
-//     res.send(order);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+
 
 const getSingleOrderData = async function (req, res, next) {
   try {
@@ -1090,6 +1071,7 @@ const searchOrder = async function (req, res, next) {
 
 
 module.exports = {
+  getRequeredOrderList,
   getnewid,
   uploadDoc,
   postComment,

@@ -146,7 +146,7 @@ const RESET_VALUES  = {
   purchase_from : '',
 }
 
-export default function UpdateDeliveredProduct({ open, handleClose, handleSnackbarClick, orderData, handleOrderList, roleName}) {
+export default function UpdateDeliveredProduct({ open, handleClose, orderData, handleOrderList, roleName}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();

@@ -5,7 +5,6 @@ const {setDBDateFormat} = require('../../utils/datetime.js')
 
 
 var Order = function (params) {
-  // console.log("params", params);
   this.id = params.id;
   this.user_id = params.user_id;
   this.userid = params.userid;
@@ -92,6 +91,10 @@ var Order = function (params) {
   
   this.fromPaymentDate = params.fromPaymentDate;
   this.toPaymentDate = params.toPaymentDate;
+
+  this.tabValue = params.tabValue;
+  this.rowsPerPage = params.rowsPerPage;
+  this.pageOffset = params.pageOffset;  
 };
 
 
@@ -2029,5 +2032,112 @@ Order.prototype.searchOrder = function () {
     throw error;
   });
 };
+
+
+
+Order.prototype.countTabRecord = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+        let Query = ``;
+        if(that.user_role === 'CSR'){
+          Query = `SELECT 
+          COUNT(CASE WHEN (o.assigned_to NOT IN(4,5) AND o.is_active = 1) THEN 1 ELSE NULL END) as open,
+          COUNT(CASE WHEN (o.assigned_to = 4 AND o.is_active = 1) THEN 1 ELSE NULL END) as finance,
+          COUNT(CASE WHEN (o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1) THEN 1 ELSE NULL END) as under_delivery,
+          COUNT(CASE WHEN o.order_status = 6 THEN 1 ELSE NULL END) as delivered,
+          COUNT(CASE WHEN o.order_status = 8 THEN 1 ELSE NULL END) as completed,
+          COUNT(CASE WHEN (o.order_status IN(9,10) AND o.is_active = 1) THEN 1 ELSE NULL END) as cancelled,
+          COUNT(CASE WHEN (o.order_status = 11 AND o.is_active = 1) THEN 1 ELSE NULL END) as archived
+          FROM orders as o`;
+        }else if(that.user_role === 'Finance'){
+          Query = `SELECT COUNT(CASE WHEN (o.assigned_to IN(4,5) AND o.order_status != 8 AND o.is_active = 1) THEN 1 ELSE NULL END) as open, COUNT(CASE WHEN (o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1) THEN 1 ELSE NULL END) as under_delivery, COUNT(CASE WHEN o.order_status = 6 THEN 1 ELSE NULL END) as delivered, COUNT(CASE WHEN o.order_status = 8 THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN (o.order_status IN(9,10) AND o.is_active = 1) THEN 1 ELSE NULL END) as cancelled FROM orders as o`;
+        }else if(that.user_role === 'Delivery'){
+          Query = `SELECT COUNT(CASE WHEN (o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1) THEN 1 ELSE NULL END) as open, COUNT(CASE WHEN (o.order_status IN(6,7,8) AND o.order_status NOT IN(9,10,11)) THEN 1 ELSE NULL END) as delivered FROM orders as o`;
+        }
+          connection.query(Query,function (error, rows, fields) {
+            if (error) {console.log("Error...", error); reject(error);}
+                resolve(rows);
+          });
+      }
+      connection.release();
+      console.log('schedule updated for order  %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+Order.prototype.getRequeredOrderList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      if (!error) {
+        connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });        
+        let Query = `SELECT o.id, o.order_id, o.ezidebit_uid, c.id as customer_id, c.first_name, c.last_name, c.address, c.suburb, c.mobile, c.telephone, o.customer_type,  DATE_FORMAT(o.order_date, \'%Y-%m-%d\') order_date, o.sales_type_id as sales_type, o.renting_for_id as renting_for, o.order_status, o.assigned_to, o.order_type,  CASE o.order_type WHEN 1 THEN \'Fix Order\' ELSE \'Flex Order\' END as \'order_type_name\', o.payment_mode, o.order_type_id, o.doc_upload_status, o.is_active, o.delivery_doc_uploaded, DATE_FORMAT(o.delivered_date, \'%Y-%m-%d\') delivered_date, o.delivered_time, DATE_FORMAT(o.delivery_date, \'%Y-%m-%d\') delivery_date, o.delivery_time, o.budget_id, o.refund_amt, o.cancel_reason, os.order_status as order_status_name, d.document as uploaded_doc, pm.payment_mode as \'payment_mode_name\', stl.sales_type_name, o.sales_person_id, u.name as sales_person_name, GROUP_CONCAT(op.product_id) as product_id  from orders as o INNER join customer as c on o.customer_id = c.id LEFT JOIN order_status as os on o.order_status = os.id LEFT JOIN payment_mode as pm on o.payment_mode = pm.id LEFT JOIN order_document as d on o.id = d.order_id LEFT JOIN sales_type_list as stl ON o.sales_type_id = stl.id LEFT JOIN user as u ON o.sales_person_id = u.id LEFT JOIN ordered_product as op ON o.id = op.order_id AND op.is_active = 1 `;
+
+        if (that.user_role === 'CSR') {
+          if(that.tabValue === 0){ //open
+            Query = Query + ` WHERE o.assigned_to NOT IN(4,5) AND o.is_active = 1 `;
+          }else if(that.tabValue === 1){ //finance
+            Query = Query + ` WHERE o.assigned_to = 4 AND o.is_active = 1 `;
+          }else if(that.tabValue === 2){ //under delivery
+            Query = Query + ` WHERE o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1 `;
+          }else if(that.tabValue === 3){ //delivered 
+            Query = Query + ` WHERE o.order_status = 6 `;
+          }else if(that.tabValue === 4){ //completed
+            Query = Query + ` WHERE o.order_status = 8 `;
+          }else if(that.tabValue === 5){ // cancelled
+            Query = Query + ` WHERE o.order_status IN(9,10) AND o.is_active = 1 `;
+          }else if(that.tabValue === 6){ //archived
+            Query = Query + ` WHERE o.order_status = 11 AND o.is_active = 1 `;
+          }        
+        } else if (that.user_role === 'Finance') {
+          if(that.tabValue === 0){ //open
+            Query = Query + ` WHERE o.assigned_to IN(4,5) AND o.order_status != 8 AND o.is_active = 1 `;
+          }else if(that.tabValue === 1){ //under delivery
+            Query = Query + ` WHERE o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1 `;
+          }else if(that.tabValue === 2){ //delivered 
+            Query = Query + ` WHERE o.order_status = 6 `;
+          }else if(that.tabValue === 3){ //completed
+            Query = Query + ` WHERE o.order_status = 8 `;
+          }else if(that.tabValue === 4){ // cancelled
+            Query = Query + ` WHERE o.order_status IN(9,10) AND o.is_active = 1 `;
+          }
+        } else if (that.user_role === 'Delivery') {
+          if(that.tabValue === 0){ // open
+            Query = Query + ` WHERE o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1 `;
+          }else if(that.tabValue === 1){ //delivered 
+            Query = Query + ` WHERE o.order_status IN(6,7,8) AND o.order_status NOT IN(9,10,11) `;
+          }
+        }
+        Query = Query + `  GROUP BY op.order_id ORDER BY o.id DESC LIMIT ${that.pageOffset}, ${that.rowsPerPage};`;
+        console.log('query..', Query)
+        connection.query(Query,function (error, rows, fields) {
+            if (error) {console.log("Error...", error); reject(error);}
+                resolve(rows);
+          });
+      }
+      connection.release();
+      console.log('schedule updated for order  %d', connection.threadId);
+    });
+  }).catch((error) => {
+    throw error;
+  });
+};
+
+
+
+
 
 module.exports = Order;

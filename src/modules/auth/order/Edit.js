@@ -116,7 +116,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleEditClose, handleOrderRecData, editableData, viewOnly, handleOrderViewFromBudget}) {
+export default function Edit({ open, handleClose, editableData, viewOnly, handleOrderViewFromBudget}) {
   const styleClass = useCommonStyles();
   const classes = useStyles();
 
@@ -402,16 +402,12 @@ export default function Edit({ open, handleEditClose, handleOrderRecData, editab
       sales_person_id : inputs.sales_person_id,
       ezidebit_uid : inputs.ezidebit_uid,
       order_status : editableData.order_status,
-     });
-    if(response!='invalid'){
-      handleOrderRecData(response);
-      handleEditClose(false);
+     });    
+    
       assignInterest.length = 0;
-      }else{
-        setpLoading(false);
-        setSavebtn(true);
-        alert("Invalid or Incomplete Credentials");
-      }
+      setpLoading(false);
+      setSavebtn(true);
+      handleClose(true);
   };
   
     
@@ -465,7 +461,7 @@ return (
               <Typography variant="h6" className={classes.title}>
                 {viewOnly ? "View Order Details" : "Update Order" }
               </Typography>            
-              <IconButton size="small" onClick={handleEditClose} className={styleClass.closeIcon}> x </IconButton>
+              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
           
@@ -733,7 +729,7 @@ return (
                     <Button  variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {!savebtn || viewOnly}>
                       save
                     </Button>
-                    <Button variant="contained" color="primary" onClick={handleEditClose} className={classes.button}>
+                    <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                       Close
                     </Button>
                   </Grid>                   

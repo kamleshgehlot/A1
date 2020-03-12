@@ -51,6 +51,25 @@ export default {
     }
   },
 
+  
+  getRequeredOrderList: async ({...payload}) => {
+    const URL = `${c.API_CONSUMER}/api/franchise/order/getRequeredOrderList`;
+    try {
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: payload,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()
+      }
+      );
+      return data;
+    } catch (error) {
+      checkError();
+      throw error;
+    }
+  },
 
   getnewid: async () => {
     const URL = `${c.API_CONSUMER}/api/franchise/order/getnewid`;

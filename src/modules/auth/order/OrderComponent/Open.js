@@ -42,8 +42,8 @@ const StyledTableCell = withStyles(theme => ({
 }))(TableCell);
 
 
-export default function Open({order, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
-  uploadFileSelector, handleDeliveryDoc, handleDelivered, handleEditOpen, createAndDownloadPdf, handleUploadFile, 
+export default function Open({order, count, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
+  uploadFileSelector, handleDelivered, handleEditOpen, createAndDownloadPdf, handleOrderIdSelection,
   handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen, handleOrderView, handleViewDeliveredDetailOpen, handleOrderArchive,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage
 }) {
@@ -108,15 +108,15 @@ return (
                   </Tooltip>
 
                   <Tooltip title="Download PDF">
-                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { createAndDownloadPdf(data); }}>
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={() => { createAndDownloadPdf(data); }}>
                       <PrintIcon /> 
                     </IconButton></span>
                   </Tooltip>
                   
-                  <input multiple accept="image/*" className={styleClass.input} id="upload_document" type="file" onChange={uploadFileSelector}/>
-                    <label htmlFor="upload_document">
-                      <Tooltip title="Upload Documents">                              
-                        <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleUploadFile(data.id); }}>
+                  <input multiple accept="image/*" className={styleClass.input} id="upload_contact_form" type="file" onChange={() => {uploadFileSelector('upload_contact_form')}} />
+                    <label htmlFor="upload_contact_form">
+                      <Tooltip title="Upload Contract Form">
+                        <span><IconButton size="small" className={styleClass.fab} component="span" onClick = {() => {handleOrderIdSelection(data.id)}} >
                           <CloudUpload />
                         </IconButton></span>
                       </Tooltip>
@@ -182,10 +182,10 @@ return (
                     </IconButton></span>
                   </a>
                 </Tooltip>
-                <input multiple accept="image/*" className={styleClass.input} id="upload_delivery_doc" type="file" onChange={uploadFileSelector} disabled  = {data.order_status >=6 ? true : false} />
+                <input multiple accept="image/*" className={styleClass.input} id="upload_delivery_doc" type="file" onChange={() => {uploadFileSelector('upload_delivery_doc')}} disabled  = {data.order_status >=6 ? true : false} />
                 <label htmlFor="upload_delivery_doc">
                   <Tooltip title="Upload">                              
-                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} aria-label="upload picture" component="span" onClick={(event) => { handleDeliveryDoc(data.id); }} disabled = {data.order_status >=6 ? true : false}>
+                    <span><IconButton  size="small" className={styleClass.fab} onClick={() => {handleOrderIdSelection(data.id)}} component="span" disabled = {data.order_status >=6 ? true : false}>
                       <CloudUpload />
                     </IconButton></span>
                   </Tooltip>
@@ -207,13 +207,9 @@ return (
           <TablePagination
             rowsPerPageOptions={[20, 50, 100]}
             colSpan={9}
-            count={order.length}
+            count={count}
             rowsPerPage={rowsPerPage}
             page={page}
-            SelectProps={{
-              inputProps: { 'aria-label': 'rows per page' },
-              native: true,
-            }}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             ActionsComponent={TablePaginationActions}

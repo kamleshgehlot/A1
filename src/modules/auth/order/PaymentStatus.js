@@ -150,7 +150,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 
-export default function paymentStatus({ open, handleClose, handleSnackbarClick, orderData}) {
+export default function paymentStatus({ open, handleClose, orderData}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();

@@ -124,7 +124,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function SearchCustomer({ open, handleClose, handleSnackbarClick, setCustomerList, setCustomer}) {
+export default function SearchCustomer({ open, handleClose, setCustomerList, setCustomer}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();
@@ -279,7 +279,7 @@ return (
           </div>
         </form>
       </Dialog>
-      {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} handleSnackbarClick={handleSnackbarClick} customerId={customerId}/> : null }
+      {customerOpen ? <ViewCustomer open={customerOpen} handleClose={handleCustomerClose} customerId={customerId}/> : null }
     </div>
   );
 }

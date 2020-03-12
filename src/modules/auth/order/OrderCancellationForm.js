@@ -126,7 +126,7 @@ const RESET_VALUES  = {
   cancel_reason : '',
 }
 
-export default function OrderCancellationForm({ open, handleClose, handleSnackbarClick, orderData, handleOrderList}) {
+export default function OrderCancellationForm({ open, handleClose, orderData, handleOrderList}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();

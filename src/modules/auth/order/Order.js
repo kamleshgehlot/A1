@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { APP_TOKEN } from '../../../api/Constants';
+import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
@@ -18,13 +17,12 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
-import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
 import BadgeComp from '../../common/BadgeComp';
-import Snackbar from '@material-ui/core/Snackbar';
 
 import Add from './Add';
 import Edit from './Edit';
 import PaymentStatus from './PaymentStatus';
+import Loader from '../../common/Loader.js';
 
 import Open from './OrderComponent/Open';
 import Finance from './OrderComponent/Finance';
@@ -52,53 +50,17 @@ import EezyDebitForm from './Documentation/EezyDebitForm';
 
 // API CALL
 import OrderAPI from '../../../api/franchise/Order';
-
 import FileReader from '../../../utils/fileReader';
+import { APP_TOKEN } from '../../../api/Constants';
+
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    // width: 1000
-  },
-  drawer: {
-    width: 240,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: 240,
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-  },
-  toolbar: theme.mixins.toolbar,
-  title: {
-    flexGrow: 1,
-    fontSize: theme.typography.pxToRem(14),
-    color: "white",
-    marginTop: theme.spacing(-3),
-  },
-  button: {
-    marginRight: theme.spacing(2),
-    padding: theme.spacing(2),
-    borderRadius: theme.spacing(7),
-  },
-  input: {
-    display: 'none',
-  },
-  fab: {
-    marginRight: theme.spacing(1),
-    fontSize: 12,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'left',
-    color: theme.palette.text.secondary,
   },
   fonttransform: {
     textTransform: "initial",
@@ -115,46 +77,28 @@ export default function Order({ roleName }) {
   const classes = useStyles();
   const userId = APP_TOKEN.get().userId;
 
-  const [open, setOpen] = useState(false);
+  const [tabsCount, setTabsCount] = useState([]);
+  const [orderList, setOrderList] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [addOrderOpen, setAddOrderOpen] = useState(false);  
   const [editOpen, setEditOpen] = useState(false);
   const [paymentStatusOpen, setPaymentStatusOpen] = useState(false);
   const [editableData, setEditableData] = useState({});
   const [orderData, setOrderData] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
   const [nextStep, setNextStep] = React.useState('');
-  const [uploadType, setUploadType] = useState('');
   const [orderId, setOrderId] = useState();  
-  const [orderIdForUpload, setOrderIdForUpload] = useState(null);
   const [order, setOrder] = useState([]);
-  const [snackbarContent, setSnackbarContent] = useState([]);
   const [commentBoxOpen, setCommentBoxOpen] = useState(false);
   const [openCommentView, setOpenCommentView] = useState(false);
-  const [commentData, setCommentData] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [commentData, setCommentData] = useState([]);  
   const [processDialog, setProcessDialog] = useState(false);
   const [response, setResponse] = useState([]);
   const [openCancelForm, setOpenCancelForm] = useState(false);
   const [openProductDelivered, setOpenProductDelivered] = useState(false);
   const [openViewDeliveredDetail, setOpenViewDeliveredDetail] = useState(false);
   
-  //Tab Data for corresponding role 
-  const [tabRecord, setTabRecord] = useState(
-    { open: [],
-      finance : [], 
-      underDelivery : [],
-      delivered : [], 
-      completed : [], 
-      cancelled : [], 
-      archived : []
-    });
-
-  // const [financeTab, setFinanceTab] = useState([]);
-  // const [underDeliveryTab, setUnderDeliveryTab] = useState([]);
-  // const [deliveredTab, setDeliveredTab] = useState([]);
-  // const [completedTab, setCompletedTab] = useState([]);
-  // const [cancelledTab, setCancelledTab] = useState([]);
-  // const [archivedTab, setArchivedTab] = useState([]);
-
   const [viewOnly, setViewOnly] = useState(false);
   const [openConfirmationPDF, setOpenConfirmationPDF] = useState(false);
   const [orderDataForPDF, setOrderDataForPDF] = useState([]);
@@ -169,7 +113,7 @@ export default function Order({ roleName }) {
   };
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 20));
+    setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   };
 
@@ -269,114 +213,18 @@ export default function Order({ roleName }) {
         }
       };
       fetchData();
-    }
-    // pdfmake.createPdf(dd).download();
-    // pdfmake.createPdf(dd).print({},window);
-    // pdfmake.createPdf(dd).print();
-    // const pdfDocGenerator = pdfMake.createPdf(dd);
+    }    
   }
 
   function handleClickOpen() {
-    setOpen(true);
+    setAddOrderOpen(true);
   }
 
-  function handleClose(result) {
-    setOpen(false);
-  }
-
-  function handleSnackbarClose() {
-    setSnackbarOpen(false);
-  }
-
-  function handlePaymentStatusClose() {
-    fetchOrderDataList();
-    setPaymentStatusOpen(false);
-  }
-
-
-  const uploadFileSelector = async (event) => {
-    setProcessDialog(true);
-    try {
-      let formData = new FormData();
-      formData.append('data', JSON.stringify(orderIdForUpload));
-
-      if (uploadType === 'Documents') {
-        for (var x = 0; x < document.getElementById('upload_document').files.length; x++) {
-          if (document.getElementById('upload_document').files.length != 0) {
-
-            const data = {
-              data: orderIdForUpload,
-              file: await FileReader.toBase64(document.getElementById('upload_document').files[x])
-            }
-
-            const result = await OrderAPI.uploadDocument(data);
-            setProcessDialog(false);
-            setOrderIdForUpload(null);
-            if (result.order.length > 0) {
-              setOrder(result.order);
-              handleTabsData(result.order);
-            }
-            if (result.isUploaded === 1) {
-              if (processDialog === false) {
-                setSnackbarContent({ message: "Successfully Uploaded.", variant: "success" });
-                setSnackbarOpen(true);
-              }
-            } else if (result.isUploaded === 0) {
-              if (processDialog === false) {
-                setSnackbarContent({ message: "Upload Failed", variant: "error" });
-                setSnackbarOpen(true);
-              }
-            }
-          }
-        }
-      } else if (uploadType === 'DeliveredDoc') {
-        for (var x = 0; x < document.getElementById('upload_delivery_doc').files.length; x++) {
-          formData.append('avatar', document.getElementById('upload_delivery_doc').files[x])
-        }
-
-        if (document.getElementById('upload_delivery_doc').files.length != 0) {
-          const result = await OrderAPI.uploadDeliveryDoc({ formData: formData });
-          setProcessDialog(false);
-          setOrderIdForUpload(null);
-          if (result.order.length > 0) {
-            setOrder(result.order);
-            handleTabsData(result.order);
-          }
-          if (result.isUploaded === 1) {
-            if (processDialog === false) {
-              setSnackbarContent({ message: "Successfully Uploaded.", variant: "success" });
-              setSnackbarOpen(true);
-            }
-          } else if (result.isUploaded === 0) {
-            if (processDialog === false) {
-              setSnackbarContent({ message: "Upload Failed", variant: "error" });
-              setSnackbarOpen(true);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
+  function handleAddOrderClose(refresh) {
+    setAddOrderOpen(false);
+    if(refresh === true){
+      fetchOrderDataList();
     }
-  };
-
-  function handleProcessDialogClose() {
-    setProcessDialog(false);
-  }
-
-  function handleCommentBoxClose() {
-    setCommentBoxOpen(false);
-  }
-
-
-  function handleUploadFile(orderId) {
-    setUploadType('Documents');
-    setOrderIdForUpload(orderId);
-  }
-
-  function handleDeliveryDoc(orderId) {
-    setUploadType('DeliveredDoc');
-    setOrderIdForUpload(orderId);
   }
 
   function handleEditOpen(data) {
@@ -384,6 +232,60 @@ export default function Order({ roleName }) {
     setEditOpen(true);
     setViewOnly(false);
   }
+
+  function handleEditClose(refresh) {
+    setEditOpen(false);
+    if(refresh === true){
+      fetchOrderDataList();
+    }    
+  }
+
+  function handlePaymentStatusClose() {
+    fetchOrderDataList();
+    setPaymentStatusOpen(false);
+  }
+
+  const handleOrderIdSelection = (orderId) => {
+    setOrderId(orderId);
+  }
+
+  const uploadFileSelector = async (formType) => {
+    setIsLoading(true);
+    try {
+      let formData = new FormData();
+      formData.append('data', JSON.stringify(orderId));
+      if (formType === 'upload_contact_form') {
+        for (var x = 0; x < document.getElementById('upload_contact_form').files.length; x++) {
+          if (document.getElementById('upload_contact_form').files.length != 0) {
+            const data = {
+              data: orderId,
+              file: await FileReader.toBase64(document.getElementById('upload_contact_form').files[x])
+            }
+            await OrderAPI.uploadDocument(data);
+          }
+        }
+      } else if (formType === 'upload_delivery_doc') {
+        for (var x = 0; x < document.getElementById('upload_delivery_doc').files.length; x++) {
+          formData.append('avatar', document.getElementById('upload_delivery_doc').files[x])
+        }
+        if (document.getElementById('upload_delivery_doc').files.length != 0) {
+          const result = await OrderAPI.uploadDeliveryDoc({ formData: formData });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    fetchOrderDataList();
+  };
+
+  function handleProcessDialogClose() {
+    setIsLoading(false);
+  }
+
+  function handleCommentBoxClose() {
+    setCommentBoxOpen(false);
+  }
+
 
   function handleOrderView(data) {
     setEditableData(data);
@@ -451,7 +353,6 @@ export default function Order({ roleName }) {
 
   function handleOrderList(response) {
     setOrder(response.order);
-    handleTabsData(response.order);
   }
 
 
@@ -471,18 +372,15 @@ export default function Order({ roleName }) {
               setOrder(result.order);
               setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
               setCommentBoxOpen(true);
-              handleTabsData(result.order);              
             }
           else if(nextStep === 'Delivery'){
             const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});            
             setOrder(result.order);
             setCommentData({ order_id: orderId, user_id: userId, roleName: roleName });
             setCommentBoxOpen(true);
-            handleTabsData(result.order);
           }else if(nextStep === 'Delivered'){
             const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_date: new Date(), delivered_time: new Date()});
             setOrder(result.order);
-            handleTabsData(result.order);
           }
         } catch (error) {
           console.log(error);
@@ -502,41 +400,31 @@ export default function Order({ roleName }) {
     setOpenCommentView(false);
   }
 
-  function handleEditClose() {
-    setEditOpen(false);
-  }
+  
 
-  function handleSnackbarClick() {
-    //don't remove this function
-  }
-
-  function handleOrderRecData(response) {    
-    setOrder(response.order);
-    handleTabsData(response.order);
-  }
-
+   
   const fetchOrderDataList = async () => {
+    setIsLoading(true);
     try {
-      const result = await OrderAPI.getAll();
-      setOrder(result.order);
-      handleTabsData(result.order);
-      // setOpenTab(result.open);
-      // setFinanceTab(result.finance);
-      // setUnderDeliveryTab(result.underDelivery);
-      // setDeliveredTab(result.delivered);
-      // setCompletedTab(result.completed);
-      // setCancelledTab(result.cancelled);
-      // setArchivedTab(result.archived);
-      
-      // console.log('new Date 2', new Date());
+      const result = await OrderAPI.getRequeredOrderList({
+        tabValue : value,
+        user_role: roleName,
+        rowsPerPage : rowsPerPage,
+        pageNo : page,
+      });
+      setTabsCount(result.tabCounts[0]);
+      setOrderList(result.orderList);
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {    
     fetchOrderDataList();
-  }, [roleName]);
+  }, [roleName, page, rowsPerPage, value]);
+
+
 
   TabPanel.propTypes = {
     children: PropTypes.node,
@@ -564,13 +452,11 @@ export default function Order({ roleName }) {
     setPage(0);
     setRowsPerPage(20);
     setValue(newValue);
-    handleTabsData(order);
   }
 
   async function handleOrderArchive(data) {
     const result = await OrderAPI.archiveOrder({ order_id: data.id });
     setOrder(result.order);
-    handleTabsData(result.order);
   }
 
 
@@ -589,101 +475,15 @@ export default function Order({ roleName }) {
       if (searchText != '') {
         const result = await OrderAPI.searchOrder({ searchText: searchText });
         setOrder(result.order);
-        handleTabsData(result.order);
       } else {
         const result = await OrderAPI.getAll();
         setOrder(result.order);
-        handleTabsData(result.order);
       }
     } catch (error) {
       console.log('error', error);
     }
   }
 
-
-
-  function handleTabsData(order) {
-    let open = [];
-    let finance = [];
-    let underDelivery = [];
-    let delivered = [];
-    let completed = [];
-    let cancelled = [];
-    let archived = [];
-
-
-    if (roleName === 'CSR') {
-      (order.length > 0 ? order : []).map((data, index) => {
-        if (data.assigned_to !== 4 && data.assigned_to !== 5 && data.is_active == 1) {
-          open.push(data);
-        }
-        if (data.assigned_to === 4 && data.is_active == 1) {
-          finance.push(data);
-        }
-        if (data.assigned_to === 5 && data.order_status === 5 && data.is_active == 1) {
-          underDelivery.push(data);
-        }
-        if (data.order_status === 6) {
-          delivered.push(data);
-        }
-        if (data.order_status === 8) {
-          completed.push(data);
-        }
-        if ((data.order_status === 9 || data.order_status === 10) && data.is_active == 0) {
-          cancelled.push(data);
-        }
-        if (data.order_status === 11 && data.is_active == 0) {
-          archived.push(data);
-        }
-      });    
-    } else if (roleName === 'Finance') {
-      (order.length > 0 ? order : []).map((data, index) => {
-        if ((data.assigned_to === 4 || data.assigned_to === 5) && data.order_status !== 8 && data.is_active == 1) {
-          open.push(data);
-        }
-        if (data.assigned_to === 5 && data.order_status === 5 && data.is_active == 1) {
-          underDelivery.push(data);
-        }
-        if (data.order_status === 6) {
-          delivered.push(data);
-        }
-        if (data.order_status === 8) {
-          completed.push(data);
-        }
-        if ((data.order_status === 9 || data.order_status === 10) && data.is_active == 0) {
-          cancelled.push(data);
-        }
-      });
-    } else if (roleName === 'Delivery') {
-      (order.length > 0 ? order : []).map((data, index) => {
-        if (data.assigned_to === 5 && data.order_status === 5 && data.is_active == 1) {
-          open.push(data);
-        }
-        if (data.order_status >= 6 && data.order_status != 9 && data.order_status != 10 && data.order_status != 11) {
-          delivered.push(data);
-        }
-      });
-    }
-    
-    setTabRecord(
-      { open: open,
-        finance : finance, 
-        underDelivery : underDelivery,
-        delivered : delivered, 
-        completed : completed, 
-        cancelled : cancelled, 
-        archived : archived
-      });
-    
-    // setOpenTab(open);
-    // setFinanceTab(finance);
-    // setUnderDeliveryTab(underDelivery);
-    // setDeliveredTab(delivered);
-    // setCompletedTab(completed);
-    // setCancelledTab(cancelled);
-    // setArchivedTab(archived);
-    
-  }
 
   return (
     <div>
@@ -726,136 +526,120 @@ export default function Order({ roleName }) {
           <Paper style={{ width: '100%' }}>
             <AppBar position="static" className={classes.appBar}>
               <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
-                <Tab label={<BadgeComp count={tabRecord.open.length} label="Open" />} />
+                <Tab label={<BadgeComp count={tabsCount.open} label="Open" />} />
                 {roleName === 'CSR' ? 
-                <Tab label={<BadgeComp count={tabRecord.finance.length} label="Finance" />} /> : ''}
+                <Tab label={<BadgeComp count={tabsCount.finance} label="Finance" />} /> : ''}
                 {roleName != 'Delivery' ?
-                <Tab label={<BadgeComp count={tabRecord.underDelivery.length} label="Before Delivery" />} /> : ''}
-                <Tab label={<BadgeComp count={tabRecord.delivered.length} label="Delivered" />} />
+                <Tab label={<BadgeComp count={tabsCount.under_delivery} label="Before Delivery" />} /> : ''}
+                <Tab label={<BadgeComp count={tabsCount.delivered} label="Delivered" />} />
                 {roleName !== 'Delivery' ? 
-                <Tab label={<BadgeComp count={tabRecord.completed.length} label="Completed" />} /> : ''}
+                <Tab label={<BadgeComp count={tabsCount.completed} label="Completed" />} /> : ''}
                 {roleName !== 'Delivery' ? 
-                <Tab label={<BadgeComp count={tabRecord.cancelled.length} label="Cancelled" />} /> : ''}
+                <Tab label={<BadgeComp count={tabsCount.cancelled} label="Cancelled" />} /> : ''}
                 {roleName === 'CSR' ? 
-                <Tab label={<BadgeComp count={tabRecord.archived.length} label="Archived" />} /> : ''}
+                <Tab label={<BadgeComp count={tabsCount.archived} label="Archived" />} /> : ''}
               </Tabs>
             </AppBar>
 
             {roleName === 'CSR' ? <div>
               <TabPanel value={value} index={0}>
-                {tabRecord && <Open order={tabRecord.open} value={value} roleName={roleName}
+                {value === 0 && <Open order={orderList} count={tabsCount.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
-                  handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                  createAndDownloadPdf={handlePDFGenerateType} handleUploadFile={handleUploadFile}
+                   handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                  createAndDownloadPdf={handlePDFGenerateType} handleOrderIdSelection = {handleOrderIdSelection}
                   handleClickViewOpen={handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
                   handleOrderView={handleOrderView} handleOrderArchive={handleOrderArchive} 
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}
                   />}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {tabRecord && <Finance order={tabRecord.finance} roleName={roleName} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
+                {value === 1 && <Finance order={orderList} count={tabsCount.finance} roleName={roleName} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {tabRecord && <UnderDelivery order={tabRecord.underDelivery} roleName={roleName} 
+                {value === 2 && <UnderDelivery order={orderList} count={tabsCount.under_delivery} roleName={roleName} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={3}>
-                {tabRecord && <Delivered order={tabRecord.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {value === 3 && <Delivered order={orderList} count={tabsCount.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={4}>
-                {tabRecord && <Completed order={tabRecord.completed} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {value === 4 && <Completed order={orderList} count={tabsCount.completed} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={5}>
-                {tabRecord && <Cancelled order={tabRecord.cancelled} roleName={roleName} 
+                {value === 5 && <Cancelled order={orderList} count={tabsCount.cancelled} roleName={roleName} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={6}>
-                {tabRecord && <Archived order={tabRecord.archived} roleName={roleName} handleEditOpen={handleEditOpen} 
+                {value === 6 && <Archived order={orderList} count={tabsCount.archived} roleName={roleName} handleEditOpen={handleEditOpen} 
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
             </div> : ''}
 
             {roleName === 'Finance' ? <div>
               <TabPanel value={value} index={0}>
-                {tabRecord && <Open order={tabRecord.open} value={value} roleName={roleName}
+                {value === 0 && <Open order={orderList} count={tabsCount.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
-                  handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                  createAndDownloadPdf={handlePDFGenerateType} handleUploadFile={handleUploadFile}
+                   handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                  createAndDownloadPdf={handlePDFGenerateType} handleOrderIdSelection = {handleOrderIdSelection}
                   handleClickViewOpen={handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen}
                   handleDeliveredProductOpen={handleDeliveredProductOpen} handleOrderView={handleOrderView}
                   handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} page={page} rowsPerPage={rowsPerPage}
                   handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {tabRecord && <UnderDelivery order={tabRecord.underDelivery} roleName={roleName} 
+                {value === 1 && <UnderDelivery order={orderList} count={tabsCount.under_delivery} roleName={roleName} 
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {tabRecord && <Delivered order={tabRecord.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {value === 2 && <Delivered order={orderList} count={tabsCount.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={3}>
-                {tabRecord && <Completed order={tabRecord.completed} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
+                {value === 3 && <Completed order={orderList} count={tabsCount.completed} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen} 
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
               <TabPanel value={value} index={4}>
-                {tabRecord && <Cancelled order={tabRecord.cancelled} roleName={roleName}
+                {value === 4 && <Cancelled order={orderList} count={tabsCount.cancelled} roleName={roleName}
                 page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
             </div> : ''}
 
             {roleName === 'Delivery' ? <div>
               <TabPanel value={value} index={0}>
-                {tabRecord && <Open order={tabRecord.open} value={value} roleName={roleName}
+                {value === 0 && <Open order={orderList} count={tabsCount.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
-                  handleDeliveryDoc={handleDeliveryDoc} handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
-                  createAndDownloadPdf={handlePDFGenerateType} handleUploadFile={handleUploadFile}
+                   handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                  createAndDownloadPdf={handlePDFGenerateType} handleOrderIdSelection = {handleOrderIdSelection}
                   handleClickViewOpen={handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
                   handleOrderView={handleOrderView} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} 
                   handleChangeRowsPerPage={handleChangeRowsPerPage}/>}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {tabRecord && <Delivered order={tabRecord.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen}
+                {value === 1 && <Delivered order={orderList} count={tabsCount.delivered} roleName={roleName} handleViewDeliveredDetailOpen={handleViewDeliveredDetailOpen}
                  page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />}
               </TabPanel>
             </div> : ''}
-
           </Paper>
         </Grid>
       </Grid>
 
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        open={snackbarOpen}
-        autoHideDuration={2000}
-        onClose={handleSnackbarClose}
-      >
-        <MySnackbarContentWrapper
-          onClose={handleSnackbarClose}
-          variant={snackbarContent.variant}
-          message={snackbarContent.message}
-        />
-      </Snackbar>
-
-      {open ? <Add open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData={handleOrderRecData} convertId={0} converstionData={""} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null}
-      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} handleSnackbarClick={handleSnackbarClick} orderData={orderData} /> : null}
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} handleSnackbarClick={handleSnackbarClick} handleOrderRecData={handleOrderRecData} editableData={editableData} viewOnly={viewOnly} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null}
+      {addOrderOpen ? <Add open={addOrderOpen} handleClose={handleAddOrderClose}  handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null}
+      {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} orderData={orderData} /> : null}
+      {editOpen ? <Edit open={editOpen} handleClose={handleEditClose} editableData={editableData} viewOnly={viewOnly} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null}
       {confirmation ? <ConfirmationDialog open={confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog} currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} /> : null}
       {processDialog ? <ProcessDialog open={processDialog} handleProcessDialogClose={handleProcessDialogClose} /> : null}
       {commentBoxOpen ? <CommentDialog open={commentBoxOpen} handleCommentBoxClose={handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null}
       {openCommentView ? <CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId} /> : null}
-      {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} handleSnackbarClick={handleSnackbarClick} orderData={orderData} handleOrderList={handleOrderList} /> : null}
-      {openProductDelivered ? <UpdateDeliveredProduct open={openProductDelivered} handleClose={handleDeliveredProdcutClose} handleSnackbarClick={handleSnackbarClick} orderData={orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
-      {openViewDeliveredDetail ? <ViewDeliveredProductDetails open={openViewDeliveredDetail} handleClose={handleViewDeliveredDetail} handleSnackbarClick={handleSnackbarClick} orderData={orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
+      {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} orderData={orderData} handleOrderList={handleOrderList} /> : null}
+      {openProductDelivered ? <UpdateDeliveredProduct open={openProductDelivered} handleClose={handleDeliveredProdcutClose} orderData={orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
+      {openViewDeliveredDetail ? <ViewDeliveredProductDetails open={openViewDeliveredDetail} handleClose={handleViewDeliveredDetail} orderData={orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
       {openConfirmationPDF ? <YesNoDialog open={openConfirmationPDF} handleYesNoClose={handleYesNoClose} title={"Ezi Debit Filled or Blank ?"} content={"Select Yes to downlaod auto filled form, No to download empty form."} /> : null}
+      {isLoading ? <Loader /> : null}
     </div>
   );
 }

@@ -135,7 +135,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function ViewCustomer({ open, handleClose, handleSnackbarClick, customerId}) {
+export default function ViewCustomer({ open, handleClose, customerId}) {
   
   const styleClass = useCommonStyles();
   const classes = useStyles();

@@ -58,6 +58,8 @@ orderRouter.route("/getnewid").get(validateToken, Order.getnewid);
 orderRouter.route("/getall").get(validateToken, Order.getAll);
 orderRouter.route("/getcomment").post(validateToken, Order.getComment);
 orderRouter.route("/postComment").post(validateToken, Order.postComment);
+orderRouter.route("/getRequeredOrderList").post(validateToken, Order.getRequeredOrderList);
+
 orderRouter.route("/uploaddoc").post(validateToken, Order.uploadDoc);
 orderRouter.route("/uploadDeliveryDoc").post(validateToken, DeliveredDoc.array('avatar'), Order.uploadDeliveryDoc);
 orderRouter.route("/getbudget").post(validateToken, Order.getBudget);

@@ -139,7 +139,7 @@ const customerList = async function (req, res, next) {
     rowsPerPage : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage)),
     pageOffset : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage) - req.body.rowsPerPage),
   }
-  console.log(params)
+  // console.log(params)
 
   try {
     const fetchData = new Customer(params);

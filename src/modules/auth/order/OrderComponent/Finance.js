@@ -38,7 +38,7 @@ const StyledTableCell = withStyles(theme => ({
 }))(TableCell);
 
 
-export default function Finance({order, roleName, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
+export default function Finance({order, count, roleName, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   const styleClass = useCommonStyles();
     
   return (  
@@ -80,13 +80,9 @@ export default function Finance({order, roleName, page, rowsPerPage, handleChang
           <TablePagination
             rowsPerPageOptions={[20, 50, 100]}
             colSpan={9}
-            count={order.length}
+            count={count}
             rowsPerPage={rowsPerPage}
             page={page}
-            SelectProps={{
-              inputProps: { 'aria-label': 'rows per page' },
-              native: true,
-            }}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             ActionsComponent={TablePaginationActions}

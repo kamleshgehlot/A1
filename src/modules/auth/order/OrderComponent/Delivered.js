@@ -61,7 +61,7 @@ function TabPanel(props) {
   );
 }
 
-export default function Delivered({order, roleName, handleViewDeliveredDetailOpen, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage}) {
+export default function Delivered({order, count, roleName, handleViewDeliveredDetailOpen, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage}) {
   const styleClass = useCommonStyles();
 
 return (  
@@ -114,13 +114,9 @@ return (
           <TablePagination
             rowsPerPageOptions={[20, 50, 100]}
             colSpan={10}
-            count={order.length}
+            count={count}
             rowsPerPage={rowsPerPage}
             page={page}
-            SelectProps={{
-              inputProps: { 'aria-label': 'rows per page' },
-              native: true,
-            }}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             ActionsComponent={TablePaginationActions}

@@ -357,38 +357,7 @@ export default function CustomerList({userId, roleName}) {
   const filterMissedPaymentData = async (searchText) =>{
     const result = await Order.filterMissedPaymentData({searchText : searchText});      
     return result;
-  }
-  
-  // async function handleTabsData(customerList){
-  //   const paymentData = await fetchMissedPaymentData();
-
-  //   let activeList = [];
-  //   let holdList = [];
-  //   let financialHardshipList = [];
-  //   let bornToday = [];
-
-  //   (customerList.length > 0 ? customerList : []).map((data, index) => {
-      
-  //     if(isBirthDate(data.dob)){
-  //       bornToday.push(data);
-  //     }
-  //     if(data.state == 1 ){
-  //       activeList.push(data);
-  //     }
-  //     if(data.state == 2 ){
-  //       holdList.push(data);
-  //     }
-  //     if(data.state == 3 ){
-  //       financialHardshipList.push(data);
-  //     } 
-  //   });
-    
-  //   setActiveTab(activeList);
-  //   setHoldTab(holdList);
-  //   setFinancialHardshipTab(financialHardshipList);
-  //   setBornTodayTab(bornToday);
-  //   setMissedPaymentTab(paymentData);
-  // }
+  }  
 
   TabPanel.propTypes = {
     children: PropTypes.node,
