@@ -462,7 +462,7 @@ export default function CustomerList({userId, roleName}) {
                   <Tab label={<BadgeComp count={tabsCount.hold} label="Hold" />} /> 
                   <Tab label={<BadgeComp count={tabsCount.financial_hardship} label="Financial Hardship" />} /> 
                   <Tab label={<BadgeComp count={tabsCount.todays_birthday} label="Today's Birthday" />} />
-                  <Tab label={<BadgeComp count={tabsCount.todays_birthday} label="Missed Payment" />} />
+                  <Tab label={<BadgeComp count={tabsCount.missed_payment} label="Missed Payment" />} />
                 </Tabs>
               </AppBar>
               <div >
@@ -484,7 +484,7 @@ export default function CustomerList({userId, roleName}) {
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  {value === 4 && <MissedPayment missedPaymentData={customerListData} count={tabsCount.todays_birthday} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} 
+                  {value === 4 && <MissedPayment missedPaymentData={customerListData} count={tabsCount.missed_payment} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} handleOrderView={handleOrderView} handlePaymentFilter={handlePaymentFilter} 
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> } 
                 </TabPanel>
               </div>

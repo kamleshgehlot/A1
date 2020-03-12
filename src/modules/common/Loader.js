@@ -1,4 +1,5 @@
 import React from "react";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import styled from "tachyons-components";
 import ReactLoading from "react-loading";
 import Dialog from '@material-ui/core/Dialog';
@@ -51,6 +52,7 @@ const Loader = () => (
     >
       <Section>
         <ReactLoading type={'spin'} color="#007bff" height={'3%'} width={'3%'} />
+        {/* <CircularProgress color= "primary" /> */}
       </Section>
     </Dialog>
 

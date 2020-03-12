@@ -244,7 +244,7 @@ Customer.prototype.countTabRecord = function () {
       }
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        let Query = `SELECT COUNT(CASE WHEN (locate('1', c.state) > 0) THEN 1 ELSE NULL END) as active, COUNT(CASE WHEN (locate('2', c.state) > 0) THEN 1 ELSE NULL END) as hold, COUNT(CASE WHEN (locate('3', c.state) > 0) THEN 1 ELSE NULL END) as financial_hardship, COUNT(CASE WHEN (DATE_FORMAT(DATE(c.dob),'%m-%d') = DATE_FORMAT(NOW(),'%m-%d')) THEN 1 ELSE NULL END) as todays_birthday FROM customer as c`;
+        let Query = `SELECT COUNT(CASE WHEN (locate('1', c.state) > 0) THEN 1 ELSE NULL END) as active, COUNT(CASE WHEN (locate('2', c.state) > 0) THEN 1 ELSE NULL END) as hold, COUNT(CASE WHEN (locate('3', c.state) > 0) THEN 1 ELSE NULL END) as financial_hardship, COUNT(CASE WHEN (DATE_FORMAT(DATE(c.dob),'%m-%d') = DATE_FORMAT(NOW(),'%m-%d')) THEN 1 ELSE NULL END) as todays_birthday, (SELECT COUNT(ps.id) FROM payment_schedules as ps WHERE ps.is_active = 1 AND ps.status IN(1,8,16,17) AND ps.payment_date < CURRENT_DATE  AND ps.payment_date  > (NOW() - INTERVAL 7 DAY)) as missed_payment FROM customer as c`;
         connection.query(Query, function (error, rows, fields) {
             if (error) {console.log("Error...", error); reject(error);}
             resolve(rows);

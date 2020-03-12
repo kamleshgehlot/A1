@@ -1107,7 +1107,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Tenure of Employer(in Years) " : "Tenure with Beneficiary(in Years) " }</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="user_id">{inputs.is_working == 1 ? "Tenure of Employer(in Years) *" : "Tenure with Beneficiary(in Years) *" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {

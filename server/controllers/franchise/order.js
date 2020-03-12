@@ -1043,11 +1043,11 @@ const getReceivedPaymentsList = async function (req, res, next) {
 
 const fetchMissedPaymentData = async function (req, res, next) {
   try {
-    const result = await new Order({ user_id: req.decoded.user_id }).fetchMissedPaymentData();
+    const customerList = await new Order({ user_id: req.decoded.user_id }).fetchMissedPaymentData();
     const fetchData = await new Customer({ user_id: req.decoded.user_id });
 
     const tabCounts = await fetchData.countTabRecord();
-    res.send({ customerList:customerList, tabCounts: tabCounts });
+    res.send({ customerList: customerList, tabCounts: tabCounts });
   } catch (error) {
     next(error);
   }
@@ -1064,7 +1064,8 @@ const filterMissedPaymentData = async function (req, res, next) {
       toPaymentDate: req.body.searchText.toPaymentDate,
     }).filterMissedPaymentData();
 
-    const tabCounts = await fetchData.countTabRecord();
+    const tabCounts = await fetchData.countTabRecord();    
+    tabCounts[0].missed_payment = customerList.length;
     res.send({ customerList:customerList, tabCounts: tabCounts });
   } catch (error) {
     next(error);
