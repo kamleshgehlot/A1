@@ -146,12 +146,10 @@ const RESET_VALUES  = {
   purchase_from : '',
 }
 
-export default function UpdateDeliveredProduct({ open, handleClose, orderData, handleOrderList, roleName}) {
+export default function UpdateDeliveredProduct({ open, handleClose, orderData, roleName, fetchOrderDataList}) {
 
   const classes = useStyles();
-  const styleClass = useCommonStyles();
-  const [requesedData, setRequesedData] = useState([]);
-  const [confirmation, setConfirmation] = React.useState(false);
+  const styleClass = useCommonStyles();  
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
   const [orderedProductList, setOrderedProductList] = useState([]);
@@ -211,7 +209,7 @@ export default function UpdateDeliveredProduct({ open, handleClose, orderData, h
 
         productDetails : filledProduct,
       });
-      handleOrderList(result);
+      fetchOrderDataList();
       handleClose();
     };    
   }

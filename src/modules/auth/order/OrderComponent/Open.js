@@ -28,6 +28,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableFooter from '@material-ui/core/TableFooter';
 import {getDateInDDMMYYYY} from '../../../../utils/datetime';
 import {TablePaginationActions} from '../../../common/Pagination';
+import {handleConfirmation} from '../../../common/confirmAlert/Confirmation.js';
 
 
 const StyledTableCell = withStyles(theme => ({
@@ -43,7 +44,7 @@ const StyledTableCell = withStyles(theme => ({
 
 
 export default function Open({order, count, value, roleName, handleAssignToFinance, handlePaymentStatus, handleAssignToDelivery,
-  uploadFileSelector, handleDelivered, handleEditOpen, createAndDownloadPdf, handleOrderIdSelection,
+  uploadFileSelector, handleEditOpen, createAndDownloadPdf, handleOrderIdSelection, 
   handleClickViewOpen, handleOrderCancellationOpen,  handleDeliveredProductOpen, handleOrderView, handleViewDeliveredDetailOpen, handleOrderArchive,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage
 }) {
@@ -122,7 +123,7 @@ return (
                       </Tooltip>
                     </label>
                   <Tooltip title="Assign to Finance"  disabled= {data.doc_upload_status===0}>
-                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToFinance(data); }} disabled= {data.doc_upload_status===0}>
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleConfirmation('Confirm to Submit', 'You really want to send selected order to next?', data, handleAssignToFinance)}} disabled= {data.doc_upload_status===0}>
                       <SendIcon />
                     </IconButton></span>
                   </Tooltip>
@@ -151,7 +152,7 @@ return (
                     </IconButton></span>
                   </Tooltip>
                   <Tooltip title="Assign to Delivery">
-                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => { handleAssignToDelivery(data.id); }} disabled= {data.order_status !==4  || data.assigned_to===5}>
+                    <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} onClick={(event) => {  handleConfirmation('Confirm to Submit', 'You really want to send selected order to next?', data, handleAssignToDelivery)}} disabled= {data.order_status !==4  || data.assigned_to===5}>
                       <SendIcon />
                     </IconButton></span>
                   </Tooltip>
@@ -174,9 +175,7 @@ return (
                       </IconButton></span>
                 </Tooltip>
                 <Tooltip title="Download Form">
-                  <a href={API_URL + "/api/download?path=order/" + data.uploaded_doc }  download >
-                  {/* <a href={"server\\files\\order\\" + data.uploaded_doc }  download > */}
-                  {/* {inputs.id_proof} */}
+                  <a href={API_URL + "/api/download?path=order/" + data.uploaded_doc }  download >                  
                     <span><IconButton  size="small" className={styleClass.fab} value={data.id} name={data.id} >
                       <PrintIcon />
                     </IconButton></span>

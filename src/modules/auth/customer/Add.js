@@ -152,7 +152,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, setCustomerList, enquiryData, setCustomer, conversionData}) {
+export default function Add({ open, handleClose, fetchCustomerList, enquiryData, setCustomer, conversionData}) {
 
   
   const styleClass = useCommonStyles();
@@ -348,9 +348,7 @@ export default function Add({ open, handleClose, setCustomerList, enquiryData, s
     }
     const response = await Customer.register({ formData: formData });
     
-    
-    
-    setCustomerList(response.customerList);
+    fetchCustomerList();
     setCustomer(data);
     handleReset(RESET_VALUES);
     setpLoading(false);

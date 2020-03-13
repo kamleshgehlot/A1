@@ -145,7 +145,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Edit({ open, handleEditClose, inputValues, setCustomerList}) {
+export default function Edit({ open, handleEditClose, inputValues, fetchCustomerList}) {
   
   const styleClass = useCommonStyles();
   const classes = useStyles();
@@ -236,7 +236,7 @@ export default function Edit({ open, handleEditClose, inputValues, setCustomerLi
         formData.append('avatar', document.getElementById('id_proof').files[x])
       }
       const response = await Customer.register({ formData: formData });
-      setCustomerList(response.customerList);
+      fetchCustomerList();
       setpLoading(false);
       setSavebtn(true);
       handleEditClose(false);

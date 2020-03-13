@@ -174,11 +174,7 @@ export default function CustomerList({userId, roleName}) {
   const [bankDetailArray, setBankDetailArray] = useState([]);
 
   const [tabsCount, setTabsCount] = useState({});
-  const [activeTab, setActiveTab] = useState([]);
-  const [holdTab, setHoldTab] = useState([]);
-  const [financialHardshipTab, setFinancialHardshipTab] = useState([]);
-  const [bornTodayTab, setBornTodayTab] = useState([]);
-  const [missedPaymentTab, setMissedPaymentTab] = useState([]);
+  
   const [editableData,setEditableData] = useState({});
   const [viewOrder,setViewOrder] = useState(false);
 
@@ -215,12 +211,14 @@ export default function CustomerList({userId, roleName}) {
         dataType : type,
         rowsPerPage : rowsPerPage,
         pageNo : page,
+        searchText : searchText,
       });
       setCustomerListData(result.customerList);
       setTabsCount(result.tabCounts[0]);
     } catch (error) {
       console.log('Error...', error);
     }
+    setSearchText('');
     setIsLoading(false);
   };
 
@@ -289,11 +287,6 @@ export default function CustomerList({userId, roleName}) {
     setEditOpen(false);
   }
  
-  function handleCustomerList(response){
-    setCustomerListData(response);
-    handleTabsData(response);    
-  }
-
   function handleSearchText(event){
     setSearchText(event.target.value);
   }
@@ -313,25 +306,6 @@ export default function CustomerList({userId, roleName}) {
 
   function handleOrderViewClose(){
     setViewOrder(false);
-  }
-
-
-  const searchHandler = async () => {
-    try {
-    if(searchText!=''){
-        const result = await Customer.search({searchText: searchText});
-        setCustomerListData(result.customerList);
-        handleTabsData(result.customerList);    
-        setSearchText('');
-     
-    }else{
-      const result = await Customer.list();
-      setCustomerListData(result.customerList);
-      handleTabsData(result.customerList);    
-      setSearchText('');
-    }} catch (error) {
-      console.log('error',error);
-    }
   }
 
 
@@ -408,7 +382,7 @@ export default function CustomerList({userId, roleName}) {
                 value={searchText} 
                 onKeyPress={(ev) => {
                   if (ev.key ===  'Enter') {
-                    searchHandler()
+                    fetchCustomerList()
                     ev.preventDefault();
                   }
                 }}
@@ -416,7 +390,7 @@ export default function CustomerList({userId, roleName}) {
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>
                                   <Tooltip title="Search">
-                                    <IconButton onClick={ searchHandler}><SearchIcon /></IconButton>
+                                    <IconButton onClick={ fetchCustomerList}><SearchIcon /></IconButton>
                                   </Tooltip>
                                 </InputAdornment>,
                 }}
@@ -461,8 +435,8 @@ export default function CustomerList({userId, roleName}) {
           </Grid>
         </Grid>  
 
-      {open ? <Add open={open} handleClose={handleClose} userId={userId} setCustomerList={handleCustomerList} enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
-      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} inputValues={customerData} setCustomerList={handleCustomerList} /> : null}
+      {open ? <Add open={open} handleClose={handleClose} userId={userId} fetchCustomerList={fetchCustomerList} enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
+      {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} inputValues={customerData} fetchCustomerList={fetchCustomerList} /> : null}
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
       {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} customer_id={customerId} roleName={roleName} /> : null }
       {openCommentView ?<CommentView open={openCommentView} handleViewClose={handleViewClose} customer_id = {customerId}  /> :null}

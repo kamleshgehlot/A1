@@ -276,6 +276,9 @@ Customer.prototype.customerList = function () {
         }else if(that.dataType === 'todaysBirthday'){
           Query = Query + ` WHERE  DATE_FORMAT(DATE(c.dob),'%m-%d') = DATE_FORMAT(NOW(),'%m-%d')`;
         }
+        if(that.searchText != ''){
+          Query = Query + ` AND c.id LIKE "%${ that.searchText }%" OR c.first_name LIKE "%${ that.searchText }%" OR c.last_name LIKE "%${ that.searchText }%" OR c.address LIKE "%${ that.searchText }%" OR c.city LIKE "%${ that.searchText }%" OR c.postcode LIKE "%${ that.searchText }%" OR c.telephone LIKE "%${ that.searchText }%" OR c.mobile  LIKE "%${ that.searchText }%" OR c.gender  LIKE "%${ that.searchText }%" OR c.dob  LIKE "%${ that.searchText }%" `
+        }
           Query = Query + ` ORDER BY c.id desc LIMIT ${that.pageOffset}, ${that.rowsPerPage};`;
 
           // console.log(Query);

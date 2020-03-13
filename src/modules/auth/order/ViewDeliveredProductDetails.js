@@ -144,7 +144,7 @@ const RESET_VALUES  = {
   document : '',
 }
 
-export default function ViewDeliveredProductDetails({ open, handleClose, orderData, handleOrderList, roleName}) {
+export default function ViewDeliveredProductDetails({ open, handleClose, orderData, roleName}) {
 
   const classes = useStyles();
   const styleClass = useCommonStyles();

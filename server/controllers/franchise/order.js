@@ -232,6 +232,7 @@ const getRequeredOrderList = async function (req, res, next) {
     rowsPerPage : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage)),
     pageOffset : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage) - req.body.rowsPerPage),
     user_id: req.decoded.user_id,
+    searchText: req.body.searchText,
   };
 
   try {
@@ -257,11 +258,10 @@ const postComment = async function (req, res, next) {
     user_id: req.decoded.user_id,
   };
   try {
+    console.log(commentParams)
     const newComment = new Order(commentParams);
 
-    const result = await newComment.postComment();
-    // console.log('comment result',result);
-    // const order = await new Order({user_id : req.decoded.user_id}).getOrderList();
+    const result = await newComment.postComment();    
     if (result) {
       res.send(result);
     } else {
@@ -342,12 +342,9 @@ const getSingleOrderData = async function (req, res, next) {
 
 
 const archiveOrder = async function (req, res, next) {
-  // console.log('req.body',req.body)
   try {
-    const result = await new Order({ user_id: req.decoded.user_id, order_id: req.body.order_id }).archiveOrder();
-
-    const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-    res.send({ order: order });
+    const result = await new Order({ user_id: req.decoded.user_id, order_id: req.body.order_id }).archiveOrder();    
+    res.send({});    
   } catch (error) {
     next(error);
   }
@@ -750,7 +747,7 @@ const assignToFinance = async function (req, res, next) {
     await newActivity.assignToFinance();
     const isScheduleExist = await newActivity.isScheduleExist();
 
-    if(isScheduleExist == null || isScheduleExist.length === 0){      
+    if(isScheduleExist == null || isScheduleExist.length === 0){
       let orderTypeResult = [];
       let noOfPayment = 0;
       let payAmt = 0;
@@ -783,8 +780,9 @@ const assignToFinance = async function (req, res, next) {
       await newActivity.createdPaymentSchedule();
     }
 
-    const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-    res.send({ order: order });
+    // const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();    
+    // res.send({ order: order });
+    res.send({});
   } catch (error) {
     next(error);
   }
@@ -816,8 +814,9 @@ const paymentReschedule = async function(req, res, next) {
 const assignToDelivery = async function (req, res, next) {
   try {
     await new Order({ user_id: req.decoded.user_id, assigned_to: req.body.assigned_to, id: req.body.id }).assignToDelivery();
-    const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
-    res.send({ order: order });
+    // const order = await new Order({ user_id: req.decoded.user_id }).getOrderList();
+    // res.send({ order: order });
+    res.send({ });
   } catch (error) {
     next(error);
   }

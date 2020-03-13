@@ -33,9 +33,7 @@ import Cancelled from './OrderComponent/Cancelled';
 import Archived from './OrderComponent/Archived';
 
 import OrderCancellationForm from './OrderCancellationForm';
-import ConfirmationDialog from '../ConfirmationDialog.js';
 import YesNoDialog from '../../common/YesNoDialog.js';
-import ProcessDialog from '../ProcessDialog.js';
 import CommentDialog from '../CommentDialog.js';
 import CommentView from './CommentView.js';
 import UpdateDeliveredProduct from './UpdateDeliveredProduct.js';
@@ -74,6 +72,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function Order({ roleName }) {
+  
   const classes = useStyles();
   const userId = APP_TOKEN.get().userId;
 
@@ -86,14 +85,11 @@ export default function Order({ roleName }) {
   const [paymentStatusOpen, setPaymentStatusOpen] = useState(false);
   const [editableData, setEditableData] = useState({});
   const [orderData, setOrderData] = useState([]);
-  const [confirmation, setConfirmation] = React.useState(false);
-  const [nextStep, setNextStep] = React.useState('');
   const [orderId, setOrderId] = useState();  
   const [order, setOrder] = useState([]);
   const [commentBoxOpen, setCommentBoxOpen] = useState(false);
   const [openCommentView, setOpenCommentView] = useState(false);
   const [commentData, setCommentData] = useState([]);  
-  const [processDialog, setProcessDialog] = useState(false);
   const [response, setResponse] = useState([]);
   const [openCancelForm, setOpenCancelForm] = useState(false);
   const [openProductDelivered, setOpenProductDelivered] = useState(false);
@@ -107,6 +103,8 @@ export default function Order({ roleName }) {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
+
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -278,9 +276,7 @@ export default function Order({ roleName }) {
     fetchOrderDataList();
   };
 
-  function handleProcessDialogClose() {
-    setIsLoading(false);
-  }
+
 
   function handleCommentBoxClose() {
     setCommentBoxOpen(false);
@@ -293,18 +289,37 @@ export default function Order({ roleName }) {
     setViewOnly(true);
   }
 
-  function handleAssignToFinance(data) {
-    setOrderId(data.id);
-    setOrderData(data);
-    setNextStep('Finance');
-    setConfirmation(true);
+  const handleAssignToFinance = async (data) => {
+    setIsLoading(true);
+    try{
+      const result = await OrderAPI.assignToFinance({
+        assigned_to: 4,
+        id: data.id, 
+        customer_id: data.customer_id,                
+        order_type : data.order_type,
+        order_type_id : data.order_type_id,
+      });
+      fetchOrderDataList();
+      setCommentData({order_id: data.id, user_id: userId, roleName: roleName});
+      setCommentBoxOpen(true);
+    }catch(e){
+      console.log('Error...', e);
+    }
   }
 
-  function handleAssignToDelivery(data) {
-    setOrderId(data);
-    setNextStep('Delivery');
-    setConfirmation(true);
+  
+  const handleAssignToDelivery = async (data) => {
+    setIsLoading(true);
+    try{
+      const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: data.id});
+      fetchOrderDataList();
+      setCommentData({ order_id: data.id, user_id: userId, roleName: roleName });
+      setCommentBoxOpen(true);
+    }catch(e){
+      console.log('Error...', e);
+    }
   }
+
 
   function handleDeliveredProdcutClose(data) {
     setOpenProductDelivered(false);
@@ -324,19 +339,6 @@ export default function Order({ roleName }) {
     setOpenViewDeliveredDetail(true);
   }
 
-
-  function handleDelivered(data) {
-    setCommentData({ order_id: data, user_id: userId, roleName: roleName });
-    setCommentBoxOpen(true);
-    setNextStep('Delivered');
-    setOrderId(data);
-  }
-
-  if (commentBoxOpen === false && response.isSucceeded === 1 && nextStep === 'Delivered') {
-    setResponse('');
-    setConfirmation(true);
-  }
-
   function handlePaymentStatus(data) {
     setOrderData(data);
     setPaymentStatusOpen(true);
@@ -349,46 +351,6 @@ export default function Order({ roleName }) {
 
   function handleOrderCancellationClose() {
     setOpenCancelForm(false);
-  }
-
-  function handleOrderList(response) {
-    setOrder(response.order);
-  }
-
-
-  function handleConfirmationDialog(response) {
-    if (response === 1) {
-      const fetchData = async () => {
-        try {
-          if(nextStep === 'Finance')
-            {
-              const result = await OrderAPI.assignToFinance({
-                assigned_to: 4,
-                id: orderId, 
-                customer_id: orderData.customer_id,                
-                order_type : orderData.order_type,
-                order_type_id : orderData.order_type_id,
-              });
-              setOrder(result.order);
-              setCommentData({order_id: orderId, user_id: userId, roleName: roleName});
-              setCommentBoxOpen(true);
-            }
-          else if(nextStep === 'Delivery'){
-            const result = await OrderAPI.assignToDelivery({assigned_to: 5, id: orderId});            
-            setOrder(result.order);
-            setCommentData({ order_id: orderId, user_id: userId, roleName: roleName });
-            setCommentBoxOpen(true);
-          }else if(nextStep === 'Delivered'){
-            const result = await OrderAPI.delivered({assigned_to: 5, id: orderId, delivered_date: new Date(), delivered_time: new Date()});
-            setOrder(result.order);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      fetchData();
-    }
-    setConfirmation(false);
   }
 
   function handleClickViewOpen(orderId) {
@@ -411,13 +373,15 @@ export default function Order({ roleName }) {
         user_role: roleName,
         rowsPerPage : rowsPerPage,
         pageNo : page,
+        searchText : searchText,
       });
       setTabsCount(result.tabCounts[0]);
       setOrderList(result.orderList);
     } catch (error) {
       console.log(error);
     }
-    setIsLoading(false);
+    setSearchText('');
+    setIsLoading(false);    
   };
 
   useEffect(() => {    
@@ -454,9 +418,15 @@ export default function Order({ roleName }) {
     setValue(newValue);
   }
 
-  async function handleOrderArchive(data) {
-    const result = await OrderAPI.archiveOrder({ order_id: data.id });
-    setOrder(result.order);
+  const handleOrderArchive = async (data) => {
+    try{
+      setIsLoading(true);
+      const result = await OrderAPI.archiveOrder({ order_id: data.id });
+      fetchOrderDataList();
+    }catch(e){
+      console.log('Error..',e);
+    }
+    
   }
 
 
@@ -468,20 +438,6 @@ export default function Order({ roleName }) {
 
   function handleSearchText(event) {
     setSearchText(event.target.value);
-  }
-
-  const searchHandler = async () => {
-    try {
-      if (searchText != '') {
-        const result = await OrderAPI.searchOrder({ searchText: searchText });
-        setOrder(result.order);
-      } else {
-        const result = await OrderAPI.getAll();
-        setOrder(result.order);
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
   }
 
 
@@ -506,7 +462,7 @@ export default function Order({ roleName }) {
             value={searchText}
             onKeyPress={(ev) => {
               if (ev.key === 'Enter') {
-                searchHandler()
+                fetchOrderDataList();
                 ev.preventDefault();
               }
             }}
@@ -514,7 +470,7 @@ export default function Order({ roleName }) {
             InputProps={{
               endAdornment: <InputAdornment position='end'>
                 <Tooltip title="Search">
-                  <IconButton onClick={searchHandler}><SearchIcon /></IconButton>
+                  <IconButton onClick={fetchOrderDataList}><SearchIcon /></IconButton>
                 </Tooltip>
               </InputAdornment>,
             }}
@@ -546,7 +502,7 @@ export default function Order({ roleName }) {
                 {value === 0 && <Open order={orderList} count={tabsCount.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
-                   handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                  handleEditOpen={handleEditOpen} 
                   createAndDownloadPdf={handlePDFGenerateType} handleOrderIdSelection = {handleOrderIdSelection}
                   handleClickViewOpen={handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
                   handleOrderView={handleOrderView} handleOrderArchive={handleOrderArchive} 
@@ -583,7 +539,7 @@ export default function Order({ roleName }) {
                 {value === 0 && <Open order={orderList} count={tabsCount.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
-                   handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                  handleEditOpen={handleEditOpen}
                   createAndDownloadPdf={handlePDFGenerateType} handleOrderIdSelection = {handleOrderIdSelection}
                   handleClickViewOpen={handleClickViewOpen} handleOrderCancellationOpen={handleOrderCancellationOpen}
                   handleDeliveredProductOpen={handleDeliveredProductOpen} handleOrderView={handleOrderView}
@@ -613,7 +569,7 @@ export default function Order({ roleName }) {
                 {value === 0 && <Open order={orderList} count={tabsCount.open} value={value} roleName={roleName}
                   handleAssignToFinance={handleAssignToFinance} handlePaymentStatus={handlePaymentStatus}
                   handleAssignToDelivery={handleAssignToDelivery} uploadFileSelector={uploadFileSelector}
-                   handleDelivered={handleDelivered} handleEditOpen={handleEditOpen}
+                  handleEditOpen={handleEditOpen}
                   createAndDownloadPdf={handlePDFGenerateType} handleOrderIdSelection = {handleOrderIdSelection}
                   handleClickViewOpen={handleClickViewOpen} handleDeliveredProductOpen={handleDeliveredProductOpen}
                   handleOrderView={handleOrderView} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} 
@@ -631,13 +587,11 @@ export default function Order({ roleName }) {
       {addOrderOpen ? <Add open={addOrderOpen} handleClose={handleAddOrderClose}  handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null}
       {paymentStatusOpen ? <PaymentStatus open={paymentStatusOpen} handleClose={handlePaymentStatusClose} orderData={orderData} /> : null}
       {editOpen ? <Edit open={editOpen} handleClose={handleEditClose} editableData={editableData} viewOnly={viewOnly} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null}
-      {confirmation ? <ConfirmationDialog open={confirmation} lastValue={1} handleConfirmationClose={handleConfirmationDialog} currentState={0} title={"Send to finance ?"} content={"Do you really want to send selected order to next ?"} /> : null}
-      {processDialog ? <ProcessDialog open={processDialog} handleProcessDialogClose={handleProcessDialogClose} /> : null}
       {commentBoxOpen ? <CommentDialog open={commentBoxOpen} handleCommentBoxClose={handleCommentBoxClose} orderData={commentData} setResponse={setResponse} /> : null}
       {openCommentView ? <CommentView open={openCommentView} handleViewClose={handleViewClose} orderId={orderId} /> : null}
-      {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} orderData={orderData} handleOrderList={handleOrderList} /> : null}
-      {openProductDelivered ? <UpdateDeliveredProduct open={openProductDelivered} handleClose={handleDeliveredProdcutClose} orderData={orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
-      {openViewDeliveredDetail ? <ViewDeliveredProductDetails open={openViewDeliveredDetail} handleClose={handleViewDeliveredDetail} orderData={orderData} handleOrderList={handleOrderList} roleName={roleName} /> : null}
+      {openCancelForm ? <OrderCancellationForm open={openCancelForm} handleClose={handleOrderCancellationClose} orderData={orderData}  fetchOrderDataList={fetchOrderDataList} /> : null}
+      {openProductDelivered ? <UpdateDeliveredProduct open={openProductDelivered} handleClose={handleDeliveredProdcutClose} orderData={orderData} roleName={roleName} fetchOrderDataList={fetchOrderDataList} /> : null}
+      {openViewDeliveredDetail ? <ViewDeliveredProductDetails open={openViewDeliveredDetail} handleClose={handleViewDeliveredDetail} orderData={orderData} roleName={roleName} /> : null}
       {openConfirmationPDF ? <YesNoDialog open={openConfirmationPDF} handleYesNoClose={handleYesNoClose} title={"Ezi Debit Filled or Blank ?"} content={"Select Yes to downlaod auto filled form, No to download empty form."} /> : null}
       {isLoading ? <Loader /> : null}
     </div>

@@ -1090,16 +1090,9 @@ Order.prototype.assignToDelivery = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           connection.query('UPDATE orders SET assigned_to= 5, order_status = 5 where id = "'+that.id+'"', function (error, rows, fields) {
-            if (!error) {
-                resolve(rows);
-                } else {
-                  console.log("Error...", error);
-                  reject(error);
-                }
+            if (error) {console.log("Error...", error); reject(error);}
+            resolve(rows);
           })
-      } else {
-        console.log("Error...", error);
-        reject(error);
       }
       connection.release();
       console.log('Order Added for Franchise Staff %d', connection.threadId);
@@ -1434,7 +1427,7 @@ Order.prototype.postComment = function () {
       if (!error) {
           connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
           let queryData = [
-            [that.id, that.userid, that.user_role, that.comment, 1]
+            [that.order_id, that.userid, that.user_role, that.comment, 1]
           ];
             connection.query('INSERT INTO order_comment(order_id, created_by, user_role, comment, is_active) VALUES ?',[queryData],function (error, rows, fields) {
               if (!error) {              
@@ -2052,11 +2045,11 @@ Order.prototype.countTabRecord = function () {
           COUNT(CASE WHEN (o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1) THEN 1 ELSE NULL END) as under_delivery,
           COUNT(CASE WHEN o.order_status = 6 THEN 1 ELSE NULL END) as delivered,
           COUNT(CASE WHEN o.order_status = 8 THEN 1 ELSE NULL END) as completed,
-          COUNT(CASE WHEN (o.order_status IN(9,10) AND o.is_active = 1) THEN 1 ELSE NULL END) as cancelled,
-          COUNT(CASE WHEN (o.order_status = 11 AND o.is_active = 1) THEN 1 ELSE NULL END) as archived
+          COUNT(CASE WHEN (o.order_status IN(9,10) AND o.is_active = 0) THEN 1 ELSE NULL END) as cancelled,
+          COUNT(CASE WHEN (o.order_status = 11 AND o.is_active = 0) THEN 1 ELSE NULL END) as archived
           FROM orders as o`;
         }else if(that.user_role === 'Finance'){
-          Query = `SELECT COUNT(CASE WHEN (o.assigned_to IN(4,5) AND o.order_status != 8 AND o.is_active = 1) THEN 1 ELSE NULL END) as open, COUNT(CASE WHEN (o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1) THEN 1 ELSE NULL END) as under_delivery, COUNT(CASE WHEN o.order_status = 6 THEN 1 ELSE NULL END) as delivered, COUNT(CASE WHEN o.order_status = 8 THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN (o.order_status IN(9,10) AND o.is_active = 1) THEN 1 ELSE NULL END) as cancelled FROM orders as o`;
+          Query = `SELECT COUNT(CASE WHEN (o.assigned_to IN(4,5) AND o.order_status != 8 AND o.is_active = 1) THEN 1 ELSE NULL END) as open, COUNT(CASE WHEN (o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1) THEN 1 ELSE NULL END) as under_delivery, COUNT(CASE WHEN o.order_status = 6 THEN 1 ELSE NULL END) as delivered, COUNT(CASE WHEN o.order_status = 8 THEN 1 ELSE NULL END) as completed, COUNT(CASE WHEN (o.order_status IN(9,10) AND o.is_active = 0) THEN 1 ELSE NULL END) as cancelled FROM orders as o`;
         }else if(that.user_role === 'Delivery'){
           Query = `SELECT COUNT(CASE WHEN (o.assigned_to = 5 AND o.order_status = 5 AND o.is_active = 1) THEN 1 ELSE NULL END) as open, COUNT(CASE WHEN (o.order_status IN(6,7,8) AND o.order_status NOT IN(9,10,11)) THEN 1 ELSE NULL END) as delivered FROM orders as o`;
         }
@@ -2098,9 +2091,9 @@ Order.prototype.getRequeredOrderList = function () {
           }else if(that.tabValue === 4){ //completed
             Query = Query + ` WHERE o.order_status = 8 `;
           }else if(that.tabValue === 5){ // cancelled
-            Query = Query + ` WHERE o.order_status IN(9,10) AND o.is_active = 1 `;
+            Query = Query + ` WHERE o.order_status IN(9,10) AND o.is_active = 0 `;
           }else if(that.tabValue === 6){ //archived
-            Query = Query + ` WHERE o.order_status = 11 AND o.is_active = 1 `;
+            Query = Query + ` WHERE o.order_status = 11 AND o.is_active = 0 `;
           }        
         } else if (that.user_role === 'Finance') {
           if(that.tabValue === 0){ //open
@@ -2112,7 +2105,7 @@ Order.prototype.getRequeredOrderList = function () {
           }else if(that.tabValue === 3){ //completed
             Query = Query + ` WHERE o.order_status = 8 `;
           }else if(that.tabValue === 4){ // cancelled
-            Query = Query + ` WHERE o.order_status IN(9,10) AND o.is_active = 1 `;
+            Query = Query + ` WHERE o.order_status IN(9,10) AND o.is_active = 0 `;
           }
         } else if (that.user_role === 'Delivery') {
           if(that.tabValue === 0){ // open
@@ -2121,8 +2114,11 @@ Order.prototype.getRequeredOrderList = function () {
             Query = Query + ` WHERE o.order_status IN(6,7,8) AND o.order_status NOT IN(9,10,11) `;
           }
         }
+        if(that.searchText !== '' ){
+            Query = Query + ` AND o.order_id LIKE  "%${that.searchText}%" OR o.ezidebit_uid LIKE "%${that.searchText}%" `;
+        }
         Query = Query + `  GROUP BY op.order_id ORDER BY o.id DESC LIMIT ${that.pageOffset}, ${that.rowsPerPage};`;
-        console.log('query..', Query)
+        // console.log('query..', Query)
         connection.query(Query,function (error, rows, fields) {
             if (error) {console.log("Error...", error); reject(error);}
                 resolve(rows);
