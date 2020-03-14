@@ -120,7 +120,7 @@ return (
         </TableRow>
       </TableHead>
       <TableBody>        
-          {customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data,index) => {
+          {(customerList.length > 0 ? customerList : []).map((data,index) => {
             return(
               <TableRow key={data.id}>
                   <StyledTableCell>  {data.id}           </StyledTableCell>

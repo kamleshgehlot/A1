@@ -58,7 +58,7 @@ export default function Finance({order, count, roleName, page, rowsPerPage, hand
           </TableRow>
         </TableHead>
         <TableBody>
-          {(order.length > 0 ? order : []).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, index) => {          
+          {(order.length > 0 ? order : []).map((data, index) => {          
               return(
                 <TableRow key={Math.random()}>
                   <StyledTableCell>{index + 1}</StyledTableCell>
