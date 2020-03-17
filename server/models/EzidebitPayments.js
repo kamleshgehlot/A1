@@ -63,10 +63,10 @@ EzidebitPayments.prototype.GetPayments = function () {
                   + (that.payment_source !== 'ALL' ? ` AND paymentSource = \'${that.payment_source}\'` :'');
         
               if(that.date_from !== "Invalid date" && that.date_to !== "Invalid date" && that.date_field !== 'NONE'){
-                if(that.date_field === 'PAYMENT') {Query = Query + ` AND debitDate BETWEEN \'${that.date_from}\' AND \'${that.date_to}\'` };
-                if(that.date_field === 'SETTLEMENT') {Query = Query + ` AND settlementDate BETWEEN \'${that.date_from}\' AND \'${that.date_to}\'` };          
+                if(that.date_field === 'PAYMENT') {Query = Query + ` AND (DATE(debitDate) BETWEEN \'${that.date_from}\' AND \'${that.date_to}\')` };
+                if(that.date_field === 'SETTLEMENT') {Query = Query + ` AND (DATE(settlementDate) BETWEEN \'${that.date_from}\' AND \'${that.date_to}\')` };          
               }
-
+              // console.log(Query)
         connection.query(Query, function (error, rows, fields) {
             if (!error) {
               resolve(rows);

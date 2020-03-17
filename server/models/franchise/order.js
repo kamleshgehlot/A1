@@ -2115,7 +2115,7 @@ Order.prototype.getRequeredOrderList = function () {
           }
         }
         if(that.searchText !== '' ){
-            Query = Query + ` AND o.order_id LIKE  "%${that.searchText}%" OR o.ezidebit_uid LIKE "%${that.searchText}%" `;
+            Query = Query + ` AND (o.order_id LIKE  "%${that.searchText}%" OR o.ezidebit_uid LIKE "%${that.searchText}%") `;
         }
         Query = Query + `  GROUP BY op.order_id ORDER BY o.id DESC LIMIT ${that.pageOffset},${that.rowsPerPage};`;
         // console.log('query..', Query)
