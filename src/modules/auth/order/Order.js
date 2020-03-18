@@ -438,7 +438,7 @@ export default function Order({ roleName }) {
             margin="dense"
             id="search"
             name="search"
-            placeholder="Type (OrderId/Ezidebit UId) to Search Order..."
+            placeholder="Type (OrderId/Ezidebit UId/ First/Last Name /Mobile /Telephone /Address /City) to Search Order..."
             type="text"
             autoComplete='off'
             value={searchText}

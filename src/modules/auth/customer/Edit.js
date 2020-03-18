@@ -150,7 +150,6 @@ export default function Edit({ open, handleEditClose, inputValues, fetchCustomer
   const [otherIdTypeValue, setOtherIdTypeValue] = useState(inputValues.other_id_type);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
-  const [chkEmail, SetChkEmail] = useState();
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -173,10 +172,7 @@ export default function Edit({ open, handleEditClose, inputValues, fetchCustomer
   }, []);
 
 
-  const editCustomer = async (e) => {
-    if(inputs.email === chkEmail || inputs.employer_email===chkEmail){
-      alert('Email already registered')
-    }else{
+  const editCustomer = async (e) => {    
       setpLoading(true);
       setSavebtn(false);
       const data = {
@@ -233,7 +229,6 @@ export default function Edit({ open, handleEditClose, inputValues, fetchCustomer
       setpLoading(false);
       setSavebtn(true);
       handleEditClose(false);
-    }
   };
 
   
@@ -251,7 +246,6 @@ export default function Edit({ open, handleEditClose, inputValues, fetchCustomer
       const response = await UserAPI.verifyEmail({email : email});
       
       if(response.isVerified!=''){
-      SetChkEmail(response.isVerified[0].email);
       errors[event.target.name]  = 'Email already registered';
       // alert('Email already registered');
       }

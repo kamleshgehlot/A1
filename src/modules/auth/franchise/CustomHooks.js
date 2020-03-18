@@ -8,8 +8,8 @@ const useSignUpForm = (state, callback, validate) => {
   const validNumber = /^[0-9]*$/;
 
   const handleSubmit = event => {
-    console.log('errors',errors)
-    console.log('inputs',inputs)
+    // console.log('errors',errors)
+    // console.log('inputs',inputs)
     if (event) {
       event.preventDefault();
     }
@@ -106,6 +106,7 @@ const useSignUpForm = (state, callback, validate) => {
     setInputsAll,
     setInput,
     errors,
+    setErrors,
     isSubmitting,
     cleanInputs,
     handleNumberInput, 

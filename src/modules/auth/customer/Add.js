@@ -162,7 +162,6 @@ export default function Add({ open, handleClose, fetchCustomerList, conversionDa
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
   const [otherIdType, setOtherIdType] = useState(true);
-  const [chkEmail, SetChkEmail] = useState();
   const [otherIdTypeValue, setOtherIdTypeValue] = useState();
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
@@ -195,26 +194,28 @@ export default function Add({ open, handleClose, fetchCustomerList, conversionDa
   }
 
 
-
+  const checkEmail = async (fieldName, email) => {
+    try{
+      const response = await UserAPI.verifyEmail({email : email});
+      if(response.isVerified !== ''){
+      setErrors({ ...errors, [fieldName]: 'Email already registered'});
+      }
+    }catch(e){
+      console.log('Error',e);
+    }    
+  }
 
   function handleEmailVerification(event){
     const email = event.target.value;    
-    const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!validEmail.test(email)) {
-      errors[event.target.name] = 'Email Address is invalid';
+    const validEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(email === ''){
+      setErrors({ ...errors, [event.target.name]: ''});
+    }else if(!validEmail.test(email)){
+      setErrors({ ...errors, [event.target.name]: 'Email Address is invalid'});
+    }else {
+      setErrors({ ...errors, [event.target.name]: ''});
     }
-    else{
-      errors[event.target.name] = '';
-    }
-
-    const checkEmail = async () => {
-      const response = await UserAPI.verifyEmail({email : email});
-      if(response.isVerified != ''){
-      SetChkEmail(response.isVerified[0].email);
-      errors[event.target.name]  = 'Email already registered';
-      }
-    }
-    checkEmail();
+    checkEmail(event.target.name, email);
   }
 
   useEffect(() => {
@@ -286,12 +287,6 @@ export default function Add({ open, handleClose, fetchCustomerList, conversionDa
     }
 
   const addCustomer = async () => {
-    if(inputs.email === chkEmail){
-      alert('Customer email already registered')
-    }else if(inputs.employer_email === chkEmail){
-      alert('Employer email already registered')
-    }else {
-
     setpLoading(true);
     setSavebtn(true);
     const data = {
@@ -351,10 +346,9 @@ export default function Add({ open, handleClose, fetchCustomerList, conversionDa
     setpLoading(false);
     setSavebtn(false);
     handleClose(false);
-    }
   };
 
- const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+ const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInput, errors, setErrors } = useSignUpForm(
     RESET_VALUES,
     addCustomer,
     validate
@@ -1137,7 +1131,7 @@ return (
             <Grid item xs={12} sm={12}>
                     
               <Button variant="contained"  color="primary" className={classes.button} onClick={handleSubmit} disabled = {savebtn}>
-                save
+                Save
               </Button> 
               <Button variant="contained" color="primary" onClick={handleClose} className={classes.button}>
                 Close

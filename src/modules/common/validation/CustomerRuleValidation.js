@@ -178,8 +178,6 @@ export default function validate(values) {
       errors.employer_email = 'Email is invalid';
     }
   } 
-
-
  
   if (!values.employer_tenure) {
     errors.employer_tenure = 'Tenure of Employer is required';
