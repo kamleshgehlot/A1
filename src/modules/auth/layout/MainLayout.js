@@ -912,7 +912,7 @@ export default function ClippedDrawer(props) {
           showTask ? <TaskList roleName={roleAs} showTaskData={taskData} /> : null
         }
         {
-          showCustomer ? <Customer userId={userId} roleName={roleAs}/> : null
+          showCustomer ? <Customer roleName={roleAs}/> : null
         }
         {
           showProfile ? <Profile roleName={roleAs}/> : null

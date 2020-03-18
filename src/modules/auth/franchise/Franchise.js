@@ -26,6 +26,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 
+import {TabPanel} from '../../common/TabPanel.js'
 import Add from './Add';
 import Edit from './Edit';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -85,18 +86,7 @@ export default function Franchise({roleName}) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
   
-// function a11yProps(index) {
-//   return {
-//     id: `simple-tab-${index}`,
-//     'aria-controls': `simple-tabpanel-${index}`,
-//   };
-// }
   const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
@@ -235,22 +225,6 @@ export default function Franchise({roleName}) {
   }
 
 
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
-    );
-  }
 
   
   function handleClickOpen() {

@@ -5,20 +5,11 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Snackbar from '@material-ui/core/Snackbar';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import CreateIcon from '@material-ui/icons/Create';
-import ArchiveIcon from '@material-ui/icons/Archive';
 import MySnackbarContentWrapper from '../../common/MySnackbarContentWrapper';
-import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
 
 //files
 import Add from './Add';
@@ -36,32 +27,11 @@ import Completed from './OtherComponents/Completed';
 
 // API CALL
 import TaskAPI from '../../../api/Task';
-// import Staff from '../../../api/franchise/Staff';
-import FranchiseUsers from '../../../api/FranchiseUsers';
-import { API_URL } from '../../../api/Constants';
-import BadgeComp from '../../common/BadgeComp';
 
+//Components
+import BadgeComp from '../../common/BadgeComp.js';
+import {TabPanel} from '../../common/TabPanel.js';
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-}))(TableRow);
-
-  const drawerWidth = 240;
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
@@ -70,14 +40,13 @@ const StyledTableRow = withStyles(theme => ({
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      // width: 1000
     },
     drawer: {
-      width: drawerWidth,
+      width: 240,
       flexShrink: 0,
     },
     drawerPaper: {
-      width: drawerWidth,
+      width: 240,
     },
     content: {
       flexGrow: 1,
@@ -302,26 +271,6 @@ export default function TaskList({roleName, showTaskData}) {
   };
 
 
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-    return (
-        <Typography
-          component="div"
-          role="tabpanel"
-          hidden={value !== index}
-          id={`simple-tabpanel-${index}`}
-          aria-labelledby={`simple-tab-${index}`}
-          {...other}
-        >
-          <Box p={3}>{children}</Box>
-        </Typography>
-    );
-  }
   
   function handleTabChange(event, newValue) {
     setValue(newValue);

@@ -1,57 +1,34 @@
 import React from 'react';
-
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CachedIcon from '@material-ui/icons/Cached';
-import DetailsIcon from '@material-ui/icons/Details';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import TablePagination from '@material-ui/core/TablePagination';
-import CreateIcon from '@material-ui/icons/Create';
-import UpdateIcon from '@material-ui/icons/Update';
 import FilterIcon from '@material-ui/icons/FilterList';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import SearchIcon from '@material-ui/icons/Search';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
-import { API_URL } from '../../../../api/Constants';
-import {useCommonStyles} from '../../../common/StyleComman';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import Popover from '@material-ui/core/Popover';;
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import {TablePaginationActions} from '../../../common/Pagination';
-import {getDate, getDateInDDMMYYYY} from '../../../../utils/datetime';
+import { getDateInDDMMYYYY} from '../../../../utils/datetime';
 import { Divider } from '@material-ui/core';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 
-const drawerWidth = 240;
+
+// Components
+import {PaginationBar} from '../../../common/PaginationBar.js';
+import {StyledTableCell} from '../../../common/TableStyles.js';
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -60,14 +37,13 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    // width: 1000
   },
   drawer: {
-    width: drawerWidth,
+    width: 240,
     flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: 240,
   },
   content: {
     flexGrow: 1,
@@ -107,16 +83,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
+
 
 export default function MissedPayment({missedPaymentData, count, handleOrderView, handlePaymentFilter, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   const classes = useStyles();
@@ -274,16 +241,7 @@ return (
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[20, 50, 100]}
-              colSpan={8}
-              count={count}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
+            <PaginationBar colSpan={8} count={count} rowsPerPage={rowsPerPage} page={page} handleChangePage = {handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />           
           </TableRow>
         </TableFooter>
       </Table>  

@@ -1,61 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles, fade } from '@material-ui/core/styles';
-import { APP_TOKEN } from '../../../api/Constants';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
-import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
-import DetailsIcon from '@material-ui/icons/Details';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
-import CreateIcon from '@material-ui/icons/Create';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
-import Add from './Add';
-import Edit from './Edit';
-import EditBudget from '../order/EditBudget';
-import CommentIcon from '@material-ui/icons/Comment';
-import TablePagination from '@material-ui/core/TablePagination';
-import CustomerBankDetails from './CustomerBankDetails';
+
 
 // API CALL
 import Customer from '../../../api/franchise/Customer';
 import Order from '../../../api/franchise/Order';
+import { APP_TOKEN } from '../../../api/Constants';
 
+// Components
 import Active from './components/Active';
 import Hold from './components/Hold';
 import FinancialHardship from './components/FinancialHardship';
 import BornToday from './components/BornToday';
 import MissedPayment from './components/MissedPayment';
-import ViewOrder from '../order/Edit';
 
+import Add from './Add';
+import Edit from './Edit';
+import EditBudget from '../order/EditBudget';
+import CustomerBankDetails from './CustomerBankDetails';
+import ViewOrder from '../order/Edit';
 import Loader from '../../common/Loader.js';
 import CommentView from './CommentView';
 import BadgeComp from '../../common/BadgeComp';
-
 import BudgetHistory from '../order/BudgetHistory';
 import { getDate} from '../../../utils/datetime';
+import {TabPanel} from '../../common/TabPanel.js'
 
-
-const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -68,14 +50,14 @@ const useStyles = makeStyles(theme => ({
     zIndex: theme.zIndex.drawer + 1,    
   },
   drawer: {
-    width: drawerWidth,
+    width: 240,
     flexShrink: 0,
   },
    padding: {
     padding: theme.spacing(0, 2),
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: 240,
   },
   content: {
     flexGrow: 1,
@@ -111,12 +93,11 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+      },
   },
-    
   searchIcon: {
     width: theme.spacing(7),
     height: '100%',
@@ -140,17 +121,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-}))(TableRow);
 
 
-export default function CustomerList({userId, roleName}) {
-
+export default function CustomerList({roleName}) {  
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
@@ -159,7 +132,6 @@ export default function CustomerList({userId, roleName}) {
   const [customerListData, setCustomerListData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [searchText, setSearchText]  = useState('');
-  const [customer, setCustomer] = useState({});
 
 
 
@@ -190,6 +162,7 @@ export default function CustomerList({userId, roleName}) {
     setPage(0);
   };
       
+  console.log(searchText)
   useEffect(() => {   
     fetchCustomerList();
   }, [page, rowsPerPage, value]);
@@ -197,18 +170,9 @@ export default function CustomerList({userId, roleName}) {
 
   const fetchCustomerList = async () => {
     setIsLoading(true);
-
-    let type = '';
-    switch(value){
-      case 0 : type = 'active'; break;
-      case 1 : type = 'hold'; break;
-      case 2 : type = 'financialHardship'; break;
-      case 3 : type = 'todaysBirthday'; break;
-      case 4 : type = 'missedPayment'; break;
-    }    
     try {
       const result = await Customer.customerList({
-        dataType : type,
+        tabValue : value,
         rowsPerPage : rowsPerPage,
         pageNo : page,
         searchText : searchText,
@@ -221,10 +185,6 @@ export default function CustomerList({userId, roleName}) {
     setSearchText('');
     setIsLoading(false);
   };
-
-  function handleClickOpen() {
-    setOpen(true);
-  }
 
   function handleClose() {
     setOpen(false);
@@ -333,28 +293,6 @@ export default function CustomerList({userId, roleName}) {
     return result;
   }  
 
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-    return (
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
-    );
-  }
-
   function handleTabChange(event, newValue) {
     setValue(newValue);    
     setPage(0);
@@ -367,35 +305,29 @@ export default function CustomerList({userId, roleName}) {
     <div>     
       <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen}>
+            <Fab variant="extended" size="small" className={classes.fonttransform} onClick={()=> {setOpen(true)}}>
               <AddIcon className={classes.extendedIcon} />Customers
             </Fab>
-          </Grid>   
+          </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                margin="dense"
-                id="search"
-                name="search"
-                placeholder ="Type (Id/Name/Address/City/Postcode/Telephone/Mobile/DOB) to Search Customer..."
-                type="text"
-                autoComplete='off'                
-                value={searchText} 
-                onKeyPress={(ev) => {
-                  if (ev.key ===  'Enter') {
-                    fetchCustomerList()
-                    ev.preventDefault();
-                  }
-                }}
-                onChange={handleSearchText}
-                InputProps={{
-                  endAdornment: <InputAdornment position='end'>
-                                  <Tooltip title="Search">
-                                    <IconButton onClick={ fetchCustomerList}><SearchIcon /></IconButton>
-                                  </Tooltip>
-                                </InputAdornment>,
-                }}
+              <TextField 
                 fullWidth
-              />              
+                id="search" 
+                name="search" 
+                margin="dense" 
+                type="text"
+                autoComplete='off' 
+                value={searchText} 
+                placeholder ="Type (Id/Name/Address/City/Postcode/Telephone/Mobile/DOB) to Search Customer..."
+                onKeyPress={(ev) => { if (ev.key ===  'Enter') { fetchCustomerList(); ev.preventDefault(); } }}
+                onChange={handleSearchText}
+                InputProps={{ endAdornment: <InputAdornment position='end'>
+                    <Tooltip title="Search"> 
+                      <IconButton onClick={ fetchCustomerList}><SearchIcon /></IconButton>
+                    </Tooltip>
+                  </InputAdornment>,
+                }}
+              />
           </Grid>
           <Grid item xs={12} sm={12}>
             <Paper style={{ width: '100%' }}>
@@ -412,7 +344,7 @@ export default function CustomerList({userId, roleName}) {
                 <TabPanel value={value} index={0}>
                   {value === 0 && <Active customerList={customerListData} count={tabsCount.active} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
                   page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> }
-                </TabPanel>              
+                </TabPanel>
 
                 <TabPanel value={value} index={1}>
                   {value === 1 && <Hold customerList={customerListData} count={tabsCount.hold} handleClickEditOpen={handleClickEditOpen} handleOpenEditBudget={handleOpenEditBudget} handleClickCommentOpen={handleClickCommentOpen} handleHistoryOpen={handleHistoryOpen} handleBankDetailOpen = {handleBankDetailOpen} 
@@ -435,7 +367,7 @@ export default function CustomerList({userId, roleName}) {
           </Grid>
         </Grid>  
 
-      {open ? <Add open={open} handleClose={handleClose} userId={userId} fetchCustomerList={fetchCustomerList} enquiryData={''} setCustomer={setCustomer} conversionData={""}/>: null}      
+      {open ? <Add open={open} handleClose={handleClose} fetchCustomerList={fetchCustomerList} />: null}
       {editOpen ? <Edit open={editOpen} handleEditClose={handleEditClose} inputValues={customerData} fetchCustomerList={fetchCustomerList} /> : null}
       {budgetOpen ?<EditBudget open={budgetOpen} handleBudgetClose={handleBudgetClose} setBudgetList={setBudgetList} budgetList={budgetList}   totalBudgetList={totalBudgetList} customer_id={customerId} isEditable={1} handleOrderViewFromBudget={handleOrderViewFromBudget} /> : null }
       {budgetHistoryOpen ? <BudgetHistory open={budgetHistoryOpen} handleClose={handleHistoryClose} customer_id={customerId} roleName={roleName} /> : null }

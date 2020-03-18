@@ -112,8 +112,8 @@ const register = async function (req, res, next) {
         });
       }
 
-      const customerList = await new Customer({ user_id: req.decoded.user_id }).all();
-      res.send({ customerList });
+      // const customerList = await new Customer({ user_id: req.decoded.user_id }).all();
+      res.send({ customer_id: newCustomer.customer_id });
     }
   } catch (error) {
     next(error);
@@ -135,7 +135,7 @@ const all = async function (req, res, next) {
 const customerList = async function (req, res, next) {
   let params = {
     user_id: req.decoded.user_id,
-    dataType : req.body.dataType,
+    tabValue: req.body.tabValue,
     rowsPerPage : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage)),
     pageOffset : (((Number(req.body.pageNo) + 1 ) * req.body.rowsPerPage) - req.body.rowsPerPage),
     searchText : req.body.searchText,
@@ -148,7 +148,7 @@ const customerList = async function (req, res, next) {
 
     let customerList = [];
 
-    if(params.dataType !== 'missedPayment'){
+    if(params.tabValue !== 4){
       customerList = await fetchData.customerList();
     }else{
       customerList = await fetchFromOrder.fetchMissedPaymentData();

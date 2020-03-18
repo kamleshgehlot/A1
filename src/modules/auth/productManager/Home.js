@@ -1,35 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { makeStyles, withStyles, fade } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
+import { makeStyles, fade } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import IconButton from '@material-ui/core/IconButton';
-import DetailsIcon from '@material-ui/icons/Details';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Tooltip from '@material-ui/core/Tooltip';
-import CreateIcon from '@material-ui/icons/Create';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
-import TablePagination from '@material-ui/core/TablePagination';
-
 
 // API CALL
 import ProductManagerAPI from '../../../api/ProductManager.js';
@@ -38,9 +13,8 @@ import ProductManagerAPI from '../../../api/ProductManager.js';
 import BadgeComp from '../../common/BadgeComp';
 import TableRecord from './Components/RecordTable.js';
 import OrderRecord from './Components/OrderRecord.js';
+import {TabPanel} from '../../common/TabPanel.js';
 
-
-const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -53,14 +27,14 @@ const useStyles = makeStyles(theme => ({
     zIndex: theme.zIndex.drawer + 1,    
   },
   drawer: {
-    width: drawerWidth,
+    width: 240,
     flexShrink: 0,
   },
    padding: {
     padding: theme.spacing(0, 2),
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: 240,
   },
   content: {
     flexGrow: 1,
@@ -128,12 +102,7 @@ const useStyles = makeStyles(theme => ({
 export default function ProductManager({roleName}) {
   
   const classes = useStyles();  
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-
+  
   const [tabValue, setTabValue] = React.useState(0);
   const [rentedProductList,setRentedProductList] = useState([]);
   const [rentedOrderList,setRentedOrderList] = useState([]);
@@ -153,22 +122,6 @@ export default function ProductManager({roleName}) {
     setPage(0);
   };
   
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-    return (
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
-    );
-  }
-
   function handleTabChange(event, newValue) {
     setPage(0);
     setRowsPerPage(10);

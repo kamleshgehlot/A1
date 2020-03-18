@@ -8,15 +8,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
-import Fab from '@material-ui/core/Fab';
 import Toolbar from '@material-ui/core/Toolbar';
-import EditIcon from '@material-ui/icons/Edit';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import Checkbox from '@material-ui/core/Checkbox';
@@ -25,7 +20,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip'; 
@@ -33,7 +27,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 import Budget from './Budget';
 import AddCustomer from '../customer/Add';
 import SearchCustomer from './SearchCustomer';
@@ -42,7 +36,6 @@ import FixedOrder from './FixedOrder';
 
 // API CALL
 import { APP_TOKEN } from '../../../api/Constants';
-import Staff from '../../../api/franchise/Staff';
 import Category from '../../../../src/api/Category';
 import OrderAPI from '../../../api/franchise/Order';
 import Customer from '../../../api/franchise/Customer';
@@ -72,10 +65,6 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(-3),
   },
   labelTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),
     marginTop: 15,
@@ -90,8 +79,6 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     marginLeft: theme.spacing(1),
-    // marginRight: theme.spacing(1),
-    // width: 100,
   },
   heading: {
     fontSize: theme.typography.pxToRem(12),
@@ -145,7 +132,6 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
   const [fixedOrderList,setFixedOrderList] = useState(null);
   const [flexOrderList,setFlexOrderList] = useState(null);
   const [customer, setCustomer] = useState(null);
-  const [junkData,setJunkData] = useState({});
   const [productList, setProductList] = useState([]);
   const [isNewCustomer,setIsNewCustomer] = useState(0);
   const [assignInterest, setAssignInterest] = React.useState([]);    
@@ -214,15 +200,16 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
     inputs.order_type = 2;
   }
 
-  function handleCustomerList(response){    
+  const fetchCustomerList = async (customerId) => {
     inputs.customer_type = 1;
     setIsNewCustomer(1);
-    setCustomer(response[0]);
     setBudgetList([]);
+    const customer = await Customer.getSingleCustomer({customer_id: customerId});        
+    setCustomer(customer.customer[0]);
   }
   function handleIsExistCustomer(response){
     inputs.customer_type = 2;
-    setIsNewCustomer(0);    
+    setIsNewCustomer(0);
     setBudgetList([]);
   }
 
@@ -637,7 +624,7 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                       onChange={handleMainCategory}
                       name= 'main_category'
                       id= 'main_category'
-                      // label='customer'
+                      
                       fullWidth
                       className={classes.textsize}
                       required
@@ -665,7 +652,7 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                       name= 'category'
                       id= 'category'
                       className={classes.textsize}
-                      // label='customer'
+                      
                       fullWidth
                       required
                       disabled = { mainCategory =="" ? true : false}
@@ -690,7 +677,7 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                       onChange={handleSubCategory}
                       name= 'sub_category'
                       id= 'sub_category'
-                      // label='customer'
+                      
                       fullWidth className={classes.textsize}
                       required
                       // disabled = {category ==""}
@@ -791,8 +778,7 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                       value={inputs.payment_mode}
                       onChange={handleInputChange}
                       name= 'payment_mode'
-                      id= 'payment_mode'
-                      // label='customer'
+                      id= 'payment_mode'                      
                       fullWidth
                       className={classes.textsize}
                       error={errors.payment_mode}
@@ -823,7 +809,7 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
         </form>
       </Dialog>
     {budgetOpen ?<Budget open={budgetOpen} handleBudgetClose={handleBudgetClose} budgetList={budgetList} setBudgetList={setBudgetList} customer_id= {customer.id} handleOrderViewFromBudget={handleOrderViewFromBudget}/> : null }
-    {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} setCustomerList={handleCustomerList}   enquiryData={''} setCustomer={setJunkData} conversionData={conversionData}/> : null }
+    {customerOpen ? <AddCustomer open={customerOpen} handleClose={handleCustomerClose} fetchCustomerList={fetchCustomerList} conversionData={conversionData}/> : null }
     {fixedOrderOpen ?<FixedOrder open={fixedOrderOpen} handleFixedClose={handleFixedClose} setFixedOrderList={setFixedOrderList} fixedOrderList= {fixedOrderList} handleOrderType = {handleFixedOrderType} totalOfRental={totalOfRental} productQuantity = {assignInterest.length} /> : null }
     {flexOrderOpen ?<FlexOrder open={flexOrderOpen} handleFlexClose={handleFlexClose} setFlexOrderList={setFlexOrderList} flexOrderList={flexOrderList} handleOrderType = {handleFlexOrderType} totalOfRental={totalOfRental} productQuantity = {assignInterest.length}/> : null }
     {searchCustomerOpen ?<SearchCustomer open={searchCustomerOpen} handleClose={handleSearchCustomerClose} setCustomerList={handleIsExistCustomer} setCustomer={setCustomer} />  : null }

@@ -162,8 +162,7 @@ export default function ViewCustomer({ open, handleClose, customerId}) {
       setIsError(false);
       setIsLoading(true);
       try {
-        const customer = await Customer.getSingleCustomer({customer_id: customerId});
-        console.log(customer.customer);
+        const customer = await Customer.getSingleCustomer({customer_id: customerId});        
         setDataCustomerList(customer.customer[0]);
 
         const idType = await Customer.idtypelist();

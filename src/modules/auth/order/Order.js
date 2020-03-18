@@ -17,8 +17,12 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
-import BadgeComp from '../../common/BadgeComp';
 
+
+// Components
+import {TabPanel} from '../../common/TabPanel.js'
+
+import BadgeComp from '../../common/BadgeComp';
 import Add from './Add';
 import Edit from './Edit';
 import PaymentStatus from './PaymentStatus';
@@ -389,28 +393,6 @@ export default function Order({ roleName }) {
   }, [roleName, page, rowsPerPage, value]);
 
 
-
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-    return (
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
-    );
-  }
 
   function handleTabChange(event, newValue) {
     setPage(0);

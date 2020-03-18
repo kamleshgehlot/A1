@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,7 +7,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,8 +16,6 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -36,7 +32,6 @@ import { API_URL } from '../../../api/Constants';
 import Customer from '../../../api/franchise/Customer';
 import useSignUpForm from '../franchise/CustomHooks';
 import {getDate, getCurrentDate} from '../../../utils/datetime';
-import UserAPI from '../../../api/User';
 
 const RESET_VALUES = {
   id: '',
@@ -72,10 +67,8 @@ const RESET_VALUES = {
   employer_tenure:'',
 
   state: '',
-
-  // is_active:1,
-  // created_by: 1,
 };
+
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
@@ -275,9 +268,9 @@ function handleIdType(event){
     setOtherIdType(true)
     setOtherIdTypeValue('');
   }
-  setInput('id_type',event.target.value);      
+  setInput('id_type',event.target.value);
 }
-  
+
 function handleDate(date){
   let date1 = new Date(date);
   let yy = date1.getFullYear();
@@ -404,7 +397,6 @@ function handleDate(date){
                       margin="dense"
                       id="address"
                       name="address"
-                      // label="Address"
                       type="text"
                       value={inputs.address} 
                       onChange={handleInputChange}
@@ -445,7 +437,6 @@ function handleDate(date){
                       margin="dense"
                       id="city"
                       name="city"
-                      // label="City"
                       type="text"
                       value={inputs.city} 
                       onChange={handleInputChange}

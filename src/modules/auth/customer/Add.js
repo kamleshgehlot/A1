@@ -152,7 +152,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, fetchCustomerList, enquiryData, setCustomer, conversionData}) {
+export default function Add({ open, handleClose, fetchCustomerList, conversionData}) {
 
   
   const styleClass = useCommonStyles();
@@ -234,7 +234,7 @@ export default function Add({ open, handleClose, fetchCustomerList, enquiryData,
     fetchData();
 
     if(conversionData != "" && conversionData != undefined){
-    handleRandomInput([ 
+    handleRandomInput([
       {name: 'customer_name', value:  conversionData.customer_name},
       {name: 'mobile', value:  conversionData.customer_contact}
     ]);
@@ -243,8 +243,7 @@ export default function Add({ open, handleClose, fetchCustomerList, enquiryData,
 
    function handleIdType(event){
     if(event.target.value===0){
-      setOtherIdType(false)
-      
+      setOtherIdType(false)      
     }else{
       setOtherIdType(true)
       setOtherIdTypeValue('');
@@ -348,8 +347,7 @@ export default function Add({ open, handleClose, fetchCustomerList, enquiryData,
     }
     const response = await Customer.register({ formData: formData });
     
-    fetchCustomerList();
-    setCustomer(data);
+    fetchCustomerList(response.customer_id);
     handleReset(RESET_VALUES);
     setpLoading(false);
     setSavebtn(false);
@@ -367,12 +365,12 @@ export default function Add({ open, handleClose, fetchCustomerList, enquiryData,
 return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
+        <form onSubmit={handleSubmit}>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" className={classes.title}>
                 Add Customer
-              </Typography>              
+              </Typography>
               <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>

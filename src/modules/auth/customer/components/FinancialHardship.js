@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,17 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CachedIcon from '@material-ui/icons/Cached';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CommentIcon from '@material-ui/icons/Comment';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -27,14 +16,12 @@ import UpdateIcon from '@material-ui/icons/Update';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
 import DetailsIcon from '@material-ui/icons/Details';
-import { API_URL } from '../../../../api/Constants';
-import {useCommonStyles} from '../../../common/StyleComman';
-import PropTypes from 'prop-types';
 
-import {TablePaginationActions} from '../../../common/Pagination';
+// Components
+import {PaginationBar} from '../../../common/PaginationBar.js';
+import {StyledTableCell} from '../../../common/TableStyles.js';
 
 
-const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -43,14 +30,13 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    // width: 1000
   },
   drawer: {
-    width: drawerWidth,
+    width: 240,
     flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: 240,
   },
   content: {
     flexGrow: 1,
@@ -87,21 +73,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
 export default function FinancialHardship({customerList, count, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
     
-  const styleClass = useCommonStyles();
   const classes = useStyles();
  
 
@@ -162,16 +136,7 @@ return (
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TablePagination
-            rowsPerPageOptions={[20, 50, 100]}
-            colSpan={7}
-            count={count}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-          />
+          <PaginationBar colSpan={7} count={count} rowsPerPage={rowsPerPage} page={page} handleChangePage = {handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />
         </TableRow>
       </TableFooter>
     </Table>    

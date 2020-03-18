@@ -11,8 +11,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CachedIcon from '@material-ui/icons/Cached';
 import AccountBalanceIconBank from '@material-ui/icons/AccountBalance';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import EditIcon from '@material-ui/icons/Edit';
 import PrintIcon from '@material-ui/icons/Print';
 import PaymentIcon from '@material-ui/icons/Payment';
@@ -22,20 +20,17 @@ import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import CommentIcon from '@material-ui/icons/Comment';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
-import TablePagination from '@material-ui/core/TablePagination';
 import CreateIcon from '@material-ui/icons/Create';
 import UpdateIcon from '@material-ui/icons/Update';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
 
-import { API_URL } from '../../../../api/Constants';
-import {useCommonStyles} from '../../../common/StyleComman';
-import PropTypes from 'prop-types';
 
-import {TablePaginationActions} from '../../../common/Pagination';
+// Components
+import {PaginationBar} from '../../../common/PaginationBar.js';
+import {StyledTableCell} from '../../../common/TableStyles.js';
 
 
-const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -44,14 +39,13 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    // width: 1000
   },
   drawer: {
-    width: drawerWidth,
+    width: 240,
     flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: 240,
   },
   content: {
     flexGrow: 1,
@@ -88,21 +82,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const StyledTableCell = withStyles(theme => ({
-  head: {    
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
 export default function Active({customerList, count, handleClickEditOpen, handleOpenEditBudget, handleClickCommentOpen, handleHistoryOpen, handleBankDetailOpen, 
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage}) {
 
-  const styleClass = useCommonStyles();
   const classes = useStyles();
     
 
@@ -131,27 +113,27 @@ return (
                   <StyledTableCell> {data.created_by_name}  </StyledTableCell>
                   <StyledTableCell>                              
                     <Tooltip title="Update">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
+                      <IconButton  size="small" value={data.id} name={data.id} component="span"  onClick={(event) => { handleClickEditOpen(data); }}>
                       <CreateIcon/>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Update Budget">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
+                      <IconButton  size="small" value={data.id} name={data.id} component="span"  onClick={(event) => { handleOpenEditBudget(data); }}>
                       <AccountBalanceIcon/>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Update Bank Detail">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleBankDetailOpen(data); }}>
+                      <IconButton  size="small" value={data.id} name={data.id} component="span"  onClick={(event) => { handleBankDetailOpen(data); }}>
                       <AccountBalanceIconBank />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="View Comment">
-                      <IconButton  size="small" className={classes.fab}  value={data.id} name={data.id} onClick={(event) => { handleClickCommentOpen(data); }} >
+                      <IconButton  size="small"  value={data.id} name={data.id} onClick={(event) => { handleClickCommentOpen(data); }} >
                         <CommentIcon />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="View Budget History">                              
-                      <IconButton  size="small" className={classes.fab} value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
+                      <IconButton  size="small" value={data.id} name={data.id} component="span"  onClick={(event) => { handleHistoryOpen(data); }}>
                         <UpdateIcon />
                       </IconButton>
                     </Tooltip>
@@ -163,16 +145,7 @@ return (
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TablePagination
-            rowsPerPageOptions={[20, 50, 100]}
-            colSpan={7}
-            count={count}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-          />
+          <PaginationBar colSpan={7} count={count} rowsPerPage={rowsPerPage} page={page} handleChangePage = {handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />
         </TableRow>
       </TableFooter>
     </Table>    

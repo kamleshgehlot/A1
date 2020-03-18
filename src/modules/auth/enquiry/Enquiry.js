@@ -32,6 +32,7 @@ import OnGoing from './OtherComponent/OnGoing';
 import Converted from './OtherComponent/Converted';
 import Archived from './OtherComponent/Archived';
 import ArchiveCommentBox from './ArchiveCommentBox.js';
+import {TabPanel} from '../../common/TabPanel.js'
 
 // API CALL
 import EnquiryAPI from '../../../api/franchise/Enquiry';
@@ -157,9 +158,6 @@ export default function Enquiry({roleName}) {
   }
 
   
-  function handleOrderRecData(response){
-    // console.log(response);
-  }
   
   const handleDeleteEnquiry = async (data, isDeleted) => {
     setIsDeleted(isDeleted);
@@ -223,12 +221,6 @@ export default function Enquiry({roleName}) {
       console.log('error',error);
     }
   }
-  
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
 
 
   function handleTabsData(enquiryList){  
@@ -253,21 +245,6 @@ export default function Enquiry({roleName}) {
     setArchivedList(archivedList);
   }
 
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;  
-    return (
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
-    );
-  }
 
   function handleTabChange(event, newValue) {
     setValue(newValue);
@@ -342,7 +319,7 @@ export default function Enquiry({roleName}) {
           </Grid>
         </Grid>
       { open ? <Add leadData={""} open={open} handleClose={handleClose} handleSnackbarClick={handleSnackbarClick}  setEnquiryList={setEnquiryListFn}  convertLead={0} /> : null }      
-      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} handleSnackbarClick={handleSnackbarClick}  handleOrderRecData= {handleOrderRecData} convertId={convertEnquiryId} converted_name={'enquiry'} conversionData={conversionData} /> : null }
+      {openOrder ? <ConvertInOrder open={openOrder} handleClose={handleOrderClose} convertId={convertEnquiryId} converted_name={'enquiry'} conversionData={conversionData} /> : null }
       {openArchiveCommentView ?<ArchiveCommentBox open={openArchiveCommentView} handleViewClose={handleViewClose} enquiryData={enquiryData} setEnquiryList={setEnquiryList} handleTabsData={handleTabsData} isDeleted={isDeleted} /> :null}
       
       

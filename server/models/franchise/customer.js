@@ -55,7 +55,7 @@ var Customer = function (params) {
   this.bankDetailData = params.bankDetailData;
   this.comment = params.comment;
 
-  this.dataType = params.dataType;
+  this.tabValue = params.tabValue;
   this.rowsPerPage = params.rowsPerPage;
   this.pageOffset = params.pageOffset;
 };
@@ -266,18 +266,17 @@ Customer.prototype.customerList = function () {
       if (!error) {
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
         let Query = `select c.id, c.first_name, c.last_name, c.address, c.city, c.suburb, c.postcode, c.telephone, c.mobile, c.email, c.gender, c.is_working, c.dob, c.id_type, c.other_id_type, c.dl_version_number, c.id_number, c.expiry_date, c.is_adult, c.id_proof, c.alt_c1_name, c.alt_c1_address, c.alt_c1_contact, c.alt_c1_relation, c.alt_c2_name, c.alt_c2_address, c.alt_c2_contact, c.alt_c2_relation, c.is_verified, c.is_active, c.state, c.created_by, u.name AS created_by_name, ci.employer_name, ci.employer_address, ci.employer_telephone, ci.employer_email, ci.employer_tenure from customer as c left join customer_income as ci on c.id = ci.cust_id INNER JOIN user as u on c.created_by = u.id `;
-        if(that.dataType === 'active'){
+        if(that.tabValue === 0){
           Query = Query + ` WHERE c.state = 1 `;
-          // 
-        }else if(that.dataType === 'hold'){
+        }else if(that.tabValue === 1){
           Query = Query + ` WHERE c.state = 2 `;
-        }else if(that.dataType === 'financialHardship'){
+        }else if(that.tabValue === 2){
           Query = Query + ` WHERE c.state = 3 `;
-        }else if(that.dataType === 'todaysBirthday'){
+        }else if(that.tabValue === 3){
           Query = Query + ` WHERE  DATE_FORMAT(DATE(c.dob),'%m-%d') = DATE_FORMAT(NOW(),'%m-%d')`;
         }
-        if(that.searchText != ''){
-          Query = Query + ` AND c.id LIKE "%${ that.searchText }%" OR c.first_name LIKE "%${ that.searchText }%" OR c.last_name LIKE "%${ that.searchText }%" OR c.address LIKE "%${ that.searchText }%" OR c.city LIKE "%${ that.searchText }%" OR c.postcode LIKE "%${ that.searchText }%" OR c.telephone LIKE "%${ that.searchText }%" OR c.mobile  LIKE "%${ that.searchText }%" OR c.gender  LIKE "%${ that.searchText }%" OR c.dob  LIKE "%${ that.searchText }%" `
+        if(that.searchText !== ''){
+          Query = Query + ` AND (c.id LIKE "%${ that.searchText }%" OR c.first_name LIKE "%${ that.searchText }%" OR c.last_name LIKE "%${ that.searchText }%" OR c.address LIKE "%${ that.searchText }%" OR c.city LIKE "%${ that.searchText }%" OR c.postcode LIKE "%${ that.searchText }%" OR c.telephone LIKE "%${ that.searchText }%" OR c.mobile  LIKE "%${ that.searchText }%" OR c.gender  LIKE "%${ that.searchText }%" OR c.dob  LIKE "%${ that.searchText }%") `
         }
           Query = Query + ` ORDER BY c.id desc LIMIT ${that.pageOffset}, ${that.rowsPerPage};`;
 
