@@ -98,9 +98,10 @@ export default function validate(values) {
     errors.is_working = 'Required';
   }
 
-  if (!values.expiry_date) {
-    errors.expiry_date = 'Expiry Date is required';
-  }else if(checkFutureDate(values.expiry_date)){
+  // if (!values.expiry_date) {
+  //   errors.expiry_date = 'Expiry Date is required';
+  // }else
+  if(checkFutureDate(values.expiry_date)){
     errors.expiry_date = 'Invalid date format';
   }
 

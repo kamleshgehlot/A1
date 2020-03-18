@@ -212,7 +212,6 @@ export default function Add({ open, handleClose, fetchCustomerList, conversionDa
       if(response.isVerified != ''){
       SetChkEmail(response.isVerified[0].email);
       errors[event.target.name]  = 'Email already registered';
-      // alert('Email already registered');
       }
     }
     checkEmail();
@@ -355,7 +354,7 @@ export default function Add({ open, handleClose, fetchCustomerList, conversionDa
     }
   };
 
- const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+ const { inputs, handleInputChange, handleNumberInput, handleRandomInput, handlePriceInput, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
     RESET_VALUES,
     addCustomer,
     validate
@@ -752,7 +751,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="expiry_date">Expiry Date *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="expiry_date">Expiry Date</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         autoOk
@@ -1091,14 +1090,12 @@ return (
                       margin="dense"
                       id="employer_email"
                       name="employer_email"
-                      // label="Email"
                       type="email"
                       value={inputs.employer_email} 
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
                       error={errors.employer_email}
                       helperText={errors.employer_email}
-                      // required
                       fullWidth
                     />
                   </Grid>

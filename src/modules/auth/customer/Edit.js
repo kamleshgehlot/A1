@@ -678,7 +678,7 @@ function handleDate(date){
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize}  htmlFor="expiry_date">Expiry Date *</InputLabel>
+                    <InputLabel className={classes.textsize}  htmlFor="expiry_date">Expiry Date </InputLabel>
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           autoOk
