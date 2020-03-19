@@ -518,7 +518,6 @@ return (
                       margin="dense"
                       id="telephone"
                       name="telephone"
-                      // label="Telephone"
                       type="text"
                       value={inputs.telephone} 
                       onChange={handleNumberInput}
@@ -527,7 +526,7 @@ return (
                       helperText={errors.telephone}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                     />
                   </Grid>
@@ -542,7 +541,6 @@ return (
                       margin="dense"
                       id="mobile"
                       name="mobile"
-                      // label="Mobile"
                       type="text"
                       value={inputs.mobile} 
                       onChange={handleNumberInput}
@@ -551,7 +549,7 @@ return (
                       helperText={errors.mobile}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                     />
                   </Grid>
@@ -864,7 +862,6 @@ return (
                       margin="dense"
                       id="alt_c1_contact"
                       name="alt_c1_contact"
-                      // label="Contact#"
                       type="text"
                       value={inputs.alt_c1_contact} 
                       onChange={handleNumberInput}
@@ -873,7 +870,7 @@ return (
                       required
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                       }}
                     />
                   </Grid>
@@ -955,15 +952,13 @@ return (
                       margin="dense"
                       id="alt_c2_contact"
                       name="alt_c2_contact"
-                      // label="Contact#"
                       type="text"
                       value={inputs.alt_c2_contact} 
                       onChange={handleNumberInput}
                       error={errors.alt_c2_contact}
                       helperText={errors.alt_c2_contact}
-                      // required
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                       fullWidth
                     />
@@ -1067,7 +1062,7 @@ return (
                       error={errors.employer_telephone}
                       helperText={errors.employer_telephone}
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                       }}
                       // required
                       fullWidth

@@ -453,7 +453,6 @@ function handleDate(date){
                       margin="dense"
                       id="telephone"
                       name="telephone"
-                      // label="Telephone"
                       type="text"
                       value={inputs.telephone} 
                       onChange={handleNumberInput}
@@ -462,7 +461,7 @@ function handleDate(date){
                       required= {inputs.mobile==='' ? true : false}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                     />
                   </Grid>
@@ -477,7 +476,6 @@ function handleDate(date){
                       margin="dense"
                       id="mobile"
                       name="mobile"
-                      // label="Mobile"
                       type="text"
                       value={inputs.mobile} 
                       onChange={handleNumberInput}
@@ -486,7 +484,7 @@ function handleDate(date){
                       helperText={errors.mobile}
                       fullWidth
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                     />
                   </Grid>
@@ -767,14 +765,13 @@ function handleDate(date){
                       margin="dense"
                       id="alt_c1_contact"
                       name="alt_c1_contact"
-                      // label="Contact#"
                       type="text"
                       value={inputs.alt_c1_contact} 
                       onChange={handleNumberInput}
                       error={errors.alt_c1_contact}
                       helperText={errors.alt_c1_contact}
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                       required
                       fullWidth
@@ -858,14 +855,13 @@ function handleDate(date){
                       margin="dense"
                       id="alt_c2_contact"
                       name="alt_c2_contact"
-                      // label="Contact#"
                       type="text"
                       value={inputs.alt_c2_contact} 
                       onChange={handleNumberInput}
                       error={errors.alt_c2_contact}
                       helperText={errors.alt_c2_contact}
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                       required
                       fullWidth
@@ -970,7 +966,7 @@ function handleDate(date){
                       helperText={errors.employer_telephone}
                       // required
                       onInput={(e)=>{ 
-                        e.target.value =(e.target.value).toString().slice(0,10)
+                        e.target.value =(e.target.value).toString().slice(0,12)
                     }}
                       fullWidth
                     />

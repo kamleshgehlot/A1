@@ -2,7 +2,6 @@ import { validString, validNumber, validFullLengthDecimalNumber, validEmail, val
 import {checkFutureDate, checkPastDate} from '../../../utils/datetime.js';
 
 export default function validate(values, preErrors) {
-  console.log(preErrors);
   let errors = {};
 
 
@@ -45,8 +44,8 @@ export default function validate(values, preErrors) {
   if (values.telephone) {
     if (!validNumber.test(values.telephone)) {
       errors.telephone = 'Telephone number is invalid';
-    } else if ((values.telephone).length<9) {
-      errors.telephone = 'Telephone number should be 9/10 digits';
+    } else if ((values.telephone).length<8) {
+      errors.telephone = 'Telephone number should be between 8 to 12 digits';
     } 
   }
   
@@ -54,8 +53,8 @@ export default function validate(values, preErrors) {
     errors.mobile = 'Mobile number is required';
   } else if (!validNumber.test(values.mobile)) {
     errors.mobile = 'Mobile number is invalid';
-  } else if ((values.mobile).length<9) {
-    errors.mobile = 'Mobile number should be 9/10 digits';
+  } else if ((values.mobile).length<8) {
+    errors.mobile = 'Mobile number should be between 8 to 12 digits';
   }
   
   if (!values.email) {
@@ -125,8 +124,8 @@ export default function validate(values, preErrors) {
     errors.alt_c1_contact = 'Contact number is required';
   } else if (!validNumber.test(values.alt_c1_contact)) {
     errors.alt_c1_contact = 'Contact number is invalid';
-  } else if ((values.alt_c1_contact).length<9) {
-    errors.alt_c1_contact = 'Contact number should be 9/10 digits';
+  } else if ((values.alt_c1_contact).length<8) {
+    errors.alt_c1_contact = 'Contact number should be between 8 to 12 digits';
   }
   
   if (!values.alt_c1_relation) {
@@ -149,8 +148,8 @@ export default function validate(values, preErrors) {
     errors.alt_c2_contact = 'Contact number is required';
   } else if (!validNumber.test(values.alt_c2_contact)) {
     errors.alt_c2_contact = 'Contact number is invalid';
-  } else if ((values.alt_c2_contact).length<9) {
-    errors.alt_c2_contact = 'Contact number is invalid';
+  } else if ((values.alt_c2_contact).length<8) {
+    errors.alt_c2_contact = 'Contact number should be between 8 to 12 digits';
   }
   
   if (!values.alt_c2_relation) {
@@ -173,8 +172,8 @@ export default function validate(values, preErrors) {
   if (values.employer_telephone) {
     if (!validNumber.test(values.employer_telephone)) {
       errors.employer_telephone = 'Telephone number is invalid';
-    } else if ((values.employer_telephone).length<9) {
-      errors.employer_telephone = 'Telephone number should be 9/10 digits';
+    } else if ((values.employer_telephone).length<8) {
+      errors.employer_telephone = 'Telephone number should be between 8 to 12 digits';
     }  
   } 
   
