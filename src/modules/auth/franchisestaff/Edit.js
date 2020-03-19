@@ -20,7 +20,6 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Formik, Form, Field, ErrorMessage} from 'formik';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import * as Yup from 'yup';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
 import {useCommonStyles} from '../../common/StyleComman'; 
@@ -45,8 +44,7 @@ const RESET_VALUES = {
   duration : '',
   resume : '',
   cover_letter : '',
-  employment_doc : '',
-  
+  employment_doc : '',  
   user_id : '',
   password : '',
   role : '',
@@ -87,10 +85,6 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
   },
   labelTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(13),
     marginTop: 15,

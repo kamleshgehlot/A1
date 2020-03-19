@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -19,7 +19,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from "@material-ui/core/FormControl";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/CustomerRuleValidation';
@@ -231,27 +230,6 @@ export default function Edit({ open, handleEditClose, inputValues, fetchCustomer
       handleEditClose(false);
   };
 
-  
-  function handleEmailVerification(event){
-    const email = event.target.value;    
-    const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!validEmail.test(email)) {
-      errors[event.target.name] = 'Email Address is invalid';
-    }
-    else{
-      errors[event.target.name] = '';
-    }
-
-    const checkEmail = async () => {
-      const response = await UserAPI.verifyEmail({email : email});
-      
-      if(response.isVerified!=''){
-      errors[event.target.name]  = 'Email already registered';
-      // alert('Email already registered');
-      }
-    }
-    checkEmail();
-  }
 
 
 
@@ -523,11 +501,9 @@ function handleDate(date){
                       margin="dense"
                       id="email"
                       name="email"
-                      // label="Email Id"
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
-                      // onBlur={handleEmailVerification}
                       error={errors.email}
                       helperText={errors.email}
                       required
@@ -1010,15 +986,11 @@ function handleDate(date){
                       margin="dense"
                       id="employer_email"
                       name="employer_email"
-                      // label="Email"
                       type="email"
-                      // disabled
                       value={inputs.employer_email} 
                       onChange={handleInputChange}
-                      // onBlur={handleEmailVerification}
                       error={errors.employer_email}
                       helperText={errors.employer_email}
-                      // required
                       fullWidth
                     />
                   </Grid>

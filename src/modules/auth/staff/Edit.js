@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -7,20 +7,16 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import useSignUpForm from '../franchise/CustomHooks';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import validate from '../../common/validation/StaffRuleValidtion';
+
 // API CALL
 import StaffMaster from '../../../api/StaffMasterAdmin';
 
@@ -31,7 +27,7 @@ const RESET_VALUES = {
   location:'',
   contact:'',
   email:'',
-  position:'',
+  position:[],
 };
 
 const useStyles = makeStyles(theme => ({
@@ -86,25 +82,16 @@ const Transition = React.forwardRef((props, ref) => {
 export default function Edit({open, handleEditClose, handleSnackbarClick,  inputValues, setFranchiseList, positions}) {
   const classes = useStyles();
   const styleClass = useCommonStyles();
-  
-  const [staffList, setStaffList] = React.useState(inputValues);
-  const [assignRole, setAssignRole] = React.useState([]);
-  const [assignError, setAssignError] = React.useState();
-
-  function handleChangeMultiple(event) {
-    setAssignRole(event.target.value);
-  }
-
+    
   useEffect(() => {
     let assignRoleList = [];
     (inputValues.position.toString().split(',')).map((role,index) =>{
       assignRoleList.push(role);
     });
-    setAssignRole(assignRoleList);
+    setInput('position',assignRoleList);
   }, []);
 
   const addStaffMaster = async () => {
-    if(assignRole!=''){
     const response = await StaffMaster.register({
       id: inputs.id,
       first_name: inputs.first_name,
@@ -113,18 +100,15 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       contact:inputs.contact,
       email:inputs.email,
       password: inputs.password,
-      position: assignRole.join(),
+      position: inputs.position.join(),
       created_by: 1,
     });
       handleSnackbarClick(true,'Franchise Updated Successfully');
       setFranchiseList(response.staffList);
       handleEditClose(false);
-    } else{
-      setAssignError('Position is required');
-    }
   };
 
-  const { inputs, handleInputChange, handleNumberInput, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
+  const { inputs, handleInputChange, handleNumberInput, handleSubmit, setInput, errors } = useSignUpForm(
     inputValues != "" ? inputValues : RESET_VALUES,
     addStaffMaster,
     validate
@@ -156,7 +140,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="first_name"
                       name="first_name"
-                      // label="First Name"
                       value={inputs.first_name}
                       onChange={handleInputChange}
                       error={errors.first_name}
@@ -164,7 +147,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                     />
                   </Grid>
@@ -179,14 +161,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="last_name"
                       name="last_name"
-                      // label="Last Name"
                       type="text"
                       required
                       value={inputs.last_name} 
                       onChange={handleInputChange}
                       error={errors.last_name}
                       helperText={errors.last_name}
-                      // onFocus={handlePasswordBlurChange}
                       required
                       fullWidth
                     />
@@ -202,7 +182,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="location"
                       name="location"
-                      // label="Location"
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
@@ -223,7 +202,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="contact"
                       name="contact"
-                      // label="Contact"
                       type="text"
                       value={inputs.contact} 
                       onChange={handleNumberInput}
@@ -247,14 +225,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="email"
                       name="email"
-                      // label="Email Id"
                       type="email"
                       value={inputs.email} 
                       onChange={handleInputChange}
                       error={errors.email}
                       helperText={errors.email}
                       required
-                      // disabled
                       fullWidth
                     />
                   </Grid>
@@ -262,23 +238,20 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                   <InputLabel  className={classes.textsize} htmlFor="city">Position *</InputLabel>
                     <Select
                       multiple
-                      value={assignRole}
-                      onChange={handleChangeMultiple}
+                      value={inputs.position}
+                      onChange={handleInputChange}
                       inputProps={{
                         name: 'position',
                         id: 'position',
-                        // label:'position'
                       }}
-                      error={assignError}
-                      helperText={assignError}
+                      error={errors.position}
+                      helperText={errors.position}
                       fullWidth className={classes.textsize}
                       required
                     > 
                       {
                         positions.map(ele =>{
-                          return(
-                          <MenuItem className={classes.textsize} value={ele.id.toString()}>{ele.position}</MenuItem>
-                          )
+                          return( <MenuItem className={classes.textsize} value={ele.id.toString()}>{ele.position}</MenuItem> )
                         })
                       }
                     </Select>
@@ -294,13 +267,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="user_id"
                       name="user_id"
-                      // label="user_id"
                       type="user_id"
                       value={inputs.user_id} 
-                      // onChange={handleInputChange}
-                      // error={errors.email}
-                      // helperText={errors.email}
-                      // required
                       disabled
                       fullWidth
                     />
@@ -316,14 +284,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="password"
                       name="password" 
-                      // label="Password"
-                      // onChange={handleInputChange}
-                      // onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
-                      // required
                       fullWidth
-                      // error={errors.password}
-                      // helperText={errors.password ? errors.password : ' '}
                       disabled
                     />
                   </Grid>
