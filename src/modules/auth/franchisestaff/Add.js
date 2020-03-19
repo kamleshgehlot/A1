@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React, { useState,useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -8,7 +7,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,15 +17,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
-import Paper from '@material-ui/core/Paper';
-import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
 import {useCommonStyles} from '../../common/StyleComman'; 
-import InputAdornment from '@material-ui/core/InputAdornment';
              
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
@@ -55,7 +45,7 @@ const RESET_VALUES = {
   
   user_id : '',
   password : '',
-  role : '',
+  assign_role : [],
 };
 
 const useStyles = makeStyles(theme => ({
@@ -126,51 +116,41 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   const styleClass = useCommonStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
-  const [temp, setTemp] = React.useState([]);
-  const [chkEmail, SetChkEmail] = useState();
-  const [assignRole, setAssignRole] = React.useState([]);
-  const [assignError, setAssignError] = React.useState();
   
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250
-      }
-    }
-  };
-
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  function handleEmailVerification(event){
-    // console.log(event.target.value);
-    const email = event.target.value;
-
-    const checkEmail = async () => {
+  
+  const checkEmail = async (fieldName, email) => {
+    try{
       const response = await UserAPI.verifyEmail({email : email});
-      
-      if(response.isVerified!=''){
-      SetChkEmail(response.isVerified[0].email);
-      alert('Email already registered');
+      if(response.isVerified !== ''){
+      setErrors({ ...errors, [fieldName]: 'Email already registered'});
       }
+    }catch(e){
+      console.log('Error',e);
+    }    
+  }
+
+  function handleEmailVerification(event){
+    const email = event.target.value;    
+    const validEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(email === ''){
+      setErrors({ ...errors, [event.target.name]: ''});
+    }else if(!validEmail.test(email)){
+      setErrors({ ...errors, [event.target.name]: 'Email Address is invalid'});
+    }else {
+      setErrors({ ...errors, [event.target.name]: ''});
     }
-    checkEmail();
+    checkEmail(event.target.name, email);
   }
 
   const addFranchiseStaff = async () => {
-    if(inputs.email === chkEmail){
-      alert('Email already registered')
-    }else{
-      if(assignRole!=''){
-
     setpLoading(true);
     setSavebtn(true);
     const data = {
@@ -191,7 +171,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
       
       user_id: inputs.user_id,
       password: inputs.password,
-      role: assignRole.join(),
+      role: inputs.assign_role.join(),
       is_active : 1,
     };
 
@@ -203,7 +183,6 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     }
     
     const response = await Staff.register( { formData: formData } );
-    assignRole.length = 0;
     handleSnackbarClick(true);
     setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
@@ -211,28 +190,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     setSavebtn(false);
     setSavebtn(true);
     handleClose(false);
-    
-  }
-  else{
-    setAssignError('Role is required');
-  }
-  }
   };
-function close(){
-  handleReset(RESET_VALUES);
-  handleClose(false);
-}
 
- const { inputs=null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput,errors } = useSignUpForm(
+
+ const { inputs = null, handleInputChange, handleNumberInput, handlePriceInput, handleSubmit, handleReset, setInput, errors, setErrors } = useSignUpForm(
     RESET_VALUES,
     addFranchiseStaff,
     validate
   );
-  
-  
-  function handleChangeMultiple(event) {
-    setAssignRole(event.target.value);
-  }
   
   function handleNameBlurChange(e) {
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
@@ -253,16 +218,10 @@ function close(){
     return first_name.substring(0, 4).toLowerCase() + '_' + uid.split('_')[1] + '_' + id;
   }
   
-  function handlePasswordBlurChange() {
-    
+  useEffect(() => {
     inputs['password']=='' ? 
-    setInput('password', GeneratePassword())
-    :''
-  }
-
-  function GeneratePassword() {
-    return Math.random().toString(36).slice(-8);
-  }
+    setInput('password', Math.random().toString(36).slice(-8)) :''
+  },[]);
 
 return (
     <div>
@@ -304,7 +263,6 @@ return (
                       }}
                       id="first_name"
                       name="first_name"
-                      // label="First Name"
                       value={inputs.first_name}
                       error={errors.first_name}
                       helperText={errors.first_name}
@@ -312,7 +270,6 @@ return (
                       fullWidth
                       required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                     />
                   </Grid>
@@ -326,14 +283,12 @@ return (
                       }}
                       margin="dense"
                       id="last_name"
-                      name="last_name"
-                      // label="Last Name"
+                      name="last_name"                      
                       type="text"
                       value={inputs.last_name} 
                       onChange={handleInputChange}
                       error={errors.last_name}
                       helperText={errors.last_name}
-                      // onBlur={handleNameBlurChange}
                       required
                       fullWidth
                     />
@@ -349,7 +304,6 @@ return (
                       margin="dense"
                       id="location"
                       name="location"
-                      // label="Location"
                       type="text"
                       value={inputs.location}
                       onChange={handleInputChange}
@@ -370,7 +324,6 @@ return (
                       margin="dense"
                       id="contact"
                       name="contact"
-                      // label="Contact"
                       type="text"
                       value={inputs.contact} 
                       onChange={handleNumberInput}
@@ -394,16 +347,14 @@ return (
                       margin="dense"
                       id="email"
                       name="email"
-                      // label="Email Id"
                       type="email"
-                      value={inputs.email} 
+                      value={inputs.email}
                       onChange={handleInputChange}
                       onBlur={handleEmailVerification}
                       error={errors.email}
                       helperText={errors.email}
                       required
                       fullWidth
-                      type="email"
                     />
                   </Grid>
                 </Grid>
@@ -434,7 +385,6 @@ return (
                       margin="dense"
                       id="pre_company_name"
                       name="pre_company_name"
-                      // label="Name of Previous Company"
                       type="text"
                       value={inputs.pre_company_name} 
                       onChange={handleInputChange}
@@ -456,7 +406,6 @@ return (
                       margin="dense"
                       id="pre_company_address"
                       name="pre_company_address"
-                      // label="Address of Previous Company"
                       type="text"
                       value={inputs.pre_company_address} 
                       onChange={handleInputChange}
@@ -555,17 +504,9 @@ return (
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel3'}
-              onChange={handleChange('panel3')}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel3a-header"
-              >
-                <Typography className={(errors.password||assignError)?classes.errorHeading:classes.heading}>Current Job Role</Typography>
+            <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel3'} onChange={handleChange('panel3')} >
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="" id="panel3a-header">
+                <Typography className={(errors.password || errors.assign_role) ? classes.errorHeading:classes.heading}>Current Job Role</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={4}>
@@ -580,11 +521,8 @@ return (
                       margin="dense"
                       id="user_id"
                       name="user_id"
-                      // label="User Id"
                       type="text"
                       value={inputs.user_id} 
-                      // onChange={handleInputChange}
-                      // onBlur={handleNameBlurChange}
                       required
                       disabled
                       fullWidth
@@ -601,44 +539,33 @@ return (
                       margin="dense"
                       id="password"
                       name="password"
-                      // label="Password"
-                      onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
                       error={errors.password}
                       helperText={errors.password}
                       required
                       fullWidth
-                      // error={errors.password}
-                      // helperText={errors.password ? errors.password : ' '}
-                      // disabled
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="assign_role">Assign Role</InputLabel>
-
                     <Select
                       multiple
-                      value={assignRole}
-                      onChange={handleChangeMultiple}
+                      value={inputs.assign_role}
+                      onChange={handleInputChange}
                       inputProps={{
                         name: 'assign_role',
                         id: 'assign_role',
                       }}
-                      error={assignError}
-                      helperText={assignError}
-                      
                       className={classes.textsize}
-                      // error={errors.assignRole}
-                      // helperText={errors.assignRole}
+                      error={errors.assign_role}
+                      helperText={errors.assign_role}
                       fullWidth
                       required
                     >
-                      {role.map((ele,index) =>{
-                        return(
-                        <MenuItem value={ele.id}>{ele.name}</MenuItem>
-                        )
+                      {role.map((ele) =>{
+                        return( <MenuItem value={ele.id}>{ele.name}</MenuItem> )
                       })}
-
                     </Select>
                   </Grid>
                 </Grid>
@@ -651,7 +578,7 @@ return (
               <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
               Save
             </Button>}
-              <Button  variant="contained"   onClick={close} color="primary" className={classes.button} >
+              <Button  variant="contained"   onClick={handleClose} color="primary" className={classes.button} >
                 Close
               </Button>
               </Grid>

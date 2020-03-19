@@ -1,7 +1,8 @@
 import { validString, validNumber, validDecimalNumber, validAlphaNumericwithDot, validEmail, validAlpha } from './Regex';
 
-export default function validate(values) {
+export default function validate(values, preErrors) {
   let errors = {};
+
   if (!values.first_name) {
     errors.first_name = 'First Name is required';
   } else if (!validString.test(values.first_name)) {
@@ -13,9 +14,7 @@ export default function validate(values) {
   } else if (!validString.test(values.last_name)) {
     errors.last_name = 'Special characters are not allowed';
   }
-  // else if (!validString.test(values.last_name)) {
-  //   errors.last_name = 'Last Name is invalid';
-  // }
+ 
   
   if (!values.location) {
     errors.location = 'Location is required';
@@ -33,11 +32,15 @@ export default function validate(values) {
     errors.email = 'Email Address is required';
   } else if (!validEmail.test(values.email)) {
     errors.email = 'Email Address is invalid';
+  } else if (preErrors){
+    if(preErrors.email === 'Email already registered'){
+      errors.email = 'Email already registered';
+    }
   }
 
-  // if (!values.assignRole) {
-  //   errors.assignRole = 'Assign Role is required';
-  // }
+  if (Object.values(values.assign_role).length === 0) {
+    errors.assign_role = 'Assign Role is required';
+  }
 
   if (!values.pre_company_name) {
     errors.pre_company_name = 'Name of Previous Company is required';

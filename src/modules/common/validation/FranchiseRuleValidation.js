@@ -1,6 +1,6 @@
 import { validString, validNumber, validEmail, validAlpha } from './Regex';
 
-export default function validate(values) {
+export default function validate(values, preErrors) {
   let errors = {};
   
   if (!values.franchise_name) {
@@ -41,6 +41,10 @@ export default function validate(values) {
     errors.accountant_email = 'Email Address is required';
   } else if (!validEmail.test(values.accountant_email)) {
     errors.accountant_email = 'Email Address is invalid';
+  } else if (preErrors){
+    if(preErrors.accountant_email === 'Email already registered'){
+      errors.accountant_email = 'Email already registered';
+    }
   }
 
   if (!values.accountant_contact) {

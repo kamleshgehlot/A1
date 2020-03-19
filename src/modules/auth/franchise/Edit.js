@@ -18,35 +18,22 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConfirmationDialog from '../ConfirmationDialog.js';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import useSignUpForm from '../franchise/CustomHooks';
 import validateEdit from '../../common/validation/FranchiseEditValidation';
 import {useCommonStyles} from '../../common/StyleComman';
+
 // API CALL
-
 import UserAPI from '../../../api/User';
-
 import LocationAPI from '../../../api/Location';
 
 const RESET_VALUES = {
   city: '',
-
   suburb: '',
   franchise_name: '',
   uid: '',
-
   city_code: '',
   abn: '',
-
   company_name: '',
   nbzn: '',
   company_location: '',
@@ -55,11 +42,9 @@ const RESET_VALUES = {
   contact: '',
   alt_contact: '',
   website: '',
-
   accountant_name: '',
   accountant_email: '',
   accountant_contact: '',
-
   user_name:'',
   uid: '',
   password: '',
@@ -123,25 +108,20 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
   const styleClass = useCommonStyles();
   const [cityList, setCityList] = useState([]);
   const [expanded, setExpanded] = React.useState('panel1');
-  const [franchise, setFranchise] = React.useState(inputValues);
-  const [directorList, setDirectorList] =useState([]);
   const [selectedArea, setSelectedArea] = useState([]);
   const [confirmation, setConfirmation] = React.useState(false);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
   
-    // console.log(franchise);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  // console.log("inputs--",franchise)
-  // console.log("selected area--",selectedArea)
-   useEffect(() => {
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const LocationResult = await LocationAPI.list();
         setCityList(LocationResult.cityList);
-        // console.log('franchise-----',franchise)
         const result = await LocationAPI.arealist({
           city_name : inputValues.city,
           city_code : inputValues.city_code,
@@ -164,52 +144,37 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
 
   function handleConfirmationDialog (response){
     setInput('state',response)
-    // console.log(franchise);
     setConfirmation(false);
   }
-  // function confirmDialogResponse(response){
 
-  // }
-
-  // const setInput = (name, value) => {
-  //   setFranchise({ ...franchise, [name]: value });
-  // };
   
   const editFranchise = async () => {
     setpLoading(true);
     setSavebtn(false);
     const response = await UserAPI.add({
-      // cancelToken: this.isTokenSource.token,
-      
       id: inputs.franchise_id,
       city: inputs.city,
       suburb: inputs.suburb,
       franchise_name: inputs.franchise_name,
-
       city_code: inputs.city,
       abn: "1234",
-
       company_name: inputs.company_name,
       nbzn: inputs.nbzn,
       company_location: inputs.company_location,
-
       director_id: inputs.director_id,
       director: inputs.director,
       email: inputs.email,
       contact: inputs.contact,
       alt_contact: inputs.alt_contact,
       website: inputs.website,
-
       accountant_id: inputs.accountant_id,
       accountant_name: inputs.accountant_name,
       accountant_email: inputs.accountant_email,
       accountant_contact: inputs.accountant_contact,
-
       user_name : inputs.director,
       user_id: inputs.user_id,
       password: inputs.password,
       state: inputs.state,
-
       designation: "2",
       role_id: "2",
       company_id: inputs.company_id,
@@ -233,59 +198,25 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       }
     });
 
-    setFranchiseId(franchiseIdTemp);
-    
+    setFranchiseId(franchiseIdTemp);    
     handleSnackbarClick(true,'Franchise Updated Successfully');
     setFranchiseList(response.userList);
-    // handleReset(RESET_VALUES);
     setpLoading(false);
     setSavebtn(true);
     handleEditClose(false);
   };
 
-  function handlePasswordBlurChange() {
-    setInput('password', GeneratePassword());
-  }
 
-  function GeneratePassword() {
-    return Math.random().toString(36).slice(-8);
-  }
-
-  function handleEmailVerification(event){
-    // console.log(event.target.value);
-    const email = event.target.value;
-    // console.log('email--',email)
-    // const validEmail =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    // if (!validEmail.test(email)) {
-    //   errors.demail = 'Email Address is invalid';
-    // }
-    // else{
-      
-    //   errors.demail = '';
-    // }
-    // console.log('email--',errors.demail)
-
-    const checkEmail = async () => {
-      const response = await UserAPI.verifyEmail({email : email});
-      
-      if(response.isVerified!=''){
-      // SetChkEmail(response.isVerified[0].email);
-      errors.demail = 'Email already registered';
-      // alert('Email already registered');
-      }
-    }
-    checkEmail();
-  }
 
   
-  const { inputs, handleNumberInput, handleInputChange, handleSubmit, handleReset, setInputsAll, setInput, errors } = useSignUpForm(
-    RESET_VALUES,
+  const { inputs, handleNumberInput, handleInputChange, handleSubmit, setInput, errors } = useSignUpForm(
+    inputValues,
     editFranchise,
     validateEdit
   );  
-  useEffect(() => {
-    setInputsAll(inputValues);
-  }, []);
+  
+
+
   return (
     <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
@@ -300,7 +231,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           </AppBar>
 
           <div className={classes.root}>
-            {/* Franchise Details */}
             <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
             <ExpansionPanel
               className={classes.expansionTitle}
@@ -326,17 +256,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="franchise_name"
                       name="franchise_name"
-                      // label="Franchise Name"
-                      // margin="dense"
                       type="text"
                       value={inputs.franchise_name}
                       onChange={handleInputChange}
                       error={errors.franchise_name}
                       helperText={errors.franchise_name}
-                      // onBlur={handleNameBlurChange}/
                       fullWidth
-                      // required
-                      // disabled                      
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -350,8 +275,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       margin="normal"
                       fullWidth
-                      // label="Status"
-                      // required
                        className={classes.textsize}
                     >
                     {inputs.state=== 1 ? <MenuItem className={classes.textsize} value={1}>Open</MenuItem> : ''}
@@ -372,8 +295,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       fullWidth
                       error={errors.city}
                       helperText={errors.city ? errors.city : ' '}
-                      // label="City"
-                      // required
                       disabled
                     >
                       {cityList.length > 0 &&
@@ -392,8 +313,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       name= 'suburb'
                       id= 'suburb_selection'
                       fullWidth
-                      // label="Area"
-                      // required
                       error={errors.suburb}
                       helperText={errors.suburb ? errors.suburb : ' '}
                     >
@@ -410,8 +329,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-
-            {/* Company Details */}
 
             <ExpansionPanel
               className={classes.expansionTitle}
@@ -437,13 +354,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="company_name"
                       name="company_name"
-                      // label="Company Name"
                       value={inputs.company_name}
                       error={errors.company_name}
                       helperText={errors.company_name}
                       fullWidth
                       margin="dense"
-                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -457,13 +372,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="nbzn"
                       name="nbzn"
-                      // label="Company's NBZN"
                       value={inputs.nbzn}
                       error={errors.nbzn}
                       helperText={errors.nbzn}
                       fullWidth
                       margin="dense"
-                      // required
                       type="text"                      
                       onChange={handleNumberInput}
                       onInput={(e)=>{ 
@@ -481,18 +394,14 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="company_location"
                       name="company_location"
-                      // label="Company Location"
                       value={inputs.company_location}
                       error={errors.company_location}
                       helperText={errors.company_location}
                       margin="dense"
-                      // required
                       fullWidth
                       onChange={handleInputChange}
                     />
                   </Grid>
-                  {/* <Paper className={classes.paper}> */}
-                  {/* <Grid container spacing={3}> */}
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize} htmlFor="director">Director Name *</InputLabel>
                     <TextField 
@@ -503,13 +412,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="director"
                       name="director"
-                      // label="Director Name"
                       value={inputs.director}
                       error={errors.director}
                       helperText={errors.director}
                       fullWidth
                       margin="dense"
-                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -523,16 +430,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="email"
                       name="email"
-                      // label="Email"
                       value={inputs.email}
                       error={errors.email}
                       helperText={errors.email}
                       margin="dense"
-                      // required
                       type="email"
                       fullWidth
-                      // disabled
-                      onBlur={handleEmailVerification}
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -546,12 +449,10 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="contact"
                       name="contact"
-                      // label="Contact #"
                       value={inputs.contact}
                       error={errors.contact}
                       helperText={errors.contact}
                       margin="dense"
-                      // required
                       fullWidth
                       type="text"                      
                       onChange={handleNumberInput}
@@ -570,10 +471,8 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="alt_contact"
                       name="alt_contact"
-                      // label="Alternative Contact"
                       value={inputs.alt_contact}
                       margin="dense"
-                      // required
                       fullWidth
                       onInput={(e)=>{ 
                         e.target.value =(e.target.value).toString().slice(0,10)
@@ -593,13 +492,9 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="user_id"
                       name="user_id"
-                      // label="User Id"
                       margin="dense"
-                      // required
                       type="text"
                       value={inputs.user_id} 
-                      // onChange={handleInputChange}
-                      // onBlur={handlePasswordBlurChange}
                       fullWidth
                       disabled
                     />
@@ -615,53 +510,12 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       margin="dense"
                       id="password"
                       name="password"
-                      // label="Password"
-                      // onChange={handleInputChange}
-                      // onFocus={handlePasswordBlurChange}
                       value={inputs.password} 
-                      // required
                       fullWidth
-                      // error={errors.password}
-                      // helperText={errors.password ? errors.password : ' '}
                       disabled
                     />
                   </Grid>
-                  {/* {console.log('franchise',franchise)} */}
-                  {/* <Grid item xs={3} sm={1}>
-                  <Fab size="small" color="secondary" aria-label="Add"  className={classes.margin}>
-                    <AddIcon />
-                  </Fab>
-                  </Grid> */}
                   </Grid>
-                  {/* <Table >
-                    <TableHead>
-                      
-                      {
-                        (directorList || []).map((list, index) =>{
-                          return(
-                            <TableRow>
-                              <StyledTableCell>{index}</StyledTableCell>
-                              <StyledTableCell>{list.director}</StyledTableCell>
-                              <StyledTableCell>{list.email}</StyledTableCell>
-                              <StyledTableCell>{list.contact}</StyledTableCell>
-                              <StyledTableCell>{list.alt_contact}</StyledTableCell>
-                              <StyledTableCell>{list.uid}</StyledTableCell>
-                              <StyledTableCell>{list.password}</StyledTableCell>
-                              <StyledTableCell>
-                              <IconButton className={classes.deleteBtn} aria-label="Delete" onClick={(event) => { handleRemoveDirector(index); }}>
-                                <DeleteIcon />
-                              </IconButton>
-                              </StyledTableCell>
-                            </TableRow>
-                          )
-                        })
-                      }
-
-                    </TableHead>
-                    </Table> */}
-                  {/* </Paper> */}
-                  
-                {/* </Grid> */}
               </ExpansionPanelDetails>
             </ExpansionPanel>
 
@@ -689,14 +543,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="accountant_name"
                       name="accountant_name"
-                      // label="Name"
                       value={inputs.accountant_name}
                       error={errors.accountant_name}
                       helperText={errors.accountant_name}
-                      // placeholder="Accountant name"
                       fullWidth
                       margin="dense"
-                      // required
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -711,15 +562,11 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="accountant_email"
                       name="accountant_email"
-                      // label="Email Address"
                       value={inputs.accountant_email}
                       error={errors.accountant_email}
                       helperText={errors.accountant_email}
-                      // placeholder="Email"
                       fullWidth
                       margin="dense"
-                      // required
-                      // disabled
                       onChange={handleInputChange}
                     />
                   </Grid>
@@ -734,7 +581,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="accountant_contact"
                       name="accountant_contact"
-                      // label="Contact #"
                       value={inputs.accountant_contact}
                       error={errors.accountant_contact}
                       helperText={errors.accountant_contact}                                            
@@ -758,9 +604,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                       }}
                       id="website"
                       name="website"
-                      // label="Website"
                       value={inputs.website}
-                      // placeholder="Accountant name"
                       fullWidth
                       margin="dense"
                       onChange={handleInputChange}
@@ -784,7 +628,6 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
           </div>
         </form>
       </Dialog>
-      {/* {console.log(confirmation)} */}
       <ConfirmationDialog open = {confirmation} lastValue={4} handleConfirmationClose={handleConfirmationDialog}  currentState={inputs.state} title={"Close to Frachise ?"} content={"Do you really want to close the franchise ?"} />
     </div>
   );

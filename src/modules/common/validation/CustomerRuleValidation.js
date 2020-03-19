@@ -1,7 +1,8 @@
 import { validString, validNumber, validFullLengthDecimalNumber, validEmail, validAlpha } from './Regex';
 import {checkFutureDate, checkPastDate} from '../../../utils/datetime.js';
 
-export default function validate(values) {
+export default function validate(values, preErrors) {
+  console.log(preErrors);
   let errors = {};
 
 
@@ -59,8 +60,12 @@ export default function validate(values) {
   
   if (!values.email) {
     errors.email = 'Email Address is required';
-  }  else if (!validEmail.test(values.email)) {
+  } else if (!validEmail.test(values.email)) {
     errors.email = 'Email Address is invalid';
+  } else if (preErrors){
+    if(preErrors.email === 'Email already registered'){
+      errors.email = 'Email already registered';
+    }
   }
 
   if (!values.gender) {
@@ -158,7 +163,7 @@ export default function validate(values) {
     errors.employer_name = 'Employer Name is required';
   } else if (!validAlpha.test(values.employer_name)) {
     errors.employer_name = 'Special characters & numbers are not allowed';
-  }
+  } 
 
   
   // if (!values.employer_address) {
@@ -176,8 +181,10 @@ export default function validate(values) {
   if (values.employer_email) {
     if (!validEmail.test(values.employer_email)) {
       errors.employer_email = 'Email is invalid';
+    } else if(preErrors.employer_email === 'Email already registered'){
+      errors.employer_email = 'Email already registered';
     }
-  } 
+  }
  
   if (!values.employer_tenure) {
     errors.employer_tenure = 'Tenure of Employer is required';

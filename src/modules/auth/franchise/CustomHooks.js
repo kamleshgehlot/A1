@@ -14,7 +14,7 @@ const useSignUpForm = (state, callback, validate) => {
       event.preventDefault();
     }
     setIsSubmitting(true);
-    setErrors(validate(inputs));
+    setErrors(validate(inputs, errors));
   };
 
   const cleanInputs = event =>{
@@ -87,14 +87,14 @@ const useSignUpForm = (state, callback, validate) => {
     setInputs({
       ...inputs,
       [name]: event.target.checked,
-    });     
+    });
   };
 
   const handleDateChange = (name, date) => {
     setInputs({
       ...inputs,
       [name]: date,
-    }); 
+    });
   }
 
   return {

@@ -38,7 +38,7 @@ const RESET_VALUES = {
   contact:'',
   email:'',
   password: '',
-  position:'',
+  position: [],
 };
 
 const useStyles = makeStyles(theme => ({
@@ -91,12 +91,11 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 export default function Add({ open, handleClose, handleSnackbarClick, setFranchiseList, positions}) {
-  const [chkEmail, SetChkEmail] = useState();
-  const classes = useStyles(); 
+
+  const classes = useStyles();
   const styleClass = useCommonStyles();
   const [ploading, setpLoading] = React.useState(false);
-  const [assignRole, setAssignRole] = React.useState([]);
-  const [assignError, setAssignError] = React.useState();
+  
     
   useEffect(() => {
     inputs['password']=='' ? setInput('password', GeneratePassword()) :''
@@ -104,13 +103,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
   
 
 
-  const addStaffMaster = async () => {
-      if(inputs.email === chkEmail){
-        alert('Email already registered')
-      }else if(assignRole ==''){
-        setAssignError('Role is required');
-      }
-      else{
+  const addStaffMaster = async () => {   
         setpLoading(true);
         const response = await StaffMaster.register({
           id: '',
@@ -121,16 +114,14 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
           location:inputs.location,
           contact:inputs.contact,
           email:inputs.email,
-          position: assignRole.join(),
+          position: inputs.position.join(),
           created_by: 1,
         });
-        assignRole.length = 0;
         handleSnackbarClick(true);
         setFranchiseList(response.staffList);
         handleReset(RESET_VALUES);
         setpLoading(false);
         handleClose(false);
-      }        
   }
  
   
@@ -138,36 +129,42 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
     return Math.random().toString(36).slice(-8);
   }
 
- const { inputs, handleNumberInput, handleInputChange, handleSubmit, handleReset, setInput, errors } = useSignUpForm(
+ const { inputs, handleNumberInput, handleInputChange, handleSubmit, handleReset, setInput, errors, setErrors } = useSignUpForm(
     RESET_VALUES,
     addStaffMaster,
     validate
   );
 
-  function handleEmailVerification(event){
-    const email = event.target.value;
-
-    const checkEmail = async () => {
+  
+  const checkEmail = async (fieldName, email) => {
+    try{
       const response = await UserAPI.verifyEmail({email : email});
-      
-      if(response.isVerified!=''){
-      SetChkEmail(response.isVerified[0].email);
-      alert('Email already registered');
+      if(response.isVerified !== ''){
+      setErrors({ ...errors, [fieldName]: 'Email already registered'});
       }
+    }catch(e){
+      console.log('Error',e);
+    }    
+  }
+
+  function handleEmailVerification(event){
+    const email = event.target.value;    
+    const validEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(email === ''){
+      setErrors({ ...errors, [event.target.name]: ''});
+    }else if(!validEmail.test(email)){
+      setErrors({ ...errors, [event.target.name]: 'Email Address is invalid'});
+    }else {
+      setErrors({ ...errors, [event.target.name]: ''});
     }
-    checkEmail();
+    checkEmail(event.target.name, email);
   }
 
   function handleNameBlurChange(e) {
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
   }
-
-  function handleChangeMultiple(event) {
-    setAssignRole(event.target.value);
-  }
   
   function generate(first_name, last_name) {
-
     const ts = new Date().getTime().toString();
     const parts = ts.split( "" ).reverse();
     let id = "";
@@ -308,10 +305,10 @@ return (
                   <InputLabel  className={classes.textsize} htmlFor="position">Position *</InputLabel>
                     <Select
                       multiple
-                      value={assignRole}
-                      onChange={handleChangeMultiple}
-                      error={assignError}
-                      helperText={assignError}
+                      value={inputs.position}
+                      onChange={handleInputChange}
+                      error={errors.position}
+                      helperText={errors.position}
                       inputProps={{
                         name: 'position',
                         id: 'position',
