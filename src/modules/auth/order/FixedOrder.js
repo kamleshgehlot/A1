@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {component} from 'react-dom';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -8,43 +7,21 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
 import AppBar from '@material-ui/core/AppBar';
-import Fab from '@material-ui/core/Fab';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
 import Paper from '@material-ui/core/Paper';
-import Input from "@material-ui/core/Input";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Divider from '@material-ui/core/Divider';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
-import { APP_TOKEN } from '../../../api/Constants';
 
 // API CALL
-import Staff from '../../../api/franchise/Staff';
-import Order from '../../../api/franchise/Order';
-
 import useSignUpForm from '../franchise/CustomHooks';
 import {useCommonStyles} from '../../common/StyleComman'; 
 import {getDate, getCurrentDate, getTimeinDBFormat } from '../../../utils/datetime'
-
-import { FormLabel } from '@material-ui/core';
 import validate from '../../common/validation/FixedOrderValidation';
 
 
@@ -88,10 +65,6 @@ const useStyles = makeStyles(theme => ({
     marginTop:theme.spacing(-3),
   },
   labelTitle: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(14),
     marginTop: 15,
@@ -174,9 +147,7 @@ export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fi
       intrest_rate : parseFloat(inputs.intrest_rate).toFixed(2),
       intrest_rate_per : parseFloat(inputs.intrest_rate_per).toFixed(2),
       total_intrest : parseFloat(inputs.total_intrest).toFixed(2),
-      // bond_amt : parseFloat(inputs.bond_amt).toFixed(2),
     }
-    
     setFixedOrderList(data);
     handleOrderType(1);
     handleFixedClose(false)
@@ -215,19 +186,19 @@ export default function FixOrder({ open, handleFixedClose, setFixedOrderList, fi
   }
   
 
-function calculateNoOfPayment(value) {
-  const validNumber = /^[0-9]*$/;    
-  if (value === '' || validNumber.test(value)) {
-    let temp = paymentBeforeDelivery;
-    setPaymentBeforeDelivery(value);
-    setInput( 'before_delivery_amt' , value);
-    if(Number(value) > Number(inputs.no_of_payment)){
-      alert('Number of payment before delivery should be less then or equal to total number of payment.');
-      setPaymentBeforeDelivery(temp);
-      setInput( 'before_delivery_amt' , temp);
+  function calculateNoOfPayment(value) {
+    const validNumber = /^[0-9]*$/;
+    if (value === '' || validNumber.test(value)) {
+      let temp = paymentBeforeDelivery;
+      setPaymentBeforeDelivery(value);
+      setInput( 'before_delivery_amt' , value);
+      if(Number(value) > Number(inputs.no_of_payment)){
+        alert('Number of payment before delivery should be less then or equal to total number of payment.');
+        setPaymentBeforeDelivery(temp);
+        setInput( 'before_delivery_amt' , temp);
+      }
     }
   }
-}
 
   useEffect(() => {
     if(duration != '' && frequency != '' && firstPaymentDate != ''){
@@ -236,22 +207,22 @@ function calculateNoOfPayment(value) {
         let firstPayDate = new Date(firstPaymentDate);
         for(let i=0; i< duration; i++){
           paymentDates.push(firstPayDate.toString())
-          firstPayDate.setMonth(firstPayDate.getMonth() + 1);                   
-        }        
+          firstPayDate.setMonth(firstPayDate.getMonth() + 1);
+        }
       }else if(frequency == 2){
         let firstPayDate = new Date(firstPaymentDate);
         for(let i = 1; i<=  (26 *( duration/12)); i++){
           paymentDates.push(firstPayDate.toString());
           firstPayDate.setDate(firstPayDate.getDate() + 15);
-        }     
+        }
       }else if(frequency == 4){
         let firstPayDate = new Date(firstPaymentDate);
         for(let i = 1; i<=  (52 *( duration/12)); i++){
           paymentDates.push(firstPayDate.toString());
           firstPayDate.setDate(firstPayDate.getDate() + 7);
-        }     
+        }
       }
-      setDateArray(paymentDates);  
+      setDateArray(paymentDates);
       const lastPaymentDate = new Date(paymentDates[paymentDates.length - 1]);
       handleRandomInput([
         {name: 'last_payment', value: lastPaymentDate},
@@ -266,19 +237,6 @@ function calculateNoOfPayment(value) {
   },[duration, frequency, firstPaymentDate]);
 
 
-
-  // useEffect(() => {
-  //     if(firstPaymentDate != '' ){
-  //       let year = firstPaymentDate.getFullYear();
-  //       let lastPaymentYear = year + (parseInt(duration)/12);
-  //       let lastPaymentDate = ((firstPaymentDate.getMonth() + 1) + '-' + firstPaymentDate.getDate() + '-' + lastPaymentYear);
-  //       handleRandomInput([
-  //         {name: 'last_payment', value: lastPaymentDate},        
-  //       ]);       
-  //     }
-  //   },[firstPaymentDate, duration]);
-
-
   useEffect(() => {
     if(paymentBeforeDelivery!= ''){
       let delivey_date = new Date(dateArray[paymentBeforeDelivery - 1]);
@@ -287,14 +245,12 @@ function calculateNoOfPayment(value) {
       }
       handleRandomInput([
         {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-        // {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
         {name: 'exp_delivery_date', value:   delivey_date},
       ]);
       setFixedNull(false);
     }else{
       handleRandomInput([
         {name: 'minimum_payment_amt', value: ''},
-        // {name: 'bond_amt', value: ''},
         {name: 'exp_delivery_date', value: ''},
       ]);
     }
@@ -310,31 +266,29 @@ function calculateNoOfPayment(value) {
             {name: 'no_of_payment', value: (duration * 1)},
             {name: 'total_payment_amt', value: (installment * duration).toFixed(2)},
           ]);
-          // setInputsAll(val);
-        }else if(frequency == 2){ 
+        }else if(frequency == 2){
           let installment = (totalOfRental * 2);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: ((duration * 2) + (duration/12 * 2))},
             {name: 'total_payment_amt', value: (installment * ((duration * 2) + (duration/12 * 2))).toFixed(2)},
           ]);
-        }else if(frequency == 4){ 
+        }else if(frequency == 4){
           let installment = (totalOfRental);
           handleRandomInput([
             {name: 'each_payment_amt', value: installment.toFixed(2)},
             {name: 'no_of_payment', value: ((duration * 4) + (duration/12 * 4))},
             {name: 'total_payment_amt', value: (installment * ((duration * 4) + (duration/12 * 4))).toFixed(2)},
-          ]);        
+          ]);
         }
-      }      
+      }
       if(paymentBeforeDelivery > inputs.no_of_payment){
         setPaymentBeforeDelivery('');
         handleRandomInput([
           {name: 'minimum_payment_amt', value: ''},
-          // {name: 'bond_amt', value: ''},
-          {name: 'before_delivery_amt', value: ''},   
-          {name: 'exp_delivery_date', value: ''},     
-        ]);        
+          {name: 'before_delivery_amt', value: ''},
+          {name: 'exp_delivery_date', value: ''},
+        ]);
         alert('Number of payment before delivery should be less then or equal to total number of payment.');
       }
   },[duration,frequency]);
@@ -370,13 +324,11 @@ function calculateNoOfPayment(value) {
         if(inputs.each_payment_amt != ""){
           handleRandomInput([
             {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-            // {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
             {name: 'total_payment_amt', value: (Number(inputs.no_of_payment) * parseFloat(inputs.each_payment_amt)).toFixed(2)},
           ]);
         }else{
           handleRandomInput([
             {name: 'minimum_payment_amt', value: ''},
-            // {name: 'bond_amt', value: ''},
             {name: 'total_payment_amt', value: ''},
           ]);
         }
@@ -391,12 +343,10 @@ function calculateNoOfPayment(value) {
           handleRandomInput([
             {name: 'each_payment_amt', value: (parseFloat(inputs.total_payment_amt) / Number(inputs.no_of_payment)).toFixed(2)},
             {name: 'minimum_payment_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
-            // {name: 'bond_amt', value: (paymentBeforeDelivery * parseFloat(inputs.each_payment_amt)).toFixed(2)},
           ]);
         }else{
           handleRandomInput([
             {name: 'minimum_payment_amt', value: ''},
-            // {name: 'bond_amt', value: ''},
             {name: 'each_payment_amt', value: ''},
           ]);
         }
@@ -699,16 +649,12 @@ return (
                       }}
                       id="each_payment_amt"
                       name="each_payment_amt"
-                      // label="each_payment_amt/Mortgage"
                       value={inputs.each_payment_amt}
                       onChange={function(e){handlePriceInput(e); changeBool(true)}}
-                      // onFocus={handleInputFocus}
-                      // onBlur={handleInputBlur}
                       error={errors.each_payment_amt}
                       helperText={errors.each_payment_amt}
                       fullWidth
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,

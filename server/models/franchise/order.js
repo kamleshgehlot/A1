@@ -2118,7 +2118,7 @@ Order.prototype.getRequeredOrderList = function () {
             Query = Query + ` AND (o.order_id LIKE  "%${that.searchText}%" OR o.ezidebit_uid LIKE "%${that.searchText}%" OR c.first_name LIKE "%${that.searchText}%" OR c.last_name LIKE "%${that.searchText}%" OR c.address LIKE "%${that.searchText}%" OR c.city LIKE "%${that.searchText}%" OR c.mobile LIKE "%${that.searchText}%" OR c.telephone LIKE "%${that.searchText}%") `;
         }
         Query = Query + `  GROUP BY op.order_id ORDER BY o.id DESC LIMIT ${that.pageOffset},${that.rowsPerPage};`;
-        console.log('query..', Query)
+        // console.log('query..', Query)
         connection.query(Query,function (error, rows, fields) {
             if (error) {console.log("Error...", error); reject(error);}
                 resolve(rows);

@@ -505,13 +505,9 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                       }}
                       id="order_id"
                       name="order_id"
-                      // label="Order #"
                       value={inputs.order_id}
-                      // onChange={handleInputChange}
                       fullWidth
-                      // required
                       type="text"
-                      // placeholder="Franchise Name"
                       margin="dense"
                       disabled
                     />
@@ -528,7 +524,6 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                         format="dd-MM-yyyy"
                         placeholder="DD-MM-YYYY"
                         disabled
-                        // disablePast = {true}
                         value={inputs.order_date}
                         fullWidth 
                         InputProps={{
@@ -619,7 +614,6 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                   <Grid item xs={12} sm={4}>
                     <InputLabel className={classes.textsize} htmlFor="main_category">Main Category*</InputLabel>
                     <Select
-                      // multiple
                       value={inputs.main_category}
                       onChange={handleMainCategory}
                       name= 'main_category'
@@ -646,7 +640,6 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="category">Category*</InputLabel>
                     <Select
-                      // multiple
                       value={inputs.category}
                       onChange={handleCategory}
                       name= 'category'
@@ -672,15 +665,12 @@ export default function Add({ open, handleClose, convertId, converted_name, conv
                   <Grid item xs={12} sm={4}>
                     <InputLabel  className={classes.textsize} htmlFor="sub_category">Sub Category*</InputLabel>
                     <Select
-                      // multiple
                       value={inputs.sub_category}
                       onChange={handleSubCategory}
                       name= 'sub_category'
-                      id= 'sub_category'
-                      
+                      id= 'sub_category'                      
                       fullWidth className={classes.textsize}
                       required
-                      // disabled = {category ==""}
                       disabled = { category =="" ? true : false}
                       error={errors.sub_category}
                       helperText={errors.sub_category}

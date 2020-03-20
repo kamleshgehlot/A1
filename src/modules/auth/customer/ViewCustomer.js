@@ -144,8 +144,6 @@ export default function ViewCustomer({ open, handleClose, customerId}) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [idTypeList, setIdTypeList] = useState([]);
-  // const [otherIdType, setOtherIdType] = useState(customerList.id_type ===0 ? false : true);
-  // const [otherIdTypeValue, setOtherIdTypeValue] = useState(customerList.other_id_type);
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(true);
 
@@ -220,10 +218,7 @@ export default function ViewCustomer({ open, handleClose, customerId}) {
 
       is_active: customerList.is_active,
       state : customerList.state,
-      // updated_by : userId.userId,
-
       other_id_type: otherIdTypeValue,
-      
     }
 
     let formData = new FormData();
@@ -233,12 +228,9 @@ export default function ViewCustomer({ open, handleClose, customerId}) {
     for (var x = 0; x < document.getElementById('id_proof').files.length; x++) {
       formData.append('avatar', document.getElementById('id_proof').files[x])
     }
-    // console.log("formadata", formData);
+
     const response = await Customer.register({ formData: formData });
-    
-    
     setCustomerList(response.customerList);
-    // handleReset(RESET_VALUES);
     setpLoading(false);
     setSavebtn(true);
     handleClose(false);
@@ -258,10 +250,6 @@ function handleIdType(event){
     setOtherIdTypeValue('');
   }
   setDataCustomerList({...customerList,  id_type: event.target.value});
-  }
-
-  function handleOtherIdType(event){
-    setOtherIdTypeValue(event.target.value)
   }
 
 
@@ -335,7 +323,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="address">Address*</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="address">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -374,7 +362,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="city">City</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="city">City *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -414,7 +402,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="telephone">Telephone *</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="telephone">Telephone</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -464,7 +452,6 @@ return (
                       margin="dense"
                       id="email"
                       name="email"
-                      // label="Email Id"
                       type="email"
                       value={customerList.email} 
                       onChange={handleInputChange}
@@ -477,24 +464,21 @@ return (
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     {console.log(customerList.gender)}
-                    <InputLabel className={classes.textsize} htmlFor="gender">Gender</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="gender">Gender *</InputLabel>
                     <RadioGroup
                       id = "gender"
                       name="gender"
                       className={classes.group}                      
                       value={customerList.gender == 'female' ? 'female' : customerList.gender== 'male' ? 'male' : ''}
-                      // onChange={handleInputChange}
                       row
-                      // disabled
                     >
                       <FormControlLabel labelPlacement="start" value="female"  control={<Radio color="primary" />} label="Female" disabled />
                       <FormControlLabel labelPlacement="start" value="male"  control={<Radio color="primary" />} label="Male" disabled />
-                      {/* <FormControlLabel labelPlacement="start" value="transgender"  control={<Radio color="primary" />} label="Transgender" /> */}
                     </RadioGroup>
                     
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="is_working">Are you working?</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="is_working">Are you working? *</InputLabel>
                     <RadioGroup 
                       aria-label="is_working" 
                       name="is_working" 
@@ -509,7 +493,7 @@ return (
                     </RadioGroup>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="dob">Date Of Birth</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="dob">Date Of Birth *</InputLabel>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         autoOk
@@ -535,12 +519,11 @@ return (
                     : ''}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="id_type">ID Proof</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="id_type">ID Proof *</InputLabel>
                     <Select
                         margin="dense"
                         name="id_type"
                         onChange = {handleIdType}
-                        // value={parseInt(customerList.id_type)}
                         value={parseInt(customerList.id_type)}
                         name = 'id_type'
                         id = 'id_type'
@@ -558,12 +541,11 @@ return (
                             )
                           })
                         }
-                          {/* <MenuItem value={0}>{'Other'}</MenuItem>     */}
                     </Select>
                     </Grid>
                    
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="id_number">Id#</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="id_number">Id# *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -573,7 +555,6 @@ return (
                       margin="dense"
                       id="id_number"
                       name="id_number"
-                      // label="ID#"
                       type="text"
                       value={customerList.id_number} 
                       onChange={handleInputChange}
@@ -604,22 +585,7 @@ return (
                     </MuiPickersUtilsProvider>   
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="is_adult">Over 18 Years?</InputLabel>
-                    <RadioGroup 
-                      aria-label="is_adult" 
-                      name="is_adult" 
-                      value={parseInt(customerList.is_adult)} 
-                      onChange={handleInputChange} 
-                      className={classes.group} 
-                      row
-                      
-                    >
-                      <FormControlLabel value={1}  control={<Radio color="primary" />} label="Yes" labelPlacement="start"  disabled />
-                      <FormControlLabel value={0}  control={<Radio color="primary" />} label="No" labelPlacement="start" disabled />                      
-                    </RadioGroup>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID*</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="id_proof">Upload Copy of Selected ID *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -629,29 +595,11 @@ return (
                       margin="dense"
                       id="id_proof"
                       name="id_proof"
-                      // label=""
                       type="file"
-                      // value={customerList.id_proof} 
                       onChange={handleInputChange}
-                      // required
                       fullWidth
                       disabled
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <InputLabel className={classes.textsize} htmlFor="state">Customer State</InputLabel>
-                    <RadioGroup 
-                      aria-label="state" 
-                      name="state" 
-                      className={classes.group}
-                      value={parseInt(customerList.state)} 
-                      onChange={handleInputChange} 
-                      row
-                    >
-                      <FormControlLabel  value={1}  control={<Radio color="primary" />} label="Active" labelPlacement="start" disabled/>
-                      <FormControlLabel value={2}  control={<Radio color="primary" />} label="Hold" labelPlacement="start" disabled />
-                      <FormControlLabel value={3}  control={<Radio color="primary" />} label="Completed" labelPlacement="start" disabled/>
-                    </RadioGroup>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
@@ -674,7 +622,7 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #1</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="alt_c1_name">Name</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c1_name">Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -684,7 +632,6 @@ return (
                       margin="dense"
                       id="alt_c1_name"
                       name="alt_c1_name"
-                      // label="Name"
                       type="text"
                       value={customerList.alt_c1_name} 
                       onChange={handleInputChange}
@@ -694,7 +641,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="alt_c1_address">Address</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c1_address">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -704,7 +651,6 @@ return (
                       margin="dense"
                       id="alt_c1_address"
                       name="alt_c1_address"
-                      // label="Address"
                       type="text"
                       value={customerList.alt_c1_address} 
                       onChange={handleInputChange}
@@ -724,7 +670,6 @@ return (
                       margin="dense"
                       id="alt_c1_contact"
                       name="alt_c1_contact"
-                      // label="Contact#"
                       type="text"
                       value={customerList.alt_c1_contact} 
                       onChange={handleInputChange}
@@ -735,7 +680,7 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="alt_c1_relation">Relationship To You</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c1_relation">Relationship To You *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -745,7 +690,6 @@ return (
                       margin="dense"
                       id="alt_c1_relation"
                       name="alt_c1_relation"
-                      // label="Relationship To You"
                       type="text"
                       value={customerList.alt_c1_relation} 
                       onChange={handleInputChange}
@@ -758,7 +702,7 @@ return (
                     <Typography className={classes.heading}>Alternate Contact Details #2</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="alt_c2_name">Name</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c2_name">Name *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -778,7 +722,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="alt_c2_address">Address</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c2_address">Address *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -808,7 +752,6 @@ return (
                       margin="dense"
                       id="alt_c2_contact"
                       name="alt_c2_contact"
-                      // label="Contact#"
                       type="text"
                       value={customerList.alt_c2_contact} 
                       onChange={handleInputChange}
@@ -819,7 +762,7 @@ return (
                   </Grid>
               
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="alt_c2_relation">Relationship To You</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="alt_c2_relation">Relationship To You *</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -829,7 +772,6 @@ return (
                       margin="dense"
                       id="alt_c2_relation"
                       name="alt_c2_relation"
-                      // label="Relationship To You"
                       type="text"
                       value={customerList.alt_c2_relation} 
                       onChange={handleInputChange}
@@ -866,7 +808,6 @@ return (
                       margin="dense"
                       id="employer_name"
                       name="employer_name"
-                      // label="Employer Name"
                       type="text"
                       value={customerList.employer_name} 
                       onChange={handleInputChange}
@@ -876,7 +817,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="employer_address">{customerList.is_working == 1 ? "Employer Address *" : "Beneficiary Address *" }</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_address">{customerList.is_working == 1 ? "Employer Address " : "Beneficiary Address" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -886,7 +827,6 @@ return (
                       margin="dense"
                       id="employer_address"
                       name="employer_address"
-                      // label="Employer Address"
                       type="text"
                       value={customerList.employer_address} 
                       onChange={handleInputChange}
@@ -896,7 +836,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel className={classes.textsize} htmlFor="employer_telephone">{customerList.is_working == 1 ? "Employer Telephone# *" : "Beneficiary Telephone# *" }</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="employer_telephone">{customerList.is_working == 1 ? "Employer Telephone#" : "Beneficiary Telephone#" }</InputLabel>
                     <TextField
                       InputProps={{
                         classes: {
@@ -906,7 +846,6 @@ return (
                       margin="dense"
                       id="employer_telephone"
                       name="employer_telephone"
-                      // label="Employer Telephone#"
                       type="text"
                       value={customerList.employer_telephone} 
                       onChange={handleInputChange}
@@ -926,7 +865,6 @@ return (
                       margin="dense"
                       id="employer_email"
                       name="employer_email"
-                      // label="Email"
                       type="email"
                       disabled
                       value={customerList.employer_email} 
@@ -947,7 +885,6 @@ return (
                       margin="dense"
                       id="employer_tenure"
                       name="employer_tenure"
-                      // label="Tenure of Employer"
                       type="text"
                       value={customerList.employer_tenure} 
                       onChange={handleInputChange}
